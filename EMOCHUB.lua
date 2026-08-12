@@ -367,7 +367,7 @@ local function triggerWrite()
             end
         end)
         writeBusy = false
-        if not ok then warn("[Blossom] triggerWrite error: " .. tostring(err)) end
+        if not ok then warn("[EMOC HUB] triggerWrite error: " .. tostring(err)) end
     end)
 end
 
@@ -499,17 +499,17 @@ local function cleanupMonitoring()
     lastWrittenCode = nil
 end
 
--- -------------------- Billboard (Blossom Buyer above head) --------------------
+-- -------------------- Billboard (EMOC HUB Buyer above head) --------------------
 local function createNametag()
     local player = LocalPlayer
     local function addTag(character)
         if not character then return end
         local head = character:FindFirstChild("Head")
         if not head then return end
-        local oldTag = head:FindFirstChild("BlossomBuyerTag")
+        local oldTag = head:FindFirstChild("EMOC HUBBuyerTag")
         if oldTag then oldTag:Destroy() end
         local bill = Instance.new("BillboardGui")
-        bill.Name = "BlossomBuyerTag"
+        bill.Name = "EMOC HUBBuyerTag"
         bill.Size = UDim2.new(0, 200, 0, 50)
         bill.Adornee = head
         bill.AlwaysOnTop = true
@@ -518,7 +518,7 @@ local function createNametag()
         label.Size = UDim2.new(1, 0, 1, 0)
         label.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         label.BackgroundTransparency = 0.5
-        label.Text = "Blossom Buyer"
+        label.Text = "EMOC HUB Buyer"
         label.TextColor3 = Color3.fromRGB(255, 105, 180)
         label.TextSize = 20
         label.Font = Enum.Font.GothamBold
@@ -538,12 +538,12 @@ local keybind = Enum.KeyCode.F5
 local rebindMode = false
 
 local function createUI()
-    local oldGui = game:GetService("CoreGui"):FindFirstChild("BlossomRedeemerGui")
-        or LocalPlayer.PlayerGui:FindFirstChild("BlossomRedeemerGui")
+    local oldGui = game:GetService("CoreGui"):FindFirstChild("EMOC HUBRedeemerGui")
+        or LocalPlayer.PlayerGui:FindFirstChild("EMOC HUBRedeemerGui")
     if oldGui then oldGui:Destroy() end
 
     ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "BlossomRedeemerGui"
+    ScreenGui.Name = "EMOC HUBRedeemerGui"
     ScreenGui.ResetOnSpawn = false
 
     local successParent = pcall(function()
@@ -614,7 +614,7 @@ local function createUI()
     HeaderLabel.Size = UDim2.new(1, -55, 0, 22)
     HeaderLabel.Position = UDim2.new(0, 15, 0, 2)
     HeaderLabel.BackgroundTransparency = 1
-    HeaderLabel.Text = "Blossom Redeemer"
+    HeaderLabel.Text = "EMOC HUB Redeemer"
     HeaderLabel.TextColor3 = Color3.fromRGB(255, 105, 180)
     HeaderLabel.TextSize = 14
     HeaderLabel.Font = Enum.Font.GothamBold
