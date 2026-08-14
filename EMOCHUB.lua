@@ -1,4 +1,4 @@
--- cxyro dumper: https://discord.gg/WW8Qm77dhF
+-- cxyro dumper: https://discord.gg/yr2Kt3prZ
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
@@ -10,7 +10,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 -- Create main GUI
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "TokinuHubGalaxy"
+ScreenGui.Name = "EMOCHUB"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = PlayerGui
 
@@ -38,7 +38,7 @@ local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0, 28)
 Title.Position = UDim2.new(0, 8, 0, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "Tokinu Hub"
+Title.Text = "EMOC HUB"
 Title.Font = Enum.Font.GothamMedium
 Title.TextSize = 16
 Title.TextColor3 = Color3.fromRGB(220, 220, 240)
@@ -49,7 +49,7 @@ local Footer = Instance.new("TextLabel")
 Footer.Size = UDim2.new(1, -20, 0, 16)
 Footer.Position = UDim2.new(0, 10, 1, -22)
 Footer.BackgroundTransparency = 1
-Footer.Text = "discord.gg/tokinu"
+Footer.Text = "discord.gg/yr2Kt3prZ"
 Footer.TextColor3 = Color3.fromRGB(180, 180, 200)
 Footer.Font = Enum.Font.Gotham
 Footer.TextSize = 11
@@ -329,4 +329,4 @@ jumpBox.FocusLost:Connect(function(enterPressed)
     end
 end)
 
-print("Tokinu Hub loaded")
+print("EMOC HUB loaded")
