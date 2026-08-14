@@ -1,914 +1,332 @@
-_G.ScriptEnabled = true
-_G.CasingType = "Normal"
-_G.AutoWriteEnabled = false
-_G.AutoSubmitEnabled = false
-
-local enteredCodes = {}
-local activeConnections = {}
-
-local latestCode = nil
-local lastWrittenCode = nil
-local autoWriteConn = nil
-
-local pendingQueue = {}
-local pendingSeen = {}
-local writeBusy = false
-
-local collectedCodes = {}
-local collectedSeen = {}
-local CODE_SEPARATOR = ""
-
-_G.SubmitAfterCount = 1
-_G.SubmitAttempts = 10
-
-local ScreenGui = nil
-local MainFrame = nil
+-- cxyro dumper: https://discord.gg/WW8Qm77dhF
 
 local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
 local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
-local function logStatus(message) end
+-- Create main GUI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "TokinuHubGalaxy"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = PlayerGui
 
--- -------------------- Code detection & clipboard functions (unchanged) --------------------
-local function isGuiVisible(obj)
-    if not obj or not obj.Visible then return false end
-    local current = obj.Parent
-    while current do
-        if current:IsA("GuiObject") and not current.Visible then
-            return false
-        elseif current:IsA("ScreenGui") and not current.Enabled then
-            return false
-        end
-        current = current.Parent
-    end
-    return true
-end
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 200, 0, 270)
+MainFrame.Position = UDim2.new(0, 40, 0, 60)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+MainFrame.BackgroundTransparency = 0.2
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Parent = ScreenGui
 
-local blacklistedWords = {
-    "top", "sec", "min", "fps", "ping", "loading",
-    "points", "coins", "cash", "rebirth", "slaps", "money",
-    "speed", "level", "lvl", "score"
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 12)
+UICorner.Parent = MainFrame
+
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Thickness = 1
+UIStroke.Color = Color3.fromRGB(180, 180, 200)
+UIStroke.Transparency = 0.7
+UIStroke.Parent = MainFrame
+
+-- Title
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 28)
+Title.Position = UDim2.new(0, 8, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "Tokinu Hub"
+Title.Font = Enum.Font.GothamMedium
+Title.TextSize = 16
+Title.TextColor3 = Color3.fromRGB(220, 220, 240)
+Title.Parent = MainFrame
+
+-- Footer / Discord invite
+local Footer = Instance.new("TextLabel")
+Footer.Size = UDim2.new(1, -20, 0, 16)
+Footer.Position = UDim2.new(0, 10, 1, -22)
+Footer.BackgroundTransparency = 1
+Footer.Text = "discord.gg/tokinu"
+Footer.TextColor3 = Color3.fromRGB(180, 180, 200)
+Footer.Font = Enum.Font.Gotham
+Footer.TextSize = 11
+Footer.TextXAlignment = Enum.TextXAlignment.Center
+Footer.Parent = MainFrame
+
+-- Settings values
+local Settings = {
+    Speed = 27,
+    JumpPower = 50
 }
 
-local commonWords = {
-    ["the"]=true, ["and"]=true, ["for"]=true, ["you"]=true, ["your"]=true,
-    ["now"]=true, ["new"]=true, ["use"]=true, ["get"]=true, ["out"]=true,
-    ["all"]=true, ["are"]=true, ["can"]=true, ["with"]=true, ["from"]=true,
-    ["this"]=true, ["that"]=true, ["here"]=true, ["more"]=true, ["info"]=true,
-    ["redeem"]=true, ["claim"]=true,
-    ["enter"]=true, ["reward"]=true, ["rewards"]=true, ["update"]=true, ["join"]=true,
-    ["group"]=true, ["like"]=true, ["follow"]=true, ["sub"]=true, ["click"]=true,
-    ["type"]=true, ["copy"]=true, ["paste"]=true, ["server"]=true, ["event"]=true,
-    ["live"]=true, ["news"]=true, ["soon"]=true, ["available"]=true, ["expired"]=true,
-    ["welcome"]=true, ["thanks"]=true, ["thank"]=true, ["player"]=true, ["players"]=true,
-    ["today"]=true, ["time"]=true, ["wait"]=true, ["xp"]=true, ["money"]=true,
-    ["sammy"]=true, ["announcement"]=true, ["announcements"]=true, ["release"]=true,
-    ["released"]=true, ["limited"]=true, ["special"]=true, ["gift"]=true, ["pet"]=true,
-    ["pets"]=true, ["egg"]=true, ["luck"]=true, ["boost"]=true, ["double"]=true,
-    ["friend"]=true, ["friends"]=true, ["chat"]=true, ["online"]=true, ["offline"]=true,
-    ["invite"]=true, ["party"]=true, ["voice"]=true, ["report"]=true, ["block"]=true,
-    ["mute"]=true, ["store"]=true, ["shop"]=true, ["inventory"]=true, ["settings"]=true,
-    ["leaderboard"]=true, ["lobby"]=true, ["menu"]=true, ["close"]=true, ["open"]=true,
-    ["back"]=true, ["next"]=true, ["play"]=true, ["exit"]=true, ["loading"]=true,
-    ["negozio"]=true, ["rinascita"]=true, ["indice"]=true, ["duelli"]=true,
-    ["scambio"]=true, ["codici"]=true, ["incremento"]=true, ["amico"]=true,
-    ["drop"]=true, ["present"]=true,
-    ["win"]=true, ["wins"]=true, ["winner"]=true, ["winners"]=true, ["winning"]=true,
-    ["winter"]=true, ["victory"]=true, ["lose"]=true, ["loss"]=true, ["losses"]=true,
-    ["defeat"]=true, ["daily"]=true, ["spin"]=true, ["wheel"]=true, ["prize"]=true,
-    ["bonus"]=true, ["streak"]=true, ["rank"]=true, ["wave"]=true, ["round"]=true,
-    ["score"]=true, ["match"]=true, ["versus"]=true, ["battle"]=true, ["quest"]=true
-}
+-- Create toggle buttons
+local function CreateToggleButton(name, yOffset, defaultText)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(1, -20, 0, 32)
+    button.Position = UDim2.new(0, 10, 0, yOffset)
+    button.BackgroundColor3 = Color3.fromRGB(100, 100, 120)
+    button.BackgroundTransparency = 0.5
+    button.Text = defaultText or (name .. ": OFF")
+    button.Font = Enum.Font.GothamMedium
+    button.TextSize = 14
+    button.TextColor3 = Color3.fromRGB(240, 240, 255)
+    button.Parent = MainFrame
 
-local function isBlacklisted(lowerText)
-    if commonWords[lowerText] then return true end
-    for _, word in ipairs(blacklistedWords) do
-        if lowerText:find(word, 1, true) then
-            return true
-        end
-    end
-    return false
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = button
+
+    local stroke = Instance.new("UIStroke")
+    stroke.Thickness = 1
+    stroke.Color = Color3.fromRGB(200, 200, 220)
+    stroke.Transparency = 0.6
+    stroke.Parent = button
+
+    -- Hover effect
+    button.MouseEnter:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2), {
+            BackgroundTransparency = 0.4
+        }):Play()
+    end)
+
+    button.MouseLeave:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2), {
+            BackgroundTransparency = 0.5
+        }):Play()
+    end)
+
+    return button
 end
 
-local function looksLikeCode(token)
-    if not token then return false end
-    if #token < 4 or #token > 20 then return false end
-    if not token:match("^%w+$") then return false end
-    if isBlacklisted(token:lower()) then return false end
+-- Speed & Jump settings panel
+local SettingsFrame = Instance.new("Frame")
+SettingsFrame.Size = UDim2.new(1, -20, 0, 65)
+SettingsFrame.Position = UDim2.new(0, 10, 0, 154)
+SettingsFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+SettingsFrame.BackgroundTransparency = 0.3
+SettingsFrame.Parent = MainFrame
 
-    local letterCount = 0
-    for _ in token:gmatch("%a") do letterCount = letterCount + 1 end
-    if letterCount < 3 then return false end
-    if token:match("^%d+[smhdSMHD]$") then return false end
+local corner5 = Instance.new("UICorner")
+corner5.CornerRadius = UDim.new(0, 8)
+corner5.Parent = SettingsFrame
 
-    local hasDigit = token:match("%d") ~= nil
-    local isAllUpper = (token == token:upper()) and (token:match("%a") ~= nil)
-    if not (hasDigit or isAllUpper) then return false end
+local stroke5 = Instance.new("UIStroke")
+stroke5.Thickness = 1
+stroke5.Color = Color3.fromRGB(180, 180, 200)
+stroke5.Transparency = 0.7
+stroke5.Parent = SettingsFrame
 
-    return true
+local function CreateSettingRow(labelText, defaultValue, yOffset)
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(0.5, -5, 0, 22)
+    label.Position = UDim2.new(0, 5, 0, yOffset)
+    label.BackgroundTransparency = 1
+    label.Text = labelText
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 12
+    label.TextColor3 = Color3.fromRGB(220, 220, 240)
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = SettingsFrame
+
+    local textbox = Instance.new("TextBox")
+    textbox.Size = UDim2.new(0.5, -10, 0, 22)
+    textbox.Position = UDim2.new(0.5, 0, 0, yOffset)
+    textbox.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+    textbox.BackgroundTransparency = 0.4
+    textbox.Text = tostring(defaultValue)
+    textbox.TextColor3 = Color3.fromRGB(240, 240, 255)
+    textbox.Font = Enum.Font.Gotham
+    textbox.TextSize = 12
+    textbox.PlaceholderText = labelText
+    textbox.PlaceholderColor3 = Color3.fromRGB(180, 180, 200)
+    textbox.Parent = SettingsFrame
+
+    local tbCorner = Instance.new("UICorner")
+    tbCorner.CornerRadius = UDim.new(0, 5)
+    tbCorner.Parent = textbox
+
+    return textbox
 end
 
-local function isLoneCode(text)
-    if not text then return false end
-    text = text:match("^%s*(.-)%s*$")
-    if text == "" or text:find("%s") then return false end
-    if #text < 3 or #text > 20 then return false end
-    if not text:match("^%w+$") then return false end
-    if isBlacklisted(text:lower()) then return false end
-    if text:match("^%d+[smhdSMHD]$") then return false end
+local speedBox = CreateSettingRow("Speed:", 27, 5)
+local jumpBox = CreateSettingRow("Jump:", 50, 32)
 
-    if text:match("^%d+$") then
-        return #text >= 3
-    end
+-- Toggles
+local DesyncButton = CreateToggleButton("Desync", 40, "Desync: OFF")
+local SpeedButton  = CreateToggleButton("Speed",  78, "Speed: ON")
+local UnwalkButton = CreateToggleButton("Unwalk", 116, "Unwalk: OFF")
 
-    local letters = 0
-    for _ in text:gmatch("%a") do letters = letters + 1 end
-    return letters >= 2
+-- Desync ESP folder
+local DesyncESPFolder = Instance.new("Folder")
+DesyncESPFolder.Name = "DesyncESP"
+DesyncESPFolder.Parent = workspace
+
+-- Simple visual feedback when toggle is ON
+local function SetButtonOn(btn)
+    btn.Text = btn.Text:gsub("OFF", "ON")
+    TweenService:Create(btn, TweenInfo.new(0.2), {
+        BackgroundColor3 = Color3.fromRGB(80, 150, 80),
+        BackgroundTransparency = 0.3
+    }):Play()
 end
 
-local function extractCodesFromText(text)
-    local found = {}
-    if not text then return found end
+-- ==================
+--    DESYNC TOGGLE
+-- ==================
+DesyncButton.MouseButton1Click:Connect(function()
+    SetButtonOn(DesyncButton)
 
-    local trimmed = text:match("^%s*(.-)%s*$")
-    trimmed = trimmed:gsub("<[^>]->", "")
+    local char = LocalPlayer.Character
+    if not char then return end
 
-    if isLoneCode(trimmed) then
-        table.insert(found, trimmed)
-        return found
+    local humanoid = char:FindFirstChildWhichIsA("Humanoid")
+    if humanoid then
+        humanoid:ChangeState(Enum.HumanoidStateType.Dead)
     end
 
-    for token in text:gmatch("%w+") do
-        if looksLikeCode(token) then
-            table.insert(found, token)
-        end
-    end
-    return found
-end
+    task.wait(0.2)
 
-local function copyCodeToClipboard(code)
-    local formattedCode = code
-    if _G.CasingType == "Upper" then
-        formattedCode = string.upper(code)
-    elseif _G.CasingType == "Lower" then
-        formattedCode = string.lower(code)
-    end
-
-    local success = false
-
-    if setclipboard then
-        pcall(function() setclipboard(formattedCode) end)
-        success = true
-    elseif toclipboard then
-        pcall(function() toclipboard(formattedCode) end)
-        success = true
-    elseif set_clipboard then
-        pcall(function() set_clipboard(formattedCode) end)
-        success = true
-    elseif Clipboard and Clipboard.set then
-        pcall(function() Clipboard.set(formattedCode) end)
-        success = true
-    end
-
-    return success
-end
-
-local function formatCode(code)
-    if _G.CasingType == "Upper" then
-        return string.upper(code)
-    elseif _G.CasingType == "Lower" then
-        return string.lower(code)
-    end
-    return code
-end
-
-local _cachedBox = nil
-
-local function _isCodeBox(obj)
-    if not obj:IsA("TextBox") then return false end
-    if ScreenGui and obj:IsDescendantOf(ScreenGui) then return false end
-    local hint = ((obj.PlaceholderText or "") .. " " .. obj.Name):lower()
-    return hint:find("code") or hint:find("redeem") or hint:find("here")
-end
-
-local function findCodeTextBox()
-    if _cachedBox and _cachedBox.Parent and isGuiVisible(_cachedBox) then
-        return _cachedBox
-    end
-    _cachedBox = nil
-    local playerGui = LocalPlayer:FindFirstChild("PlayerGui")
-    if not playerGui then return nil end
-    for _, obj in ipairs(playerGui:GetDescendants()) do
-        if _isCodeBox(obj) then
-            if isGuiVisible(obj) then _cachedBox = obj return obj end
-        end
-    end
-    return nil
-end
-
-local function fireSignal(sig)
-    if not sig then return end
+    -- Some network flags (most likely won't work anymore in 2025/2026)
     pcall(function()
-        if getconnections then
-            for _, c in ipairs(getconnections(sig)) do
-                if c.Fire then c:Fire() end
-            end
-        end
+        setfflag("PhysicsSenderMaxBandwidthBps", "20000")
+        setfflag("LargeReplicatorEnabled9", "true")
+        setfflag("LargeReplicatorWrite5", "true")
+        -- ... other flags
     end)
-    if firesignal then
-        pcall(function() firesignal(sig) end)
-    end
-end
 
-local function isSubmitButton(obj)
-    if not (obj:IsA("TextButton") or obj:IsA("ImageButton")) then return false end
-    if ScreenGui and obj:IsDescendantOf(ScreenGui) then return false end
-    if not isGuiVisible(obj) then return false end
-    local hint = (((obj:IsA("TextButton") and obj.Text) or "") .. " " .. obj.Name):lower()
-    return hint:find("redeem") ~= nil or hint:find("submit") ~= nil
-end
+    DesyncESPFolder:ClearAllChildren()
 
-local function fireSubmitButton(nearObj)
-    local target = nil
-    local container = nearObj and nearObj.Parent or nil
-    local levels = 0
-    while container and not target and levels < 5 do
-        for _, obj in ipairs(container:GetDescendants()) do
-            if isSubmitButton(obj) then
-                target = obj
-                break
+    local serverPosPart = Instance.new("Part")
+    serverPosPart.Name = "Server Position"
+    serverPosPart.Size = Vector3.new(2, 5, 2)
+    serverPosPart.Anchored = true
+    serverPosPart.CanCollide = false
+    serverPosPart.Material = Enum.Material.Neon
+    serverPosPart.Color = Color3.fromRGB(255, 100, 100)
+    serverPosPart.Transparency = 0.3
+    serverPosPart.Parent = DesyncESPFolder
+
+    local hl = Instance.new("Highlight")
+    hl.FillColor = Color3.fromRGB(255, 100, 100)
+    hl.OutlineColor = Color3.fromRGB(255, 100, 100)
+    hl.FillTransparency = 0.5
+    hl.OutlineTransparency = 0
+    hl.Parent = serverPosPart
+
+    local billboard = Instance.new("BillboardGui")
+    billboard.Size = UDim2.new(0, 100, 0, 40)
+    billboard.Adornee = serverPosPart
+    billboard.AlwaysOnTop = true
+    billboard.Parent = serverPosPart
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1,0,1,0)
+    label.BackgroundTransparency = 1
+    label.Text = "Server Position"
+    label.TextColor3 = Color3.fromRGB(255, 100, 100)
+    label.TextStrokeTransparency = 0.5
+    label.TextScaled = true
+    label.Font = Enum.Font.GothamBold
+    label.Parent = billboard
+
+    local hrp = char:WaitForChild("HumanoidRootPart", 5)
+    if hrp then
+        serverPosPart.CFrame = CFrame.new(hrp.Position)
+
+        -- Update every ~0.15s when position changes
+        hrp:GetPropertyChangedSignal("Position"):Connect(function()
+            task.wait(0.15)
+            if char.Parent then
+                local newHrp = char:FindFirstChild("HumanoidRootPart")
+                if newHrp then
+                    serverPosPart.CFrame = CFrame.new(newHrp.Position)
+                end
             end
-        end
-        container = container.Parent
-        levels = levels + 1
-    end
-    if not target then return false end
-    fireSignal(target.MouseButton1Click)
-    fireSignal(target.Activated)
-    return true
-end
-
-local _rfRemote = nil
-local function getRedemptionRF()
-    if _rfRemote and _rfRemote.Parent then return _rfRemote end
-    _rfRemote = nil
-    local rfFolder = ReplicatedStorage:FindFirstChild("RF")
-    if rfFolder then
-        local rf = rfFolder:FindFirstChild("RequestRedemption")
-        if rf and rf:IsA("RemoteFunction") then
-            _rfRemote = rf
-            return _rfRemote
-        end
-    end
-    if rfFolder then
-        for _, v in ipairs(rfFolder:GetChildren()) do
-            if v.Name == "RequestRedemption" and v:IsA("RemoteFunction") then
-                _rfRemote = v
-                return _rfRemote
-            end
-        end
-    end
-    if getinstances then
-        for _, v in ipairs(getinstances()) do
-            if v.Name == "RequestRedemption" and v:IsA("RemoteFunction") then
-                _rfRemote = v
-                return _rfRemote
-            end
-        end
-    end
-    return _rfRemote
-end
-
-local function redeemViaRF(code)
-    local rf = getRedemptionRF()
-    if not rf then return false end
-    local formatted = formatCode(code)
-    local ok, result = pcall(function()
-        return rf:InvokeServer(formatted)
-    end)
-    if ok then
-        return true
-    else
-        return false
-    end
-end
-
-local function writeAndSubmit(code)
-    if redeemViaRF(code) then return true end
-    local textBox = findCodeTextBox()
-    if not textBox then
-        return false
-    end
-    local formatted = formatCode(code)
-    pcall(function() textBox.ClearTextOnFocus = false end)
-    if not collectedSeen[formatted] then
-        collectedSeen[formatted] = true
-        table.insert(collectedCodes, formatted)
-    end
-    local fullText = table.concat(collectedCodes, CODE_SEPARATOR)
-    local target = math.max(1, tonumber(_G.SubmitAfterCount) or 1)
-    local ready = #collectedCodes >= target
-
-    if ready and _G.AutoSubmitEnabled then
-        local count = #collectedCodes
-        local btn = false
-        for i = 1, _G.SubmitAttempts do
-            local box = findCodeTextBox()
-            if not box then break end
-            local ok = pcall(function()
-                box:CaptureFocus()
-                box.Text = fullText
-                box.CursorPosition = #fullText + 1
-            end)
-            if not ok then
-                pcall(function() box.Text = fullText end)
-            end
-            pcall(function() box:ReleaseFocus(true) end)
-            if fireSubmitButton(box) then btn = true end
-        end
-        table.clear(collectedCodes)
-        table.clear(collectedSeen)
-    else
-        local ok = pcall(function()
-            textBox:CaptureFocus()
-            textBox.Text = fullText
-            textBox.CursorPosition = #fullText + 1
         end)
-        if not ok then
-            pcall(function() textBox.Text = fullText end)
-        end
-        if ready then
-            table.clear(collectedCodes)
-            table.clear(collectedSeen)
-        end
     end
-    return true
-end
+end)
 
-local function triggerWrite()
-    if writeBusy or not _G.AutoWriteEnabled or #pendingQueue == 0 then return end
-    local focused = UserInputService:GetFocusedTextBox()
-    if focused and ScreenGui and focused:IsDescendantOf(ScreenGui) then return end
-    local box = findCodeTextBox()
-    if not (box and isGuiVisible(box)) then return end
-    writeBusy = true
+-- ==================
+--    SPEED TOGGLE
+-- ==================
+SpeedButton.MouseButton1Click:Connect(function()
+    SetButtonOn(SpeedButton)
+    -- Actual speed implementation missing in original code
+end)
+
+-- ==================
+--    UNWALK TOGGLE
+-- ==================
+UnwalkButton.MouseButton1Click:Connect(function()
+    SetButtonOn(UnwalkButton)
+
+    local char = LocalPlayer.Character
+    if not char then return end
+
     task.spawn(function()
-        local ok, err = pcall(function()
-            while _G.AutoWriteEnabled and #pendingQueue > 0 do
-                local b = findCodeTextBox()
-                if not (b and isGuiVisible(b)) then break end
-                local code = table.remove(pendingQueue, 1)
-                pendingSeen[code] = nil
-                writeAndSubmit(code)
+        local animate = char:FindFirstChild("Animate")
+        if not animate then return end
+
+        -- Remove default walk & run animations
+        local walk = animate:FindFirstChild("walk")
+        if walk then
+            local anim = walk:FindFirstChild("WalkAnim")
+            if anim and anim:IsA("Animation") then
+                anim.AnimationId = ""
             end
-        end)
-        writeBusy = false
-        if not ok then warn("[EMOC HUB] triggerWrite error: " .. tostring(err)) end
-    end)
-end
-
-local function startAutoWriteLoop()
-    if autoWriteConn then return end
-    local playerGui = LocalPlayer:FindFirstChild("PlayerGui") or LocalPlayer:WaitForChild("PlayerGui", 10)
-    local boxConn = playerGui and playerGui.DescendantAdded:Connect(function(obj)
-        if _isCodeBox(obj) and isGuiVisible(obj) then
-            _cachedBox = obj
-            triggerWrite()
         end
-    end)
-    local boxRemConn = playerGui and playerGui.DescendantRemoving:Connect(function(obj)
-        if obj == _cachedBox then _cachedBox = nil end
-    end)
-    autoWriteConn = { Disconnect = function()
-        if boxConn then boxConn:Disconnect() end
-        if boxRemConn then boxRemConn:Disconnect() end
-    end }
-    table.insert(activeConnections, autoWriteConn)
-end
 
-local function extractStrings(val, out)
-    out = out or {}
-    local t = type(val)
-    if t == "string" then
-        table.insert(out, val)
-    elseif t == "table" then
-        for _, v in pairs(val) do
-            extractStrings(v, out)
+        local run = animate:FindFirstChild("run")
+        if run then
+            local anim = run:FindFirstChild("RunAnim")
+            if anim and anim:IsA("Animation") then
+                anim.AnimationId = ""
+            end
         end
-    end
-    return out
-end
 
-local function processText(text)
-    if not text or text == "" then return end
-    local codes = extractCodesFromText(text)
-    if #codes == 0 then return end
-    for _, code in ipairs(codes) do
-        copyCodeToClipboard(code)
-        latestCode = code
-        if not pendingSeen[code] then
-            pendingSeen[code] = true
-            table.insert(pendingQueue, code)
-            triggerWrite()
-        end
-    end
-end
-
-local function resolveRemote()
-    if _G.PhiNotifyRemote then return _G.PhiNotifyRemote end
-    local Net
-    local deadline = tick() + 30
-    while not Net and tick() < deadline do
-        pcall(function()
-            local Pkgs = ReplicatedStorage:FindFirstChild("Packages")
-            if Pkgs then Net = Pkgs:FindFirstChild("Net") end
-        end)
-        if not Net then task.wait(0.5) end
-    end
-    if not Net then return nil end
-    local getinfo = debug and (debug.getinfo or debug.info)
-    if getconnections and getinfo then
-        for _, d in ipairs(Net:GetDescendants()) do
-            if d:IsA("RemoteEvent") then
-                local ok, cs = pcall(getconnections, d.OnClientEvent)
-                if ok and cs then
-                    for _, c in ipairs(cs) do
-                        local f, fn = pcall(function() return c.Function end)
-                        if f and type(fn) == "function" then
-                            local i, info = pcall(getinfo, fn)
-                            if i and tostring(
-                                (type(info) == "table" and (info.short_src or info.source)) or info or ""
-                            ):find("NotificationController", 1, true) then
-                                _G.PhiNotifyRemote = d
-                                return d
-                            end
-                        end
-                    end
+        -- Stop any currently playing walk/run animations
+        local humanoid = char:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            for _, track in ipairs(humanoid:GetPlayingAnimationTracks()) do
+                if track.Name:lower():find("walk") then
+                    track:Stop()
                 end
             end
         end
-    end
-    for _, d in ipairs(Net:GetDescendants()) do
-        if d:IsA("RemoteEvent") and d.Name:match("^RE/%x+$") then
-            _G.PhiNotifyRemote = d
-            return d
-        end
-    end
-    return nil
-end
 
-local function startMonitoring()
-    task.spawn(function()
-        local NC = resolveRemote()
-        if not NC then
-            return
-        end
-        local conn = NC.OnClientEvent:Connect(function(...)
-            if not _G.ScriptEnabled then return end
-            local strings = {}
-            for _, v in ipairs({...}) do
-                extractStrings(v, strings)
-            end
-            for _, s in ipairs(strings) do
-                processText(s)
+        -- Block new walk animations
+        animate.DescendantAdded:Connect(function(desc)
+            if desc:IsA("Animation") and desc.Name:lower():find("walk") then
+                desc.AnimationId = ""
             end
         end)
-        table.insert(activeConnections, conn)
     end)
-end
+end)
 
-local function cleanupMonitoring()
-    for _, conn in pairs(activeConnections) do
-        if typeof(conn) == "RBXScriptConnection" then
-            conn:Disconnect()
-        end
-    end
-    table.clear(activeConnections)
-    table.clear(enteredCodes)
-    table.clear(collectedCodes)
-    table.clear(collectedSeen)
-    table.clear(pendingQueue)
-    table.clear(pendingSeen)
-    writeBusy = false
-    autoWriteConn = nil
-    latestCode = nil
-    lastWrittenCode = nil
-end
-
--- -------------------- Billboard (EMOC HUB Buyer above head) --------------------
-local function createNametag()
-    local player = LocalPlayer
-    local function addTag(character)
-        if not character then return end
-        local head = character:FindFirstChild("Head")
-        if not head then return end
-        local oldTag = head:FindFirstChild("EMOC HUBBuyerTag")
-        if oldTag then oldTag:Destroy() end
-        local bill = Instance.new("BillboardGui")
-        bill.Name = "EMOC HUBBuyerTag"
-        bill.Size = UDim2.new(0, 200, 0, 50)
-        bill.Adornee = head
-        bill.AlwaysOnTop = true
-        bill.StudsOffset = Vector3.new(0, 2, 0)
-        local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(1, 0, 1, 0)
-        label.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        label.BackgroundTransparency = 0.5
-        label.Text = "EMOC HUB Buyer"
-        label.TextColor3 = Color3.fromRGB(255, 105, 180)
-        label.TextSize = 20
-        label.Font = Enum.Font.GothamBold
-        label.TextStrokeColor = Color3.fromRGB(0, 0, 0)
-        label.TextStrokeTransparency = 0
-        label.Parent = bill
-        bill.Parent = head
-    end
-    if player.Character then
-        addTag(player.Character)
-    end
-    player.CharacterAdded:Connect(addTag)
-end
-
--- -------------------- UI creation --------------------
-local keybind = Enum.KeyCode.F5
-local rebindMode = false
-
-local function createUI()
-    local oldGui = game:GetService("CoreGui"):FindFirstChild("EMOC HUBRedeemerGui")
-        or LocalPlayer.PlayerGui:FindFirstChild("EMOC HUBRedeemerGui")
-    if oldGui then oldGui:Destroy() end
-
-    ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "EMOC HUBRedeemerGui"
-    ScreenGui.ResetOnSpawn = false
-
-    local successParent = pcall(function()
-        ScreenGui.Parent = game:GetService("CoreGui")
-    end)
-    if not successParent then
-        ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
-    end
-
-    MainFrame = Instance.new("Frame")
-    MainFrame.Name = "MainFrame"
-    MainFrame.Size = UDim2.new(0, 220, 0, 180)
-    MainFrame.Position = UDim2.new(0.5, -110, 0.4, -90)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    MainFrame.BorderSizePixel = 0
-    MainFrame.Active = true
-    MainFrame.Draggable = true
-    MainFrame.ClipsDescendants = true
-    MainFrame.Parent = ScreenGui
-
-    local FULL_HEIGHT = 180
-    local MINI_HEIGHT = 40
-
-    local mainCorner = Instance.new("UICorner")
-    mainCorner.CornerRadius = UDim.new(0, 12)
-    mainCorner.Parent = MainFrame
-
-    local mainStroke = Instance.new("UIStroke")
-    mainStroke.Color = Color3.fromRGB(0, 0, 0)
-    mainStroke.Thickness = 2
-    mainStroke.Parent = MainFrame
-
-    -- Drag
-    local dragToggle = nil
-    local dragStart = nil
-    local startPos = nil
-
-    local function updateInput(input)
-        local delta = input.Position - dragStart
-        local position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        TweenService:Create(MainFrame, TweenInfo.new(0.08), {Position = position}):Play()
-    end
-
-    MainFrame.InputBegan:Connect(function(input)
-        if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
-            dragToggle = true
-            dragStart = input.Position
-            startPos = MainFrame.Position
-            input.Changed:Connect(function()
-                if (input.UserInputState == Enum.UserInputState.End) then
-                    dragToggle = false
-                end
-            end)
-        end
-    end)
-
-    UserInputService.InputChanged:Connect(function(input)
-        if (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-            if dragToggle then
-                updateInput(input)
-            end
-        end
-    end)
-
-    -- Header: "Enzo Redeemer" (white with black outline)
-    local HeaderLabel = Instance.new("TextLabel")
-    HeaderLabel.Name = "HeaderLabel"
-    HeaderLabel.Size = UDim2.new(1, -55, 0, 22)
-    HeaderLabel.Position = UDim2.new(0, 15, 0, 2)
-    HeaderLabel.BackgroundTransparency = 1
-    HeaderLabel.Text = "EMOC HUB Redeemer"
-    HeaderLabel.TextColor3 = Color3.fromRGB(255, 105, 180)
-    HeaderLabel.TextSize = 14
-    HeaderLabel.Font = Enum.Font.GothamBold
-    HeaderLabel.TextXAlignment = Enum.TextXAlignment.Left
-    HeaderLabel.Parent = MainFrame
-
-    local titleStroke = Instance.new("UIStroke")
-    titleStroke.Color = Color3.fromRGB(0, 0, 0)
-    titleStroke.Thickness = 1
-    titleStroke.Parent = HeaderLabel
-
-    -- Discord link
-    local DiscordLabel = Instance.new("TextLabel")
-    DiscordLabel.Name = "DiscordLabel"
-    DiscordLabel.Size = UDim2.new(1, -55, 0, 14)
-    DiscordLabel.Position = UDim2.new(0, 15, 0, 24)
-    DiscordLabel.BackgroundTransparency = 1
-    DiscordLabel.Text = "https://discord.gg/yr2Kt3prZ"
-    DiscordLabel.TextColor3 = Color3.fromRGB(255, 105, 180)
-    DiscordLabel.TextSize = 10
-    DiscordLabel.Font = Enum.Font.Gotham
-    DiscordLabel.TextXAlignment = Enum.TextXAlignment.Left
-    DiscordLabel.Parent = MainFrame
-
-    -- Minimize button
-    local function makeHeaderButton(name, char, xOffset, hoverColor)
-        local btn = Instance.new("TextButton")
-        btn.Name = name
-        btn.Size = UDim2.new(0, 24, 0, 24)
-        btn.Position = UDim2.new(1, xOffset, 0, 4)
-        btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        btn.AutoButtonColor = false
-        btn.Text = char
-        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        btn.TextSize = 12
-        btn.Font = Enum.Font.GothamBold
-        btn.Parent = MainFrame
-
-        local c = Instance.new("UICorner")
-        c.CornerRadius = UDim.new(0, 6)
-        c.Parent = btn
-
-        local s = Instance.new("UIStroke")
-        s.Color = Color3.fromRGB(255, 255, 255)
-        s.Thickness = 1
-        s.Parent = btn
-
-        btn.MouseEnter:Connect(function()
-            btn.BackgroundColor3 = hoverColor
-            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        end)
-        btn.MouseLeave:Connect(function()
-            btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        end)
-        return btn
-    end
-
-    local MinimizeButton = makeHeaderButton("MinimizeButton", "–", -35, Color3.fromRGB(200, 50, 120))
-
-    local minimized = false
-    MinimizeButton.MouseButton1Click:Connect(function()
-        minimized = not minimized
-        local h = minimized and MINI_HEIGHT or FULL_HEIGHT
-        MinimizeButton.Text = minimized and "+" or "–"
-        TweenService:Create(MainFrame, TweenInfo.new(0.2),
-            {Size = UDim2.new(0, 220, 0, h)}):Play()
-    end)
-
-    -- STATUS label
-    local StatusLabel = Instance.new("TextLabel")
-    StatusLabel.Name = "StatusLabel"
-    StatusLabel.Size = UDim2.new(0, 80, 0, 18)
-    StatusLabel.Position = UDim2.new(0, 15, 0, 44)
-    StatusLabel.BackgroundTransparency = 1
-    StatusLabel.Text = "STATUS"
-    StatusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    StatusLabel.TextSize = 12
-    StatusLabel.Font = Enum.Font.GothamBold
-    StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
-    StatusLabel.Parent = MainFrame
-
-    local StatusDot = Instance.new("Frame")
-    StatusDot.Name = "StatusDot"
-    StatusDot.Size = UDim2.new(0, 12, 0, 12)
-    StatusDot.Position = UDim2.new(0, 85, 0, 47)
-    StatusDot.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    StatusDot.BorderSizePixel = 0
-    StatusDot.Parent = MainFrame
-    local dotCorner = Instance.new("UICorner")
-    dotCorner.CornerRadius = UDim.new(1, 0)
-    dotCorner.Parent = StatusDot
-
-    -- AUTOCODE toggle – background black, text white, border white
-    local MainToggle = Instance.new("TextButton")
-    MainToggle.Name = "MainToggle"
-    MainToggle.Size = UDim2.new(0, 95, 0, 26)
-    MainToggle.Position = UDim2.new(0, 120, 0, 40)
-    MainToggle.Text = "AUTOCODE OFF"
-    MainToggle.TextColor3 = Color3.fromRGB(255, 255, 255)   -- always white
-    MainToggle.TextSize = 12
-    MainToggle.Font = Enum.Font.GothamBold
-    MainToggle.BackgroundColor3 = Color3.fromRGB(0, 0, 0)   -- black background
-    MainToggle.Parent = MainFrame
-
-    local mainToggleCorner = Instance.new("UICorner")
-    mainToggleCorner.CornerRadius = UDim.new(0, 8)
-    mainToggleCorner.Parent = MainToggle
-
-    local mainToggleStroke = Instance.new("UIStroke")
-    mainToggleStroke.Color = Color3.fromRGB(255, 105, 180)   -- white border
-    mainToggleStroke.Thickness = 1
-    mainToggleStroke.Parent = MainToggle
-
-    local function updateMainToggle()
-        if _G.ScriptEnabled then
-            MainToggle.Text = "AUTOCODE ON"
-            StatusDot.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+-- Basic input validation for speed/jump values
+speedBox.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        local num = tonumber(speedBox.Text)
+        if num and num > 0 then
+            Settings.Speed = num
         else
-            MainToggle.Text = "AUTOCODE OFF"
-            StatusDot.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+            speedBox.Text = "27"
         end
     end
-    updateMainToggle()
+end)
 
-    MainToggle.MouseButton1Click:Connect(function()
-        _G.ScriptEnabled = not _G.ScriptEnabled
-        updateMainToggle()
-        if not _G.ScriptEnabled then
-            table.clear(collectedCodes)
-            table.clear(collectedSeen)
-            table.clear(pendingQueue)
-            table.clear(pendingSeen)
-            lastWrittenCode = nil
-        end
-    end)
-
-    -- Keybind listener
-    local function onKeybindPressed(input, gameProcessed)
-        if gameProcessed then return end
-        if input.KeyCode == keybind then
-            _G.ScriptEnabled = not _G.ScriptEnabled
-            updateMainToggle()
-            if not _G.ScriptEnabled then
-                table.clear(collectedCodes)
-                table.clear(collectedSeen)
-                table.clear(pendingQueue)
-                table.clear(pendingSeen)
-                lastWrittenCode = nil
-            end
+jumpBox.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        local num = tonumber(jumpBox.Text)
+        if num and num > 0 then
+            Settings.JumpPower = num
+        else
+            jumpBox.Text = "50"
         end
     end
-    UserInputService.InputBegan:Connect(onKeybindPressed)
+end)
 
-    -- OPTIONS label
-    local OptionsLabel = Instance.new("TextLabel")
-    OptionsLabel.Name = "OptionsLabel"
-    OptionsLabel.Size = UDim2.new(0, 100, 0, 18)
-    OptionsLabel.Position = UDim2.new(0, 15, 0, 76)
-    OptionsLabel.BackgroundTransparency = 1
-    OptionsLabel.Text = "OPTIONS"
-    OptionsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    OptionsLabel.TextSize = 12
-    OptionsLabel.Font = Enum.Font.GothamBold
-    OptionsLabel.TextXAlignment = Enum.TextXAlignment.Left
-    OptionsLabel.Parent = MainFrame
-
-    local function createToggleRow(labelText, yPos, startOn, onChanged)
-        local lbl = Instance.new("TextLabel")
-        lbl.Size = UDim2.new(0, 140, 0, 18)
-        lbl.Position = UDim2.new(0, 15, 0, yPos)
-        lbl.BackgroundTransparency = 1
-        lbl.Text = labelText
-        lbl.TextColor3 = Color3.fromRGB(255, 255, 255)
-        lbl.TextSize = 11
-        lbl.Font = Enum.Font.GothamSemibold
-        lbl.TextXAlignment = Enum.TextXAlignment.Left
-        lbl.Parent = MainFrame
-
-        local btn = Instance.new("TextButton")
-        btn.Size = UDim2.new(0, 60, 0, 18)
-        btn.Position = UDim2.new(1, -75, 0, yPos + 1)
-        btn.TextColor3 = Color3.fromRGB(200, 200, 200)
-        btn.TextSize = 10
-        btn.Font = Enum.Font.GothamBold
-        btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        btn.Parent = MainFrame
-
-        local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0, 6)
-        corner.Parent = btn
-
-        local stroke = Instance.new("UIStroke")
-        stroke.Color = Color3.fromRGB(255, 105, 180)
-        stroke.Thickness = 1
-        stroke.Parent = btn
-
-        local state = startOn
-        local function render()
-            if state then
-                btn.Text = "ON"
-                btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-            else
-                btn.Text = "OFF"
-                btn.TextColor3 = Color3.fromRGB(200, 200, 200)
-            end
-        end
-        render()
-
-        btn.MouseButton1Click:Connect(function()
-            state = not state
-            render()
-            onChanged(state)
-        end)
-        return btn
-    end
-
-    createToggleRow("Auto Submit", 96, _G.AutoSubmitEnabled, function(on)
-        _G.AutoSubmitEnabled = on
-    end)
-
-    createToggleRow("Auto Enter", 118, _G.AutoWriteEnabled, function(on)
-        _G.AutoWriteEnabled = on
-        if not on then
-            table.clear(collectedCodes)
-            table.clear(collectedSeen)
-            table.clear(pendingQueue)
-            table.clear(pendingSeen)
-            lastWrittenCode = nil
-        end
-    end)
-
-    -- KEYBIND
-    local KeybindLabel = Instance.new("TextLabel")
-    KeybindLabel.Name = "KeybindLabel"
-    KeybindLabel.Size = UDim2.new(0, 100, 0, 18)
-    KeybindLabel.Position = UDim2.new(0, 15, 0, 144)
-    KeybindLabel.BackgroundTransparency = 1
-    KeybindLabel.Text = "KEYBIND"
-    KeybindLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    KeybindLabel.TextSize = 12
-    KeybindLabel.Font = Enum.Font.GothamBold
-    KeybindLabel.TextXAlignment = Enum.TextXAlignment.Left
-    KeybindLabel.Parent = MainFrame
-
-    local KeybindDisplay = Instance.new("TextButton")
-    KeybindDisplay.Name = "KeybindDisplay"
-    KeybindDisplay.Size = UDim2.new(0, 80, 0, 18)
-    KeybindDisplay.Position = UDim2.new(1, -95, 0, 144)
-    KeybindDisplay.BackgroundTransparency = 1
-    KeybindDisplay.Text = "F5"
-    KeybindDisplay.TextColor3 = Color3.fromRGB(255, 255, 255)
-    KeybindDisplay.TextSize = 12
-    KeybindDisplay.Font = Enum.Font.GothamBold
-    KeybindDisplay.TextXAlignment = Enum.TextXAlignment.Right
-    KeybindDisplay.Parent = MainFrame
-
-    local function updateKeybindDisplay()
-        KeybindDisplay.Text = keybind.Name
-    end
-
-    KeybindDisplay.MouseButton1Click:Connect(function()
-        if rebindMode then return end
-        rebindMode = true
-        KeybindDisplay.Text = "press key..."
-        local conn
-        conn = UserInputService.InputBegan:Connect(function(input, gameProcessed)
-            if gameProcessed then return end
-            if input.UserInputType == Enum.UserInputType.Keyboard then
-                keybind = input.KeyCode
-                rebindMode = false
-                updateKeybindDisplay()
-                conn:Disconnect()
-            end
-        end)
-        task.delay(5, function()
-            if rebindMode then
-                rebindMode = false
-                updateKeybindDisplay()
-                if conn then conn:Disconnect() end
-            end
-        end)
-    end)
-
-    updateKeybindDisplay()
-end
-
--- -------------------- Initialization --------------------
-local function init()
-    pcall(cleanupMonitoring)
-    createUI()
-    startMonitoring()
-    startAutoWriteLoop()
-    createNametag()
-end
-
-init()
+print("Tokinu Hub loaded")
