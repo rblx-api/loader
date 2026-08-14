@@ -1,268 +1,914 @@
-local CollectionService = game:GetService("CollectionService")
-local UserInputService  = game:GetService("UserInputService")
-local TweenService      = game:GetService("TweenService")
-local Players           = game:GetService("Players")
-local RS                = game:GetService("ReplicatedStorage")
-local LP                = Players.LocalPlayer
+_G.ScriptEnabled = true
+_G.CasingType = "Normal"
+_G.AutoWriteEnabled = false
+_G.AutoSubmitEnabled = false
 
-local DELAY = 5
+local enteredCodes = {}
+local activeConnections = {}
 
-local G = (getgenv and getgenv()) or _G
-G.RNGAutoSpin = false
-G.__RNGRun    = (G.__RNGRun or 0) + 1
-local myToken = G.__RNGRun
+local latestCode = nil
+local lastWrittenCode = nil
+local autoWriteConn = nil
 
-local Animals, Rarities, machine
-pcall(function() Animals  = require(RS.Datas.Animals) end)
-pcall(function() Rarities = require(RS.Datas.Rarities) end)
-pcall(function() machine  = require(RS.Packages.ReplicatorClient).get("RNGMachine_" .. LP.UserId) end)
+local pendingQueue = {}
+local pendingSeen = {}
+local writeBusy = false
 
-local FALLBACK = {
-    Common = Color3.fromRGB(190, 195, 205), Uncommon = Color3.fromRGB(120, 210, 130),
-    Rare = Color3.fromRGB(90, 150, 255), Epic = Color3.fromRGB(180, 100, 255),
-    Legendary = Color3.fromRGB(255, 180, 55), Mythic = Color3.fromRGB(255, 85, 85),
-    Secret = Color3.fromRGB(180, 90, 220), ["Brainrot God"] = Color3.fromRGB(255, 95, 200),
-    OG = Color3.fromRGB(255, 215, 60),
+local collectedCodes = {}
+local collectedSeen = {}
+local CODE_SEPARATOR = ""
+
+_G.SubmitAfterCount = 1
+_G.SubmitAttempts = 10
+
+local ScreenGui = nil
+local MainFrame = nil
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LocalPlayer = Players.LocalPlayer
+
+local function logStatus(message) end
+
+-- -------------------- Code detection & clipboard functions (unchanged) --------------------
+local function isGuiVisible(obj)
+    if not obj or not obj.Visible then return false end
+    local current = obj.Parent
+    while current do
+        if current:IsA("GuiObject") and not current.Visible then
+            return false
+        elseif current:IsA("ScreenGui") and not current.Enabled then
+            return false
+        end
+        current = current.Parent
+    end
+    return true
+end
+
+local blacklistedWords = {
+    "top", "sec", "min", "fps", "ping", "loading",
+    "points", "coins", "cash", "rebirth", "slaps", "money",
+    "speed", "level", "lvl", "score"
 }
-local function rarityColor(r)
-    local info = Rarities and Rarities[r]
-    if info then
-        local c = info.Color or info.Colour
-        if typeof(c) == "Color3" then return c end
-        if type(c) == "table" then
-            if c[1] then return Color3.fromRGB(c[1], c[2], c[3]) end
-            if c.R then return Color3.new(c.R, c.G, c.B) end
+
+local commonWords = {
+    ["the"]=true, ["and"]=true, ["for"]=true, ["you"]=true, ["your"]=true,
+    ["now"]=true, ["new"]=true, ["use"]=true, ["get"]=true, ["out"]=true,
+    ["all"]=true, ["are"]=true, ["can"]=true, ["with"]=true, ["from"]=true,
+    ["this"]=true, ["that"]=true, ["here"]=true, ["more"]=true, ["info"]=true,
+    ["redeem"]=true, ["claim"]=true,
+    ["enter"]=true, ["reward"]=true, ["rewards"]=true, ["update"]=true, ["join"]=true,
+    ["group"]=true, ["like"]=true, ["follow"]=true, ["sub"]=true, ["click"]=true,
+    ["type"]=true, ["copy"]=true, ["paste"]=true, ["server"]=true, ["event"]=true,
+    ["live"]=true, ["news"]=true, ["soon"]=true, ["available"]=true, ["expired"]=true,
+    ["welcome"]=true, ["thanks"]=true, ["thank"]=true, ["player"]=true, ["players"]=true,
+    ["today"]=true, ["time"]=true, ["wait"]=true, ["xp"]=true, ["money"]=true,
+    ["sammy"]=true, ["announcement"]=true, ["announcements"]=true, ["release"]=true,
+    ["released"]=true, ["limited"]=true, ["special"]=true, ["gift"]=true, ["pet"]=true,
+    ["pets"]=true, ["egg"]=true, ["luck"]=true, ["boost"]=true, ["double"]=true,
+    ["friend"]=true, ["friends"]=true, ["chat"]=true, ["online"]=true, ["offline"]=true,
+    ["invite"]=true, ["party"]=true, ["voice"]=true, ["report"]=true, ["block"]=true,
+    ["mute"]=true, ["store"]=true, ["shop"]=true, ["inventory"]=true, ["settings"]=true,
+    ["leaderboard"]=true, ["lobby"]=true, ["menu"]=true, ["close"]=true, ["open"]=true,
+    ["back"]=true, ["next"]=true, ["play"]=true, ["exit"]=true, ["loading"]=true,
+    ["negozio"]=true, ["rinascita"]=true, ["indice"]=true, ["duelli"]=true,
+    ["scambio"]=true, ["codici"]=true, ["incremento"]=true, ["amico"]=true,
+    ["drop"]=true, ["present"]=true,
+    ["win"]=true, ["wins"]=true, ["winner"]=true, ["winners"]=true, ["winning"]=true,
+    ["winter"]=true, ["victory"]=true, ["lose"]=true, ["loss"]=true, ["losses"]=true,
+    ["defeat"]=true, ["daily"]=true, ["spin"]=true, ["wheel"]=true, ["prize"]=true,
+    ["bonus"]=true, ["streak"]=true, ["rank"]=true, ["wave"]=true, ["round"]=true,
+    ["score"]=true, ["match"]=true, ["versus"]=true, ["battle"]=true, ["quest"]=true
+}
+
+local function isBlacklisted(lowerText)
+    if commonWords[lowerText] then return true end
+    for _, word in ipairs(blacklistedWords) do
+        if lowerText:find(word, 1, true) then
+            return true
         end
     end
-    return FALLBACK[r] or Color3.fromRGB(232, 232, 238)
-end
-local function short(n)
-    n = tonumber(n) or 0
-    local a = math.abs(n)
-    if a >= 1e12 then return ("%.2fT"):format(n / 1e12) end
-    if a >= 1e9  then return ("%.2fB"):format(n / 1e9) end
-    if a >= 1e6  then return ("%.2fM"):format(n / 1e6) end
-    if a >= 1e3  then return ("%.1fK"):format(n / 1e3) end
-    return tostring(math.floor(n))
+    return false
 end
 
-local function getSpinPrompt()
-    for _, p in ipairs(CollectionService:GetTagged("RNGMachineSpinPrompt")) do
-        if p:IsA("ProximityPrompt") and p:IsDescendantOf(workspace) then return p end
+local function looksLikeCode(token)
+    if not token then return false end
+    if #token < 4 or #token > 20 then return false end
+    if not token:match("^%w+$") then return false end
+    if isBlacklisted(token:lower()) then return false end
+
+    local letterCount = 0
+    for _ in token:gmatch("%a") do letterCount = letterCount + 1 end
+    if letterCount < 3 then return false end
+    if token:match("^%d+[smhdSMHD]$") then return false end
+
+    local hasDigit = token:match("%d") ~= nil
+    local isAllUpper = (token == token:upper()) and (token:match("%a") ~= nil)
+    if not (hasDigit or isAllUpper) then return false end
+
+    return true
+end
+
+local function isLoneCode(text)
+    if not text then return false end
+    text = text:match("^%s*(.-)%s*$")
+    if text == "" or text:find("%s") then return false end
+    if #text < 3 or #text > 20 then return false end
+    if not text:match("^%w+$") then return false end
+    if isBlacklisted(text:lower()) then return false end
+    if text:match("^%d+[smhdSMHD]$") then return false end
+
+    if text:match("^%d+$") then
+        return #text >= 3
     end
-    local ok, p = pcall(function() return workspace.RNGMachine.Prompt.RNGMachinePrompt end)
-    if ok and typeof(p) == "Instance" and p:IsA("ProximityPrompt") then return p end
+
+    local letters = 0
+    for _ in text:gmatch("%a") do letters = letters + 1 end
+    return letters >= 2
+end
+
+local function extractCodesFromText(text)
+    local found = {}
+    if not text then return found end
+
+    local trimmed = text:match("^%s*(.-)%s*$")
+    trimmed = trimmed:gsub("<[^>]->", "")
+
+    if isLoneCode(trimmed) then
+        table.insert(found, trimmed)
+        return found
+    end
+
+    for token in text:gmatch("%w+") do
+        if looksLikeCode(token) then
+            table.insert(found, token)
+        end
+    end
+    return found
+end
+
+local function copyCodeToClipboard(code)
+    local formattedCode = code
+    if _G.CasingType == "Upper" then
+        formattedCode = string.upper(code)
+    elseif _G.CasingType == "Lower" then
+        formattedCode = string.lower(code)
+    end
+
+    local success = false
+
+    if setclipboard then
+        pcall(function() setclipboard(formattedCode) end)
+        success = true
+    elseif toclipboard then
+        pcall(function() toclipboard(formattedCode) end)
+        success = true
+    elseif set_clipboard then
+        pcall(function() set_clipboard(formattedCode) end)
+        success = true
+    elseif Clipboard and Clipboard.set then
+        pcall(function() Clipboard.set(formattedCode) end)
+        success = true
+    end
+
+    return success
+end
+
+local function formatCode(code)
+    if _G.CasingType == "Upper" then
+        return string.upper(code)
+    elseif _G.CasingType == "Lower" then
+        return string.lower(code)
+    end
+    return code
+end
+
+local _cachedBox = nil
+
+local function _isCodeBox(obj)
+    if not obj:IsA("TextBox") then return false end
+    if ScreenGui and obj:IsDescendantOf(ScreenGui) then return false end
+    local hint = ((obj.PlaceholderText or "") .. " " .. obj.Name):lower()
+    return hint:find("code") or hint:find("redeem") or hint:find("here")
+end
+
+local function findCodeTextBox()
+    if _cachedBox and _cachedBox.Parent and isGuiVisible(_cachedBox) then
+        return _cachedBox
+    end
+    _cachedBox = nil
+    local playerGui = LocalPlayer:FindFirstChild("PlayerGui")
+    if not playerGui then return nil end
+    for _, obj in ipairs(playerGui:GetDescendants()) do
+        if _isCodeBox(obj) then
+            if isGuiVisible(obj) then _cachedBox = obj return obj end
+        end
+    end
     return nil
 end
 
-local function doSpin(prompt)
-    if fireproximityprompt then
-        fireproximityprompt(prompt)
+local function fireSignal(sig)
+    if not sig then return end
+    pcall(function()
+        if getconnections then
+            for _, c in ipairs(getconnections(sig)) do
+                if c.Fire then c:Fire() end
+            end
+        end
+    end)
+    if firesignal then
+        pcall(function() firesignal(sig) end)
+    end
+end
+
+local function isSubmitButton(obj)
+    if not (obj:IsA("TextButton") or obj:IsA("ImageButton")) then return false end
+    if ScreenGui and obj:IsDescendantOf(ScreenGui) then return false end
+    if not isGuiVisible(obj) then return false end
+    local hint = (((obj:IsA("TextButton") and obj.Text) or "") .. " " .. obj.Name):lower()
+    return hint:find("redeem") ~= nil or hint:find("submit") ~= nil
+end
+
+local function fireSubmitButton(nearObj)
+    local target = nil
+    local container = nearObj and nearObj.Parent or nil
+    local levels = 0
+    while container and not target and levels < 5 do
+        for _, obj in ipairs(container:GetDescendants()) do
+            if isSubmitButton(obj) then
+                target = obj
+                break
+            end
+        end
+        container = container.Parent
+        levels = levels + 1
+    end
+    if not target then return false end
+    fireSignal(target.MouseButton1Click)
+    fireSignal(target.Activated)
+    return true
+end
+
+local _rfRemote = nil
+local function getRedemptionRF()
+    if _rfRemote and _rfRemote.Parent then return _rfRemote end
+    _rfRemote = nil
+    local rfFolder = ReplicatedStorage:FindFirstChild("RF")
+    if rfFolder then
+        local rf = rfFolder:FindFirstChild("RequestRedemption")
+        if rf and rf:IsA("RemoteFunction") then
+            _rfRemote = rf
+            return _rfRemote
+        end
+    end
+    if rfFolder then
+        for _, v in ipairs(rfFolder:GetChildren()) do
+            if v.Name == "RequestRedemption" and v:IsA("RemoteFunction") then
+                _rfRemote = v
+                return _rfRemote
+            end
+        end
+    end
+    if getinstances then
+        for _, v in ipairs(getinstances()) do
+            if v.Name == "RequestRedemption" and v:IsA("RemoteFunction") then
+                _rfRemote = v
+                return _rfRemote
+            end
+        end
+    end
+    return _rfRemote
+end
+
+local function redeemViaRF(code)
+    local rf = getRedemptionRF()
+    if not rf then return false end
+    local formatted = formatCode(code)
+    local ok, result = pcall(function()
+        return rf:InvokeServer(formatted)
+    end)
+    if ok then
+        return true
     else
-        pcall(function()
-            prompt.MaxActivationDistance = math.huge
-            prompt.RequiresLineOfSight = false
+        return false
+    end
+end
+
+local function writeAndSubmit(code)
+    if redeemViaRF(code) then return true end
+    local textBox = findCodeTextBox()
+    if not textBox then
+        return false
+    end
+    local formatted = formatCode(code)
+    pcall(function() textBox.ClearTextOnFocus = false end)
+    if not collectedSeen[formatted] then
+        collectedSeen[formatted] = true
+        table.insert(collectedCodes, formatted)
+    end
+    local fullText = table.concat(collectedCodes, CODE_SEPARATOR)
+    local target = math.max(1, tonumber(_G.SubmitAfterCount) or 1)
+    local ready = #collectedCodes >= target
+
+    if ready and _G.AutoSubmitEnabled then
+        local count = #collectedCodes
+        local btn = false
+        for i = 1, _G.SubmitAttempts do
+            local box = findCodeTextBox()
+            if not box then break end
+            local ok = pcall(function()
+                box:CaptureFocus()
+                box.Text = fullText
+                box.CursorPosition = #fullText + 1
+            end)
+            if not ok then
+                pcall(function() box.Text = fullText end)
+            end
+            pcall(function() box:ReleaseFocus(true) end)
+            if fireSubmitButton(box) then btn = true end
+        end
+        table.clear(collectedCodes)
+        table.clear(collectedSeen)
+    else
+        local ok = pcall(function()
+            textBox:CaptureFocus()
+            textBox.Text = fullText
+            textBox.CursorPosition = #fullText + 1
         end)
-        prompt:InputHoldBegin()
-        task.wait((prompt.HoldDuration or 0) + 0.06)
-        prompt:InputHoldEnd()
+        if not ok then
+            pcall(function() textBox.Text = fullText end)
+        end
+        if ready then
+            table.clear(collectedCodes)
+            table.clear(collectedSeen)
+        end
+    end
+    return true
+end
+
+local function triggerWrite()
+    if writeBusy or not _G.AutoWriteEnabled or #pendingQueue == 0 then return end
+    local focused = UserInputService:GetFocusedTextBox()
+    if focused and ScreenGui and focused:IsDescendantOf(ScreenGui) then return end
+    local box = findCodeTextBox()
+    if not (box and isGuiVisible(box)) then return end
+    writeBusy = true
+    task.spawn(function()
+        local ok, err = pcall(function()
+            while _G.AutoWriteEnabled and #pendingQueue > 0 do
+                local b = findCodeTextBox()
+                if not (b and isGuiVisible(b)) then break end
+                local code = table.remove(pendingQueue, 1)
+                pendingSeen[code] = nil
+                writeAndSubmit(code)
+            end
+        end)
+        writeBusy = false
+        if not ok then warn("[EMOC HUB] triggerWrite error: " .. tostring(err)) end
+    end)
+end
+
+local function startAutoWriteLoop()
+    if autoWriteConn then return end
+    local playerGui = LocalPlayer:FindFirstChild("PlayerGui") or LocalPlayer:WaitForChild("PlayerGui", 10)
+    local boxConn = playerGui and playerGui.DescendantAdded:Connect(function(obj)
+        if _isCodeBox(obj) and isGuiVisible(obj) then
+            _cachedBox = obj
+            triggerWrite()
+        end
+    end)
+    local boxRemConn = playerGui and playerGui.DescendantRemoving:Connect(function(obj)
+        if obj == _cachedBox then _cachedBox = nil end
+    end)
+    autoWriteConn = { Disconnect = function()
+        if boxConn then boxConn:Disconnect() end
+        if boxRemConn then boxRemConn:Disconnect() end
+    end }
+    table.insert(activeConnections, autoWriteConn)
+end
+
+local function extractStrings(val, out)
+    out = out or {}
+    local t = type(val)
+    if t == "string" then
+        table.insert(out, val)
+    elseif t == "table" then
+        for _, v in pairs(val) do
+            extractStrings(v, out)
+        end
+    end
+    return out
+end
+
+local function processText(text)
+    if not text or text == "" then return end
+    local codes = extractCodesFromText(text)
+    if #codes == 0 then return end
+    for _, code in ipairs(codes) do
+        copyCodeToClipboard(code)
+        latestCode = code
+        if not pendingSeen[code] then
+            pendingSeen[code] = true
+            table.insert(pendingQueue, code)
+            triggerWrite()
+        end
     end
 end
 
-local setStatus, showWin
-local spins = 0
+local function resolveRemote()
+    if _G.PhiNotifyRemote then return _G.PhiNotifyRemote end
+    local Net
+    local deadline = tick() + 30
+    while not Net and tick() < deadline do
+        pcall(function()
+            local Pkgs = ReplicatedStorage:FindFirstChild("Packages")
+            if Pkgs then Net = Pkgs:FindFirstChild("Net") end
+        end)
+        if not Net then task.wait(0.5) end
+    end
+    if not Net then return nil end
+    local getinfo = debug and (debug.getinfo or debug.info)
+    if getconnections and getinfo then
+        for _, d in ipairs(Net:GetDescendants()) do
+            if d:IsA("RemoteEvent") then
+                local ok, cs = pcall(getconnections, d.OnClientEvent)
+                if ok and cs then
+                    for _, c in ipairs(cs) do
+                        local f, fn = pcall(function() return c.Function end)
+                        if f and type(fn) == "function" then
+                            local i, info = pcall(getinfo, fn)
+                            if i and tostring(
+                                (type(info) == "table" and (info.short_src or info.source)) or info or ""
+                            ):find("NotificationController", 1, true) then
+                                _G.PhiNotifyRemote = d
+                                return d
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    for _, d in ipairs(Net:GetDescendants()) do
+        if d:IsA("RemoteEvent") and d.Name:match("^RE/%x+$") then
+            _G.PhiNotifyRemote = d
+            return d
+        end
+    end
+    return nil
+end
 
-local function startLoop()
+local function startMonitoring()
     task.spawn(function()
-        while G.RNGAutoSpin and myToken == G.__RNGRun do
-            local prompt = getSpinPrompt()
-            if prompt and prompt.Enabled then
-                setStatus("Spinning", Color3.fromRGB(250, 200, 90))
-                pcall(doSpin, prompt)
-                spins += 1
-                local t0 = os.clock()
-                while G.RNGAutoSpin and prompt.Parent and prompt.Enabled and os.clock() - t0 < 2 do
-                    task.wait(0.05)
+        local NC = resolveRemote()
+        if not NC then
+            return
+        end
+        local conn = NC.OnClientEvent:Connect(function(...)
+            if not _G.ScriptEnabled then return end
+            local strings = {}
+            for _, v in ipairs({...}) do
+                extractStrings(v, strings)
+            end
+            for _, s in ipairs(strings) do
+                processText(s)
+            end
+        end)
+        table.insert(activeConnections, conn)
+    end)
+end
+
+local function cleanupMonitoring()
+    for _, conn in pairs(activeConnections) do
+        if typeof(conn) == "RBXScriptConnection" then
+            conn:Disconnect()
+        end
+    end
+    table.clear(activeConnections)
+    table.clear(enteredCodes)
+    table.clear(collectedCodes)
+    table.clear(collectedSeen)
+    table.clear(pendingQueue)
+    table.clear(pendingSeen)
+    writeBusy = false
+    autoWriteConn = nil
+    latestCode = nil
+    lastWrittenCode = nil
+end
+
+-- -------------------- Billboard (EMOC HUB Buyer above head) --------------------
+local function createNametag()
+    local player = LocalPlayer
+    local function addTag(character)
+        if not character then return end
+        local head = character:FindFirstChild("Head")
+        if not head then return end
+        local oldTag = head:FindFirstChild("EMOC HUBBuyerTag")
+        if oldTag then oldTag:Destroy() end
+        local bill = Instance.new("BillboardGui")
+        bill.Name = "EMOC HUBBuyerTag"
+        bill.Size = UDim2.new(0, 200, 0, 50)
+        bill.Adornee = head
+        bill.AlwaysOnTop = true
+        bill.StudsOffset = Vector3.new(0, 2, 0)
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(1, 0, 1, 0)
+        label.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        label.BackgroundTransparency = 0.5
+        label.Text = "EMOC HUB Buyer"
+        label.TextColor3 = Color3.fromRGB(255, 105, 180)
+        label.TextSize = 20
+        label.Font = Enum.Font.GothamBold
+        label.TextStrokeColor = Color3.fromRGB(0, 0, 0)
+        label.TextStrokeTransparency = 0
+        label.Parent = bill
+        bill.Parent = head
+    end
+    if player.Character then
+        addTag(player.Character)
+    end
+    player.CharacterAdded:Connect(addTag)
+end
+
+-- -------------------- UI creation --------------------
+local keybind = Enum.KeyCode.F5
+local rebindMode = false
+
+local function createUI()
+    local oldGui = game:GetService("CoreGui"):FindFirstChild("EMOC HUBRedeemerGui")
+        or LocalPlayer.PlayerGui:FindFirstChild("EMOC HUBRedeemerGui")
+    if oldGui then oldGui:Destroy() end
+
+    ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "EMOC HUBRedeemerGui"
+    ScreenGui.ResetOnSpawn = false
+
+    local successParent = pcall(function()
+        ScreenGui.Parent = game:GetService("CoreGui")
+    end)
+    if not successParent then
+        ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+    end
+
+    MainFrame = Instance.new("Frame")
+    MainFrame.Name = "MainFrame"
+    MainFrame.Size = UDim2.new(0, 220, 0, 180)
+    MainFrame.Position = UDim2.new(0.5, -110, 0.4, -90)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    MainFrame.BorderSizePixel = 0
+    MainFrame.Active = true
+    MainFrame.Draggable = true
+    MainFrame.ClipsDescendants = true
+    MainFrame.Parent = ScreenGui
+
+    local FULL_HEIGHT = 180
+    local MINI_HEIGHT = 40
+
+    local mainCorner = Instance.new("UICorner")
+    mainCorner.CornerRadius = UDim.new(0, 12)
+    mainCorner.Parent = MainFrame
+
+    local mainStroke = Instance.new("UIStroke")
+    mainStroke.Color = Color3.fromRGB(0, 0, 0)
+    mainStroke.Thickness = 2
+    mainStroke.Parent = MainFrame
+
+    -- Drag
+    local dragToggle = nil
+    local dragStart = nil
+    local startPos = nil
+
+    local function updateInput(input)
+        local delta = input.Position - dragStart
+        local position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        TweenService:Create(MainFrame, TweenInfo.new(0.08), {Position = position}):Play()
+    end
+
+    MainFrame.InputBegan:Connect(function(input)
+        if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
+            dragToggle = true
+            dragStart = input.Position
+            startPos = MainFrame.Position
+            input.Changed:Connect(function()
+                if (input.UserInputState == Enum.UserInputState.End) then
+                    dragToggle = false
                 end
-                while G.RNGAutoSpin and prompt.Parent and not prompt.Enabled do
-                    task.wait(0.1)
-                end
-                if G.RNGAutoSpin then
-                    setStatus(("Active  \u{2022}  %d spins"):format(spins), Color3.fromRGB(52, 199, 123))
-                    task.wait(DELAY)
-                end
+            end)
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            if dragToggle then
+                updateInput(input)
+            end
+        end
+    end)
+
+    -- Header: "Enzo Redeemer" (white with black outline)
+    local HeaderLabel = Instance.new("TextLabel")
+    HeaderLabel.Name = "HeaderLabel"
+    HeaderLabel.Size = UDim2.new(1, -55, 0, 22)
+    HeaderLabel.Position = UDim2.new(0, 15, 0, 2)
+    HeaderLabel.BackgroundTransparency = 1
+    HeaderLabel.Text = "EMOC HUB Redeemer"
+    HeaderLabel.TextColor3 = Color3.fromRGB(255, 105, 180)
+    HeaderLabel.TextSize = 14
+    HeaderLabel.Font = Enum.Font.GothamBold
+    HeaderLabel.TextXAlignment = Enum.TextXAlignment.Left
+    HeaderLabel.Parent = MainFrame
+
+    local titleStroke = Instance.new("UIStroke")
+    titleStroke.Color = Color3.fromRGB(0, 0, 0)
+    titleStroke.Thickness = 1
+    titleStroke.Parent = HeaderLabel
+
+    -- Discord link
+    local DiscordLabel = Instance.new("TextLabel")
+    DiscordLabel.Name = "DiscordLabel"
+    DiscordLabel.Size = UDim2.new(1, -55, 0, 14)
+    DiscordLabel.Position = UDim2.new(0, 15, 0, 24)
+    DiscordLabel.BackgroundTransparency = 1
+    DiscordLabel.Text = "https://discord.gg/yr2Kt3prZ"
+    DiscordLabel.TextColor3 = Color3.fromRGB(255, 105, 180)
+    DiscordLabel.TextSize = 10
+    DiscordLabel.Font = Enum.Font.Gotham
+    DiscordLabel.TextXAlignment = Enum.TextXAlignment.Left
+    DiscordLabel.Parent = MainFrame
+
+    -- Minimize button
+    local function makeHeaderButton(name, char, xOffset, hoverColor)
+        local btn = Instance.new("TextButton")
+        btn.Name = name
+        btn.Size = UDim2.new(0, 24, 0, 24)
+        btn.Position = UDim2.new(1, xOffset, 0, 4)
+        btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        btn.AutoButtonColor = false
+        btn.Text = char
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.TextSize = 12
+        btn.Font = Enum.Font.GothamBold
+        btn.Parent = MainFrame
+
+        local c = Instance.new("UICorner")
+        c.CornerRadius = UDim.new(0, 6)
+        c.Parent = btn
+
+        local s = Instance.new("UIStroke")
+        s.Color = Color3.fromRGB(255, 255, 255)
+        s.Thickness = 1
+        s.Parent = btn
+
+        btn.MouseEnter:Connect(function()
+            btn.BackgroundColor3 = hoverColor
+            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        end)
+        btn.MouseLeave:Connect(function()
+            btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        end)
+        return btn
+    end
+
+    local MinimizeButton = makeHeaderButton("MinimizeButton", "–", -35, Color3.fromRGB(200, 50, 120))
+
+    local minimized = false
+    MinimizeButton.MouseButton1Click:Connect(function()
+        minimized = not minimized
+        local h = minimized and MINI_HEIGHT or FULL_HEIGHT
+        MinimizeButton.Text = minimized and "+" or "–"
+        TweenService:Create(MainFrame, TweenInfo.new(0.2),
+            {Size = UDim2.new(0, 220, 0, h)}):Play()
+    end)
+
+    -- STATUS label
+    local StatusLabel = Instance.new("TextLabel")
+    StatusLabel.Name = "StatusLabel"
+    StatusLabel.Size = UDim2.new(0, 80, 0, 18)
+    StatusLabel.Position = UDim2.new(0, 15, 0, 44)
+    StatusLabel.BackgroundTransparency = 1
+    StatusLabel.Text = "STATUS"
+    StatusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    StatusLabel.TextSize = 12
+    StatusLabel.Font = Enum.Font.GothamBold
+    StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
+    StatusLabel.Parent = MainFrame
+
+    local StatusDot = Instance.new("Frame")
+    StatusDot.Name = "StatusDot"
+    StatusDot.Size = UDim2.new(0, 12, 0, 12)
+    StatusDot.Position = UDim2.new(0, 85, 0, 47)
+    StatusDot.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    StatusDot.BorderSizePixel = 0
+    StatusDot.Parent = MainFrame
+    local dotCorner = Instance.new("UICorner")
+    dotCorner.CornerRadius = UDim.new(1, 0)
+    dotCorner.Parent = StatusDot
+
+    -- AUTOCODE toggle – background black, text white, border white
+    local MainToggle = Instance.new("TextButton")
+    MainToggle.Name = "MainToggle"
+    MainToggle.Size = UDim2.new(0, 95, 0, 26)
+    MainToggle.Position = UDim2.new(0, 120, 0, 40)
+    MainToggle.Text = "AUTOCODE OFF"
+    MainToggle.TextColor3 = Color3.fromRGB(255, 255, 255)   -- always white
+    MainToggle.TextSize = 12
+    MainToggle.Font = Enum.Font.GothamBold
+    MainToggle.BackgroundColor3 = Color3.fromRGB(0, 0, 0)   -- black background
+    MainToggle.Parent = MainFrame
+
+    local mainToggleCorner = Instance.new("UICorner")
+    mainToggleCorner.CornerRadius = UDim.new(0, 8)
+    mainToggleCorner.Parent = MainToggle
+
+    local mainToggleStroke = Instance.new("UIStroke")
+    mainToggleStroke.Color = Color3.fromRGB(255, 105, 180)   -- white border
+    mainToggleStroke.Thickness = 1
+    mainToggleStroke.Parent = MainToggle
+
+    local function updateMainToggle()
+        if _G.ScriptEnabled then
+            MainToggle.Text = "AUTOCODE ON"
+            StatusDot.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+        else
+            MainToggle.Text = "AUTOCODE OFF"
+            StatusDot.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        end
+    end
+    updateMainToggle()
+
+    MainToggle.MouseButton1Click:Connect(function()
+        _G.ScriptEnabled = not _G.ScriptEnabled
+        updateMainToggle()
+        if not _G.ScriptEnabled then
+            table.clear(collectedCodes)
+            table.clear(collectedSeen)
+            table.clear(pendingQueue)
+            table.clear(pendingSeen)
+            lastWrittenCode = nil
+        end
+    end)
+
+    -- Keybind listener
+    local function onKeybindPressed(input, gameProcessed)
+        if gameProcessed then return end
+        if input.KeyCode == keybind then
+            _G.ScriptEnabled = not _G.ScriptEnabled
+            updateMainToggle()
+            if not _G.ScriptEnabled then
+                table.clear(collectedCodes)
+                table.clear(collectedSeen)
+                table.clear(pendingQueue)
+                table.clear(pendingSeen)
+                lastWrittenCode = nil
+            end
+        end
+    end
+    UserInputService.InputBegan:Connect(onKeybindPressed)
+
+    -- OPTIONS label
+    local OptionsLabel = Instance.new("TextLabel")
+    OptionsLabel.Name = "OptionsLabel"
+    OptionsLabel.Size = UDim2.new(0, 100, 0, 18)
+    OptionsLabel.Position = UDim2.new(0, 15, 0, 76)
+    OptionsLabel.BackgroundTransparency = 1
+    OptionsLabel.Text = "OPTIONS"
+    OptionsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    OptionsLabel.TextSize = 12
+    OptionsLabel.Font = Enum.Font.GothamBold
+    OptionsLabel.TextXAlignment = Enum.TextXAlignment.Left
+    OptionsLabel.Parent = MainFrame
+
+    local function createToggleRow(labelText, yPos, startOn, onChanged)
+        local lbl = Instance.new("TextLabel")
+        lbl.Size = UDim2.new(0, 140, 0, 18)
+        lbl.Position = UDim2.new(0, 15, 0, yPos)
+        lbl.BackgroundTransparency = 1
+        lbl.Text = labelText
+        lbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+        lbl.TextSize = 11
+        lbl.Font = Enum.Font.GothamSemibold
+        lbl.TextXAlignment = Enum.TextXAlignment.Left
+        lbl.Parent = MainFrame
+
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(0, 60, 0, 18)
+        btn.Position = UDim2.new(1, -75, 0, yPos + 1)
+        btn.TextColor3 = Color3.fromRGB(200, 200, 200)
+        btn.TextSize = 10
+        btn.Font = Enum.Font.GothamBold
+        btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        btn.Parent = MainFrame
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 6)
+        corner.Parent = btn
+
+        local stroke = Instance.new("UIStroke")
+        stroke.Color = Color3.fromRGB(255, 105, 180)
+        stroke.Thickness = 1
+        stroke.Parent = btn
+
+        local state = startOn
+        local function render()
+            if state then
+                btn.Text = "ON"
+                btn.TextColor3 = Color3.fromRGB(255, 255, 255)
             else
-                setStatus("Waiting for machine", Color3.fromRGB(150, 150, 165))
-                task.wait(0.25)
+                btn.Text = "OFF"
+                btn.TextColor3 = Color3.fromRGB(200, 200, 200)
             end
         end
+        render()
+
+        btn.MouseButton1Click:Connect(function()
+            state = not state
+            render()
+            onChanged(state)
+        end)
+        return btn
+    end
+
+    createToggleRow("Auto Submit", 96, _G.AutoSubmitEnabled, function(on)
+        _G.AutoSubmitEnabled = on
     end)
-end
 
-if G.__RNGGui then pcall(function() G.__RNGGui:Destroy() end) end
-
-local ON_COLOR  = Color3.fromRGB(52, 199, 123)
-local OFF_COLOR = Color3.fromRGB(58, 58, 72)
-local ACCENT_A  = Color3.fromRGB(138, 99, 255)
-local ACCENT_B  = Color3.fromRGB(86, 138, 255)
-local MUTED     = Color3.fromRGB(140, 140, 158)
-
-local function corner(o, r) local c = Instance.new("UICorner"); c.CornerRadius = UDim.new(0, r); c.Parent = o end
-local function tween(o, t, p) TweenService:Create(o, TweenInfo.new(t, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), p):Play() end
-
-local gui = Instance.new("ScreenGui")
-gui.Name = "RNGSpinToggle"
-gui.ResetOnSpawn = false
-gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-gui.IgnoreGuiInset = true
-pcall(function() if syn and syn.protect_gui then syn.protect_gui(gui) end end)
-pcall(function() if protectgui then protectgui(gui) end end)
-local parent
-pcall(function() parent = gethui and gethui() end)
-if not parent then pcall(function() parent = game:GetService("CoreGui") end) end
-if not parent then parent = LP:WaitForChild("PlayerGui") end
-gui.Parent = parent
-G.__RNGGui = gui
-
-local card = Instance.new("Frame")
-card.Size = UDim2.fromOffset(256, 190)
-card.Position = UDim2.fromOffset(30, 230)
-card.BackgroundColor3 = Color3.fromRGB(17, 17, 23)
-card.BorderSizePixel = 0
-card.Active = true
-card.Parent = gui
-corner(card, 16)
-local cstroke = Instance.new("UIStroke", card)
-cstroke.Color = Color3.fromRGB(42, 42, 56); cstroke.Thickness = 1.5; cstroke.Transparency = 0.1
-
-local accent = Instance.new("Frame")
-accent.Size = UDim2.new(1, -32, 0, 3); accent.Position = UDim2.fromOffset(16, 14)
-accent.BorderSizePixel = 0; accent.Parent = card; corner(accent, 2)
-Instance.new("UIGradient", accent).Color = ColorSequence.new(ACCENT_A, ACCENT_B)
-
-local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, -32, 0, 20); title.Position = UDim2.fromOffset(16, 26)
-title.BackgroundTransparency = 1; title.Text = "RNG Auto-Spin"
-title.TextXAlignment = Enum.TextXAlignment.Left; title.TextColor3 = Color3.fromRGB(240, 240, 248)
-title.Font = Enum.Font.GothamBold; title.TextSize = 16; title.Parent = card
-
-local sub = Instance.new("TextLabel")
-sub.Size = UDim2.new(1, -32, 0, 14); sub.Position = UDim2.fromOffset(16, 45)
-sub.BackgroundTransparency = 1; sub.Text = "Steal a Brainrot"
-sub.TextXAlignment = Enum.TextXAlignment.Left; sub.TextColor3 = MUTED
-sub.Font = Enum.Font.Gotham; sub.TextSize = 11; sub.Parent = card
-
-local div1 = Instance.new("Frame")
-div1.Size = UDim2.new(1, -32, 0, 1); div1.Position = UDim2.fromOffset(16, 68)
-div1.BackgroundColor3 = Color3.fromRGB(38, 38, 50); div1.BorderSizePixel = 0; div1.Parent = card
-
-local rowLabel = Instance.new("TextLabel")
-rowLabel.Size = UDim2.fromOffset(120, 24); rowLabel.Position = UDim2.fromOffset(16, 80)
-rowLabel.BackgroundTransparency = 1; rowLabel.Text = "Auto Spin"
-rowLabel.TextXAlignment = Enum.TextXAlignment.Left; rowLabel.TextColor3 = Color3.fromRGB(218, 218, 228)
-rowLabel.Font = Enum.Font.GothamMedium; rowLabel.TextSize = 14; rowLabel.Parent = card
-
-local track = Instance.new("Frame")
-track.Size = UDim2.fromOffset(50, 26); track.Position = UDim2.new(1, -66, 0, 79)
-track.BackgroundColor3 = OFF_COLOR; track.BorderSizePixel = 0; track.Parent = card; corner(track, 13)
-local knob = Instance.new("Frame")
-knob.Size = UDim2.fromOffset(20, 20); knob.Position = UDim2.fromOffset(3, 3)
-knob.BackgroundColor3 = Color3.fromRGB(245, 245, 250); knob.BorderSizePixel = 0; knob.Parent = track; corner(knob, 10)
-local hit = Instance.new("TextButton")
-hit.Size = UDim2.fromScale(1, 1); hit.BackgroundTransparency = 1; hit.Text = ""; hit.Parent = track
-
-local status = Instance.new("TextLabel")
-status.Size = UDim2.new(1, -32, 0, 16); status.Position = UDim2.fromOffset(16, 108)
-status.BackgroundTransparency = 1; status.Text = "Idle"
-status.TextXAlignment = Enum.TextXAlignment.Left; status.TextColor3 = MUTED
-status.Font = Enum.Font.Gotham; status.TextSize = 12; status.Parent = card
-
-local div2 = Instance.new("Frame")
-div2.Size = UDim2.new(1, -32, 0, 1); div2.Position = UDim2.fromOffset(16, 130)
-div2.BackgroundColor3 = Color3.fromRGB(38, 38, 50); div2.BorderSizePixel = 0; div2.Parent = card
-
-local winHeader = Instance.new("TextLabel")
-winHeader.Size = UDim2.new(1, -32, 0, 12); winHeader.Position = UDim2.fromOffset(16, 138)
-winHeader.BackgroundTransparency = 1; winHeader.Text = "LAST WIN"
-winHeader.TextXAlignment = Enum.TextXAlignment.Left; winHeader.TextColor3 = Color3.fromRGB(105, 105, 122)
-winHeader.Font = Enum.Font.GothamBold; winHeader.TextSize = 10; winHeader.Parent = card
-
-local winName = Instance.new("TextLabel")
-winName.Size = UDim2.new(1, -32, 0, 18); winName.Position = UDim2.fromOffset(16, 150)
-winName.BackgroundTransparency = 1; winName.Text = "\u{2014}"
-winName.TextXAlignment = Enum.TextXAlignment.Left; winName.TextColor3 = Color3.fromRGB(232, 232, 238)
-winName.Font = Enum.Font.GothamBold; winName.TextSize = 15; winName.TextTruncate = Enum.TextTruncate.AtEnd
-winName.Parent = card
-
-local winInfo = Instance.new("TextLabel")
-winInfo.Size = UDim2.new(1, -32, 0, 14); winInfo.Position = UDim2.fromOffset(16, 169)
-winInfo.BackgroundTransparency = 1; winInfo.Text = "no spins yet"
-winInfo.TextXAlignment = Enum.TextXAlignment.Left; winInfo.TextColor3 = MUTED
-winInfo.Font = Enum.Font.Gotham; winInfo.TextSize = 11; winInfo.Parent = card
-
-function setStatus(text, color)
-    status.Text = text
-    tween(status, 0.15, {TextColor3 = color or MUTED})
-end
-
-function showWin(offer)
-    if not offer or not offer.Name then return end
-    local a = Animals and Animals[offer.Name]
-    local rarity = (a and a.Rarity) or "?"
-    local mult = offer.Multiplier or 1
-    winName.Text = offer.Name
-    winName.TextColor3 = rarityColor(rarity)
-    local info = ("%s  \u{2022}  $%s"):format(rarity, short(offer.BuyPrice))
-    if mult > 1 then info = info .. ("  \u{2022}  x%s luck"):format(mult) end
-    winInfo.Text = info
-end
-
-if machine then
-    task.spawn(function()
-        local last
-        while gui.Parent and myToken == G.__RNGRun do
-            local d = machine.Data
-            if d and d.Offer and d.Offer.Name and d.Offer.ExpiresAt ~= last then
-                last = d.Offer.ExpiresAt
-                showWin(d.Offer)
-            end
-            task.wait(0.25)
+    createToggleRow("Auto Enter", 118, _G.AutoWriteEnabled, function(on)
+        _G.AutoWriteEnabled = on
+        if not on then
+            table.clear(collectedCodes)
+            table.clear(collectedSeen)
+            table.clear(pendingQueue)
+            table.clear(pendingSeen)
+            lastWrittenCode = nil
         end
     end)
+
+    -- KEYBIND
+    local KeybindLabel = Instance.new("TextLabel")
+    KeybindLabel.Name = "KeybindLabel"
+    KeybindLabel.Size = UDim2.new(0, 100, 0, 18)
+    KeybindLabel.Position = UDim2.new(0, 15, 0, 144)
+    KeybindLabel.BackgroundTransparency = 1
+    KeybindLabel.Text = "KEYBIND"
+    KeybindLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    KeybindLabel.TextSize = 12
+    KeybindLabel.Font = Enum.Font.GothamBold
+    KeybindLabel.TextXAlignment = Enum.TextXAlignment.Left
+    KeybindLabel.Parent = MainFrame
+
+    local KeybindDisplay = Instance.new("TextButton")
+    KeybindDisplay.Name = "KeybindDisplay"
+    KeybindDisplay.Size = UDim2.new(0, 80, 0, 18)
+    KeybindDisplay.Position = UDim2.new(1, -95, 0, 144)
+    KeybindDisplay.BackgroundTransparency = 1
+    KeybindDisplay.Text = "F5"
+    KeybindDisplay.TextColor3 = Color3.fromRGB(255, 255, 255)
+    KeybindDisplay.TextSize = 12
+    KeybindDisplay.Font = Enum.Font.GothamBold
+    KeybindDisplay.TextXAlignment = Enum.TextXAlignment.Right
+    KeybindDisplay.Parent = MainFrame
+
+    local function updateKeybindDisplay()
+        KeybindDisplay.Text = keybind.Name
+    end
+
+    KeybindDisplay.MouseButton1Click:Connect(function()
+        if rebindMode then return end
+        rebindMode = true
+        KeybindDisplay.Text = "press key..."
+        local conn
+        conn = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+            if gameProcessed then return end
+            if input.UserInputType == Enum.UserInputType.Keyboard then
+                keybind = input.KeyCode
+                rebindMode = false
+                updateKeybindDisplay()
+                conn:Disconnect()
+            end
+        end)
+        task.delay(5, function()
+            if rebindMode then
+                rebindMode = false
+                updateKeybindDisplay()
+                if conn then conn:Disconnect() end
+            end
+        end)
+    end)
+
+    updateKeybindDisplay()
 end
 
-local function setState(on)
-    G.RNGAutoSpin = on and true or false
-    if G.RNGAutoSpin then
-        tween(track, 0.2, {BackgroundColor3 = ON_COLOR})
-        tween(knob, 0.2, {Position = UDim2.fromOffset(27, 3)})
-        setStatus("Active", ON_COLOR)
-        startLoop()
-    else
-        tween(track, 0.2, {BackgroundColor3 = OFF_COLOR})
-        tween(knob, 0.2, {Position = UDim2.fromOffset(3, 3)})
-        setStatus(("Stopped  \u{2022}  %d spins"):format(spins), MUTED)
-    end
+-- -------------------- Initialization --------------------
+local function init()
+    pcall(cleanupMonitoring)
+    createUI()
+    startMonitoring()
+    startAutoWriteLoop()
+    createNametag()
 end
-hit.MouseButton1Click:Connect(function() setState(not G.RNGAutoSpin) end)
 
-local dragging, dragStart, startPos
-local function beginDrag(i)
-    if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
-        dragging = true; dragStart = i.Position; startPos = card.Position
-    end
-end
-title.InputBegan:Connect(beginDrag)
-sub.InputBegan:Connect(beginDrag)
-card.InputBegan:Connect(function(i)
-    if i.Position.Y - card.AbsolutePosition.Y < 68 then beginDrag(i) end
-end)
-UserInputService.InputEnded:Connect(function(i)
-    if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then dragging = false end
-end)
-UserInputService.InputChanged:Connect(function(i)
-    if dragging and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then
-        local d = i.Position - dragStart
-        card.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
-    end
-end)
+init()
