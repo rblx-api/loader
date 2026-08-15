@@ -1,0 +1,562 @@
+local Players         = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService        = game:GetService("RunService")
+local TweenService      = game:GetService("TweenService")
+local UserInputService  = game:GetService("UserInputService")
+local HttpService       = game:GetService("HttpService")
+
+local lp        = Players.LocalPlayer
+local playerGui = lp:WaitForChild("PlayerGui")
+local _enabled  = true
+local _seen     = {}
+local _focused  = nil
+
+local ANTHROPIC_KEY = "sk-ant-api03-placeholder-replace-with-real-key"
+
+-- PUNK / TECH NEON PALETTE
+local T = {
+    BG     = Color3.fromRGB(15, 17, 23),       -- Cyber Obsidian
+    Card   = Color3.fromRGB(22, 26, 36),       -- Tech Slate
+    Border = Color3.fromRGB(35, 42, 58),       -- Dark Steel
+    Accent = Color3.fromRGB(0, 230, 255),      -- Neon Cyan
+    Green  = Color3.fromRGB(0, 255, 150),      -- Electric Lime (Active)
+    Red    = Color3.fromRGB(255, 45, 85),      -- Laser Pink/Red
+    Yellow = Color3.fromRGB(255, 200, 0),       -- Warning Gold
+    White  = Color3.fromRGB(240, 244, 250),     -- Crisp Platinum
+    Dim    = Color3.fromRGB(110, 125, 150),    -- Hologram Blue-Gray
+}
+
+local F = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local function Tw(o,i,p) TweenService:Create(o,i,p):Play() end
+local function Corner(p,r)
+    local c=Instance.new("UICorner"); c.CornerRadius=UDim.new(0,r or 6); c.Parent=p
+end
+local function Stroke(p,col,th)
+    local s=Instance.new("UIStroke"); s.Color=col or T.Border
+    s.Thickness=th or 1; s.ApplyStrokeMode=Enum.ApplyStrokeMode.Border; s.Parent=p; return s
+end
+
+-- Clean up older frames
+pcall(function()
+    if game.CoreGui:FindFirstChild("EMOC HUB") then game.CoreGui.SDLCPaste:Destroy() end
+end)
+pcall(function()
+    if playerGui:FindFirstChild("EMOC HUB") then playerGui.SDLCPaste:Destroy() end
+end)
+
+local GUI = Instance.new("ScreenGui")
+GUI.Name="EMOC HUB"; GUI.ResetOnSpawn=false; GUI.IgnoreGuiInset=true
+GUI.DisplayOrder=999
+if not pcall(function() GUI.Parent=game.CoreGui end) then GUI.Parent=playerGui end
+
+local WIN_W = 220
+
+local Win = Instance.new("Frame")
+Win.Name="Win"
+Win.Size=UDim2.new(0,WIN_W,0,10)
+Win.AutomaticSize=Enum.AutomaticSize.Y
+Win.AnchorPoint=Vector2.new(1,0)
+Win.Position=UDim2.new(1,-20,0,60)
+Win.BackgroundColor3=T.BG
+Win.BackgroundTransparency=0
+Win.BorderSizePixel=0
+Win.ZIndex=100
+Win.ClipsDescendants=true
+Win.Parent=GUI
+Corner(Win,8)
+
+-- Neon Shifting Glow Border
+local WBorder=Stroke(Win, T.Accent, 1.5)
+local WBG=Instance.new("UIGradient")
+WBG.Color=ColorSequence.new({
+    ColorSequenceKeypoint.new(0,   T.Accent),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 100, 255)),
+    ColorSequenceKeypoint.new(1,   T.Accent),
+})
+WBG.Rotation=0
+WBG.Parent=WBorder
+
+RunService.RenderStepped:Connect(function(dt)
+    WBG.Rotation = (WBG.Rotation + dt*90) % 360
+end)
+
+local WinList=Instance.new("UIListLayout")
+WinList.FillDirection=Enum.FillDirection.Vertical
+WinList.Padding=UDim.new(0,0)
+WinList.SortOrder=Enum.SortOrder.LayoutOrder
+WinList.HorizontalAlignment=Enum.HorizontalAlignment.Center
+WinList.Parent=Win
+
+-- HEADER DESIGN
+local Hdr=Instance.new("Frame")
+Hdr.Size=UDim2.new(1,0,0,40)
+Hdr.BackgroundColor3=Color3.fromRGB(18, 22, 30)
+Hdr.BorderSizePixel=0
+Hdr.LayoutOrder=1
+Hdr.Active=true
+Hdr.ZIndex=101
+Hdr.Parent=Win
+Corner(Hdr,8)
+
+local HdrFill=Instance.new("Frame")
+HdrFill.Size=UDim2.new(1,0,0,10)
+HdrFill.Position=UDim2.new(0,0,1,-10)
+HdrFill.BackgroundColor3=Color3.fromRGB(18, 22, 30)
+HdrFill.BorderSizePixel=0
+HdrFill.ZIndex=101
+HdrFill.Parent=Hdr
+
+local HdrLine=Instance.new("Frame")
+HdrLine.Size=UDim2.new(1,0,0,1)
+HdrLine.Position=UDim2.new(0,0,1,0)
+HdrLine.BackgroundColor3=T.Accent
+HdrLine.BackgroundTransparency=0.7
+HdrLine.BorderSizePixel=0
+HdrLine.ZIndex=102
+HdrLine.Parent=Hdr
+
+-- Minimalist Tech Tag instead of an "F" box
+local TechTag=Instance.new("Frame")
+TechTag.Size=UDim2.new(0,4,0,16)
+TechTag.Position=UDim2.new(0,10,0.5,-8)
+TechTag.BackgroundColor3=T.Accent
+TechTag.BorderSizePixel=0
+TechTag.ZIndex=103
+TechTag.Parent=Hdr
+Corner(TechTag,2)
+
+local TitleL=Instance.new("TextLabel")
+TitleL.Size=UDim2.new(0,120,1,0)
+TitleL.Position=UDim2.new(0,20,0,0)
+TitleL.BackgroundTransparency=1
+TitleL.RichText=true
+TitleL.Text='<font color="rgb(0,230,255)">EMOCHUB</font><font color="rgb(240,244,250)">.HUD</font> <font color="rgb(110,125,150)" size="9">// v2</font>'
+TitleL.TextSize=13
+TitleL.Font=Enum.Font.Code
+TitleL.TextColor3=T.White
+TitleL.TextXAlignment=Enum.TextXAlignment.Left
+TitleL.TextYAlignment=Enum.TextYAlignment.Center
+TitleL.ZIndex=102
+TitleL.Parent=Hdr
+
+local OnBtn=Instance.new("TextButton")
+OnBtn.Size=UDim2.new(0,42,0,20)
+OnBtn.AnchorPoint=Vector2.new(1,0.5)
+OnBtn.Position=UDim2.new(1,-10,0.5,0)
+OnBtn.BackgroundColor3=Color3.fromRGB(24, 40, 36)
+OnBtn.BorderSizePixel=0
+OnBtn.AutoButtonColor=false
+OnBtn.Text="ONLINE"
+OnBtn.TextSize=8
+OnBtn.Font=Enum.Font.Code
+OnBtn.TextColor3=T.Green
+OnBtn.ZIndex=103
+OnBtn.Parent=Hdr
+Corner(OnBtn,4)
+local OnS=Stroke(OnBtn,T.Green,1)
+
+-- Dragging Functionality
+do
+    local drag,ds,ws,mv
+    Hdr.InputBegan:Connect(function(inp)
+        if inp.UserInputType==Enum.UserInputType.MouseButton1
+        or inp.UserInputType==Enum.UserInputType.Touch then
+            drag=true; mv=false; ds=inp.Position; ws=Win.Position
+        end
+    end)
+    Hdr.InputEnded:Connect(function(inp)
+        if inp.UserInputType==Enum.UserInputType.MouseButton1
+        or inp.UserInputType==Enum.UserInputType.Touch then drag=false end
+    end)
+    UserInputService.InputChanged:Connect(function(inp)
+        if drag and (inp.UserInputType==Enum.UserInputType.MouseMovement
+        or inp.UserInputType==Enum.UserInputType.Touch) then
+            local d=inp.Position-ds
+            if not mv and d.Magnitude<5 then return end
+            mv=true
+            Win.Position=UDim2.new(ws.X.Scale,ws.X.Offset+d.X,ws.Y.Scale,ws.Y.Offset+d.Y)
+        end
+    end)
+end
+
+local Body=Instance.new("Frame")
+Body.Size=UDim2.new(1,0,0,0)
+Body.AutomaticSize=Enum.AutomaticSize.Y
+Body.BackgroundTransparency=1
+Body.BorderSizePixel=0
+Body.LayoutOrder=2
+Body.ZIndex=101
+Body.Parent=Win
+
+local BL=Instance.new("UIListLayout")
+BL.FillDirection=Enum.FillDirection.Vertical
+BL.Padding=UDim.new(0,6)
+BL.HorizontalAlignment=Enum.HorizontalAlignment.Center
+BL.Parent=Body
+
+local BPad=Instance.new("UIPadding")
+BPad.PaddingTop=UDim.new(0,8)
+BPad.PaddingBottom=UDim.new(0,10)
+BPad.PaddingLeft=UDim.new(0,10)
+BPad.PaddingRight=UDim.new(0,10)
+BPad.Parent=Body
+
+-- STATUS MODULE
+local StatusCard=Instance.new("Frame")
+StatusCard.Size=UDim2.new(1,0,0,28)
+StatusCard.BackgroundColor3=T.Card
+StatusCard.BorderSizePixel=0
+StatusCard.ZIndex=102
+StatusCard.Parent=Body
+Corner(StatusCard,5)
+Stroke(StatusCard,T.Border,1)
+
+local SDot=Instance.new("Frame")
+SDot.Size=UDim2.new(0,4,0,4)
+SDot.Position=UDim2.new(0,10,0.5,-2)
+SDot.BackgroundColor3=T.Dim
+SDot.BorderSizePixel=0
+SDot.ZIndex=103
+SDot.Parent=StatusCard
+Corner(SDot,2)
+
+local SLbl=Instance.new("TextLabel")
+SLbl.Size=UDim2.new(1,-26,1,0)
+SLbl.Position=UDim2.new(0,20,0,0)
+SLbl.BackgroundTransparency=1
+SLbl.Text="SYSTEM INITIALIZED"
+SLbl.TextSize=9
+SLbl.Font=Enum.Font.Code
+SLbl.TextColor3=T.Dim
+SLbl.TextXAlignment=Enum.TextXAlignment.Left
+SLbl.TextYAlignment=Enum.TextYAlignment.Center
+SLbl.ZIndex=103
+SLbl.Parent=StatusCard
+
+-- CODE BOX MODULE
+local CodeCard=Instance.new("Frame")
+CodeCard.Size=UDim2.new(1,0,0,48)
+CodeCard.BackgroundColor3=T.Card
+CodeCard.BorderSizePixel=0
+CodeCard.ZIndex=102
+CodeCard.Parent=Body
+Corner(CodeCard,5)
+local CodeStroke=Stroke(CodeCard,T.Border,1)
+
+local CodeSmall=Instance.new("TextLabel")
+CodeSmall.Size=UDim2.new(1,-12,0,14)
+CodeSmall.Position=UDim2.new(0,10,0,6)
+CodeSmall.BackgroundTransparency=1
+CodeSmall.Text="DATA_STREAM // DETECTED"
+CodeSmall.TextSize=8
+CodeSmall.Font=Enum.Font.Code
+CodeSmall.TextColor3=T.Dim
+CodeSmall.TextXAlignment=Enum.TextXAlignment.Left
+CodeSmall.ZIndex=103
+CodeSmall.Parent=CodeCard
+
+local CodeVal=Instance.new("TextLabel")
+CodeVal.Size=UDim2.new(1,-12,0,24)
+CodeVal.Position=UDim2.new(0,10,0,18)
+CodeVal.BackgroundTransparency=1
+CodeVal.Text="NULL"
+CodeVal.TextSize=15
+CodeVal.Font=Enum.Font.Code
+CodeVal.TextColor3=T.Dim
+CodeVal.TextXAlignment=Enum.TextXAlignment.Left
+CodeVal.TextYAlignment=Enum.TextYAlignment.Center
+CodeVal.ZIndex=103
+CodeVal.Parent=CodeCard
+
+-- RIDDLE CARD MODULE
+local RiddleCard=Instance.new("Frame")
+RiddleCard.Size=UDim2.new(1,0,0,0)
+RiddleCard.AutomaticSize=Enum.AutomaticSize.Y
+RiddleCard.BackgroundColor3=Color3.fromRGB(35, 30, 20)
+RiddleCard.Visible=false
+RiddleCard.ZIndex=102
+RiddleCard.Parent=Body
+Corner(RiddleCard,5)
+Stroke(RiddleCard,T.Yellow,1)
+
+local RiddlePad=Instance.new("UIPadding")
+RiddlePad.PaddingTop=UDim.new(0,6); RiddlePad.PaddingBottom=UDim.new(0,8)
+RiddlePad.PaddingLeft=UDim.new(0,10); RiddlePad.PaddingRight=UDim.new(0,10)
+RiddlePad.Parent=RiddleCard
+
+local RLL=Instance.new("UIListLayout")
+RLL.FillDirection=Enum.FillDirection.Vertical
+RLL.Padding=UDim.new(0,4)
+RLL.Parent=RiddleCard
+
+local RTag=Instance.new("TextLabel")
+RTag.Size=UDim2.new(1,0,0,12)
+RTag.BackgroundTransparency=1
+RTag.Text="[!] NET_DECODER ACTIVE"
+RTag.TextSize=8; RTag.Font=Enum.Font.Code
+RTag.TextColor3=T.Yellow
+RTag.TextXAlignment=Enum.TextXAlignment.Left
+RTag.ZIndex=103; RTag.Parent=RiddleCard
+
+local RMsg=Instance.new("TextLabel")
+RMsg.Size=UDim2.new(1,0,0,14)
+RMsg.BackgroundTransparency=1; RMsg.Text=""
+RMsg.TextSize=11; RMsg.Font=Enum.Font.Code
+RMsg.TextColor3=T.White; RMsg.TextXAlignment=Enum.TextXAlignment.Left
+RMsg.TextWrapped=true; RMsg.ZIndex=103; RMsg.Parent=RiddleCard
+
+-- Control updates
+local function setStatus(msg, col)
+    col=col or T.Dim
+    SLbl.Text=msg:upper(); SLbl.TextColor3=col; SDot.BackgroundColor3=col
+end
+
+local function flashCode(code, col)
+    col=col or T.Accent
+    CodeVal.Text=code; CodeVal.TextColor3=col
+    Tw(CodeStroke, TweenInfo.new(0.1), {Color=col})
+    task.delay(0.6, function()
+        Tw(CodeStroke, TweenInfo.new(0.5), {Color=T.Border})
+        Tw(CodeVal, TweenInfo.new(0.5), {TextColor3=col})
+    end)
+end
+
+local function showRiddle(msg, col)
+    RMsg.Text=msg; RMsg.TextColor3=col or T.White
+    RiddleCard.Visible=true
+end
+local function hideRiddle()
+    RiddleCard.Visible=false
+end
+
+OnBtn.MouseButton1Click:Connect(function()
+    _enabled=not _enabled
+    if _enabled then
+        OnBtn.Text="ONLINE"; OnBtn.BackgroundColor3=Color3.fromRGB(24, 40, 36); OnS.Color=T.Green
+        OnBtn.TextColor3=T.Green
+        setStatus(_focused and "Ready — watching" or "Select input target",
+            _focused and T.Green or T.Dim)
+    else
+        OnBtn.Text="OFFLINE"; OnBtn.BackgroundColor3=Color3.fromRGB(40, 24, 30); OnS.Color=T.Red
+        OnBtn.TextColor3=T.Red; setStatus("Core Paused",T.Dim)
+    end
+end)
+
+UserInputService.TextBoxFocused:Connect(function(box)
+    _focused=box
+    if _enabled then setStatus("Ready — watching",T.Green) end
+end)
+UserInputService.TextBoxFocusReleased:Connect(function(box)
+    if _focused==box then
+        _focused=nil
+        if _enabled then setStatus("Select input target",T.Dim) end
+    end
+end)
+
+local function appendToBox(text)
+    if not text or text=="" then return end
+    if not _focused or not _focused.Parent then
+        setStatus("Target lost! Select box",T.Yellow)
+        flashCode(text, T.Yellow)
+        return
+    end
+    local cur=_focused.Text or ""
+    if cur=="" then
+        _focused.Text=text
+    else
+        _focused.Text=cur.." "..text
+    end
+    setStatus("Data injected",T.Green)
+    flashCode(text,T.Green)
+end
+
+local RIDDLE_KW={
+    "when was","how old","what year","what month","birthday","age of",
+    "released","release date","hint","riddle","figure out","guess",
+    "first letter","combine","spell","backwards","months","years",
+    "old is","how many","what is","do you know","can you","which month",
+    "which year","how long","since when",
+}
+local function isRiddle(txt)
+    local l=txt:lower()
+    for _,p in ipairs(RIDDLE_KW) do if l:find(p,1,true) then return true end end
+    return false
+end
+
+local SAB={rm="MAY",ry="2024",rf="MAY2024",sa="24",c="MAY24"}
+local function solveLocal(txt)
+    local l=txt:lower()
+    if (l:find("month") or l:find("when")) and (l:find("sab") or l:find("steal") or l:find("releas")) then return SAB.rm end
+    if l:find("year") and (l:find("sab") or l:find("releas")) then return SAB.ry end
+    if (l:find("when") or l:find("date")) and (l:find("sab") or l:find("steal") or l:find("releas")) then return SAB.rf end
+    if (l:find("age") or l:find("old")) and l:find("sammy") then return SAB.sa end
+    if (l:find("age") or l:find("old")) and (l:find("month") or l:find("when") or l:find("releas")) then return SAB.c end
+    if l:find("may") and l:find("24") then return SAB.c end
+    return nil
+end
+
+local function callAI(prompt)
+    if not ANTHROPIC_KEY or ANTHROPIC_KEY=="" then return nil end
+    local ok,result=pcall(function()
+        local body=HttpService:JSONEncode({
+            model="claude-sonnet-4-6",
+            max_tokens=40,
+            system="Decode Roblox promo codes for Steal a Brainrot (SAB). SAB released May 2024. Sammy is 24. Output ONLY the code uppercase no spaces nothing else.",
+            messages={{role="user",content=prompt}}
+        })
+        local resp=HttpService:RequestAsync({
+            Url="https://api.anthropic.com/v1/messages",
+            Method="POST",
+            Headers={
+                ["Content-Type"]="application/json",
+                ["x-api-key"]=ANTHROPIC_KEY,
+                ["anthropic-version"]="2023-06-01",
+            },
+            Body=body,
+        })
+        if resp.StatusCode==200 then
+            local data=HttpService:JSONDecode(resp.Body)
+            if data and data.content and data.content[1] then return data.content[1].text end
+        end
+        return nil
+    end)
+    if ok and result then return tostring(result):match("^%s*([A-Z0-9_%-]+)%s*$") end
+    return nil
+end
+
+local function extractWords(txt)
+    local words={}
+    for w in txt:gmatch("%S+") do
+        local clean=w:gsub("[^A-Za-z0-9]","")
+        if #clean>=2 then
+            local isUpper=clean==clean:upper() and clean:match("[A-Z]")
+            local isLower=clean==clean:lower() and clean:match("[a-z]") and #clean>=3
+            if isUpper or isLower then
+                table.insert(words,clean)
+            end
+        end
+    end
+    if #words>0 then return table.concat(words," ") end
+    return nil
+end
+
+local function processGlobal(txt)
+    if not _enabled then return end
+    if not txt or type(txt)~="string" or #txt<2 then return end
+    if _seen[txt] then return end
+    _seen[txt]=true
+    task.delay(20, function() _seen[txt]=nil end)
+
+    if isRiddle(txt) then
+        showRiddle("Processing Stream...",T.Yellow)
+        setStatus("Riddle captured",T.Yellow)
+        local ans=solveLocal(txt)
+        if ans then
+            showRiddle("Resolved: "..ans,T.Green)
+            setStatus("Success",T.Green)
+            appendToBox(ans)
+            task.delay(4,hideRiddle); return
+        end
+        showRiddle("Querying Uplink...",T.Yellow)
+        task.spawn(function()
+            local ai=callAI("Sammy said: \""..txt.."\". SAB=May2024,Sammy=24. Code only.")
+            if ai then
+                showRiddle("Resolved via Net: "..ai,T.Green)
+                setStatus("Success",T.Green)
+                appendToBox(ai)
+                task.delay(4,hideRiddle)
+            else
+                showRiddle("Matrix Failure",T.Red)
+                setStatus("Unresolved",T.Red)
+                task.delay(3,function()
+                    hideRiddle()
+                    setStatus(_focused and "Ready — watching" or "Select input target",
+                        _focused and T.Green or T.Dim)
+                end)
+            end
+        end)
+        return
+    end
+
+    local words=extractWords(txt)
+    if words then appendToBox(words) end
+end
+
+local _watched={}
+local function watchLabel(obj)
+    if _watched[obj] then return end
+    _watched[obj]=true
+    obj:GetPropertyChangedSignal("Text"):Connect(function()
+        processGlobal(obj.Text)
+    end)
+end
+
+local BAD={"backpack","inventory","chatmain","bubblechat","overhead","nametag","leaderboard","hudgui"}
+local GOOD={"global","announce","notif","banner","broadcast","event","popup","sammy","alert","header","news","system","message","center"}
+local function classify(obj)
+    local n=(obj.Name or ""):lower()
+    local pn=((obj.Parent and obj.Parent.Name) or ""):lower()
+    local gpn=((obj.Parent and obj.Parent.Parent and obj.Parent.Parent.Name) or ""):lower()
+    for _,b in ipairs(BAD) do if n:find(b) or pn:find(b) then return false end end
+    for _,g in ipairs(GOOD) do
+        if n:find(g) or pn:find(g) or gpn:find(g) then return true end
+    end
+    return false
+end
+
+playerGui.DescendantAdded:Connect(function(obj)
+    task.wait(0.04)
+    if obj:IsA("TextLabel") then
+        local txt=obj.Text or ""
+        if classify(obj) or extractWords(txt) or isRiddle(txt) then
+            watchLabel(obj)
+            if #txt>1 then processGlobal(txt) end
+        end
+        obj:GetPropertyChangedSignal("Text"):Connect(function()
+            local t=obj.Text or ""
+            if classify(obj) or extractWords(t) or isRiddle(t) then
+                if not _watched[obj] then watchLabel(obj) end
+                processGlobal(t)
+            end
+        end)
+    end
+end)
+
+pcall(function()
+    local tcs=game:GetService("TextChatService")
+    if tcs and tcs.MessageReceived then
+        tcs.MessageReceived:Connect(function(msg)
+            if not msg then return end
+            processGlobal(msg.Text or "")
+        end)
+    end
+end)
+
+pcall(function()
+    local shared=ReplicatedStorage:WaitForChild("Shared",5)
+    if not shared then return end
+    local flags=shared:WaitForChild("Flags",5); if not flags then return end
+    local cf=flags:WaitForChild("CodesFlags",5); if not cf then return end
+    cf.ChildAdded:Connect(function(obj)
+        processGlobal(obj.Name)
+        if obj:IsA("StringValue") then
+            processGlobal(tostring(obj.Value))
+            obj:GetPropertyChangedSignal("Value"):Connect(function()
+                processGlobal(tostring(obj.Value))
+            end)
+        end
+    end)
+end)
+
+pcall(function()
+    local ctrl=ReplicatedStorage:WaitForChild("Controllers",5)
+    if not ctrl then return end
+    local cc=ctrl:WaitForChild("CodesController",5); if not cc then return end
+    cc.DescendantAdded:Connect(function(obj)
+        if obj:IsA("StringValue") then processGlobal(tostring(obj.Value)) end
+        processGlobal(obj.Name)
+    end)
+end)
+
+setStatus("Select input target",T.Dim)
+flashCode("NULL",T.Dim)T.Dim)
