@@ -1200,13 +1200,13 @@ MainFrame.Draggable        = true
 corner(MainFrame, 12)
 stroke(MainFrame, CLR.OptionStroke, 1)
 
--- ========== FONDO PERSONALIZADO ==========
+-- ========== FONDO CON IMAGEN NUEVA ==========
 local FondoTextura = Instance.new("ImageLabel", MainFrame)
 FondoTextura.Name = "FondoTextura"
 FondoTextura.Size = UDim2.new(1, 0, 1, 0)
 FondoTextura.Position = UDim2.new(0, 0, 0, 0)
 FondoTextura.BackgroundTransparency = 1
-FondoTextura.Image = "rbxassetid://AQUI_TU_ID"
+FondoTextura.Image = "rbxassetid://g8nUfZkXCnVKu9KKg"
 FondoTextura.ZIndex = 0
 FondoTextura.ScaleType = Enum.ScaleType.Crop
 FondoTextura.Visible = false
@@ -2137,4 +2137,4 @@ if State.Unwalk then task.spawn(startUnwalk) end
 loadConfig()
 task.delay(1, function() pcall(saveConfig) end)
 
-print("[ReyHub] Cargado - Letras con sombra chorreada aplicadas.")
+print("[ReyHub] Cargado - Imagen de fondo actualizada.")
