@@ -1,4 +1,4 @@
--- REY HUB | optimized visual build
+"-- REY HUB BLUE EDITION | optimized visual build
 local BG         = Color3.fromRGB(0, 0, 5)
 local SIDEBAR_BG = Color3.fromRGB(0, 0, 12)
 local CARD_BG    = Color3.fromRGB(0, 0, 24)
@@ -25,9 +25,9 @@ local LP = Players.LocalPlayer
 
 task.spawn(function()
     local env = (getgenv and getgenv()) or _G
-    env.__CRYON_HIGH_PING_RUN = (env.__CRYON_HIGH_PING_RUN or 0) + 1
-    local thisRun = env.__CRYON_HIGH_PING_RUN
-    env.__CRYON_INTRO_FINISHED_RUN = 0
+    env.__REY_HUB_HIGH_PING_RUN = (env.__REY_HUB_HIGH_PING_RUN or 0) + 1
+    local thisRun = env.__REY_HUB_HIGH_PING_RUN
+    env.__REY_HUB_INTRO_FINISHED_RUN = 0
     local shown = false
 
     local function getPingMilliseconds()
@@ -153,11 +153,11 @@ task.spawn(function()
         gui:Destroy()
     end
 
-    while env.__CRYON_HIGH_PING_RUN == thisRun and env.__CRYON_INTRO_FINISHED_RUN ~= thisRun do
+    while env.__REY_HUB_HIGH_PING_RUN == thisRun and env.__REY_HUB_INTRO_FINISHED_RUN ~= thisRun do
         task.wait(0.1)
     end
 
-    while env.__CRYON_HIGH_PING_RUN == thisRun and not shown do
+    while env.__REY_HUB_HIGH_PING_RUN == thisRun and not shown do
         local ping = getPingMilliseconds()
         if ping and ping > 150 then
             shown = true
@@ -176,8 +176,8 @@ do
 
     local noIntroSaved = false
     pcall(function()
-        if type(isfile) == "function" and type(readfile) == "function" and isfile("REYHUB_DUELS_V8_CONFIG.json") then
-            local decoded = HttpService:JSONDecode(readfile("REYHUB_DUELS_V8_CONFIG.json"))
+        if type(isfile) == "function" and type(readfile) == "function" and isfile("REY_HUB_DUELS_V8_CONFIG.json") then
+            local decoded = HttpService:JSONDecode(readfile("REY_HUB_DUELS_V8_CONFIG.json"))
             if type(decoded) == "table" then
                 if decoded.noIntro ~= nil then
                     noIntroSaved = decoded.noIntro == true
@@ -188,7 +188,7 @@ do
         end
     end)
     local sharedEnv = (getgenv and getgenv()) or _G
-    sharedEnv.__CRYON_NO_INTRO_SAVED = noIntroSaved
+    sharedEnv.__REY_HUB_NO_INTRO_SAVED = noIntroSaved
 
     for _, n in ipairs({"ReyHubIntro", "ReyHubHoneypotGui", "AdaptIntro", "AdaptHoneypotGui"}) do
         pcall(function()
@@ -271,7 +271,7 @@ do
         skipIntroButton.BackgroundTransparency = 0.08
         skipIntroButton.BorderSizePixel = 0
         skipIntroButton.AutoButtonColor = false
-        skipIntroButton.Text = "SKIP INTRO ›"
+        skipIntroButton.Text = "SKIP INTRO  â€º"
         skipIntroButton.TextColor3 = Color3.fromRGB(235, 235, 235)
         skipIntroButton.TextSize = 13
         skipIntroButton.Font = Enum.Font.GothamBold
@@ -382,7 +382,7 @@ do
             label.Position = UDim2.fromScale(0.5, 0.5)
             label.Size = UDim2.new(1, -12, 0, 110)
             label.Font = Enum.Font.GothamBlack
-            label.Text = "↻  REY HUB  ↻"
+            label.Text = "â†»  REY HUB  â†»"
             label.TextColor3 = color
             label.TextSize = 58
             label.TextTransparency = transparency
@@ -676,7 +676,7 @@ do
             task.wait(0.24)
             end, debug.traceback)
             if not ok then
-                warn("[REY HUB] Animation error: " .. tostring(err))
+                warn("[REY HUB Intro] Animation error: " .. tostring(err))
             end
             finishIntro()
         end)
@@ -711,8 +711,8 @@ local State = {
 	antiLagEnabled = false,
 	hitboxFollowerEnabled = false,
 	guiVisible = true,
-	noIntro = (((getgenv and getgenv()) or _G).__CRYON_NO_INTRO_SAVED == true),
-	introEnabled = (((getgenv and getgenv()) or _G).__CRYON_NO_INTRO_SAVED ~= true), selectedIntroMusic = 1,
+	noIntro = (((getgenv and getgenv()) or _G).__REY_HUB_NO_INTRO_SAVED == true),
+	introEnabled = (((getgenv and getgenv()) or _G).__REY_HUB_NO_INTRO_SAVED ~= true), selectedIntroMusic = 1,
 	isStealing = false, stealStartTime = nil, lastStealTick = 0,
 	lastKnownHealth = 100,
 	dropActive = false,
@@ -1138,7 +1138,7 @@ State._safeReadFile = function(path)
 	end
 	local ok, result = pcall(reader, path)
 	if not ok or type(result) ~= "string" or result == "" then
-		return nil, ok and "archivo vacío" or tostring(result)
+		return nil, ok and "archivo vacÃ­o" or tostring(result)
 	end
 	return result
 end
@@ -1163,7 +1163,7 @@ State._writeVerifiedJson = function(path, encoded)
 	if not writeOk then return false, writeErr end
 	local decoded, raw = State._readValidJsonFile(path)
 	if type(decoded) ~= "table" or raw ~= encoded then
-		return false, "la verificación del archivo falló: " .. tostring(path)
+		return false, "la verificaciÃ³n del archivo fallÃ³: " .. tostring(path)
 	end
 	return true
 end
@@ -1171,7 +1171,7 @@ end
 State._atomicJsonSave = function(mainPath, backupPath, tempPath, encoded)
 	local jsonOk, decoded = pcall(function() return HttpService:JSONDecode(encoded) end)
 	if not jsonOk or type(decoded) ~= "table" then
-		return false, "JSON inválido antes de guardar"
+		return false, "JSON invÃ¡lido antes de guardar"
 	end
 
 	local currentData, currentRaw = State._readValidJsonFile(mainPath)
@@ -1450,7 +1450,7 @@ local function showDiscordInProgressBar()
 	local originalSize = progressPct.TextSize
 	local originalAlign = progressPct.TextXAlignment
 
-	progressPct.Text = "🌌 Rey Hub  ·  mogs"
+	progressPct.Text = "ðŸŒ€ Rey Hub  Â·  mogs"
 	progressPct.TextColor3 = Color3.fromRGB(0, 0, 235) -- Cambiado a Rosa
 	progressPct.TextSize = 13
 	progressPct.TextXAlignment = Enum.TextXAlignment.Center
@@ -1831,7 +1831,7 @@ local function cursedInstaReset()
 	end)
 end
 
-for _, name in pairs({"REYHUBGUI"}) do
+for _, name in pairs({"REY_HUB_V2_GUI"}) do
 	local old = game:GetService("CoreGui"):FindFirstChild(name)
 	if old then old:Destroy() end
 	local pg = LP:FindFirstChild("PlayerGui")
@@ -1892,7 +1892,7 @@ local function makeDraggable(frame)
 end
 
 local gui = Instance.new("ScreenGui")
-gui.Name = "REYHUBGUI"
+gui.Name = "REY_HUB_V2_GUI"
 gui.ResetOnSpawn = false
 gui.DisplayOrder = 10
 gui.IgnoreGuiInset = true
@@ -1982,7 +1982,7 @@ main.BorderSizePixel = 0
 main.Active = true
 main.ClipsDescendants = true
 main.Visible = false
-main.BackgroundTransparency = 0 -- MODIFICADO: Removida transparencia para que se mantenga sólido tal cual
+main.BackgroundTransparency = 0 -- MODIFICADO: Removida transparencia para que se mantenga sÃ³lido tal cual
 
 local mainCorner = Instance.new("UICorner", main)
 mainCorner.CornerRadius = UDim.new(0, CORNER)
@@ -2042,7 +2042,7 @@ State.applyBackgroundImage = function(assetId, shouldSave)
 			visual.stroke.Thickness = selected and 2.2 or 1
 		end
 		if visual.badge then
-			visual.badge.Text = selected and ("✓ " .. tostring(visual.index)) or tostring(visual.index)
+			visual.badge.Text = selected and ("âœ“ " .. tostring(visual.index)) or tostring(visual.index)
 			visual.badge.BackgroundColor3 = selected and WHITE or Color3.fromRGB(0, 0, 13)
 			visual.badge.TextColor3 = selected and BG or WHITE
 		end
@@ -2099,7 +2099,7 @@ local titleLbl = Instance.new("TextLabel", topbar)
 titleLbl.Size = UDim2.new(0, 190, 1, 0)
 titleLbl.Position = UDim2.new(0, 17, 0, -3)
 titleLbl.BackgroundTransparency = 1
-titleLbl.Text = "🌌 Rey Hub"
+titleLbl.Text = "ðŸŒ€ Rey Hub"
 titleLbl.TextColor3 = WHITE -- Rojo
 titleLbl.Font = Enum.Font.GothamBlack
 titleLbl.TextSize = 15
@@ -2110,7 +2110,7 @@ local verLbl = Instance.new("TextLabel", topbar)
 verLbl.Size = UDim2.new(0, 240, 0, 14)
 verLbl.Position = UDim2.new(0, 18, 0, 28)
 verLbl.BackgroundTransparency = 1
-verLbl.Text = "ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤRey Hub  ·  Rey mogs"
+verLbl.Text = "ã…¤ã…¤ã…¤ã…¤ã…¤ã…¤ã…¤ã…¤ã…¤ã…¤ã…¤ã…¤Rey Hub  Â·  Rey mogs"
 verLbl.TextColor3 = DIM -- Rojo Medio
 verLbl.Font = Enum.Font.Gotham
 verLbl.TextSize = 8
@@ -2122,7 +2122,7 @@ minBtn.Size = UDim2.new(0, 26, 0, 26)
 minBtn.Position = UDim2.new(1, -36, 0.5, -13)
 minBtn.BackgroundColor3 = KB_BG
 minBtn.BorderSizePixel = 0
-minBtn.Text = "–"
+minBtn.Text = "â€“"
 minBtn.TextColor3 = WHITE -- Rojo
 minBtn.Font = Enum.Font.GothamBlack
 minBtn.TextSize = 16
@@ -2231,12 +2231,12 @@ content.ClipsDescendants = true
 content.ZIndex = 100
 
 local mini = Instance.new("TextButton", gui)
-mini.Name = "REYHUBMini"
+mini.Name = "REY_HUB_V2_Mini"
 mini.Size = UDim2.new(0, 110, 0, 32)
 mini.Position = UDim2.new(0, 20, 0, 70)
 mini.BackgroundColor3 = BG
 mini.BorderSizePixel = 0
-mini.Text = "🌌 Rey Hub"
+mini.Text = "ðŸŒ€ Rey Hub"
 mini.TextColor3 = WHITE -- Rojo
 mini.Font = Enum.Font.GothamBold
 mini.TextSize = 11
@@ -2260,7 +2260,7 @@ local function showGui()
     mini.Visible = false
     State.guiVisible = true
 
-    main.BackgroundTransparency = 0 -- MODIFICADO: Mantenido en 0 sólido
+    main.BackgroundTransparency = 0 -- MODIFICADO: Mantenido en 0 sÃ³lido
     mainUIScale.Scale = 0.85
 
     TweenService:Create(main, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
@@ -2586,7 +2586,7 @@ local function makeKB(parent, kbEntry, onChange)
 	local li = false; local lc; local pv = b.Text
 	b.MouseButton1Click:Connect(function()
 		if li then li=false; _anyKeyListening=false; if lc then lc:Disconnect(); lc=nil end; b.Text=pv; b.TextColor3=WHITE; return end
-		pv=b.Text; li=true; _anyKeyListening=true; b.Text="···"; b.TextColor3=DIM
+		pv=b.Text; li=true; _anyKeyListening=true; b.Text="Â·Â·Â·"; b.TextColor3=DIM
 		TweenService:Create(bs, TweenInfo.new(0.1), {Color=WHITE}):Play()
 		lc = UIS.InputBegan:Connect(function(inp)
 			if not li then return end
@@ -2711,346 +2711,4 @@ local function rowInput(tabName, label, sub, default, onChange)
 		sl.Position = UDim2.new(0, 10, 0, 35)
 	end
 	local box = Instance.new("TextBox", c)
-	box.Size = UDim2.new(0, 64, 0, 22)
-	box.Position = UDim2.new(1, -(64+10), 0.5, -11)
-	box.BackgroundColor3 = KB_BG
-	box.BackgroundTransparency = INPUT_TRANSPARENCY
-	box.BorderSizePixel = 0
-	box.Text = tostring(default or "")
-	box.TextColor3 = WHITE
-	box.Font = Enum.Font.GothamBold
-	box.TextSize = 10
-	box.TextXAlignment = Enum.TextXAlignment.Center
-	box.ZIndex = 11
-	Instance.new("UICorner", box).CornerRadius = UDim.new(0, 8)
-	local boxSt = Instance.new("UIStroke", box); boxSt.Color = BORDER; boxSt.Thickness = 1
-	box.FocusLost:Connect(function(enterPressed)
-		if enterPressed then
-			local val = tonumber(box.Text)
-			if val and onChange then onChange(val) end
-		end
-	end)
-	return box
-end
-
--- Speed tab
-makeSecHeader("Speed", "Speed Settings")
-local speedToggleSet = rowToggle("Speed", "Speed", "Toggle speed on/off", false, function(on)
-	State.speedToggled = on
-	if State.requestConfigSave then State.requestConfigSave() end
-end)
-
-rowInput("Speed", "Normal Speed", "Default speed value", NS, function(val)
-	if val and val > 0 then NS = val end
-end)
-
-rowInput("Speed", "Carry Speed", "Speed when carrying", CS, function(val)
-	if val and val > 0 then CS = val end
-end)
-
--- Bat Aimbot tab
-makeSecHeader("Bat Aimbot", "Bat Aimbot Settings")
-local batToggleSet = rowToggle("Bat Aimbot", "Bat Aimbot", "Auto aim at closest player", false, function(on)
-	State.autoBatToggled = on
-	if on then
-		startBatAimbot()
-	else
-		stopBatAimbot()
-	end
-	if State.requestConfigSave then State.requestConfigSave() end
-end)
-
-rowToggle("Bat Aimbot", "Auto Swing", "Auto swing when in range", false, function(on)
-	State.autoSwingEnabled = on
-	if State.requestConfigSave then State.requestConfigSave() end
-end)
-
--- Mechanics tab
-makeSecHeader("Mechanics", "Mechanics Settings")
-rowToggle("Mechanics", "Inf Jump", "Infinite jump enabled", false, function(on)
-	State.infJumpEnabled = on
-	if State.requestConfigSave then State.requestConfigSave() end
-end)
-
-rowToggle("Mechanics", "Anti Ragdoll", "Prevent ragdoll", false, function(on)
-	State.antiRagdollEnabled = on
-	if on then
-		startAntiRagdoll()
-	else
-		stopAntiRagdoll()
-	end
-	if State.requestConfigSave then State.requestConfigSave() end
-end)
-
--- Movement tab
-makeSecHeader("Movement", "Movement Settings")
-rowToggle("Movement", "Drop", "Drop from height", false, function(on)
-	State.dropActive = on
-	if on then
-		runDrop()
-	end
-end)
-
-rowToggle("Movement", "Auto Left", "Auto move left", false, function(on)
-	State.autoLeftEnabled = on
-	if on then
-		startAutoLeft()
-	else
-		stopAutoLeft()
-	end
-	if State.requestConfigSave then State.requestConfigSave() end
-end)
-
-rowToggle("Movement", "Auto Right", "Auto move right", false, function(on)
-	State.autoRightEnabled = on
-	if on then
-		startAutoRight()
-	else
-		stopAutoRight()
-	end
-	if State.requestConfigSave then State.requestConfigSave() end
-end)
-
--- Performance tab
-makeSecHeader("Performance", "Performance Settings")
-rowToggle("Performance", "FPS Boost", "Improve performance", false, function(on)
-	State.fpsBoostEnabled = on
-	if on then
-		applyFPSBoost()
-	end
-	if State.requestConfigSave then State.requestConfigSave() end
-end)
-
-rowToggle("Performance", "Anti Lag", "Reduce lag", false, function(on)
-	State.antiLagEnabled = on
-	if State.requestConfigSave then State.requestConfigSave() end
-end)
-
--- Settings tab
-makeSecHeader("Settings", "Settings")
-rowToggle("Settings", "No Intro", "Skip intro animation", false, function(on)
-	State.noIntro = on
-	if State.requestConfigSave then State.requestConfigSave() end
-end)
-
-rowToggle("Settings", "Dark Mode", "Dark theme", false, function(on)
-	State.darkModeEnabled = on
-	if State.requestConfigSave then State.requestConfigSave() end
-end)
-
--- Background tab
-makeSecHeader("Background", "Background Settings")
-local bgChoices = {"139887397490573", "127996260669664", "81349726073991", "82525224213939", "97204072864657", "104462721630415"}
-local bgNames = {"Default", "Space", "Nebula", "Galaxy", "Stars", "Aurora"}
-
-for i, id in ipairs(bgChoices) do
-	local card = baseCard("Background", 38)
-	local label = cLabel(card, bgNames[i] or "BG "..i, 10, 140, 11, WHITE, Enum.Font.GothamBold)
-	
-	local badge = Instance.new("TextLabel", card)
-	badge.Size = UDim2.new(0, 24, 0, 20)
-	badge.Position = UDim2.new(1, -(24+10), 0.5, -10)
-	badge.BackgroundColor3 = State.backgroundAssetId == id and WHITE or Color3.fromRGB(0,0,13)
-	badge.BackgroundTransparency = 0.2
-	badge.BorderSizePixel = 0
-	badge.Text = State.backgroundAssetId == id and ("✓ " .. i) or tostring(i)
-	badge.TextColor3 = State.backgroundAssetId == id and BG or WHITE
-	badge.Font = Enum.Font.GothamBold
-	badge.TextSize = 8
-	badge.TextXAlignment = Enum.TextXAlignment.Center
-	badge.ZIndex = 11
-	Instance.new("UICorner", badge).CornerRadius = UDim.new(0, 6)
-	
-	local imgStroke = Instance.new("UIStroke", card)
-	imgStroke.Color = State.backgroundAssetId == id and WHITE or BORDER
-	imgStroke.Thickness = State.backgroundAssetId == id and 2.2 or 1
-	imgStroke.Transparency = 0.3
-	
-	State.imageChoiceVisuals[id] = {badge = badge, stroke = imgStroke, index = i}
-	
-	card.MouseButton1Click:Connect(function()
-		State.applyBackgroundImage(id, true)
-	end)
-end
-
--- Songs tab
-makeSecHeader("Songs", "Music Settings")
-rowToggle("Songs", "Intro Music", "Play intro music", false, function(on)
-	State.introEnabled = on
-	if State.requestConfigSave then State.requestConfigSave() end
-end)
-
-switchTab("Speed")
-
--- Anti Ragdoll
-function startAntiRagdoll()
-	if Conns.antiRag then Conns.antiRag:Disconnect() end
-	Conns.antiRag = RunService.Heartbeat:Connect(function()
-		if not State.antiRagdollEnabled then return end
-		local c = LP.Character
-		if c then
-			local h = c:FindFirstChildOfClass("Humanoid")
-			if h and h:GetState() == Enum.HumanoidStateType.Physics then
-				h:ChangeState(Enum.HumanoidStateType.GettingUp)
-			end
-		end
-	end)
-end
-
-function stopAntiRagdoll()
-	if Conns.antiRag then
-		Conns.antiRag:Disconnect()
-		Conns.antiRag = nil
-	end
-end
-
--- FPS Boost
-function applyFPSBoost()
-	if State.fpsBoostEnabled then
-		settings().Rendering.QualityLevel = 1
-		settings().Rendering.MaxFrameRate = 999
-	end
-end
-
--- Load config
-function loadConfig()
-	local path = "REYHUB_DUELS_V8_CONFIG.json"
-	local raw = State._safeReadFile(path)
-	if not raw then return end
-	
-	local ok, config = pcall(function() return HttpService:JSONDecode(raw) end)
-	if not ok or type(config) ~= "table" then return end
-	
-	State.noIntro = config.noIntro == true
-	State.introEnabled = config.introEnabled == true
-	State.speedToggled = config.speedToggled == true
-	State.autoBatToggled = config.autoBatToggled == true
-	State.infJumpEnabled = config.infJumpEnabled == true
-	State.antiRagdollEnabled = config.antiRagdollEnabled == true
-	State.fpsBoostEnabled = config.fpsBoostEnabled == true
-	State.antiLagEnabled = config.antiLagEnabled == true
-	State.darkModeEnabled = config.darkModeEnabled == true
-	
-	if config.backgroundAssetId then
-		State.applyBackgroundImage(config.backgroundAssetId, false)
-	end
-	
-	State._configLoaded = true
-	State._configDirty = false
-end
-
--- Save config
-function saveConfig()
-	if State._configLoading then return end
-	
-	local config = {
-		noIntro = State.noIntro,
-		introEnabled = State.introEnabled,
-		speedToggled = State.speedToggled,
-		autoBatToggled = State.autoBatToggled,
-		infJumpEnabled = State.infJumpEnabled,
-		antiRagdollEnabled = State.antiRagdollEnabled,
-		fpsBoostEnabled = State.fpsBoostEnabled,
-		antiLagEnabled = State.antiLagEnabled,
-		darkModeEnabled = State.darkModeEnabled,
-		backgroundAssetId = State.backgroundAssetId,
-	}
-	
-	local encoded = HttpService:JSONEncode(config)
-	local path = "REYHUB_DUELS_V8_CONFIG.json"
-	local ok, err = State._safeWriteFile(path, encoded)
-	if not ok then
-		warn("[REY HUB] Error saving config: " .. tostring(err))
-	end
-	State._configDirty = false
-end
-
--- Load config on startup
-task.spawn(function()
-	task.wait(1)
-	loadConfig()
-	
-	if State.speedToggled then
-		-- Apply speed settings if needed
-	end
-	
-	if State.autoBatToggled then
-		startBatAimbot()
-	end
-	
-	if State.antiRagdollEnabled then
-		startAntiRagdoll()
-	end
-	
-	if State.fpsBoostEnabled then
-		applyFPSBoost()
-	end
-end)
-
--- Keyboard shortcuts
-UIS.InputBegan:Connect(function(input, gameProcessed)
-	if gameProcessed then return end
-	if not State.guiVisible then return end
-	
-	local kc = input.KeyCode
-	if kbMatch(KB.GuiHide, kc) then
-		if main.Visible then
-			hideGui()
-		else
-			showGui()
-		end
-	end
-	
-	if kbMatch(KB.Speed, kc) then
-		State.speedToggled = not State.speedToggled
-		speedToggleSet(State.speedToggled)
-	end
-	
-	if kbMatch(KB.Lagger, kc) then
-		State.laggerToggled = not State.laggerToggled
-	end
-	
-	if kbMatch(KB.AutoBat, kc) then
-		State.autoBatToggled = not State.autoBatToggled
-		batToggleSet(State.autoBatToggled)
-	end
-	
-	if kbMatch(KB.Drop, kc) then
-		runDrop()
-	end
-	
-	if kbMatch(KB.TPDown, kc) then
-		runTPDown()
-	end
-	
-	if kbMatch(KB.AutoLeft, kc) then
-		State.autoLeftEnabled = not State.autoLeftEnabled
-		if State.autoLeftEnabled then
-			startAutoLeft()
-		else
-			stopAutoLeft()
-		end
-	end
-	
-	if kbMatch(KB.AutoRight, kc) then
-		State.autoRightEnabled = not State.autoRightEnabled
-		if State.autoRightEnabled then
-			startAutoRight()
-		else
-			stopAutoRight()
-		end
-	end
-end)
-
--- Auto save positions on character death or leave
-LP.CharacterAdded:Connect(function()
-	task.wait(1)
-	if State.requestConfigSave then State.requestConfigSave() end
-end)
-
--- Version display
-print("🌌 Rey Hub loaded successfully!")
-print("🔥 Created by Rey - mogs all")
-print("💫 Optimized visual build")
-
-end)()
+	box.Size = UDim2.new(0, 64, 0)
