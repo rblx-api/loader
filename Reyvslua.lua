@@ -16,21 +16,21 @@ local function tween(obj, duration, props)
 end
 
 local CLR = {
-    Background   = Color3.fromRGB(15,  15,  18),
-    Topbar       = Color3.fromRGB(8,   8,   10),
-    SideBar      = Color3.fromRGB(10,  10,  13),
+    Background   = Color3.fromRGB(20,  0,  0),
+    Topbar       = Color3.fromRGB(15,  0,  0),
+    SideBar      = Color3.fromRGB(12,  0,  0),
     TabPanel     = Color3.fromRGB(15,  15,  18),
     TabBtn       = Color3.fromRGB(37,  37,  40),
-    TabBtnActive = Color3.fromRGB(255, 255, 255),
-    OptionRow    = Color3.fromRGB(22,  22,  26),
+    TabBtnActive = Color3.fromRGB(255, 0, 0),
+    OptionRow    = Color3.fromRGB(60,  0,  0),
     OptionStroke = Color3.fromRGB(0,   0,   0),
     Bind         = Color3.fromRGB(42,  42,  47),
     ToggleOff    = Color3.fromRGB(24,  24,  28),
-    ToggleOn     = Color3.fromRGB(255, 255, 255),
+    ToggleOn     = Color3.fromRGB(255, 0, 0),
     KnobOff      = Color3.fromRGB(128, 128, 133),
     KnobOn       = Color3.fromRGB(0,   0,   0),
     White        = Color3.fromRGB(255, 255, 255),
-    TextPrimary  = Color3.fromRGB(255, 255, 255),
+    TextPrimary  = Color3.fromRGB(255, 0, 0),
     TextSecondary= Color3.fromRGB(180, 180, 190),
     Black        = Color3.fromRGB(0,   0,   0),
 }
@@ -107,7 +107,7 @@ local MOVE_KEYS = {
     [Enum.KeyCode.Down]=true,[Enum.KeyCode.Right]=true,
 }
 
-local CONFIG_FILE = "ReyHubConfig.json" -- Cambiado nombre del archivo de configuración
+local CONFIG_FILE = "ReyHubConfig.json" -- Cambiado nombre del archivo de configuraciÃ³n
 local h, hrp
 local unwalkAnimateRef = nil
 local lastMoveDir = Vector3.new(0,0,0)
@@ -1235,7 +1235,7 @@ TextoFondo.Position = UDim2.new(0, 0, 0, 0)
 TextoFondo.BackgroundTransparency = 1
 TextoFondo.Text = "REY HUB" -- Cambiado
 TextoFondo.Font = Enum.Font.GothamBlack
-TextoFondo.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextoFondo.TextColor3 = Color3.fromRGB(255, 0, 0) -- Rojo puro
 TextoFondo.TextSize = 84
 TextoFondo.TextScaled = true
 TextoFondo.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
@@ -1251,7 +1251,7 @@ TextoBrillo.Position = UDim2.new(0, -2, 0, -3)
 TextoBrillo.BackgroundTransparency = 1
 TextoBrillo.Text = "REY HUB" -- Cambiado
 TextoBrillo.Font = Enum.Font.GothamBlack
-TextoBrillo.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextoBrillo.TextColor3 = Color3.fromRGB(255, 0, 0) -- Rojo puro
 TextoBrillo.TextSize = 84
 TextoBrillo.TextScaled = true
 TextoBrillo.TextTransparency = 0.65
@@ -1270,7 +1270,7 @@ Topbar.BackgroundColor3 = CLR.Topbar
 Topbar.BorderSizePixel  = 0
 Topbar.ZIndex = 2
 
--- Sombra del título superior
+-- Sombra del tÃ­tulo superior
 local titleShadow = Instance.new("TextLabel", Topbar)
 titleShadow.Size               = UDim2.fromOffset(150, 30)
 titleShadow.Position           = UDim2.fromOffset(20, 12)
@@ -1291,7 +1291,7 @@ titleLbl.BackgroundTransparency = 1
 titleLbl.Text               = "REY HUB" -- Cambiado
 titleLbl.Font               = Enum.Font.GothamBlack
 titleLbl.TextSize           = 17
-titleLbl.TextColor3         = Color3.fromRGB(255, 255, 255)
+titleLbl.TextColor3 = Color3.fromRGB(255, 0, 0) -- Rojo puro
 titleLbl.TextStrokeColor3   = Color3.fromRGB(0, 0, 0)
 titleLbl.TextStrokeTransparency = 0.15
 titleLbl.ZIndex             = 3
@@ -1311,7 +1311,7 @@ local minBtn = Instance.new("TextButton", Topbar)
 minBtn.Size             = UDim2.fromOffset(36, 28)
 minBtn.Position         = UDim2.new(1, -52, 0, 11)
 minBtn.BackgroundColor3 = CLR.TabBtn
-minBtn.Text             = "–"
+minBtn.Text             = "â€“"
 minBtn.Font             = Enum.Font.GothamBold
 minBtn.TextSize         = 18
 minBtn.TextColor3       = CLR.TextPrimary
@@ -1339,7 +1339,7 @@ brandHolder.Size               = UDim2.new(1, -20, 0, 52)
 brandHolder.Position           = UDim2.new(0, 10, 1, -62)
 brandHolder.BackgroundTransparency = 1
 
--- Sombra del título lateral
+-- Sombra del tÃ­tulo lateral
 local brandShadow = Instance.new("TextLabel", brandHolder)
 brandShadow.Size               = UDim2.new(1, 0, 0, 24)
 brandShadow.Position           = UDim2.fromOffset(2, 2)
@@ -1359,7 +1359,7 @@ brandTitle.BackgroundTransparency = 1
 brandTitle.Text               = "REY HUB" -- Cambiado
 brandTitle.Font               = Enum.Font.GothamBlack
 brandTitle.TextSize           = 19
-brandTitle.TextColor3         = Color3.fromRGB(255, 255, 255)
+brandTitle.TextColor3 = Color3.fromRGB(255, 0, 0) -- Rojo puro
 brandTitle.TextStrokeColor3   = Color3.fromRGB(0, 0, 0)
 brandTitle.TextStrokeTransparency = 0.1
 brandTitle.ZIndex             = 3
