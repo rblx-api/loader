@@ -21,16 +21,16 @@ local CLR = {
     SideBar      = Color3.fromRGB(12,  0,  0),
     TabPanel     = Color3.fromRGB(15,  15,  18),
     TabBtn       = Color3.fromRGB(37,  37,  40),
-    TabBtnActive = Color3.fromRGB(255, 0, 0),
+    TabBtnActive = Color3.fromRGB(255, 0, 0), -- Rojo
     OptionRow    = Color3.fromRGB(60,  0,  0),
     OptionStroke = Color3.fromRGB(0,   0,   0),
     Bind         = Color3.fromRGB(42,  42,  47),
     ToggleOff    = Color3.fromRGB(24,  24,  28),
-    ToggleOn     = Color3.fromRGB(255, 0, 0),
+    ToggleOn     = Color3.fromRGB(255, 0, 0), -- Rojo
     KnobOff      = Color3.fromRGB(128, 128, 133),
     KnobOn       = Color3.fromRGB(0,   0,   0),
     White        = Color3.fromRGB(255, 255, 255),
-    TextPrimary  = Color3.fromRGB(255, 0, 0),
+    TextPrimary  = Color3.fromRGB(255, 0, 0), -- Rojo
     TextSecondary= Color3.fromRGB(180, 180, 190),
     Black        = Color3.fromRGB(0,   0,   0),
 }
@@ -107,7 +107,7 @@ local MOVE_KEYS = {
     [Enum.KeyCode.Down]=true,[Enum.KeyCode.Right]=true,
 }
 
-local CONFIG_FILE = "ReyHubConfig.json" -- Cambiado nombre del archivo de configuraciÃ³n
+local CONFIG_FILE = "ReyHubConfig.json"
 local h, hrp
 local unwalkAnimateRef = nil
 local lastMoveDir = Vector3.new(0,0,0)
@@ -277,7 +277,7 @@ end
 
 local function createMobilePanel()
     local panel = Instance.new("ScreenGui")
-    panel.Name = "ReyMobileButtons" -- Cambiado
+    panel.Name = "ReyMobileButtons"
     panel.Parent = LocalPlayer:WaitForChild("PlayerGui")
     panel.ResetOnSpawn = false
     panel.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -303,7 +303,7 @@ local function createMobilePanel()
         container.Size = UDim2.new(0, BTN_W, 0, BTN_H)
         container.Position = defaultPos
         corner(container, CORNER)
-        stroke(container, Color3.fromRGB(255,255,255), 1)
+        stroke(container, Color3.fromRGB(255,0,0), 2) -- Borde rojo
         
         local btn = Instance.new("TextButton", container)
         btn.Size = UDim2.new(1, 0, 1, 0)
@@ -320,8 +320,8 @@ local function createMobilePanel()
         local function setActive(state)
             active = state
             if active then
-                container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                btn.TextColor3 = Color3.fromRGB(0, 0, 0)
+                container.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Rojo cuando activo
+                btn.TextColor3 = Color3.fromRGB(255, 255, 255)
             else
                 container.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
                 btn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -329,10 +329,16 @@ local function createMobilePanel()
         end
         
         btn.MouseButton1Down:Connect(function()
-            if not isToggle then container.BackgroundColor3 = Color3.fromRGB(255,255,255); btn.TextColor3 = Color3.fromRGB(0,0,0) end
+            if not isToggle then 
+                container.BackgroundColor3 = Color3.fromRGB(200, 0, 0) -- Rojo oscuro al presionar
+                btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            end
         end)
         btn.MouseButton1Up:Connect(function()
-            if not isToggle then container.BackgroundColor3 = Color3.fromRGB(0,0,0); btn.TextColor3 = Color3.fromRGB(255,255,255) end
+            if not isToggle then 
+                container.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            end
         end)
         btn.MouseButton1Click:Connect(function()
             if isToggle then setActive(not active) end
@@ -388,7 +394,7 @@ local function createMobilePanel()
     end
     
     local dropBRSetActive = makeMobileBtn("BtnDropBR", "DROP\nBR",
-        UDim2.new(1, COL1_X, BASE_Y, ROW_Y[1]), "ReyBtn_dropbr.txt", -- Cambiado
+        UDim2.new(1, COL1_X, BASE_Y, ROW_Y[1]), "ReyBtn_dropbr.txt",
         function(setActive, currentActive)
             runDropBrainrot()
             task.delay(0.5, function()
@@ -397,7 +403,7 @@ local function createMobilePanel()
         end, true)
     
     local autoLeftSetActive = makeMobileBtn("BtnAutoLeft", "AUTO\nLEFT",
-        UDim2.new(1, COL2_X, BASE_Y, ROW_Y[1]), "ReyBtn_autoleft.txt", -- Cambiado
+        UDim2.new(1, COL2_X, BASE_Y, ROW_Y[1]), "ReyBtn_autoleft.txt",
         function(setActive)
             State.AutoLeft = not State.AutoLeft
             if State.AutoLeft then
@@ -413,7 +419,7 @@ local function createMobilePanel()
         end, true)
     
     local autoBatSetActive = makeMobileBtn("BtnAutoBat", "BAT\nAIMBOT",
-        UDim2.new(1, COL1_X, BASE_Y, ROW_Y[2]), "ReyBtn_autobat.txt", -- Cambiado
+        UDim2.new(1, COL1_X, BASE_Y, ROW_Y[2]), "ReyBtn_autobat.txt",
         function(setActive)
             State.BatAimbot = not State.BatAimbot
             if State.BatAimbot then
@@ -429,7 +435,7 @@ local function createMobilePanel()
         end, true)
     
     local autoRightSetActive = makeMobileBtn("BtnAutoRight", "AUTO\nRIGHT",
-        UDim2.new(1, COL2_X, BASE_Y, ROW_Y[2]), "ReyBtn_autoright.txt", -- Cambiado
+        UDim2.new(1, COL2_X, BASE_Y, ROW_Y[2]), "ReyBtn_autoright.txt",
         function(setActive)
             State.AutoRight = not State.AutoRight
             if State.AutoRight then
@@ -445,7 +451,7 @@ local function createMobilePanel()
         end, true)
     
     local tpDownSetActive = makeMobileBtn("BtnTpDown", "TP\nDOWN",
-        UDim2.new(1, COL1_X, BASE_Y, ROW_Y[3]), "ReyBtn_tpdown.txt", -- Cambiado
+        UDim2.new(1, COL1_X, BASE_Y, ROW_Y[3]), "ReyBtn_tpdown.txt",
         function(setActive, currentActive)
             doTpDown()
             task.delay(0.5, function()
@@ -454,7 +460,7 @@ local function createMobilePanel()
         end, true)
     
     local carrySpeedSetActive = makeMobileBtn("BtnCarrySpd", "CARRY\nSPD",
-        UDim2.new(1, COL2_X, BASE_Y, ROW_Y[3]), "ReyBtn_carryspd.txt", -- Cambiado
+        UDim2.new(1, COL2_X, BASE_Y, ROW_Y[3]), "ReyBtn_carryspd.txt",
         function(setActive)
             if State.SpeedMode == "Carry" then
                 State.SpeedMode = "Normal"
@@ -467,7 +473,7 @@ local function createMobilePanel()
         end, true)
     
     local laggerSetActive = makeMobileBtn("BtnLaggerMode", "LAGGER\nNORM",
-        UDim2.new(1, COL1_X, BASE_Y, ROW_Y[4]), "ReyBtn_laggermode.txt", -- Cambiado
+        UDim2.new(1, COL1_X, BASE_Y, ROW_Y[4]), "ReyBtn_laggermode.txt",
         function(setActive)
             State.LaggerEnabled = not State.LaggerEnabled
             if State.LaggerEnabled then
@@ -489,7 +495,7 @@ local function createMobilePanel()
         end, true)
     
     local laggerCarrySetActive = makeMobileBtn("BtnLaggerCarry", "LAGGER\nCARRY",
-        UDim2.new(1, COL2_X, BASE_Y, ROW_Y[4]), "ReyBtn_laggercarry.txt", -- Cambiado
+        UDim2.new(1, COL2_X, BASE_Y, ROW_Y[4]), "ReyBtn_laggercarry.txt",
         function(setActive)
             State.LaggerCarryEnabled = not State.LaggerCarryEnabled
             if State.LaggerCarryEnabled then
@@ -1173,9 +1179,9 @@ loadConfig = function()
 end
 
 -- CREATE GUI
-safeDestroy("ReyHubGUI") -- Cambiado
+safeDestroy("ReyHubGUI")
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name           = "ReyHubGUI" -- Cambiado
+ScreenGui.Name           = "ReyHubGUI"
 ScreenGui.ResetOnSpawn   = false
 ScreenGui.IgnoreGuiInset = true
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -1216,7 +1222,7 @@ TextoGoteo.Name = "TextoGoteo"
 TextoGoteo.Size = UDim2.new(1, 0, 1, 0)
 TextoGoteo.Position = UDim2.new(0, 4, 0, 7)
 TextoGoteo.BackgroundTransparency = 1
-TextoGoteo.Text = "REY HUB" -- Cambiado
+TextoGoteo.Text = "REY HUB"
 TextoGoteo.Font = Enum.Font.GothamBlack
 TextoGoteo.TextColor3 = Color3.fromRGB(30, 30, 30)
 TextoGoteo.TextSize = 82
@@ -1233,7 +1239,7 @@ TextoFondo.Name = "TextoFondo"
 TextoFondo.Size = UDim2.new(1, 0, 1, 0)
 TextoFondo.Position = UDim2.new(0, 0, 0, 0)
 TextoFondo.BackgroundTransparency = 1
-TextoFondo.Text = "REY HUB" -- Cambiado
+TextoFondo.Text = "REY HUB"
 TextoFondo.Font = Enum.Font.GothamBlack
 TextoFondo.TextColor3 = Color3.fromRGB(255, 0, 0) -- Rojo puro
 TextoFondo.TextSize = 84
@@ -1249,7 +1255,7 @@ TextoBrillo.Name = "TextoBrillo"
 TextoBrillo.Size = UDim2.new(1, 0, 1, 0)
 TextoBrillo.Position = UDim2.new(0, -2, 0, -3)
 TextoBrillo.BackgroundTransparency = 1
-TextoBrillo.Text = "REY HUB" -- Cambiado
+TextoBrillo.Text = "REY HUB"
 TextoBrillo.Font = Enum.Font.GothamBlack
 TextoBrillo.TextColor3 = Color3.fromRGB(255, 0, 0) -- Rojo puro
 TextoBrillo.TextSize = 84
@@ -1270,12 +1276,12 @@ Topbar.BackgroundColor3 = CLR.Topbar
 Topbar.BorderSizePixel  = 0
 Topbar.ZIndex = 2
 
--- Sombra del tÃ­tulo superior
+-- Sombra del título superior
 local titleShadow = Instance.new("TextLabel", Topbar)
 titleShadow.Size               = UDim2.fromOffset(150, 30)
 titleShadow.Position           = UDim2.fromOffset(20, 12)
 titleShadow.BackgroundTransparency = 1
-titleShadow.Text               = "REY HUB" -- Cambiado
+titleShadow.Text               = "REY HUB"
 titleShadow.Font               = Enum.Font.GothamBlack
 titleShadow.TextSize           = 17
 titleShadow.TextColor3         = Color3.fromRGB(20, 20, 20)
@@ -1288,7 +1294,7 @@ local titleLbl = Instance.new("TextLabel", Topbar)
 titleLbl.Size               = UDim2.fromOffset(150, 30)
 titleLbl.Position           = UDim2.fromOffset(18, 10)
 titleLbl.BackgroundTransparency = 1
-titleLbl.Text               = "REY HUB" -- Cambiado
+titleLbl.Text               = "REY HUB"
 titleLbl.Font               = Enum.Font.GothamBlack
 titleLbl.TextSize           = 17
 titleLbl.TextColor3 = Color3.fromRGB(255, 0, 0) -- Rojo puro
@@ -1301,7 +1307,7 @@ local subLbl = Instance.new("TextLabel", Topbar)
 subLbl.Size               = UDim2.fromOffset(200, 30)
 subLbl.Position           = UDim2.fromOffset(170, 10)
 subLbl.BackgroundTransparency = 1
-subLbl.Text               = "discord.gg/reyhub" -- Cambiado
+subLbl.Text               = "discord.gg/reyhub"
 subLbl.Font               = Enum.Font.Gotham
 subLbl.TextSize           = 13
 subLbl.TextColor3         = CLR.TextSecondary
@@ -1311,7 +1317,7 @@ local minBtn = Instance.new("TextButton", Topbar)
 minBtn.Size             = UDim2.fromOffset(36, 28)
 minBtn.Position         = UDim2.new(1, -52, 0, 11)
 minBtn.BackgroundColor3 = CLR.TabBtn
-minBtn.Text             = "â€“"
+minBtn.Text             = "–"
 minBtn.Font             = Enum.Font.GothamBold
 minBtn.TextSize         = 18
 minBtn.TextColor3       = CLR.TextPrimary
@@ -1339,12 +1345,12 @@ brandHolder.Size               = UDim2.new(1, -20, 0, 52)
 brandHolder.Position           = UDim2.new(0, 10, 1, -62)
 brandHolder.BackgroundTransparency = 1
 
--- Sombra del tÃ­tulo lateral
+-- Sombra del título lateral
 local brandShadow = Instance.new("TextLabel", brandHolder)
 brandShadow.Size               = UDim2.new(1, 0, 0, 24)
 brandShadow.Position           = UDim2.fromOffset(2, 2)
 brandShadow.BackgroundTransparency = 1
-brandShadow.Text               = "REY HUB" -- Cambiado
+brandShadow.Text               = "REY HUB"
 brandShadow.Font               = Enum.Font.GothamBlack
 brandShadow.TextSize           = 19
 brandShadow.TextColor3         = Color3.fromRGB(20, 20, 20)
@@ -1356,7 +1362,7 @@ brandShadow.TextXAlignment     = Enum.TextXAlignment.Left
 local brandTitle = Instance.new("TextLabel", brandHolder)
 brandTitle.Size               = UDim2.new(1, 0, 0, 24)
 brandTitle.BackgroundTransparency = 1
-brandTitle.Text               = "REY HUB" -- Cambiado
+brandTitle.Text               = "REY HUB"
 brandTitle.Font               = Enum.Font.GothamBlack
 brandTitle.TextSize           = 19
 brandTitle.TextColor3 = Color3.fromRGB(255, 0, 0) -- Rojo puro
@@ -1375,7 +1381,7 @@ local brandSub = Instance.new("TextLabel", brandHolder)
 brandSub.Size               = UDim2.new(1, 0, 0, 16)
 brandSub.Position           = UDim2.fromOffset(0, 33)
 brandSub.BackgroundTransparency = 1
-brandSub.Text               = "discord.gg/reyhub" -- Cambiado
+brandSub.Text               = "discord.gg/reyhub"
 brandSub.Font               = Enum.Font.Gotham
 brandSub.TextSize           = 12
 brandSub.TextColor3         = CLR.TextSecondary
@@ -1401,12 +1407,12 @@ ContentArea.ZIndex = 2
 pad(ContentArea, 14, 14, 14, 14)
 
 local MiniBtn = Instance.new("TextButton", ScreenGui)
-MiniBtn.Name             = "ReyMini" -- Cambiado
+MiniBtn.Name             = "ReyMini"
 MiniBtn.Size             = UDim2.fromOffset(140, 40)
 MiniBtn.Position         = UDim2.fromOffset(20, 20)
 MiniBtn.BackgroundColor3 = CLR.TabBtn
 MiniBtn.AutoButtonColor  = false
-MiniBtn.Text             = "REY HUB" -- Cambiado
+MiniBtn.Text             = "REY HUB"
 MiniBtn.Font             = Enum.Font.GothamBlack
 MiniBtn.TextSize         = 14
 MiniBtn.TextColor3       = CLR.TextPrimary
@@ -1963,10 +1969,10 @@ local function setupChar(char)
     if not h or not hrp then return end
     local head = char:FindFirstChild("Head")
     if head then
-        local old = head:FindFirstChild("ReyBB") -- Cambiado
+        local old = head:FindFirstChild("ReyBB")
         if old then old:Destroy() end
         local bb = Instance.new("BillboardGui", head)
-        bb.Name="ReyBB" -- Cambiado
+        bb.Name="ReyBB"
         bb.Size=UDim2.new(0,130,0,36)
         bb.StudsOffset=Vector3.new(0,3,0); bb.AlwaysOnTop=true
         local sl = Instance.new("TextLabel", bb)
@@ -2055,7 +2061,7 @@ RunService.RenderStepped:Connect(function()
     pcall(function()
         local hd = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Head")
         if hd then
-            local bb = hd:FindFirstChild("ReyBB") -- Cambiado
+            local bb = hd:FindFirstChild("ReyBB")
             local sl = bb and bb:FindFirstChild("SpeedLbl")
             if sl then
                 sl.Text = string.format("%.1f", Vector3.new(hrp.AssemblyLinearVelocity.X,0,hrp.AssemblyLinearVelocity.Z).Magnitude)
@@ -2139,4 +2145,4 @@ if State.Unwalk then task.spawn(startUnwalk) end
 loadConfig()
 task.delay(1, function() pcall(saveConfig) end)
 
-print("[Rey Hub] Cargado - Letras con sombra chorreada aplicadas.")
+print("[Rey Hub] Cargado - Colores cambiados a rojo.")
