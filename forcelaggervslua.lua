@@ -7,9 +7,9 @@ local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
 
 local player = Players.LocalPlayer
-local ConfigFile = "KillHubConfig.json"
+local ConfigFile = "ForceHubConfig.json"
 
--- âš™ï¸ PODER EXACTO: 25 - 32 - 70
+-- ⚡ PODER EXACTO: 25 - 32 - 70
 local NIVELES = {
     Low     = { poder = 25 },
     Mid     = { poder = 32 },
@@ -23,7 +23,7 @@ local lagThread = nil
 local nivelActual = "Low"
 local ventanaBloqueada = false
 
--- ðŸŽ¨ ESTILO TERROR
+-- 🎨 ESTILO TERROR
 local UI_CONFIG = {
     MainBg       = Color3.fromRGB(255, 255, 255),
     TitleColor   = Color3.fromRGB(0, 0, 0),
@@ -42,7 +42,7 @@ local UI_CONFIG = {
     SelectorAct  = Color3.fromRGB(0, 0, 0),
 }
 
--- ðŸ’¾ CONFIG
+-- 💾 CONFIG
 local function SaveConfig()
     local data = {
         Keybind = keybind.Name,
@@ -64,7 +64,7 @@ local function LoadConfig()
 end
 LoadConfig()
 
--- âš ï¸ LAG ENGINE (estable)
+-- ⚠️ LAG ENGINE (estable)
 local function bomb(poder)
     local main, spam = {}, {{}}
     local z = spam[1]
@@ -74,11 +74,11 @@ local function bomb(poder)
     pcall(function() game:GetService("RobloxReplicatedStorage").SetPlayerBlockList:FireServer(main) end)
 end
 
--- ðŸ§© ELEMENTOS
+-- 🧩 ELEMENTOS
 local toggleBall, toggleContainer, btnLow, btnMid, btnHigh, lockButton
 local titleLabel, textEnable, keybindButton, textLagger, toggleClick
 
--- Funciones de actualizaciÃ³n
+-- Funciones de actualización
 local function actualizarBotonesNivel()
     if nivelActual == "Low" then
         btnLow.BackgroundColor3 = UI_CONFIG.ButtonAct
@@ -124,7 +124,7 @@ local function actualizarSwitch()
             toggleBall.Position = UDim2.new(0, 3, 0.5, -9)
         end
     end
-    -- Cambiar fondo y texto del botÃ³n toggle (ON: negro+fondo blanco? No, ON: negro fondo, blanco texto; OFF: blanco fondo, negro texto)
+    -- Cambiar fondo y texto del botón toggle (ON: negro+fondo blanco? No, ON: negro fondo, blanco texto; OFF: blanco fondo, negro texto)
     if toggleClick then
         toggleClick.Text = laggerActive and "ON" or "OFF"
         if laggerActive then
@@ -164,7 +164,7 @@ local function toggleLagger()
         BackgroundColor3 = targetColor
     }):Play()
 
-    -- Actualizar fondo y texto del botÃ³n toggle
+    -- Actualizar fondo y texto del botón toggle
     toggleClick.Text = laggerActive and "ON" or "OFF"
     if laggerActive then
         toggleClick.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -188,11 +188,11 @@ local function toggleLagger()
     end
 end
 
--- ðŸ–¼ï¸ INTERFAZ - PANEL CON LLUVIA INTENSA
-if CoreGui:FindFirstChild("KillHub_UI") then CoreGui.KillHub_UI:Destroy() end
+-- 🖼️ INTERFAZ - PANEL CON LLUVIA INTENSA
+if CoreGui:FindFirstChild("ForceHub_UI") then CoreGui.ForceHub_UI:Destroy() end
 
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "KillHub_UI"
+screenGui.Name = "ForceHub_UI"
 screenGui.Parent = CoreGui
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screenGui.ResetOnSpawn = false
@@ -209,7 +209,7 @@ mainFrame.Parent = screenGui
 mainFrame.ClipsDescendants = true
 Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 8)
 
--- ðŸŒ§ï¸ LLUVIA REALISTA
+-- 🌧️ LLUVIA REALISTA
 local rainParticles = {}
 local rainCanvas = Instance.new("Frame")
 rainCanvas.Name = "RainCanvas"
@@ -260,15 +260,15 @@ RunService.Heartbeat:Connect(function(dt)
     end
 end)
 
--- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
--- TÃTULO "KILL HUB" CON ANIMACIÃ“N
--- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+-- ═══════════════════════════════════════════════════════════════
+-- TÍTULO "FORCE HUB" CON ANIMACIÓN
+-- ═══════════════════════════════════════════════════════════════
 titleLabel = Instance.new("TextLabel", mainFrame)
 titleLabel.BackgroundTransparency = 1
 titleLabel.Position = UDim2.new(0, 10, 0, 0)
 titleLabel.Size = UDim2.new(1, -45, 0, 28)
 titleLabel.Font = Enum.Font.GothamBlack
-titleLabel.Text = "KILL HUB"
+titleLabel.Text = "FORCE HUB"
 titleLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
 titleLabel.TextSize = 14
 titleLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -323,9 +323,9 @@ lockButton.MouseButton1Click:Connect(function()
 end)
 actualizarCandado()
 
--- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+-- ═══════════════════════════════════════════════════════════════
 -- FILA "ENABLE LAGGER [cuadro] [switch]"
--- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+-- ═══════════════════════════════════════════════════════════════
 textEnable = Instance.new("TextLabel", mainFrame)
 textEnable.BackgroundTransparency = 1
 textEnable.Position = UDim2.new(0, 10, 0, 30)
@@ -349,7 +349,7 @@ textLagger.TextSize = 10
 textLagger.TextXAlignment = Enum.TextXAlignment.Left
 textLagger.ZIndex = 1
 
--- BotÃ³n selector de tecla
+-- Botón selector de tecla
 keybindButton = Instance.new("TextButton", mainFrame)
 keybindButton.BackgroundColor3 = UI_CONFIG.SelectorBg
 keybindButton.Position = UDim2.new(0, 100, 0, 30)
@@ -379,9 +379,9 @@ toggleBall.Position = UDim2.new(0, 2, 0.5, -9)
 toggleBall.ZIndex = 1
 Instance.new("UICorner", toggleBall).CornerRadius = UDim.new(1,0)
 
--- BotÃ³n con texto ON/OFF y fondo sÃ³lido (cubre todo el toggle)
+-- Botón con texto ON/OFF y fondo sólido (cubre todo el toggle)
 toggleClick = Instance.new("TextButton", toggleContainer)
-toggleClick.BackgroundTransparency = 0               -- fondo sÃ³lido
+toggleClick.BackgroundTransparency = 0               -- fondo sólido
 toggleClick.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  -- blanco por defecto (OFF)
 toggleClick.Size = UDim2.new(1,0,1,0)
 toggleClick.ZIndex = 2
@@ -397,9 +397,9 @@ toggleClick.AutoButtonColor = false
 local corner = Instance.new("UICorner", toggleClick)
 corner.CornerRadius = UDim.new(1,0)
 
--- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+-- ═══════════════════════════════════════════════════════════════
 -- SELECTOR DE TECLA
--- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+-- ═══════════════════════════════════════════════════════════════
 keybindButton.MouseButton1Click:Connect(function()
     if listeningForInput then return end
     listeningForInput = true
@@ -538,7 +538,7 @@ mainFrame.InputEnded:Connect(function(input)
     end
 end)
 
--- ðŸŽ® ACTIVACIÃ“N CON LA TECLA SELECCIONADA
+-- 🎮 ACTIVACIÓN CON LA TECLA SELECCIONADA
 UserInputService.InputBegan:Connect(function(input, gp)
     if gp then return end
     if input.KeyCode == keybind or (input.UserInputType == Enum.UserInputType.Gamepad1 and input.KeyCode == keybind) then
