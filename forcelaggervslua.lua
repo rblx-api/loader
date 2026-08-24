@@ -23,23 +23,23 @@ local lagThread = nil
 local nivelActual = "Low"
 local ventanaBloqueada = false
 
--- 🎨 ESTILO TERROR
+-- 🎨 ESTILO OSCURO (FONDO NEGRO, TEXTO BLANCO)
 local UI_CONFIG = {
-    MainBg       = Color3.fromRGB(255, 255, 255),
-    TitleColor   = Color3.fromRGB(0, 0, 0),
-    TextColor    = Color3.fromRGB(0, 0, 0),
-    ButtonInact  = Color3.fromRGB(255, 255, 255),
-    ButtonAct    = Color3.fromRGB(0, 0, 0),
-    ToggleOff    = Color3.fromRGB(180, 180, 180),
-    ToggleOn     = Color3.fromRGB(0, 0, 0),
-    LockColor    = Color3.fromRGB(0, 0, 0),
-    UnlockColor  = Color3.fromRGB(150, 150, 150),
+    MainBg       = Color3.fromRGB(0, 0, 0),        -- Fondo negro
+    TitleColor   = Color3.fromRGB(255, 255, 255),   -- Título blanco
+    TextColor    = Color3.fromRGB(255, 255, 255),   -- Texto blanco
+    ButtonInact  = Color3.fromRGB(30, 30, 30),      -- Botón inactivo gris oscuro
+    ButtonAct    = Color3.fromRGB(255, 255, 255),   -- Botón activo blanco
+    ToggleOff    = Color3.fromRGB(60, 60, 60),      -- Toggle apagado gris
+    ToggleOn     = Color3.fromRGB(255, 255, 255),   -- Toggle encendido blanco
+    LockColor    = Color3.fromRGB(255, 255, 255),   -- Candado blanco
+    UnlockColor  = Color3.fromRGB(150, 150, 150),   -- Candado desbloqueado gris
     Font         = Enum.Font.GothamBold,
-    BorderColor  = Color3.fromRGB(220, 220, 220),
-    GlowColor    = Color3.fromRGB(200, 0, 0),
-    RainColor    = Color3.fromRGB(180, 195, 210),
-    SelectorBg   = Color3.fromRGB(240, 240, 240),
-    SelectorAct  = Color3.fromRGB(0, 0, 0),
+    BorderColor  = Color3.fromRGB(60, 60, 60),      -- Borde gris
+    GlowColor    = Color3.fromRGB(255, 50, 50),     -- Rojo brillante
+    RainColor    = Color3.fromRGB(100, 100, 120),   -- Lluvia gris azulado
+    SelectorBg   = Color3.fromRGB(40, 40, 40),      -- Fondo selector gris
+    SelectorAct  = Color3.fromRGB(255, 255, 255),   -- Selector activo blanco
 }
 
 -- 💾 CONFIG
@@ -82,31 +82,31 @@ local titleLabel, textEnable, keybindButton, textLagger, toggleClick
 local function actualizarBotonesNivel()
     if nivelActual == "Low" then
         btnLow.BackgroundColor3 = UI_CONFIG.ButtonAct
-        btnLow.TextColor3 = Color3.fromRGB(255,255,255)
+        btnLow.TextColor3 = Color3.fromRGB(0, 0, 0)  -- Texto negro cuando está activo
         btnLow.BorderSizePixel = 0
     else
         btnLow.BackgroundColor3 = UI_CONFIG.ButtonInact
-        btnLow.TextColor3 = Color3.fromRGB(0,0,0)
+        btnLow.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Texto blanco
         btnLow.BorderSizePixel = 1
         btnLow.BorderColor3 = UI_CONFIG.BorderColor
     end
     if nivelActual == "Mid" then
         btnMid.BackgroundColor3 = UI_CONFIG.ButtonAct
-        btnMid.TextColor3 = Color3.fromRGB(255,255,255)
+        btnMid.TextColor3 = Color3.fromRGB(0, 0, 0)
         btnMid.BorderSizePixel = 0
     else
         btnMid.BackgroundColor3 = UI_CONFIG.ButtonInact
-        btnMid.TextColor3 = Color3.fromRGB(0,0,0)
+        btnMid.TextColor3 = Color3.fromRGB(255, 255, 255)
         btnMid.BorderSizePixel = 1
         btnMid.BorderColor3 = UI_CONFIG.BorderColor
     end
     if nivelActual == "High" then
         btnHigh.BackgroundColor3 = UI_CONFIG.ButtonAct
-        btnHigh.TextColor3 = Color3.fromRGB(255,255,255)
+        btnHigh.TextColor3 = Color3.fromRGB(0, 0, 0)
         btnHigh.BorderSizePixel = 0
     else
         btnHigh.BackgroundColor3 = UI_CONFIG.ButtonInact
-        btnHigh.TextColor3 = Color3.fromRGB(0,0,0)
+        btnHigh.TextColor3 = Color3.fromRGB(255, 255, 255)
         btnHigh.BorderSizePixel = 1
         btnHigh.BorderColor3 = UI_CONFIG.BorderColor
     end
@@ -124,15 +124,14 @@ local function actualizarSwitch()
             toggleBall.Position = UDim2.new(0, 3, 0.5, -9)
         end
     end
-    -- Cambiar fondo y texto del botón toggle (ON: negro+fondo blanco? No, ON: negro fondo, blanco texto; OFF: blanco fondo, negro texto)
     if toggleClick then
         toggleClick.Text = laggerActive and "ON" or "OFF"
         if laggerActive then
-            toggleClick.BackgroundColor3 = Color3.fromRGB(0, 0, 0)      -- fondo negro
-            toggleClick.TextColor3 = Color3.fromRGB(255, 255, 255)      -- texto blanco
+            toggleClick.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  -- fondo blanco
+            toggleClick.TextColor3 = Color3.fromRGB(0, 0, 0)              -- texto negro
         else
-            toggleClick.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- fondo blanco
-            toggleClick.TextColor3 = Color3.fromRGB(0, 0, 0)            -- texto negro
+            toggleClick.BackgroundColor3 = Color3.fromRGB(60, 60, 60)     -- fondo gris
+            toggleClick.TextColor3 = Color3.fromRGB(255, 255, 255)        -- texto blanco
         end
     end
 end
@@ -164,14 +163,13 @@ local function toggleLagger()
         BackgroundColor3 = targetColor
     }):Play()
 
-    -- Actualizar fondo y texto del botón toggle
     toggleClick.Text = laggerActive and "ON" or "OFF"
     if laggerActive then
-        toggleClick.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        toggleClick.TextColor3 = Color3.fromRGB(255, 255, 255)
-    else
         toggleClick.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         toggleClick.TextColor3 = Color3.fromRGB(0, 0, 0)
+    else
+        toggleClick.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        toggleClick.TextColor3 = Color3.fromRGB(255, 255, 255)
     end
 
     if laggerActive then
@@ -269,26 +267,26 @@ titleLabel.Position = UDim2.new(0, 10, 0, 0)
 titleLabel.Size = UDim2.new(1, -45, 0, 28)
 titleLabel.Font = Enum.Font.GothamBlack
 titleLabel.Text = "FORCE HUB"
-titleLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Blanco
 titleLabel.TextSize = 14
 titleLabel.TextXAlignment = Enum.TextXAlignment.Left
 titleLabel.TextYAlignment = Enum.TextYAlignment.Center
 titleLabel.ZIndex = 1
 titleLabel.ClipsDescendants = false
 
-local grisOscuro = Color3.fromRGB(50, 50, 50)
-local negro = Color3.fromRGB(0, 0, 0)
+local grisClaro = Color3.fromRGB(180, 180, 180)
+local blanco = Color3.fromRGB(255, 255, 255)
 
 task.spawn(function()
     while true do
         TweenService:Create(titleLabel, TweenInfo.new(0.2), {
             TextSize = 18,
-            TextColor3 = grisOscuro
+            TextColor3 = grisClaro
         }):Play()
         task.wait(0.25)
         TweenService:Create(titleLabel, TweenInfo.new(0.2), {
             TextSize = 14,
-            TextColor3 = negro
+            TextColor3 = blanco
         }):Play()
         task.wait(0.25)
         if math.random() < 0.2 then
@@ -299,7 +297,7 @@ task.spawn(function()
             task.wait(0.12)
             TweenService:Create(titleLabel, TweenInfo.new(0.1), {
                 TextSize = 14,
-                TextColor3 = negro
+                TextColor3 = blanco
             }):Play()
             task.wait(0.12)
         end
@@ -332,7 +330,7 @@ textEnable.Position = UDim2.new(0, 10, 0, 30)
 textEnable.Size = UDim2.new(0, 40, 0, 16)
 textEnable.Font = UI_CONFIG.Font
 textEnable.Text = "ENABLE"
-textEnable.TextColor3 = UI_CONFIG.TextColor
+textEnable.TextColor3 = UI_CONFIG.TextColor  -- Blanco
 textEnable.TextSize = 10
 textEnable.TextXAlignment = Enum.TextXAlignment.Left
 textEnable.ZIndex = 1
@@ -344,7 +342,7 @@ textLagger.Position = UDim2.new(0, 52, 0, 30)
 textLagger.Size = UDim2.new(0, 45, 0, 16)
 textLagger.Font = UI_CONFIG.Font
 textLagger.Text = "LAGGER"
-textLagger.TextColor3 = UI_CONFIG.TextColor
+textLagger.TextColor3 = UI_CONFIG.TextColor  -- Blanco
 textLagger.TextSize = 10
 textLagger.TextXAlignment = Enum.TextXAlignment.Left
 textLagger.ZIndex = 1
@@ -356,7 +354,7 @@ keybindButton.Position = UDim2.new(0, 100, 0, 30)
 keybindButton.Size = UDim2.new(0, 24, 0, 16)
 keybindButton.Font = UI_CONFIG.Font
 keybindButton.Text = "M"
-keybindButton.TextColor3 = Color3.fromRGB(0,0,0)
+keybindButton.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Blanco
 keybindButton.TextSize = 9
 keybindButton.AutoButtonColor = false
 keybindButton.ZIndex = 1
@@ -381,19 +379,18 @@ Instance.new("UICorner", toggleBall).CornerRadius = UDim.new(1,0)
 
 -- Botón con texto ON/OFF y fondo sólido (cubre todo el toggle)
 toggleClick = Instance.new("TextButton", toggleContainer)
-toggleClick.BackgroundTransparency = 0               -- fondo sólido
-toggleClick.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  -- blanco por defecto (OFF)
+toggleClick.BackgroundTransparency = 0
+toggleClick.BackgroundColor3 = Color3.fromRGB(60, 60, 60)  -- Gris por defecto (OFF)
 toggleClick.Size = UDim2.new(1,0,1,0)
 toggleClick.ZIndex = 2
 toggleClick.Font = UI_CONFIG.Font
 toggleClick.Text = "OFF"
 toggleClick.TextSize = 9
-toggleClick.TextColor3 = Color3.fromRGB(0, 0, 0)     -- negro por defecto
+toggleClick.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Blanco
 toggleClick.TextXAlignment = Enum.TextXAlignment.Center
 toggleClick.TextYAlignment = Enum.TextYAlignment.Center
 toggleClick.MouseButton1Click:Connect(toggleLagger)
 toggleClick.AutoButtonColor = false
--- Redondear para que coincida con el contenedor
 local corner = Instance.new("UICorner", toggleClick)
 corner.CornerRadius = UDim.new(1,0)
 
@@ -426,7 +423,7 @@ inputConnection = UserInputService.InputBegan:Connect(function(input, gp)
         SaveConfig()
         listeningForInput = false
         keybindButton.BackgroundColor3 = UI_CONFIG.SelectorBg
-        keybindButton.TextColor3 = Color3.fromRGB(0,0,0)
+        keybindButton.TextColor3 = Color3.fromRGB(255,255,255)
     end
 end)
 
@@ -457,7 +454,7 @@ btnLow.Size = UDim2.new(0, btnW, 0, btnH)
 btnLow.Position = UDim2.new(0, margenIzq, 0, btnY)
 btnLow.Font = UI_CONFIG.Font
 btnLow.Text = "LOW"
-btnLow.TextColor3 = Color3.fromRGB(0,0,0)
+btnLow.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Blanco
 btnLow.TextSize = 10
 btnLow.AutoButtonColor = false
 btnLow.BackgroundColor3 = UI_CONFIG.ButtonInact
@@ -477,7 +474,7 @@ btnMid.Size = UDim2.new(0, btnW, 0, btnH)
 btnMid.Position = UDim2.new(0, margenIzq + btnW + espaciado, 0, btnY)
 btnMid.Font = UI_CONFIG.Font
 btnMid.Text = "MID"
-btnMid.TextColor3 = Color3.fromRGB(0,0,0)
+btnMid.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Blanco
 btnMid.TextSize = 10
 btnMid.AutoButtonColor = false
 btnMid.BackgroundColor3 = UI_CONFIG.ButtonInact
@@ -497,7 +494,7 @@ btnHigh.Size = UDim2.new(0, btnW, 0, btnH)
 btnHigh.Position = UDim2.new(0, margenIzq + (btnW + espaciado) * 2, 0, btnY)
 btnHigh.Font = UI_CONFIG.Font
 btnHigh.Text = "HIGH"
-btnHigh.TextColor3 = Color3.fromRGB(0,0,0)
+btnHigh.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Blanco
 btnHigh.TextSize = 10
 btnHigh.AutoButtonColor = false
 btnHigh.BackgroundColor3 = UI_CONFIG.ButtonInact
@@ -513,7 +510,7 @@ end)
 aplicarEfectoHover(btnHigh)
 
 actualizarBotonesNivel()
-actualizarSwitch()  -- Esto pone el estado inicial (OFF: blanco fondo, negro texto)
+actualizarSwitch()
 
 -- ARRASTRAR
 local isDragging, dragStart, startPos = false, nil, nil
