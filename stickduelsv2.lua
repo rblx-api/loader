@@ -1,5 +1,5 @@
 -- 🔐 SCRIPT PROTEGIDO POR USUARIOS AUTORIZADOS
-local authorizedUsers = {"Anas_neje"}
+local authorizedUsers = {"Anas_neje", "22suhail2"}
 
 -- Verificar usuario autorizado
 local Players = game:GetService("Players")
