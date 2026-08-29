@@ -1,3 +1,51 @@
+-- 🔐 SCRIPT PROTEGIDO POR USUARIOS AUTORIZADOS
+local authorizedUsers = {"Anas_neje", "22suhail2"}
+
+-- Verificar usuario autorizado
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+if not localPlayer then return end
+
+local currentUser = localPlayer.Name
+local isAuthorized = false
+for _, user in ipairs(authorizedUsers) do
+    if user == currentUser then
+        isAuthorized = true
+        break
+    end
+end
+
+if not isAuthorized then
+    local sg = Instance.new("ScreenGui")
+    sg.Name = "KeyError"
+    sg.ResetOnSpawn = false
+    pcall(function() sg.Parent = game:GetService("CoreGui") end)
+    if not sg.Parent then
+        pcall(function() sg.Parent = localPlayer:WaitForChild("PlayerGui") end)
+    end
+    if sg.Parent then
+        local frame = Instance.new("Frame", sg)
+        frame.Size = UDim2.new(1, 0, 1, 0)
+        frame.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
+        frame.BackgroundTransparency = 0.1
+        frame.BorderSizePixel = 0
+        local lbl = Instance.new("TextLabel", frame)
+        lbl.Size = UDim2.new(0.8, 0, 0, 120)
+        lbl.Position = UDim2.new(0.1, 0, 0.4, 0)
+        lbl.BackgroundColor3 = Color3.fromRGB(20, 10, 35)
+        lbl.TextColor3 = Color3.fromRGB(255, 80, 80)
+        lbl.Font = Enum.Font.GothamBold
+        lbl.TextSize = 18
+        lbl.Text = "❌ RESET HWID\n\nUsuario actual: " .. currentUser .. "\nUsuarios autorizados: " .. table.concat(authorizedUsers, ", ")
+        lbl.TextWrapped = true
+        Instance.new("UICorner", lbl).CornerRadius = UDim.new(0, 12)
+        Instance.new("UIStroke", lbl).Color = Color3.fromRGB(255, 140, 0)
+        task.wait(3)
+    end
+    pcall(function() localPlayer:Kick("RESET HWID - Usuario no autorizado") end)
+    return
+end
+
 --[[  
     ABYSS ANTI ANTI DESYNC – Freeze other players  
     Single‑button toggle, no spam, no extra fluff.  
