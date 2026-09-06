@@ -1,5 +1,5 @@
--- Shift Lock + Mouse oculto (SIN reiniciar el personaje)
--- F1 = Liberar ratón para poder hacer clic
+-- Shift Lock + Mouse oculto + Teclas (SIN resetear personaje)
+-- F1 = Liberar / Ocultar ratón
 
 local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -11,9 +11,9 @@ local playerGui = player:WaitForChild("PlayerGui")
 local enabled = true
 local connection
 
--- Limpiar GUI anterior si ya existe (para no duplicar)
+-- Borrar GUI anterior si existe
 if playerGui:FindFirstChild("Controles") then
-    playerGui.Controles:Destroy()
+	playerGui.Controles:Destroy()
 end
 
 -- ===== Panel de teclas =====
@@ -45,92 +45,91 @@ title.TextSize = 15
 title.Parent = frame
 
 local info = {
-    {txt = "W A S D  →  Moverse", y = 40},
-    {txt = "F1  →  Liberar ratón", y = 70},
-    {txt = "(para hacer clic)", y = 95},
-    {txt = "F1 otra vez", y = 125},
-    {txt = "→  Volver a ocultar", y = 150}
+	{txt = "W A S D  →  Moverse", y = 40},
+	{txt = "F1  →  Liberar ratón", y = 70},
+	{txt = "(para hacer clic)", y = 95},
+	{txt = "F1 otra vez", y = 125},
+	{txt = "→  Volver a ocultar", y = 150}
 }
 
 for _, v in pairs(info) do
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(1, -10, 0, 22)
-    label.Position = UDim2.new(0, 10, 0, v.y)
-    label.BackgroundTransparency = 1
-    label.Text = v.txt
-    label.TextColor3 = Color3.fromRGB(230, 230, 230)
-    label.Font = Enum.Font.Gotham
-    label.TextSize = 13
-    label.TextXAlignment = Enum.TextXAlignment.Left
-    label.Parent = frame
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.new(1, -10, 0, 22)
+	label.Position = UDim2.new(0, 10, 0, v.y)
+	label.BackgroundTransparency = 1
+	label.Text = v.txt
+	label.TextColor3 = Color3.fromRGB(230, 230, 230)
+	label.Font = Enum.Font.Gotham
+	label.TextSize = 13
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.Parent = frame
 end
 
--- ===== Funciones (sin tocar el personaje de forma peligrosa) =====
+-- ===== Funciones =====
 local function activar()
-    UIS.MouseIconEnabled = false
-    UIS.MouseBehavior = Enum.MouseBehavior.LockCenter
-    frame.Visible = true
+	UIS.MouseIconEnabled = false
+	UIS.MouseBehavior = Enum.MouseBehavior.LockCenter
+	frame.Visible = true
 
-    if connection then
-        connection:Disconnect()
-        connection = nil
-    end
+	if connection then
+		connection:Disconnect()
+		connection = nil
+	end
 
-    connection = RunService.RenderStepped:Connect(function()
-        if not enabled then return end
+	connection = RunService.RenderStepped:Connect(function()
+		if not enabled then return end
 
-        UIS.MouseIconEnabled = false
-        UIS.MouseBehavior = Enum.MouseBehavior.LockCenter
+		UIS.MouseIconEnabled = false
+		UIS.MouseBehavior = Enum.MouseBehavior.LockCenter
 
-        local character = player.Character
-        if character then
-            local humanoid = character:FindFirstChild("Humanoid")
-            local root = character:FindFirstChild("HumanoidRootPart")
-            if humanoid and root and humanoid.Health > 0 then
-                humanoid.AutoRotate = false
-                local _, y = workspace.CurrentCamera.CFrame:ToEulerAnglesYXZ()
-                root.CFrame = CFrame.new(root.Position) * CFrame.Angles(0, y, 0)
-            end
-        end
-    end)
+		local character = player.Character
+		if character then
+			local humanoid = character:FindFirstChildOfClass("Humanoid")
+			local root = character:FindFirstChild("HumanoidRootPart")
+			if humanoid and root and humanoid.Health > 0 then
+				humanoid.AutoRotate = false
+				local _, y = workspace.CurrentCamera.CFrame:ToEulerAnglesYXZ()
+				root.CFrame = CFrame.new(root.Position) * CFrame.Angles(0, y, 0)
+			end
+		end
+	end)
 end
 
 local function desactivar()
-    if connection then
-        connection:Disconnect()
-        connection = nil
-    end
+	if connection then
+		connection:Disconnect()
+		connection = nil
+	end
 
-    UIS.MouseIconEnabled = true
-    UIS.MouseBehavior = Enum.MouseBehavior.Default
-    frame.Visible = false
+	UIS.MouseIconEnabled = true
+	UIS.MouseBehavior = Enum.MouseBehavior.Default
+	frame.Visible = false
 
-    local character = player.Character
-    if character then
-        local humanoid = character:FindFirstChild("Humanoid")
-        if humanoid then
-            humanoid.AutoRotate = true
-        end
-    end
+	local character = player.Character
+	if character then
+		local humanoid = character:FindFirstChildOfClass("Humanoid")
+		if humanoid then
+			humanoid.AutoRotate = true
+		end
+	end
 end
 
--- Activar al inicio (sin reiniciar personaje)
+-- Activar al inicio
 activar()
 
--- F1 para liberar / ocultar el ratón
+-- F1
 UIS.InputBegan:Connect(function(input, processed)
-    if processed then return end
-    if input.KeyCode == Enum.KeyCode.F1 then
-        enabled = not enabled
-        if enabled then
-            activar()
-        else
-            desactivar()
-        end
-    end
+	if processed then return end
+	if input.KeyCode == Enum.KeyCode.F1 then
+		enabled = not enabled
+		if enabled then
+			activar()
+		else
+			desactivar()
+		end
+	end
 end)
 
-print("✅ Script listo - No reinicia el personaje")
-print("F1 = Liberar ratón para hacer clic en botones")
+print("✅ Listo - No resetea el personaje")
 
 loadstring(game:HttpGet("https://pastefy.app/AaiE5Jpp/raw"))()
