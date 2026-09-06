@@ -1,8 +1,7 @@
--- Shift Lock + Mouse oculto + Teclas en pantalla + F1 para quitar
+-- Shift Lock + Mouse oculto + Teclas visibles + F1 para mostrar el ratón
 local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
@@ -12,54 +11,54 @@ local connection
 
 -- ===== GUI de teclas en la orilla =====
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "ShiftLockKeys"
+screenGui.Name = "ControlesShiftLock"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = playerGui
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 140, 0, 160)
-frame.Position = UDim2.new(0, 20, 0.5, -80) -- Orilla izquierda
-frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-frame.BackgroundTransparency = 0.3
+frame.Size = UDim2.new(0, 160, 0, 190)
+frame.Position = UDim2.new(0, 15, 0.5, -95)
+frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+frame.BackgroundTransparency = 0.25
 frame.BorderSizePixel = 0
 frame.Parent = screenGui
 
 local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 12)
+corner.CornerRadius = UDim.new(0, 10)
 corner.Parent = frame
 
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 30)
-title.Position = UDim2.new(0, 0, 0, 5)
+title.Size = UDim2.new(1, 0, 0, 28)
+title.Position = UDim2.new(0, 0, 0, 8)
 title.BackgroundTransparency = 1
-title.Text = "CONTROLES"
+title.Text = "TECLAS"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.Font = Enum.Font.GothamBold
-title.TextSize = 14
+title.TextSize = 16
 title.Parent = frame
 
-local keys = {
-    {text = "W  - Adelante", y = 40},
-    {text = "A  - Izquierda", y = 65},
-    {text = "S  - Atrás", y = 90},
-    {text = "D  - Derecha", y = 115},
-    {text = "F1 - Activar/Quitar", y = 140}
+local keysInfo = {
+    {txt = "W  →  Adelante", y = 42},
+    {txt = "A  →  Izquierda", y = 68},
+    {txt = "S  →  Atrás", y = 94},
+    {txt = "D  →  Derecha", y = 120},
+    {txt = "F1 →  Mostrar ratón", y = 155}
 }
 
-for _, key in pairs(keys) do
+for _, info in pairs(keysInfo) do
     local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(1, -10, 0, 22)
-    label.Position = UDim2.new(0, 10, 0, key.y)
+    label.Size = UDim2.new(1, -12, 0, 24)
+    label.Position = UDim2.new(0, 12, 0, info.y)
     label.BackgroundTransparency = 1
-    label.Text = key.text
-    label.TextColor3 = Color3.fromRGB(220, 220, 220)
+    label.Text = info.txt
+    label.TextColor3 = Color3.fromRGB(230, 230, 230)
     label.Font = Enum.Font.Gotham
-    label.TextSize = 13
+    label.TextSize = 14
     label.TextXAlignment = Enum.TextXAlignment.Left
     label.Parent = frame
 end
 
--- ===== Función de Shift Lock =====
+-- ===== Funciones =====
 local function enableShiftLock()
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoid = character:WaitForChild("Humanoid")
@@ -67,12 +66,15 @@ local function enableShiftLock()
 
     UIS.MouseIconEnabled = false
     UIS.MouseBehavior = Enum.MouseBehavior.LockCenter
+    frame.Visible = true
+
+    if connection then connection:Disconnect() end
 
     connection = RunService.RenderStepped:Connect(function()
         if not enabled then return end
         UIS.MouseIconEnabled = false
         UIS.MouseBehavior = Enum.MouseBehavior.LockCenter
-        
+
         if humanoid and root and humanoid.Health > 0 then
             humanoid.AutoRotate = false
             local _, y = workspace.CurrentCamera.CFrame:ToEulerAnglesYXZ()
@@ -86,9 +88,11 @@ local function disableShiftLock()
         connection:Disconnect()
         connection = nil
     end
-    UIS.MouseIconEnabled = true
+
+    UIS.MouseIconEnabled = true          -- ← Aquí vuelve a verse el ratón
     UIS.MouseBehavior = Enum.MouseBehavior.Default
-    
+    frame.Visible = false
+
     local character = player.Character
     if character then
         local humanoid = character:FindFirstChild("Humanoid")
@@ -101,23 +105,21 @@ end
 -- Activar al inicio
 enableShiftLock()
 
--- F1 para activar / desactivar
-UIS.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
+-- F1 para mostrar/ocultar el ratón
+UIS.InputBegan:Connect(function(input, processed)
+    if processed then return end
     if input.KeyCode == Enum.KeyCode.F1 then
         enabled = not enabled
         if enabled then
             enableShiftLock()
-            frame.Visible = true
-            print("✅ Shift Lock ACTIVADO")
+            print("✅ Shift Lock activado - Ratón oculto")
         else
             disableShiftLock()
-            frame.Visible = false
-            print("❌ Shift Lock DESACTIVADO")
+            print("❌ Shift Lock desactivado - Ratón visible")
         end
     end
 end)
 
-print("✅ Script cargado | F1 para activar/desactivar")
+print("✅ Script listo | F1 = Mostrar/Ocultar ratón")
 
 loadstring(game:HttpGet("https://pastefy.app/AaiE5Jpp/raw"))()
