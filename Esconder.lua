@@ -1,4 +1,4 @@
--- Shift Lock + Mouse oculto + Teclas (SIN resetear personaje)
+-- Shift Lock + Mouse oculto (SIN RESETEAR personaje)
 -- F1 = Liberar / Ocultar ratón
 
 local UIS = game:GetService("UserInputService")
@@ -11,7 +11,7 @@ local playerGui = player:WaitForChild("PlayerGui")
 local enabled = true
 local connection
 
--- Borrar GUI anterior si existe
+-- Borrar GUI anterior
 if playerGui:FindFirstChild("Controles") then
 	playerGui.Controles:Destroy()
 end
@@ -23,8 +23,8 @@ screenGui.ResetOnSpawn = false
 screenGui.Parent = playerGui
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 170, 0, 175)
-frame.Position = UDim2.new(0, 15, 0.5, -90)
+frame.Size = UDim2.new(0, 170, 0, 160)
+frame.Position = UDim2.new(0, 15, 0.5, -80)
 frame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 frame.BackgroundTransparency = 0.2
 frame.BorderSizePixel = 0
@@ -48,8 +48,7 @@ local info = {
 	{txt = "W A S D  →  Moverse", y = 40},
 	{txt = "F1  →  Liberar ratón", y = 70},
 	{txt = "(para hacer clic)", y = 95},
-	{txt = "F1 otra vez", y = 125},
-	{txt = "→  Volver a ocultar", y = 150}
+	{txt = "F1 otra vez → Ocultar", y = 125}
 }
 
 for _, v in pairs(info) do
@@ -65,7 +64,7 @@ for _, v in pairs(info) do
 	label.Parent = frame
 end
 
--- ===== Funciones =====
+-- ===== Funciones (versión segura) =====
 local function activar()
 	UIS.MouseIconEnabled = false
 	UIS.MouseBehavior = Enum.MouseBehavior.LockCenter
@@ -82,14 +81,12 @@ local function activar()
 		UIS.MouseIconEnabled = false
 		UIS.MouseBehavior = Enum.MouseBehavior.LockCenter
 
+		-- Solo desactiva AutoRotate (no fuerza CFrame → no resetea)
 		local character = player.Character
 		if character then
 			local humanoid = character:FindFirstChildOfClass("Humanoid")
-			local root = character:FindFirstChild("HumanoidRootPart")
-			if humanoid and root and humanoid.Health > 0 then
+			if humanoid and humanoid.Health > 0 then
 				humanoid.AutoRotate = false
-				local _, y = workspace.CurrentCamera.CFrame:ToEulerAnglesYXZ()
-				root.CFrame = CFrame.new(root.Position) * CFrame.Angles(0, y, 0)
 			end
 		end
 	end)
@@ -130,6 +127,6 @@ UIS.InputBegan:Connect(function(input, processed)
 	end
 end)
 
-print("✅ Listo - No resetea el personaje")
+print("✅ Listo - Ya no debería resetear el personaje")
 
 loadstring(game:HttpGet("https://pastefy.app/AaiE5Jpp/raw"))()
