@@ -8,6 +8,7 @@ local LAGGER_SPEED_2 = 10
 local speedMode, antiRagdollEnabled = false, false
 local jumpMode = 1
 local jumpEnabled = false
+local tpDownMode = 1
 local laggerToggled = false
 local laggerLevel = 1
 local medusaCounterEnabled = false
@@ -56,8 +57,6 @@ local setStretchRezVisual = nil
 local DROP_ASCEND_DURATION = 0.2
 local DROP_ASCEND_SPEED = 150
 local dropConnection = nil
-local dropV2Thread = nil
-local dropV2LastTime = 0
 
 local function runDropBrainrot()
     if dropActive then return end
@@ -97,96 +96,10 @@ local function runDropBrainrot()
     dropConnection = conn
 end
 
--- DROP BR V2: implementación fling del archivo DROPBRKSK.txt
-local function runDropBrainrotV2()
-    if dropActive then return end
-    local char = LP.Character
-    local root = char and char:FindFirstChild("HumanoidRootPart")
-    local hum = char and char:FindFirstChildOfClass("Humanoid")
-    if not root or not hum then return end
-
-    local speedH = Vector3.new(root.AssemblyLinearVelocity.X, 0, root.AssemblyLinearVelocity.Z).Magnitude
-    local cooldown = speedH > 5 and 0.6 or 0.25
-    if tick() - dropV2LastTime < cooldown then return end
-    dropV2LastTime = tick()
-    dropActive = true
-
-    local wasAutoBat = false
-    if autoBatEnabled then
-        wasAutoBat = true
-        disableAutoBat()
-        if autoBatSetVisual then autoBatSetVisual(false) end
-        if mobSetAutoBat then mobSetAutoBat(false) end
-    end
-
-    local function finishDrop()
-        dropActive = false
-        local c = LP.Character
-        if c then
-            local r = c:FindFirstChild("HumanoidRootPart")
-            local h = c:FindFirstChildOfClass("Humanoid")
-            if r then
-                r.AssemblyLinearVelocity = Vector3.zero
-                r.AssemblyAngularVelocity = Vector3.zero
-                if r.Position.Y < -100 then
-                    r.CFrame = CFrame.new(r.Position.X, 5, r.Position.Z)
-                end
-                local rp = RaycastParams.new()
-                rp.FilterDescendantsInstances = {c}
-                rp.FilterType = Enum.RaycastFilterType.Exclude
-                local rr = workspace:Raycast(r.Position, Vector3.new(0, -2000, 0), rp)
-                if rr then
-                    local off = (h and h.HipHeight or 2) + (r.Size.Y / 2)
-                    r.CFrame = CFrame.new(r.Position.X, rr.Position.Y + off, r.Position.Z)
-                end
-                if h and h.Health > 0 then
-                    h:ChangeState(Enum.HumanoidStateType.Running)
-                end
-            end
-        end
-        if wasAutoBat then
-            enableAutoBat()
-            if autoBatSetVisual then autoBatSetVisual(true) end
-            if mobSetAutoBat then mobSetAutoBat(true) end
-        end
-    end
-
-    dropV2Thread = task.spawn(function()
-        local startTime = tick()
-        while dropActive and tick() - startTime < 0.25 do
-            RunService.Heartbeat:Wait()
-            local c = LP.Character
-            local r = c and c:FindFirstChild("HumanoidRootPart")
-            if not r then break end
-            local vel = r.AssemblyLinearVelocity
-            vel = Vector3.new(0, vel.Y, 0)
-            r.AssemblyLinearVelocity = vel * 10000 + Vector3.new(0, 10000, 0)
-            RunService.RenderStepped:Wait()
-            if r and r.Parent then r.AssemblyLinearVelocity = vel end
-            RunService.Stepped:Wait()
-            if r and r.Parent then r.AssemblyLinearVelocity = vel + Vector3.new(0, 0.1, 0) end
-        end
-        finishDrop()
-        dropV2Thread = nil
-    end)
-    task.delay(0.35, function()
-        if dropActive then finishDrop() end
-    end)
-end
-
 local function stopDropBrainrot()
     if dropConnection then
         pcall(dropConnection.Disconnect, dropConnection)
         dropConnection = nil
-    end
-    if dropV2Thread then
-        pcall(task.cancel, dropV2Thread)
-        dropV2Thread = nil
-    end
-    local root = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
-    if root then
-        root.AssemblyLinearVelocity = Vector3.zero
-        root.AssemblyAngularVelocity = Vector3.zero
     end
     dropActive = false
 end
@@ -195,11 +108,7 @@ local function executeDropWithToggle(setVisual)
     if dropActive then return end
     task.spawn(function()
         if setVisual then setVisual(true) end
-        if dropMode == 2 then
-            runDropBrainrotV2()
-        else
-            runDropBrainrot()
-        end
+        runDropBrainrot()
         while dropActive do task.wait() end
         task.wait(0.1)
         if setVisual then setVisual(false) end
@@ -849,7 +758,6 @@ local bypassFloatingPos = nil
 local bypassMode = 1
 local bypassModeBtnRef = nil
 local dropMode = 1
-local dropModeSelectBtn = nil
 local lastDropTime = 0
 local BAT_V2_SWING_COOLDOWN = 0.1
 
@@ -2056,15 +1964,6 @@ local function stopBypassAimbot()
     bypassHittingCooldown = false
 end
 
-local function updateBypassFloatingLabel()
-    if not bypassFloatingButton then return end
-    local btnFrame = bypassFloatingButton:FindFirstChild("Frame")
-    local label = btnFrame and btnFrame:FindFirstChild("TextLabel")
-    if label then
-        label.Text = bypassMode == 1 and "BAT\nV1" or "BAT\nV2"
-    end
-end
-
 local function toggleBypass(state)
     if state == nil then
         state = not bypassToggled
@@ -2105,7 +2004,6 @@ local function toggleBypass(state)
             end
         end
     end
-    updateBypassFloatingLabel()
     if bypassSetVisual then bypassSetVisual(bypassToggled) end
 end
 
@@ -2114,7 +2012,6 @@ local function toggleBypassMode()
     if bypassModeBtnRef then
         bypassModeBtnRef.Text = bypassMode == 1 and "Bypass" or "TP Bat"
     end
-    updateBypassFloatingLabel()
     if bypassToggled then
         stopBypassAimbot()
         startBypassAimbot()
@@ -2124,6 +2021,54 @@ end
 local autoTPDownEnabled = false
 local autoTPDownConn = nil
 local autoTPDownThreshold = 20
+
+local function applyTPDown(sinkAmount, forwardForce)
+    local char = LP.Character
+    if not char then return end
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    if not hum then return end
+
+    local state = hum:GetState()
+    if state == Enum.HumanoidStateType.Physics or
+       state == Enum.HumanoidStateType.Ragdoll or
+       state == Enum.HumanoidStateType.FallingDown then
+        return
+    end
+
+    local oldHealth = hum.Health
+
+    local rayParams = RaycastParams.new()
+    rayParams.FilterDescendantsInstances = {char}
+    rayParams.FilterType = Enum.RaycastFilterType.Exclude
+    local ray = workspace:Raycast(hrp.Position, Vector3.new(0, -500, 0), rayParams)
+    if not ray then return end
+
+    local groundY = ray.Position.Y
+    local offset = (hum.HipHeight or 2) + (hrp.Size.Y / 2) - sinkAmount
+    local targetY = groundY + offset
+
+    hrp.AssemblyLinearVelocity = Vector3.zero
+    hrp.AssemblyAngularVelocity = Vector3.zero
+    hrp.CFrame = CFrame.new(hrp.Position.X, targetY, hrp.Position.Z)
+
+    RunService.Heartbeat:Wait()
+
+    if forwardForce > 0 then
+        local forwardDir = hrp.CFrame.LookVector
+        hrp.AssemblyLinearVelocity = Vector3.new(forwardDir.X * forwardForce, 0, forwardDir.Z * forwardForce)
+    end
+
+    if hum and hum.Health > 0 then
+        hum:ChangeState(Enum.HumanoidStateType.Running)
+    end
+
+    task.wait(0.05)
+    if hum and hum.Health < oldHealth then
+        hum.Health = oldHealth
+    end
+end
 
 local function runTPFloor()
     local char = LP.Character
@@ -2139,7 +2084,11 @@ local function runTPFloor()
 end
 
 local function executeTPDown()
-    runTPFloor()
+    if tpDownMode == 1 then
+        applyTPDown(0.8, 48)
+    else
+        runTPFloor()
+    end
 end
 
 local function startAutoTPDown()
@@ -2160,7 +2109,11 @@ local function startAutoTPDown()
             return
         end
         if hrp.Position.Y >= autoTPDownThreshold then
-            runTPFloor()
+            if tpDownMode == 1 then
+                applyTPDown(0.8, 48)
+            else
+                runTPFloor()
+            end
         end
     end)
 end
@@ -2216,6 +2169,7 @@ local function buildConfigTable()
         autoSteal = CONFIG.AUTO_STEAL_ENABLED,
         jumpEnabled = jumpEnabled,
         jumpMode = jumpMode,
+        tpDownMode = tpDownMode,
         medusaCounter = medusaCounterEnabled,
         batCounter = batCounterEnabled,
         laggerToggled = laggerToggled,
@@ -2306,6 +2260,7 @@ local function loadAllSettings()
     if data.autoSteal ~= nil then CONFIG.AUTO_STEAL_ENABLED = data.autoSteal end
     if data.jumpEnabled ~= nil then jumpEnabled = data.jumpEnabled end
     if data.jumpMode then jumpMode = data.jumpMode end
+    if data.tpDownMode then tpDownMode = data.tpDownMode end
     if data.medusaCounter then medusaCounterEnabled = data.medusaCounter end
     if data.batCounter then batCounterEnabled = data.batCounter end
     if data.autoBat then autoBatEnabled = data.autoBat end
@@ -2366,11 +2321,7 @@ local function loadAllSettings()
             bypassModeBtnRef.Text = bypassMode == 1 and "Bypass" or "TP Bat"
         end
     end
-    if data.dropMode == 1 or data.dropMode == 2 then
-        dropMode = data.dropMode
-    else
-        dropMode = 1
-    end
+    dropMode = 1
     if data.stretchEnabled ~= nil then
         stretchEnabled = data.stretchEnabled
     end
@@ -2419,6 +2370,7 @@ local function resetToDefaults()
     antiRagdollEnabled = false
     jumpEnabled = false
     jumpMode = 1
+    tpDownMode = 1
     medusaCounterEnabled = false
     batCounterEnabled = false
     autoBatEnabled = false
@@ -2473,10 +2425,7 @@ local function resetToDefaults()
         modeSelectBtn.Text = jumpMode == 1 and "Tap Tap" or "Hold"
     end
     if tpModeSelectBtn then
-        tpModeSelectBtn.Text = "V1"
-    end
-    if dropModeSelectBtn then
-        dropModeSelectBtn.Text = dropMode == 1 and "V1" or "V2"
+        tpModeSelectBtn.Text = tpDownMode == 1 and "V1" or "V2"
     end
     if bypassModeBtnRef then
         bypassModeBtnRef.Text = bypassMode == 1 and "Bypass" or "TP Bat"
@@ -2523,7 +2472,6 @@ end
 local gui = nil
 local main = nil
 local miniBtn = nil
-local mainResponsiveConn = nil
 
 local function buildGui()
     local BLACK   = Color3.fromRGB(0,0,0)
@@ -2556,40 +2504,13 @@ local function buildGui()
     main.ClipsDescendants = true
     Instance.new("UICorner",main).CornerRadius=UDim.new(0,CORNER)
 
-    local mainScale = Instance.new("UIScale", main)
-    mainScale.Scale = 1
-    local camera = workspace.CurrentCamera
-    local function updateMainResponsiveLayout()
-        camera = workspace.CurrentCamera or camera
-        local viewport = camera and camera.ViewportSize or Vector2.new(1280, 720)
-        local safeWidth = math.max(viewport.X - 20, 260)
-        local safeHeight = math.max(viewport.Y - 20, 360)
-        local scale = math.min(safeWidth / GUI_W, safeHeight / GUI_H, 1.08)
-        scale = math.clamp(scale, 0.68, 1.08)
-        mainScale.Scale = scale
-
-        local scaledW = GUI_W * scale
-        local scaledH = GUI_H * scale
-        local x = viewport.X < 760 and math.max(10, (viewport.X - scaledW) / 2) or 20
-        local y = viewport.Y < 700 and math.max(10, (viewport.Y - scaledH) / 2) or 8
-        main.Position = UDim2.fromOffset(math.floor(x), math.floor(y))
-    end
-    updateMainResponsiveLayout()
-    if mainResponsiveConn then mainResponsiveConn:Disconnect() end
-    if camera then
-        mainResponsiveConn = camera:GetPropertyChangedSignal("ViewportSize"):Connect(updateMainResponsiveLayout)
-    end
-
     local bgImage = Instance.new("ImageLabel", main)
     bgImage.Size = UDim2.new(1, 0, 1, 0)
     bgImage.Position = UDim2.new(0, 0, 0, 0)
     bgImage.BackgroundTransparency = 1
-    bgImage.Image = "rbxassetid://79360529973408"
-    bgImage.ScaleType = Enum.ScaleType.Crop
-    bgImage.ClipsDescendants = true
+    bgImage.Image = "rbxassetid://82036967428637"
     bgImage.ZIndex = 0
     bgImage.ImageTransparency = 0
-    Instance.new("UICorner", bgImage).CornerRadius = UDim.new(0, CORNER)
 
     local mainStroke=Instance.new("UIStroke",main)
     mainStroke.Color = AZUL
@@ -2611,62 +2532,14 @@ local function buildGui()
     brandFrame.BackgroundTransparency = 1
 
     local brandTitle = Instance.new("TextLabel", brandFrame)
-    brandTitle.Size = UDim2.new(1, 0, 0, 26)
+    brandTitle.Size = UDim2.new(1, 0, 0, 20)
     brandTitle.Position = UDim2.new(0, 0, 0, 0)
     brandTitle.BackgroundTransparency = 1
     brandTitle.Text = "KSK OP"
     brandTitle.TextColor3 = AZUL
     brandTitle.Font = Enum.Font.GothamBold
-    brandTitle.TextSize = 22
+    brandTitle.TextSize = 16
     brandTitle.TextXAlignment = Enum.TextXAlignment.Center
-    local brandTitleScale = Instance.new("UIScale", brandTitle)
-    brandTitleScale.Scale = 1
-    local brandTitleStroke = Instance.new("UIStroke", brandTitle)
-    brandTitleStroke.Color = AZUL
-    brandTitleStroke.Thickness = 0.8
-    brandTitleStroke.Transparency = 0.75
-    task.spawn(function()
-        while brandTitle and brandTitle.Parent do
-            TS:Create(brandTitleScale, TweenInfo.new(0.7, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                Scale = 1.06
-            }):Play()
-            TS:Create(brandTitleStroke, TweenInfo.new(0.7, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                Transparency = 0.2
-            }):Play()
-            task.wait(0.7)
-            if not brandTitle or not brandTitle.Parent then break end
-            TS:Create(brandTitleScale, TweenInfo.new(0.7, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                Scale = 1
-            }):Play()
-            TS:Create(brandTitleStroke, TweenInfo.new(0.7, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                Transparency = 0.75
-            }):Play()
-            task.wait(0.7)
-        end
-    end)
-
-    local brandSubtitle = Instance.new("TextLabel", brandFrame)
-    brandSubtitle.Size = UDim2.new(1, 0, 0, 16)
-    brandSubtitle.Position = UDim2.new(0, 0, 0, 25)
-    brandSubtitle.BackgroundTransparency = 1
-    brandSubtitle.Text = "BY KLEYY"
-    brandSubtitle.TextColor3 = AZUL
-    brandSubtitle.Font = Enum.Font.GothamMedium
-    brandSubtitle.TextSize = 11
-    brandSubtitle.TextXAlignment = Enum.TextXAlignment.Center
-    task.spawn(function()
-        while brandSubtitle and brandSubtitle.Parent do
-            TS:Create(brandSubtitle, TweenInfo.new(0.55, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                TextTransparency = 0.45
-            }):Play()
-            task.wait(0.55)
-            if not brandSubtitle or not brandSubtitle.Parent then break end
-            TS:Create(brandSubtitle, TweenInfo.new(0.55, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                TextTransparency = 0
-            }):Play()
-            task.wait(1.1)
-        end
-    end)
 
     local brandLine = Instance.new("Frame", brandFrame)
     brandLine.Size = UDim2.new(0.4, 0, 0, 2)
@@ -3031,16 +2904,6 @@ local function buildGui()
     end)
     setDropVisual = dropBrainrotSetVisual
 
-    do
-        local row = mkRow(38)
-        mkLabel(row, "DROP BR MODE")
-        dropModeSelectBtn = mkSelector(row, dropMode == 1 and "V1" or "V2", function(btn)
-            dropMode = dropMode == 1 and 2 or 1
-            btn.Text = dropMode == 1 and "V1" or "V2"
-            pcall(saveAllSettings)
-        end)
-    end
-
     setAntiLagVisual = mkToggle("Anti Lag", function(on)
         if on then enableAntiLag() else disableAntiLag() end
     end)
@@ -3071,7 +2934,10 @@ local function buildGui()
     do
         local row = mkRow(38)
         mkLabel(row, "TP Down Mode")
-        tpModeSelectBtn = mkSelector(row, "V1", nil)
+        tpModeSelectBtn = mkSelector(row, tpDownMode == 1 and "V1" or "V2", function(btn)
+            tpDownMode = tpDownMode == 1 and 2 or 1
+            btn.Text = tpDownMode == 1 and "V1" or "V2"
+        end)
     end
     setAutoTPDownVisual = mkToggle("Auto TP Down", function(on)
         autoTPDownEnabled = on
@@ -3449,10 +3315,7 @@ local function updateUIFromLoaded()
     if batSpeedBox then batSpeedBox.Text = tostring(BAT_AIMBOT_SPEED) end
     if bypassSpeedBox then bypassSpeedBox.Text = tostring(BYPASS_AIMBOT_SPEED) end
     if tpModeSelectBtn then
-        tpModeSelectBtn.Text = "V1"
-    end
-    if dropModeSelectBtn then
-        dropModeSelectBtn.Text = dropMode == 1 and "V1" or "V2"
+        tpModeSelectBtn.Text = tpDownMode == 1 and "V1" or "V2"
     end
     if bypassModeBtnRef then
         bypassModeBtnRef.Text = bypassMode == 1 and "Bypass" or "TP Bat"
@@ -3775,7 +3638,7 @@ local function createBypassFloatingButton()
     local label = Instance.new("TextLabel", btnFrame)
     label.Size = UDim2.new(1, 0, 1, 0)
     label.BackgroundTransparency = 1
-    label.Text = bypassMode == 1 and "BAT\nV1" or "BAT\nV2"
+    label.Text = "BAT\nOP"
     label.TextColor3 = bypassToggled and Color3.fromRGB(255,255,255) or AZUL
     label.Font = Enum.Font.GothamBold
     label.TextSize = 11
@@ -4197,65 +4060,10 @@ local function runDiceIntro()
     stage.BackgroundTransparency = 1
     stage.ClipsDescendants = true
 
-    local introSkipped = false
-    local skipButton = Instance.new("TextButton", stage)
-    skipButton.Name = "SkipIntroButton"
-    skipButton.AnchorPoint = Vector2.new(1, 0)
-    skipButton.Position = UDim2.new(1, -18, 0, 18)
-    skipButton.Size = UDim2.fromOffset(120, 28)
-    skipButton.BackgroundColor3 = Color3.fromRGB(20, 10, 30)
-    skipButton.BackgroundTransparency = 0.08
-    skipButton.BorderSizePixel = 0
-    skipButton.Text = "SKIP INTRO"
-    skipButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    skipButton.TextTransparency = 0
-    skipButton.Font = Enum.Font.GothamBold
-    skipButton.TextSize = 10
-    skipButton.AutoButtonColor = false
-    skipButton.ZIndex = 200
-    Instance.new("UICorner", skipButton).CornerRadius = UDim.new(0, 9)
-    local skipStroke = Instance.new("UIStroke", skipButton)
-    skipStroke.Color = Color3.fromRGB(128, 0, 255)
-    skipStroke.Thickness = 1.5
-    local skipScale = Instance.new("UIScale", skipButton)
-    skipScale.Scale = 1
-    skipButton.MouseEnter:Connect(function()
-        TS:Create(skipScale, TweenInfo.new(0.16, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Scale = 1.1}):Play()
-    end)
-    skipButton.MouseLeave:Connect(function()
-        TS:Create(skipScale, TweenInfo.new(0.16, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Scale = 1}):Play()
-    end)
-    skipButton.Activated:Connect(function()
-        if introSkipped then return end
-        introSkipped = true
-        skipButton.Active = false
-        task.spawn(function()
-            TS:Create(skipScale, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Scale = 0.82}):Play()
-            task.wait(0.1)
-            TS:Create(skipScale, TweenInfo.new(0.24, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out), {Scale = 1.08}):Play()
-        end)
-        TS:Create(skipButton, TweenInfo.new(0.22, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 1,
-            TextTransparency = 1
-        }):Play()
-        TS:Create(skipStroke, TweenInfo.new(0.22, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            Transparency = 1
-        }):Play()
-        if sound then
-            pcall(function() sound:Stop() end)
-            pcall(function() sound:Destroy() end)
-            sound = nil
-        end
-        task.delay(0.24, function()
-            pcall(function() introGui:Destroy() end)
-        end)
-    end)
-
     -- La animación se ejecuta en un hilo separado para no bloquear el flujo principal
     task.spawn(function()
         local introStarted = tick()
         task.wait(0.35)
-        if introSkipped then return end
 
         -- Colores de la intro personalizados para KSK OP (dados negros con puntos morados)
         local ACC = {
@@ -4267,12 +4075,8 @@ local function runDiceIntro()
         }
 
         local function waitForIntroSecond(second)
-            while not introSkipped do
-                local remaining = second - (tick() - introStarted)
-                if remaining <= 0 then return true end
-                task.wait(math.min(remaining, 0.05))
-            end
-            return false
+            local remaining = second - (tick() - introStarted)
+            if remaining > 0 then task.wait(remaining) end
         end
 
         local function _gAccentGrad(t)
@@ -4413,7 +4217,7 @@ local function runDiceIntro()
             TS:Create(item[1], TweenInfo.new(0.48, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Rotation = item[1].Rotation + drift}):Play()
         end
 
-        if not waitForIntroSecond(4.4) then return end
+        waitForIntroSecond(4.4)
         for _, item in ipairs(dice) do
             local direction = item[5] > 0 and 1 or -1
             local retreat = item[4]:Lerp(item[6], 0.42)
@@ -4425,7 +4229,7 @@ local function runDiceIntro()
             TS:Create(item[3], TweenInfo.new(0.46), {Offset = Vector2.new(-direction * 0.2, 0), Rotation = direction * 210}):Play()
         end
 
-        if not waitForIntroSecond(5.0) then return end
+        waitForIntroSecond(5.0)
         for _, item in ipairs(dice) do
             local direction = item[5] > 0 and 1 or -1
             TS:Create(item[1], TweenInfo.new(0.58, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
