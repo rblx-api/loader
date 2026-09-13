@@ -9,19 +9,11 @@ local Lighting = game:GetService("Lighting")
 local HS = game:GetService("HttpService")
 local player = Players.LocalPlayer
 
--- ------------------------------------------------------------
--- DESCARGAR FONDO ITACHI SI NO EXISTE
--- ------------------------------------------------------------
 pcall(function()
     if writefile and isfile and not isfile("Itachiazuldiamante.jpg") then
-        -- local url = "URL_DIRECTA_DE_LA_IMAGEN_JPG"
-        -- if url then writefile("Itachiazuldiamante.jpg", game:HttpGet(url)) end
     end
 end)
 
--- ------------------------------------------------------------
--- EARLY CONFIG LOAD
--- ------------------------------------------------------------
 local introSoundEnabled = true
 if isfile and isfile("RXZ_HUB.json") then
     local ok, data = pcall(function() return HS:JSONDecode(readfile("RXZ_HUB.json")) end)
@@ -38,9 +30,6 @@ if isfile and isfile("RXZ_HUB.json") then
     end
 end
 
--- ------------------------------------------------------------
--- INTRO SOUND
--- ------------------------------------------------------------
 local introSoundInstance = nil
 if introSoundEnabled then
     local urlIntro = "https://files.catbox.moe/hg5cr4.mp3"
@@ -61,9 +50,7 @@ end
 
 repeat task.wait() until game:IsLoaded()
 
--- ============================================================
 -- SKY THEME SYSTEM
--- ============================================================
 local CANDY_SKY_TAG = "MoveeSkyTheme"
 local currentSkyTheme = "Night"
 local CANDY_SKY_PRESETS = {
@@ -122,9 +109,7 @@ local function CandyApplyCustomSky(mode)
     end
 end
 
--- ============================================================
 -- STATE
--- ============================================================
 local TS=TweenService
 local LP=Players.LocalPlayer
 local NS,CS=59,29
@@ -185,9 +170,6 @@ local _GuiKeys = nil
 local lockUiEnabled = false
 local unlockUiIndividual = false
 
--- ============================================================
--- CYBER EXTRAS
--- ============================================================
 local animEnabled = false
 local backgroundEnabled = false
 local backgroundIndex = 0
@@ -307,9 +289,6 @@ do
     end
 end
 
--- ============================================================
--- POSITIONS SAVE/LOAD
--- ============================================================
 local MOB_POS_FILE="RXZ_BtnPos.json"
 local MOB_INDIVIDUAL_FILE="RXZ_BtnIndiv.json"
 
@@ -728,9 +707,7 @@ startAutoRight=function()
     end)
 end
 
--- ============================================================
 -- DROP BRAINROT
--- ============================================================
 local _wfConns={}
 local function runDrop()
     if dropActive then return end
@@ -824,9 +801,6 @@ setupMedusa=function(char)
 end
 stopMedusaCounter=function() for _,c in pairs(Conns.anchor) do pcall(function() c:Disconnect() end) end;Conns.anchor={} end
 
--- ============================================================
--- ANTI KICK
--- ============================================================
 function RXZ.enableAntiKick()
     RXZ.antiKick=true
     task.spawn(function()
@@ -1099,10 +1073,7 @@ startUnwalk=function()
 end
 stopUnwalk=function() local c=LP.Character;if c and unwalkSavedAnimate then unwalkSavedAnimate:Clone().Parent=c;unwalkSavedAnimate=nil end end
 
-
--- ============================================================
 -- STEAL BAR
--- ============================================================
 local function createStealBar()
     for _,n in ipairs({"MoveeStealBar"}) do
         local old=game:GetService("CoreGui"):FindFirstChild(n);if old then old:Destroy() end
@@ -1225,9 +1196,7 @@ local function createStealBar()
 end
 createStealBar()
 
--- ============================================================
 -- TP BAT + BAT V2
--- ============================================================
 local RXZ_SLAP_LIST={"Bat","Slap","Iron Slap","Gold Slap","Diamond Slap","Emerald Slap","Ruby Slap","Dark Matter Slap","Flame Slap","Nuclear Slap","Galaxy Slap","Glitched Slap"}
 function RXZ.findBat()
     local char=LP.Character; if not char then return nil end
@@ -1371,9 +1340,7 @@ function RXZ.stopBatV2()
     RXZ.v2Rot=nil
 end
 
--- ============================================================
--- MOBILE BUTTONS (AZUL DIAMANTE) - CON LOCK/UNLOCK UI
--- ============================================================
+-- MOBILE BUTTONS (AZUL DIAMANTE)
 local function destroyMobileButtons()
     if mobGuiRef then pcall(function() mobGuiRef:Destroy() end);mobGuiRef=nil end
     for _,n in ipairs({"RXZMobileButtons","SpectrumMobileButtons","MoveeMobileButtons"}) do
@@ -1619,9 +1586,7 @@ local function buildMobileButtons()
     if mobBtnRefs.batV2 then mobBtnRefs.batV2(RXZ.batV2) end
 end
 
--- ============================================================
 -- FULL CONFIG LOAD
--- ============================================================
 pcall(function()
     if not(isfile and isfile("RXZ_HUB.json")) then return end
     local ok,d=pcall(function() return HS:JSONDecode(readfile("RXZ_HUB.json")) end)
@@ -1666,9 +1631,7 @@ pcall(function()
     if type(d.unlockUiIndividual)=="boolean" then unlockUiIndividual=d.unlockUiIndividual end
 end)
 
--- ============================================================
 -- APPLY CONFIG
--- ============================================================
 pcall(function()
     if animEnabled then task.spawn(function() task.wait(1); if startAnimToggle then startAnimToggle() end end) end
     if antiLagEnabled then task.spawn(function() task.wait(1); if enableAntiLag then enableAntiLag() end end) end
@@ -1684,9 +1647,7 @@ pcall(function()
     if currentSkyTheme and currentSkyTheme ~= "" then task.spawn(function() task.wait(1); if CandyApplyCustomSky then CandyApplyCustomSky(currentSkyTheme) end end) end
 end)
 
--- ============================================================
 -- CYBER GUI
--- ============================================================
 ;(function()
 
 local PlayerGui = LP:WaitForChild("PlayerGui")
@@ -1756,11 +1717,15 @@ _GuiKeys = Keys
     GuiHub.ZIndexBehavior=Enum.ZIndexBehavior.Sibling; GuiHub.Parent=PlayerGui
     GuiRefs.hub=GuiHub
 
+    -- =====================================================
+    -- PANEL MAS GRANDE: 340 x 820 (antes 700)
+    -- =====================================================
     local Outer=Instance.new("Frame")
-    Outer.Name="Outer"; Outer.Size=UDim2.new(0,340,0,700); Outer.Position=UDim2.new(0,6,0,10)
+    Outer.Name="Outer"; Outer.Size=UDim2.new(0,340,0,820); Outer.Position=UDim2.new(0,6,0,10)
     Outer.BackgroundTransparency=1; Outer.BorderSizePixel=0; Outer.ClipsDescendants=false; Outer.Parent=GuiHub
     GuiRefs.outer=Outer
-    local OuterScale=Instance.new("UIScale"); OuterScale.Scale=0.72; OuterScale.Parent=Outer
+    -- Reducir ligeramente escala para que quepa en móvil
+    local OuterScale=Instance.new("UIScale"); OuterScale.Scale=0.68; OuterScale.Parent=Outer
 
     local Inner=Instance.new("Frame")
     Inner.Name="Inner"; Inner.ClipsDescendants=false; Inner.Size=UDim2.new(1,0,1,0)
@@ -1863,7 +1828,7 @@ _GuiKeys = Keys
     CatPad.PaddingTop=UDim.new(0,10); CatPad.PaddingBottom=UDim.new(0,10); CatPad.Parent=CatList
     GuiRefs.categoryList=CatList
 
-    -- CONTENT FRAME CON SCROLL COMPLETO
+    -- CONTENT FRAME MAS ALTO (panel 820 - 118 = 702 px)
     local CF=Instance.new("ScrollingFrame")
     CF.Name="ContentFrame"
     CF.Size=UDim2.new(1,-95,1,-118)
@@ -1895,7 +1860,7 @@ _GuiKeys = Keys
     CPad.PaddingLeft=UDim.new(0,12)
     CPad.PaddingRight=UDim.new(0,12)
     CPad.PaddingTop=UDim.new(0,14)
-    CPad.PaddingBottom=UDim.new(0,50)
+    CPad.PaddingBottom=UDim.new(0,70)
     CPad.Parent=CF
 
     local BotSep=Instance.new("Frame")
@@ -2015,7 +1980,6 @@ local function addCycleRow(parent,label,value,order,onCycle)
     return Row,CB
 end
 
--- PIL Toggle con BOLITA BLANCA
 local function addPillToggleRow(parent,label,enabled,order,onToggle)
     local Row=Instance.new("Frame",parent)
     Row.Size=UDim2.new(1,0,0,38); Row.BackgroundColor3=C.row
@@ -2081,9 +2045,7 @@ local CategoryRefs={contents={},btnsSide={},active="Speed"}
                 local ac=(n==name); b.TextColor3=ac and C.white or C.textMuted; b.BackgroundTransparency=ac and 0.2 or 0.3
                 local i2=b:FindFirstChild("indicator"); if i2 then i2.BackgroundTransparency=ac and 0.3 or 1 end
             end
-            -- Reset scroll a arriba
             GuiRefs.contentFrame.CanvasPosition = Vector2.new(0, 0)
-            -- Recalcular CanvasSize varias veces para asegurar
             task.spawn(function()
                 for i=1,5 do
                     task.wait()
@@ -2101,7 +2063,6 @@ local CategoryRefs={contents={},btnsSide={},active="Speed"}
     if spBtn then spBtn.TextColor3=C.white; spBtn.BackgroundTransparency=0.2; local i2=spBtn:FindFirstChild("indicator"); if i2 then i2.BackgroundTransparency=0.3 end end
 end)()
 
--- SCROLL FLUIDO FORZADO
 task.spawn(function()
     task.wait(1)
     local CF = GuiRefs.contentFrame
