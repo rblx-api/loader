@@ -10,6 +10,18 @@ local HS = game:GetService("HttpService")
 local player = Players.LocalPlayer
 
 -- ------------------------------------------------------------
+-- DESCARGAR FONDO ITACHI SI NO EXISTE
+-- ------------------------------------------------------------
+pcall(function()
+    if writefile and isfile and not isfile("Itachiazuldiamante.jpg") then
+        -- Si ya tienes el archivo en workspace, este bloque no hace nada.
+        -- Si no lo tienes, pon aqui la URL directa y se descargara.
+        -- local url = "URL_DIRECTA_DE_LA_IMAGEN_JPG"
+        -- if url then writefile("Itachiazuldiamante.jpg", game:HttpGet(url)) end
+    end
+end)
+
+-- ------------------------------------------------------------
 -- EARLY CONFIG LOAD (for intro sound setting)
 -- ------------------------------------------------------------
 local introSoundEnabled = true
@@ -1811,11 +1823,28 @@ _GuiKeys = Keys
     })
     grad.Rotation=135; grad.Parent=BgGrad; GuiRefs.bgGrad=BgGrad
 
+    -- ================================================
+    -- FONDO DEL PANEL: Itachiazuldiamante.jpg
+    -- ================================================
     local BgImg=Instance.new("ImageLabel")
-    BgImg.Name="BackgroundImage"; BgImg.Size=UDim2.new(1,0,1,0); BgImg.BackgroundTransparency=1
-    BgImg.Image="rbxassetid://131288871967315"; BgImg.ScaleType=Enum.ScaleType.Crop; BgImg.ZIndex=0
-    BgImg.ImageTransparency=1; BgImg.Visible=false
-    BgImg.Parent=BgCont; guiCorner(BgImg,24); GuiRefs.backgroundImage=BgImg; bgImageRef=BgImg
+    BgImg.Name="BackgroundImage"
+    BgImg.Size=UDim2.new(1,0,1,0)
+    BgImg.BackgroundTransparency=1
+    BgImg.ScaleType=Enum.ScaleType.Crop
+    BgImg.ZIndex=0
+    BgImg.ImageTransparency=0.15
+    BgImg.Visible=true
+    local okBg, errBg = pcall(function()
+        BgImg.Image = getcustomasset("Itachiazuldiamante.jpg")
+    end)
+    if not okBg then
+        warn("[Braxil.vs] No se pudo cargar Itachiazuldiamante.jpg: "..tostring(errBg))
+        BgImg.Image = "rbxassetid://131288871967315" -- fallback
+    end
+    BgImg.Parent=BgCont
+    guiCorner(BgImg,24)
+    GuiRefs.backgroundImage=BgImg
+    bgImageRef=BgImg
 
     local HF=Instance.new("Frame")
     HF.Name="HeaderFrame"; HF.Size=UDim2.new(1,0,0,62); HF.BackgroundTransparency=1
