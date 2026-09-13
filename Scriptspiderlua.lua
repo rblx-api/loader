@@ -1439,15 +1439,12 @@ local function buildMobileButtons()
         frame.ZIndex = 102
         Instance.new("UICorner", frame).CornerRadius = UDim.new(0, QR)
 
-        -- Restaurar posicion individual si modo
         do
             local ip = savedIndiv[uniqueName]
             if type(ip)=="table" and ip.xo then
                 if unlockUiIndividual then
-                    -- Modo absoluto
                     frame.Position = UDim2.new(ip.xs or 0, ip.xo or 0, ip.ys or 0, ip.yo or 0)
                 else
-                    -- Modo relativo al grupo
                     frame.Position = UDim2.new(0, ip.xo or 0, 0, ip.yo or 0)
                 end
             end
@@ -1499,7 +1496,6 @@ local function buildMobileButtons()
             end
         end)
 
-        -- Drag support: Group / Individual / Locked
         local _dn, _sp, _fp, _li, _wd, _fpIsFrame = false, nil, nil, nil, false, false
         btn.InputBegan:Connect(function(i)
             if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
@@ -1868,16 +1864,42 @@ _GuiKeys = Keys
     CatPad.PaddingTop=UDim.new(0,10); CatPad.PaddingBottom=UDim.new(0,10); CatPad.Parent=CatList
     GuiRefs.categoryList=CatList
 
+    -- =====================================================
+    -- CONTENT FRAME CON SCROLL MEJORADO (Combat, Visual, etc.)
+    -- =====================================================
     local CF=Instance.new("ScrollingFrame")
-    CF.Name="ContentFrame"; CF.Size=UDim2.new(1,-95,1,-118); CF.Position=UDim2.new(0,0,0,63)
-    CF.BackgroundTransparency=1; CF.BorderSizePixel=0; CF.ScrollBarThickness=6; CF.ScrollBarImageColor3=C.blue
-    CF.CanvasSize=UDim2.new(0,0,0,0); CF.AutomaticCanvasSize=Enum.AutomaticSize.Y
-    CF.ScrollingDirection=Enum.ScrollingDirection.Y; CF.ScrollingEnabled=true; CF.Active=true
-    CF.ElasticBehavior=Enum.ElasticBehavior.Never; CF.Parent=Inner; GuiRefs.contentFrame=CF
-    local CLay=Instance.new("UIListLayout"); CLay.SortOrder=Enum.SortOrder.LayoutOrder; CLay.Padding=UDim.new(0,6); CLay.Parent=CF
-    CLay:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() CF.CanvasSize = UDim2.new(0, 0, 0, CLay.AbsoluteContentSize.Y + 25) end)
-    local CPad=Instance.new("UIPadding"); CPad.PaddingLeft=UDim.new(0,12); CPad.PaddingRight=UDim.new(0,12)
-    CPad.PaddingTop=UDim.new(0,10); CPad.PaddingBottom=UDim.new(0,8); CPad.Parent=CF
+    CF.Name="ContentFrame"
+    CF.Size=UDim2.new(1,-95,1,-118)
+    CF.Position=UDim2.new(0,0,0,63)
+    CF.BackgroundTransparency=1
+    CF.BorderSizePixel=0
+    CF.ScrollBarThickness=5
+    CF.ScrollBarImageColor3=Color3.fromRGB(0,210,255)
+    CF.ScrollBarImageTransparency=0.25
+    CF.CanvasSize=UDim2.new(0,0,0,0)
+    CF.AutomaticCanvasSize=Enum.AutomaticSize.Y
+    CF.ScrollingDirection=Enum.ScrollingDirection.Y
+    CF.ScrollingEnabled=true
+    CF.Active=true
+    CF.ClipsDescendants=true
+    CF.ElasticBehavior=Enum.ElasticBehavior.WhenScrollable
+    CF.Parent=Inner
+    GuiRefs.contentFrame=CF
+
+    local CLay=Instance.new("UIListLayout")
+    CLay.SortOrder=Enum.SortOrder.LayoutOrder
+    CLay.Padding=UDim.new(0,6)
+    CLay.Parent=CF
+    CLay:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        CF.CanvasSize = UDim2.new(0, 0, 0, CLay.AbsoluteContentSize.Y + 60)
+    end)
+
+    local CPad=Instance.new("UIPadding")
+    CPad.PaddingLeft=UDim.new(0,12)
+    CPad.PaddingRight=UDim.new(0,12)
+    CPad.PaddingTop=UDim.new(0,14)
+    CPad.PaddingBottom=UDim.new(0,50)
+    CPad.Parent=CF
 
     local BotSep=Instance.new("Frame")
     BotSep.Position=UDim2.new(0,8,1,-54); BotSep.Size=UDim2.new(1,-16,0,1); BotSep.BackgroundColor3=C.blue
@@ -2054,8 +2076,14 @@ local CategoryRefs={contents={},btnsSide={},active="Speed"}
                 local ac=(n==name); b.TextColor3=ac and C.white or C.textMuted; b.BackgroundTransparency=ac and 0.2 or 0.3
                 local i2=b:FindFirstChild("indicator"); if i2 then i2.BackgroundTransparency=ac and 0.3 or 1 end
             end
+            -- Reset scroll al cambiar de pestaña
+            GuiRefs.contentFrame.CanvasPosition = Vector2.new(0, 0)
+            -- Actualizar CanvasSize con padding extra
             local lay = selectedPage:FindFirstChildOfClass("UIListLayout")
-            if lay then GuiRefs.contentFrame.CanvasSize = UDim2.new(0, 0, 0, lay.AbsoluteContentSize.Y + 25) end
+            if lay then
+                task.wait()
+                GuiRefs.contentFrame.CanvasSize = UDim2.new(0, 0, 0, lay.AbsoluteContentSize.Y + 60)
+            end
         end)
         btn.MouseEnter:Connect(function() if CategoryRefs.active~=name then btn.TextColor3=C.textDim; btn.BackgroundTransparency=0.25 end end)
         btn.MouseLeave:Connect(function() if CategoryRefs.active~=name then btn.TextColor3=C.textMuted; btn.BackgroundTransparency=0.3 end end)
