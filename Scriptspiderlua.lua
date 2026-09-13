@@ -186,7 +186,7 @@ local infJumpMode="manual"
 local holdInfJumpConn=nil
 local DROP_ASCEND_DURATION=0.2
 local DROP_ASCEND_SPEED=150
-local _GuiKeys = nil -- referinta catre Keys din GUI closure, pentru saveConfig
+local _GuiKeys = nil
 
 -- ============================================================
 -- CYBER EXTRAS: BACKGROUND + ZOMBIE ANIMATIONS (din Cyber)
@@ -636,7 +636,6 @@ LP.CharacterAdded:Connect(function(char)
     if medusaCounterEnabled then setupMedusa(char) end
     if batCounterEnabled then startBatCounter() end
     if unwalkEnabled then task.wait(0.5);startUnwalk() end
-    -- Restaureaza starea de speed dupa respawn
     if refreshSpeedModeLabel then refreshSpeedModeLabel() end
     if mobBtnRefs.carrySpeed then mobBtnRefs.carrySpeed(carrySpeedActive) end
     if mobBtnRefs.lagger then mobBtnRefs.lagger(laggerModeEnabled) end
@@ -860,7 +859,6 @@ startBatCounter=function()
 end
 stopBatCounter=function() if Conns.batCounter then Conns.batCounter:Disconnect();Conns.batCounter=nil end;batCounterDebounce=false end
 local aimbotConn=nil
--- â”€â”€ Bat Aimbot (Envy logic) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 local _predBall=nil
 local function findBat()
     local char=LP.Character;if not char then return nil end
@@ -1022,7 +1020,6 @@ refreshSpeedModeLabel=function()
 end
 local _prevCarryBeforeLagger = false
 toggleCarryMode=function()
-    -- Toggle between Normal Speed and Carry Speed (exit lagger if active)
     if laggerModeEnabled then
         laggerModeEnabled = false
     end
@@ -1033,12 +1030,10 @@ toggleCarryMode=function()
 end
 toggleLaggerMode=function()
     if not laggerModeEnabled then
-        -- Activeaza lagger mode si salveaza carry state
         _prevCarryBeforeLagger = carrySpeedActive
         laggerModeEnabled = true
         carrySpeedActive = false
     else
-        -- Lagger e activ: dezactiveaza-l si restaureaza carry state
         laggerModeEnabled = false
         carrySpeedActive = _prevCarryBeforeLagger
     end
@@ -1047,7 +1042,6 @@ toggleLaggerMode=function()
     if mobBtnRefs.lagger then mobBtnRefs.lagger(laggerModeEnabled) end
 end
 local function speedToggleAction()
-    -- Q key: does nothing (carry toggle is only on customizable carryMode keybind)
 end
 startAntiRagdoll=function()
     if Conns.antiRag then return end
@@ -1213,7 +1207,7 @@ end
 createStealBar()
 
 -- ============================================================
--- TP BAT + BAT V2 (no external GUI, integrated in mobile buttons)
+-- TP BAT + BAT V2
 -- ============================================================
 local RXZ_SLAP_LIST={"Bat","Slap","Iron Slap","Gold Slap","Diamond Slap","Emerald Slap","Ruby Slap","Dark Matter Slap","Flame Slap","Nuclear Slap","Galaxy Slap","Glitched Slap"}
 function RXZ.findBat()
@@ -1250,7 +1244,6 @@ function RXZ.closestRoot()
     end
     return best,dist
 end
--- ===== TP BAT =====
 function RXZ.tpHit()
     if RXZ.hitCD then return end
     RXZ.hitCD=true
@@ -1286,7 +1279,6 @@ function RXZ.stopTPBat()
     if RXZ.tpConn then RXZ.tpConn:Disconnect();RXZ.tpConn=nil end
     RXZ.tpBat=false
 end
--- ===== BAT V2 =====
 function RXZ.v2Swing()
     if RXZ.v2CD then return end
     RXZ.v2CD=true
@@ -1361,7 +1353,7 @@ function RXZ.stopBatV2()
 end
 
 -- ============================================================
--- MOBILE BUTTONS  (RXZ stack-button style)
+-- MOBILE BUTTONS (RXZ stack-button style) - AZUL DIAMANTE
 -- ============================================================
 local function destroyMobileButtons()
     if mobGuiRef then pcall(function() mobGuiRef:Destroy() end);mobGuiRef=nil end
@@ -1380,15 +1372,19 @@ local function buildMobileButtons()
     if not pcall(function() mobGui.Parent = game:GetService("CoreGui") end) then mobGui.Parent = LP:WaitForChild("PlayerGui") end
     mobGuiRef = mobGui
 
-    -- ===== ABYSS/ZEN STYLE =====
+    -- ===== ABYSS/ZEN STYLE (AZUL DIAMANTE) =====
     local QS = 60          -- button size px
     local QG = 10          -- gap px
     local QR = 14          -- corner radius
+    -- Paleta AZUL DIAMANTE
+    local DIAMOND_BLUE      = Color3.fromRGB(0, 210, 255)   -- azul diamante
+    local DIAMOND_BLUE_DIM  = Color3.fromRGB(0, 130, 180)   -- azul diamante oscuro
+    local DIAMOND_BLUE_GLOW = Color3.fromRGB(0, 240, 255)   -- azul diamante brillante
     local Q_OFF        = Color3.fromRGB(10, 10, 10)
-    local Q_ON         = Color3.fromRGB(255, 255, 255)
-    local Q_BORDER     = Color3.fromRGB(40, 40, 45)
-    local Q_BORDER_ON  = Color3.fromRGB(80, 80, 85)
-    local Q_TEXT       = Color3.fromRGB(255, 255, 255)
+    local Q_ON         = DIAMOND_BLUE
+    local Q_BORDER     = DIAMOND_BLUE_DIM
+    local Q_BORDER_ON  = DIAMOND_BLUE_GLOW
+    local Q_TEXT       = DIAMOND_BLUE
     local Q_TEXT_ON    = Color3.fromRGB(0, 0, 0)
 
     -- Grid container (3 cols x 4 rows)
@@ -1441,7 +1437,6 @@ local function buildMobileButtons()
 
         local isOn = false
 
-        -- setter pentru sync extern
         local function setter(s)
             isOn = s
             TweenService:Create(frame, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {BackgroundColor3 = s and Q_ON or Q_OFF}):Play()
@@ -1469,7 +1464,6 @@ local function buildMobileButtons()
             end
         end)
 
-        -- Drag support (moves the WHOLE button group together)
         local _dn, _sp, _fp, _li, _wd = false, nil, nil, nil, false
         btn.InputBegan:Connect(function(i)
             if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
@@ -1500,24 +1494,18 @@ local function buildMobileButtons()
         return frame, setter
     end
 
-    -- ===== DEFINIRE BUTOANE (col, row, 0-indexed) =====
-    local _, refDrop = makeMobileBtn("DROP\nBR", 2, 2, false, function()
-        runDrop()
-    end)
+    local _, refDrop = makeMobileBtn("DROP\nBR", 2, 2, false, function() runDrop() end)
     mobBtnRefs["drop"] = refDrop
-
     local _, refTPBat = makeMobileBtn("TP\nBAT", 2, 3, true, function(on)
         if on then RXZ.startTPBat() else RXZ.stopTPBat() end
         if RXZ.setTPBatVisual then RXZ.setTPBatVisual(on) end
     end)
     mobBtnRefs["tpBat"] = refTPBat
-
     local _, refBatV2 = makeMobileBtn("BAT\nV2", 0, 1, true, function(on)
         if on then RXZ.startBatV2() else RXZ.stopBatV2() end
         if RXZ.setBatV2Visual then RXZ.setBatV2Visual(on) end
     end)
     mobBtnRefs["batV2"] = refBatV2
-
     local _, refAutoLeft = makeMobileBtn("AUTO\nLEFT", 1, 0, true, function(on)
         if on then
             if autoRightEnabled then autoRightEnabled=false; stopAutoRight(); if autoRightSetVisual then autoRightSetVisual(false) end; if mobBtnRefs.autoRight then mobBtnRefs.autoRight(false) end end
@@ -1530,7 +1518,6 @@ local function buildMobileButtons()
         end
     end)
     mobBtnRefs["autoLeft"] = refAutoLeft
-
     local _, refAutoBat = makeMobileBtn("BAT\nAIMBOT", 1, 1, true, function(on)
         if on then
             if autoLeftEnabled then autoLeftEnabled=false; stopAutoLeft(); if autoLeftSetVisual then autoLeftSetVisual(false) end; if mobBtnRefs.autoLeft then mobBtnRefs.autoLeft(false) end end
@@ -1543,7 +1530,6 @@ local function buildMobileButtons()
         end
     end)
     mobBtnRefs["autoBat"] = refAutoBat
-
     local _, refAutoRight = makeMobileBtn("AUTO\nRIGHT", 2, 0, true, function(on)
         if on then
             if autoLeftEnabled then autoLeftEnabled=false; stopAutoLeft(); if autoLeftSetVisual then autoLeftSetVisual(false) end; if mobBtnRefs.autoLeft then mobBtnRefs.autoLeft(false) end end
@@ -1556,19 +1542,14 @@ local function buildMobileButtons()
         end
     end)
     mobBtnRefs["autoRight"] = refAutoRight
-
-    local _, refTP = makeMobileBtn("TP\nDOWN", 1, 3, false, function()
-        runTPFloor()
-    end)
+    local _, refTP = makeMobileBtn("TP\nDOWN", 1, 3, false, function() runTPFloor() end)
     mobBtnRefs["tpDown"] = refTP
-
     local _, refCarry = makeMobileBtn("CARRY\nSPD", 1, 2, true, function(on)
         toggleCarryMode()
         if mobBtnRefs.lagger then mobBtnRefs.lagger(laggerModeEnabled) end
         saveConfig()
     end)
     mobBtnRefs["carrySpeed"] = refCarry
-
     local _, refLagger = makeMobileBtn("LAGGER\nMODE", 2, 1, true, function(on)
         toggleLaggerMode()
         if mobBtnRefs.lagger then mobBtnRefs.lagger(laggerModeEnabled) end
@@ -1576,13 +1557,9 @@ local function buildMobileButtons()
         saveConfig()
     end)
     mobBtnRefs["lagger"] = refLagger
-
-    local _, refReset = makeMobileBtn("INSTA\nRESET", 0, 0, false, function()
-        cursedInstaReset()
-    end)
+    local _, refReset = makeMobileBtn("INSTA\nRESET", 0, 0, false, function() cursedInstaReset() end)
     mobBtnRefs["instaReset"] = refReset
 
-    -- Sync stari curente
     if mobBtnRefs.autoLeft then mobBtnRefs.autoLeft(autoLeftEnabled) end
     if mobBtnRefs.autoRight then mobBtnRefs.autoRight(autoRightEnabled) end
     if mobBtnRefs.autoBat then mobBtnRefs.autoBat(autoBatEnabled) end
@@ -1593,7 +1570,7 @@ local function buildMobileButtons()
 end
 
 -- ============================================================
--- FULL CONFIG LOAD (inainte de build GUI, pentru ca GUI sa citeasca valorile corecte)
+-- FULL CONFIG LOAD
 -- ============================================================
 pcall(function()
     if not(isfile and isfile("RXZ_HUB.json")) then return end
@@ -1638,92 +1615,25 @@ pcall(function()
 end)
 
 -- ============================================================
--- APPLY CONFIG â€” porneste sistemele dupa ce valorile au fost incarcate
+-- APPLY CONFIG
 -- ============================================================
 pcall(function()
-    -- Zombie Animations
-    if animEnabled then
-        task.spawn(function()
-            task.wait(1)
-            if startAnimToggle then startAnimToggle() end
-        end)
-    end
-    -- Anti Lag
-    if antiLagEnabled then
-        task.spawn(function()
-            task.wait(1)
-            if enableAntiLag then enableAntiLag() end
-        end)
-    end
-    -- Stretch Rez (FOV)
-    if stretchRezEnabled then
-        task.spawn(function()
-            task.wait(0.5)
-            if enableStretchRez then enableStretchRez() end
-        end)
-    end
-    -- Anti Ragdoll
-    if antiRagdollEnabled then
-        task.spawn(function()
-            task.wait(0.5)
-            if startAntiRagdoll then startAntiRagdoll() end
-        end)
-    end
-    -- Infinite Jump
-    if infJumpEnabled then
-        task.spawn(function()
-            task.wait(0.5)
-            if setInfJumpInternal then setInfJumpInternal(true) end
-        end)
-    end
-    -- Auto Steal
-    if Steal.AutoStealEnabled then
-        task.spawn(function()
-            task.wait(1)
-            if startAutoSteal then startAutoSteal() end
-        end)
-    end
-    -- Bat Counter
-    if batCounterEnabled then
-        task.spawn(function()
-            task.wait(1)
-            if startBatCounter then startBatCounter() end
-        end)
-    end
-    -- Anti Kick
-    if RXZ.antiKick then
-        task.spawn(function() task.wait(1); RXZ.antiKick=false; RXZ.enableAntiKick(); if RXZ.setAntiKickVisual then RXZ.setAntiKickVisual(true) end end)
-    end
-    -- Medusa Reset
-    if RXZ.medusaReset then
-        task.spawn(function() task.wait(1); local ch=LP.Character; if ch and setupMedusa then setupMedusa(ch) end end)
-    end
-    -- Medusa Counter
-    if medusaCounterEnabled then
-        task.spawn(function()
-            task.wait(1)
-            local char = LP.Character
-            if char and setupMedusa then setupMedusa(char) end
-        end)
-    end
-    -- Auto TP
-    if autoTPEnabled then
-        task.spawn(function()
-            task.wait(0.5)
-            if startAutoTP then startAutoTP() end
-        end)
-    end
-    -- Sky Theme
-    if currentSkyTheme and currentSkyTheme ~= "" then
-        task.spawn(function()
-            task.wait(1)
-            if CandyApplyCustomSky then CandyApplyCustomSky(currentSkyTheme) end
-        end)
-    end
+    if animEnabled then task.spawn(function() task.wait(1); if startAnimToggle then startAnimToggle() end end) end
+    if antiLagEnabled then task.spawn(function() task.wait(1); if enableAntiLag then enableAntiLag() end end) end
+    if stretchRezEnabled then task.spawn(function() task.wait(0.5); if enableStretchRez then enableStretchRez() end end) end
+    if antiRagdollEnabled then task.spawn(function() task.wait(0.5); if startAntiRagdoll then startAntiRagdoll() end end) end
+    if infJumpEnabled then task.spawn(function() task.wait(0.5); if setInfJumpInternal then setInfJumpInternal(true) end end) end
+    if Steal.AutoStealEnabled then task.spawn(function() task.wait(1); if startAutoSteal then startAutoSteal() end end) end
+    if batCounterEnabled then task.spawn(function() task.wait(1); if startBatCounter then startBatCounter() end end) end
+    if RXZ.antiKick then task.spawn(function() task.wait(1); RXZ.antiKick=false; RXZ.enableAntiKick(); if RXZ.setAntiKickVisual then RXZ.setAntiKickVisual(true) end end) end
+    if RXZ.medusaReset then task.spawn(function() task.wait(1); local ch=LP.Character; if ch and setupMedusa then setupMedusa(ch) end end) end
+    if medusaCounterEnabled then task.spawn(function() task.wait(1); local char = LP.Character; if char and setupMedusa then setupMedusa(char) end end) end
+    if autoTPEnabled then task.spawn(function() task.wait(0.5); if startAutoTP then startAutoTP() end end) end
+    if currentSkyTheme and currentSkyTheme ~= "" then task.spawn(function() task.wait(1); if CandyApplyCustomSky then CandyApplyCustomSky(currentSkyTheme) end end) end
 end)
 
 -- ============================================================
--- CYBER GUI â€” rulat in functie proprie ca sa evite limita 200 locals
+-- CYBER GUI
 -- ============================================================
 ;(function()
 
@@ -1776,7 +1686,6 @@ local Keys={
     autoLeft=Enum.KeyCode.J,
     autoRight=Enum.KeyCode.L,
 }
--- Aplica keybind-urile salvate si inregistreaza referinta pentru saveConfig
 pcall(function()
     if not(isfile and isfile("RXZ_HUB.json")) then return end
     local ok,d=pcall(function() return HS:JSONDecode(readfile("RXZ_HUB.json")) end)
@@ -1789,7 +1698,6 @@ pcall(function()
 end)
 _GuiKeys = Keys
 
--- BUILD HUB GUI
 ;(function()
     local GuiHub=Instance.new("ScreenGui")
     GuiHub.Name="BraxilVsHub"; GuiHub.ResetOnSpawn=false
@@ -1800,7 +1708,6 @@ _GuiKeys = Keys
     Outer.Name="Outer"; Outer.Size=UDim2.new(0,340,0,620); Outer.Position=UDim2.new(0,6,0,20)
     Outer.BackgroundTransparency=1; Outer.BorderSizePixel=0; Outer.ClipsDescendants=false; Outer.Parent=GuiHub
     GuiRefs.outer=Outer
-    -- compact scale for mobile (opens on the LEFT, next to the Roblox settings button)
     local OuterScale=Instance.new("UIScale"); OuterScale.Scale=0.72; OuterScale.Parent=Outer
 
     local Inner=Instance.new("Frame")
@@ -1823,9 +1730,7 @@ _GuiKeys = Keys
     })
     grad.Rotation=135; grad.Parent=BgGrad; GuiRefs.bgGrad=BgGrad
 
-    -- ================================================
     -- FONDO DEL PANEL: Itachiazuldiamante.jpg
-    -- ================================================
     local BgImg=Instance.new("ImageLabel")
     BgImg.Name="BackgroundImage"
     BgImg.Size=UDim2.new(1,0,1,0)
@@ -1839,7 +1744,7 @@ _GuiKeys = Keys
     end)
     if not okBg then
         warn("[Braxil.vs] No se pudo cargar Itachiazuldiamante.jpg: "..tostring(errBg))
-        BgImg.Image = "rbxassetid://131288871967315" -- fallback
+        BgImg.Image = "rbxassetid://131288871967315"
     end
     BgImg.Parent=BgCont
     guiCorner(BgImg,24)
@@ -1858,10 +1763,9 @@ _GuiKeys = Keys
 
     local ML=Instance.new("TextLabel")
     ML.Position=UDim2.new(0,14,0,32); ML.Size=UDim2.new(0,200,0,14); ML.BackgroundTransparency=1
-    ML.Text="Braxil.vs â€¢ PREMIUM"; ML.TextColor3=C.textDim; ML.TextSize=10; ML.Font=Enum.Font.GothamBold
+    ML.Text="Braxil.vs • PREMIUM"; ML.TextColor3=C.textDim; ML.TextSize=10; ML.Font=Enum.Font.GothamBold
     ML.TextXAlignment=Enum.TextXAlignment.Left; ML.Parent=HF; ML.ZIndex=3
 
-    -- MINIMIZE BUTTON
     local CloseBtn=Instance.new("TextButton")
     CloseBtn.Size=UDim2.new(0,28,0,28); CloseBtn.Position=UDim2.new(1,-38,0,8)
     CloseBtn.BackgroundColor3=C.bgDark; CloseBtn.BorderSizePixel=0
@@ -1871,16 +1775,21 @@ _GuiKeys = Keys
     CloseBtn.MouseEnter:Connect(function() tw(CloseBtn,{BackgroundColor3=Color3.fromRGB(28,28,28),TextColor3=C.text}) end)
     CloseBtn.MouseLeave:Connect(function() tw(CloseBtn,{BackgroundColor3=C.bgDark,TextColor3=C.textMuted}) end)
 
-    -- MINI RESTORE BUTTON
+    -- ================================================
+    -- MINI RESTORE BUTTON "Braxil.vs" - AZUL DIAMANTE
+    -- ================================================
     local MiniBtn=Instance.new("TextButton")
     MiniBtn.Size=UDim2.new(0,110,0,28); MiniBtn.Position=Outer.Position
     MiniBtn.BackgroundColor3=C.bgDark; MiniBtn.BorderSizePixel=0
-    MiniBtn.Text="Braxil.vs"; MiniBtn.TextColor3=C.text; MiniBtn.Font=Enum.Font.GothamBlack; MiniBtn.TextSize=11
+    MiniBtn.Text="Braxil.vs"
+    MiniBtn.TextColor3=Color3.fromRGB(0, 210, 255)   -- AZUL DIAMANTE
+    MiniBtn.Font=Enum.Font.GothamBlack; MiniBtn.TextSize=11
     MiniBtn.ZIndex=20; MiniBtn.Visible=false; MiniBtn.Parent=GuiRefs.hub
-    guiCorner(MiniBtn,8); guiStroke(MiniBtn,Color3.fromRGB(45,45,45),1.2)
+    guiCorner(MiniBtn,8)
+    guiStroke(MiniBtn, Color3.fromRGB(0, 150, 200), 1.2)   -- BORDE AZUL DIAMANTE
     makeDraggable_cyber(MiniBtn, MiniBtn)
-    MiniBtn.MouseEnter:Connect(function() tw(MiniBtn,{BackgroundColor3=Color3.fromRGB(22,22,22)}) end)
-    MiniBtn.MouseLeave:Connect(function() tw(MiniBtn,{BackgroundColor3=C.bgDark}) end)
+    MiniBtn.MouseEnter:Connect(function() tw(MiniBtn,{BackgroundColor3=Color3.fromRGB(22,22,22), TextColor3=Color3.fromRGB(0, 240, 255)}) end)
+    MiniBtn.MouseLeave:Connect(function() tw(MiniBtn,{BackgroundColor3=C.bgDark, TextColor3=Color3.fromRGB(0, 210, 255)}) end)
 
     local function showGui() Outer.Visible=true; MiniBtn.Visible=false end
     local function hideGui() Outer.Visible=false; MiniBtn.Visible=true end
@@ -1926,11 +1835,11 @@ end)()
 local KeyListen={cb=nil,label=nil,active=false}
 local KEY_ALIASES={
     ButtonA="A",ButtonB="B",ButtonX="X",ButtonY="Y",ButtonR1="RB",ButtonR2="RT",ButtonL1="LB",ButtonL2="LT",
-    DPadUp="Dâ†‘",DPadDown="Dâ†“",DPadLeft="Dâ†",DPadRight="Dâ†’",ButtonStart="â–¶",ButtonSelect="â—€",
+    DPadUp="D+",DPadDown="D-",DPadLeft="D<",DPadRight="D>",ButtonStart=">",ButtonSelect="<",
     LeftShift="LShift",RightShift="RShift",LeftControl="LCtrl",RightControl="RCtrl",LeftAlt="LAlt",RightAlt="RAlt",
     LeftSuper="LSuper",RightSuper="RSuper",Return="Enter",BackSpace="Backspace",Tab="Tab",CapsLock="CapsLock",
     Escape="Esc",Space="Space",PageUp="PgUp",PageDown="PgDn",End="End",Home="Home",Insert="Ins",Delete="Del",
-    Up="â†‘",Down="â†“",Left="â†",Right="â†’",F1="F1",F2="F2",F3="F3",F4="F4",F5="F5",F6="F6",F7="F7",F8="F8",
+    Up="Up",Down="Dn",Left="Lt",Right="Rt",F1="F1",F2="F2",F3="F3",F4="F4",F5="F5",F6="F6",F7="F7",F8="F8",
     F9="F9",F10="F10",F11="F11",F12="F12",Print="PrtScn",ScrollLock="ScrLk",Pause="Pause",
     Minus="-",Equals="=",LeftBracket="[",RightBracket="]",BackSlash="\\",Semicolon=";",Quote="'",
     Comma=",",Period=".",Slash="/",Backquote="`"
@@ -2089,7 +1998,6 @@ end)()
         if refreshSpeedModeLabel then refreshSpeedModeLabel() end; saveConfig()
     end)
 end)()
-
 
 -- COMBAT PAGE
 ;(function()
@@ -2313,6 +2221,6 @@ if RXZ.antiKick then RXZ.antiKick=false; RXZ.enableAntiKick() end
 CandyApplyCustomSky(currentSkyTheme)
 buildMobileButtons()
 
-end)() -- end GUI function
+end)()
 
 print("Braxil.vs LOADED")
