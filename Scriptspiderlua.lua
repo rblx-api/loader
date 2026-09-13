@@ -14,15 +14,13 @@ local player = Players.LocalPlayer
 -- ------------------------------------------------------------
 pcall(function()
     if writefile and isfile and not isfile("Itachiazuldiamante.jpg") then
-        -- Si ya tienes el archivo en workspace, este bloque no hace nada.
-        -- Si no lo tienes, pon aqui la URL directa y se descargara.
         -- local url = "URL_DIRECTA_DE_LA_IMAGEN_JPG"
         -- if url then writefile("Itachiazuldiamante.jpg", game:HttpGet(url)) end
     end
 end)
 
 -- ------------------------------------------------------------
--- EARLY CONFIG LOAD (for intro sound setting)
+-- EARLY CONFIG LOAD
 -- ------------------------------------------------------------
 local introSoundEnabled = true
 if isfile and isfile("RXZ_HUB.json") then
@@ -31,7 +29,6 @@ if isfile and isfile("RXZ_HUB.json") then
         introSoundEnabled = data.introSoundEnabled
     end
 end
--- Load Cyber extras from saved config
 if isfile and isfile("RXZ_HUB.json") then
     local ok2, d2 = pcall(function() return HS:JSONDecode(readfile("RXZ_HUB.json")) end)
     if ok2 and type(d2)=="table" then
@@ -42,18 +39,16 @@ if isfile and isfile("RXZ_HUB.json") then
 end
 
 -- ------------------------------------------------------------
--- INTRO SOUND (only if enabled)
+-- INTRO SOUND
 -- ------------------------------------------------------------
 local introSoundInstance = nil
 if introSoundEnabled then
     local urlIntro = "https://files.catbox.moe/hg5cr4.mp3"
     local numeFisier = "movee_intro.mp3"
-
     local ok, data = pcall(function() return game:HttpGet(urlIntro) end)
     if ok and data then
         pcall(function() writefile(numeFisier, data) end)
     end
-
     introSoundInstance = Instance.new("Sound")
     pcall(function()
         introSoundInstance.SoundId = getcustomasset(numeFisier)
@@ -141,7 +136,6 @@ local laggerModeEnabled = false
 local antiRagdollEnabled,infJumpEnabled=false,false
 local medusaCounterEnabled,batCounterEnabled,unwalkEnabled=false,false,false
 local medusaDebounce,medusaLastUsed,dropActive=false,0,false
--- RXZ HUB extra state (single table to stay under the local limit)
 local RXZ={medusaReset=false,antiKick=false,brainrot=false,tpBat=false,batV2=false,tpConn=nil,v2Conn=nil,v2Rot=nil,hitCD=false,v2CD=false}
 local autoLeftEnabled,autoRightEnabled=false,false
 local autoLeftSetVisual,autoRightSetVisual=nil,nil
@@ -188,8 +182,12 @@ local DROP_ASCEND_DURATION=0.2
 local DROP_ASCEND_SPEED=150
 local _GuiKeys = nil
 
+-- ===== NUEVOS ESTADOS: Lock UI / Unlock UI =====
+local lockUiEnabled = false
+local unlockUiIndividual = false
+
 -- ============================================================
--- CYBER EXTRAS: BACKGROUND + ZOMBIE ANIMATIONS (din Cyber)
+-- CYBER EXTRAS
 -- ============================================================
 local animEnabled = false
 local backgroundEnabled = false
@@ -224,7 +222,6 @@ local function applyBackgroundImage(index)
     end
 end
 
--- ANIMATII REMBEMBI (Zombie Mode) din Cyber
 local RembembiAnims = {
     WalkAnim  = 73718308412641,
     RunAnim   = 135515454877967,
@@ -311,8 +308,12 @@ do
     end
 end
 
-
+-- ============================================================
+-- POSITIONS SAVE/LOAD (GROUP + INDIVIDUAL)
+-- ============================================================
 local MOB_POS_FILE="RXZ_BtnPos.json"
+local MOB_INDIVIDUAL_FILE="RXZ_BtnIndiv.json"
+
 local function loadBtnPositions()
     if not(isfile and isfile(MOB_POS_FILE)) then return {} end
     local ok,data=pcall(function() return HS:JSONDecode(readfile(MOB_POS_FILE)) end)
@@ -324,6 +325,23 @@ local function saveBtnPositions()
     if not grp then return end
     local out={__group={xs=grp.Position.X.Scale,xo=grp.Position.X.Offset,ys=grp.Position.Y.Scale,yo=grp.Position.Y.Offset}}
     pcall(function() writefile(MOB_POS_FILE,HS:JSONEncode(out)) end)
+end
+local function loadIndividualPositions()
+    if not(isfile and isfile(MOB_INDIVIDUAL_FILE)) then return {} end
+    local ok,data=pcall(function() return HS:JSONDecode(readfile(MOB_INDIVIDUAL_FILE)) end)
+    if ok and type(data)=="table" then return data end; return {}
+end
+local function saveIndividualPositions()
+    if not writefile then return end; if not mobGuiRef then return end
+    local grp=mobGuiRef:FindFirstChild("MobileButtons")
+    if not grp then return end
+    local out={}
+    for _,child in ipairs(grp:GetChildren()) do
+        if child:IsA("Frame") and child.Name:sub(1,5)=="btn__" then
+            out[child.Name]={xs=child.Position.X.Scale,xo=child.Position.X.Offset,ys=child.Position.Y.Scale,yo=child.Position.Y.Offset}
+        end
+    end
+    pcall(function() writefile(MOB_INDIVIDUAL_FILE,HS:JSONEncode(out)) end)
 end
 task.spawn(function() while true do task.wait(3);pcall(saveBtnPositions) end end)
 
@@ -710,6 +728,7 @@ startAutoRight=function()
         end
     end)
 end
+
 -- ============================================================
 -- DROP BRAINROT
 -- ============================================================
@@ -805,8 +824,9 @@ setupMedusa=function(char)
     table.insert(Conns.anchor,char.DescendantAdded:Connect(function(part) if part:IsA("BasePart") then table.insert(Conns.anchor,onAnchorChanged(part)) end end))
 end
 stopMedusaCounter=function() for _,c in pairs(Conns.anchor) do pcall(function() c:Disconnect() end) end;Conns.anchor={} end
+
 -- ============================================================
--- ANTI KICK (from RXZ)
+-- ANTI KICK
 -- ============================================================
 function RXZ.enableAntiKick()
     RXZ.antiKick=true
@@ -963,7 +983,7 @@ saveConfig=function()
         elseif e.gp then return {gp=e.gp.Name}
         else return {kb=nil,gp=nil} end
     end
-    local cfg={normalSpeed=NS,carrySpeed=CS,dropBrainrotKey=ks(KB.DropBrainrot),autoLeftKey=ks(KB.AutoLeft),autoRightKey=ks(KB.AutoRight),autoBatKey=ks(KB.AutoBat),laggerToggleKey=ks(KB.LaggerToggle),tpFloorKey=ks(KB.TPFloor),instaResetKey=ks(KB.InstaReset),guiHideKey=ks(KB.GuiHide),speedToggleKey=ks(KB.SpeedToggle),grabRadius=Steal.StealRadius,stealDuration=Steal.StealDuration,antiRagdoll=antiRagdollEnabled,autoStealEnabled=Steal.AutoStealEnabled,infiniteJump=infJumpEnabled,infJumpMode=infJumpMode,medusaCounter=medusaCounterEnabled,batCounter=batCounterEnabled,carrySpeedActive=carrySpeedActive,laggerModeEnabled=laggerModeEnabled,laggerSpeed=LAGGER_SPEED,laggerCarrySpeed=LAGGER_CARRY_SPEED,autoBat=autoBatEnabled,autoSwing=autoSwingEnabled,unwalkEnabled=unwalkEnabled,antiLag=antiLagEnabled,stretchRez=stretchRezEnabled,autoTPEnabled=autoTPEnabled,autoTPHeight=autoTPHeight,guiTransparencyEnabled=guiTransparencyEnabled,mobileButtonsEnabled=mobileButtonsEnabled,mobileButtonsLocked=mobileButtonsLocked,mobileButtonsSize=mobileButtonsSize,circleButtonsEnabled=circleButtonsEnabled,autoSwitchSpeed=autoSwitchSpeedEnabled,fovValue=fovValue,perButtonDrag=perButtonDragEnabled,skyTheme=currentSkyTheme,medusaReset=RXZ.medusaReset,antiKick=RXZ.antiKick,autoMoveSwing=autoMoveSwingEnabled,autoMoveSwingInterval=autoMoveSwingInterval,ragdollGui=ragdollGuiEnabled,introSoundEnabled=introSoundEnabled,animEnabled=animEnabled,backgroundEnabled=backgroundEnabled,backgroundIndex=backgroundIndex,keys=(function() if not _GuiKeys then return {} end;local t={};for k,v in pairs(_GuiKeys) do t[k]=v.Name end;return t end)()}
+    local cfg={normalSpeed=NS,carrySpeed=CS,dropBrainrotKey=ks(KB.DropBrainrot),autoLeftKey=ks(KB.AutoLeft),autoRightKey=ks(KB.AutoRight),autoBatKey=ks(KB.AutoBat),laggerToggleKey=ks(KB.LaggerToggle),tpFloorKey=ks(KB.TPFloor),instaResetKey=ks(KB.InstaReset),guiHideKey=ks(KB.GuiHide),speedToggleKey=ks(KB.SpeedToggle),grabRadius=Steal.StealRadius,stealDuration=Steal.StealDuration,antiRagdoll=antiRagdollEnabled,autoStealEnabled=Steal.AutoStealEnabled,infiniteJump=infJumpEnabled,infJumpMode=infJumpMode,medusaCounter=medusaCounterEnabled,batCounter=batCounterEnabled,carrySpeedActive=carrySpeedActive,laggerModeEnabled=laggerModeEnabled,laggerSpeed=LAGGER_SPEED,laggerCarrySpeed=LAGGER_CARRY_SPEED,autoBat=autoBatEnabled,autoSwing=autoSwingEnabled,unwalkEnabled=unwalkEnabled,antiLag=antiLagEnabled,stretchRez=stretchRezEnabled,autoTPEnabled=autoTPEnabled,autoTPHeight=autoTPHeight,guiTransparencyEnabled=guiTransparencyEnabled,mobileButtonsEnabled=mobileButtonsEnabled,mobileButtonsLocked=mobileButtonsLocked,mobileButtonsSize=mobileButtonsSize,circleButtonsEnabled=circleButtonsEnabled,autoSwitchSpeed=autoSwitchSpeedEnabled,fovValue=fovValue,perButtonDrag=perButtonDragEnabled,skyTheme=currentSkyTheme,medusaReset=RXZ.medusaReset,antiKick=RXZ.antiKick,autoMoveSwing=autoMoveSwingEnabled,autoMoveSwingInterval=autoMoveSwingInterval,ragdollGui=ragdollGuiEnabled,introSoundEnabled=introSoundEnabled,animEnabled=animEnabled,backgroundEnabled=backgroundEnabled,backgroundIndex=backgroundIndex,lockUi=lockUiEnabled,unlockUiIndividual=unlockUiIndividual,keys=(function() if not _GuiKeys then return {} end;local t={};for k,v in pairs(_GuiKeys) do t[k]=v.Name end;return t end)()}
     if writefile then pcall(function() writefile("RXZ_HUB.json",HS:JSONEncode(cfg)) end) end
 end
 task.spawn(function() while task.wait(5) do saveConfig() end end)
@@ -977,6 +997,7 @@ local function resetAllSettings()
     Steal.AutoStealEnabled=false;Steal.StealRadius=60;Steal.StealDuration=1.4
     guiTransparencyEnabled=false;mobileButtonsEnabled=true;mobileButtonsSize=80
     circleButtonsEnabled=false;uiLocked=false;fovValue=80;fovIndex=1
+    lockUiEnabled=false;unlockUiIndividual=false
     introSoundEnabled=true
     KB.DropBrainrot={kb=nil,gp=nil};KB.AutoLeft={kb=nil,gp=nil};KB.AutoRight={kb=nil,gp=nil}
     KB.AutoBat={kb=nil,gp=nil};KB.TPFloor={kb=nil,gp=nil};KB.InstaReset={kb=nil,gp=nil}
@@ -1041,8 +1062,7 @@ toggleLaggerMode=function()
     if mobBtnRefs.carrySpeed then mobBtnRefs.carrySpeed(carrySpeedActive) end
     if mobBtnRefs.lagger then mobBtnRefs.lagger(laggerModeEnabled) end
 end
-local function speedToggleAction()
-end
+local function speedToggleAction() end
 startAntiRagdoll=function()
     if Conns.antiRag then return end
     Conns.antiRag=RunService.Heartbeat:Connect(function()
@@ -1082,7 +1102,7 @@ stopUnwalk=function() local c=LP.Character;if c and unwalkSavedAnimate then unwa
 
 
 -- ============================================================
--- STEAL BAR (alb/negru)
+-- STEAL BAR
 -- ============================================================
 local function createStealBar()
     for _,n in ipairs({"MoveeStealBar"}) do
@@ -1353,7 +1373,7 @@ function RXZ.stopBatV2()
 end
 
 -- ============================================================
--- MOBILE BUTTONS (RXZ stack-button style) - AZUL DIAMANTE
+-- MOBILE BUTTONS (AZUL DIAMANTE) - CON LOCK/UNLOCK UI
 -- ============================================================
 local function destroyMobileButtons()
     if mobGuiRef then pcall(function() mobGuiRef:Destroy() end);mobGuiRef=nil end
@@ -1372,14 +1392,12 @@ local function buildMobileButtons()
     if not pcall(function() mobGui.Parent = game:GetService("CoreGui") end) then mobGui.Parent = LP:WaitForChild("PlayerGui") end
     mobGuiRef = mobGui
 
-    -- ===== ABYSS/ZEN STYLE (AZUL DIAMANTE) =====
-    local QS = 60          -- button size px
-    local QG = 10          -- gap px
-    local QR = 14          -- corner radius
-    -- Paleta AZUL DIAMANTE
-    local DIAMOND_BLUE      = Color3.fromRGB(0, 210, 255)   -- azul diamante
-    local DIAMOND_BLUE_DIM  = Color3.fromRGB(0, 130, 180)   -- azul diamante oscuro
-    local DIAMOND_BLUE_GLOW = Color3.fromRGB(0, 240, 255)   -- azul diamante brillante
+    local QS = 60
+    local QG = 10
+    local QR = 14
+    local DIAMOND_BLUE      = Color3.fromRGB(0, 210, 255)
+    local DIAMOND_BLUE_DIM  = Color3.fromRGB(0, 130, 180)
+    local DIAMOND_BLUE_GLOW = Color3.fromRGB(0, 240, 255)
     local Q_OFF        = Color3.fromRGB(10, 10, 10)
     local Q_ON         = DIAMOND_BLUE
     local Q_BORDER     = DIAMOND_BLUE_DIM
@@ -1387,7 +1405,6 @@ local function buildMobileButtons()
     local Q_TEXT       = DIAMOND_BLUE
     local Q_TEXT_ON    = Color3.fromRGB(0, 0, 0)
 
-    -- Grid container (3 cols x 4 rows)
     local QW = QS * 3 + QG * 2
     local QH = QS * 4 + QG * 3
     local mbGroup = Instance.new("Frame", mobGui)
@@ -1405,11 +1422,15 @@ local function buildMobileButtons()
         end
     end
 
+    local savedIndiv = loadIndividualPositions()
+
     local function makeMobileBtn(label, col, rowN, isToggle, onAction)
         local relX = 10 + col * (QS + QG)
         local relY = 10 + rowN * (QS + QG)
+        local uniqueName = "btn__"..tostring(col).."_"..tostring(rowN)
 
         local frame = Instance.new("Frame", mbGroup)
+        frame.Name = uniqueName
         frame.Size = UDim2.new(0, QS, 0, QS)
         frame.Position = UDim2.new(0, relX, 0, relY)
         frame.BackgroundColor3 = Q_OFF
@@ -1417,6 +1438,20 @@ local function buildMobileButtons()
         frame.Active = true
         frame.ZIndex = 102
         Instance.new("UICorner", frame).CornerRadius = UDim.new(0, QR)
+
+        -- Restaurar posicion individual si modo
+        do
+            local ip = savedIndiv[uniqueName]
+            if type(ip)=="table" and ip.xo then
+                if unlockUiIndividual then
+                    -- Modo absoluto
+                    frame.Position = UDim2.new(ip.xs or 0, ip.xo or 0, ip.ys or 0, ip.yo or 0)
+                else
+                    -- Modo relativo al grupo
+                    frame.Position = UDim2.new(0, ip.xo or 0, 0, ip.yo or 0)
+                end
+            end
+        end
 
         local stroke = Instance.new("UIStroke", frame)
         stroke.Color = Q_BORDER
@@ -1464,10 +1499,17 @@ local function buildMobileButtons()
             end
         end)
 
-        local _dn, _sp, _fp, _li, _wd = false, nil, nil, nil, false
+        -- Drag support: Group / Individual / Locked
+        local _dn, _sp, _fp, _li, _wd, _fpIsFrame = false, nil, nil, nil, false, false
         btn.InputBegan:Connect(function(i)
             if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
-                _dn = true; _wd = false; _sp = i.Position; _fp = mbGroup.Position
+                if lockUiEnabled then return end
+                _dn = true; _wd = false; _sp = i.Position
+                if unlockUiIndividual then
+                    _fp = frame.Position; _fpIsFrame = true
+                else
+                    _fp = mbGroup.Position; _fpIsFrame = false
+                end
                 i.Changed:Connect(function() if i.UserInputState == Enum.UserInputState.End then _dn = false end end)
             end
         end)
@@ -1476,17 +1518,30 @@ local function buildMobileButtons()
         end)
         UIS.InputChanged:Connect(function(i)
             if i == _li and _dn and _sp and _fp then
-                if uiLocked then return end
+                if lockUiEnabled then return end
                 local dx = i.Position.X - _sp.X; local dy = i.Position.Y - _sp.Y
                 if math.abs(dx) > 6 or math.abs(dy) > 6 then
                     _wd = true
-                    mbGroup.Position = UDim2.new(_fp.X.Scale, _fp.X.Offset + dx, _fp.Y.Scale, _fp.Y.Offset + dy)
+                    local newPos
+                    if _fpIsFrame then
+                        newPos = UDim2.new(_fp.X.Scale, _fp.X.Offset + dx, _fp.Y.Scale, _fp.Y.Offset + dy)
+                        frame.Position = newPos
+                    else
+                        newPos = UDim2.new(_fp.X.Scale, _fp.X.Offset + dx, _fp.Y.Scale, _fp.Y.Offset + dy)
+                        mbGroup.Position = newPos
+                    end
                 end
             end
         end)
         btn.InputEnded:Connect(function(i)
             if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
-                if _wd then pcall(saveBtnPositions) end
+                if _wd then
+                    if _fpIsFrame then
+                        pcall(saveIndividualPositions)
+                    else
+                        pcall(saveBtnPositions)
+                    end
+                end
                 _dn = false; _wd = false
             end
         end)
@@ -1612,6 +1667,8 @@ pcall(function()
     if type(d.backgroundEnabled)=="boolean" then backgroundEnabled=d.backgroundEnabled end
     if type(d.backgroundIndex)=="number" then backgroundIndex=d.backgroundIndex end
     if type(d.autoSwitchSpeed)=="boolean" then autoSwitchSpeedEnabled=d.autoSwitchSpeed end
+    if type(d.lockUi)=="boolean" then lockUiEnabled=d.lockUi end
+    if type(d.unlockUiIndividual)=="boolean" then unlockUiIndividual=d.unlockUiIndividual end
 end)
 
 -- ============================================================
@@ -1705,7 +1762,7 @@ _GuiKeys = Keys
     GuiRefs.hub=GuiHub
 
     local Outer=Instance.new("Frame")
-    Outer.Name="Outer"; Outer.Size=UDim2.new(0,340,0,620); Outer.Position=UDim2.new(0,6,0,20)
+    Outer.Name="Outer"; Outer.Size=UDim2.new(0,340,0,700); Outer.Position=UDim2.new(0,6,0,10)
     Outer.BackgroundTransparency=1; Outer.BorderSizePixel=0; Outer.ClipsDescendants=false; Outer.Parent=GuiHub
     GuiRefs.outer=Outer
     local OuterScale=Instance.new("UIScale"); OuterScale.Scale=0.72; OuterScale.Parent=Outer
@@ -1730,7 +1787,6 @@ _GuiKeys = Keys
     })
     grad.Rotation=135; grad.Parent=BgGrad; GuiRefs.bgGrad=BgGrad
 
-    -- FONDO DEL PANEL: Itachiazuldiamante.jpg
     local BgImg=Instance.new("ImageLabel")
     BgImg.Name="BackgroundImage"
     BgImg.Size=UDim2.new(1,0,1,0)
@@ -1775,18 +1831,15 @@ _GuiKeys = Keys
     CloseBtn.MouseEnter:Connect(function() tw(CloseBtn,{BackgroundColor3=Color3.fromRGB(28,28,28),TextColor3=C.text}) end)
     CloseBtn.MouseLeave:Connect(function() tw(CloseBtn,{BackgroundColor3=C.bgDark,TextColor3=C.textMuted}) end)
 
-    -- ================================================
-    -- MINI RESTORE BUTTON "Braxil.vs" - AZUL DIAMANTE
-    -- ================================================
     local MiniBtn=Instance.new("TextButton")
     MiniBtn.Size=UDim2.new(0,110,0,28); MiniBtn.Position=Outer.Position
     MiniBtn.BackgroundColor3=C.bgDark; MiniBtn.BorderSizePixel=0
     MiniBtn.Text="Braxil.vs"
-    MiniBtn.TextColor3=Color3.fromRGB(0, 210, 255)   -- AZUL DIAMANTE
+    MiniBtn.TextColor3=Color3.fromRGB(0, 210, 255)
     MiniBtn.Font=Enum.Font.GothamBlack; MiniBtn.TextSize=11
     MiniBtn.ZIndex=20; MiniBtn.Visible=false; MiniBtn.Parent=GuiRefs.hub
     guiCorner(MiniBtn,8)
-    guiStroke(MiniBtn, Color3.fromRGB(0, 150, 200), 1.2)   -- BORDE AZUL DIAMANTE
+    guiStroke(MiniBtn, Color3.fromRGB(0, 150, 200), 1.2)
     makeDraggable_cyber(MiniBtn, MiniBtn)
     MiniBtn.MouseEnter:Connect(function() tw(MiniBtn,{BackgroundColor3=Color3.fromRGB(22,22,22), TextColor3=Color3.fromRGB(0, 240, 255)}) end)
     MiniBtn.MouseLeave:Connect(function() tw(MiniBtn,{BackgroundColor3=C.bgDark, TextColor3=Color3.fromRGB(0, 210, 255)}) end)
@@ -1941,6 +1994,40 @@ local function addCycleRow(parent,label,value,order,onCycle)
     local hov=Instance.new("TextButton",Row); hov.Size=UDim2.new(1,0,1,0); hov.BackgroundTransparency=1; hov.Text=""; hov.ZIndex=0
     hov.MouseEnter:Connect(function() tw(Row,{BackgroundTransparency=0.3}) end); hov.MouseLeave:Connect(function() tw(Row,{BackgroundTransparency=0.5}) end)
     return Row,CB
+end
+
+-- PIL Toggle con BOLITA BLANCA (para Lock UI / Unlock UI)
+local function addPillToggleRow(parent,label,enabled,order,onToggle)
+    local Row=Instance.new("Frame",parent)
+    Row.Size=UDim2.new(1,0,0,38); Row.BackgroundColor3=C.row
+    Row.BackgroundTransparency=0.5; Row.BorderSizePixel=0; Row.LayoutOrder=order
+    guiCorner(Row,10); guiStroke(Row,C.divider,1)
+    local Lb=Instance.new("TextLabel",Row); Lb.Size=UDim2.new(0.6,0,0,16); Lb.Position=UDim2.new(0,12,0,6)
+    Lb.BackgroundTransparency=1; Lb.Text=label; Lb.TextColor3=C.text; Lb.TextSize=11
+    Lb.Font=Enum.Font.GothamBold; Lb.TextXAlignment=Enum.TextXAlignment.Left
+    local Track=Instance.new("Frame",Row)
+    Track.Size=UDim2.new(0,40,0,20); Track.Position=UDim2.new(1,-52,0.5,-10)
+    Track.BackgroundColor3=enabled and Color3.fromRGB(0,150,200) or Color3.fromRGB(40,40,45)
+    Track.BorderSizePixel=0; guiCorner(Track,10)
+    local Knob=Instance.new("Frame",Track)
+    Knob.Size=UDim2.new(0,16,0,16)
+    Knob.Position=enabled and UDim2.new(1,-18,0.5,-8) or UDim2.new(0,2,0.5,-8)
+    Knob.BackgroundColor3=Color3.fromRGB(255,255,255)
+    Knob.BorderSizePixel=0; guiCorner(Knob,8)
+    local st=enabled
+    local function setV(on)
+        st=on
+        tw(Knob,{Position=on and UDim2.new(1,-18,0.5,-8) or UDim2.new(0,2,0.5,-8)})
+        tw(Track,{BackgroundColor3=on and Color3.fromRGB(0,150,200) or Color3.fromRGB(40,40,45)})
+    end
+    local Btn=Instance.new("TextButton",Row); Btn.Size=UDim2.new(0,52,0,20)
+    Btn.Position=UDim2.new(1,-52,0.5,-10); Btn.BackgroundTransparency=1; Btn.Text=""
+    Btn.MouseButton1Click:Connect(function() st=not st; setV(st); if onToggle then onToggle(st) end end)
+    local hov=Instance.new("TextButton",Row); hov.Size=UDim2.new(1,0,1,0)
+    hov.BackgroundTransparency=1; hov.Text=""; hov.ZIndex=0
+    hov.MouseEnter:Connect(function() tw(Row,{BackgroundTransparency=0.3}) end)
+    hov.MouseLeave:Connect(function() tw(Row,{BackgroundTransparency=0.5}) end)
+    return Row,setV
 end
 
 -- CATEGORY SETUP
@@ -2162,9 +2249,24 @@ end)()
         uiLocked=on; saveConfig()
     end)
 
-    addSectLbl(vi,"RESET",14)
+    -- ===== UI LOCK / UNLOCK UI =====
+    addSectLbl(vi,"UI LOCK",30)
+    addPillToggleRow(vi,"Lock UI",lockUiEnabled,31,function(on)
+        lockUiEnabled = on
+        if lockUiEnabled then
+            pcall(saveBtnPositions)
+            pcall(saveIndividualPositions)
+        end
+        saveConfig()
+    end)
+    addPillToggleRow(vi,"Unlock UI",unlockUiIndividual,32,function(on)
+        unlockUiIndividual = on
+        saveConfig()
+    end)
+
+    addSectLbl(vi,"RESET",40)
     local resetRow=Instance.new("Frame"); resetRow.Size=UDim2.new(1,0,0,38); resetRow.BackgroundColor3=C.row
-    resetRow.BackgroundTransparency=0.5; resetRow.BorderSizePixel=0; resetRow.LayoutOrder=15; resetRow.Parent=vi
+    resetRow.BackgroundTransparency=0.5; resetRow.BorderSizePixel=0; resetRow.LayoutOrder=41; resetRow.Parent=vi
     guiCorner(resetRow,10); guiStroke(resetRow,C.divider,1)
     local resetLbl=Instance.new("TextLabel",resetRow); resetLbl.Size=UDim2.new(0.55,0,0,16); resetLbl.Position=UDim2.new(0,12,0,6)
     resetLbl.BackgroundTransparency=1; resetLbl.Text="Reset Settings"; resetLbl.TextColor3=C.text; resetLbl.TextSize=11; resetLbl.Font=Enum.Font.GothamBold; resetLbl.TextXAlignment=Enum.TextXAlignment.Left
