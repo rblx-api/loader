@@ -1,6 +1,6 @@
 --[[
-    Nightmare anti anti desync â€“ Freeze other players
-    Singleâ€‘button toggle, no spam, no extra fluff.
+    LARP ANTI ANTI DESYNC – Freeze other players
+    Single‑button toggle, no spam, no extra fluff.
 ]]
 
 -- Services
@@ -17,7 +17,7 @@ featureStates = featureStates or {}
 featureStates.FreezePlayer = false
 
 -- ============================================================
---  FEATURE LOGIC â€“ Freeze other players
+--  FEATURE LOGIC – Freeze other players
 -- ============================================================
 local function toggleFreeze(enabled)
     if enabled then
@@ -128,11 +128,11 @@ end
 --  BUILD THE GUI
 -- ============================================================
 local parent = getGuiParent()
-local existing = parent:FindFirstChild("NightmareAntiAntiDesyncGui")
+local existing = parent:FindFirstChild("LarpAntiAntiDesyncGui")
 if existing then existing:Destroy() end
 
 local gui = newInstance("ScreenGui", {
-    Name = "NightmareAntiAntiDesyncGui",
+    Name = "LarpAntiAntiDesyncGui",
     ResetOnSpawn = false,
     IgnoreGuiInset = true,
     ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
@@ -152,183 +152,87 @@ end
 
 -- Main container
 local frame = newInstance("Frame", {
-    Size = UDim2.fromOffset(520, 285),
-    Position = UDim2.new(0.5, -260, 0.5, -142),
-    BackgroundColor3 = Color3.fromRGB(8, 8, 10),
+    Size = UDim2.fromOffset(230, 92),
+    Position = UDim2.new(0.5, -115, 0.5, -46),
+    BackgroundColor3 = Color3.fromRGB(0, 0, 0),
     BorderSizePixel = 0,
     ClipsDescendants = true,
     Active = true,
     ZIndex = 40,
 }, gui)
-addCorner(frame, 16)
-addStroke(frame, Color3.fromRGB(255, 0, 0), 2)
+addCorner(frame, 13)
+addStroke(frame, Color3.fromRGB(39, 39, 39), 1.3)
 
--- Inner holder
+-- Inner holder (image + overlay)
 local holder = newInstance("Frame", {
-    Size = UDim2.new(1, -8, 1, -8),
-    Position = UDim2.fromOffset(4, 4),
-    BackgroundColor3 = Color3.fromRGB(13, 13, 17),
+    Size = UDim2.new(1, -6, 1, -6),
+    Position = UDim2.fromOffset(3, 3),
+    BackgroundTransparency = 1,
     BorderSizePixel = 0,
     ClipsDescendants = true,
     ZIndex = 40,
 }, frame)
-addCorner(holder, 13)
+addCorner(holder, 10)
 
--- Red top accent
+-- Background image
+newInstance("ImageLabel", {
+    Size = UDim2.fromScale(1, 1),
+    BackgroundTransparency = 1,
+    Image = "rbxassetid://98596557474777",
+    ScaleType = Enum.ScaleType.Crop,
+    ImageTransparency = 0.22,
+    ZIndex = 40,
+}, holder)
+
+-- Dark overlay
 newInstance("Frame", {
-    Size = UDim2.new(1, 0, 0, 4),
-    BackgroundColor3 = Color3.fromRGB(255, 0, 0),
+    Size = UDim2.fromScale(1, 1),
+    BackgroundColor3 = Color3.fromRGB(2, 2, 2),
+    BackgroundTransparency = 0.74,
     BorderSizePixel = 0,
-    ZIndex = 44,
+    ZIndex = 41,
 }, holder)
 
 -- Header
 local header = newInstance("Frame", {
-    Size = UDim2.new(1, 0, 0, 78),
-    Position = UDim2.fromOffset(0, 4),
-    BackgroundColor3 = Color3.fromRGB(15, 15, 19),
+    Size = UDim2.new(1, 0, 0, 31),
+    BackgroundColor3 = Color3.fromRGB(4, 4, 4),
     BorderSizePixel = 0,
     ZIndex = 42,
 }, holder)
-
+newInstance("Frame", {
+    Size = UDim2.new(1, 0, 0, 1),
+    Position = UDim2.new(0, 0, 1, -1),
+    BackgroundColor3 = Color3.fromRGB(34, 34, 34),
+    BorderSizePixel = 0,
+    ZIndex = 43,
+}, header)
 newInstance("TextLabel", {
-    Size = UDim2.new(1, -190, 1, 0),
-    Position = UDim2.fromOffset(24, 0),
+    Size = UDim2.new(1, -76, 1, 0),
+    Position = UDim2.fromOffset(12, 0),
     BackgroundTransparency = 1,
-    Text = "Nightmare anti anti desync",
+    Text = "LARP ANTI ANTI DESYNC",
     TextColor3 = Color3.fromRGB(255, 255, 255),
     Font = Enum.Font.GothamBold,
-    TextSize = 22,
+    TextSize = 11,
     TextXAlignment = Enum.TextXAlignment.Left,
     ZIndex = 43,
 }, header)
 
--- Header control buttons
-local minusBtn = newInstance("TextButton", {
-    Size = UDim2.fromOffset(62, 54),
-    Position = UDim2.new(1, -190, 0, 12),
-    BackgroundColor3 = Color3.fromRGB(17, 19, 25),
-    BorderSizePixel = 0,
-    Text = "−",
-    TextColor3 = Color3.fromRGB(225, 225, 230),
-    Font = Enum.Font.Gotham,
-    TextSize = 24,
-    AutoButtonColor = false,
-    ZIndex = 44,
-}, header)
-addCorner(minusBtn, 18)
-addStroke(minusBtn, Color3.fromRGB(45, 50, 62), 1.5)
-
-local plusBtn = newInstance("TextButton", {
-    Size = UDim2.fromOffset(62, 54),
-    Position = UDim2.new(1, -120, 0, 12),
-    BackgroundColor3 = Color3.fromRGB(17, 19, 25),
-    BorderSizePixel = 0,
-    Text = "+",
-    TextColor3 = Color3.fromRGB(225, 225, 230),
-    Font = Enum.Font.Gotham,
-    TextSize = 24,
-    AutoButtonColor = false,
-    ZIndex = 44,
-}, header)
-addCorner(plusBtn, 18)
-addStroke(plusBtn, Color3.fromRGB(45, 50, 62), 1.5)
-
-local closeBtn = newInstance("TextButton", {
-    Size = UDim2.fromOffset(62, 54),
-    Position = UDim2.new(1, -50, 0, 12),
-    BackgroundColor3 = Color3.fromRGB(17, 19, 25),
-    BorderSizePixel = 0,
-    Text = "−",
-    TextColor3 = Color3.fromRGB(225, 225, 230),
-    Font = Enum.Font.Gotham,
-    TextSize = 24,
-    AutoButtonColor = false,
-    ZIndex = 44,
-}, header)
-addCorner(closeBtn, 18)
-addStroke(closeBtn, Color3.fromRGB(45, 50, 62), 1.5)
-
--- Main toggle row
-local toggleRow = newInstance("Frame", {
-    Size = UDim2.new(1, -42, 0, 82),
-    Position = UDim2.fromOffset(21, 94),
-    BackgroundColor3 = Color3.fromRGB(17, 17, 22),
-    BorderSizePixel = 0,
-    ZIndex = 42,
-}, holder)
-addCorner(toggleRow, 18)
-
-newInstance("TextLabel", {
-    Size = UDim2.new(1, -180, 1, 0),
-    Position = UDim2.fromOffset(24, 0),
-    BackgroundTransparency = 1,
-    Text = "Anti Anti Desync",
-    TextColor3 = Color3.fromRGB(235, 235, 240),
-    Font = Enum.Font.Gotham,
-    TextSize = 20,
-    TextXAlignment = Enum.TextXAlignment.Left,
-    ZIndex = 43,
-}, toggleRow)
-
--- Toggle switch
+-- Toggle button
 local toggleBtn = newInstance("TextButton", {
-    Size = UDim2.fromOffset(92, 52),
-    Position = UDim2.new(1, -112, 0.5, -26),
-    BackgroundColor3 = Color3.fromRGB(35, 35, 43),
+    Size = UDim2.new(1, -18, 0, 39),
+    Position = UDim2.fromOffset(9, 43),
+    BackgroundColor3 = Color3.fromRGB(16, 16, 16),
     BorderSizePixel = 0,
     AutoButtonColor = false,
-    Text = "",
-    ZIndex = 43,
-}, toggleRow)
-addCorner(toggleBtn, 26)
-addStroke(toggleBtn, Color3.fromRGB(58, 62, 75), 1.5)
-
-local toggleKnob = newInstance("Frame", {
-    Size = UDim2.fromOffset(38, 38),
-    Position = UDim2.fromOffset(7, 7),
-    BackgroundColor3 = Color3.fromRGB(220, 220, 230),
-    BorderSizePixel = 0,
-    ZIndex = 44,
-}, toggleBtn)
-addCorner(toggleKnob, 19)
-
--- Keybind row
-local keyRow = newInstance("Frame", {
-    Size = UDim2.new(1, -42, 0, 82),
-    Position = UDim2.fromOffset(21, 188),
-    BackgroundColor3 = Color3.fromRGB(17, 17, 22),
-    BorderSizePixel = 0,
+    Text = "ACTIVATE",
+    TextColor3 = Color3.fromRGB(226, 52, 52),
+    Font = Enum.Font.GothamBold,
+    TextSize = 11,
     ZIndex = 42,
 }, holder)
-addCorner(keyRow, 18)
-
-newInstance("TextLabel", {
-    Size = UDim2.new(1, -190, 1, 0),
-    Position = UDim2.fromOffset(24, 0),
-    BackgroundTransparency = 1,
-    Text = "Keybind",
-    TextColor3 = Color3.fromRGB(205, 205, 212),
-    Font = Enum.Font.Gotham,
-    TextSize = 18,
-    TextXAlignment = Enum.TextXAlignment.Left,
-    ZIndex = 43,
-}, keyRow)
-
-local keyBtn = newInstance("TextButton", {
-    Size = UDim2.fromOffset(130, 58),
-    Position = UDim2.new(1, -148, 0.5, -29),
-    BackgroundColor3 = Color3.fromRGB(9, 9, 12),
-    BorderSizePixel = 0,
-    Text = "B",
-    TextColor3 = Color3.fromRGB(240, 240, 245),
-    Font = Enum.Font.GothamBold,
-    TextSize = 18,
-    AutoButtonColor = false,
-    ZIndex = 43,
-}, keyRow)
-addCorner(keyBtn, 17)
-addStroke(keyBtn, Color3.fromRGB(55, 60, 72), 1.5)
+addCorner(toggleBtn, 10)
 
 -- ============================================================
 --  STATE & BUTTON BEHAVIOUR
@@ -338,14 +242,14 @@ local active = false
 local function setActive(state)
     active = state
     if state then
-        toggleBtn.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
-        toggleKnob.Position = UDim2.new(1, -45, 0, 7)
-        toggleKnob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        toggleBtn.Text = "DEACTIVATE"
+        toggleBtn.BackgroundColor3 = Color3.fromRGB(228, 34, 34)
+        toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
         toggleFreeze(true)
     else
-        toggleBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 43)
-        toggleKnob.Position = UDim2.fromOffset(7, 7)
-        toggleKnob.BackgroundColor3 = Color3.fromRGB(220, 220, 230)
+        toggleBtn.Text = "ACTIVATE"
+        toggleBtn.BackgroundColor3 = Color3.fromRGB(16, 16, 16)
+        toggleBtn.TextColor3 = Color3.fromRGB(226, 52, 52)
         toggleFreeze(false)
     end
 end
@@ -354,19 +258,15 @@ toggleBtn.Activated:Connect(function()
     setActive(not active)
 end)
 
-closeBtn.Activated:Connect(function()
-    frame.Visible = false
+-- Hover animations
+toggleBtn.MouseEnter:Connect(function()
+    local target = active and Color3.fromRGB(236, 44, 44) or Color3.fromRGB(32, 32, 32)
+    TweenService:Create(toggleBtn, TweenInfo.new(0.12), { BackgroundColor3 = target }):Play()
 end)
-
-plusBtn.Activated:Connect(function()
-    frame.Size = UDim2.fromOffset(560, 305)
+toggleBtn.MouseLeave:Connect(function()
+    local target = active and Color3.fromRGB(228, 34, 34) or Color3.fromRGB(16, 16, 16)
+    TweenService:Create(toggleBtn, TweenInfo.new(0.12), { BackgroundColor3 = target }):Play()
 end)
-
-minusBtn.Activated:Connect(function()
-    frame.Size = UDim2.fromOffset(520, 285)
-end)
-
-setActive(false)
 
 -- ============================================================
 --  DRAGGING (move the window)
@@ -406,4 +306,4 @@ end)
 -- Start with the feature off
 setActive(false)
 
-print("Nightmare anti anti desync loaded â€“ click the button to freeze other players.")
+print("LARP ANTI ANTI DESYNC loaded – click the button to freeze other players.")
