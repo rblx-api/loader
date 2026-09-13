@@ -1,4 +1,4 @@
---RXZ HUB
+--Braxil.vs
 --MOBILE EDITION
 
 local Players = game:GetService("Players")
@@ -1738,7 +1738,7 @@ local function makeDraggable_cyber(dragTarget, moveTarget)
 end
 
 local C={
-    bg=Color3.fromRGB(6,6,6), bgDark=Color3.fromRGB(3,3,3), row=Color3.fromRGB(16,16,16),
+    bg=Color3.fromRGB(0,0,0), bgDark=Color3.fromRGB(0,0,0), row=Color3.fromRGB(16,16,16),
     input=Color3.fromRGB(16,16,16), blue=Color3.fromRGB(210,210,210), blueDim=Color3.fromRGB(70,70,70),
     blueDark=Color3.fromRGB(22,22,22), text=Color3.fromRGB(255,255,255), textDim=Color3.fromRGB(160,160,160),
     textMuted=Color3.fromRGB(100,100,100), white=Color3.fromRGB(255,255,255), divider=Color3.fromRGB(32,32,32),
@@ -1780,12 +1780,12 @@ _GuiKeys = Keys
 -- BUILD HUB GUI
 ;(function()
     local GuiHub=Instance.new("ScreenGui")
-    GuiHub.Name="RXZHub"; GuiHub.ResetOnSpawn=false
+    GuiHub.Name="BraxilVsHub"; GuiHub.ResetOnSpawn=false
     GuiHub.ZIndexBehavior=Enum.ZIndexBehavior.Sibling; GuiHub.Parent=PlayerGui
     GuiRefs.hub=GuiHub
 
     local Outer=Instance.new("Frame")
-    Outer.Name="Outer"; Outer.Size=UDim2.new(0,340,0,495); Outer.Position=UDim2.new(0,6,0,54)
+    Outer.Name="Outer"; Outer.Size=UDim2.new(0,340,0,620); Outer.Position=UDim2.new(0,6,0,20)
     Outer.BackgroundTransparency=1; Outer.BorderSizePixel=0; Outer.ClipsDescendants=false; Outer.Parent=GuiHub
     GuiRefs.outer=Outer
     -- compact scale for mobile (opens on the LEFT, next to the Roblox settings button)
@@ -1801,16 +1801,20 @@ _GuiKeys = Keys
     BgCont.BackgroundTransparency=1; BgCont.ZIndex=0; BgCont.Parent=Inner
 
     local BgGrad=Instance.new("Frame")
-    BgGrad.Name="BgGrad"; BgGrad.Size=UDim2.new(1,0,1,0); BgGrad.BackgroundColor3=C.bgDark
+    BgGrad.Name="BgGrad"; BgGrad.Size=UDim2.new(1,0,1,0); BgGrad.BackgroundColor3=Color3.fromRGB(0,0,0)
     BgGrad.BorderSizePixel=0; BgGrad.ZIndex=0; BgGrad.Parent=BgCont; guiCorner(BgGrad,24)
     local grad=Instance.new("UIGradient")
-    grad.Color=ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(4,4,4)),ColorSequenceKeypoint.new(0.5,Color3.fromRGB(7,7,7)),ColorSequenceKeypoint.new(1,Color3.fromRGB(4,4,4))})
+    grad.Color=ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(0,0,0)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0,0,0)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(0,0,0))
+    })
     grad.Rotation=135; grad.Parent=BgGrad; GuiRefs.bgGrad=BgGrad
 
     local BgImg=Instance.new("ImageLabel")
     BgImg.Name="BackgroundImage"; BgImg.Size=UDim2.new(1,0,1,0); BgImg.BackgroundTransparency=1
     BgImg.Image="rbxassetid://131288871967315"; BgImg.ScaleType=Enum.ScaleType.Crop; BgImg.ZIndex=0
-    BgImg.ImageTransparency=0.55; BgImg.Visible=true
+    BgImg.ImageTransparency=1; BgImg.Visible=false
     BgImg.Parent=BgCont; guiCorner(BgImg,24); GuiRefs.backgroundImage=BgImg; bgImageRef=BgImg
 
     local HF=Instance.new("Frame")
@@ -1820,12 +1824,12 @@ _GuiKeys = Keys
 
     local TL=Instance.new("TextLabel")
     TL.Position=UDim2.new(0,14,0,8); TL.Size=UDim2.new(1,-90,0,22); TL.BackgroundTransparency=1
-    TL.Text="RXZ HUB"; TL.TextColor3=C.text; TL.TextSize=17; TL.Font=Enum.Font.GothamBlack
+    TL.Text="Braxil.vs"; TL.TextColor3=C.text; TL.TextSize=17; TL.Font=Enum.Font.GothamBlack
     TL.TextXAlignment=Enum.TextXAlignment.Left; TL.Parent=HF; TL.ZIndex=3
 
     local ML=Instance.new("TextLabel")
     ML.Position=UDim2.new(0,14,0,32); ML.Size=UDim2.new(0,200,0,14); ML.BackgroundTransparency=1
-    ML.Text="RXZ HUB â€¢ PREMIUM"; ML.TextColor3=C.textDim; ML.TextSize=10; ML.Font=Enum.Font.GothamBold
+    ML.Text="Braxil.vs â€¢ PREMIUM"; ML.TextColor3=C.textDim; ML.TextSize=10; ML.Font=Enum.Font.GothamBold
     ML.TextXAlignment=Enum.TextXAlignment.Left; ML.Parent=HF; ML.ZIndex=3
 
     -- MINIMIZE BUTTON
@@ -1842,7 +1846,7 @@ _GuiKeys = Keys
     local MiniBtn=Instance.new("TextButton")
     MiniBtn.Size=UDim2.new(0,110,0,28); MiniBtn.Position=Outer.Position
     MiniBtn.BackgroundColor3=C.bgDark; MiniBtn.BorderSizePixel=0
-    MiniBtn.Text="RXZ HUB"; MiniBtn.TextColor3=C.text; MiniBtn.Font=Enum.Font.GothamBlack; MiniBtn.TextSize=11
+    MiniBtn.Text="Braxil.vs"; MiniBtn.TextColor3=C.text; MiniBtn.Font=Enum.Font.GothamBlack; MiniBtn.TextSize=11
     MiniBtn.ZIndex=20; MiniBtn.Visible=false; MiniBtn.Parent=GuiRefs.hub
     guiCorner(MiniBtn,8); guiStroke(MiniBtn,Color3.fromRGB(45,45,45),1.2)
     makeDraggable_cyber(MiniBtn, MiniBtn)
@@ -2282,4 +2286,4 @@ buildMobileButtons()
 
 end)() -- end GUI function
 
-print("RXZ HUB LOADED")
+print("Braxil.vs LOADED")
