@@ -182,7 +182,6 @@ local DROP_ASCEND_DURATION=0.2
 local DROP_ASCEND_SPEED=150
 local _GuiKeys = nil
 
--- ===== NUEVOS ESTADOS: Lock UI / Unlock UI =====
 local lockUiEnabled = false
 local unlockUiIndividual = false
 
@@ -309,7 +308,7 @@ do
 end
 
 -- ============================================================
--- POSITIONS SAVE/LOAD (GROUP + INDIVIDUAL)
+-- POSITIONS SAVE/LOAD
 -- ============================================================
 local MOB_POS_FILE="RXZ_BtnPos.json"
 local MOB_INDIVIDUAL_FILE="RXZ_BtnIndiv.json"
@@ -1864,9 +1863,7 @@ _GuiKeys = Keys
     CatPad.PaddingTop=UDim.new(0,10); CatPad.PaddingBottom=UDim.new(0,10); CatPad.Parent=CatList
     GuiRefs.categoryList=CatList
 
-    -- =====================================================
-    -- CONTENT FRAME CON SCROLL MEJORADO (Combat, Visual, etc.)
-    -- =====================================================
+    -- CONTENT FRAME CON SCROLL COMPLETO
     local CF=Instance.new("ScrollingFrame")
     CF.Name="ContentFrame"
     CF.Size=UDim2.new(1,-95,1,-118)
@@ -2018,7 +2015,7 @@ local function addCycleRow(parent,label,value,order,onCycle)
     return Row,CB
 end
 
--- PIL Toggle con BOLITA BLANCA (para Lock UI / Unlock UI)
+-- PIL Toggle con BOLITA BLANCA
 local function addPillToggleRow(parent,label,enabled,order,onToggle)
     local Row=Instance.new("Frame",parent)
     Row.Size=UDim2.new(1,0,0,38); Row.BackgroundColor3=C.row
@@ -2057,9 +2054,17 @@ local Categories={"Speed","Combat","Steal","Movement","Visual"}
 local CategoryRefs={contents={},btnsSide={},active="Speed"}
 ;(function()
     for _,name in pairs(Categories) do
-        local page=Instance.new("Frame"); page.Size=UDim2.new(1,0,1,0); page.BackgroundTransparency=1
-        page.Visible=(name=="Speed"); page.Parent=GuiRefs.contentFrame; CategoryRefs.contents[name]=page
-        local lay=Instance.new("UIListLayout"); lay.SortOrder=Enum.SortOrder.LayoutOrder; lay.Padding=UDim.new(0,6); lay.Parent=page
+        local page=Instance.new("Frame")
+        page.Size=UDim2.new(1,0,0,0)
+        page.AutomaticSize=Enum.AutomaticSize.Y
+        page.BackgroundTransparency=1
+        page.Visible=(name=="Speed")
+        page.Parent=GuiRefs.contentFrame
+        CategoryRefs.contents[name]=page
+        local lay=Instance.new("UIListLayout")
+        lay.SortOrder=Enum.SortOrder.LayoutOrder
+        lay.Padding=UDim.new(0,6)
+        lay.Parent=page
     end
     for i,name in ipairs(Categories) do
         local btn=Instance.new("TextButton"); btn.Size=UDim2.new(1,0,0,32); btn.BackgroundColor3=C.blueDark
@@ -2076,14 +2081,18 @@ local CategoryRefs={contents={},btnsSide={},active="Speed"}
                 local ac=(n==name); b.TextColor3=ac and C.white or C.textMuted; b.BackgroundTransparency=ac and 0.2 or 0.3
                 local i2=b:FindFirstChild("indicator"); if i2 then i2.BackgroundTransparency=ac and 0.3 or 1 end
             end
-            -- Reset scroll al cambiar de pestaña
+            -- Reset scroll a arriba
             GuiRefs.contentFrame.CanvasPosition = Vector2.new(0, 0)
-            -- Actualizar CanvasSize con padding extra
-            local lay = selectedPage:FindFirstChildOfClass("UIListLayout")
-            if lay then
-                task.wait()
-                GuiRefs.contentFrame.CanvasSize = UDim2.new(0, 0, 0, lay.AbsoluteContentSize.Y + 60)
-            end
+            -- Recalcular CanvasSize varias veces para asegurar
+            task.spawn(function()
+                for i=1,5 do
+                    task.wait()
+                    local lay = selectedPage:FindFirstChildOfClass("UIListLayout")
+                    if lay then
+                        GuiRefs.contentFrame.CanvasSize = UDim2.new(0, 0, 0, lay.AbsoluteContentSize.Y + 30)
+                    end
+                end
+            end)
         end)
         btn.MouseEnter:Connect(function() if CategoryRefs.active~=name then btn.TextColor3=C.textDim; btn.BackgroundTransparency=0.25 end end)
         btn.MouseLeave:Connect(function() if CategoryRefs.active~=name then btn.TextColor3=C.textMuted; btn.BackgroundTransparency=0.3 end end)
@@ -2091,6 +2100,29 @@ local CategoryRefs={contents={},btnsSide={},active="Speed"}
     local spBtn=CategoryRefs.btnsSide["Speed"]
     if spBtn then spBtn.TextColor3=C.white; spBtn.BackgroundTransparency=0.2; local i2=spBtn:FindFirstChild("indicator"); if i2 then i2.BackgroundTransparency=0.3 end end
 end)()
+
+-- SCROLL FLUIDO FORZADO
+task.spawn(function()
+    task.wait(1)
+    local CF = GuiRefs.contentFrame
+    if not CF then return end
+    local function recalc()
+        local activeName = CategoryRefs.active
+        local page = CategoryRefs.contents[activeName]
+        if page then
+            local lay = page:FindFirstChildOfClass("UIListLayout")
+            if lay then
+                CF.CanvasSize = UDim2.new(0, 0, 0, lay.AbsoluteContentSize.Y + 30)
+            end
+        end
+    end
+    task.spawn(function()
+        while CF.Parent do
+            task.wait(0.5)
+            recalc()
+        end
+    end)
+end)
 
 -- SPEED PAGE
 ;(function()
@@ -2277,7 +2309,6 @@ end)()
         uiLocked=on; saveConfig()
     end)
 
-    -- ===== UI LOCK / UNLOCK UI =====
     addSectLbl(vi,"UI LOCK",30)
     addPillToggleRow(vi,"Lock UI",lockUiEnabled,31,function(on)
         lockUiEnabled = on
