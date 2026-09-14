@@ -343,7 +343,6 @@ local startAutoTP,stopAutoTP,enableAntiLag,disableAntiLag,enableStretchRez,disab
 local startBatAimbot,stopBatAimbot,queueAutoBatStart,runDrop,runTPFloor,cursedInstaReset
 local startAutoSteal,stopAutoSteal,toggleCarryMode,toggleLaggerMode
 local doResetButtonPositions
-local updateActiveCanvasSize  -- NUEVA: función para recalcular el scroll según la categoría activa
 
 local function addShimmerToLabel(lbl,color1,color2)
     local gr=Instance.new("UIGradient",lbl)
@@ -1865,7 +1864,7 @@ _GuiKeys = Keys
     CatPad.PaddingTop=UDim.new(0,10); CatPad.PaddingBottom=UDim.new(0,10); CatPad.Parent=CatList
     GuiRefs.categoryList=CatList
 
-    -- ===== ContentFrame con scroll + 400 por defecto (Combat tendrá +700 al cambiar) =====
+    -- ===== ContentFrame con scroll + 400 de padding =====
     local CF=Instance.new("ScrollingFrame")
     CF.Name="ContentFrame"; CF.Size=UDim2.new(1,-95,1,-118); CF.Position=UDim2.new(0,0,0,63)
     CF.BackgroundTransparency=1; CF.BorderSizePixel=0
@@ -1876,11 +1875,7 @@ _GuiKeys = Keys
     CF.ScrollingDirection=Enum.ScrollingDirection.Y; CF.ScrollingEnabled=true; CF.Active=true
     CF.ElasticBehavior=Enum.ElasticBehavior.Never; CF.Parent=Inner; GuiRefs.contentFrame=CF
     local CLay=Instance.new("UIListLayout"); CLay.SortOrder=Enum.SortOrder.LayoutOrder; CLay.Padding=UDim.new(0,6); CLay.Parent=CF
-    CLay:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        local _extra = 400
-        if CategoryRefs and CategoryRefs.active == "Combat" then _extra = 700 end
-        CF.CanvasSize = UDim2.new(0, 0, 0, CLay.AbsoluteContentSize.Y + _extra)
-    end)
+    CLay:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() CF.CanvasSize = UDim2.new(0, 0, 0, CLay.AbsoluteContentSize.Y + 400) end)
     local CPad=Instance.new("UIPadding"); CPad.PaddingLeft=UDim.new(0,12); CPad.PaddingRight=UDim.new(0,12)
     CPad.PaddingTop=UDim.new(0,10); CPad.PaddingBottom=UDim.new(0,400); CPad.Parent=CF
 
@@ -2023,8 +2018,7 @@ local CategoryRefs={contents={},btnsSide={},active="Speed"}
                 local i2=b:FindFirstChild("indicator"); if i2 then i2.BackgroundTransparency=ac and 0.3 or 1 end
             end
             local lay = selectedPage:FindFirstChildOfClass("UIListLayout")
-            local _extra = (name == "Combat") and 700 or 400
-            if lay then GuiRefs.contentFrame.CanvasSize = UDim2.new(0, 0, 0, lay.AbsoluteContentSize.Y + _extra) end
+            if lay then GuiRefs.contentFrame.CanvasSize = UDim2.new(0, 0, 0, lay.AbsoluteContentSize.Y + 400) end
         end)
         btn.MouseEnter:Connect(function() if CategoryRefs.active~=name then btn.TextColor3=C.textDim; btn.BackgroundTransparency=0.25 end end)
         btn.MouseLeave:Connect(function() if CategoryRefs.active~=name then btn.TextColor3=C.textMuted; btn.BackgroundTransparency=0.3 end end)
