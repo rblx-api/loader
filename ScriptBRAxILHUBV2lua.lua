@@ -1384,11 +1384,11 @@ local function buildMobileButtons()
         frame.Active = true
         frame.ZIndex = 102
         frame.ClipsDescendants = true
+        frame:SetAttribute("OrigX", relX)
+        frame:SetAttribute("OrigY", relY)
 
-        -- Botón CUADRADO (esquinas rectas, UICorner pequeño)
         Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 4)
 
-        -- Fondo personalizado del botón
         local bgImg = Instance.new("ImageLabel", frame)
         bgImg.Name = "BtnBg"
         bgImg.Size = UDim2.new(1,0,1,0)
@@ -1447,9 +1447,12 @@ local function buildMobileButtons()
         end)
 
         local _dn, _sp, _fp, _li, _wd = false, nil, nil, nil, false
+        local _ownStart = nil
+
         btn.InputBegan:Connect(function(i)
             if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
                 _dn = true; _wd = false; _sp = i.Position; _fp = mbGroup.Position
+                _ownStart = frame.Position
                 i.Changed:Connect(function() if i.UserInputState == Enum.UserInputState.End then _dn = false end end)
             end
         end)
@@ -1462,7 +1465,11 @@ local function buildMobileButtons()
                 local dx = i.Position.X - _sp.X; local dy = i.Position.Y - _sp.Y
                 if math.abs(dx) > 6 or math.abs(dy) > 6 then
                     _wd = true
-                    mbGroup.Position = UDim2.new(_fp.X.Scale, _fp.X.Offset + dx, _fp.Y.Scale, _fp.Y.Offset + dy)
+                    if perButtonDragEnabled then
+                        frame.Position = UDim2.new(_ownStart.X.Scale, _ownStart.X.Offset + dx, _ownStart.Y.Scale, _ownStart.Y.Offset + dy)
+                    else
+                        mbGroup.Position = UDim2.new(_fp.X.Scale, _fp.X.Offset + dx, _fp.Y.Scale, _fp.Y.Offset + dy)
+                    end
                 end
             end
         end)
@@ -1606,6 +1613,7 @@ pcall(function()
     if type(d.backgroundEnabled)=="boolean" then backgroundEnabled=d.backgroundEnabled end
     if type(d.backgroundIndex)=="number" then backgroundIndex=d.backgroundIndex end
     if type(d.autoSwitchSpeed)=="boolean" then autoSwitchSpeedEnabled=d.autoSwitchSpeed end
+    if type(d.perButtonDrag)=="boolean" then perButtonDragEnabled=d.perButtonDrag end
 end)
 
 pcall(function()
@@ -1738,7 +1746,6 @@ _GuiKeys = Keys
     grad.Color=ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(4,4,4)),ColorSequenceKeypoint.new(0.5,Color3.fromRGB(7,7,7)),ColorSequenceKeypoint.new(1,Color3.fromRGB(4,4,4))})
     grad.Rotation=135; grad.Parent=BgGrad; GuiRefs.bgGrad=BgGrad
 
-    -- FONDO DEL PANEL
     local BgImg=Instance.new("ImageLabel")
     BgImg.Name="BackgroundImage"; BgImg.Size=UDim2.new(1,0,1,0); BgImg.BackgroundTransparency=1
     BgImg.Image=getcustomasset("Fondopanel.jpg"); BgImg.ScaleType=Enum.ScaleType.Crop; BgImg.ZIndex=0
@@ -1809,13 +1816,25 @@ _GuiKeys = Keys
     CF.ScrollBarThickness=8
     CF.ScrollBarImageColor3=Color3.fromRGB(160,60,255)
     CF.ScrollBarImageTransparency=0.3
-    CF.CanvasSize=UDim2.new(0,0,0,0); CF.AutomaticCanvasSize=Enum.AutomaticSize.Y
-    CF.ScrollingDirection=Enum.ScrollingDirection.Y; CF.ScrollingEnabled=true; CF.Active=true
-    CF.ElasticBehavior=Enum.ElasticBehavior.Never; CF.Parent=Inner; GuiRefs.contentFrame=CF
+    CF.CanvasSize=UDim2.new(0,0,0,0)
+    CF.AutomaticCanvasSize=Enum.AutomaticSize.Y
+    CF.ScrollingDirection=Enum.ScrollingDirection.Y
+    CF.ScrollingEnabled=true
+    CF.Active=true
+    CF.ClipsDescendants=true
+    CF.ElasticBehavior=Enum.ElasticBehavior.Never
+    CF.Parent=Inner
+    GuiRefs.contentFrame=CF
     local CLay=Instance.new("UIListLayout"); CLay.SortOrder=Enum.SortOrder.LayoutOrder; CLay.Padding=UDim.new(0,6); CLay.Parent=CF
-    CLay:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() CF.CanvasSize = UDim2.new(0, 0, 0, CLay.AbsoluteContentSize.Y + 180) end)
-    local CPad=Instance.new("UIPadding"); CPad.PaddingLeft=UDim.new(0,12); CPad.PaddingRight=UDim.new(0,12)
-    CPad.PaddingTop=UDim.new(0,10); CPad.PaddingBottom=UDim.new(0,150); CPad.Parent=CF
+    CLay:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        CF.CanvasSize = UDim2.new(0, 0, 0, CLay.AbsoluteContentSize.Y + 300)
+    end)
+    local CPad=Instance.new("UIPadding")
+    CPad.PaddingLeft=UDim.new(0,12)
+    CPad.PaddingRight=UDim.new(0,12)
+    CPad.PaddingTop=UDim.new(0,10)
+    CPad.PaddingBottom=UDim.new(0,300)
+    CPad.Parent=CF
 
     local BotSep=Instance.new("Frame")
     BotSep.Position=UDim2.new(0,8,1,-54); BotSep.Size=UDim2.new(1,-16,0,1); BotSep.BackgroundColor3=C.purple
@@ -1956,7 +1975,12 @@ local CategoryRefs={contents={},btnsSide={},active="Speed"}
                 local i2=b:FindFirstChild("indicator"); if i2 then i2.BackgroundTransparency=ac and 0.3 or 1 end
             end
             local lay = selectedPage:FindFirstChildOfClass("UIListLayout")
-            if lay then GuiRefs.contentFrame.CanvasSize = UDim2.new(0, 0, 0, lay.AbsoluteContentSize.Y + 180) end
+            if lay then
+                GuiRefs.contentFrame.CanvasSize = UDim2.new(0, 0, 0, lay.AbsoluteContentSize.Y + 300)
+                task.defer(function()
+                    GuiRefs.contentFrame.CanvasSize = UDim2.new(0, 0, 0, lay.AbsoluteContentSize.Y + 300)
+                end)
+            end
         end)
         btn.MouseEnter:Connect(function() if CategoryRefs.active~=name then btn.TextColor3=C.textDim; btn.BackgroundTransparency=0.25 end end)
         btn.MouseLeave:Connect(function() if CategoryRefs.active~=name then btn.TextColor3=C.textMuted; btn.BackgroundTransparency=0.3 end end)
@@ -2145,9 +2169,113 @@ end)()
         uiLocked=on; saveConfig()
     end)
 
-    addSectLbl(vi,"RESET",14)
+    -- ============================================================
+    -- LOCK UI / UNLOCK UI / BUTTON POSITION RESET
+    -- ============================================================
+    local function makePillToggle(parent,label,defaultOn,order,onChange)
+        local Row=Instance.new("Frame",parent); Row.Size=UDim2.new(1,0,0,38); Row.BackgroundColor3=C.row
+        Row.BackgroundTransparency=0.5; Row.BorderSizePixel=0; Row.LayoutOrder=order; Row.Parent=parent
+        guiCorner(Row,10); guiStroke(Row,C.divider,1)
+        local Lb=Instance.new("TextLabel",Row); Lb.Size=UDim2.new(0.6,0,0,16); Lb.Position=UDim2.new(0,12,0,6)
+        Lb.BackgroundTransparency=1; Lb.Text=label; Lb.TextColor3=C.text; Lb.TextSize=11; Lb.Font=Enum.Font.GothamBold
+        Lb.TextXAlignment=Enum.TextXAlignment.Left
+
+        local Track=Instance.new("Frame",Row); Track.Size=UDim2.new(0,44,0,22); Track.Position=UDim2.new(1,-56,0.5,-11)
+        Track.BackgroundColor3=Color3.fromRGB(30,30,30); Track.BorderSizePixel=0; guiCorner(Track,11)
+        guiStroke(Track,C.purple,1.2)
+
+        local Ball=Instance.new("Frame",Track); Ball.Size=UDim2.new(0,16,0,16)
+        Ball.Position = defaultOn and UDim2.new(1,-19,0.5,-8) or UDim2.new(0,3,0.5,-8)
+        Ball.BackgroundColor3=Color3.fromRGB(255,255,255); Ball.BorderSizePixel=0; guiCorner(Ball,8)
+
+        local state = defaultOn
+        local function setState(on)
+            state = on
+            tw(Ball,{Position = on and UDim2.new(1,-19,0.5,-8) or UDim2.new(0,3,0.5,-8)})
+            tw(Ball,{BackgroundColor3 = Color3.fromRGB(255,255,255)})
+            tw(Track,{BackgroundColor3 = on and Color3.fromRGB(70,30,110) or Color3.fromRGB(30,30,30)})
+        end
+
+        local Btn=Instance.new("TextButton",Row); Btn.Size=UDim2.new(0,44,0,22); Btn.Position=UDim2.new(1,-56,0.5,-11)
+        Btn.BackgroundTransparency=1; Btn.Text=""
+        Btn.MouseButton1Click:Connect(function()
+            state = not state
+            setState(state)
+            if onChange then onChange(state) end
+        end)
+
+        local hov=Instance.new("TextButton",Row); hov.Size=UDim2.new(1,0,1,0); hov.BackgroundTransparency=1; hov.Text=""; hov.ZIndex=0
+        hov.MouseEnter:Connect(function() tw(Row,{BackgroundTransparency=0.3}) end)
+        hov.MouseLeave:Connect(function() tw(Row,{BackgroundTransparency=0.5}) end)
+
+        return Row, setState
+    end
+
+    makePillToggle(vi,"Lock UI",true,17,function(on)
+        uiLocked = on
+        saveConfig()
+    end)
+
+    makePillToggle(vi,"Unlock UI",false,18,function(on)
+        perButtonDragEnabled = on
+        if on then uiLocked = false end
+        saveConfig()
+    end)
+
+    local resetPosRow=Instance.new("Frame",vi); resetPosRow.Size=UDim2.new(1,0,0,38); resetPosRow.BackgroundColor3=C.row
+    resetPosRow.BackgroundTransparency=0.5; resetPosRow.BorderSizePixel=0; resetPosRow.LayoutOrder=19; resetPosRow.Parent=vi
+    guiCorner(resetPosRow,10); guiStroke(resetPosRow,C.divider,1)
+    local resetPosLbl=Instance.new("TextLabel",resetPosRow); resetPosLbl.Size=UDim2.new(0.6,0,0,16); resetPosLbl.Position=UDim2.new(0,12,0,6)
+    resetPosLbl.BackgroundTransparency=1; resetPosLbl.Text="Button Position Reset"; resetPosLbl.TextColor3=C.text; resetPosLbl.TextSize=11
+    resetPosLbl.Font=Enum.Font.GothamBold; resetPosLbl.TextXAlignment=Enum.TextXAlignment.Left
+
+    local resetPosBtn=Instance.new("TextButton",resetPosRow); resetPosBtn.Size=UDim2.new(0,56,0,22); resetPosBtn.Position=UDim2.new(1,-68,0.5,-11)
+    resetPosBtn.BackgroundColor3=Color3.fromRGB(180,30,40); resetPosBtn.BorderSizePixel=0
+    resetPosBtn.Text="RESET"; resetPosBtn.TextColor3=Color3.fromRGB(255,255,255); resetPosBtn.TextSize=10
+    resetPosBtn.Font=Enum.Font.GothamBold; guiCorner(resetPosBtn,5)
+    guiStroke(resetPosBtn,Color3.fromRGB(255,80,80),1)
+
+    resetPosBtn.MouseButton1Click:Connect(function()
+        resetPosBtn.BackgroundColor3 = Color3.fromRGB(40,200,90)
+        guiStroke(resetPosBtn,Color3.fromRGB(120,255,150),1)
+        task.delay(0.30, function()
+            resetPosBtn.BackgroundColor3 = Color3.fromRGB(180,30,40)
+            guiStroke(resetPosBtn,Color3.fromRGB(255,80,80),1)
+        end)
+
+        if mobGuiRef then
+            local grp = mobGuiRef:FindFirstChild("MobileButtons")
+            if grp then
+                local QS = 60
+                local QG = 10
+                local QW = QS * 3 + QG * 2
+                local QH = QS * 4 + QG * 3
+                grp.Position = UDim2.new(1, -QW - 34, 0.5, -QH/2 - 10)
+
+                for _,child in ipairs(grp:GetChildren()) do
+                    if child:IsA("Frame") then
+                        local origX = child:GetAttribute("OrigX")
+                        local origY = child:GetAttribute("OrigY")
+                        if origX and origY then
+                            tw(child, {Position = UDim2.new(0, origX, 0, origY)}, TweenInfo.new(0.25))
+                        end
+                    end
+                end
+            end
+        end
+
+        if isfile and isfile(MOB_POS_FILE) then
+            pcall(function() delfile(MOB_POS_FILE) end)
+        end
+    end)
+
+    local hovRP=Instance.new("TextButton",resetPosRow); hovRP.Size=UDim2.new(1,0,1,0); hovRP.BackgroundTransparency=1; hovRP.Text=""; hovRP.ZIndex=0
+    hovRP.MouseEnter:Connect(function() tw(resetPosRow,{BackgroundTransparency=0.3}) end)
+    hovRP.MouseLeave:Connect(function() tw(resetPosRow,{BackgroundTransparency=0.5}) end)
+
+    addSectLbl(vi,"RESET",20)
     local resetRow=Instance.new("Frame"); resetRow.Size=UDim2.new(1,0,0,38); resetRow.BackgroundColor3=C.row
-    resetRow.BackgroundTransparency=0.5; resetRow.BorderSizePixel=0; resetRow.LayoutOrder=15; resetRow.Parent=vi
+    resetRow.BackgroundTransparency=0.5; resetRow.BorderSizePixel=0; resetRow.LayoutOrder=21; resetRow.Parent=vi
     guiCorner(resetRow,10); guiStroke(resetRow,C.divider,1)
     local resetLbl=Instance.new("TextLabel",resetRow); resetLbl.Size=UDim2.new(0.55,0,0,16); resetLbl.Position=UDim2.new(0,12,0,6)
     resetLbl.BackgroundTransparency=1; resetLbl.Text="Reset Settings"; resetLbl.TextColor3=C.text; resetLbl.TextSize=11; resetLbl.Font=Enum.Font.GothamBold; resetLbl.TextXAlignment=Enum.TextXAlignment.Left
@@ -2157,6 +2285,19 @@ end)()
     resetBtn.MouseButton1Click:Connect(function() resetAllSettings() end)
     local hov4=Instance.new("TextButton",resetRow); hov4.Size=UDim2.new(1,0,1,0); hov4.BackgroundTransparency=1; hov4.Text=""; hov4.ZIndex=0
     hov4.MouseEnter:Connect(function() tw(resetRow,{BackgroundTransparency=0.3}) end); hov4.MouseLeave:Connect(function() tw(resetRow,{BackgroundTransparency=0.5}) end)
+
+    task.defer(function()
+        local lay = vi:FindFirstChildOfClass("UIListLayout")
+        if lay and GuiRefs.contentFrame then
+            GuiRefs.contentFrame.CanvasSize = UDim2.new(0, 0, 0, lay.AbsoluteContentSize.Y + 300)
+        end
+    end)
+    task.delay(0.5, function()
+        local lay = vi:FindFirstChildOfClass("UIListLayout")
+        if lay and GuiRefs.contentFrame then
+            GuiRefs.contentFrame.CanvasSize = UDim2.new(0, 0, 0, lay.AbsoluteContentSize.Y + 300)
+        end
+    end)
 end)()
 
 UIS.InputBegan:Connect(function(inp,gp)
