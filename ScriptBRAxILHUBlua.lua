@@ -174,6 +174,12 @@ local DROP_ASCEND_DURATION=0.2
 local DROP_ASCEND_SPEED=150
 local _GuiKeys = nil
 
+-- NUEVOS ESTADOS PARA LOS BOTONES
+local lockUIEnabled = false
+local unlockUIEnabled = false
+local initialBtnPositions = nil
+local _SetLockUI, _SetUnlockUI
+
 -- ============================================================
 -- CYBER EXTRAS
 -- ============================================================
@@ -298,6 +304,7 @@ end
 
 
 local MOB_POS_FILE="RXZ_BtnPos.json"
+local MOB_POS_INDIV_FILE="RXZ_BtnIndivPos.json"
 local function loadBtnPositions()
     if not(isfile and isfile(MOB_POS_FILE)) then return {} end
     local ok,data=pcall(function() return HS:JSONDecode(readfile(MOB_POS_FILE)) end)
@@ -310,7 +317,24 @@ local function saveBtnPositions()
     local out={__group={xs=grp.Position.X.Scale,xo=grp.Position.X.Offset,ys=grp.Position.Y.Scale,yo=grp.Position.Y.Offset}}
     pcall(function() writefile(MOB_POS_FILE,HS:JSONEncode(out)) end)
 end
-task.spawn(function() while true do task.wait(3);pcall(saveBtnPositions) end end)
+local function saveIndividualBtnPositions()
+    if not writefile or not mobGuiRef then return end
+    local grp=mobGuiRef:FindFirstChild("MobileButtons")
+    if not grp then return end
+    local out={}
+    for _,child in ipairs(grp:GetChildren()) do
+        if child:IsA("Frame") and child:GetAttribute("BtnName") then
+            out[child:GetAttribute("BtnName")]={xs=child.Position.X.Scale,xo=child.Position.X.Offset,ys=child.Position.Y.Scale,yo=child.Position.Y.Offset}
+        end
+    end
+    pcall(function() writefile(MOB_POS_INDIV_FILE,HS:JSONEncode(out)) end)
+end
+local function loadIndividualBtnPositions()
+    if not(isfile and isfile(MOB_POS_INDIV_FILE)) then return {} end
+    local ok,data=pcall(function() return HS:JSONDecode(readfile(MOB_POS_INDIV_FILE)) end)
+    if ok and type(data)=="table" then return data end; return {}
+end
+task.spawn(function() while true do task.wait(3);pcall(saveBtnPositions);pcall(saveIndividualBtnPositions) end end)
 
 local refreshSpeedModeLabel,saveConfig
 local startUnwalk,stopUnwalk,setupMedusa,stopMedusaCounter
@@ -318,6 +342,7 @@ local startAntiRagdoll,stopAntiRagdoll,startAutoLeft,stopAutoLeft,startAutoRight
 local startAutoTP,stopAutoTP,enableAntiLag,disableAntiLag,enableStretchRez,disableStretchRez
 local startBatAimbot,stopBatAimbot,queueAutoBatStart,runDrop,runTPFloor,cursedInstaReset
 local startAutoSteal,stopAutoSteal,toggleCarryMode,toggleLaggerMode
+local doResetButtonPositions
 
 local function addShimmerToLabel(lbl,color1,color2)
     local gr=Instance.new("UIGradient",lbl)
@@ -942,7 +967,7 @@ saveConfig=function()
         elseif e.gp then return {gp=e.gp.Name}
         else return {kb=nil,gp=nil} end
     end
-    local cfg={normalSpeed=NS,carrySpeed=CS,dropBrainrotKey=ks(KB.DropBrainrot),autoLeftKey=ks(KB.AutoLeft),autoRightKey=ks(KB.AutoRight),autoBatKey=ks(KB.AutoBat),laggerToggleKey=ks(KB.LaggerToggle),tpFloorKey=ks(KB.TPFloor),instaResetKey=ks(KB.InstaReset),guiHideKey=ks(KB.GuiHide),speedToggleKey=ks(KB.SpeedToggle),grabRadius=Steal.StealRadius,stealDuration=Steal.StealDuration,antiRagdoll=antiRagdollEnabled,autoStealEnabled=Steal.AutoStealEnabled,infiniteJump=infJumpEnabled,infJumpMode=infJumpMode,medusaCounter=medusaCounterEnabled,batCounter=batCounterEnabled,carrySpeedActive=carrySpeedActive,laggerModeEnabled=laggerModeEnabled,laggerSpeed=LAGGER_SPEED,laggerCarrySpeed=LAGGER_CARRY_SPEED,autoBat=autoBatEnabled,autoSwing=autoSwingEnabled,unwalkEnabled=unwalkEnabled,antiLag=antiLagEnabled,stretchRez=stretchRezEnabled,autoTPEnabled=autoTPEnabled,autoTPHeight=autoTPHeight,guiTransparencyEnabled=guiTransparencyEnabled,mobileButtonsEnabled=mobileButtonsEnabled,mobileButtonsLocked=mobileButtonsLocked,mobileButtonsSize=mobileButtonsSize,circleButtonsEnabled=circleButtonsEnabled,autoSwitchSpeed=autoSwitchSpeedEnabled,fovValue=fovValue,perButtonDrag=perButtonDragEnabled,skyTheme=currentSkyTheme,medusaReset=RXZ.medusaReset,antiKick=RXZ.antiKick,autoMoveSwing=autoMoveSwingEnabled,autoMoveSwingInterval=autoMoveSwingInterval,ragdollGui=ragdollGuiEnabled,introSoundEnabled=introSoundEnabled,animEnabled=animEnabled,backgroundEnabled=backgroundEnabled,backgroundIndex=backgroundIndex,keys=(function() if not _GuiKeys then return {} end;local t={};for k,v in pairs(_GuiKeys) do t[k]=v.Name end;return t end)()}
+    local cfg={normalSpeed=NS,carrySpeed=CS,dropBrainrotKey=ks(KB.DropBrainrot),autoLeftKey=ks(KB.AutoLeft),autoRightKey=ks(KB.AutoRight),autoBatKey=ks(KB.AutoBat),laggerToggleKey=ks(KB.LaggerToggle),tpFloorKey=ks(KB.TPFloor),instaResetKey=ks(KB.InstaReset),guiHideKey=ks(KB.GuiHide),speedToggleKey=ks(KB.SpeedToggle),grabRadius=Steal.StealRadius,stealDuration=Steal.StealDuration,antiRagdoll=antiRagdollEnabled,autoStealEnabled=Steal.AutoStealEnabled,infiniteJump=infJumpEnabled,infJumpMode=infJumpMode,medusaCounter=medusaCounterEnabled,batCounter=batCounterEnabled,carrySpeedActive=carrySpeedActive,laggerModeEnabled=laggerModeEnabled,laggerSpeed=LAGGER_SPEED,laggerCarrySpeed=LAGGER_CARRY_SPEED,autoBat=autoBatEnabled,autoSwing=autoSwingEnabled,unwalkEnabled=unwalkEnabled,antiLag=antiLagEnabled,stretchRez=stretchRezEnabled,autoTPEnabled=autoTPEnabled,autoTPHeight=autoTPHeight,guiTransparencyEnabled=guiTransparencyEnabled,mobileButtonsEnabled=mobileButtonsEnabled,mobileButtonsLocked=mobileButtonsLocked,mobileButtonsSize=mobileButtonsSize,circleButtonsEnabled=circleButtonsEnabled,autoSwitchSpeed=autoSwitchSpeedEnabled,fovValue=fovValue,perButtonDrag=perButtonDragEnabled,skyTheme=currentSkyTheme,medusaReset=RXZ.medusaReset,antiKick=RXZ.antiKick,autoMoveSwing=autoMoveSwingEnabled,autoMoveSwingInterval=autoMoveSwingInterval,ragdollGui=ragdollGuiEnabled,introSoundEnabled=introSoundEnabled,animEnabled=animEnabled,backgroundEnabled=backgroundEnabled,backgroundIndex=backgroundIndex,lockUI=lockUIEnabled,unlockUI=unlockUIEnabled,keys=(function() if not _GuiKeys then return {} end;local t={};for k,v in pairs(_GuiKeys) do t[k]=v.Name end;return t end)()}
     if writefile then pcall(function() writefile("RXZ_HUB.json",HS:JSONEncode(cfg)) end) end
 end
 task.spawn(function() while task.wait(5) do saveConfig() end end)
@@ -957,6 +982,9 @@ local function resetAllSettings()
     guiTransparencyEnabled=false;mobileButtonsEnabled=true;mobileButtonsSize=80
     circleButtonsEnabled=false;uiLocked=false;fovValue=80;fovIndex=1
     introSoundEnabled=true
+    lockUIEnabled=false;unlockUIEnabled=false
+    if _SetLockUI then _SetLockUI(false) end
+    if _SetUnlockUI then _SetUnlockUI(false) end
     KB.DropBrainrot={kb=nil,gp=nil};KB.AutoLeft={kb=nil,gp=nil};KB.AutoRight={kb=nil,gp=nil}
     KB.AutoBat={kb=nil,gp=nil};KB.TPFloor={kb=nil,gp=nil};KB.InstaReset={kb=nil,gp=nil}
     KB.GuiHide={kb=nil,gp=nil};KB.SpeedToggle={kb=nil,gp=nil};KB.LaggerToggle={kb=nil,gp=nil}
@@ -1345,17 +1373,15 @@ local function buildMobileButtons()
     if not pcall(function() mobGui.Parent = game:GetService("CoreGui") end) then mobGui.Parent = LP:WaitForChild("PlayerGui") end
     mobGuiRef = mobGui
 
-    -- ===== CONFIG: RONDOS + BORDE BLANCO =====
-    local QS = 60                    -- tamaño (diámetro) del círculo
-    local QG = 10                    -- separación entre botones
-    local Q_OFF        = Color3.fromRGB(10, 10, 10)     -- fondo apagado (negro)
-    local Q_ON         = Color3.fromRGB(255, 255, 255)  -- fondo encendido (blanco)
-    local Q_BORDER     = Color3.fromRGB(255, 255, 255)  -- BORDE BLANCO (apagado)
-    local Q_BORDER_ON  = Color3.fromRGB(255, 255, 255)  -- BORDE BLANCO (encendido)
-    local Q_TEXT       = Color3.fromRGB(255, 255, 255)  -- texto apagado
-    local Q_TEXT_ON    = Color3.fromRGB(0, 0, 0)        -- texto encendido
+    local QS = 60
+    local QG = 10
+    local Q_OFF        = Color3.fromRGB(10, 10, 10)
+    local Q_ON         = Color3.fromRGB(255, 255, 255)
+    local Q_BORDER     = Color3.fromRGB(255, 255, 255)
+    local Q_BORDER_ON  = Color3.fromRGB(255, 255, 255)
+    local Q_TEXT       = Color3.fromRGB(255, 255, 255)
+    local Q_TEXT_ON    = Color3.fromRGB(0, 0, 0)
 
-    -- Grid container (3 cols x 4 rows)
     local QW = QS * 3 + QG * 2
     local QH = QS * 4 + QG * 3
     local mbGroup = Instance.new("Frame", mobGui)
@@ -1373,11 +1399,17 @@ local function buildMobileButtons()
         end
     end
 
-    local function makeMobileBtn(label, col, rowN, isToggle, onAction)
+    local initialGroupPos = mbGroup.Position
+    local initialBtnMap = {}
+    local indivPositions = loadIndividualBtnPositions()
+
+    local function makeMobileBtn(btnName, label, col, rowN, isToggle, onAction)
         local relX = 10 + col * (QS + QG)
         local relY = 10 + rowN * (QS + QG)
 
         local frame = Instance.new("Frame", mbGroup)
+        frame.Name = btnName
+        frame:SetAttribute("BtnName", btnName)
         frame.Size = UDim2.new(0, QS, 0, QS)
         frame.Position = UDim2.new(0, relX, 0, relY)
         frame.BackgroundColor3 = Q_OFF
@@ -1385,10 +1417,8 @@ local function buildMobileButtons()
         frame.Active = true
         frame.ZIndex = 102
 
-        -- ✅ BOTÓN REDONDO: CornerRadius = UDim.new(1, 0) lo hace un círculo perfecto
         Instance.new("UICorner", frame).CornerRadius = UDim.new(1, 0)
 
-        -- ✅ BORDE BLANCO
         local stroke = Instance.new("UIStroke", frame)
         stroke.Color = Q_BORDER
         stroke.Thickness = 2.5
@@ -1406,6 +1436,13 @@ local function buildMobileButtons()
         btn.BorderSizePixel = 0
         btn.AutoButtonColor = false
         btn.ZIndex = 103
+
+        initialBtnMap[btnName] = {xs = frame.Position.X.Scale, xo = frame.Position.X.Offset, ys = frame.Position.Y.Scale, yo = frame.Position.Y.Offset}
+
+        if indivPositions[btnName] then
+            local p = indivPositions[btnName]
+            frame.Position = UDim2.new(p.xs or 0, p.xo or 0, p.ys or 0, p.yo or 0)
+        end
 
         local isOn = false
 
@@ -1436,11 +1473,19 @@ local function buildMobileButtons()
             end
         end)
 
-        -- Drag: mueve TODO el grupo junto (comportamiento original)
         local _dn, _sp, _fp, _li, _wd = false, nil, nil, nil, false
+        local _dragTarget = nil
+
         btn.InputBegan:Connect(function(i)
             if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
-                _dn = true; _wd = false; _sp = i.Position; _fp = mbGroup.Position
+                _dn = true; _wd = false; _sp = i.Position
+                if unlockUIEnabled then
+                    _fp = frame.Position
+                    _dragTarget = frame
+                else
+                    _fp = mbGroup.Position
+                    _dragTarget = mbGroup
+                end
                 i.Changed:Connect(function() if i.UserInputState == Enum.UserInputState.End then _dn = false end end)
             end
         end)
@@ -1448,43 +1493,43 @@ local function buildMobileButtons()
             if i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch then _li = i end
         end)
         UIS.InputChanged:Connect(function(i)
-            if i == _li and _dn and _sp and _fp then
-                if uiLocked then return end
+            if i == _li and _dn and _sp and _fp and _dragTarget then
+                if lockUIEnabled then return end
                 local dx = i.Position.X - _sp.X; local dy = i.Position.Y - _sp.Y
                 if math.abs(dx) > 6 or math.abs(dy) > 6 then
                     _wd = true
-                    mbGroup.Position = UDim2.new(_fp.X.Scale, _fp.X.Offset + dx, _fp.Y.Scale, _fp.Y.Offset + dy)
+                    _dragTarget.Position = UDim2.new(_fp.X.Scale, _fp.X.Offset + dx, _fp.Y.Scale, _fp.Y.Offset + dy)
                 end
             end
         end)
         btn.InputEnded:Connect(function(i)
             if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
-                if _wd then pcall(saveBtnPositions) end
-                _dn = false; _wd = false
+                if _wd then
+                    if unlockUIEnabled then pcall(saveIndividualBtnPositions) else pcall(saveBtnPositions) end
+                end
+                _dn = false; _wd = false; _dragTarget = nil
             end
         end)
 
         return frame, setter
     end
 
-    local _, refDrop = makeMobileBtn("DROP\nBR", 2, 2, false, function()
-        runDrop()
-    end)
+    local _, refDrop = makeMobileBtn("drop", "DROP\nBR", 2, 2, false, function() runDrop() end)
     mobBtnRefs["drop"] = refDrop
 
-    local _, refTPBat = makeMobileBtn("TP\nBAT", 2, 3, true, function(on)
+    local _, refTPBat = makeMobileBtn("tpBat", "TP\nBAT", 2, 3, true, function(on)
         if on then RXZ.startTPBat() else RXZ.stopTPBat() end
         if RXZ.setTPBatVisual then RXZ.setTPBatVisual(on) end
     end)
     mobBtnRefs["tpBat"] = refTPBat
 
-    local _, refBatV2 = makeMobileBtn("BAT\nV2", 0, 1, true, function(on)
+    local _, refBatV2 = makeMobileBtn("batV2", "BAT\nV2", 0, 1, true, function(on)
         if on then RXZ.startBatV2() else RXZ.stopBatV2() end
         if RXZ.setBatV2Visual then RXZ.setBatV2Visual(on) end
     end)
     mobBtnRefs["batV2"] = refBatV2
 
-    local _, refAutoLeft = makeMobileBtn("AUTO\nLEFT", 1, 0, true, function(on)
+    local _, refAutoLeft = makeMobileBtn("autoLeft", "AUTO\nLEFT", 1, 0, true, function(on)
         if on then
             if autoRightEnabled then autoRightEnabled=false; stopAutoRight(); if autoRightSetVisual then autoRightSetVisual(false) end; if mobBtnRefs.autoRight then mobBtnRefs.autoRight(false) end end
             if autoBatEnabled then stopBatAimbot(); if autoBatSetVisual then autoBatSetVisual(false) end; if mobBtnRefs.autoBat then mobBtnRefs.autoBat(false) end end
@@ -1497,7 +1542,7 @@ local function buildMobileButtons()
     end)
     mobBtnRefs["autoLeft"] = refAutoLeft
 
-    local _, refAutoBat = makeMobileBtn("BAT\nAIMBOT", 1, 1, true, function(on)
+    local _, refAutoBat = makeMobileBtn("autoBat", "BAT\nAIMBOT", 1, 1, true, function(on)
         if on then
             if autoLeftEnabled then autoLeftEnabled=false; stopAutoLeft(); if autoLeftSetVisual then autoLeftSetVisual(false) end; if mobBtnRefs.autoLeft then mobBtnRefs.autoLeft(false) end end
             if autoRightEnabled then autoRightEnabled=false; stopAutoRight(); if autoRightSetVisual then autoRightSetVisual(false) end; if mobBtnRefs.autoRight then mobBtnRefs.autoRight(false) end end
@@ -1510,7 +1555,7 @@ local function buildMobileButtons()
     end)
     mobBtnRefs["autoBat"] = refAutoBat
 
-    local _, refAutoRight = makeMobileBtn("AUTO\nRIGHT", 2, 0, true, function(on)
+    local _, refAutoRight = makeMobileBtn("autoRight", "AUTO\nRIGHT", 2, 0, true, function(on)
         if on then
             if autoLeftEnabled then autoLeftEnabled=false; stopAutoLeft(); if autoLeftSetVisual then autoLeftSetVisual(false) end; if mobBtnRefs.autoLeft then mobBtnRefs.autoLeft(false) end end
             if autoBatEnabled then stopBatAimbot(); if autoBatSetVisual then autoBatSetVisual(false) end; if mobBtnRefs.autoBat then mobBtnRefs.autoBat(false) end end
@@ -1523,19 +1568,17 @@ local function buildMobileButtons()
     end)
     mobBtnRefs["autoRight"] = refAutoRight
 
-    local _, refTP = makeMobileBtn("TP\nDOWN", 1, 3, false, function()
-        runTPFloor()
-    end)
+    local _, refTP = makeMobileBtn("tpDown", "TP\nDOWN", 1, 3, false, function() runTPFloor() end)
     mobBtnRefs["tpDown"] = refTP
 
-    local _, refCarry = makeMobileBtn("CARRY\nSPD", 1, 2, true, function(on)
+    local _, refCarry = makeMobileBtn("carrySpeed", "CARRY\nSPD", 1, 2, true, function(on)
         toggleCarryMode()
         if mobBtnRefs.lagger then mobBtnRefs.lagger(laggerModeEnabled) end
         saveConfig()
     end)
     mobBtnRefs["carrySpeed"] = refCarry
 
-    local _, refLagger = makeMobileBtn("LAGGER\nMODE", 2, 1, true, function(on)
+    local _, refLagger = makeMobileBtn("lagger", "LAGGER\nMODE", 2, 1, true, function(on)
         toggleLaggerMode()
         if mobBtnRefs.lagger then mobBtnRefs.lagger(laggerModeEnabled) end
         if mobBtnRefs.carrySpeed then mobBtnRefs.carrySpeed(carrySpeedActive) end
@@ -1543,10 +1586,16 @@ local function buildMobileButtons()
     end)
     mobBtnRefs["lagger"] = refLagger
 
-    local _, refReset = makeMobileBtn("INSTA\nRESET", 0, 0, false, function()
-        cursedInstaReset()
-    end)
+    local _, refReset = makeMobileBtn("instaReset", "INSTA\nRESET", 0, 0, false, function() cursedInstaReset() end)
     mobBtnRefs["instaReset"] = refReset
+
+    initialBtnPositions = {
+        __group = {xs = initialGroupPos.X.Scale, xo = initialGroupPos.X.Offset, ys = initialGroupPos.Y.Scale, yo = initialGroupPos.Y.Offset},
+        buttons = {}
+    }
+    for name, pos in pairs(initialBtnMap) do
+        initialBtnPositions.buttons[name] = pos
+    end
 
     if mobBtnRefs.autoLeft then mobBtnRefs.autoLeft(autoLeftEnabled) end
     if mobBtnRefs.autoRight then mobBtnRefs.autoRight(autoRightEnabled) end
@@ -1555,6 +1604,27 @@ local function buildMobileButtons()
     if mobBtnRefs.lagger then mobBtnRefs.lagger(laggerModeEnabled) end
     if mobBtnRefs.tpBat then mobBtnRefs.tpBat(RXZ.tpBat) end
     if mobBtnRefs.batV2 then mobBtnRefs.batV2(RXZ.batV2) end
+end
+
+doResetButtonPositions = function()
+    if not mobGuiRef then return end
+    local grp = mobGuiRef:FindFirstChild("MobileButtons")
+    if not grp then return end
+    if initialBtnPositions and initialBtnPositions.__group then
+        local g = initialBtnPositions.__group
+        grp.Position = UDim2.new(g.xs, g.xo, g.ys, g.yo)
+    end
+    if initialBtnPositions and initialBtnPositions.buttons then
+        for name, pos in pairs(initialBtnPositions.buttons) do
+            for _,child in ipairs(grp:GetChildren()) do
+                if child:IsA("Frame") and child:GetAttribute("BtnName") == name then
+                    child.Position = UDim2.new(pos.xs, pos.xo, pos.ys, pos.yo)
+                end
+            end
+        end
+    end
+    if isfile and isfile(MOB_POS_FILE) then pcall(function() delfile(MOB_POS_FILE) end) end
+    if isfile and isfile(MOB_POS_INDIV_FILE) then pcall(function() delfile(MOB_POS_INDIV_FILE) end) end
 end
 
 pcall(function()
@@ -1590,13 +1660,14 @@ pcall(function()
     if type(d.autoMoveSwingInterval)=="number" then autoMoveSwingInterval=d.autoMoveSwingInterval end
     if type(d.ragdollGui)=="boolean" then ragdollGuiEnabled=d.ragdollGui end
     if type(d.mobileButtonsEnabled)=="boolean" then mobileButtonsEnabled=d.mobileButtonsEnabled end
-    if type(d.mobileButtonsSize)=="number" then mobileButtonsSize=d.mobileButtonsSize end
     if type(d.circleButtonsEnabled)=="boolean" then circleButtonsEnabled=d.circleButtonsEnabled end
     if type(d.introSoundEnabled)=="boolean" then introSoundEnabled=d.introSoundEnabled end
     if type(d.animEnabled)=="boolean" then animEnabled=d.animEnabled end
     if type(d.backgroundEnabled)=="boolean" then backgroundEnabled=d.backgroundEnabled end
     if type(d.backgroundIndex)=="number" then backgroundIndex=d.backgroundIndex end
     if type(d.autoSwitchSpeed)=="boolean" then autoSwitchSpeedEnabled=d.autoSwitchSpeed end
+    if type(d.lockUI)=="boolean" then lockUIEnabled=d.lockUI end
+    if type(d.unlockUI)=="boolean" then unlockUIEnabled=d.unlockUI end
 end)
 
 pcall(function()
@@ -1729,7 +1800,6 @@ _GuiKeys = Keys
     grad.Color=ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(4,4,4)),ColorSequenceKeypoint.new(0.5,Color3.fromRGB(7,7,7)),ColorSequenceKeypoint.new(1,Color3.fromRGB(4,4,4))})
     grad.Rotation=135; grad.Parent=BgGrad; GuiRefs.bgGrad=BgGrad
 
-    -- FONDO DEL PANEL
     local BgImg=Instance.new("ImageLabel")
     BgImg.Name="BackgroundImage"; BgImg.Size=UDim2.new(1,0,1,0); BgImg.BackgroundTransparency=1
     BgImg.Image=getcustomasset("Espacio.jpg"); BgImg.ScaleType=Enum.ScaleType.Crop; BgImg.ZIndex=0
@@ -1794,16 +1864,20 @@ _GuiKeys = Keys
     CatPad.PaddingTop=UDim.new(0,10); CatPad.PaddingBottom=UDim.new(0,10); CatPad.Parent=CatList
     GuiRefs.categoryList=CatList
 
+    -- ===== ContentFrame con scroll + 400 de padding =====
     local CF=Instance.new("ScrollingFrame")
     CF.Name="ContentFrame"; CF.Size=UDim2.new(1,-95,1,-118); CF.Position=UDim2.new(0,0,0,63)
-    CF.BackgroundTransparency=1; CF.BorderSizePixel=0; CF.ScrollBarThickness=6; CF.ScrollBarImageColor3=C.blue
+    CF.BackgroundTransparency=1; CF.BorderSizePixel=0
+    CF.ScrollBarThickness=8
+    CF.ScrollBarImageColor3=Color3.fromRGB(255,255,255)
+    CF.ScrollBarImageTransparency=0.3
     CF.CanvasSize=UDim2.new(0,0,0,0); CF.AutomaticCanvasSize=Enum.AutomaticSize.Y
     CF.ScrollingDirection=Enum.ScrollingDirection.Y; CF.ScrollingEnabled=true; CF.Active=true
     CF.ElasticBehavior=Enum.ElasticBehavior.Never; CF.Parent=Inner; GuiRefs.contentFrame=CF
     local CLay=Instance.new("UIListLayout"); CLay.SortOrder=Enum.SortOrder.LayoutOrder; CLay.Padding=UDim.new(0,6); CLay.Parent=CF
-    CLay:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() CF.CanvasSize = UDim2.new(0, 0, 0, CLay.AbsoluteContentSize.Y + 25) end)
+    CLay:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() CF.CanvasSize = UDim2.new(0, 0, 0, CLay.AbsoluteContentSize.Y + 400) end)
     local CPad=Instance.new("UIPadding"); CPad.PaddingLeft=UDim.new(0,12); CPad.PaddingRight=UDim.new(0,12)
-    CPad.PaddingTop=UDim.new(0,10); CPad.PaddingBottom=UDim.new(0,8); CPad.Parent=CF
+    CPad.PaddingTop=UDim.new(0,10); CPad.PaddingBottom=UDim.new(0,400); CPad.Parent=CF
 
     local BotSep=Instance.new("Frame")
     BotSep.Position=UDim2.new(0,8,1,-54); BotSep.Size=UDim2.new(1,-16,0,1); BotSep.BackgroundColor3=C.blue
@@ -1944,7 +2018,7 @@ local CategoryRefs={contents={},btnsSide={},active="Speed"}
                 local i2=b:FindFirstChild("indicator"); if i2 then i2.BackgroundTransparency=ac and 0.3 or 1 end
             end
             local lay = selectedPage:FindFirstChildOfClass("UIListLayout")
-            if lay then GuiRefs.contentFrame.CanvasSize = UDim2.new(0, 0, 0, lay.AbsoluteContentSize.Y + 25) end
+            if lay then GuiRefs.contentFrame.CanvasSize = UDim2.new(0, 0, 0, lay.AbsoluteContentSize.Y + 400) end
         end)
         btn.MouseEnter:Connect(function() if CategoryRefs.active~=name then btn.TextColor3=C.textDim; btn.BackgroundTransparency=0.25 end end)
         btn.MouseLeave:Connect(function() if CategoryRefs.active~=name then btn.TextColor3=C.textMuted; btn.BackgroundTransparency=0.3 end end)
@@ -2129,20 +2203,72 @@ end)()
     gKB.TextColor3=C.white; gKB.TextSize=9; gKB.Font=Enum.Font.GothamBold; guiCorner(gKB,5)
     gKB.MouseButton1Click:Connect(function() startKL(gKB,function(nk) Keys.guiHide=nk; gKB.Text=prettyKey(nk); saveConfig() end) end)
 
-    addToggleRow(vi,"Lock All (freeze everything)",uiLocked,16,nil,function(on)
-        uiLocked=on; saveConfig()
+    -- ===== LOCK UI =====
+    local _,svLockUI = addToggleRow(vi, "Lock UI", lockUIEnabled, 20, nil, function(on)
+        lockUIEnabled = on
+        if on then
+            unlockUIEnabled = false
+            if _SetUnlockUI then _SetUnlockUI(false) end
+        end
+        saveConfig()
     end)
 
-    addSectLbl(vi,"RESET",14)
+    -- ===== UNLOCK UI =====
+    local _,svUnlockUI = addToggleRow(vi, "Unlock UI", unlockUIEnabled, 21, nil, function(on)
+        unlockUIEnabled = on
+        if on then
+            lockUIEnabled = false
+            if _SetLockUI then _SetLockUI(false) end
+        end
+        saveConfig()
+    end)
+    _SetUnlockUI = function(v) svUnlockUI(v) end
+    _SetLockUI = function(v) svLockUI(v) end
+
+    -- ===== BUTTON POSITION RESET =====
+    local reset2Row = Instance.new("Frame",vi)
+    reset2Row.Size = UDim2.new(1,0,0,38); reset2Row.BackgroundColor3 = C.row
+    reset2Row.BackgroundTransparency = 0.5; reset2Row.BorderSizePixel = 0
+    reset2Row.LayoutOrder = 22; guiCorner(reset2Row,10); guiStroke(reset2Row, C.divider, 1)
+    local rlbl = Instance.new("TextLabel", reset2Row)
+    rlbl.Size = UDim2.new(0.6,0,0,16); rlbl.Position = UDim2.new(0,12,0,6)
+    rlbl.BackgroundTransparency = 1; rlbl.Text = "Button Position Reset"
+    rlbl.TextColor3 = C.text; rlbl.TextSize = 11; rlbl.Font = Enum.Font.GothamBold
+    rlbl.TextXAlignment = Enum.TextXAlignment.Left
+
+    local resetBtn = Instance.new("TextButton", reset2Row)
+    resetBtn.Size = UDim2.new(0,60,0,22); resetBtn.Position = UDim2.new(1,-72,0.5,-11)
+    resetBtn.BackgroundColor3 = Color3.fromRGB(200,50,50)
+    resetBtn.BackgroundTransparency = 0.2; resetBtn.BorderSizePixel = 0
+    resetBtn.Text = "RESET"; resetBtn.TextColor3 = C.white
+    resetBtn.TextSize = 9; resetBtn.Font = Enum.Font.GothamBold
+    guiCorner(resetBtn,5)
+    local _resetting = false
+    resetBtn.MouseButton1Click:Connect(function()
+        if _resetting then return end
+        _resetting = true
+        resetBtn.BackgroundColor3 = Color3.fromRGB(50,200,80)
+        task.delay(0.30, function()
+            resetBtn.BackgroundColor3 = Color3.fromRGB(200,50,50)
+            _resetting = false
+        end)
+        if doResetButtonPositions then pcall(doResetButtonPositions) end
+    end)
+    local hov5 = Instance.new("TextButton", reset2Row)
+    hov5.Size = UDim2.new(1,0,1,0); hov5.BackgroundTransparency = 1; hov5.Text = ""; hov5.ZIndex = 0
+    hov5.MouseEnter:Connect(function() tw(reset2Row, {BackgroundTransparency=0.3}) end)
+    hov5.MouseLeave:Connect(function() tw(reset2Row, {BackgroundTransparency=0.5}) end)
+
+    addSectLbl(vi,"RESET",30)
     local resetRow=Instance.new("Frame"); resetRow.Size=UDim2.new(1,0,0,38); resetRow.BackgroundColor3=C.row
-    resetRow.BackgroundTransparency=0.5; resetRow.BorderSizePixel=0; resetRow.LayoutOrder=15; resetRow.Parent=vi
+    resetRow.BackgroundTransparency=0.5; resetRow.BorderSizePixel=0; resetRow.LayoutOrder=31; resetRow.Parent=vi
     guiCorner(resetRow,10); guiStroke(resetRow,C.divider,1)
     local resetLbl=Instance.new("TextLabel",resetRow); resetLbl.Size=UDim2.new(0.55,0,0,16); resetLbl.Position=UDim2.new(0,12,0,6)
     resetLbl.BackgroundTransparency=1; resetLbl.Text="Reset Settings"; resetLbl.TextColor3=C.text; resetLbl.TextSize=11; resetLbl.Font=Enum.Font.GothamBold; resetLbl.TextXAlignment=Enum.TextXAlignment.Left
-    local resetBtn=Instance.new("TextButton",resetRow); resetBtn.Size=UDim2.new(0,52,0,22); resetBtn.Position=UDim2.new(1,-60,0.5,-11)
-    resetBtn.BackgroundColor3=Color3.fromRGB(150,30,40); resetBtn.BackgroundTransparency=0.2; resetBtn.BorderSizePixel=0
-    resetBtn.Text="RESET"; resetBtn.TextColor3=C.white; resetBtn.TextSize=9; resetBtn.Font=Enum.Font.GothamBold; guiCorner(resetBtn,5)
-    resetBtn.MouseButton1Click:Connect(function() resetAllSettings() end)
+    local resetBtn2=Instance.new("TextButton",resetRow); resetBtn2.Size=UDim2.new(0,52,0,22); resetBtn2.Position=UDim2.new(1,-60,0.5,-11)
+    resetBtn2.BackgroundColor3=Color3.fromRGB(150,30,40); resetBtn2.BackgroundTransparency=0.2; resetBtn2.BorderSizePixel=0
+    resetBtn2.Text="RESET"; resetBtn2.TextColor3=C.white; resetBtn2.TextSize=9; resetBtn2.Font=Enum.Font.GothamBold; guiCorner(resetBtn2,5)
+    resetBtn2.MouseButton1Click:Connect(function() resetAllSettings() end)
     local hov4=Instance.new("TextButton",resetRow); hov4.Size=UDim2.new(1,0,1,0); hov4.BackgroundTransparency=1; hov4.Text=""; hov4.ZIndex=0
     hov4.MouseEnter:Connect(function() tw(resetRow,{BackgroundTransparency=0.3}) end); hov4.MouseLeave:Connect(function() tw(resetRow,{BackgroundTransparency=0.5}) end)
 end)()
