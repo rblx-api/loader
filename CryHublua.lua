@@ -1,1 +1,1 @@
-loadstring(game:HttpGet("https://pastebin.com/raw/uLAXQHSF"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/EldayDev/Cry-Hub-Lagger/refs/heads/main/main.lua"))()
