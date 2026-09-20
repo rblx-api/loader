@@ -1,5 +1,13 @@
---BRAxIL HUB
---MOBILE EDITION
+--[[
+    ██████╗ ██████╗  █████╗ ██╗  ██╗██╗██╗
+    ██╔══██╗██╔══██╗██╔══██╗╚██╗██╔╝██║██║
+    ██████╔╝██████╔╝███████║ ╚███╔╝ ██║██║
+    ██╔══██╗██╔══██╗██╔══██║ ██╔██╗ ██║██║
+    ██████╔╝██║  ██║██║  ██║██╔╝ ██╗██║███████╗
+    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝
+                BRAxIL HUB — MOBILE EDITION
+        Creado por mí. Script de uso personal.
+]]
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
@@ -10,67 +18,64 @@ local HS = game:GetService("HttpService")
 local player = Players.LocalPlayer
 
 -- ============================================================
--- [NUEVO] WHITE MOVING SHADOW SYSTEM (sincronizado, 1 segundo)
--- Sombra blanca que va de arriba-izquierda a abajo-derecha
--- en todos los botones registrados AL MISMO TIEMPO.
+-- WHITE MOVING SHADOW SYSTEM
+-- Sombra blanca DENTRO de los botones que recorre desde
+-- el borde SUPERIOR-IZQUIERDO hasta el INFERIOR-IZQUIERDO
+-- en 1.30 segundos. Todos los botones sincronizados.
 -- ============================================================
 local _whiteShadows = {}
 local _shadowStartTime = tick()
+local SHADOW_DURATION = 1.30
+local SHADOW_BAR_HEIGHT = 18
 
 local function registerWhiteShadow(target, cornerRadius)
     if not target then return end
     pcall(function()
-        target.ClipsDescendants = false
-        local parent = target.Parent
-        if not parent then return end
-        local shadow = Instance.new("Frame")
-        shadow.Name = "__WhiteShadow"
-        shadow.Size = target.Size
-        shadow.Position = target.Position
-        shadow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        shadow.BackgroundTransparency = 1
-        shadow.BorderSizePixel = 0
-        shadow.ZIndex = math.max(0, (target.ZIndex or 1) - 1)
-        shadow.Parent = parent
-        local c = Instance.new("UICorner", shadow)
+        target.ClipsDescendants = true
+        local bar = Instance.new("Frame")
+        bar.Name = "__WhiteShadow"
+        bar.Size = UDim2.new(1, 0, 0, SHADOW_BAR_HEIGHT)
+        bar.Position = UDim2.new(0, 0, 0, -SHADOW_BAR_HEIGHT - 4)
+        bar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        bar.BackgroundTransparency = 0
+        bar.BorderSizePixel = 0
+        bar.ZIndex = (target.ZIndex or 1) + 50
+        bar.Parent = target
+        local grad = Instance.new("UIGradient", bar)
+        grad.Rotation = 90
+        grad.Transparency = NumberSequence.new({
+            NumberSequenceKeypoint.new(0,   1.00),
+            NumberSequenceKeypoint.new(0.5, 0.25),
+            NumberSequenceKeypoint.new(1,   1.00),
+        })
+        local c = Instance.new("UICorner", bar)
         c.CornerRadius = UDim.new(0, cornerRadius or 10)
-        table.insert(_whiteShadows, {shadow = shadow, target = target})
+        table.insert(_whiteShadows, {bar = bar, target = target})
     end)
 end
 
 task.spawn(function()
     while true do
         local elapsed = tick() - _shadowStartTime
-        local phase = (elapsed % 1.0)              -- 0 → 1 cada 1 segundo
-        local offset = -10 + phase * 20            -- -10px (↖) hasta +10px (↘)
-
-        local alpha
-        if phase < 0.15 then
-            alpha = phase / 0.15
-        elseif phase > 0.85 then
-            alpha = (1 - phase) / 0.15
-        else
-            alpha = 1
-        end
-        local transparency = 1 - alpha * 0.7       -- visible = 0.3 en el medio
-
+        local phase = (elapsed % SHADOW_DURATION) / SHADOW_DURATION
         for i = #_whiteShadows, 1, -1 do
             local entry = _whiteShadows[i]
-            if not entry or not entry.shadow or not entry.shadow.Parent
+            if not entry or not entry.bar or not entry.bar.Parent
                or not entry.target or not entry.target.Parent then
-                if entry and entry.shadow and entry.shadow.Parent then
-                    entry.shadow:Destroy()
+                if entry and entry.bar and entry.bar.Parent then
+                    entry.bar:Destroy()
                 end
                 table.remove(_whiteShadows, i)
             else
                 local t = entry.target
-                local s = entry.shadow
-                s.Size = t.Size
-                s.Position = UDim2.new(
-                    t.Position.X.Scale, t.Position.X.Offset + offset,
-                    t.Position.Y.Scale, t.Position.Y.Offset + offset
-                )
-                s.BackgroundTransparency = transparency
+                local b = entry.bar
+                local h = t.AbsoluteSize.Y
+                if h <= 0 then h = 60 end
+                local startY = -SHADOW_BAR_HEIGHT - 4
+                local endY   = h + 4
+                local currentY = startY + (endY - startY) * phase
+                b.Position = UDim2.new(0, 0, 0, math.floor(currentY))
+                b.Size = UDim2.new(1, 0, 0, SHADOW_BAR_HEIGHT)
             end
         end
         task.wait()
@@ -83,14 +88,14 @@ end)
 -- EARLY CONFIG LOAD (for intro sound setting)
 -- ------------------------------------------------------------
 local introSoundEnabled = true
-if isfile and isfile("RXZ_HUB.json") then
-    local ok, data = pcall(function() return HS:JSONDecode(readfile("RXZ_HUB.json")) end)
+if isfile and isfile("BRAxIL_HUB.json") then
+    local ok, data = pcall(function() return HS:JSONDecode(readfile("BRAxIL_HUB.json")) end)
     if ok and type(data) == "table" and data.introSoundEnabled ~= nil then
         introSoundEnabled = data.introSoundEnabled
     end
 end
-if isfile and isfile("RXZ_HUB.json") then
-    local ok2, d2 = pcall(function() return HS:JSONDecode(readfile("RXZ_HUB.json")) end)
+if isfile and isfile("BRAxIL_HUB.json") then
+    local ok2, d2 = pcall(function() return HS:JSONDecode(readfile("BRAxIL_HUB.json")) end)
     if ok2 and type(d2)=="table" then
         if type(d2.animEnabled)=="boolean" then animEnabled=d2.animEnabled end
         if type(d2.backgroundEnabled)=="boolean" then backgroundEnabled=d2.backgroundEnabled end
@@ -104,7 +109,7 @@ end
 local introSoundInstance = nil
 if introSoundEnabled then
     local urlIntro = "https://files.catbox.moe/hg5cr4.mp3"
-    local numeFisier = "movee_intro.mp3"
+    local numeFisier = "braxil_intro.mp3"
 
     local ok, data = pcall(function() return game:HttpGet(urlIntro) end)
     if ok and data then
@@ -126,9 +131,9 @@ repeat task.wait() until game:IsLoaded()
 -- ============================================================
 -- SKY THEME SYSTEM
 -- ============================================================
-local CANDY_SKY_TAG = "MoveeSkyTheme"
+local BRAXIL_SKY_TAG = "BRAxILSkyTheme"
 local currentSkyTheme = "Night"
-local CANDY_SKY_PRESETS = {
+local BRAXIL_SKY_PRESETS = {
     ["Off"]={kind="off"},
     ["Night"]={clock=22,brightness=2,ambient={110,100,130},outAmb={120,110,140},sky={stars=4000,moon=18,sun=0,moonTex=true},atm={dens=0.45,color={120,60,180},decay={60,20,100},glare=0.5,haze=1.2}},
     ["Aurora"]={clock=14,brightness=3,ambient={150,120,150},outAmb={160,130,150},atm={dens=0.55,color={255,80,200},decay={255,20,150},glare=2.5,haze=3},clouds={cover=0.7,dens=0.7,color={255,240,250}}},
@@ -155,19 +160,19 @@ local CANDY_SKY_PRESETS = {
     ["Mint Sky"]={clock=10,brightness=3.2,ambient={180,230,210},outAmb={190,240,220},sky={sun=10},atm={dens=0.32,color={150,255,210},decay={100,220,180},glare=1.6,haze=1.6},clouds={cover=0.55,dens=0.45,color={240,255,250}}},
 }
 local SkyOrder={"Off","Night","Aurora","Sunset","Galaxy","Cyber","Sakura","Pink Night","Blood Moon","Emerald Dawn","Volcanic","Arctic","Midnight Ocean","Vaporwave","Toxic","Solar Eclipse","Hellscape","Heaven","Storm","Sunrise","Deep Space","Lavender Dream","Inferno","Mint Sky"}
-local function candyColor(rgb) return Color3.fromRGB(rgb[1],rgb[2],rgb[3]) end
+local function braxilColor(rgb) return Color3.fromRGB(rgb[1],rgb[2],rgb[3]) end
 local function CandyApplyCustomSky(mode)
-    for _,child in ipairs(Lighting:GetChildren()) do if child:GetAttribute(CANDY_SKY_TAG) then pcall(function() child:Destroy() end) end end
+    for _,child in ipairs(Lighting:GetChildren()) do if child:GetAttribute(BRAXIL_SKY_TAG) then pcall(function() child:Destroy() end) end end
     local terrain=workspace:FindFirstChildOfClass("Terrain")
-    if terrain then for _,child in ipairs(terrain:GetChildren()) do if child:GetAttribute(CANDY_SKY_TAG) then pcall(function() child:Destroy() end) end end end
-    local preset=CANDY_SKY_PRESETS[mode]
+    if terrain then for _,child in ipairs(terrain:GetChildren()) do if child:GetAttribute(BRAXIL_SKY_TAG) then pcall(function() child:Destroy() end) end end end
+    local preset=BRAXIL_SKY_PRESETS[mode]
     if not preset or preset.kind=="off" then Lighting.ClockTime=14;Lighting.Brightness=2;Lighting.OutdoorAmbient=Color3.fromRGB(127,127,127);Lighting.Ambient=Color3.fromRGB(127,127,127);Lighting.FogEnd=100000;Lighting.GlobalShadows=true;return end
     Lighting.FogStart=0;Lighting.FogEnd=100000;Lighting.FogColor=Color3.fromRGB(200,200,200);Lighting.ColorShift_Top=Color3.fromRGB(0,0,0);Lighting.ColorShift_Bottom=Color3.fromRGB(0,0,0);Lighting.GlobalShadows=true
     Lighting.ClockTime=preset.clock or 14;Lighting.Brightness=preset.brightness or 2
-    if preset.outAmb then Lighting.OutdoorAmbient=candyColor(preset.outAmb) end
-    if preset.ambient then Lighting.Ambient=candyColor(preset.ambient) end
+    if preset.outAmb then Lighting.OutdoorAmbient=braxilColor(preset.outAmb) end
+    if preset.ambient then Lighting.Ambient=braxilColor(preset.ambient) end
     if preset.sky then
-        local skyInst=Instance.new("Sky");skyInst:SetAttribute(CANDY_SKY_TAG,true)
+        local skyInst=Instance.new("Sky");skyInst:SetAttribute(BRAXIL_SKY_TAG,true)
         if preset.sky.stars then skyInst.StarCount=preset.sky.stars end
         if preset.sky.moon then skyInst.MoonAngularSize=preset.sky.moon end
         if preset.sky.sun then skyInst.SunAngularSize=preset.sky.sun end
@@ -175,12 +180,12 @@ local function CandyApplyCustomSky(mode)
         skyInst.Parent=Lighting
     end
     if preset.atm then
-        local atm=Instance.new("Atmosphere");atm:SetAttribute(CANDY_SKY_TAG,true)
-        atm.Density=preset.atm.dens or 0.3;atm.Color=candyColor(preset.atm.color);atm.Decay=candyColor(preset.atm.decay);atm.Glare=preset.atm.glare or 1;atm.Haze=preset.atm.haze or 1;atm.Parent=Lighting
+        local atm=Instance.new("Atmosphere");atm:SetAttribute(BRAXIL_SKY_TAG,true)
+        atm.Density=preset.atm.dens or 0.3;atm.Color=braxilColor(preset.atm.color);atm.Decay=braxilColor(preset.atm.decay);atm.Glare=preset.atm.glare or 1;atm.Haze=preset.atm.haze or 1;atm.Parent=Lighting
     end
     if preset.clouds and terrain then
-        local clouds=Instance.new("Clouds");clouds:SetAttribute(CANDY_SKY_TAG,true)
-        clouds.Cover=preset.clouds.cover or 0.5;clouds.Density=preset.clouds.dens or 0.5;clouds.Color=candyColor(preset.clouds.color);clouds.Parent=terrain
+        local clouds=Instance.new("Clouds");clouds:SetAttribute(BRAXIL_SKY_TAG,true)
+        clouds.Cover=preset.clouds.cover or 0.5;clouds.Density=preset.clouds.dens or 0.5;clouds.Color=braxilColor(preset.clouds.color);clouds.Parent=terrain
     end
 end
 
@@ -198,7 +203,7 @@ local laggerModeEnabled = false
 local antiRagdollEnabled,infJumpEnabled=false,false
 local medusaCounterEnabled,batCounterEnabled,unwalkEnabled=false,false,false
 local medusaDebounce,medusaLastUsed,dropActive=false,0,false
-local RXZ={medusaReset=false,antiKick=false,brainrot=false,tpBat=false,batV2=false,tpConn=nil,v2Conn=nil,v2Rot=nil,hitCD=false,v2CD=false}
+local BRAXIL={medusaReset=false,antiKick=false,brainrot=false,tpBat=false,batV2=false,tpConn=nil,v2Conn=nil,v2Rot=nil,hitCD=false,v2CD=false}
 local autoLeftEnabled,autoRightEnabled=false,false
 local autoLeftSetVisual,autoRightSetVisual=nil,nil
 local speedLabel=nil
@@ -372,8 +377,8 @@ do
 end
 
 
-local MOB_POS_FILE="RXZ_BtnPos.json"
-local MOB_POS_INDIV_FILE="RXZ_BtnIndivPos.json"
+local MOB_POS_FILE="BRAxIL_BtnPos.json"
+local MOB_POS_INDIV_FILE="BRAxIL_BtnIndivPos.json"
 local function loadBtnPositions()
     if not(isfile and isfile(MOB_POS_FILE)) then return {} end
     local ok,data=pcall(function() return HS:JSONDecode(readfile(MOB_POS_FILE)) end)
@@ -431,7 +436,7 @@ local function createRagdollBillboard(duration,labelText,color)
     local WHITE = Color3.fromRGB(255,255,255)
     local BG    = Color3.fromRGB(12,5,10)
     local W,H   = 210,80
-    local guiName="MoveeRagdollTimer_"..labelText
+    local guiName="BRAxILRagdollTimer_"..labelText
     pcall(function()
         local cg=game:GetService("CoreGui");local old=cg:FindFirstChild(guiName);if old then old:Destroy() end
         local pg=LP:FindFirstChild("PlayerGui");if pg then local o=pg:FindFirstChild(guiName);if o then o:Destroy() end end
@@ -516,12 +521,12 @@ local function setupRagdollTriggers()
     if hum then hum.StateChanged:Connect(onHumanoidStateChanged);hum:GetPropertyChangedSignal("PlatformStand"):Connect(onMedusaStateChanged) end
 end
 -- ============================================================
--- SPEED INDICATOR (sin /gg.rxz)
+-- SPEED INDICATOR
 -- ============================================================
 local function setupSpeedIndicator(char)
     local head=char:WaitForChild("Head",5);if not head then return end
-    if head:FindFirstChild("MoveeSpeedBB") then head.MoveeSpeedBB:Destroy() end
-    local bb=Instance.new("BillboardGui",head);bb.Name="MoveeSpeedBB";bb.Size=UDim2.new(0,140,0,42);bb.StudsOffset=Vector3.new(0,3,0);bb.AlwaysOnTop=true
+    if head:FindFirstChild("BRAxILSpeedBB") then head.BRAxILSpeedBB:Destroy() end
+    local bb=Instance.new("BillboardGui",head);bb.Name="BRAxILSpeedBB";bb.Size=UDim2.new(0,140,0,42);bb.StudsOffset=Vector3.new(0,3,0);bb.AlwaysOnTop=true
     speedLabel=Instance.new("TextLabel",bb);speedLabel.Size=UDim2.new(1,0,1,0);speedLabel.BackgroundTransparency=1;speedLabel.Text="0"
     speedLabel.TextColor3=Color3.fromRGB(255,255,255);speedLabel.Font=Enum.Font.GothamBold;speedLabel.TextScaled=true;speedLabel.TextStrokeTransparency=0
     local gr1=addShimmerToLabel(speedLabel,Color3.fromRGB(200,200,200),Color3.fromRGB(255,255,255))
@@ -821,7 +826,7 @@ startAutoTP=function()
 end
 stopAutoTP=function() autoTPEnabled=false;if autoTPConn then task.cancel(autoTPConn);autoTPConn=nil end end
 runTPFloor=function() pcall(function() doAutoTPDown(true) end) end
-local STRETCH_NAME="Movee_Stretch"
+local STRETCH_NAME="BRAxIL_Stretch"
 enableStretchRez=function()
     stretchRezEnabled=true;if stretchRezConn then stretchRezConn:Disconnect() end
     pcall(function() RunService:UnbindFromRenderStep(STRETCH_NAME) end)
@@ -866,7 +871,7 @@ end
 local function onAnchorChanged(part)
     return part:GetPropertyChangedSignal("Anchored"):Connect(function()
         if part.Anchored and part.Transparency==1 then
-            if RXZ.medusaReset then
+            if BRAXIL.medusaReset then
                 cursedInstaReset()
             elseif medusaCounterEnabled then
                 useMedusaCounter()
@@ -881,10 +886,10 @@ setupMedusa=function(char)
     table.insert(Conns.anchor,char.DescendantAdded:Connect(function(part) if part:IsA("BasePart") then table.insert(Conns.anchor,onAnchorChanged(part)) end end))
 end
 stopMedusaCounter=function() for _,c in pairs(Conns.anchor) do pcall(function() c:Disconnect() end) end;Conns.anchor={} end
-function RXZ.enableAntiKick()
-    RXZ.antiKick=true
+function BRAXIL.enableAntiKick()
+    BRAXIL.antiKick=true
     task.spawn(function()
-        while RXZ.antiKick do
+        while BRAXIL.antiKick do
             task.wait(0.5)
             local char=LP.Character
             if char then
@@ -892,18 +897,18 @@ function RXZ.enableAntiKick()
                     if tool:IsA("Tool") then
                         local n=tool.Name:lower()
                         if n:find("brainrot") or n:find("skibidi") or n:find("toilet") then
-                            RXZ.brainrot=true
+                            BRAXIL.brainrot=true
                             if autoBatEnabled then autoBatEnabled=false;if resetAutoBatMotion then resetAutoBatMotion() end;if stopBatAimbot then stopBatAimbot() end;if autoBatSetVisual then autoBatSetVisual(false) end;if mobBtnRefs.autoBat then mobBtnRefs.autoBat(false) end end
                             if autoLeftEnabled then autoLeftEnabled=false;stopAutoLeft();if autoLeftSetVisual then autoLeftSetVisual(false) end;if mobBtnRefs.autoLeft then mobBtnRefs.autoLeft(false) end end
                             if autoRightEnabled then autoRightEnabled=false;stopAutoRight();if autoRightSetVisual then autoRightSetVisual(false) end;if mobBtnRefs.autoRight then mobBtnRefs.autoRight(false) end end
-                        else RXZ.brainrot=false end
+                        else BRAXIL.brainrot=false end
                     end
                 end
             end
         end
     end)
 end
-function RXZ.disableAntiKick() RXZ.antiKick=false;RXZ.brainrot=false end
+function BRAXIL.disableAntiKick() BRAXIL.antiKick=false;BRAXIL.brainrot=false end
 local BAT_COUNTER_SLAP_LIST={"Bat","Slap","Iron Slap","Gold Slap","Diamond Slap","Emerald Slap","Ruby Slap","Dark Matter Slap","Flame Slap","Nuclear Slap","Galaxy Slap","Glitched Slap"}
 local function findBatForCounter()
     local c=LP.Character;if not c then return nil end;local bp=LP:FindFirstChildOfClass("Backpack")
@@ -1020,7 +1025,7 @@ stopBatAimbot=function()
     if mobBtnRefs and mobBtnRefs.autoBat then mobBtnRefs.autoBat(false) end
 end
 queueAutoBatStart=function()
-    if RXZ.antiKick and RXZ.brainrot then return end
+    if BRAXIL.antiKick and BRAXIL.brainrot then return end
     if autoLeftEnabled then autoLeftEnabled=false;if autoLeftSetVisual then autoLeftSetVisual(false) end;stopAutoLeft() end
     if autoRightEnabled then autoRightEnabled=false;if autoRightSetVisual then autoRightSetVisual(false) end;stopAutoRight() end
     startBatAimbot()
@@ -1036,15 +1041,15 @@ saveConfig=function()
         elseif e.gp then return {gp=e.gp.Name}
         else return {kb=nil,gp=nil} end
     end
-    local cfg={normalSpeed=NS,carrySpeed=CS,dropBrainrotKey=ks(KB.DropBrainrot),autoLeftKey=ks(KB.AutoLeft),autoRightKey=ks(KB.AutoRight),autoBatKey=ks(KB.AutoBat),laggerToggleKey=ks(KB.LaggerToggle),tpFloorKey=ks(KB.TPFloor),instaResetKey=ks(KB.InstaReset),guiHideKey=ks(KB.GuiHide),speedToggleKey=ks(KB.SpeedToggle),grabRadius=Steal.StealRadius,stealDuration=Steal.StealDuration,antiRagdoll=antiRagdollEnabled,autoStealEnabled=Steal.AutoStealEnabled,infiniteJump=infJumpEnabled,infJumpMode=infJumpMode,medusaCounter=medusaCounterEnabled,batCounter=batCounterEnabled,carrySpeedActive=carrySpeedActive,laggerModeEnabled=laggerModeEnabled,laggerSpeed=LAGGER_SPEED,laggerCarrySpeed=LAGGER_CARRY_SPEED,autoBat=autoBatEnabled,autoSwing=autoSwingEnabled,unwalkEnabled=unwalkEnabled,antiLag=antiLagEnabled,stretchRez=stretchRezEnabled,autoTPEnabled=autoTPEnabled,autoTPHeight=autoTPHeight,guiTransparencyEnabled=guiTransparencyEnabled,mobileButtonsEnabled=mobileButtonsEnabled,mobileButtonsLocked=mobileButtonsLocked,mobileButtonsSize=mobileButtonsSize,circleButtonsEnabled=circleButtonsEnabled,autoSwitchSpeed=autoSwitchSpeedEnabled,fovValue=fovValue,perButtonDrag=perButtonDragEnabled,skyTheme=currentSkyTheme,medusaReset=RXZ.medusaReset,antiKick=RXZ.antiKick,autoMoveSwing=autoMoveSwingEnabled,autoMoveSwingInterval=autoMoveSwingInterval,ragdollGui=ragdollGuiEnabled,introSoundEnabled=introSoundEnabled,animEnabled=animEnabled,backgroundEnabled=backgroundEnabled,backgroundIndex=backgroundIndex,lockUI=lockUIEnabled,unlockUI=unlockUIEnabled,keys=(function() if not _GuiKeys then return {} end;local t={};for k,v in pairs(_GuiKeys) do t[k]=v.Name end;return t end)()}
-    if writefile then pcall(function() writefile("RXZ_HUB.json",HS:JSONEncode(cfg)) end) end
+    local cfg={normalSpeed=NS,carrySpeed=CS,dropBrainrotKey=ks(KB.DropBrainrot),autoLeftKey=ks(KB.AutoLeft),autoRightKey=ks(KB.AutoRight),autoBatKey=ks(KB.AutoBat),laggerToggleKey=ks(KB.LaggerToggle),tpFloorKey=ks(KB.TPFloor),instaResetKey=ks(KB.InstaReset),guiHideKey=ks(KB.GuiHide),speedToggleKey=ks(KB.SpeedToggle),grabRadius=Steal.StealRadius,stealDuration=Steal.StealDuration,antiRagdoll=antiRagdollEnabled,autoStealEnabled=Steal.AutoStealEnabled,infiniteJump=infJumpEnabled,infJumpMode=infJumpMode,medusaCounter=medusaCounterEnabled,batCounter=batCounterEnabled,carrySpeedActive=carrySpeedActive,laggerModeEnabled=laggerModeEnabled,laggerSpeed=LAGGER_SPEED,laggerCarrySpeed=LAGGER_CARRY_SPEED,autoBat=autoBatEnabled,autoSwing=autoSwingEnabled,unwalkEnabled=unwalkEnabled,antiLag=antiLagEnabled,stretchRez=stretchRezEnabled,autoTPEnabled=autoTPEnabled,autoTPHeight=autoTPHeight,guiTransparencyEnabled=guiTransparencyEnabled,mobileButtonsEnabled=mobileButtonsEnabled,mobileButtonsLocked=mobileButtonsLocked,mobileButtonsSize=mobileButtonsSize,circleButtonsEnabled=circleButtonsEnabled,autoSwitchSpeed=autoSwitchSpeedEnabled,fovValue=fovValue,perButtonDrag=perButtonDragEnabled,skyTheme=currentSkyTheme,medusaReset=BRAXIL.medusaReset,antiKick=BRAXIL.antiKick,autoMoveSwing=autoMoveSwingEnabled,autoMoveSwingInterval=autoMoveSwingInterval,ragdollGui=ragdollGuiEnabled,introSoundEnabled=introSoundEnabled,animEnabled=animEnabled,backgroundEnabled=backgroundEnabled,backgroundIndex=backgroundIndex,lockUI=lockUIEnabled,unlockUI=unlockUIEnabled,keys=(function() if not _GuiKeys then return {} end;local t={};for k,v in pairs(_GuiKeys) do t[k]=v.Name end;return t end)()}
+    if writefile then pcall(function() writefile("BRAxIL_HUB.json",HS:JSONEncode(cfg)) end) end
 end
 task.spawn(function() while task.wait(5) do saveConfig() end end)
 local function resetAllSettings()
     NS=59;CS=29;LAGGER_SPEED=30;LAGGER_CARRY_SPEED=15;carrySpeedActive=false;laggerModeEnabled=false
     autoSwitchSpeedEnabled=false;antiRagdollEnabled=false;infJumpEnabled=false;infJumpMode="manual"
     medusaCounterEnabled=false;batCounterEnabled=false;unwalkEnabled=false
-    RXZ.medusaReset=false;RXZ.disableAntiKick()
+    BRAXIL.medusaReset=false;BRAXIL.disableAntiKick()
     autoLeftEnabled=false;autoRightEnabled=false;autoBatEnabled=false;autoSwingEnabled=true;autoMoveSwingEnabled=false
     autoTPEnabled=false;autoTPHeight=20;antiLagEnabled=false;stretchRezEnabled=false
     Steal.AutoStealEnabled=false;Steal.StealRadius=60;Steal.StealDuration=1.4
@@ -1158,17 +1163,17 @@ stopUnwalk=function() local c=LP.Character;if c and unwalkSavedAnimate then unwa
 
 
 -- ============================================================
--- STEAL BAR (todo en gris oscuro)
+-- STEAL BAR
 -- ============================================================
 local function createStealBar()
-    for _,n in ipairs({"MoveeStealBar"}) do
+    for _,n in ipairs({"BRAxILStealBar"}) do
         local old=game:GetService("CoreGui"):FindFirstChild(n);if old then old:Destroy() end
         local pgui=LP:FindFirstChild("PlayerGui");if pgui then local o=pgui:FindFirstChild(n);if o then o:Destroy() end end
     end
     local DARK=Color3.fromRGB(90,90,90)
     local BARBG=Color3.fromRGB(18,10,15)
     local SB_W,SB_H=330,32
-    local stealGui=Instance.new("ScreenGui");stealGui.Name="MoveeStealBar";stealGui.ResetOnSpawn=false;stealGui.IgnoreGuiInset=true;stealGui.DisplayOrder=8
+    local stealGui=Instance.new("ScreenGui");stealGui.Name="BRAxILStealBar";stealGui.ResetOnSpawn=false;stealGui.IgnoreGuiInset=true;stealGui.DisplayOrder=8
     pcall(function() if syn and syn.protect_gui then syn.protect_gui(stealGui) end end)
     if not pcall(function() stealGui.Parent=game:GetService("CoreGui") end) then stealGui.Parent=LP:WaitForChild("PlayerGui") end
     stealBarFrame=Instance.new("Frame",stealGui)
@@ -1282,13 +1287,13 @@ local function createStealBar()
 end
 createStealBar()
 
-local RXZ_SLAP_LIST={"Bat","Slap","Iron Slap","Gold Slap","Diamond Slap","Emerald Slap","Ruby Slap","Dark Matter Slap","Flame Slap","Nuclear Slap","Galaxy Slap","Glitched Slap"}
-function RXZ.findBat()
+local BRAXIL_SLAP_LIST={"Bat","Slap","Iron Slap","Gold Slap","Diamond Slap","Emerald Slap","Ruby Slap","Dark Matter Slap","Flame Slap","Nuclear Slap","Galaxy Slap","Glitched Slap"}
+function BRAXIL.findBat()
     local char=LP.Character; if not char then return nil end
-    for _,name in ipairs(RXZ_SLAP_LIST) do local t=char:FindFirstChild(name); if t and t:IsA("Tool") then return t end end
+    for _,name in ipairs(BRAXIL_SLAP_LIST) do local t=char:FindFirstChild(name); if t and t:IsA("Tool") then return t end end
     local bp=LP:FindFirstChildOfClass("Backpack")
     if bp then
-        for _,name in ipairs(RXZ_SLAP_LIST) do
+        for _,name in ipairs(BRAXIL_SLAP_LIST) do
             local t=bp:FindFirstChild(name)
             if t and t:IsA("Tool") then
                 local hum=char:FindFirstChildOfClass("Humanoid")
@@ -1300,7 +1305,7 @@ function RXZ.findBat()
     for _,ch in ipairs(char:GetChildren()) do if ch:IsA("Tool") and (ch.Name:lower():find("bat") or ch.Name:lower():find("slap")) then return ch end end
     return nil
 end
-function RXZ.closestRoot()
+function BRAXIL.closestRoot()
     local char=LP.Character
     local root=char and char:FindFirstChild("HumanoidRootPart")
     if not root then return nil,math.huge end
@@ -1317,47 +1322,47 @@ function RXZ.closestRoot()
     end
     return best,dist
 end
-function RXZ.tpHit()
-    if RXZ.hitCD then return end
-    RXZ.hitCD=true
+function BRAXIL.tpHit()
+    if BRAXIL.hitCD then return end
+    BRAXIL.hitCD=true
     pcall(function()
-        local bat=RXZ.findBat()
+        local bat=BRAXIL.findBat()
         if bat then
             bat:Activate()
             local ev=bat:FindFirstChildWhichIsA("RemoteEvent")
             if ev then ev:FireServer() end
         end
     end)
-    task.delay(0.08,function() RXZ.hitCD=false end)
+    task.delay(0.08,function() BRAXIL.hitCD=false end)
 end
-function RXZ.startTPBat()
-    if RXZ.tpConn then return end
-    RXZ.tpBat=true
-    RXZ.tpConn=RunService.Heartbeat:Connect(function()
-        if not RXZ.tpBat then return end
+function BRAXIL.startTPBat()
+    if BRAXIL.tpConn then return end
+    BRAXIL.tpBat=true
+    BRAXIL.tpConn=RunService.Heartbeat:Connect(function()
+        if not BRAXIL.tpBat then return end
         local char=LP.Character; if not char then return end
         local hrp=char:FindFirstChild("HumanoidRootPart"); if not hrp then return end
-        local tr=RXZ.closestRoot()
+        local tr=BRAXIL.closestRoot()
         if tr then
             if sethiddenproperty then pcall(function() sethiddenproperty(hrp,"PhysicsRepRootPart",tr) end) end
             local targetPos=tr.Position+Vector3.new(0,0.9,0)
             if (hrp.Position-targetPos).Magnitude>8 then hrp.CFrame=CFrame.new(targetPos) end
             local cam=workspace.CurrentCamera
             if cam then cam.CFrame=CFrame.new(cam.CFrame.Position,tr.Position) end
-            RXZ.tpHit()
+            BRAXIL.tpHit()
         end
     end)
 end
-function RXZ.stopTPBat()
-    if RXZ.tpConn then RXZ.tpConn:Disconnect();RXZ.tpConn=nil end
-    RXZ.tpBat=false
+function BRAXIL.stopTPBat()
+    if BRAXIL.tpConn then BRAXIL.tpConn:Disconnect();BRAXIL.tpConn=nil end
+    BRAXIL.tpBat=false
 end
-function RXZ.v2Swing()
-    if RXZ.v2CD then return end
-    RXZ.v2CD=true
+function BRAXIL.v2Swing()
+    if BRAXIL.v2CD then return end
+    BRAXIL.v2CD=true
     pcall(function()
         local char=LP.Character; if not char then return end
-        local bat=RXZ.findBat()
+        local bat=BRAXIL.findBat()
         if bat then
             if bat.Parent~=char then
                 local hum=char:FindFirstChildOfClass("Humanoid")
@@ -1366,26 +1371,26 @@ function RXZ.v2Swing()
             pcall(function() bat:Activate() end)
         end
     end)
-    task.delay(0.35,function() RXZ.v2CD=false end)
+    task.delay(0.35,function() BRAXIL.v2CD=false end)
 end
-function RXZ.startBatV2()
-    if RXZ.v2Conn then RXZ.v2Conn:Disconnect() end
-    RXZ.batV2=true
+function BRAXIL.startBatV2()
+    if BRAXIL.v2Conn then BRAXIL.v2Conn:Disconnect() end
+    BRAXIL.batV2=true
     local hum0=LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
     if hum0 then
-        if RXZ.v2Rot==nil then RXZ.v2Rot=hum0.AutoRotate end
+        if BRAXIL.v2Rot==nil then BRAXIL.v2Rot=hum0.AutoRotate end
         hum0.AutoRotate=false
     end
-    RXZ.v2Conn=RunService.RenderStepped:Connect(function()
-        if not RXZ.batV2 then return end
+    BRAXIL.v2Conn=RunService.RenderStepped:Connect(function()
+        if not BRAXIL.batV2 then return end
         local char=LP.Character; if not char then return end
         local root=char:FindFirstChild("HumanoidRootPart"); if not root then return end
         local hum=char:FindFirstChildOfClass("Humanoid"); if not hum then return end
         if not char:FindFirstChildOfClass("Tool") then
-            local bat=RXZ.findBat()
+            local bat=BRAXIL.findBat()
             if bat then pcall(function() hum:EquipTool(bat) end) end
         end
-        local target,targetDist=RXZ.closestRoot()
+        local target,targetDist=BRAXIL.closestRoot()
         if not target then return end
         local myPos=root.Position
         local targetPos=target.Position
@@ -1406,31 +1411,31 @@ function RXZ.startBatV2()
             rx=math.clamp(rx,-2.5,2.5);ry=math.clamp(ry,-2.5,2.5);rz=math.clamp(rz,-2.5,2.5)
             root.AssemblyAngularVelocity=root.CFrame:VectorToWorldSpace(Vector3.new(rx*42,ry*42,rz*42))
         end
-        if targetDist<=8 then RXZ.v2Swing() end
+        if targetDist<=8 then BRAXIL.v2Swing() end
     end)
 end
-function RXZ.stopBatV2()
-    RXZ.batV2=false
-    if RXZ.v2Conn then RXZ.v2Conn:Disconnect();RXZ.v2Conn=nil end
-    RXZ.v2CD=false
+function BRAXIL.stopBatV2()
+    BRAXIL.batV2=false
+    if BRAXIL.v2Conn then BRAXIL.v2Conn:Disconnect();BRAXIL.v2Conn=nil end
+    BRAXIL.v2CD=false
     local c=LP.Character
     local root=c and c:FindFirstChild("HumanoidRootPart")
     if root then root.AssemblyLinearVelocity=Vector3.zero;root.AssemblyAngularVelocity=Vector3.zero end
     local hum=c and c:FindFirstChildOfClass("Humanoid")
     if hum then
-        hum.AutoRotate=(RXZ.v2Rot==nil) and true or RXZ.v2Rot
+        hum.AutoRotate=(BRAXIL.v2Rot==nil) and true or BRAXIL.v2Rot
         hum.PlatformStand=false
         pcall(function() hum:ChangeState(Enum.HumanoidStateType.GettingUp) end)
     end
-    RXZ.v2Rot=nil
+    BRAXIL.v2Rot=nil
 end
 
 -- ============================================================
--- MOBILE BUTTONS (CUADRADOS CON ESQUINITAS REDONDEADAS)
+-- MOBILE BUTTONS
 -- ============================================================
 local function destroyMobileButtons()
     if mobGuiRef then pcall(function() mobGuiRef:Destroy() end);mobGuiRef=nil end
-    for _,n in ipairs({"RXZMobileButtons","SpectrumMobileButtons","MoveeMobileButtons"}) do
+    for _,n in ipairs({"BRAxILMobileButtons"}) do
         local old=game:GetService("CoreGui"):FindFirstChild(n);if old then old:Destroy() end
         local pgui=LP:FindFirstChild("PlayerGui");if pgui then local o=pgui:FindFirstChild(n);if o then o:Destroy() end end
     end
@@ -1440,7 +1445,7 @@ local function buildMobileButtons()
     destroyMobileButtons(); if not mobileButtonsEnabled then return end
 
     local mobGui = Instance.new("ScreenGui")
-    mobGui.Name = "RXZMobileButtons"; mobGui.ResetOnSpawn = false; mobGui.DisplayOrder = 15; mobGui.IgnoreGuiInset = true
+    mobGui.Name = "BRAxILMobileButtons"; mobGui.ResetOnSpawn = false; mobGui.DisplayOrder = 15; mobGui.IgnoreGuiInset = true
     pcall(function() if syn and syn.protect_gui then syn.protect_gui(mobGui) end end)
     if not pcall(function() mobGui.Parent = game:GetService("CoreGui") end) then mobGui.Parent = LP:WaitForChild("PlayerGui") end
     mobGuiRef = mobGui
@@ -1583,7 +1588,7 @@ local function buildMobileButtons()
             end
         end)
 
-        -- [NUEVO] Sombra blanca animada en cada botón de la derecha
+        -- Sombra blanca animada en cada botón
         registerWhiteShadow(frame, 10)
 
         return frame, setter
@@ -1593,14 +1598,14 @@ local function buildMobileButtons()
     mobBtnRefs["drop"] = refDrop
 
     local _, refTPBat = makeMobileBtn("tpBat", "TP\nBAT", 2, 3, true, function(on)
-        if on then RXZ.startTPBat() else RXZ.stopTPBat() end
-        if RXZ.setTPBatVisual then RXZ.setTPBatVisual(on) end
+        if on then BRAXIL.startTPBat() else BRAXIL.stopTPBat() end
+        if BRAXIL.setTPBatVisual then BRAXIL.setTPBatVisual(on) end
     end)
     mobBtnRefs["tpBat"] = refTPBat
 
     local _, refBatV2 = makeMobileBtn("batV2", "BAT\nV2", 0, 1, true, function(on)
-        if on then RXZ.startBatV2() else RXZ.stopBatV2() end
-        if RXZ.setBatV2Visual then RXZ.setBatV2Visual(on) end
+        if on then BRAXIL.startBatV2() else BRAXIL.stopBatV2() end
+        if BRAXIL.setBatV2Visual then BRAXIL.setBatV2Visual(on) end
     end)
     mobBtnRefs["batV2"] = refBatV2
 
@@ -1677,8 +1682,8 @@ local function buildMobileButtons()
     if mobBtnRefs.autoBat then mobBtnRefs.autoBat(autoBatEnabled) end
     if mobBtnRefs.carrySpeed then mobBtnRefs.carrySpeed(carrySpeedActive) end
     if mobBtnRefs.lagger then mobBtnRefs.lagger(laggerModeEnabled) end
-    if mobBtnRefs.tpBat then mobBtnRefs.tpBat(RXZ.tpBat) end
-    if mobBtnRefs.batV2 then mobBtnRefs.batV2(RXZ.batV2) end
+    if mobBtnRefs.tpBat then mobBtnRefs.tpBat(BRAXIL.tpBat) end
+    if mobBtnRefs.batV2 then mobBtnRefs.batV2(BRAXIL.batV2) end
 end
 
 doResetButtonPositions = function()
@@ -1703,8 +1708,8 @@ doResetButtonPositions = function()
 end
 
 pcall(function()
-    if not(isfile and isfile("RXZ_HUB.json")) then return end
-    local ok,d=pcall(function() return HS:JSONDecode(readfile("RXZ_HUB.json")) end)
+    if not(isfile and isfile("BRAxIL_HUB.json")) then return end
+    local ok,d=pcall(function() return HS:JSONDecode(readfile("BRAxIL_HUB.json")) end)
     if not(ok and type(d)=="table") then return end
     if type(d.normalSpeed)=="number" and d.normalSpeed>0 then NS=d.normalSpeed end
     if type(d.carrySpeed)=="number" and d.carrySpeed>0 then CS=d.carrySpeed end
@@ -1716,8 +1721,8 @@ pcall(function()
     if type(d.infiniteJump)=="boolean" then infJumpEnabled=d.infiniteJump end
     if type(d.infJumpMode)=="string" then infJumpMode=d.infJumpMode end
     if type(d.medusaCounter)=="boolean" then medusaCounterEnabled=d.medusaCounter end
-    if type(d.medusaReset)=="boolean" then RXZ.medusaReset=d.medusaReset end
-    if type(d.antiKick)=="boolean" then RXZ.antiKick=d.antiKick end
+    if type(d.medusaReset)=="boolean" then BRAXIL.medusaReset=d.medusaReset end
+    if type(d.antiKick)=="boolean" then BRAXIL.antiKick=d.antiKick end
     if type(d.batCounter)=="boolean" then batCounterEnabled=d.batCounter end
     if type(d.autoStealEnabled)=="boolean" then Steal.AutoStealEnabled=d.autoStealEnabled end
     if type(d.grabRadius)=="number" then Steal.StealRadius=d.grabRadius end
@@ -1759,7 +1764,7 @@ pcall(function()
         task.spawn(function() task.wait(0.5); if startAntiRagdoll then startAntiRagdoll() end end)
     end
     if infJumpEnabled then
-        task.spawn(function() task.wait(0.5); if setInfJumpInternal then setInfJumpInternal(true) end end)
+        task.spawn(function() task.wait(0.5); if startHoldInfJump then startHoldInfJump() end end)
     end
     if Steal.AutoStealEnabled then
         task.spawn(function() task.wait(1); if startAutoSteal then startAutoSteal() end end)
@@ -1767,10 +1772,10 @@ pcall(function()
     if batCounterEnabled then
         task.spawn(function() task.wait(1); if startBatCounter then startBatCounter() end end)
     end
-    if RXZ.antiKick then
-        task.spawn(function() task.wait(1); RXZ.antiKick=false; RXZ.enableAntiKick(); if RXZ.setAntiKickVisual then RXZ.setAntiKickVisual(true) end end)
+    if BRAXIL.antiKick then
+        task.spawn(function() task.wait(1); BRAXIL.antiKick=false; BRAXIL.enableAntiKick(); if BRAXIL.setAntiKickVisual then BRAXIL.setAntiKickVisual(true) end end)
     end
-    if RXZ.medusaReset then
+    if BRAXIL.medusaReset then
         task.spawn(function() task.wait(1); local ch=LP.Character; if ch and setupMedusa then setupMedusa(ch) end end)
     end
     if medusaCounterEnabled then
@@ -1836,8 +1841,8 @@ local Keys={
     autoRight=Enum.KeyCode.L,
 }
 pcall(function()
-    if not(isfile and isfile("RXZ_HUB.json")) then return end
-    local ok,d=pcall(function() return HS:JSONDecode(readfile("RXZ_HUB.json")) end)
+    if not(isfile and isfile("BRAxIL_HUB.json")) then return end
+    local ok,d=pcall(function() return HS:JSONDecode(readfile("BRAxIL_HUB.json")) end)
     if ok and type(d)=="table" and type(d.keys)=="table" then
         for k,v in pairs(d.keys) do
             local ok2,kc=pcall(function() return Enum.KeyCode[v] end)
@@ -1891,7 +1896,6 @@ _GuiKeys = Keys
     TL.Text="BRAxIL HUB"; TL.TextColor3=Color3.fromRGB(90,90,90); TL.TextSize=17; TL.Font=Enum.Font.GothamBlack
     TL.TextXAlignment=Enum.TextXAlignment.Left; TL.Parent=HF; TL.ZIndex=3
 
-    -- [NUEVO] Sombra blanca animada para el título BRAxIL HUB
     registerWhiteShadow(TL, 6)
 
     local ML=Instance.new("TextLabel")
@@ -1918,7 +1922,6 @@ _GuiKeys = Keys
     MiniBtn.MouseEnter:Connect(function() tw(MiniBtn,{BackgroundColor3=Color3.fromRGB(22,22,22)}) end)
     MiniBtn.MouseLeave:Connect(function() tw(MiniBtn,{BackgroundColor3=C.bgDark}) end)
 
-    -- [NUEVO] Sombra blanca animada para el botón minimizado BRAxIL HUB
     registerWhiteShadow(MiniBtn, 8)
 
     local function showGui() Outer.Visible=true; MiniBtn.Visible=false end
@@ -2151,29 +2154,29 @@ end)()
     setMedusaVisual=svMedusa
     local _,svUnwalk=addToggleRow(cp,"Unwalk",unwalkEnabled,7,nil,function(on) unwalkEnabled=on;if on then startUnwalk() else stopUnwalk() end;saveConfig() end)
     setUnwalkVisual=svUnwalk
-    local _,svMedReset=addToggleRow(cp,"Medusa Reset",RXZ.medusaReset,8,nil,function(on)
-        RXZ.medusaReset=on
+    local _,svMedReset=addToggleRow(cp,"Medusa Reset",BRAXIL.medusaReset,8,nil,function(on)
+        BRAXIL.medusaReset=on
         if on then setupMedusa(LP.Character) elseif not medusaCounterEnabled then stopMedusaCounter() end
         saveConfig()
     end)
-    RXZ.setMedusaResetVisual=svMedReset
+    BRAXIL.setMedusaResetVisual=svMedReset
     addSectLbl(cp,"PROTECTION",13)
-    local _,svAntiKick=addToggleRow(cp,"Anti Kick",RXZ.antiKick,14,nil,function(on)
-        if on then RXZ.antiKick=false; RXZ.enableAntiKick() else RXZ.disableAntiKick() end
+    local _,svAntiKick=addToggleRow(cp,"Anti Kick",BRAXIL.antiKick,14,nil,function(on)
+        if on then BRAXIL.antiKick=false; BRAXIL.enableAntiKick() else BRAXIL.disableAntiKick() end
         saveConfig()
     end)
-    RXZ.setAntiKickVisual=svAntiKick
+    BRAXIL.setAntiKickVisual=svAntiKick
     addSectLbl(cp,"TP BAT / BAT V2",15)
-    local _,svTPBat=addToggleRow(cp,"TP Bat",RXZ.tpBat,16,nil,function(on)
-        if on then RXZ.startTPBat() else RXZ.stopTPBat() end
+    local _,svTPBat=addToggleRow(cp,"TP Bat",BRAXIL.tpBat,16,nil,function(on)
+        if on then BRAXIL.startTPBat() else BRAXIL.stopTPBat() end
         if mobBtnRefs.tpBat then mobBtnRefs.tpBat(on) end
     end)
-    RXZ.setTPBatVisual=svTPBat
-    local _,svBatV2=addToggleRow(cp,"Bat V2",RXZ.batV2,17,nil,function(on)
-        if on then RXZ.startBatV2() else RXZ.stopBatV2() end
+    BRAXIL.setTPBatVisual=svTPBat
+    local _,svBatV2=addToggleRow(cp,"Bat V2",BRAXIL.batV2,17,nil,function(on)
+        if on then BRAXIL.startBatV2() else BRAXIL.stopBatV2() end
         if mobBtnRefs.batV2 then mobBtnRefs.batV2(on) end
     end)
-    RXZ.setBatV2Visual=svBatV2
+    BRAXIL.setBatV2Visual=svBatV2
     addSectLbl(cp,"ACTIONS",9)
     addActionRow(cp,"Drop Brainrot","dropBrainrot",function() runDrop() end,10)
     addActionRow(cp,"Insta Reset","instaReset",function() cursedInstaReset() end,11)
@@ -2388,8 +2391,8 @@ if infJumpEnabled then startHoldInfJump() end
 if antiRagdollEnabled then startAntiRagdoll() end
 if medusaCounterEnabled then setupMedusa(LP.Character) end
 if animEnabled then startAnimToggle() end
-if RXZ.medusaReset then setupMedusa(LP.Character) end
-if RXZ.antiKick then RXZ.antiKick=false; RXZ.enableAntiKick() end
+if BRAXIL.medusaReset then setupMedusa(LP.Character) end
+if BRAXIL.antiKick then BRAXIL.antiKick=false; BRAXIL.enableAntiKick() end
 CandyApplyCustomSky(currentSkyTheme)
 buildMobileButtons()
 
