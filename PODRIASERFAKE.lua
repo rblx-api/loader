@@ -1,11 +1,11 @@
 --[[ Stick Obfuscador v1.2 ]]
 local _M
 do _M=function()
-local _1_l_i1illI1={"\xA8\x11\x56\x90";"\xC0\x77\x70\xC0\x1D\x11\x29\x9B\xF8\x26\xFD\x85\x44\xA7\x8C\xA4\x0D\x65";"\xC2\x65\x39\x92\x1C\x57\x0A\x70\x11\x6C\xD5\x8F\x28\xB7\xA6\xE6\xFB\x80\x1E\x54"}
-local _illIII11_l2={0xA3,0x9,0x7B,0xC4,0x2D,0x25,0x77,0x55,0x2C}
-local _I11_l_i1il3={0x3,0x2,0x1}
-local _1_l_i1illI2s={0x11,0x30,0x4F}
-local _i1illIII114={0x1,0x1,0x1,0x2,0x1,0x3,0x2,0x3}
+local _1_l_i1illI1={"\x01\xDD\x29\xFB\x15\x5B\xB3\x33\x03\xAF\x6D\x9F\x41\xBE\xAA\x5F\xB8\x92\xDD\xEC\x2D\xCC\x4A\x46\xD3";"\x15\xAC\x64\xB6\x60\x1E\xF1\xD1\xF5\x8A\x23\x8C\x25\xB9\x8B\x79\x34"}
+local _illIII11_l2={0x60,0xB1,0x6B,0xAD,0x24,0x29,0xCE,0x16,0x3E}
+local _I11_l_i1il3={0x1,0x2}
+local _1_l_i1illI2s={0x11,0x30}
+local _i1illIII114={0x1,0x1,0x1,0x2,0x2,0x3}
 local __i1illIII16,_lIII11_l_i17,__l_i1illII8=string.char,string.byte,table.concat
 local _II11_l_i1i5
 do
