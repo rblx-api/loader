@@ -9,6 +9,76 @@ local Lighting = game:GetService("Lighting")
 local HS = game:GetService("HttpService")
 local player = Players.LocalPlayer
 
+-- ============================================================
+-- [NUEVO] WHITE MOVING SHADOW SYSTEM (sincronizado, 1 segundo)
+-- Sombra blanca que va de arriba-izquierda a abajo-derecha
+-- en todos los botones registrados AL MISMO TIEMPO.
+-- ============================================================
+local _whiteShadows = {}
+local _shadowStartTime = tick()
+
+local function registerWhiteShadow(target, cornerRadius)
+    if not target then return end
+    pcall(function()
+        target.ClipsDescendants = false
+        local parent = target.Parent
+        if not parent then return end
+        local shadow = Instance.new("Frame")
+        shadow.Name = "__WhiteShadow"
+        shadow.Size = target.Size
+        shadow.Position = target.Position
+        shadow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        shadow.BackgroundTransparency = 1
+        shadow.BorderSizePixel = 0
+        shadow.ZIndex = math.max(0, (target.ZIndex or 1) - 1)
+        shadow.Parent = parent
+        local c = Instance.new("UICorner", shadow)
+        c.CornerRadius = UDim.new(0, cornerRadius or 10)
+        table.insert(_whiteShadows, {shadow = shadow, target = target})
+    end)
+end
+
+task.spawn(function()
+    while true do
+        local elapsed = tick() - _shadowStartTime
+        local phase = (elapsed % 1.0)              -- 0 → 1 cada 1 segundo
+        local offset = -10 + phase * 20            -- -10px (↖) hasta +10px (↘)
+
+        local alpha
+        if phase < 0.15 then
+            alpha = phase / 0.15
+        elseif phase > 0.85 then
+            alpha = (1 - phase) / 0.15
+        else
+            alpha = 1
+        end
+        local transparency = 1 - alpha * 0.7       -- visible = 0.3 en el medio
+
+        for i = #_whiteShadows, 1, -1 do
+            local entry = _whiteShadows[i]
+            if not entry or not entry.shadow or not entry.shadow.Parent
+               or not entry.target or not entry.target.Parent then
+                if entry and entry.shadow and entry.shadow.Parent then
+                    entry.shadow:Destroy()
+                end
+                table.remove(_whiteShadows, i)
+            else
+                local t = entry.target
+                local s = entry.shadow
+                s.Size = t.Size
+                s.Position = UDim2.new(
+                    t.Position.X.Scale, t.Position.X.Offset + offset,
+                    t.Position.Y.Scale, t.Position.Y.Offset + offset
+                )
+                s.BackgroundTransparency = transparency
+            end
+        end
+        task.wait()
+    end
+end)
+-- ============ FIN DEL SISTEMA DE SOMBRA BLANCA ============
+
+
 -- ------------------------------------------------------------
 -- EARLY CONFIG LOAD (for intro sound setting)
 -- ------------------------------------------------------------
@@ -174,7 +244,6 @@ local DROP_ASCEND_DURATION=0.2
 local DROP_ASCEND_SPEED=150
 local _GuiKeys = nil
 
--- NUEVOS ESTADOS PARA LOS BOTONES
 local lockUIEnabled = false
 local unlockUIEnabled = false
 local initialBtnPositions = nil
@@ -1378,7 +1447,6 @@ local function buildMobileButtons()
 
     local QS = 60
     local QG = 10
-    -- Colores gris oscuro
     local Q_OFF        = Color3.fromRGB(20, 20, 20)
     local Q_ON         = Color3.fromRGB(60, 60, 60)
     local Q_BORDER     = Color3.fromRGB(90, 90, 90)
@@ -1421,7 +1489,6 @@ local function buildMobileButtons()
         frame.Active = true
         frame.ZIndex = 102
 
-        -- CUADRADO CON ESQUINITAS REDONDEADAS
         Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
 
         local stroke = Instance.new("UIStroke", frame)
@@ -1515,6 +1582,9 @@ local function buildMobileButtons()
                 _dn = false; _wd = false; _dragTarget = nil
             end
         end)
+
+        -- [NUEVO] Sombra blanca animada en cada botón de la derecha
+        registerWhiteShadow(frame, 10)
 
         return frame, setter
     end
@@ -1805,7 +1875,6 @@ _GuiKeys = Keys
     grad.Color=ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(4,4,4)),ColorSequenceKeypoint.new(0.5,Color3.fromRGB(7,7,7)),ColorSequenceKeypoint.new(1,Color3.fromRGB(4,4,4))})
     grad.Rotation=135; grad.Parent=BgGrad; GuiRefs.bgGrad=BgGrad
 
-    -- ===== FONDO DEL PANEL (CAMBIADO A Imagepanel.jpg) =====
     local BgImg=Instance.new("ImageLabel")
     BgImg.Name="BackgroundImage"; BgImg.Size=UDim2.new(1,0,1,0); BgImg.BackgroundTransparency=1
     BgImg.Image=getcustomasset("Imagepanel.jpg"); BgImg.ScaleType=Enum.ScaleType.Crop; BgImg.ZIndex=0
@@ -1817,11 +1886,13 @@ _GuiKeys = Keys
     HF.BorderSizePixel=0; HF.Parent=Inner; HF.ZIndex=2
     makeDraggable_cyber(HF, Outer)
 
-    -- ===== TÍTULO BRAxIL HUB EN GRIS OSCURO =====
     local TL=Instance.new("TextLabel")
     TL.Position=UDim2.new(0,14,0,8); TL.Size=UDim2.new(1,-90,0,22); TL.BackgroundTransparency=1
     TL.Text="BRAxIL HUB"; TL.TextColor3=Color3.fromRGB(90,90,90); TL.TextSize=17; TL.Font=Enum.Font.GothamBlack
     TL.TextXAlignment=Enum.TextXAlignment.Left; TL.Parent=HF; TL.ZIndex=3
+
+    -- [NUEVO] Sombra blanca animada para el título BRAxIL HUB
+    registerWhiteShadow(TL, 6)
 
     local ML=Instance.new("TextLabel")
     ML.Position=UDim2.new(0,14,0,32); ML.Size=UDim2.new(0,200,0,14); ML.BackgroundTransparency=1
@@ -1837,7 +1908,6 @@ _GuiKeys = Keys
     CloseBtn.MouseEnter:Connect(function() tw(CloseBtn,{BackgroundColor3=Color3.fromRGB(28,28,28),TextColor3=C.text}) end)
     CloseBtn.MouseLeave:Connect(function() tw(CloseBtn,{BackgroundColor3=C.bgDark,TextColor3=C.textMuted}) end)
 
-    -- ===== BOTÓN MINIMIZADO EN GRIS OSCURO =====
     local MiniBtn=Instance.new("TextButton")
     MiniBtn.Size=UDim2.new(0,110,0,28); MiniBtn.Position=Outer.Position
     MiniBtn.BackgroundColor3=C.bgDark; MiniBtn.BorderSizePixel=0
@@ -1847,6 +1917,9 @@ _GuiKeys = Keys
     makeDraggable_cyber(MiniBtn, MiniBtn)
     MiniBtn.MouseEnter:Connect(function() tw(MiniBtn,{BackgroundColor3=Color3.fromRGB(22,22,22)}) end)
     MiniBtn.MouseLeave:Connect(function() tw(MiniBtn,{BackgroundColor3=C.bgDark}) end)
+
+    -- [NUEVO] Sombra blanca animada para el botón minimizado BRAxIL HUB
+    registerWhiteShadow(MiniBtn, 8)
 
     local function showGui() Outer.Visible=true; MiniBtn.Visible=false end
     local function hideGui() Outer.Visible=false; MiniBtn.Visible=true end
