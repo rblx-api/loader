@@ -1,32 +1,9845 @@
---[[ Stick Obfuscador v1.2 ]]
-local _M
-do _M=function()
-local _1_l_i1illI1={"\x0B\x6F\xF5\xC7\x13\x17\xA1\xE0\x04\xC2\x97\x68\x96\x86\x98\x14\x2B\xBA\x14\x56\xAF\x0B\xBF\x58\xD1\xB5\x3A\xE1";"\x03\x30\xBC\x59\x44\x12\xEB\xAB\x3B\xDF\xBA\x20\xD3\xC7\x87\x3B\x3C\xBB\x11";"\x26\x0B\xCC\x7E\xA5\xBF\xC9\x8B\x5D\xEB\xB1\x08\xEB\x5D\x7C\xF3\x11\x9A\x4D\x37\xA0\x4E\x99\xA4\x22\x4B\x0E\xD5";"\x01\x6C\xA1\x55\x08\x40\xEB\xA8\x30\x89\xD5\x65\xDC\xCD\xDE\x11\x33\xBC\x17\x46";"\x57\x31\x82\x45\x4A\x52\xE1\xEA\x73\x8A\xD6\x25\xD6\xF0\xC5\x54\x36\xA0\x02\x06\x9E";"\x97\x9D\x73\xD1\x05\x06\x9D\xE3\x71\x1B\x5C\xD0\x14\xE6\xC6\x25\x58\xFA\x20\x87\x51";"\xE0\x8E\x01\xE1\x14\x27\xBA\x48\x9B\x5D\x35\xF0\x2D\xF9\xD7\x61\x20\x44\xC6\x9E\x7B\x95\x09\x0A\x90";"\xEE\xCE\x02\xB2\x28\x2E\x4D\x06\x96\x39\x3B\x89\x7B\xDD\xCB";"\x1F\x79\xA3\x5F\x0F\x56\xE3\xA0\x00\xF4\x93\x64\x9A\x82\x84\x10\x7F\xF5\x1D\x49\x9C\x46\xB9\x09";"\x86\xC0\x69\x84\xDC\xD0\x57\x61\x9D\x18\x4E\x91\x0C\x91\x49\xC1\x94\x22\xED\xCB";"\x8F\x86\x02\xCE\x31\xCD\x58\x37\xA4\x26\x45\x81\x44\xB1\xA0\xC9\x80";"\xA3\xB3\x14\xF9\x1D\x2D\xF2\x7B\xD3\x33\x64\xB9\x29\xD7\xEB";"\x8D\xBE\x54\x8B\x7F\x29\x90\xDA\x7F\xBE\x2C\xD8\x07\xE2\xF4\x23\x45\xC2\x31\x73\x58\xA8";"\x95\xCD\xFD\x0C\x89\xAE\x5F\x65\xF0\x23\x32\xF5\xF0\x13\x61\xE4\xA3\x50\x8D\xC5\x7B\x98\xC8\xDD\x43\x73\xF4\x41";"\x6A\x5A\x92\x5D\xED\xDB\x83\xC2\x62\xBC\xF5\x4A\xB8\x60\x33\xB0\x5D\x99\x78\x2C\xBD\x66\x93\xAE\x2B\x28\x18\xC2\xAA";"\x2D\x17\xCB\x07\xF1\xA7\xC8\x81\x32\xAE\xFF\x0B\xF8\x2B\x3D\x43\x0D\x82\x35\x06\xC8\x21\xF5\xE3\x7D";"\x2D\x67\xA5\xE1\x77\x1B\xF0\xB2\x46\xD5\x95\x40\x98\x80";"\x8B\xD7\x6D\x98\x02\x58\xFE\xBB\x39\x15\x5A\xA3\x43\xB9\xCD\x5F\x36\xAE\x68\x93\x53\x98\x79\x64\x8C\x81\x09\xE3\xB4\x89\x79\xA7";"\x16\x5B\x9C\x42\xBA\xCC\x0A\x67\xA3\x0F\x87\x5B\x9B\x68\x63\xA7\xC7\x71\xBF\xF0";"\x06\x20\xE3\x78\x83\xBA\x27\x67\x17\x8B\x92\x68\x95\x14\x1E\xDC";"\x74\x36\x90\x66\xD9\xC7\x7F\xD6\x4E\x88\xA4\x78\xE8\x45";"\x70\x54\x48\xA9\x51\x28\xDA\xC4\x5E\xB2\xEA\x36\x20\xD3\xD8\x71\x2D\xDC\x03\x5F\xB5\x42\x4F\x12\xDA";"\x4A\x7B\xB8\xAB\x40\x10\xED\xB6\x55\x92\xF0\x2A\xCF\xE4\xCB\x56\x3C\xBA\x15\x5D\xC3\x42\xB5\x42";"\xA0\x4F\x94\x3C\xF7\xF7\x14\x40\xF7\x72\x38\x41\xB2\x72\x31\xDB\x96\x1A\xF9\xAE\x92\x70\x88\xAE\x3E\x05\x86";"\xC3\xB3\x60\xA8\x5B\x54\xA1\xE1\x81\x01\x06\xFD\x59\xA4\x9A\x3F\x73\xF5\xDA\xA9\x67\x98";"\x6A\x36\x96\x3A\xB6\xAC\x35\x91\x55\x9B\xE6\x3F\xA7\x55\x69\xFB\xAA\xCA\x04";"\x36\x05\x83\x64\x88\x85\x3D\x9D\x1C\xE1\xF7\x24\xCA\x18\x27";"\x35\x3E\x42\xB1\x59\x21\x99\x92\x12\xCC\xA5\x7A\x68\x90\xAA\x26\x6D\x87\x47\x78\xAE\x54\x47\x53";"\xB1\xBF\x8F\x23\xE4\xEA\x00\x14\xCD\x35\x74\x56\xE8\x08\x2C\xAF\x81";"\xDA\x9A\x78\x95\x33\x0E\x97\xF3\x73\x0A\x1E\xDC\x09\xE8\x8A\x42\x58\xEF\x2B";"\x1B\x50\xAA\x1C\x91\x69\xE4\x94\x0C\xB8\xE1\x20\xFA\x6A\xD0\x7E\x29\xA6\x73\x46\xC2\x59\xAF\xA5\xEB\x88\x19\xFC\xF0\x30\xC2";"\x9F\xCD\x5E\xD0\x3C\xCB\x54\x49\xB9\x6E\x58\x84\x63\xA1\xF3\xC0\x85\x34";"\xF2\xC1\xD7\x74\xA0\x90\x36\x1D\x97\x77\x5F\xA8\xAC\x73\x66\xFD\xAD\x0C\xD7\xF4\x3B\x2C\x93\xF5\x62\x36\xCC";"\x12\x62\xA3\x5C\x0A\x5D\xE6\xA3\x7D\x9E\xDB\x33\xD8\x38\xCF";"\x20\x09\x8A\x7D\xB7\xBD\xC5\x8B\x1F\xD7\xBD\x03\xE4\x13\x6D\x8E\x1D\x8A\x4B\x7E";"\x43\x14\xE9\x5C\x49\x5F\x95\xD6\x78\xD6\x9B\x5C\x82\x7A\x8C\x18\x77\xED\x29\x0E\xD7\x0F\xED\xF1\xD4\x8D\x30\xF7\xA6\x1A\xF9";"\x8D\xB3\x03\xDB\xD2\xDB\x22\x34\xAD\x57\x5A\xA0\x4D\xAC\x46\x94\xEF\x38\xFC\xD3\x5A\xEB";"\x52\x3C\xE2\x39\x8E\x99\x3D\x5D\xF2\xDB\x9D\x6C\x9B\x7A\x4C\x9D\xE6\x65";"\xED\xFE\x13\xF7\x18\x2F\xF3\x00\x97\x5F\x20\xEE\x4C\x95\xBE\x23\x6E\x13";"\x71\x4B\x91\x7F\xAC\xF3\xC6\x88\x0D\xFD\xA3\x12\xB4\x1F\x29\xBC\x1F\x80\x3F";"\xFA\xBF\x80\x7E\x9E\xA0\x3C\x5A\xD7\x4D\x65\xBE\xBF\x52\x5A\xE9\xA0\x43\x83\xFD\x27\xDB\xCA\xCD";"\xAE\xFE\xD4\x3B\xEA\xF9\x6C\x56\x9F\x27\x77\xB6\xBB\x58\x5B\xE0\xEE\x49\x92\xA9\x26\xC1\xC9\x90\x40\x2C\xB6\x0B\x1C";"\xF1\xA6\x7F\x67\x95\xA9\x3B\x6A\xC3\x02\x2D\xBA\x42\x58\x1C\xDE\xAA\x2C\x96\xC4\x2C\xD2\xCD\x89\x68\x6C\xB5";"\x38\x20\x6E\xAC\x4F\x68\xB7\xE0\x4B\x8B\xF5\x39\x3E\x9F";"\x8A\xC9\x1D\xEF\x3B\x4F\xD9\x88\x6D\xB8\x2C\xDF\x00\xE0\xAD\x3E\x56\xEF\x0E\x77\x59\xAD\x68\x66\xF2\x90\x7E\xB5\xF8\x2C";"\xD9\x9D\x28\xAF\x68\x03\x93\xFD\x57\x46\x16\xD8\x1D\xFE\x84\x0B\x05\xA8\x4C\xCB\x0C\xF2\x2A\x3C";"\xB7\xFF\x8E\x75\x9C\xF4\x77\x45\xC6\x21\x6A\xF9\xBB\x52\x7A\xF0\xA9\x5B\x92\xA3\x37\xE7\xD8\xD0";"\x6D\x23\xC8\x7E\xB3\xB5\x74\x8F\x11\xF0\xB4\x43\xF1\x1C\x39";"\x73\x39\xC0\x6C\x91\xAF\x28\xD3\x10\xC3\xA6\x3B\xF9\x1E\x1A\xB3\xA0\xB6\x41\x3B\xEB\x1A\x90\xDE\x3E\x71\xFE\xD5\xDC\x73\x8E\x70";"\x7E\x5A\x94\x4B\xEE\xDA\x8C\xC3\x61\xBD\xF2\x4B\xBB\x61\x65\xF7\x5E\xD6\x30\x79\xBE\x24\x9D\xA8\x7A\x6D";"\xDA\xB9\x69\xE0\x09\x26\xB8\xE4\x92\x17\x0A\xFE\x7B\x83\xDE\x01\x62\x15\xD8\x80\x62\x9A\x0D\x4B\xB6";"\x16\x4C\xF4\x11\xBB\x53\xDC\xBF\x00\xCB\xE7\x52\x9A\x65\x9F\x0A\x5F\xF2\x32\x04\xDF\x20\xFE\xF6\x89\xF2\x5C\xBA\xFF\x40\xFA";"\x37\x78\xEE\x75\x9E\xAA\x3D\x44\x0D\xC8\xAA\x7C\xB3\x27\x1E\xBF\xF7\x80\x53\x11\xEE\x55\x8F\x80\x00\x36\xB4";"\x68\x51\xE7\x12\xF8\xC6\x02\x3F\xD0\xDB\x85\x4B\x88\x74\x1F\x80\xDE\x28\xB2\x03\xC9\x3C\xAA\x96\x48\x07\x9D\x79\x3E\x07\xFF";"\x71\x26\xF4\x26\x92\xF5\x05\x5B\x36\xE9\xF8\x3E\x9B\x1B\x0D\xE1\xD6\x71\x4B\x18\xF2\x15\xF3\x88\x49";"\x2E\xCF\x3A\x82\x61\x73\x8D\xCF\x21\xBB\xE7\xC5\x38\xF5\xEC\x78\x50\x96\x39\x6A\x8C\xA5\x53\x6A\xF5\xA5\x47\xB8\xF8\x30";"\xF6\xC7\x05\xC6\x24\x5C\xCA\x9E\x29\xCF\x06\xDC\x30\xE8\xF1\x4F\x55\xCE\x3D\x74\x42\x91\x53\x62";"\x2A\x0F\xD0\x0E\xEE\xF0\x8C\xC3\x61\xBD\xF2\x07\xF4\x22\x24\xBB\x5E\x84\x7F\x36\xEA\x39\x97\xEE\x3B\x67\x0F\x8B\xAF";"\x9B\xFF\xD2\x33\xA3\x8D\x31\x10\x94\x72\x27\xF8\xE6\x16\x61\xE2\xEB\x40\x96\xD8\x32\xD4\xCD\xD2\x63\x2A\xBB\x1C\x11\xB2\x54";"\x0A\x6F\xB0\x2E\xCE\xD0\x2A\x6C\x14\xD3\x96\x36\x8B\x13\x45\xFD\xBE\x36\x10\x59\x9E\x44\xB4\xCE\x5A\x09\xAB";"\x26\x84\x05\xF7\x43\x7A\x88\xD4\x48\xB2\xBD\x89\x64\xFD\xEF\x72\x5D\xD4\x0E\x76\xF3\xAD\x44\x5B\xE4\xBA\x4F";"\x92\xDD\x55\x8D\x7B\x12\xB5\xFD\x61\xB8\x16\xE8\x0E\xE3\xE3\x0E\x4D\xE3\x62\xC0\x02\xB3";"\xBD\xE9\x3D\xDE\xCC\xDA\x79\x3D\x9D\x28\x56\xA7\x4E\x4D\x56\x83\xF1\x3B\x94\xD1\x57\xCA\x23\x87\x63\x40\xB9\x74";"\x2E\x4A\x84\x4B\xBB\xA6\xD3\xC7\x26\xEE\xB8\x01\xE4\x6C\x79";"\xA4\xEB\x3E\x29\xDA\xE0\x7F\x19\xDE\x05\x79\xB7\x64\x51\x42\xEB\xEB\x0D\x8A\xDE\x2B\xD4\xCD\xC0\x18\x70\xB1\x1C\x43\xD1";"\x17\x5A\xA9\x58\x49\x51\xD0\xF9\x70\xCE\xD3\x25\x83\x31\x8D\x4B\x3E\xAB\x66\x01\x9E\x16\x81\xB9\xD4\x84\x6B\xD5\xB1\x0A\xED\x28";"\xC5\xC6\x4D\xC7\x61\x01\x9E\xC4\x2A\xCE\x4D\x92\x70\xA8\xB2\x4E\x05\x9F\x7F\x30\x05\xFD\x6A\x61\xB1\xEF\x50";"\x14\x10\xF4\x5D\xCE\x87\x1D\x61\xE0\x3D\xD3\x1B\x83\x76\x60\xC9\xC4\x2A\x9A\xBB\x98\x7A\xE2\xB6\x4E\x12\x97\x00";"\x3C\x7A\xE9\x23\xD9\xED\x7F\xD6\x4E\x88\xE1\x70\xE3\x1E\x56\x9D\xBC\xD2\x0F\x41\xB9\x59\x83\x94\x55\x16";"\x22\x89\x49\xAC\x2B\x6B\x81\xDD\x52\xFA\xED\xC5\x2A\xCB\xF2";"\x49\x2E\xF7\xEF\x0D\x11\xA3\xE2\x02\xDC\x95\x6A\xD4\xCF";"\x3A\x77\xBA\xA6\x59\x65\xE0\xAF\x5C\xCE\xA2\x6C\xD7\xC4\xD8\x33\x26\xB1\x29\x56\xA6\x4C\xB8\x1C\x82";"\x9D\xBD\x73\xE1\x5B\x45\x9A\xFA\x89\x4B\x3B\xF5\x47\xA4\xA0\x64\x2A\x41\xB7";"\x31\x6B\x9D\xAB\x5A\x60\xA7\xA7\x42\x87\xAC\x34\xDF\xCB\x93\x07\x64\x80\x5E\x13\xE4\x1A\x02\x04\x90";"\x94\xDC\x2A\xF2\x40\x5A\xD6\xBD\x37\x17\x58\x9D\x0C\xFD\xCF\x17\x47\xF8\x6A\x8B\x42\x81\x7E\x51\x8F\xD7\x68\xAB\xF7";"\x97\xD8\x60\x89\x74\xC5\x5F\x38\xAA\x35\x67\x90\x59\x80\xB2\xD3\x96\x2D\xE1\xB2\x40\xB4\x0A\x31\xB3\x13\x8D\x7C\x34\x84\x21";"\xD0\x81\x4A\x9A\x78\x19\x8C\xC9\x7B\x83\x05\xCD\x30\xE6";"\x11\x12\xDE\x14\xFE\xC7\x1F\x4F\xE6\x25\x94\x1A\xE0\x26\x23\xC2";"\x48\x10\xE5\x19\xB2\xA5\x07\x63\xE1\xD6\x8A\x4D\xAA\x76\x06\x80\xDE\x69\xE8\x28";"\xD5\x9B\x6B\xB1\x81\x85\x17\x7E\xB7\x05\x4D\x91\x68\xB1\x48\xCE\xAC\x25\xEA\xCE\x1D\xF4\x2B\x6E\x4B\x05\xAC\x6D\x36\xC4";"\x3A\x7F\xC0\x3E\xDE\xE0\x7C\xD3\x51\x8D\xE2\x3B\xAB\x51\x55\xE7\xAE\xC6\x00\x69\xAE\x54\x82\x91\x3F\x77\xFF\x86\x8C\x73\xC1";"\xB7\xFF\xF2\x39\xC4\xF2\x32\x50\xDD\x37\x24\xA9\xBB\x19\x4A\xE6\xB8\x41\x89\xE5\x18\xD7\xD2\xC8\x32";"\x31\x76\x6D\xB2\x73\x60\xB7\xB4\x16\xF0\xB9\x7E\x64\x94\xAE\x3A\x26\xC7\x0F\x4A";"\xC7\xA8\x6D\x95\x8B\x9F\x29\x78\xFC\x5A\x1F\xE0\x1E\xFE\x49\xDA\xF3\x3E\xEF\xC8\x41\xE2\x22";"\x2C\x7E\x8B\x78\xB4\xEF\x61\xDC\x44\xBE\xF7\x31\xA6\x7C\x24\xAB";"\xDA\xB4\x7A\xC1\x16\x11\xB5\xC5\x8A\x43\x15\xE4\x13\x82\xC5\x12\x7A\xF5\xC6\x9F\x38\x8A\x7F\x4D";"\xAA\x18\x80\x7D\xE7\xF8\x18\x0E\x8E\x74\x21\x0A\xEC\x15\x3D\xE0\xD4\x47\xA6\xF6\x37\x69\xD2\xE5\x61\x6C\xA2";"\x64\x6A\x55\xAA\x58\x2D\xC8\xF7\x5C\x99\xE8\x74\x03\xD5\xF3\x45\x22\xC3\x02\x26\x8C\x68\x16\x4B\xFB\xAD\x39\xD6\xE4\x05\xD0";"\x52\x07\xD8\x06\xF6\x08\x84\xCB\x69\xA5\x8A\x53\xB3\x69\x7D\x5D\x09\x91\x6C\x7F\xB4\x73\x88\x90\x37\x9D\x1C\xF0";"\x10\x59\x9E\x44\xB4\xCE\x5A\x09\xAB\x6B\xCC\x11\xF1\x2F\x33\xCD\x84\x20\xFE\xE1\xCB\x35\xF6\xAA\x46\x5A";"\xB5\xC0\x36\x35\xD0\xA1\x68\x2F\xC6\x02\x21\xFC\x1E\x06\x1B\xAE\xCF\x7F\xDF\x90\x65\x9D\x83\x87\x11\x35";"\xD4\xD1\x2D\xC3\x39\xCE\x1E\x27\xBF\x2F\x1D\xD5\x7F\xB2\xAE\xC2\x81\x37\xF6";"\x55\x0E\xC9\x5C\x95\xA0\x21\x93\x11\xD8\xA0\x68\xA8\x7A\x6A\xE6\xAD\xC7\x4E\x2E\xAD\x16\x83\x9E\x3B\x38\xE8\xD2\x9A\x6E\xDE";"\x17\x4E\x8D\x45\x91\x83\x16\x4B\xED\x26\xCF\x43\x8B\x7A\x52\x8D\xD7\x42\xB2\xE7\xC5\x2F\xE4\xF7\x41\x57\xC5\x25\x78\xB2";"\x17\x5F\xA8\x59\xBF\x52\x9A\xF8\x68\xD3\xFB\x1D\xDB\x38\xDB\x66\x03\xA6\x68\x0B\xD1\x32\xA4\xB5";"\xEE\xB7\x2A\xEE\x35\x2A\x87\x1F\x82\x78\x71\xB7\x24\x86\xAB\x2E\x7C\x19\xC5\xEC\x65";"\x64\x50\x88\x03\xB6\xB0\xD3\x8D\x29\xEE\xC7\x0B\xF7\x30\x37\x45\x17\x88\x33\x2C\x93\x6E\x92\xB3";"\xFC\xC5\x55\xCC\x3D\x33\x01\x13\xB0\x70\x3E\x86\x71\xE8\xBE\x3D\x95\x1D\xBD\xA8\x06\xF0\x09\x22\xB1";"\xBA\xFF\x21\xF0\x0A\x29\x98\x16\x82\x54\x2C\xF8\x4A\x98\x98\x25\x61\x12\x9D";"\x6C\x26\xEE\xF2\x15\x03\xF7\xA5\x49\x85\xE1\x72\xFC\xE9\xF5\x49\x00\x8D\x20\x73\x84\x6F\x71\x7E\xEE\x83\x04\xB7\xE2";"\xB0\xF4\x2E\x2F\xE9\xF8\x79\x59\xC9\x54\x68\xB6\xA3\x5E\x54\xB8\xB2\x41\x9D\xD9\x26\x90\xC6\xCF\x58\x3E\xA3\x1E\x57\x93";"\x33\x6C\x43\xB1\x4C\x64\xD0\xD2\x53\x88\xEE\x75\x0D\xDE\xDB\x73\x73\xE3\x0E\x7C\xA3\x1A\x62\x51\xE4\xAD\x75\xA8\xDF\x28\xE7\x36";"\xDB\xC4\x5C\x87\x73\x4B\x80\xC2\x6C\xE6\x61\x8C\x72\xAA\xBC\x01\x41\x9D\x38\x6B\x53\xB0\x71\x64\xF5\xC6\x61\x89\xF1\x0C\x21";"\x6D\x28\xED\x15\x0B\x1F\xA9\xF8\x7C\xDA\x9F\x60\x9E\x32\xCF\x5F\x32\xBD\x2D\x56\x9C\x5F\xEC\x83\xC2\x8D\x32\xEF\xDB\x5D\xBA\x2A";"\x93\xC4\x19\x80\x71\x4B\x9C\xCE\x28\xA7\x05\xC8\x72\xF3\xFE\x52\x6E\xCE\x18\x36\x05\x9D\x54\x6D\xFF";"\xAE\x83\x54\x8A\x72\x74\x00\x4F\xE5\x21\x76\x9D\x78\xAA\xAD\x85\xBB\x09\xE7\xB8\x0F\xE2\x14\x3B\x9F\x1B\x88\x5A\x2C\xF4\x7F";"\x31\x69\x4A\xAF\x5C\x71\xB7\x95\x4B\x80\xA0\x5F\x6D\x93\x97\x21\x60\x84\x42";"\xA7\xC0\x12\xD8\x65\x61\x0F\x42\xEF\x2D\x65\xDA\x28\xEC\xFA\x66";"\x7A\x6D\x45\xAD\x5B\x74\xDD\xC6\x45\x82\xC0\x3A\x3F\xFC\xDA\x73\x27\xC9\x0E\x29\xF3";"\xB3\xDE\x27\xDF\x3D\x3E\x97\xE0\x7D\xBC\x26\xD5\x06\xFE\xCA\x5B\x0D";"\x5B\x0B\xE6\x11\xEC\x8D\x52\x47\xE3\x2C\x8C\x48\x9B\x70\x67\x82\xC0\x65\xB9\x49";"\xAF\xBD\x83\x71\xA0\xFE\x79\x1D\xBD\x77\x38\xFD\xE5\x1B\x2F";"\xF6\x91\x7C\x62\x9A\xAC\x38\x17\x8D\x49\x2E\xF7\xEF\x0D\x43\xE6\xB6\x57\x8E\xDB\x6A\xB2\x80\x9A\x16\x7D\xF7";"\xFB\xC9\x1A\xC3\x71\x77\x55\x08\xA1\x6C\x77\x8B\x2C\x82\xB1\x27";"\xC7\xA8\x6D\x95\x8B\x9F\x29\x78\xFC\x5A\x1F\xE0\x52\xB1\x43\xDD\xBF\x71\xFB\xC7\x17\x96\x23\x3A";"\x04\x58\xAB\x17\x2F\x5C\xE5\xBE\x73\xD4\xB7\x2E\xCF\x3B\xC3";"\x4C\x25\xFA\xE8\x10\x2A\xA6\xED\x07\xC7\xA8\x6D\x95\x8B\x9F\x29\x30\xA9\x17\x11\x93\x57";"\xC4\xA0\x62\xEA\x03\x04\xAF\xAF\xB3\x4C\x07\xE0\x0D\x8E\x94\x1B\x3C\xA5\x96\xAD\x59\x81\x6E\x03\x8A\xA4";"\xB9\xA8\x37\x32\xD2\xEC\x3B\x2F\xC4\x00\x2D\xD8\x10\x08\x12\xAE\xA9\x30";"\xA5\x02\x9F\x46\xAD\x9B\x43\x02\xA2\x7C\x7C\x4C\xF8\x43\x75\xF8\xD3\x44\xF9";"\x74\x3D\x02\xE0\x18\x22\xBE\x95\x0F\xCF\xA0\x75\x6D\xD6\xD9\x65\x60\xAE\x42\x17";"\xBD\xA6\x03\xFE\x2F\x65\xA5\x1B\x82\x65\x2B\xF0\x24\x91\xA0\x3E\x29\x61\x8B\xEC\x31\xD1\x4F\x53\xED\xA4\x86";"\x54\x1D\xE2\x00\xF8\x02\x9E\xF5\x6F\xAF\x80\x55\x8D\x73\x3F\x54";"\xBC\x15\xC6\x29\xE2\xF7\x00\x4D\xE6\x27\x29\x5D\xAB\x72";"\x72\x7B\x96\x22\xDA\xEC\x78\xD7\x4D\x89\xEE\x72\xE1\x09\x51\xC9\xA2\xC2\x1C\x55\xEF\x16\x84\xDA\x7C\x78\xF9\xD3\xD1";"\x7C\x00\x94\x43\xB7\xF7\xCC\x8F\x26\xC0\xA3\x06\xC4\x23\x3E";"\xEB\x04\xC3\x21\xAF\xFC\x1F\x04\xEE\x31\x67\x04\xB2\x77\x69\xB0\xCB\x5D";"\xF0\x9D\x7D\x9E\x49\x33\x92\xFD\x62\x5F\x0B\x8D\x4A\xEE\x8B\x08\x46\xA7\x2D\x8D\x5D\xA2\x6A\x3A\xD6\xD6\x65\xAA\xE6\xD6";"\xC1\x88\x54\x9D\x79\x92\x10\x40\xF1\x32\x05\xD4\x23\xE3\xFC\xA2\x8B\x12\xFA\xBF\x0B\xBF\x2E\x35\xB6\x13\x9E\x0C";"\x4C\x25\xFA\xA4\x5F\x69\xE7\xA1\x07\x95\xED\x3E\xC5\xC4\xD1\x7A\x3D\xE1\x12\x4B\xB4\x4E\x99\x45";"\x74\x71\xDB\x3C\x92\xAF\x3E\xD1\x79\xFF\xAB\x7A\xE8\x1B\x6B\x9A\xED\x9D\x52\x24\xCE";"\xA3\x1B\xC9\x53\xD8\xF5\x0F\x57\xEE\x2F\x21\x05\xA1\x64\x77\xF8\x9E\x3C\xB5\xF7\x3A";"\x03\x10\xB4\x38\xB7\xA4\x39\x2E\xB5\xDE\x89\x4C\xCC\x4A\x03\x8B\xFE\x79\xA0\x01\xD9\x54\xE1";"\xBF\xE5\x88\x77\x9E\x8A\x3C\x13\x91\x4D\x22\xFB\xEB\x11\x46\xF3\xBC\x43\x94\xEA\x26\xE6\xC1\xC4\x4F\x37\xBA\x19\x50";"\xE2\xBA\x7E\xEE\x1F\x62\xB1\x19\x9E\x4C\x3C\xE3\x27\xB2\x86\x25\x41\x0D";"\x72\x38\x41\xB2\x72\x31\x86\xCC\x14\x8C\xB7\xD1\x30\xDC\xAE\x76\x47\xDF\x41\x41\xA6\xBE\x56\x5A";"\x02\x45\xEF\x58\x57\x19\xF8\xAE\x67\xC9\xF8\x2C\xD5\x35\x8C\x76\x20\xA2\x6E";"\xC5\xAA\x73\xDF\xC6\xDE\x6E\x2A\xFE\x0B\x45\xFB\x54\xA9\x4B\x88\x96\x36\x87\xF7\x0D\xC8\x23\xCE\x0D\x45\xE8\x0C";"\x3D\x68\x83\x7C\xA4\xAF\x86\x86\x08\xED\xB1\x34\xEB\x18\x20\xBF\x4F";"\x7D\x60\x4E\xAF\x74\x77\xF9\x9E\x58\xB5\xF8\x2C\x21\xC7\xFA\x3A\x43\xCE\x05\x68\xF1\x3B\x43\x5C\xEE\xA5\x4C";"\xC8\xAD\x7D\xD1\x1A\x1D\xBA\xE5\x8C\x55\x36\xEA\x1B\x80\x88\x15\x7B\xB5\x8C";"\x0C\x59\xBA\x54\xD1\xD6\x46\x31\xA7\x9B\xC8\x11\x96\x78\x0E\x95";"\xC2\x98\x29\x98\x0B\x2B\x9D\xFD\x6B\x53\x57\xDD\x10\xCA\x84\x19\x64\xE8\x74\xDF\x1B\xDE\x2D\x1B\x8F\xCD\x61";"\x02\x6F\xA5\xA2\x08\x5C\xDF\xA3\x47\xD6\xA3\x3C\xD5\xDF\x9A\x3F\x69\xEF";"\x4B\x2C\xF1\x5D\x40\x50\xEC\xA8\x00\x93\xD6\x30\xD2\xCD\xC0\x43\x62";"\x50\x53\x8E\x5A\xC2\xC4\x50\x3F\xB5\x91\xC6\x1F\xC7\x35\x49\x92\xCC";"\x18\x52\x86\x07\xDF\x09\x9B\xCA\x6A\xA4\x8D\x52\xB0\x3A\x7C\x6F\x16\x8C\x7A\x3D\x87\x71\xBA\x8B\x38\x9E\x11";"\x91\xDD\x28\xDA\xCD\x85\x51\x2B\xB8\x13\x4D\x97\x4B\xBA\x0E\xD3\x9A\x06\xF2\xFC\x1D\xFE\x3B\x11";"\x99\xCB\x5E\xD0\x3C\xCB\x54\x49\xB9\x6E\x58\x84\x63\xA1\xF3\xC8\x8A\x24\xBE\xD9";"\x5C\x10\x97\x3F\xF2\x87\x0A\x4F\xE1\x32\x92\x0C\xEF\x2A\x4A\x8D\xC4\x49\xB6\xEC\x94";"\x4F\x24\xF6\x28\x93\xA2\x27\x7F\x5A\xEB\x98\x23\xB6\x03\x1E\xBB\xF9\x7F\x4E\x1A\xF2\x45\xF7\x86\x5C\x7D\xFE\x39\xC2\x58\x83";"\x39\x7E\xC7\x3F\xDD\xE1\x73\xD2\x52\xCA\xAA\x68\xA8\x2F\x66\xB6\xEC\x95";"\x7F\x31\x84\x3E\xF4\xE0\x7C\xD3\x51\x8D\xE2\x3B\xAB\x0C\x55\xCD\xAE\xC6\x00\x69\xAE\x54\xC4\xDE";"\x05\x40\xB3\x53\xC9\xDD\x0E\x73\xEA\xD7\xBD\x63\x9A\x68\x46\xCF\xEA\x78\x51\x59\xFC";"\xF4\xB2\x4D\xE2\x18\x26\xAF\xEF\xD0\x62\x24\xE0\x15\xBB\x97\x3C\x73\xFA\xCD\xD8\x46\xA8\x31";"\xA5\xF6\xC5\x33\xBC\xDF\x71\x4F\xFD\x30\x69\x40\xA6\x57\x69\xFE\xD8\x5A\x9B\xA9\x7F\x65\x8C\xD2\x6D\x61\xA9\x43";"\xAC\x83\x7E\x8A\x72\x74\x00\x1F\xA6\x60\x3A\x83\x3F\xA3";"\x2B\x0C\x83\x74\xBB\xA6\xDF\x8A\x60\x94\xF3\x44\xBA\x62\x64\xF0\x5F\xD5\x31\x66\xBF\x27\x90\xA7\x3F\x2A";"\x64\x22\xBC\x63\xA4\xAD\xCE\xD2\x53\xB4\xD7\x42\xA0\x58\x62\xFE\x55\xCF\x0F\x2C\xFA\x6E\x92\x9B\x61\x69\x17\xF0\x96";"\x1F\x56\xA6\x57\x53\x4F\xC4\xB8\x77\x83\xD0\x18\xCB\x7B\xA5\x19\x48\xEC\x2A\x0F\xD0\x0E\xEE\xBC\xC3\x80\x20\xF1\xF2\x04";"\x98\xCE\x27\xC9\x3E\x82\x5F\x3B\xBB\x66\x72\x94\x4A\xB7\xB8\xCD\x8C\x01\xEC\xB6\x0A\xFA\x23\x3C\xF4\x1A\x97\x71\x7A\x8F\x62";"\x5E\x18\xBC\x15\xED\x96\x18\x34\x9A\x6E\xC3\x14\xCA\x32\x34\xC0\x8F\x69\xAE\xF5\xCE\x3B\xA5\xFA\x0A\x57\xDF\x26\x7C\x1F\xB7\x57";"\x6E\x2D\xF2\x10\x08\x12\xAE\xE5\x7F\xDF\x90\x65\x9D\xCF\xC8\x52\x31\xB8";"\xFE\xE4\x76\x00\xC3\xE6\x67\x3F\xC0\x0A\x64\xFA\x13\x4C\x53\xEB\xE6\x54\xD8\x91\x66";"\xB8\xFC\x34\x30\xD6\xFC\x3B\x61\x97\x03\x69\xF0\xA0\x41\x44\xAC\xB3\x4E\x99\xC1\x6B\xCF\xC9\xC0";"\xFE\x93\x66\x9E\x13\x04\xA4\xEB\x74\x5A\x1C\xDD\x10\xA9\x86\x0F\x44\xAB\x41\xCC\x11\xF1\x2F\x33\xCD\x84\x20";"\xEE\x03\xD9\x3F\xAA\xFD\x06\x43\x9D\x31\x6B\x4A\xF1\x75\x68\xE3\xFA";"\x74\x4D\xC4\x2E\xA3\xAD\xD9\xD6\x3D\xE9\xAC\x05\xF3\x1C\x2C\xA5\x3F\x98";"\x10\x58\xA6\x76\xBC\xC6\x52\x31\xFF\xDC\x87\x58\x85\x37\x08\x8D\xCD\x7A\xE6\x56\x8C";"\x08\x65\xA7\x56\x14\x59\xEA\xB5\x3D\xC3\xD3\x34\xD9\x3D\xCD\x12\x5B\xF3\x53\x04\xD9";"\xC6\xB2\x2B\xF7\x11\x56\xC8\xA1\xC3\x03\x54\xE0\x1F\xC7\x93\x00\x71\xF9\xD8\x94\x55\x86\x3A\x18\x90\xF2\x63\xE9\x64\x97\x4F";"\x24\x59\x9A\x75\xA6\xF2\xA4\xC5\x5F\xBF\xF0\x45\xBD\x63\x67\xF1\x50\xD4\x32\x24\xED\x74\x85\xAD\x20\x59\x0C\xD6\xAF\x67\xA1\x0C";"\x98\xC8\x1E\xCB\x16\xEF\x49\x0B\xA7\x61\x10\x91\x71\xA5\xB7\xDC\x84";"\xD0\x99\x5E\x84\x74\x8E\x5F\x07\xAF\x2B\x26\xD1\x31\xEF\xF3\x8D\xC4\x60\xBE\xF3\x44\xBA\x62\x36\xB5\x0B\x80\x63\x28\xBF\x68\x99";"\xCA\xAF\x70\x6E\x8E\x90\x2C\x63\x81\x5D\x12\xA7\x54\x42\x44\xDB";"\x20\x79\xB1\xAE\x68\x6E\xEF\xAD\x48\xAB\xE1\x39\x23\xCF\xC4\x69\x79\xE2\x11\x5D\xA5\x5E";"\x76\x33\x80\x35\xE1\x97\x3D\x91\x0D\xF7\xB5\x6B\xA4\x5F\x64\xA3\xEA\x84\x40\x70\xD4\x16\x9D\xAE\x2A\x74\xE8";"\xD9\x80\x6E\x95\x49\x4C\xDE\xBE\x72\x5F\x59\xB4\x44\xB4\xCE\x5A\x09\xAB\x6B\xCC\x11\xF1\x2F\x33\xCD";"\x3D\x8F\x45\x9B\x59\x78\x8E\xC7\x22\xE1\xB5\xC4\x31\xEC\xBA\x1C\x51\xD8\x34\x79\xB1\xE5\x78\x60\xF7\xA6";"\x3B\x6D\x00\xAA\x56\x65\xF2\x93\x5D\x82\xE1\x3A\x27\x91\xDD\x3A\x2D\xCE\x01\x7B";"\x38\x66\x95\x27\xD5\xE9\x7B\x63\x0C\x84\xAC\x7E\xB3\x07\x1C";"\x9A\xE0\x3C\x18\xD7\xCE\x45\x21\xC4\x03\x5A\xAA\x53\x05\x04\xAB\xBC\x3B\x98\xCE\x27\x80\x52\xCE\x51\x36\xAE\x63\x00";"\xB5\xB7\x0C\xE1\x3B\x39\xB1\x24\x8B\x4E\x32\xB8\x6D\x99\x82\x2D";"\xDB\x9E\x23\xE9\x39\x4D\xDF\xB6\x2E\xE8\x41\x96\x09\xE2\xF2\x42\x2B\xA3\x63\x34\x09\xBC\x69\x7F\xBC\x9C\x32\xF6\xBB\x7C\x62";"\xD9\xEF\x2D\xAE\x15\x11\xB9\xF7\x8E\x6E\x06\xEE\x1A\x8D\xD8\x19\x77\xFA\x9C\x98\x50\x90\x7D\x3C\x9B\xCE";"\x87\xD1\x75\x88\x87\xCF\x5D\x39\xB6\x56\x31\xDC\x02\xFA\x0C\x98\xF7\x6D\xA9\x8E\x57\x8F\x6D\x71\x03\x42\xE2";"\x76\x79\xED\x6D\x93\xA0\x7A\x7D\x03\xCE\xA2\x31\xFB\x4F\x53\xED\xA4\xC0\x1E\x53\xA4";"\x39\xCA\x79\xA7\x50\x56\xAC\xE2\x4F\x93\x3D\xF1\x01\xD6\xD2";"\x22\x7A\x46\xB0\x63\x48\xE1\xDD\x4C\xB3\xCF\x25\x32\xDF\xA2\x48\x5F\xD4\x1A\x67\xB4\xBC\x0D\x5E\xF1\xE2\x51\x88\xD4\x3E\xDD\x9D";"\x0E\x6C\xAF\x46\x72\x5B\xE6\xB6\x38\x92\xC8\x38\x9C\x09\xC6\x5E\x20\xBF\x7C";"\x3B\x3A\x46\xAD\x5D\x2D\x95\x96\x0E\xC8\xA1\x3F\x2A\x8C\xD8\x6D\x35\x83\x05\x5B\xBB\x5A\x42\x1B\xC1\xB4\x3D\x98\x9B\x76\x82\x7A";"\xE9\xCB\x00\xE0\x61\x7F\x67\x13\x93\x79\x3F\x89\x75\x98\xE4\x7B\xD1\x79\xB3\xE4\x39\xA9";"\xD0\x93\x64\x91\x43\x0E\x82\xDA\x61\x5F\x17\xD1\x08\xF1\xC8\x59\x0B\xDC\x0C\xB9\x09\x9A\x7A\x56\x8A\xDF\x7A\xB7\xE6\xC8";"\x49\x2D\xE5\x69\xCC\xFC\x27\x6F\x07\x83\xFE\x65\x96\x04\x1A\x99\xBC\x7E\x43\x15\xDF\x16";"\xB3\xF1\xC8\x23\xCE\xED\x7E\x5A\xD4\x23\x50\xBA\xAB\x5A\x6A\xF2\xBE";"\xE6\xDC\x00\xF7\x30\x37\x45\x17\xD3\x32\x7C\xEB\x21\xDF\xE3\x7D\x9D\x16\x8E\xAD\x7B\xFE\x52\x13\xA5";"\x8A\xFE\x71\x8C\x8F\xFF\x5D\x6A\xE3\x16\x52\xB6\x5B\x41";"\x93\xFF\x23\xF0\xCB\xC8\x5B\x22\xA9\x2F\x57\xB4\x4A\xBC\x4D\x93\xA6\x3A\xE9\xCB\x5A\xC9";"\xAA\xFB\xCB\x39\x91\xAF\x3D\x1C\x9B\x4C\x0F\xFA\xE8\x10\x2A\xA6\xED\x07\xC7\xA8\x6D\x95\x8B\xD6\x6F";"\x87\xE3\x1E\xAA\x52\x54\xE0\xAF\xC5\x01\x56\xAF\x57\xC5\xD9\x22\x7C\xBA\xC6\x98\x71\x90\x77\x0C";"\x1E\x72\x54\xAC\x11\x4B\xE8\xD9\x51\x80\xEC\x3D\x2E\xE1\xC0\x61\x3B\xC0\x35\x4F\xBF\x52\x0B\x7E\xEE\xAE\x2E\x9D\xD3\x25";"\xB0\xBC\x70\xE0\x54\x44\xFA\xA9\xCB\x0B\x6C\xB1\x51\xCF\x80\x39\x76\x05\xCA\x90\x6C\xA8\x07\x1E\xBF\xED\x7C\x56";"\x84\xE4\x28\x72\xF6\xE3\x68\x29\xE1\x0E\x7A\xBE\x41\x68\x57\xE0\xB4\x38\xB5\xD9\x03\xD2\x3F\xD3";"\x2A\x89\x12\xB4\x34\x76\x87\xD6\x4B\xFF\xE4\xCD\x38\xED";"\x71\x33\xC2\x72\x9D\xB6\x2B\x87\x01\x8F\xA5\x7B\xE9\x53\x7D\xE1\xA0\xC4\x02\x1B\xE7\x15\x87\x94\x54\x78\xF1\xD4";"\xF2\xF3\x30\x23\xD8\xA8\x0E\x6B\x89\x45\x2A\xF3\x13\x09\x1D\xAF\xE6\x7E\xD8\xC3\x29";"\x03\x94\x02\xF4\x0E\x3E\xCA\x99\x1B\x9A\xE9\xD5\x2E\xFD\xE2\x69\x14\x8D\x15\x68\xB6\xF7\x77\x5A\xF5\xA2\x0B\xAA\xD3\x36\xF4";"\xF9\xB9\x4A\xA5\x60\x34\xBF\x11\xD7\x1D\x34\xF2\x66\x9A\xA3\x79\x69\x19\xDE\xA0\x52";"\x84\x35\xF0\x1C\xC6\xD1\x2B\x69\xE9\x16\x31\x1B\xFC\x0E\x33\xB2\xBB\x5F\xBC\xE7\x38\x25\x97\xE9\x64\x38\xEB\x09\x7E\xA2\x46";"\x13\x44\x99\x1A\xE3\x99\x00\x58\xEB\x2E\xB9\x49\xA8\x49\x73\x86\xC9\x00\x8B\xEB\xC9\x0C\xD8\xF3\x65\x5B\xD1\x09\x2B\x88\xAD";"\xCA\x9B\x61\x94\x42\x6E\xD0\xBF\x35\x11\x46\x9F\x47\xB5\xC9\x5B\x0A\xAA\x28\x82\x51\xB1\x64";"\x23\x74\x80\x7F\xE7\xB3\x3A\x93\x13\xF0\xAE\x72\xE1\x0E\x25\xB7\x19\xCD\x48\x20\xF3\x2F\x83\x94\x34";"\xE8\xB0\x3E\xE1\x30\x3F\xF8\x3B\x96\x7B\x34\xF4\x6B\x9C\x8B\x36\x7F\x02\x8A\xC5\x75\xE0\x0A\x50\xC6";"\x1B\x08\xE9\x04\xF1\xC3\x77\x34\xB0\x6E\xC3\x14\xCA\x32\x34\xC0\x8F\x25\xE1\xF0\xC0\x25\xA5\xC6\x47\x59\x9A\x3D";"\x2B\x77\x51\xF0\x6B\x75\xE1\x9E\x64\xBD\xF4\x31\x32\xDF\xE7";"\x42\x2A\xB1\x10\x9A\x87\x22\x48\x05\xD8\x87\x57\x9F\x16\x32\x99\xEC";"\x16\x4C\x90\x47\xA0\x47\xD5\x87\x6B\xEC\xC9\x05\xD0\x2C\x27\x44\x12\xA5\x53\x3C\x92\x7F\x91";"\xEE\xCE\x4D\xF3\x24\x2A\x47\x1C\xDC\x6E\x37\x85\x70\xDE\xCA\x7C\xD3\x51\x8D\xE2";"\x6F\xC0\x15\xCD\x33\x37\xC1\x80\x24\xE2\xB7\x88\x76\xA6\xB8\x7D\x5D\x99\x36\x34\x65\xB6\x57\x6E\xEB\xDF\x41\x86\xA1\x22\x24";"\x50\x09\xF7\x04\x8D\x91\x3A\x60\xFB\x82\x84\x77\x88\x06\x47\x94\xFE\x70\x1B\x4E\x98\x6C\xB6\xC8\x44\x0B\xA9\x65\xCA\x13";"\x8E\xE4\x3C\xD7\xD4\xCC\x60\x32\xB4\x10\x07\xB7\x4A\xBA\x46\x97\xFF\x6E\x82\x81\x56\x8C\x6C\x22";"\x45\x74\xA0\x6B\x98\xBF\x3E\x95\x1A\xCD\xB3\x36\x86\x4C\x56\xE2\xA1\x8A\x45\x54\xEA";"\xFA\x95\x80\x7E\x9E\xA0\x75\x55\x91\x03\x6D\xAF\xEB\x52";"\xBC\x50\x9A\x0C\xE0\xFB\x0D\x7D\xC2\x03\x3E\x1D\xE2\x30\x35\xD9\x8F\x0F\xF8\xAF\x97\x75\x91";"\x96\x94\x4E\xC2\x79\x04\x99\xE5\x37\x8F\x07\xD9\x0B\xCB\xF8\x11\x51\xF6\x1F";"\x44\x28\xEC\x17\xF9\x8E\x15\x3D\xA6\x6F\xEA\x15\xCD\x33\x37\x8D\xCF\x67\xA3\xFB\x88\x35\xBB\xD4";"\x9D\xC4\x19\xCA\x76\xEC\x76\x24\x99\x5A\x6B\xA0\x50\x8C\x93\xEB\xB9\x3A\xCD\x83";"\x3A\x74\x1F\x9E\x6C\x69\xFF\xD5\x57\xA6\xAF\x3E\x33\xD8\xEB\x70\x22\xC6\x0B\x22\x8C\x1F\x59\x5C";"\x74\x3C\x98\x7E\xB3\xB1\x7F\x9D\x19\xFE\xB7\x6D\xA8\x17";"\x9E\x95\x71\x94\x01\x10\x99\xF0\x7B\x11\x39\xCF\x15\xFA\x84\x0B\x5E\xCE\x2D\x9E\x46\xF8\x78\x60\x81\xC8\x4F\xAB";"\x11\x12\xD7\x02\xFB\xC9\x71\x0A\xAA\x64\xCD\x12\xF0\x28\x32\xCE\x85\x1F\xFF\xB0\x85\x7D\xA3\xA7\x31\x10\x94\x72";"\xE7\x04\xC2\x36\xEA\xF3\x49\x5B\xD4\x3B\x6D\x1D\x92\x6E\x2E\xDF\xDB\x50\x9F\xE3\x38\x3F\xD4\xC7\x3C\x27\xC0\x40\x6A\xA6";"\x7C\x35\x0A\xF8\x66\x6F\xF8\xDE\x43\xBE\xF7\x33\x6D\x92";"\x9C\xC9\x6F\xD2\x2B\x8F\x6B\x78\xA1\x7C\x41\xD6\x40\xA2\x5A\x88\xAC\x34\xF4\xCD\x00\xF7\x27\x26\x65\x11\x92\x7F\x3E";"\xFD\xA9\x7C\xE6\x19\x69\xB8\xEB\x87\x19\x3A\xFD\x02\x83\x81";"\xCB\x9A\x78\x93\x13\x0A\x97\xFE\x72\x0D\x3E\xD4\x0B\xFF\xA9\x10\x5A\xFF\x3E\xAC\x58\x87";"\x39\x8D\x52\xA5\x6A\x61\xD6\xCD\x66\xFE\xFD\xCB\x2E\xA2\xE7\x78\x5E\xC7\x71\x72\xB7\xA2\x5B\x29\xE9\xAF\x5E\x91";"\x53\x19\xA0\x56\xEA\x87\x08\x3E\xF9\x3F\x92\x15\xBB\x7E\x66\x8E\xDA\x6F\xAF\x07\x87\x7A\xC9\xFF";"\x4F\x45\x82\x72\xA0\xBD\xC3\x81\x23\xEA\xFB\x4D\xA1\x01\x2B\xBE\x11\x86\x3F\x27\xF1\x73\x9C\x9B\x3A";"\x9F\x35\xFF\x2D\xD4\xCA\x5B\x0D\xB6\x71\xD8\x0D\xDF\x67\x70\x8A\xD9\x50\xFA\xC0\xC4\x2C\xD1\xF0\x5F\x5C";"\x32\x33\xF9\x75\x9D\xE6\x33\x6A\x00\xD1\xE2\x20\xDA\x49\x19\xA0\xA6\x14\x18\x51\xA6\x5C\xBC";"\x5F\x01\xEF\x0A\xC0\x8E\x1E\x78\xF9\x97\xF2\x1D\xC5\x3B\x4F\xD9\x88\x2C\xEA\x1B\xD1\x0C\xE2\xF5\x42";"\x14\x4E\xA6\x6A\x93\x7D\x97\xFF\x6E\xED\xCF\x12\x8C\x46\x76\x02\x41\xE3\x23\x74\xC9\x39\x8E\xB5\x33\xB6\x0D\xFB\xAB\x4C";"\xBE\xE9\xC0\x2F\xF0\xAF\x38\x19\x94\x36\x68\xF8\xCC\x16\x28\xA4\xEB\x09\xC5\xAA\x73\x93\x89\x9D\x2F\x2F\xB8\x58\x41\xB8\x01\x90";"\xE6\x94\x7D\xF2\x20\x21\xB7\xFE\x88\x49\x6A\xE7\x1B\x8C\x93\x6F\x67\xEB";"\xAF\xB9\x1F\xB7\x1D\x71\xA6\x0C\x9C\x3F\x7B\x96\x22\xDA\xEC\x78\xD7\x4D\x89\xEE\x72\xE1\x09\x51\xC9";"\x8A\xFA\x32\x3D\x8D\xBB\x23\x62\x82\x5C\x59\xA5\x5B\x41\x56\x96\xAF";"\x8F\x96\x45\x97\x85\x99\x2B\x7A\xFA\x54\x1D\xA4\x4F\xAA\x02\xE1\xF9\x2B\xEA\xD3\x16\x8D\x3A\x39\x01\x09\xB4\x63\x3E\x9A\x65\xEE";"\x7C\x33\x50\xB2\x67\x6A\xB0\xB5\x15\xF1\xA6\x7F\x67\x95\xA9\x3B\x6A\x8A\x44";"\xB9\xE5\x39\x22\xD0\xDE\x75\x39\x99\x34\x52\xAB\x42\x49\x4A";"\xA2\xCC\x10\xF7\x31\xDC\x4C\x00\xA8\x6E\x02\xB9\x74\xAE\xA1\xD9\x86\x25\xFF\xA7\x5E\xD9\x2D\x2A\xBE\x1A\x96";"\x28\x48\x90\x0C\xBE\xA4\x82\x95\x2B\xE6\xBA\x49\x93\x67\x7B\xF5\x5C\xD8\x36\x7B\xBC";"\x6A\x2C\xE8\x6D\xA3\xAF\x34\x7B\x02\xD5\xE0\x4E\xA0\x39\x2C\x8C\xDC\x43\x68\x3A\xD3\x3B\xCA\xBF\x3B\x46\xD8\x09\xCE";"\xEF\x40\x95\x08\xFD\xF3\x41\x2A\xA4\x62\x37\x08\xB3\x68\x7C\xB4\xB1\x19\xF5\xBA\x83\x31\xDC\xF9\x6A\x44\xC0\x48\x67";"\x48\x1A\xFA\x50\xC9\xDA\x13\x73\xF3\x97\xF2\x1D\xC5\x3B\x4F\x9C\xC6\x68\xEA\x65\x90\x4E\xAE\xB0\x00\x4C\xE2\x3C";"\x8C\xC6\x21\x9A\xC7\xCA\x54\x7F\xDF\x1D\x49\x9C\x46\xB9\x09\xDD";"\x7D\x3B\xC2\x6E\x97\xB6\x7E\xBC\x01\xC9\x8A\x60\xE0\x03\x27\xAD\xE1\x90\x44\x18\xFA\x1B\xC6\x8C\x1C\x7E\xF7\x95\xB9\x71\x86";"\x71\x72\x8A\x75\xA8\xA8\x6A\x9D\x4C\xD6\xB0\x70\xE0\x32\x27";"\xFB\xC9\xD7\x36\xDD\xFE\x50\x50\xC8\x1B\x64\xA2\xF1\x7A\x53\xE1\xB5\x4C\x91\x87\x67\xD7\xC2\xCC\x1D\x6C";"\xAA\xFE\xC6\x29\xEA\xE8\x7F\x10\xD2\x3D\x75\xBB\xA3\x61\x69\xE8\xA0\x7A\x95\xEF\x36\xD7";"\xF3\xFA\xCF\x68\x9F\xE6\x73\x50\x90\x64\x23\xF4\xEA\x12\x14\xA0\xEF\x05\x85\xD7\x3B\xD6\x8B\xCB\x6E\x3B\xBE\x0D\x00\xB6";"\x64\x76\xD1\x6A\x98\xAE\x35\x58\x00\xCB\xB6\x75\xFC\x4E\x7A\xA0\xEC\x82\x5C\x1E\xAB\x35\xB2\xC9\x34\x4D\xB6";"\xEB\xC6\x17\xD3\x27\x3E\x41\x17\xCC\x22\x13\x8A\x71\xAC";"\x99\xD6\x0E\x89\x3D\xC3\x50\x06\xAB\x5E\x47\x82\x4B\xAF\xB4\x85\xC3\x4B\xBD\xF2\x4B\xBB\x22\x2A\xA5\x11\x83\x64";"\xE9\xCD\x35\xC3\x22\x38\x02\x15\xAB\x66\x3A\xC9\x78\xAB\x98\x3A\x92";"\xA8\xAB\x56\x8C\x6C\x76\x4E\x0E\xA0\x62\x38\xC9\x7A\xAF\xBA\x27\xDC\x45\xB6\x97\x4C\xAC\x39\x24\xB9\x05\x8C";"\xA4\xCB\x13\xFC\x3B\x37\x0E\x6F\x93\x70\x33\x84\x71\xE3\xAA\x34\x94\x01\xE1\xA6\x5C\xE3\x14\x27\xB1\xE5\x8A\x40\x66\xFE";"\x4A\x29\xB2\x7A\xC8\xD2\x6E\x25\xBF\x9F\xD0\x25\x98\x0D\x03\xD1\x9A\x34\x12\x47\x98\x03\xF8\x8C\x44\x21\xA9";"\x3F\x6D\x8E\xA5\x46\x7A\xB8\xE0\x0B\xE1\xAC\x71\x91\x8F\x93\x2D\x64\x80\x17\x55\xE4\x54\x4D";"\xEF\xDD\x40\xC4\x2B\x2D\x43\x0D\x92\x74\x32\xC8\x2F\xB2\xA2\x3A\x9A\x19\xDA\xB6\x70\xEF\x52\x11\xAE\xEB\xC5\x2B\x56\xAF";"\x25\x9E\x06\x95\x54\x41\xB8\x8B\x15\x83\xB0\xC9\x33\xCF\xAD\x4D\x5B\xC3\x07\x77\xBD\xA5\x5C\x1A\xD9\xE3\x64\xB1\xE9\x1D\x85";"\x4B\x5A\xB2\x41\x4C\x53\xFB\xE6\x3F\x96\xD5\x66\xCC\x2E\xC9\x5F\x21\xA7\x5D\x74\x98\x5B\xB2\x45\xD1\xC2\x1F\xE9\xD9\x00\xF6";"\x0C\x65\xBA\x28\xD0\xEA\x66\x2D\x47\xC1\xA7\x7F\xD5\x34\x53\xAA\xB8\x75\x54\x5F\xE9\x0E\xFF";"\x1C\x07\x8C\x4E\xB3\x46\x84\x8A\x25\xC6\xC5\x1D\xFD\x73\x19";"\x31\x80\x53\xBE\x67\x7B\x8A\xF7\x50\xB0\xE4\xF5\x3C\xF1\xF3\x33\x19\x94\x58\x27\xF8\xE6\x16\x28\xA4\xEB\x09\xC5";"\xF3\xC1\x02\xFB\x63\x76\x09\x72\xDC\x3A\x7F\xC0\x3E\xDE\xE0\x7C\x95\x1E";"\x87\xAC\x37\xC4\xC1\xD0\x79\x2D\xCF\x10\x13\xB7\x4E\x4D\x54\xF1\xAA\x21\x9E\xF5\x0B\xC2\x34\xC5\x13";"\x36\x68\xB4\xAA\x1E\x21\xA4\xC1\x09\xC5\xAA\x73\xDA\xCF\x9D\x4C\x29\xB0\x16\x42\xE8\x5D\xB2\x52\xDB\x83\x32";"\x8B\xEE\x38\x22\xC9\xD5\x76\x69\x8A\x43\x3E\xE9\x19\x07\x1B\x95\xFC\x78\xD6\x9B\x5C\x82\x7A\xC9\x54\x24\xA8\x60\x48\xD7\x5B";"\x28\x70\x5A\xA8\x65\x7E\xAC\xEA\x56\xBE\xEC\x75\x6C\x9B\x85\x39\x68\x8C\x4A\x2F\xF0\xEE\x0E\x10\xAC\xE3\x01";"\x3A\x84\x45\x98\x5C\x64\x8D\xCC\x73\xB7\xBC\x80\x62\xEE";"\x44\x2D\xF2\x10\x4D\x5C\xEA\xEC\x7F\xF5\xD5\x2B\xD9\x83\xAD\x57\x25\xBA\x11\x53\x91\x49\xB8\x08\xD6";"\x2B\xC2\x4B\x99\x2B\x5C\x94\xEF\x2E\xE2\x39\xDC\x3B\xFC\xF7\x07\x50\xCF\x22\x4C\x53\xAE";"\x3D\x73\x4F\xA7\x11\x2F\xCA\xC6\x5E\x8D\xF3\x02\x23\xDE\xC5\x6D\x63\x8A";"\xC8\xFD\x20\xDF\xCF\xC0\x6B\x36\xAC\x42\x5E\xAC\x51\x5E\x07\xBB\xBC\x3B\x91\xC6\x14\x86\x1B\xED\x60\x3E\x9A";"\x87\xD9\x28\xD4\xD7\xDE\x61\x22\xBB\x1F\x57\x8C\x04\xFF\x08\xC5\x85\x2D\xA5\xDA\x01\xBD\x08\x3E\x5B\x0F";"\x34\x3F\x46\xBF\x52\x73\xF9\x93\x54\x83\xE6\x7B\x41\x91\x95\x27\x6E\xCA\x0F\x6A\xAF\x58";"\x8B\xEC\x31\xD1\x4F\x53\xED\xE1\x8E\x5A\x53\x8E\x5A\xC2\xC4\x50\x7A";"\xBE\xF3\x44\xBA\x62\x64\xF0\x5F\xD5\x31\x66\xBF\x27\xD5\xE9\x32\x6C\x4A\xD4\xBF\x28\xB9\x1B\x33\xE6\xA7\x4F\x4D\x1F";"\xC4\x9C\x5F\x88\x34\x1A\x92\xCC\x65\xEB\x1E\xD4\x25\xFA\xE1";"\x70\x5E\xB7\xB3\x44\x4A\xE5\xB8\x4C\xC7\xA3\x73\xB9\x89\x9D\x2F\x66\xFE";"\xE3\xCC\x1E\xC8\x25\x7D\x41\x1B\xA8\x63\x5D\x87\x7B\xAA\xF6\x83\xD9\x71\xBB";"\xF0\xB9\x7E\x64\x94\xAE\x3A\x69\x8B\x4B\x2C\xF1\x11\x0F\x13\xE4\xA2\x00\x90\xDC\x30\x9A\xC4\xCB\x45\x31\xB1";"\x30\x76\x47\xE3\x33\x2D\xBF\x96\x0E\xA1\xEF\x30\x06\xD9\xDB\x72\x11\xCF\x02\x40\xAF\x56\x55";"\x03\x20\xB3\xB8\x5D\x54\xF5\xA9\x4B\x8C\x97\x3A\xC3\xC8\xF2\x41";"\x4E\x0E\xF2\x04\xFB\xB1\x18\x67\xF5\x3A\xB1\x51\x87\x7D\x60\x85\x8F\x71\xA9";"\x16\x5B\x9C\x42\xBA\xCC\x58\x37\xAD\x69\xCE\x17\x83\x62\x72\x82\xCE\x22\xBD\xFB\xD3\x10\xE5\xF6\x72\x00\xD1\x36\x74\xAE";"\x6A\x79\xA2\x56\xA4\xBD\xC1\x97\x57\xB6\xF0\x6F\xBD\x63\x67\xF1\x00\x97\x73\x2B\xF4\x2E\x90\xBD\x2A\x68\x1D\xCC\xA5\x7D";"\x5F\x17\xE9\x1B\xB5\xC3\x20\x66\xF7\x2D\x89\x18\xC1\x30\x1E\x8E\xC8\x69\xE7\x62\x8D\x75\xAB\xBF\x49\x18\x9C\x7A\x3F\x00";"\xC3\xAF\x35\x20\xCA\x90\x06\x63\x81\x5D\x12\xAE\x55\x45";"\xE2\xB7\x88\x76\xEF\xFE\x34\x72\xD7\x33\x50\x56\xAE\x49\x5D\xF3\xD7\x5A\x8E\xEE\x24\x21\x8C\xC2\x6A\x24\xCD\x43";"\x2A\x69\xAE\x54\xC4\x9A\x38\x76\xEB\xFA\x9F\x75\x88\x69\x06\xC0\xE0\x62\xBB";"\x30\x84\x77\xA1\x66\x6D\xA4\xC3\x47\xBA\xF8\xC8\x38\xFE\xF3";"\x56\x0A\xDD\x49\x9D\xCB\x45\x0C\xA8\x66\xCB\x0C\xF2\x66\x73";"\xF8\xB1\x86\x7C\x9C\xA6\x32\x63\xC6\x3D\x57\xBC\xBB\x41\x62\xE6";"\xDA\xB5\x60\x9E\x7E\x80\x1C\x73\xF1\x2D\x02\xDB\x0B\xF1\xF5\x87\xCE\x66\xEC";"\x38\x75\xFC\xB6\x52\x69\xF6\x97\x5E\x9D\xFC\x32\x3B\xCE\xD9";"\x6A\x1A\xEF\x33\x92\x96\x05\x4C\xF4\xD7\x8F\x5A\x8D\x68\x01\xD6\xC7\x62\xBA\x07\xC3\x06\xE2\xFF\x43\x1F\xA2\x0A\x70\x49\xAC\x6F";"\x50\x12\xDA\x5A\xE1\x9B\x0E\x4F\xAA\x4E\xCD\x12\xF0\x28\x32\xCE\x85\x1F\xFF\xB0";"\x64\x48\x42\xBC\x49\x6E\xE1\x81\x1C\x82\xE0\x2D\x60\xDD\xEE\x28\x15\x8D";"\xE2\xC4\x18\xC4\x35\xCE\x0A\x04\xA9\x61\x62\x98\x78\xBB\x9A\xC7\x99\x1E\xF6\xBA\x04\xBE\x43\x60\xBA\x12\x9D\x5E\x27";"\x9E\xD4\x67\x90\x0B\x57\x9B\xF5\x74\x16\x71\xD0\x0D\xF9\x8D\x14\x37\xFE\x39\x8B\x52\x8B\x41\x70\x81";"\x15\x4B\x8B\x44\x84\x5F\xC4\x82\x2C\xBB\xCD\x0D\xFE\x39\x39\x08\x6D";"\xBE\x91\x7D\xE5\x02\x27\xB6\xB8\xC7\x4B\x2F\xE4\x5B\xC4\xC9\x77\x35\xB0\x89";"\x32\x67\xB8\x60\x99\xBA\x64\x54\x45\xD5\xB8\x33\x9A\x07\x5D\xA6\xF6\x7F";"\x6B\x4D\x89\x35\xAA\xB1\xCD\xD8\x12\xF5\xAB\x40\xFF\x0B\x34\xB3\x3F\x94\x4B\x36\xDE\x65\x90\x97\x2B\x6B\x02\x80\xA8\x60\x90";"\x55\x21\xB0\xAD\x40\x45\xE7\xE1\x29\x8F\xDB\x2A\xD8\xCB\x9B\x46\x28\xBD\x17\x57\xAF";"\x2E\x37\x49\xBA\x45\x77\xFA\xD5\x15\xB4\xE8\xE0\x2C\xD7\xE3\x22\x58\xC7\x04\x2D\xB8\xA5\x40\x16\x88\xAD\x4C\x80";"\x69\x46\x8E\x15\xB8\x5F\xCB\xD6\x2F\xF5\xD8\x43\xD4\x38\x2C\x4C\x15\x9E\x76\x26\xAC\x77\x90\xA5\x3D\x81\x27\xC8";"\x4E\x74\xB1\x61\xF0\x00\xEC\xB0\x22\xE0\xD4\x10\xE8\x25\x32\x4F\x14\xE6\x2B\x77\x89\x78\xA2\xF8\x27";"\x31\x66\xBF\x27\xD5\xAF\x34\x78\x4A\xFB\xE1\x62\x9F\x0C\x52\xA7\xEB\x3F\x56\x00\xE4\x14\x91\x94\x59\x60\xFB\xD6";"\x11\x72\x5C\x80\x6F\x6B\xE1\xDA\x55\xF9\xFB\xD6\x37\xD6\xDF\x76\x51\xC6\x1C\x52\xB3\xB8\x7A\x5F\xF1\xB4\x42\x8F\x94";"\xB4\xFF\xC0\x2D\x9F\xE7\x20\x75\xE0\x31\x51\xE6\xE7\x5A\x46\xF0\xE1\x75\x8E\xC5\x26\xC3\xCC\xD6\x65\x61\xB6\x1B\x5E\xA3\x4C";"\x2F\x72\x08\xEB\x26\x5B\xD2\xC9\x58\xB8\xFF\x8D\x2D\xDC\xFA\x37\x44\x80";"\x6F\x93\x41\x9F\x76\x63\x82\xC8\x56\xA7\xED\xEB\x39\xE8\xF6";"\x64\xCD\x12\xF0\x28\x32\xCE\x85\x1F\xFF\xB0\x85\x7D\xA3\xEE\x77\x10\xDB\x30\x6D\xE2\x8F\x45\x49\xAC\xE9\x64\x8A\xFE\x3C\xC1\x9F";"\x0B\x46\xFD\x1E\x8C\x92\x21\x24\x06\xCB\x9D\x67\x8E\x0B\x0B\x9E\xBF\x67\x44";"\x24\x86\x13\x9A\x67\x7B\xA5\xD3\x53\xA8\xC1\xCA\x3D\xC8\xE0\x7D\x43\xDE\x73\x39\xF9\xA7\x5E\x67\xA5\xC6\x44\x89\xE8\x2D\xDE\x8A";"\x46\x50\xB8\x5D\xB5\x82\x12\x64\xFB\xC0\xD4\x16\x9C\x73\x1A\x8B\x8B\x03\xE5\x4A\x93\x73\xA9\xBD\x4F";"\xC3\xDD\x39\xD8\xCE\xC9\x46\x74\x88\x1A\x5A\x85\x47\xA8\x5F\x82\x90\x28\xFD\xFE\x1B\xCE\x34\x34\x51";"\x4E\x66\xB0\x04\xCE\xD0\x6C\x23\x41\x9D\xD2\x2B\xDB\x41\x45\xD7\xBE\x36";"\xE1\xB6\x8F\x77\xA5\xF7\x0E\x5B\xC8\x31\x6E\x56\xEC\x5C\x6B\xED\xC1\x12\x89\xEF\x20\x23\xD7\x9B\x65\x60\xAE\x42\x17\xE8\x16\x06";"\x6B\xCC\x11\xF1\x6E\x66\x99\xCB\x52\xB7\xF4\xCC\x2E\xC7\xEA\x71\x5D\xD9\x34\x62";"\xFB\xB4\x02\xAF\x65\x23\x81\xD2\x4D\xAA\x1D\xDD\x7B\xE2\xF8\x16\x0F\x9E\x2C\x79\x43\xB2\x1C\x67\xFC\xC8\x7B\xB6";"\xF0\xF3\x01\xF4\x26\x64\xDA\x5F\xD5\x31\x66\xBF\x27\xD5\xE9\x37\x65\x09\xC5";"\x91\xD2\x3C\xF2\xC3\xCC\x51\x38\xAD\x10\x5E\xFE\x57\xAB\x58\xDA\xF6\x2B\xE6\xC5\x56\xA6\x6C\x76\x02\x41\xE3\x23\x74\xC9\x7C\xA9";"\x2B\x0C\xD1\x31\xEF\xF3\x8D\xC4\x60\xBE\xF3\x44\xBA\x62\x64\xF0\x5F\x90\x7F\x22\xBF\x0D\xD5\xE9\x7B\x2A\x4A\x84\xED\x32\xD0\x48";"\x5E\x13\xA1\x54\x46\x04\xBA\xFF\x75\xD1\x86\x5F\x87\x75\x89\x5E\x04\xAE\x2D";"\x1B\x5C\xA1\x41\xBF\xC3\x18\x7A\xF4\x6E\xE9\x14\xCA\x32\x34\x85\xC1\x61\xE8\xB6\xA5\x32\xEB\xFD\x4B\x30\xD6\x3B\x7E";"\xA8\xC9\xC5\x32\xD1\xE3\x75\x47\xC8\x43\x5B\xF7\xA6\x47\x1B\xDD\xE4\x55\x90\xED\x67\x94\xAE\x9E\x2A";"\x02\x57\xA8\x56\xC6\xD8\x54\x3B\xB9\x95\xDA\x23\xC3\x39\x4D\x9A\xF8\x6A\xE8\x6B\x96\x4C\xAC\xB6\x42\x01\xA3\x63\x34";"\xB2\xFA\x81\x32\xCB\xF1\x78\x40\xD3\x06\x51\xB1\xB0\x71\x5B\xEE\xA1\x05\x95\xDE\x2A\xD9\x85\xCA\x7F\x28\xBF";"\x01\x1D\xBF\x43\xA2\x6B\xCC\x82\x25\xE1\xD8\x16\xFD\x61\x74\x06\x46\x9A\x77\x71\xEC\x3C\xDC\xE6\x72\xD1\x53\xB3\xE4";"\xD2\xD5\x1D\xE8\x3E\x3B\x49\x1D\xFB\x7B\x54\xCE\x1E\xA8\xB1\xC9\x98\x17\xBB\xBA\x14";"\x4A\x61\xB9\xA2\x0E\x3A\xE0\xAC\x42\x9C\xDE\x6B\xE4\xC0\xCB\x4E\x15\xB3\x09\x75\x97\x57\xA0\x4B\xD4\x80\x25\xEC\x8C\x4C";"\xF1\xAC\x10\xFF\x1D\x25\xF2\x30\x84\x5F\x30\xFE\x65\x85\xB6\x26\x63\x03\xD2\xA8\x20\xB7\x05\x13\xAF\xEB\x7A\x68";"\x2B\x87\x4E\xB4\x67\x3F\x81\xCD\x51\xE7\xFC\x9A\x18\xD7\xEE\x78\x75\xD8\x1F\x71\xAF\x88\x59\x5C\xEB\xAA\x69\x86\xCA";"\xCA\x99\x3B\xD7\x09\x1E\x82\xB4\x28\x1A\x4B\x90\x52\xB4\xD9\x4D\x3B\xBD\x60\xD5\x53\x86\x7E\x72";"\x47\x04\xB8\x5F\x8A\x9F\x10\x3E\xE2\xC1\xD5\x1A\xDD\x72\x01\x97\xC8\x66\xB7\x0E\xFF\x32\xEB\xF8\x03";"\x09\x2A\xBB\x46\x44\x1D\xB2\xE6\x3D\x90\xD0\x34\x9C\x3D\xC8\x56\x71\xB0\x1B\x45\x8B\x13\x91\x42\xCB\x88\x0E\xEF\xD9\x1F\xE6\x09";"\x02\x4C\xAD\x52\xAF\xC1\x52\x20\xA0\x7D\xD3\x1A\xDE\x39\x38\xD4\x93";"\xE2\xB9\x0C\xA3\x0E\x28\x99\x13\x99\x72\x3E\xF8\x2A\xD3\xEC\x52\x9B\x02\xCA\xAF\x7B";"\x91\xC6\x1F\xC7\x35\x49\xDB\xCB\x78\x94\x05\xD3\x23\xED\xAF\x5F\x1E\xD6\x39\x30\x44\xA8\x77\x68\xC3\xD9\x53\xBA";"\xF6\x91\x7C\x62\x9A\xAC\x74\x58\xCE\x08\x62\xF7\xBC\x44\x56\xED\xFF\x52\x90\xDA\x3E\x82\xE6\xD3\x58\x39\x91\x1E\x4A\x8E\x51";"\x3C\x3C\x0E\xF3\x5A\x60\xFE\xD7\x08\xAB\xE0\x2E\x1B\xD5\xF8\x70\x24\xC4\x02";"\x29\x4B\x99\x4B\xED\xDB\xC6\x8C\x26\xBC\xDF\x06\xF7\x23\x3B\xBA\x5D";"\xA2\xBE\x0E\xB6\x6E\x2C\xB3\x0F\xD4\x7D\x28\x93\x2D\xA9\xA2\x2C\x9F\x1A\xC1\xAE\x78\xA5\x42\x3B\xA3\xE6\x8D\x4A\x00\xFC";"\x18\x6F\xAB\x9B\x5D\x54\xF3\xA8\x49\x92\xE4\x60\xE4\xCB\xCD\x63\x2D\xB2\x14\x52\xE1\x1C\xFF\x75\xD8\xB7\x24\xE1";"\x22\x6C\xB2\x96\x4F\x6A\xF8\xA4\x04\xC3\xAF\x5A\x6E\x8E\x90\x2C\x2A\xC7\x5D\x71\xA4\x55\x4F\x56\x99\xBF\x23\x84\xD6\x2D";"\x89\x10\xD4\x1B\xD0\xF6\x13\x47\xF0\x25\xC9\x13\xF4\x62\x7F\x86\xCA\x5E\xFB\x96\x81\x61\x9F\xA3\x3D";"\xFF\xE6\x7A\xE9\x11\x69\xD1\xAA\xCA\x04\x6D\xD1\x1F\x86\x9C\x3D\x2B\xFE\xCA\x84\x6A\xAE\x17\x02\x90\xFC\x29";"\x4D\x23\xF3\x57\x46\x69\xDF\x82\x31\x8F\xDF\x6E\xC8\x2E\xD3\x57\x78\xF3\x16\x4A\x9D\x00\xF7\x21\xC0\x82\x2C\xA6\xA1\x00";"\xC2\xF0\x0C\xE5\x51\x19\xF7\x07\x80\x4A\x6A\xB4\x00\xD2\xD4\x60\x2F\x45\x81\xD6\x2F\x92";"\x5C\x15\xEA\x18\x00\x5F\xD8\xB9\x77\xFD\x98\x5D\x85\x7B\xCA\x57\x0C\xEC\x00\x0F\xD0\x0E";"\xD6\x8A\x35\xC2\x66\x0A\x91\xAF\x57\xA2\x10\xD7\x46\xDB\x8F\x1F\x6E\xE8\x23\x8D\x03\x83\x76\x33\xC9\xB2\x1C\xFA";"\x3C\xD0\x1A\x84\x77\x63\xC8\x9F\x29\xE1\xBB\x9E\x67\xB5\xA9\x47\x1A\x8A\x7D\x3D";"\x52\x00\xC9\x36\xEF\x9D\x16\x43\xE9\x09\x80\x5C\x81\x7C\x23\xD1\xE0\x6E\xB1\xFD\xD9\x68\xAF\xE3\x65\x51\xDB\x02";"\xA7\xA2\x4D\xB5\x6B\x7F\x09\x58\xDC\x3A\x7F\xC0\x3E\xDE\xA8\x29";"\x1F\x50\xE9\x12\x80\x86\x1D\x30\xE4\xDE\x88\x4C\x95\x2B\x1F\x8B\xD9\x62\xB6\x1A\xD2\x30\xEC\xA7";"\x54\x12\xCA\x15\xFB\xC9\x15\x43\xE6\x64\xE7\x12\xF0\x28\x32\x8B\xCB\x5B\xFF\x9A\x85\x7D\xA3\xA7\x66\x58\xDD\x3E\x62";"\x3C\x97\x1A\xBA\x73\x66\x85\xC1\x71\xE1\xF3\xC1\x33\xA5\x93\x4B\x1A\x9A\x74\x74\x44\xE0\x48\x63\xEC\xC1\x0F\x8E\xEE\x31\x6D";"\xC0\xBE\x62\x91\x1E\x15\xA7\xE9\x3D\x7A\x0C\xE2\x1E\xE9\x84";"\xF0\xB9\x7E\x64\x94\xEF\x76\x19\xC3\x0A\x7F\xB4\x0C\x1D\x13\x87";"\xCA\xFA\x16\xC5\x3A\xC9\x5F\x3A\xBF\x6A\x58\x94\x39\x8A\xBD\xD8\x89\x6E\xD6";"\xFA\xF3\x71\xE7\x0E\x24\xB7\x13\xC4\x09\x44\xB7\x2F\xCD\xD1\x63\x22\x42\x9C\xD5\x2A\xD8\x40\x13\x90\xBD\x78\x5C\x58\xDC\x0B\xFF";"\xB6\xFB\x3C\xA2\x5A\x6C\xF8\x57\xCD\x09\x6E\xB7\x2F\xCD\xD1\x63\x6B\x04\x9C\xB6\x47\xD8\x14\x12\x93\xF3\x37\x74\x35\x87\x20\xF5";"\xCE\xA3\x74\x6A\x92\x94\x20\x26\xC3\x41\x58\xA0\x43\x05\x58\xE5\xAE\x33\xA6\xDC\x25\xC4\x37\xCE";"\x69\x3F\x83\x73\x8A\xBF\xE8\x96\x1B\xE7\xAE\x4A\xA2\x30";"\x9D\x88\x3B\xC6\x21\xC8\x60\x1A\xB8\x6B\x40\x82\x64\x95\xFC\xC6\x8A\x13\xFB";"\x90\xD9\x1E\x94\x77\x0F\x96\xC5\x23\xAD\x19\xDF\x32\xFB\xFA\x02\x4A\xA8\x77\x33\x47\xAF\x70\x77\xF5\xDB\x67\xB4\xF5";"\x19\x5E\xA7\x5F\xBD\xC1\x53\x32\xB2\x25\x83\x1A\xB8\x5D\x4A\x92\xC5\x62\xA9\x48";"\x4B\x21\xE4\x67\xBC\x91\x2B\x23\x15\xD5\x97\x65\xDB\x22\x0A\x99\xF0\x65\x1E\x18\xD0\x10\xFD\xBC\x1B\x4E\xB1";"\x31\x27\x07\xA3\x62\x69\xFA\x90\x5E\xB7\xF7\x2F\x27\x93\xB7\x70\x19\xFD\x05\x6F\xA3";"\xC8\xA1\x69\xD7\x42\x5F\xC3\xB8\x3C\x1A\x5F\xE9\x18\xBE\x8E\x13\x67\xB1\x65";"\x8E\xDE\x2B\xC4\x3C\xD7\x00\x3C\xA5\x63\x18\x9C\x58\xA2\xFA\xE1\x9C\x36\xE4\xBB\x0D\xFB";"\xC1\x88\x6C\x8F\x54\x02\x9B\xE3\x62\xAD\x43\x9F\x45\xAC\x9C\x42\x01\xA3\x63";"\x6C\xC5\x1A\xC8\x30\x4A\xC6\xDF\x68\xA8\x1C\x83\x14\xF8\xEC\x0C\x55\xDE\x36\x66\x6C\xB7\x50\x65\xFD\xC1\x67\x88\xEE\x34\x28\xD8";"\x32\x67\xB8\x26\xD6\xE8\x2C\x7E\x04\x8B\x9A\x7F\x92\x1D";"\xCF\xA1\x6D\xC7\xCE\xCB\x7C\x2A\xB2\x5A\x77\x93\x04\x99\x45\xC8\x92\x22\xF4\xCC\x18";"\xE6\xAC\x66\xBD\x07\x06\xA7\xEA\x71\x1F\x04\xED\x18\x8D\xC7\x03\x75\xE7\xD7\x93\x79\x93\x62\x07";"\x5A\x1F\xE0\x1E\xFE\x00\x9C\xF3\x71\xAD\x82\x5B\x8B\x71\x75\x4F\x1B\xAB\x3A\x6A\x86\x75\xAA\xB9\xCF\xAA\x0F\xFA\xA8\x04\xA9";"\x9A\xEE\x36\x39\xDA\xD8\x6F\x68\x8D\x42\x7F\x9B\x18\x6E";"\xC9\x8F\x64\xD2\x76\x12\x8C\xBD\x47\xA8\x0E\xD4\x08\xF8\xE1\x1E\x00";"\x0D\x48\xBB\x2B\xD1\xD5\x67\x2E\x46\x80\xAF\x61\x86\x44\x21\xE6\xFA\x74\x55\x12\xA1\x08\xF1";"\x71\x26\xFF\xE7\x15\x29\xBB\xEA\x0A\xC4\xAD\x72\x90\x88\x92\x2E\x2C\xB9\x5F\x65";"\x6F\x4D\xCC\x73\xB8\x8C\xC0\x86\x0E\xFC\xE3\x5A\xAD\x5D\x35\xBB\x17\x9C\x0C";"\x96\xDB\x1C\xC2\x3A\x4C\x91\xF1\x2D\xA1\x1B\xDA\x5D\xA3\xD7\x0F\x4D\xED\x2E";"\x9B\xE4\x7A\x38\xC3\xC5\x76\x33\xCA\x0D\x53\xE1\x75\x77\x15\xE0\xAF\x3D\x84\xF2\x18\x8B\x76\x9D";"\x15\x55\xE6\x36\xFC\x06\x92\xF1\x73\xD3\x84\x59\x89\x77\x8B\x05\x04\xBA\x76\x05\xBA\x77\xA6\xB3\xCB\x8E\x09\xE0";"\x65\xCA\x13\xF3\x29\x3D\xCF\x86\x1E\xF8\xB1\xC3\x32\xD8\xA6\x18\x11\x93\x73";"\xA2\x05\xC2\x21\xEE\xBF\x54\x18\xD2\x33\x73\x00\xD4\x52\x6F\xFF\xD2\x5D\xCD\xC1\x0E\x19\xE2\xF0\x43\x11\xF4\x25\x5A\x8B\x60\x7B";"\x5E\x38\x88\x78\xBA\xAF\x20\x82\x07\xD0\xAC\x70\xE5\x13\x63\xE7\xDC\x84\x49\x3F\xFF\x50\xC3\xDC\x42\x27\xBD\x99";"\xB0\x94\x08\xE9\x11\x68\x99\x14\x8A\x50\x2B\xFD\x6C\xD9\x98\x35\x6D\x0B\xC3\xE2\x2C\x9D\x18\x5C\xA0\xF2\x70";"\x3A\x70\xA0\xF4\x61\x6E\xE6\xB8\x47\x94\xB8\x62\xC8\xCF\xCE\x67\x67\xD7\x59\x1E\xE7\x1F\xFD\x01\x93\xF2\x72\xAC\x85\x5A\x88";"\x86\xD0\x11\xD3\x22\x45\xD6\x9C\x24\xF6\x55\x9E\x69\xBA\xBC\x59\x16\x96";"\x68\xC1\x16\xCC\x2C\x36\xC2\x81\x23\xE3\xFC\xDC\x34\xBD\xD6\x7A";"\x8F\xAC\x26\xD7\x6F\x59\xEB\xBA\x3A\x14\x5D\xA2\x40\xB8\xC2\x5E";"\x7F\x1A\xE3\x03\xF9\x44\xD9\xF6\x2F\xFA\xE2\x19\xC2\x22\x76\x56\x09\xA6\x6D\x74";"\x95\xDA\x23\xC3\x39\x4D\xDF\xB6\x2E\xE8\x41\x96\x4C\xAC\xB6\x42";"\x4C\x25\xFA\xE8\x10\x2A\xA6\xED\x07\xC7\xA8\x6D\x95\x8B\x9F\x29\x78\xFC\x5A\x1F\xE0\x1E\xFE\x00\x9C\xF3\x71\xE4";"\xEE\x8F\x7A\x8E\x6E\x70\x0C\x0F\xAE\x7E\x33\x87\x3B\xA2\xAD";"\x6E\x54\x94\x10\xA8\xAA\x81\xEA\x39\xA2\xDD\x04\xF9\x25\x39\xB8\x5B\x90\x66\x09\x97\x66\x98\xA1\x36\x98\x09\x88";"\x56\x5A\x92\x46\xFA\x59\xD6\xA0\x2C\xE5\xC5\x24\xCE\x3B\x34\x47\x23\xAC\x75\x38\x8B\x6C\xA5\xFA\x22\x95\x12\xF9\xF8\x68\xEB";"\xE0\xDE\x32\xE6\x3D\x32\x7B\x36\xA8\x71\x22\x93\x7D\x90\xE6\x6F\xD1";"\x99\xD5\x37\x83\x2D\xC5\x5A\x38\xEE\x7A\x44\x82\x59\xBE\xB8\x82\x87\x22\xEF\xA7\x0C\xB9\x22\x35\xB1";"\x61\x35\x9F\x94\x6B\x5C\xA8\xE9\x16\xCB\xDA\x34\xD2\xDB\xDC\x7F\x77\x8E\x10\x56\xB3\x12\x0F\x10";"\x7E\x33\x04\xFA\x22\x24\xB0\x9F\x15\xB9\xF3\x32\x7D\xF8\xE6\x6D\x2F";"\x3F\x73\x01\xCB\x1F\x23\xBD\x94\x10\xCE\xA3\x74\x23\xD4\x94\x69\x3C\xE8\x18\x66\xA3\x58\x51\x7B\xF2\x94\x3B\x99\xD8\x6A\xD0";"\xE9\xC7\x36\x27\xD9\xEE\x66\x38\x80\x00\x7E\xA2\x51\x5E\x55\xE7\xA9";"\x76\x23\xC8\x62\xAE\xBD\x3A\xDB\x73\xB5\xFA\x43\xA3\x59\x6D\xFF\x56\xCE\x08\x61\xB6\x2C\xCC\xD6\x62\x21\x43\x83";"\x06\x6B\xE4\x07\x87\xC6\x05\x68\xEB\xDC\xD6\x6A\x89\x31\x07\x92\xFE";"\x72\x33\xF7\x21\x91\xBE\x2B\x6F\x1C\xCF\xA4\x62\xDA\x43\x5C\xC2\xA7\x3D\x19";"\xC9\xB3\x62\xAE\x45\x56\xC8\xA1\xC3\x03\x54\xA9\x59\xC7\xDB\x19\x73\xFB\xD7\x97\x1C\x8A\x6F\x01\xC5\xF4\x65\xA8\x1C";"\x6B\x8A\x50\xBD\x7C\x76\xCD\xAE\x6C\xB1\xF0\xC5\x36\xA2\xE5\x65";"\x98\x81\x59\x90\x75\x40\x9E\xF6\x61\xBA\x0B\x9E\x54\xE5\xE4\x0E\x0C\xD2\x30\x74\x5E\xBE\x6F\x68\xFB\xEE\x43\xB6\xF6\x39";"\x80\xEE\x1F\xD2\xCB\xD8\x63\x68\x8A\x1D\x49\xB2\x01\xAF\x52\xC0\xB8\x3D\x94\x8A\x1F\xC6\x25\xC6\x44\x18\xE0";"\xE1\xB6\x8F\x77\xE0\xF7\x0F\x1A\xB0\x31\x73\x46\xE9\x18\x08\xEE\xD6\x4E\x83\xEC";"\x13\x44\x99\x49\xB7\xCB\x45\x0C\xA8\x23\x85\x48\xF2\x00\x3C\xC8\x87";"\xAB\x0C\xD4\x09\xFC\xA9\x20\x5F\xE6\x2A\x8D\x0D\xB0\x65\x7B";"\x43\x14\xE9\x19\x07\x5D\xDA\xAE\x78\xA9\x97\x0C\xD0\x7A\xC5\x56";"\x3A\x7A\xA8\xA4\x55\x7E\xF5\x99\x7D\x86\xFD\x3E\x3B\xC4\xDE\x6D\x62\x9F\x5C\x47\xA5\x57\x54\x14\xE6\xB2\x24\x9E\xCC\x14\xCA";"\xAF\x8B\x09\xFC\x2E\x70\x08\x6D\xDD\x39\x7E\xC7\x3F\xDD\xE1\x73\xD2\x52\x8C\xE5\x7C\xFD\x1E\x29\xB2\xE4\x88\x49";"\x20\x62\xB6\xB2\x75\x69\xE9\xAE\x5B\x84\xA4\x10\xD2\xC4\xD8\x7D\x27\x8D\x0D\x53\xAC\x59\xBF\x52\x8F";"\x9E\xAF\x0E\x66\xDF\xC6\x66\x6D\xCB\x11\x44\xE7\x78\x54\x48\xD0\xB1\x3A\x9A\xC2\x30\xCB\x34\xC9\x59\x25\x9B\x6C\x42\x98";"\x80\xE5\x76\xFE\x5E\x10\xEF\xAD\xED\x07\x68\xAD\x55\x8E\x91\x2D\x31\xBC\xB0\x9A\x6E\x9A\x3E\x6A\x90\xFC\x72\xAC\x0E\x9B";"\x15\x45\x95\x5A\xB2\x0B\xAF\xCC\x68\xA6\x8B\x4C\xB2\x6A\x7C\x4E\x08\x8F\x39\x01\xCB";"\xB7\xE3\x78\x32\xDE\xED\x6A\x6B\xDB\x00\x7E\xA6\x41\x47\x1D";"\x5B\x2F\xF0\x1D\x83\xDB\x2B\x71\x0E\xDD\x87\x6D\x95\x0C";"\x02\x23\xBC\xB8\x42\x09\xE3\xA7\x44\x93\x8C\x09\xDE\xCB\xDD\x4D\x33\xA8\x07\x49\x81\x48\xB1\x4E\xDA";"\x92\x85\x7F\xFF\x0F\x19\xAC\xEF\x86\x40\x00\xA1\x50\xDC\xDB\x06\x68\xEA\xD3\x8F";"\xB9\xDB\x21\xC6\x35\x83\x6B\x33\xB6\x7C\x72\x82\x5E\xA3\xBD\xC7\xB5\x31";"\xC2\x97\x68\x96\x86\x98\x14\x38\xB8\x18\x14\x80\x65\xAB\x4C\xD2\xB3\x73\xEB\xC0\x1B\x82\x0F\x10\x50\x00\xAE";"\x88\xE6\x17\x2A\xD3\xD0\x6B\x60\xF2\x05\x71\xBA\x77\x4B\x52\xE5\xAB\x68\xC6\xFF\x2E\xCD\x30";"\xEA\xD1\x1B\xDA\x13\x37\x54\x06\xB3\x64\x76\x8B\x78\xE5\xD3\x8B\xDA\x5A";"\xA8\xFC\xC8\x2F\xE8\xEA\x79\x1E\xC5\x35\x6D\xAB\xB4\x67\x7E\xFF\xAC\x4F\xA2\xE2";"\xFA\xA4\x53\x69\x97\xAB\x25\x6C\x88\x46\x2B\xEC\x12\x0A\x1C\xFC\xA6\x2E\x92\x90\x30\xDE\x34\xD5";"\x25\x0A\x9A\x75\xE9\xB4\xDC\xB4\x1F\xFF\xB5\x09\xF0\x10\x15";"\x24\x5C\x86\x50\x98\x4F\xD8\x8C\x27\xA9\x80\x13\xF3\x66\x73\x27\x44\xE0\x3E\x73\x97\x6A\xA7\xA1\x34\xB3\x14\xF3\xA3\x73\xA9";"\xA5\xAE\x39\x32\xDB\xEA\x6F\x23\xC5\x0A\x25\xFB\x10\x22\x12";"\x1F\x4B\x9A\x48\xBB\x0B\xC8\x9A\x75\xD0\xCE\x0F\xE6\x25\x2E\x1B\x49\x93\x7C\x29\xCF\x7B\xD3\x99\x7F\xC2\x5E\xC8";"\x80\xE0\x20\x23\xDD\xDA\x20\x3D\xD0\x0F\x72\xBD\x58\x55\x11\xA2\xFA\x50\xD4\x9D\x62\x80\x31\xC4\x1E";"\xC9\xAE\x3B\xD1\x21\x08\xA2\xE7\x70\x57\x18\xE2\x2E\xF3\x89";"\xA5\x00\xC4\x4E\xB3\xB0\x0F\x4B\xE0\x2F\x32\x4A\xB5\x65\x25\xF4\xD6";"\xC9\xC4\x68\x81\x77\x1A\x95\xDB\x38\xE5\x02\xD4\x26\xA7\xFE\x1B\x0A\xD8\x74\x60\x54\xBE\x2E\x6C";"\x8F\x9F\x39\xE9\x16\x04\xA2\xA0\x8D\x4C\x57\xE1\x06\x87\x91\x06\x68\xB1\xD2\x9B\x6E\x86\x23\x2A\x9A\xE2\x4A";"\x0C\x7A\xBE\xAD\x5A\x59\xE3\xAD\x01\x8E\xC6\x24\xCB\xE0\xD0\x43\x31\x84\x19\x5E\x96\x50\xFC\x07\x9A\xE3";"\xFB\xD2\x13\xC1\x2E\x3A\x5B\x2D\xAA\x6D\x31\x88\x6B\x91\xBE\x39\x93\x1B\xFF\xAF\x65\xBF\x2C\x29\xBB";"\x6E\x4E\x9A\x44\xB7\x85\xCE\x8F\x30\xD2\xB6\x1A\xE2\x64";"\xAF\x1D\x80\x02\xE1\xF2\x05\x5A\xD2\x2F\x65\x01\xCB\x1F\x23\xBD\x94\x10\xCE\xA3\x74\x6A\x92\x94\x20\x3D\xCA\x0E";"\x4E\x23\xBD\xAC\x12\x5A\xEF\xBB\x05\x92\xC2\x3D\xD2\xD1\xDA\x63\x08\xBF\x0E\x78\xAC\x41\xBA\x4E\xDB\xB1\x6F\xFB\xC8\x10\xC3";"\x60\x41\x99\x0F\xAB\xB8\xCD\x86\x0C\xF9\xB4\x18\xFD\x33\x2E\x86\x0F\x98";"\xF4\xA8\x2A\xF5\x12\x23\xB3\x03\xA5\x76\x28\xF6\x6A\x9E\xBF\x3C\x31\x3E\xC3\xA8\x78\x9D\x18\x4F\xE6\xE9";"\x3D\x6F\x51\xB4\x7B\x6A\xF7\xD9\x4B\xC7\xA2\x16\x22\xDD";"\xE6\x81\x5E\xDC\x2D\x24\x56\x4F\x93\x6C\x27\x80\x6D\xAE\xB4\x3B";"\xDB\xE5\x25\xDE\x8A\xD9\x66\x23\xE6\x18\x4C\x97\x57\xBC\x52\xD6\xEF\x63\xAC\xAF\x5A\x88\x70";"\x40\x01\xFD\x1C\xB4\x8F\x10\x7D\xF4\x9E\x8B\x4E\x8D\x77";"\x26\x1F\xB9\x48\x44\x13\x96\xD7\x77\xD7\x98\x5D\x85\x7B\x8F\x19\x0D\xA0\x79";"\xC5\xAA\x3F\xDC\xCA\xDC\x63\x66\xB1\x1E\x57\xE6\x01\xFC\x0E";"\xAA\xBE\x7C\xE9\x08\x2A\xE2\xF8\x8F\x4B\x23\xFC\x26\x88\x85\x22\x60\x15\xD4\x9D\x65\xD3\x48\x45\x9F\xEB\x7B";"\x16\x30\x84\x7C\xE9\xFA\x5C\x91\x18\xF4\xB9\x71\xA5\x1E\x21\xB8\xEA\x80\x4F";"\x98\xD5\x21\xE1\x2D\xC3\x6D\x33\xA8\x7B\x0F\x92\x5E\xA3\xA6\x8A\x87\x22\xEF\xA7\x0C\xB0\x67\x3E\xBB\x18";"\x59\x57\xA1\x1F\xB3\x4E\xC7\xF2\x22\xE0\xCA\x0E\xDB\x70\xDE\x4E\x08\xA9\x27\x5A\x88\x61\xBE\xAD";"\xFD\x98\xCE\x23\xE4\xC2\x65\x5F\xD4\x12\x78\xAC\xF9\x5A\x67\xF6\xE9\x21\x87\xE3\x32\xD0\xC3\x93\x61\x25\xD3\x0A";"\x27\x83\x52\xB0\x63\x33\x85\xD1\x6D\xE3\xF0\xCC\x3B\xF0\xBE";"\x4B\x05\xAA\x18\xF5\x95\x06\x2C\xFD\xDA\x88\x15\x84\x76\x1F\x8D";"\x5D\x73\xBB\x63\x96\x80\x69\x6C\x05\xD1\x83\x45\x99\x10\x1D\xB0\xF2\x6B\x1B\x22\xA9";"\x08\x77\xC8\x36\xE6\xF8\x74\xDB\x59\xB5\xFA\x43\xA3\x59";"\xF1\xB4\x23\xF4\x31\x34\xA5\x33\x9C\x7B\x2B\xFC\x2E\xD4\x80\x31\x66\x08\xCB\xA5\x7A\x97\x3B\x12\xA0\xF2\x4E\x59\x03";"\xCB\xE0\x28\xF7\x03\xFA\x63\x28\x83\x2E\x08\x82\x67\xEB\xF7\xDA\x88\x19\xFF\xBB\x2D\xF1\x1A\x25\xFC\x12\x9F\x49\x62";"\x89\xAC\x7A\x2D\xDE\xEE\x3D\x24\xC1\x47\x65\xA2\x57\x69\x4B";"\xC1\x96\x3D\xD2\xD1\xCC\x79\x34\xFA\x19\x5C\xB6\x48\xF6\x4A\xCB\xB2\x2A\xAF\xAA\x10\xC3\x37\x77\x2B\x0C\xAB";"\xD4\xC4\x4D\x81\x72\x05\xC5\xDE\x6D\xB2\x1E\xDE\x3C\xAA\xF9\x06\x43\x9D\x53\x3E\x07\xFF\x1D\x42\xFC\xDC\x5C\x9F\xAB\x3B";"\x01\x56\xAF\x57\xC5\xD9\x6B\x3A\xF3\xD2\xDD\x6C\x8F\x6C\x42\x96\xE7\x7F\xEF\x0F\xC7\x4D\xFD";"\xB2\xFC\xC7\x3B\xEE\xA4\x71\x4A\xC1\x3E\x55\xA8\xAE\x5B\x6E\xDE\xA4\x4B\x86\xE1\x37\xD4\x88\x8F\x2E\x31\xAD\x0A\x55\xE5";"\x41\x16\xEF\x17\x05\x19\xAB\xFA\x7A\xD4\x9D\x62\xD2\x76\xE1\x78\x27\xAE";"\x9C\xDC\x38\xCB\xC0\xD7\x52\x30\xB5\x09\x04\xCF\x04\xDE\x0E";"\x2F\x09\xDC\x3D\xE4\xD4\x8A\xD9\x5B\xBB\xFC\x41\xA1\x5F";"\x20\x74\x43\xB2\x61\x39\x9F\xD2\x5F\xBA\xBD\xA8\x60\x98\xA2\x3E\x15\x8F\x4F\x20\xB9\xA2\x50\x56\xED\xE0\x49\x86\x8A\x20\xC3\xCB";"\x1D\x52\xE2\x1D\xC1\x95\x09\x23\xDA\xE0\xD9\x5F\x8A\x70\x4E\x8A\x87\x48\xA3\x0D\xC3\x30\xEC";"\x61\x26\xF3\x65\xC6\xD2\x15\x6C\x14\x9D\x9A\x6A\x8D\x04\x45\x95\xFB\x73\x5E\x59\xCC\x01\xF9\x81\x0C\x4C\xEF\x6B\x8A\x5E";"\x9D\x80\x6E\x8F\x14\x17\x99\xBE\x7E\x44\x0D\xCE\x3B\xE6\x8B\x0B\x5C\xEE\x38\x98";"\x72\x78\x97\x25\xDB\xEF\x79\x28\x4C\x8A\xEF\x30\xAE\x4E\x50\xAA\xEC\x93\x1D\x19\xEE\x02\xC1\x8C\x19\x3E\xE6\xD1\x90\x4C\x97";"\x7C\x7C\x5A\xB9\x69\x68\xE5\x95\x56\xA3\xEC\x67\x02\xDE\xFB\x5A\x20\xC5\x06";"\xA4\xD2\x1B\xCA\x2E\x8C\x4C\x3F\xA8\x67\x0E\x9A\x40\xAF\x93\xD7\x8C\x10\xF9\xB3\x19\xB6\x21\x2F\xA2\x12\xA5\x7E\x3F";"\x47\x49\xAD\x19\xFC\x9F\x10\x36\x84\x68\xC1\x16\xCC\x2C\x36\xC2\x81\x23\xE3\xB4\x89\x79\xA7\xBB\x35\x5D\xCD\x22\x74\x8E";"\x2C\x04\xD2\x62\xAD\xA6\xDB\x97\x11\xBF\xA0\x17\xF2\x2E\x37\xA5";"\xB6\xEA\x79\x2A\xD6\xE6\x2B\x0F\xEE\x14\x6A\xA1\x57\x17\x4F\xFC\xB5\x38\x8D\xDD\x2F\xED\x38\xDB\x7C\x20\xBB";"\x6C\xC5\x1A\xC8\x7C\x05\x85\xCC\x6B\xE7\x2A\xE1\x14\xC8\xD4\x25\x71\xEF\x0E\x40\x75\x8C\x72\x3D\xBE\xDB";"\xE2\xB7\x88\x76\xA6\xB8\x34\x1B\x99\x39\x75\x40\xA2\x55";"\xB0\xF9\xC1\x0E\xF7\xE6\x65\x55\xE0\x2B\x77\xBD\xE8\x64\x7D\xEA\xA5\x40\x8B\xED\x7A\x93\xCC\xD3\x6B\x6F\xE5\x0F\x5E\xB4\x57\xAF";"\x04\x0B\xF5\x13\xB1\xAC\x16\x66\xFA\x23\x81\x07\xCA\x57\x2F\xB2\x8F\x7A\xEE\x46\xEF\x3A\xEF\xE6\x49";"\x1B\x2F\xB2\xBE\x43\x46\xA2\xB5\x4B\x86\xDA\x69\xD4\xC8\xD9\x77\x28\xB6\x24\x5E\x9A\x51\xF4";"\x64\x7A\x9A\x75\xB0\xBB\xFE\x80\x0B\xFE\xF2\x31\xE9\x06\x30\xB4";"\xAD\x00\xC2\x56\xDB\xF7\x0B\x55\xAB\x6A\x34\x23\xF9\x27\x3B\xB5\x9C\x18\xF6\xBB\x7C\x62\x9A\xAC\x74\x58\xCE\x08\x62\xF7\xAC\x10";"\x29\x8E\x5C\xCE\x66\x65\x81\x83\x3C\xFD\xF1\x91\x1D\xE8\xEB\x73\x78\xDF\x22\x6A\xAA\x87\x5C";"\x41\x72\xD7\x09\xB3\xB4\xCB\x82\x29\xEF\xC7\x4C\xBD\x64\x3B\x44\x1D\xD2\x20\x2E";"\xA7\x83\x7E\x8A\x72\x74\x00\x4F\xE5\x21\x76\x86\x71\xE5";"\x2C\x79\x4D\x95\x71\x77\xB9\xDF\x5C\xA7\xB3\xC6\x32\xD7\xF2\x36\x53\xCE\x03\x73\xB0";"\xF1\xBE\x43\xFD\x34\x2B\xB4\x0A\x9F\x7F\x37\xB6\x2D\xD4\xA6\x60\x4A\x03\xCA\xA2\x76";"\xDF\xB0\x7B\xE4\x50\x3E\xAE\xE8\x89\x07\x29\xF8\x01\x84\xB3\x2C\x7E\xE8\xE9\x9A\x74\xA8\x77\x13\x89\xF2\x7D\xE5\x04";"\xF6\xE8\x78\xE7\x03\x22\x97\xED\x8F\x42\x24\xE0\x1E\xAF";"\x5C\x3D\xE4\x46\x94\xAB\x3C\x26\x3E\xC3\xA8\x78\xFA\x33\x4D\xB8\xF1\x94\x58\x0F\xAB\x71\x8D\x8A\x14\x7F\xFA\x90";"\x85\xB8\x76\x87\x1C\x0F\xA1\xA6\x79\x59\x1C\xE3\x46\xD4\x92\x06\x61\xD4\xD6\x90\x11\x9C\x65\x07";"\x13\x7E\x94\x57\xA8\x5B\xFA\x80\x25\xE6\xCB\x58\x8C\x06\x25\x41\x02\xAF\x72\x3B\x8F\x49\xAE";"\xB9\x2E\x98\x4C\xDC\xF5\x01\x4C\xF5\x38\x57\x5D\xBE\x6F\x71\xB5\x97\x16\xB1\xF7";"\x71\x1C\xE1\x01\xFF\x03\x9D\xF4\x70\xAE\x83\x54\x8A\x72\x74\x00";"\x4E\x14\xE5\x59\xA0\x97\x2A\x78\xF6\xD1\x99\x3F\x94\x6A\x17\x9B\xB5\x6A\xA1\x04\x95";"\x03\x49\xA9\x49\xC9\xCD\x40\x3C\xE5\x96\x9E\x52\x86\x3A";"\xF4\xBB\x4F\xE3\x2D\x3C\x45\x5A\xF0\x34\x7D\xC2\x20\xD8\xE2\x7E\xD5\x09\xC0\xB2\x35\xD2\x5F";"\x10\x7F\xC0\x3E\xDE\xE0\x7C\xD3\x51\x8D\xE2\x3B\xAB\x51\x55\xE7\xAE\xC6\x00";"\x7F\x3C\xF4\x76\xBF\xA2\x39\x95\x01\xCC\xAA\x2A\xE9\x0C\x1D\xB0\xE7\xD9\x55\x13\xAA\x19\x92\xB9\x19\x73\xF9\x97\x8C\x55\x80";"\x80\xEE\x26\xC0\xC8\xF1\x6E\x35\xAA\x2D\x42\xA3\x58\xF0\x42\xC0\xBE\x23";"\x67\x26\x9D\x73\xB5\xAC\x7C\x80\x2C\xE7\xB6\x5E\xF6\x0B\x21\xF3\x3B\x8B\x5C\x29\xF9\x68\xD1\xD4\x05\x44\x37";"\xC0\x4F\x90\x4E\xAE\xFC\x03\x40\xE0\x31\x32\x44\xB0\x2D\x66\xF1\x83";"\x6F\x7B\x87\x73\xAC\xAA\xEF\x97\x1A\xF9\xB0\x04\xE5\x5F\x7E\xFD\x12\x91\x42\x30\xF1\x26";"\x02\x2B\xFF\x7F\xD8\xB8\x29\x62\x13\x89\x9E\x68\x99\x04\x1C\xA0\xEC\x65\x14\x27\xAC";"\x8F\xFD\x20\x88\xC8\xD7\x68\x2A\xE6\x3C\x56\xAE\x5A\x98";"\x9E\xD7\x16\xD3\x23\x44\xD4\x82\x32\xB6\x1A\xD6\x36\xED\xD1\x0E\x44\xDB\x34\x3F\x64\xBD\x5F";"\x33\x4E\xB9\x29\xD7\xEB\x65\x2C\x48\x86\xA2\x6A\xD2\x23";"\x5D\x57\x91\x4B\xBE\xBD\xCE\x88\x65\xF5\xBE\x0A\xF9\x65\x2B\x4E\x0E";"\x09\x10\xD7\x14\xFD\x9B\x14\x4A\xEA\x20\xC4\x70\xA6\x7B\x6F\x8A\xC8\x4A\x9B";"\xEC\xC9\x01\xD4\x6E\x01\x44\x03\xB0\x6D\x25\xDB\x38\xA8\xBD\x23\xD3\x14";"\x19\x18\x9C\x57\x98\x40\xD7\x86\x76\xCE\xC6\x03\xCD\x21\x3E\x42\x06\xA2\x69\x7A\xC2\x20";"\xFE\xF9\x6A\xE5\x16\x22\xBF\xA7\x82\x45\x3F\xF4\x03\x9B\xDB\x1E\x70\x05\xDF";"\x35\x1C\xEA\x1E\x82\x8B\x51\x71\xE1\xC6\x88\x7A\x87\x62\x3B\x81\xDF\x5F\xAC\x19\xC6\x32";"\x59\x16\xD0\x44\xE7\x9A\x1B\x5B\xFF\x0A\x99\x45\xBE\x43\x76\x8B\xD0\x28";"\xD7\x9F\x6C\x92\x4B\x2A\xBF\xFF\x6A\x44\x18\xE6\x5A\xDB\x8D\x10\x7B\xEA\x2C\x94\x1D\x8B\x66\x79\x82\xD4\x6D\xAD\xF9";"\xE6\x4B\x8C\x72\xF8\xF9\x1C\x52\xCF\x37\x3E\x4F\xAA\x50\x2F\xC3\xDE\x53\x98\xE3\x35\x3A\xDD";"\xAB\xF1\xC7\x79\x8D\xBB\x35\x1C\x98\x76\x3B\xFC\xE2\x1A\x2C\xB8\x97\x41\x86\xED\x36\x23\x8D\xC5\x64";"\x73\x70\x8D\x78\xA2\xA3\x6C\x93\x1C\xF3\xB5\x22\xD1\x17\x21\xB0\xCD\x86\x57\x09\xFB\x1A\x85\x99\x67\x24\xD6\xDD\x90";"\xFB\x4F\xCC\x09\xFE\xF9\x42\x2B\xA3\x63\x34\x09\xF9\x27\x3B\xB5\x9C\x18\xF6\xBB\x7C\x62\x9A\xAC\x7D\x59";"\xB6\xFB\x3C\xA2\x5A\x6C\xBD\x19\x89\x09\x44\xB7\x2F\xCD";"\x97\xD7\x17\xCE\xC3\xD0\x55\x0B\xAC\x01\x43\xD1\x61\xB4\x45\xD7\x83\x24\xE3";"\xA3\x30\xDE\x0D\xE2\xB5\x06\x40\xE2\x60\x84\x41\xB6\x46\x6A\x84\xEB\x5E\xBD\xEF\x8F\x20\xCA";"\x17\x69\xB9\xA4\x5A\x6D\xE0\xEB\x14\xC5\xEC\x32\xDF\xDA\xD8\x2F\x4C\xB2\x17\x52\xA7\x50\xFC\x54\xD7\xBC\x3C\x85\xC1\x38\xCA";"\x71\x23\xE5\x11\x84\x99\x66\x2C\xBF\xB5\xD0\x25\xDD\x43\x0B\x9E\xF3\x75\x5E\x47\xDB";"\x38\x66\xA3\x3D\x8A\xB5\xCE\x94\x1F\xFB\xA5\x03\xEE\x47\x2F\xB4\x51\x9D\x7C\x30\xB9\x6A\xD7\xBF\x2D\x69\x06\x86";"\x01\x75\x5B\x9A\x68\x75\xE1\xDD\x51\xB8\xFE\x2E\x62\x87\xAC\x76\x5E\xC1\x49\x04\xBB\xA0\x4E\x50";"\x2D\x34\x47\xB0\x6B\x3B\xF0\xD2\x5C\xF6\x91\x7C\x62\x9A\xAC\x74\x58\xCE\x08\x62\xF7\xBF\x41\x5E\xF7\xB1\x1F";"\xE6\xC8\x02\xE7\x21\x77\x0A\x1C\x95\x7F\x67\x92\x60\x89\xA6\x1E\x9B\x1E\xC8\xAA\x73\xA2\x5B";"\xC0\xA9\x6E\x94\x84\x9E\x2A\x79\xFB\x5B\x1C\xE1\x01\xFF";"\x2C\x78\x41\xB2\x55\x6C\xF5\xCF\x5C\x81\xE3\xD3\x26\x97\xDF\x7E\x51\xCA\x07\x6D\xBA\xEC\x43\x44\xA2\xB2\x57\xDE\x89";"\x57\x4D\xBD\x1D\xF6\x81\x0E\x29\xD7\x24\x8C\x5F\xAD\x78\x67\x94\xDA\x45\xA8\x00\xC2\x30\xCB\xF8\x29";"\xC0\xA9\x6E\x94\xC1\xD0\x6E\x79\xD1\x5B\x1C\xE1\x01\xFF\x03\x9D\xF4\x35\xE0\xC7\x5D\x8A\x58";"\x04\x2F\xA2\xAB\x5A\x45\xFE\xAD\x01\x98\xDC\x2F\x9B\xAB\x85\x17\x7E\xF6\x50\x19\xDE\x04";"\xD4\x9C\x65\xD0\x70\x05\x8B\xBB\x33\x8F\x0B\xD7\x07\xF3\xFA\x06\x5C\xE2\x07\x9C\x47\xF6\x28\x76\x8F\xD8\x5F";"\xB9\xFE\x47\xF9\x12\x33\xF3\x2D\xDE\x4A\x2B\xBA\x61\x9E\xEA\x2F\x7D\x06\xCE\xBA\x7E\xDD\x0F\x1E\xBD\xF9\x32\x4E";"\x07\x57\xA3\x44\x40\x19\x81\xB6\x35\x97\xDC\x2E\x80\x39\xD7\x4A\x3A\x83\x6A\x46\x81";"\xBF\xA4\x02\xE9\x7E\x11\xB4\x13\x80\x7D\x35\xAB\x28\x98\xAD\x33\x23\x28";"\x73\x36\x8B\x74\xE0\xB7\x20\xC0\x21\xF2\xBB\x69\xEA\x09\x7C\xF7\xE6\x89\x5D\x67\xF4\x20";"\x87\xCB\x2B\xC0\x30\xC3\x51\x3F\xAD\x72\x7D\x85\x61\xBF\xBD\xC4\xCF\x1B\xF8\xB2\x14";"\x87\x08\xD8\x3B\xFC\xF9\x48\x1A\x9D\x3F\x7F\x4B\xAC\x58\x2D\xA3\x9E\x54\x8D\xE9\x29\x2D\x90\x80\x6A\x22\xC4\x06\x64\xED\x54";"\x14\x54\xD3\x54\xA1\x46\xCB\xA8\x2B\xF0\xEE\x1D\xE5\x26\x26\x4B\x17\xDF\x15\x3C\x8A\x7E\xA2\xAB\x71\x91\x1A\xE6\xAE\x54\xE7\x11";"\x21\x63\xBA\xA3\x1D\x20\xBB\xC0\x0A\xC4\xAD\x72\xC2\xCD\xC6\x7B\x37\xB1\x5F\x5C\xA4\x5A\x44\x42\xC3\x84";"\xFF\xB1\x7D\xEC\x57\x41\xE5\xAC\xC8\x06\x6B\xAC\x52\xCA\xDC";"\x46\x08\xE7\x5B\xF1\x91\x2D\x61\xEA\x2E\x8C\x5C\x83\x74\x2A\x87";"\xCF\xA7\x26\xDD\x44\x74\xEA\xB9\x3B\x1B\x5C\xA1\x41\xBF\xC3\x5D\x34\xB0\x27\x85\x14";"\x1C\x55\xAA\x58\xC0\xDA\x56\x7B\xF8\xC5\xD8\x62\xC9\x7D";"\x5F\x53\xF1\x10\xF9\x95\x10\x3D\xE9\x3A\x8E\x56\x99\x7A\x78\x8F\x88";"\x43\x39\xC8\x17\x88\x93\x3D\x69\xFE\xDC\xDE\x3A\xDF\x7B\x00\x9F\xE1\x77\xEC\x6F\xD6\x07\xF3\x8B\x0A\x0D\xEA\x28\x8C\x48";"\x3B\x7E\x48\xB2\x59\x65\xE6\x99\x1A\xF3\xE1\x37\x2D\x97";"\x9D\xC3\x6A\xD2\x39\xD1\x51\x32\xBF\x1C\x57\x8C\x5B\xB2\x03\xC3\x99\x26\xE5\xDF\x05\xFD\x24\x74";"\xF9\xBF\x17\xF0\x6D\x06\xBF\x13\x9C\x7D\x35\xFD\x62\xD6\xF5\x64\x7F\x1B";"\x2C\x51\x9B\x5B\xBB\x04\xD1\x8C\x2E\xF3\x80\x5F\xBC\x6B\x55\x09\x58\xDC\x3A";"\x71\x4C\x9E\x30\xBC\xBA\xCB\x8B\x5F\xFE\xA5\x11\xF2\x0F\x22\xB7\x04";"\x10\x59\xDB\x0A\xF0\xCE\x70\x09\xAB\x6B\xCC\x11\xF1\x2F\x33\x88\xCA\x64\xFE\x99";"\xAB\xED\x35\x28\xDE\xD1\x64\x72\x98\x15\x44\xBA\x52\x05\x33\xAB\xFA\x7A\xD4\x9D";"\x8E\xE3\x34\xAA\x52\x11\xAE\xEB\xCC\x01\x7C\xAF\x57\xC5\xD9\x6B\x3A";"\xFF\xA0\x24\xFD\x05\x3E\xA0\xB7\x8A\x54\x2E\xED\x19\xCA\x99\x26\x63";"\x20\x81\x12\xCA\x52\x0B\x95\xC8\x25\xEE\x48\xA7\x75\xAB\xBF\x49\x18\x9C\x7A\x3F\x00\xFE\x1E\x20\xF0\xDC\x52\x8C\xEE\x7B";"\xB2\xE5\xCA\x3A\xE7\xF5\x12\x76\xD3\x3A\x78\x43\xB2\x6E\x67\xF2\xDA\x4C\x86\xF4";"\xE3\xAE\x77\x6F\x8D\x91\x23\x62\x82\x15\x53\xEA\x5C\x45\x49\xD5\xE7\x1E";"\x8B\xE7\x2E\xD4\xC7\x9F\x68\x2C\xA8\x47\x4C\xB0\x04\x98\x49\xD2\xB7\x17\xE4\xD0";"\x36\x66\xBC\x61\xDA\xAD\x36\x93\x4D\xCA\xF4\x51\xE6\x03";"\xA0\x41\xDA\x22\xF8\xBC\x2F\x56\xCC\x3A\x7D\x47\xB1\x7A\x4B\xF8\xDE\x51\xB3\xF5\x0E\x23\xDA\xE7\x67\x22\xDD\x1C\x24\x8A\x1F\x44";"\xFA\xA7\x4D\xBF\x11\x22\xBC\x1F\x80\x77\x02\xEE\x63\x98\xBC\x66\x22\x47\xE3\xA3\x61\x96\x3A\x18\xBD\xF0";"\x89\xC4\x37\xAF\x4D\x51\xE3\xA2\xC2\x1C\x10\xE4\x1C\xC0\xF0\x56\x3D\xB7\x97\x9D\x53\x81\x32\x4F";"\xDF\xA1\x67\xF9\x49\x3E\xB2\xC1\xCC\x00\x35\xE9\x05\x83\xA8\x15\x69\xED\x97\xD3\x23\x97\x71\x08\x91\xB6\x7C\xAD\x15\xC3\x1E";"\x33\x87\x5F\xE6\x25\x65\x8C\xCA\x53\xF6\xF9\xC1\x32\xCD\xE5\x35\x08\xC3\x08\x76\xAE\xB9\x5F\x15\xE2\xA0\x42\xC0\x83\x6E\x94\x84";"\xD7\xCA\x18\xD6\x2E\xC3\x4D\x48\xB8\x62\x4A\x9E\x0E\xBC\xB5\xD8\x96\x33\xF3\xF2\x19\xFE\x32\x30\xBB\x0A\xD6";"\xB0\x1E\xD2\x47\xEE\xB8\x5E\x1F\xA0\x28\x7D\x58\xBD\x61\x7E\xB4\x9D\x43\xBF\xFD\x33\x65\xCB\xEC\x78";"\x70\x30\x95\x79\xC1\xF7\x72\xFB\x53\xB3\xE4\x39\xE5\x18";"\x73\x72\x82\x75\xE1\xAC\x27\x9F\x1F\xE2\xAA\x36\xE0\x15";"\xD8\x90\x73\x8C\x35\x48\xDA\xB2\x76\xA3\x45\xB0\x48\xB0\xCA\x46\x0D\xA7\x67\xC8\x0D\xF5\x2B\x3F\xC9\x98";"\x37\x3E\x42\xB1\x59\x21\x99\x92\x12\xCC\xA5\x36\x27\xD3\xEB\x6A\x6D\xC5\x05\x35\x84\x5B\x58\x4B\xE8";"\xE3\x82\x46\x8B\x3F\x3C\x4B\x4E\xCC\x6C\x46\x8D\x75\xA8\xFE\xD9\x8D\x09\xFE";"\x7B\x51\x92\x00\xA4\xA4\xD2\xCF\x15\xE6\xB8\x06\xFA\x2E\x2F\xAC\x52\xA1\x3A\x37\xFD\x71\x8E\x81\x37\x81\x08";"\x47\x0D\xD6\x07\xBF\xC2\x45\x4F\xFD\x34\x98\x49\xB6\x58\x79\x9B\xC2\x49\x8B\xFB\xCA\x30\xC9\xE4\x29";"\x59\x1E\xE7\x1F\xFD\x01\xD6\xBC\x36\xA5\x85\x70\x88\x70\x8A\x06\x4D\xE7\x27\x08";"\x82\xD9\x23\xDD\xDE\xEC\x69\x35\xA9\x5B\x17\xE7\x50\xAF\x01\xD0";"\xD2\xBE\x6E\x81\x6B\x11\xD6\xB7\x47\xBA\x0D\xD4\x03\xFC\xFE\x05\x02\xAD\x62\x1D\x08\xF6\x26\x38\xB4\x9B\x19\xF5\xF3\xC5";"\x62\x43\xB0\x5D\xBD\x5A\xF6\x81\x26\xF3\xCE\x02\xE7\x26\x7F\x5D\x10\x99\x74\x7F\xA9\x70\x98\x8A";"\xBF\xEC\x75\x23\xDA\xE3\x6A\x2D\x85\x4A\x6A\xBE\xAA\x0E\x3A\xE9\xAD\x45\xDD\xB8\x27\xD4\xC2\xC4\x5B\x7E\xB0\x05\x57\x9D\x50";"\x23\x4B\x86\x5A\xFC\x84\xCF\x9C\x2C\xF5\xBF\x00\xF9\x7E\x35\x44\x19\x9B\x78\x7D\x8F\x76";"\xEC\x45\x9A\x48\xB0\x8F\x08\x49\xA7\x4D\xC8\x0D\xF5\x2B";"\x30\x76\x45\xED\x77\x6C\xF2\xD3\x14\x9B\xF4\x34\x64\x9D\x9A\x31\x68\x9E\x5E\x16\x9B\x7C\x08\x19\x95\xA8\x30\x93";"\x18\x4A\x93\x5E\xAF\x46\xD6\xA6\x72\xB1\x85\x14\xC1\x3C\x8A\x2C\x01\xA8\x64\x49\x81";"\xD0\x92\x78\x93\x07\x0C\xD4\xEF\x78\x46\x11\xAD\x14\xF8\x84\x0B\x3E\xA7\x68\x94\x58\x98\x65\x7A\xC2\xC6";"\x9B\xE0\x30\xDB\xD6\xC1\x18\x1A\xBB\x04\x4B\xD1\x6F\xA0\x44\xDA\x84";"\xD7\xA3\x0F\xFB\x15\x28\xB3\x1D\xB0\x55\x36\xF8\x64\x92\xF6\x2B\x65\x04";"\x25\x1E\xFB\x17\x45\x0B\xED\xF7\x78\xA5\xD7\x17\xD0\x74\xA4\x1A\x49\xEB";"\x5A\x35\xE0\x1E\xFE\x00\xD5\xB5\x71\xEC\xD7\x0F\xC4\x03\x3C\x40\x06\xB2\x53\x4C\x9A\x42\xAD\xAD\xDF\x98\x17\xBB";"\x4F\x1D\xA7\x1D\x80\x89\x04\x7B\xBF\x8B\x91\x4B\x89\x3A\x3E\x96\xC8\x7F\xAD\x03\xC3\x3C\xDC\xE7\x0C\x4A\xE4";"\x09\x61\xA1\x15\x4E\x51\xED\xF8\x56\xDA\x9F\x60\x9E\x37\xD3\x6F\x27\xB4\x6C\x4E\x92\x45\xB6\xE8\xC1";"\x3F\x77\xCA\x67\x99\xB8\x37\x85\x5E\x87\xA0\x72\xF8\x45";"\x9F\xD1\x56\xFC\x7C\xDB\x54\x0F\xE0\x25\x20\xD3\x33\xE9\xFD\x8F";"\xA3\xF7\x2B\xA8\x54\x7E\xF3\xA9\xE1\x0B\x6C\xB1\x51\xCF\xD3\x6D\x24\x09\xD8\xD3\x76\x95\x0D\x10\xDE";"\x83\xE8\x37\x2B\xDC\x9C\x6F\x6D\xE7\x08\x5C\xA8\x4F\x48\x4A";"\x77\x76\xC0\x39\xCD\xFB\x75\xDC\x58\xDF\xB5\x7A\xC8\x0F\x21\xA8\x27\x81\x48\x3A\xF1\x60\x9F\x9C\x6D\x4C\x03\xD1\x90\x2A";"\x6C\x50\xDB\x5F\xB9\xB0\xC9\xCE\x34\xE5\xDD\x1B\xE6\x2A\x7E\x4F\x17\x9F\x3B\x56\xC1\x21\xDF\xE3\x7D\xD4\x50\x8E\xAF\x7B\xE9\x13";"\x52\x56\xB0\xAE\x47\x58\xF3\xF3\x0A\x8C\xD2\x3F\x9E\xC2\x96\x6C\x77\xE9\x59\x5E\xED\x79\xF0\x03\xEA\xB8\x27\xFC\x81\x7C\x8C\x6C";"\xB6\xC2\x18\xFD\x63\x31\x4C\x10\x83\x71\x26\x8A\x6E\xA7\xB6\x6D\x91\x1C\xFD\xEA\x7E\xE9\x16\x21\xB4\xF8\xD7\x5F\x30";"\xCA\x94\x68\x88\x35\x46\xF8\xB1\x33\x13\x44\x99\x49\xB7\xCB\x45\x0C\xA8\x66\x82\x4A\xF2\x64\x73\x9C\x87\x4D\xB8\xEC\xC2\x31";"\xD6\x93\x11\x85\x61\x45\xBD\x80\x28\x82\x39\xE3\x02\xD5\xDD\x3B\x64\xF8\x17\x5A\x78\x8C\x6D\x44\xD6\xF6";"\x73\x1C\xF2\x1F\xA6\x8D\x02\x3F\xA8\x91\xB0\x5A\x84\x61\x06\x89";"\x86\x89\x4D\xB1\x47\x4D\xFE\xB4\x2E\x1B\x57\xA7\x75\xBD\xC1\x53\x32\xB2\x6C\xC5\x1A\xC8\x30\x4A\xC6\x8D\x27\xE7\x48\xD9";"\x56\x1B\x94\x57\xB7\x16\xF5\xB8\x3B\xEC\x86\x1A\xD9\x61\x37\x42\x0E";"\x88\xDC\x29\xD3\x88\x93\x16\x70\xF7\x03\x08\xDD\x1B\xE6\x0F\xFD\xBA\x03\xDA\xF0\x31\xFD";"\x38\x89\x11\xB8\x69\x33\x9F\xC1\x73\xBB\xE7\xE5\x2F\xF6\xEB";"\xD5\x8A\x63\xA9\x35\xC2\x5C\x37\xA2\x28\x63\xB7\x78\x93\x85\xF5\xA8\x0D\xC4\x8B\x20\xD7\x13\x1E\x87\x2A\xB9";"\x51\x5A\x89\x43\xB9\xCD\x5F\x36\xAE\x68\xC1\x16\xCC\x2C\x36\x87\xCF";"\xE4\xBB\x7B\xE5\x00\x74\x99\xE6\x85\x45\x29\xF2\x05\xC7\x95\x38\x6A\x03\xCA\x9A\x6B\x94\x4A\x4D\xD0\x95\x35\x11\x46\x9F\x47\xB5";"\x5A\x24\xE2\x79\x9E\x98\x62\x64\x0D\xC7\xD4\x03\xD9\x47\x5B\xD5\xF5\x7E\x16";"\x3F\x4A\xB8\xBF\x74\x7D\xF0\xAF\x45\x84\xEE\x3C\x0D\xE8\xC2\x6D\x2E";"\x5B\x4A\xDE\x13\x85\x8C\x1B\x69\xAA\x9B\x94\x66\x94\x31\x00\x89\xB8\x56\xE2\x12\xC6\x08\xA0\xFE\x10";"\xB1\xD1\x2F\xCA\x87\xDA\x5B\x38\xF8\x1B\x54\x9E\x60\xAE\x42\xEA\xB2\x2B\xFA\x80\x13\xDD";"\x70\x2E\x80\x6B\xAB\xA8\x25\xB5\x01\xC6\xAF\x2B\xE2\x05\x1A\xE2\xE4\x8D\x47\x54\x83\x59\xC7\xDB";"\xCF\xAF\x67\xEF\x5B\x4F\xA8\xFD\x95\x0F\x37\xFC\x04\x80\x94\x29\x76\xE3\xF8\x94\x6C\x85\x79\x10\xA8\xF0\x63\xA0";"\xF8\xB2\x16\xCE\x19\x2F\xBB\x5C\xCF\x25\x60\xB5\x2D\xD3\x9E\x27\x20\x0A\xCD\x83\x28\x86";"\xB0\xE5\x2F\xC0\xC2\xD1\x78\x34\xFB\x0F\x54\xA4\x4F\xFF\x51\xD8\xA0\x25\xFC\xCD";"\x0D\x15\xE1\x16\x2C\x18\x94\xFB\x79\x9C\xDC\x63\xCD\x36\xD9\x1F\x24\xA1\x67\x55\xD6\x58\xA4\xB3\xCC\xC1\x31\xE6\xA0\x1C\xEB";"\x80\x98\x68\x92\x7C\x0C\x8F\xF0\x5C\xAF\x01\xD1\x06\xBC\xC0\x05\x57";"\xE2\x96\x02\xFB\x26\x7C\x22\x47\xDD\x39\x7E\xC7\x3F\xDD\xE1\x73\xD2\x52\x8C\xE5\x3A\xA8\x50\x6A\xE6\xAD\xC7";"\xDE\xAB\x75\x8F\x0C\x0A\x81\xE4\x49\x12\x13\xD0\x03\xF8\xC8\x6E\x0B\xA9\x65\xCA\x13\xF3\x29\x3D\xBC\xD2\x5B\xB9";"\xA7\xE2\x3B\xAB\x51\x55\xE7\xAE\xC6\x57\x21\xE7\x18\x81\xDE";"\x82\xC3\x6B\xCB\x2F\xC8\x54\x35\xB7\x7E\x18\x81\x55\xFC\x58\xC3\x8C\x23\xFE\x95\x19\xE7\x3E\x3A\x54\x58\xF6\x3A";"\x1A\x56\x8A\x01\xA4\x5B\x9F\xAB\x2D\xF2\xEF\x09\xE1\x29\x39\x46\x03\x9C\x77\x2A\x94\x37\xD4\xE8\x73\x96\x1D\x8C\xCF\x3A";"\x98\xF8\x13\xCE\x36\xC5\x5C\x32\xF0\x6F\x4F\x9B\x5C\xA8\xF1\xC6\x8C\x26\xBC\xDF\x4A";"\x81\xD6\x2F\xD7\x0F\x0C\xA6\xEA\x5E\x46\x12\xF2\x21\xFB\x96\x17\x63\xEA\x6F\xDD\x15";"\x12\x47\x98\x0F\xF0\xC8\x0A\x44\xFD\x65\x83\x5D\xB5\x43\x68\x82\xD6\x7B\xB6\xF0\xC4\x30\xD9\xE2\x32\x45\xDB\x36\x6A";"\xDB\x87\x71\x88\x0C\x44\x95\xF1\x71\x11\x6C\x9F\x47\xB5\xC9\x17\x45\xE9\x25\x81\x12\xB8\x7A\x62\xD3\xC6\x57\xBE\xE2\x9F\x1B\xEA";"\x95\xDA\x23\xC3\x39\x04\x99\xB6\x26\xBC\x06\xC2\x41\xE4\xE4\x12\x0F\xD3\x2C\x67\x40";"\x2B\x0C\xD1\x31\xEF\xF3\xC8\x8A\x24\xBE\xD9\x44\xBA\x62\x64\xF0\x5F\xD5\x31\x19\xE8\x61\xB6\xA6\x35\x64\x19\x99\xB6\x6F\xD0\x62";"\xEB\x0F\xD0\x3C\xB2\xE4\x02\x56\xEB\x2D\x63\x45\xB9\x67\x2A\xD3\xCA\x47\xA3\xE3\x31";"\x81\xB0\x64\x8D\x0D\x54\xBE\xE8\x7A\x56\x16\xD2\x0C\xFF\xBC\x0D\x49\xF8\x2F\xBB\x49\x9E\x6B\x3E\xBE";"\xBE\x4A\x99\x23\xE4\xF8\x06\x40\xE9\x29\x8D\x0C\xFD\x24\x14\xCA\x99\x1B\xFB\xF0\xCE\x22\xDE\xEF\x3D\x5C\xC2";"\x85\xC0\x33\xD3\x49\x5D\xEF\xA6\x3E\x18\x51\xA6\x5C\xBC\xC6\x52\x31\xB3\x93\xC4\x19\xC9\x7B\x04\x86\xCD\x64\xE6\x0D\xC3\x27\xE4";"\xE3\x82\x71\x8B\x71\x75\x07\x4E\xE6\x20\x09\xCE\x34\xE4\xFE\xD8\x9C\x0F\xEE\xAE\x0F\xA1\x06\x21\xF3";"\xC8\xAC\x70\xFE\x2A\x2F\x9B\xA8\xCD\x0B\x5B\xB8\x5F\xC6\xF2\x54\x3B\xB9\x95\x92\x71\x93\x37\x2C";"\x0F\x6F\xBB\xBC\x48\x11\x89\xAE\x4D\x9F\xD4\x26\x98\xC2\xDB\x42\x1E";"\xF3\xA4\x79\x69\x97\xAB\x25\x6C\x88\x46\x2B\xBE\x57\x5E\x49\xFA\xA9\x7D\xF3\x9E\x67\x9F\x7D\x81\x13\x72";"\x44\x2D\xF2\x10\x08\x12\xAE\xE5\x7F\xDF\x90\x65\x9D\x83\xC2\x5F\x34\xF4\x78\x07\xD8\x06\xF6\x08\x84\xCB\x69\xA5";"\xB5\xB2\x16\xEE\x59\x2C\xB1\x12\xCE\x40\x34\xFB\x22\xBB\x97\x2E\x6A\x30\xD3\x91\x6C\x9D\x47\x47\xD5\xAF\x28\x16\x0F\xD4\x07\xF4";"\x1E\x5F\xB5\x4E\xAD\x10\x93\xBA\x35\xF9\x8B\x35\xFA\x0D\x18\x11\x41\x9D\x2D\x3E\x9D\x67\xEB\x89\xC4\x89\x13\xE0\xB4";"\x50\x60\xAF\x21\x8E\x87\x3D\x54\xFD\xD8\x9A\x6C\xDC\x32\x02\x9E\xBA\x31\xC7\x42\x9B";"\x09\x6D\xA5\xA9\x05\x16\xE7\xAF\x47\xD8\xC7\x28\xCF\xC2\xF8\x5A\x32\xBE\x1F\x5C\xD4\x0B\xE1";"\xD1\x86\x16\xC1\x75\xC7\x54\x1E\xEA\x65\x58\x86\x7F\x9A\xBB\xC9\x8D\x0B\xDA\xBE\x04\xFF\x2F";"\x51\x4A\xB8\x5F\x4B\x75\xE4\xB6\x53\x8A\xF0\x2C\xD3\xCE\xC0\x18\x7D\x9D";"\x2E\x82\x40\xB6\x45\x7A\xAB\xCB\x5C\xAA\xED\x8F\x7D\xF5\xF4\x7E\x53\xDC";"\x0F\x4A\xB5\x2D\xD3\xD7\x32\x70\x01\xC7\x93\x44\x97\x04\x1D\x98\xB5\x5F\x5A\x14\xF7\x5E\xDC\x83\x0A\x7B\xA0\x0E\x8E";"\xFC\xA4\x4F\xB6\x5D\x4B\xF3\x52\xD2\x0C\x65\xBA\x28\xD0\xB9\x32\x7F\x02";"\xA2\xED\xC0\x37\xE0\xDA\x7B\x55\xD5\x37\x6F\xB5\xAD\x54\x58\xEA\xD6\x4E\x82\xFD\x7F\x66\x84\x91\x67\x2D\x82\x08\x0F\x99";"\x6F\x5B\xD8\x5B\xBC\xBC\x85\xC3\x4B\xBD\xF2\x4B\xBB\x61";"\x3B\x8B\x43\x9A\x7F\x7F\xC3\xA8\x22\xFC\xB5\x8A\x78\xA0\xBA\x36\x1D\x97\x77";"\xB4\xE0\xC7\x62\xCD\xF5\x60\x58\x9F\x01\x7D\xBE\xB1\x54\x7D\xAA\xE6\x56\x8F";"\xB9\xF7\x3B\x6A\xC6\xEB\x69\x3C\xC6\x0E\x24\xB7\x5D\x46\x5D\xEA\x90\x48\x8C\xD6\x25\xDE\x8B\x84\x3A\x7F\xF5\x51";"\x41\x15\xE8\x71\x4E\x5C\xFC\xA8\x3A\x87\xE8\x11\xC4\x2F\xC9\x56\x1A\xA1\x28\x0F\xFA\x0E\xEE\xF0\x8C\xAA\x2F\xFB\x98\x1E\xF6\x31";"\xFF\xB1\x71\xE1\x53\x6D\x8D\xE7\x9E\x59\x20\xB2\x27\xCE\xFA\x6C\x23\x41\x9D\x9B\x6D\xDB\x0F\x0A\x83\xBE\x64\x5F";"\x4D\x19\xC8\x14\xF8\x1C\x83\xC9\x41\xE7\xC3\x12\xF0\x23\x73\x61\x25\x87\x59\x16\xB6\x45\x91\x94\x15\xBA\x31\xB1";"\x1A\x48\x90\x52\xB3\xD7\x1A\x75\xA3\x08\x82\x40\x8E\x74\x62\xAC\xCC\x56\xB3\xE5\x97\x2C\xF2\xEF\x73\x1D\xBD\x77\x38";"\x02\x4D\x99\x4F\xAD\xBA\x82\x8C\x26\xE7\xA1\x1A\xF8\x04\x34\xA0\x12\x8C\x73\x29\xD9\x6C\x9B\xAE\x34\x92\x09\x89\xF3\x37";"\x0B\x77\xA1\xB8\x5C\x14\x8A\xEF\x05\xC1\x96\x2A\xD9\xC1\x99\x01\x7A\xFA\x54\x1D\xAE\x4F\xBB\x43\xD2\xF5\x3D\xEA\xD3\x10\xD9";"\xB6\xF4\x59\xE9\x1E\x62\xB6\x55\x9B\x47\x25\xFB\x2D\x9B\xCD\x0C";"\x07\x5B\xA0\x57\xBC\x5F\x82\x9A\x1E\xA6\xE2\x1E\xCD\x3E\x37\x41\x15\xA6\x71\x74\xE3\x39\xE7\xFB\x75\x90\x17\xF5\xBA\x70\xA2\x12";"\x46\x23\xB8\x6D\x81\x82\x23\x76\x15\xD4\x9C\x6E\xD5\x02\x09\x98\xED\x73\x1C\x1A\x97\x44\xF1\x80\x1E\x09\x81\x6B\xCC";"\x42\x21\xFF\x7A\xA3\xBE\x23\x7D\x17\xC2\xAC\x37\xB6\x04\x11\xA7\xFD";"\x66\x4B\x9F\x33\xBA\xBE\xCE\x8A\x1B\xC1\xEC\x4E\xFB\x19\x32\xB5\x14\x9D\x65\x6C\xB0\x27\xA5\xAE\x36\x63\x04\xD3";"\x6B\x4C\x84\x4B\xBC\xEB\xC5\x85\x61\xF3\xBD\x1F\xBB\x22\x2D\xB6\x0C\xD6\x64\x31\xFB\x6A\xD4\xBC\x3F";"\x1A\x11\xEF\x0A\xBE\x83\x09\x61\xE2\x28\x86\x69\x8E\x62\x70\x93\xFC\x63\xAD\x06\xDA\x31\xA4\xFF\x04\x5D\x9B\x2F";"\xF7\xC7\x8B\x1E\xED\xDE\x5F\x00\x9C\x36\x2C\xFA\xC2\x10\x2A\xA6\xED\x07\xC7\xA8\x6D\x95\x8B\x9F\x29";"\xCC\xA8\x7D\x87\x4C\x5C\x82\xEC\x76\x5A\x12\xEE\x08\xFB\xC1\x54\x34\x9A\x6E\xC3\x14\xCA\x7B\x72\xC0\xC7";"\x5D\x1F\xA6\x76\xBC\xC6\x52\x31\xB3\x93\xC4\x19\xC9\x37\x4B\xC5\xDC";"\xCE\xEA\x32\x6A\xDF\xDB\x62\x0D\xD1\x0F\x64\xAA\x51\x56\x19\xEA\xB4\x3E\xD4\xD0\x2D\xC2\x1A\xD6\x50\x07";"\x76\x30\x40\xB3\x67\x27\x9B\x90\x14\xF2\xA7\x78\x66\x96\xA8\x70\x2A\xDA\x0E\x24\xA4\x52\x40\x49\xA7\x95\x2A\x9D";"\xB7\xF5\x84\x3B\xEE\xC7\x7F\x51\xDB\x71\x72\xB7\xA2\x5B\x29\xFA\xA6\x69\x8B\xE3\x3C";"\x05\x34\xEC\x0E\x80\x88\x1F\x7E\xF1\xD1\x93\x10\xCF\x2D\x09\x88\xE8\x66\xAB\x04\x8E\x3D\xE0\xF1\x4F\x43\xD0\x3C\x2A\x47\xB0\x6C";"\x4B\x27\xEE\x1C\x9F\x86\x67\x40\xB0\x8A\xD3\x68\x8C\x6E\x4E\xAA\xF6\x7D";"\xE4\xC7\x09\xF6\x77\x28\x5A\x12\x98\x39\x3B\x89\x7B\xDD\xCB\x73\xD2\x52\x8C\xE5\x3A";"\x3A\x1E\xDF\x09\xF1\xD4\x3D\x4C\xFF\x18\x89\x43\xA7\x66\x70\x88\x8C";"\xCF\x92\x2E\xB5\x7B\x19\xBF\xFC\x75\xA8\x4C\xE8\x36\xAC\xE1";"\x48\x17\xA2\x5B\x84\x8B\x13\x3E\x9C\x90\xD9\x1E\xC4\x78\x01\x99\xC8\x67\xEB\x18";"\xAC\x85\x5A\x88\x70\x8A\x06\x01\xA8\x64\x49\x81\x35\xB9\xAD\x89\xC5\x5C\xED\xB0\x12\xF5\x0D\x30\xBD\x10";"\x13\x1A\xB0\x57\xAB\x48\xCB\xB5\x26\xDA\xC4\x0C\xEF\x23";"\x23\x74\xC9\x39\xE7\xFB\x75\x99\x16\xF2\xFB\x16\xA2\x5A\x6C\xF8\x57\xCD\x09\x6E\xB7\x2F\xCD\xD1\x26\x6C\x06\x9C\xFF\x2A\xD8\x40";"\x3A\x7F\xC0\x3E\xDE\xE0\x7C\x9F\x1E\xCE\xA3\x77\xAB\x05\x12\xB3\xB3\xB0";"\xB6\xA8\x31\xE8\x2E\x79\xA5\x0D\x99\x3D\x0B\xFA\x73\x9D\xA6\x3F\x37\x48\xE3\x88\x46\xD2\x15\x5B\xE0\xC7\x70";"\x5C\x03\x91\x4F\xB6\xE2\x44\x0B\xA9\x65\x8F\x5D\xB7\x29\x17\x8A\xC8\x5A\xF1\xB1\xAC\x28\xDD\xF5\x79\x1F\xC0\x23";"\x66\xCB\x0C\xF2\x6F\x72\x8C\x87\x37\xF9\xBE\x87\x7F\xD8\xEF\x77\x12\xB8\x09\x6B\xBE\xE1\x10\x00\xEA\xA2\x44\x86\xE4\x6D\xD3\xDE";"\xAE\xD1\x7B\x24\xC3\x95\x49\x1D\x8F\x40\x03\xAB\x5A\x40\x1E\x80\xB5\x34";"\x2C\x76\x50\xB9\x6A\x56\xF5\xC5\x15\xDB\xE2\x30\x67\xBF\xA9\x3B\x6A\x8A\x08\x62";"\x03\x03\xEE\x7F\x9E\xA6\x33\x6B\x07\xCC\x8C\x60\x95\x06\x12\xAF\xFD\x3B\x54\x0E\xA1\x08\xEC";"\x43\x2C\xBB\x36\xD1\x9B\x2E\x62\x46\xAA\xA5\x61\x97\x05\x12\xEA\xF3\x6E\x56\x0C\xC5";"\x82\x81\x3A\xCB\x34\xC8\x7E\x3E\xBF\x7A\x5A\xB4\x47\xA4\xBD\xC7\xCA\x60\xDD\xBB\x03\xF5\x21\x36\x86";"\x31\x99\x13\xA7\x66\x3D\x9F\xCA\x5F\xA1\xB1\xDA\x7C\xFF\xC9\x56\x74\x89";"\xFC\xC0\x1F\xCC\x1C\xCB\x44\x08\xAB\x29\x7C\x88\x6D\xBF\xE2\x8B\xAB\x0C\xFF\xBA\x04\xA4\x5E\x70\xFE\x48\x82\x5D\x27";"\x12\x47\x93\x07\xB3\x5C\xD5\x89\x3E\xED\xC2\x1C\xB0\x3B\x26\x4F\x17\x8B\x5E\x3E\x91\x74\x91\xA6\x36";"\x51\x49\x81\x59\xA9\xB3\x89\xF2\x10\xF5\xBC\x01\xF2\x5E\x35\xB5\x20\x92";"\xB3\xE8\x1E\xC1\x29\x17\x4A\x10\xB1\x68\x16\x82\x71\xAC\xBE\x19\x9B\x34\xFB\xB9\x6E\xF6\x53\x6D\x91\xFD\x81\x4B\x21\xFF";"\x7F\x1A\x05\xFD\x23\x27\xF4\xDE\x50\xF2\x8D\x78\x66\x96\xA8";"\x93\x90\x36\xCD\xC7\x9A\x56\x35\xA0\x33\x52\x8C\x49\x86\x49\xD0\x83\x1A";"\x55\x58\xD9\x12\x89\x96\x28\x73\xEE\xCD\xC0\x74\x85\x74\x48\xCF\xA5\x3F\xFF\x50\x9E\x3B\xF6\xF4\x15\x4F\xF6\x71\x39";"\x66\x55\xD8\x7F\xAF\xBF\xE4\x88\x78\xF0\xA4\x0C\xFC\x23\x17\xB4\x1E\x9D\x7A\x75\xC8\x67\x82";"\x7B\x33\x97\x23\xF3\xED\x7F\xD6\x4E\x88\xE1\x36\xAC\x4C\x56\xE2\xA1\xC3\x03";"\x22\x7D\x79\xBE\x76\x6C\x8A\xD6\x07\xBA\xF4\xCE\x60\xB2\xE7\x66\x50\xE3\x0E\x67\xB2\xA8\x41\x67\xE0\xAE\x41\x8E\xFC\x2D";"\x37\x69\x9F\xAD\x54\x62\xA2\xF3\x44\x9A\xED\x38\x21\xC3\xD4\x60\x36\x8A\x55\x15\xAF\x56\x44\x01\xD7\xAF\x07\x9F\xD9\x0E\xC0";"\x56\x1B\xDC\x02\xFA\x0C\x98\xF7\x6D\xA9\x8E\x57\xC6\x2B\x71\x51\x07\xB1\x79\x21\xAE\x7D\xB4\xBF\x35\x89";"\xD8\xDB\x36\xC2\x3A\x4C\xD8\xB7\x2D\xE9\x4E\x97\x4F\xAD\xB1\x43\x02\xA2\x7C\x76\x5F\xAA\x73\x7F\xF2\xEF\x52\xA4\xFD\x29\x17";"\x83\xD0\x18\xCB\x7B\xA5\x19\x48\xEC\x2A\x0F\xD0\x0E\xEE\xF0\x8C\xC3";"\xF7\xB8\x7D\x65\x9B\xAF\x39\x68\x8C\x4A\x2F\xF0\xEE\x0E\x10\xE9\xAD\x45\xDD\xB8\x6B\x9B\x81\x85\x17\x7E\xF6\x50\x19\xDE";"\x9C\xB5\x59\x9F\x75\x09\x97\xDF\x4F\xAC\x06\xC7\x36\xFB\xC9\x16\x56\xDB\x76\x54\x5E\xBF";"\xA7\xBD\x80\x79\x8D\xBB\x35\x1C\x98\x33\x75\xB8\xE2\x30\x2C\xB8\x97\x0D\x80\xE8\x77\x2C\xC5\xD0\x71\x23";"\x62\x2C\x84\x6E\x99\xEB\x2E\x91\x1C\xC8\xEA\x29\xB7\x50\x3D\xAE\xFC\x91\x40\x18\xEC\x12\xC7\xD9\x2A\x74\xFE\x94\x8E\x67\x8C\x7E";"\xDA\xC4\x2A\xC3\xD0\xCB\x65\x7A\xD0\x54\x1D\xE2\x00\xF8\x02\x9E\xF5\x6F\xAF\x80\x55\xC8\x3D\x33\x01\x6A\xE4\x22\x77";"\x6A\x42\x9B\x74\x9A\xBD\xC1\x91\x2F\xFE\xA2\x11\xBF\x6A\x67\xDB\x50\xD4\x32\x67\xF4\x69\x95\xA9";"\x17\x58\x9D\x00\xF5\x8B\x59\x22\xAC\x6A\xCF\x10\xCE\x2E\x30\xCC\xCF\x6E\xBE\xF3\xC7";"\xC9\xA1\x3A\xB5\x50\x2C\xA7\xE1\x94\x42\x68\x87\x19\x84\x9C\x28\x74\xBC\xDB\x91\x74\x97\x52\x01\x9B\xD7\x74\xBE\x01\xF8\x04\xFF";"\x96\x97\x21\xD8\x86\xD1\x44\x3A\xB0\x07\x49\xEB\x4B\xAC\x40\x85\x91\x2B\xFC\xF1\x1A";"\x24\x7C\xAE\xB4\x51\x6A\xA0\x8A\x44\x85\xE2\x34\xD2\xDB\x9B\x6B\x31\xCE\x1D\x47\xAD\x55";"\xE6\xDB\x06\xBB\x3C\x3E\x40\x0C\xD4\x23\x66\xD9\x27\xC7\xF9\x75\xD3\x7B\x8D\xE2\x3B\xAB\x51\x55\xE7\xAE";"\x1A\x72\xBB\xED\x56\x59\xE5\xE0\x2E\xC2\x97\x68\x96\x86\x98\x14\x7B\xB5\x1A\x59\xA2\x4F\xF9\x5D\x82\xB0\x27\xE6\xC5\x38\xC9\x2D";"\x1F\x4F\x91\x40\xFC\x09\xDE\x84\x2E\xAD\x96\x05\xFF\x3A\x39\x5D\x15\x9E\x7C\x35\xCB\x5E\xB6\xB5";"\x6D\x3E\xD2\x17\xF7\xC2\x33\x72\xF4\x0A\x81\x53\x8A\x23\x55\x8C\xD5\x6C\x81\xA8\xDE\x2A\xF5\xFF\x3A\x66\xF2\x39\x6D\xB0\xEB";"\x0A\x11\xFD\x18\x85\x8C\x1D\x74\xF7\x9D\xD3\x23\xE9\x39\x4D";"\x5E\x7E\xF7\x62\x93\x86\x7A\x49\x0C\xCF\x92\x49\x9E\x17\x0A\xBF\xD9\x72\x5D\x11\xE6\x48\xBA\xAA\x0B\x78";"\xD6\xD8\x28\xB1\x7D\x01\x9C\xF8\x67\x46\x00\xDC\x55\xA6\xCB\x11\x44\xED\x28\xCB\x26\xF2\x2A\x3C\xC8\x87\x1D\xF9\xBE";"\x19\x10\x9A\x59\x51\x48\xC1\x93\x3B\x9C\xC9\x58\xD2\x3E\xCD\x4A\x4B\x96\x61\x58\x9C\x63\x8A\xB2\xC1\x88\x44\xDC\xB8\x15";"\x98\xD0\x10\xB4\x75\x1C\x9F\xC7\x7F\xF6\x0F\x8A\x24\xE1\xE4\x0C\x48\xEB\x0D\x72\x52\xBF\x66\x45\xFE\xD6";"\xE3\xB6\x31\xC6\x06\x3A\xBE\xE7\x88\x48\x34\xDE\x19\x86\x97\x2F\x77\xC9\xDA\x9C\x6A\x9E\x0A\x13\x88\xBE\x4D\x1E";"\x66\x25\xFD\x1D\x9A\xD3\x2E\x73\xEA\xD7\xA2\x72\x99\x7D\x0A\xC8\xD5\x7A\x40\x07\xD6\x07\xF9\x8E\x06\x58\xA0\x6F";"\xF3\x9B\x7A\x90\x13\x12\x9A\xF2\x36\x6E\x57\x9C\x10\xE8\xC2\x28\x78\xFE\x20\x9A\x5E\x80\x63\x3F\xBA\x82\x29";"\x1F\x57\xC1\x18\x95\x8C\x15\x75\xFA\xD0\xD4\x6D\x86\x6E\x45\xDD\xC6\x6F\xBA";"\x40\x24\xB3\x01\x8C\x89\x3A\x74\xF0\x98\x94\x68\x98\x3C\x6C\xD2";"\x8F\xD2\x6F\xDF\xD0\xD4\x22\x7A\xAE\x1C\x58\xAC\x00\xD2\x02\x9E\xF5\x6F";"\x1D\x5D\xB4\xAE\x41\x54\xE7\xFF\x56\x8E\xC0\x2F\x98\xAA\x9A\x16\x7D\xF7\x04\x48\x98\x40\xBF\x63\xD8\x8A\x29\xE6\x81";"\xF9\xEA\xCF\x3A\xD3\xA1\x61\x57\xC6\x19\x77\xB4\xE8\x55\x64\xE2\xED\x2D\xC7\xA8\x6D\x95\xC7\xD0\x6A\x39\xB0\x5A\x57\xB5";"\xB3\xE5\x8A\x2C\xE8\xFF\x78\x1D\xDA\x38\x7A\x9F\xB1\x55\x5D\xFC\xAE\x5F\xC4\xEB\x22\x21\xDE\x98\x78\x31";"\xD0\xA2\x46\xA0\x2B\x1D\xA0\xEB\x3F\x02\x50\xEB\x14\x8F\xC7\x7B\x7C\xFB\xD1\x86\x54\xC6\x65";"\x45\x7E\x83\x69\xB1\xEB\x07\x91\x05\xF9\xAD\x77\xEB\x1A\x60\x83\xA5\xAA\x7B\x13\xC3";"\xF2\xB5\x72\xF1\x1E\x72\xAA\xED\x80\x4C\x6F\x9A\x2E\xCE\xD0\x6C\x23\x41";"\x8E\xDC\x28\xEC\x3B\xDA\x79\x3D\xB0\x6F\x4E\x9E\x4F\xEC\xB3\xC6\x82\x35\xE5\x89\x64\xB4\x64\x7E\x0A\x59\xDB\x3B\x7C";"\x78\x33\x82\x6D\x9C\x92\x26\x90\x18\xC9\xA6\x6E\xB5\x18\x6A\xA3\xE3\x83\x07\x2D\xE3\x11";"\x86\xEB\x2C\xD2\x4A\x5C\xE8\xA7\x3D\x19\x5E\xA7\x5F\xBD\xC1\x53\x32";"\x25\x91\x72\x9E\x63\x66\xCA\x88\x23\xC9\xB4\x89\x79\xA7\xF2\x73\x1C\xD2\x23\x76\xAC\x86\x48\x63\xE8\xF6";"\xD9\xBB\x26\xDD\x14\x16\xB3\xE1\x94\x13\x67\xF4\x11\x96\x91\x6A\x13\xBB\x9B\xDC\x21\xC1\x3F\x43\xDD\xB4";"\xA3\x25\xDB\x0C\xF1\xFB\x04\x44\xA4\x36\x7F\x4D\xB8\x26\x6A\xF1\xCF\x4C\xA7\xF4\x83\x26";"\x17\x59\x9B\x53\x54\x4E\xDD\xB8\x3C\xDB\xE9\x37\xC6\x29\xDD\x5A\x32\xF4";"\x38\x7B\x4D\xFB\x60\x69\xC7\xD6\x57\xA3\xFC\x63\x79\x86\xAE";"\x91\xC1\x64\xE5\x8E\xD4\x10\x36\xBB\x51\x4F\x8F\x46\xBC\x5B\xC8\xC2\x1A\xE8\xCC\x0B\xF5\x3A\x21\x14\x22\x9A\x6B\x00\x89";"\xF3\xA7\x0E\xD4\x21\x38\xB3\x11\xD9\x55\x39\xFE\x6E\x9C\xBD\x36\x7D\x02\xCE\x9B\x62";"\xF3\xB3\x0E\xF3\x3C\x64\x4D\x1B\x96\x67\x38\xD9\x69\x8B\x91\x2A\x90\x0E\xC3\xA9\x7B\xEA\x4E\x03\xB3\xF5\x81\x19\x04\xFC\x13\x87";"\x6E\xE9\x14\xCA\x32\x34\xC0\x8F\x25\xE1\xB6\x8F\x77\xA5\xB9\x4B\x1A\x9A\x35";"\xA6\xEE\xEE\x2C\xCF\xE8\x5B\x5F\xDC\x46\x4C\xB7\xAB\x42\x5F\xF6\xB4\x47\x86\x8A\x79\x99\xD3\xD3\x50\x32\xF8\x7C";"\x78\x0B\xC7\x2B\xED\xF5\x7B\xCE\x5A\xA1\xF0\x3E\x8E\x54\x6E\xFA\xA9\xCB\x0B\x6C\xB1\x51\xCF";"\x47\x1B\xE0\x17\xFC\x9F\x5F\x1C\xAE\x68\xC1\x16\xCC\x2C\x36\xC2\xCD\x6C\xA0\xF5\xC5\x79\xF5";"\x73\x7A\xA8\x6A\xB4\xBE\x38\x9E\x14\xEF\x97\x75\xEC\x1F\x2D\xAA\x21\x88\x45\x21\xF4\x66\x99\x88\x6D\x5B\x4E\xD1\x83\x24";"\x74\x32\xF6\x65\x82\xA1\x2B\x65\x41\x8C\xEA\x19\xD3\x49\x5D\xEF\xA6\x3E\x18\x51\xE2\x0E\xF3\x96\x33\x72\xE7\xDA\x92\x5C\xD4";"\x7C\x4C\x84\x6B\xB1\xA0\xC9\x99\x20\xA1\xEB\x4F\xF1\x24\x35\x58\x1F\xDA\x1E\x31\x8D\x63\x99";"\x17\x09\x91\x48\xA5\x4D\xD6\x9F\x61\xDA\xDD\x15\xD0\x26\x33\x41\x15\xD2\x7B\x3E\x8A\x5F\x93\xA8\x3C\xD8";"\x2F\x74\x44\xAF\x1F\x62\xE8\xC0\x5F\xBC\xEA\x33\x22\xC6\xE7\x65\x3B\xF3\x08\x45\xBA\x56\x49\x11\xED\xBB\x36\x87\xD8\x6B";"\xB5\x08\xC3\x20\xEE\xD0\x09\x45\xD8\x35\x23\x6E\xB1\x4E\x75\xF2\xDC\x51\x89\xAB\x34\x2D";"\x4C\x6E\xF2\x61\x89\xD8\x63\x08\x42\x9C\xD5\x2A\x94\x0F\x19\x97\xF1\x37\x51\x0D\xD3\x06\xEF\x86\x16\x46\xAC\x22\x9B\x44\x9E\x49";"\xA0\xB3\xE1\x21\xD6\xC1\x71\x59\xC3\x06\x64\xB0\xF0\x55\x56\xED\xB3\x41\xC2\xD2\x26";"\x70\x1F\xE0\x1E\xFE\x00\x9C\xF3\x71\xE1\xCD\x18\xCA\x3D\x75\x4F\x1B";"\xE4\x38\xDC\x37\xEF\xF8\x52\x07\x98\x77\x2F\x41\xFD\x11\x57\xF6\xD1\x46\x83\xF7\x69\x66\xDE\xEF\x71\x65\xCF\x15\x78\xE3\x63\x4E";"\x6C\x32\x9F\x3E\xF6\xF4\x65\xCB\x49\xA5\xEA\x4F\xB3\x50\x6D\xD5\x56\xCE\x08\x61\xB6\x2C\xCC";"\xDB\xCA\x4D\x98\x13\x15\xDA\xD0\x7C\x4C\x39\xEC\x07\xFC\xC3";"\x1F\x51\x9D\x0D\xA1\xAC\x11\x49\xE2\x2D\x8A\x63\x9A\x6F\x64\x89\x8B\x44";"\x79\x3C\xFC\x6B\x8F\xBC\x10\x66\x1F\xDE\xAE\x7E\xED\x0B";"\xA1\xF6\xC4\x76\xE0\xED\x7A\x58\xCD\x3C\x75\x4D\xE3\x5C\x75\xFA";"\x53\x64\xC9\x59\x9A\x8D\x2B\x2F\xBE\xB2\xD1\x26\xDC\x3C\x46\xD2\xB1\x33\x56\x08\xCA\x0C";"\x88\xE2\x20\x92\xA0\xD0\x67\x24\xBC\x15\x1E\xA4\x4A\xAF\x52\xD6\xB6\x00\xE9\xD6\x1F\xDC\x02";"\xDE\x84\x68\x9F\x68\x0F\x9D\xFF\x33\x57\x0D\xCA\x08\xF5\x87\x00\x7F\xFC\x34\x8E\x58\xB1\x62\x4E";"\xBC\xBA\x0C\xFE\x6C\x7A\xA4\x53\xA7\x78\x2B\xF4\x71\x92\xA0\x37\x26\x36\x83\xEF\x1A\xAE\x4E\x50\xEC\xA3\xC1\x1D\x52\xAB\x5B\xC1";"\x36\x5D\x87\x8A\x68\x75\xA3\xAD\x50\xDC\xFB\x19\x98\xAA\xDF\x58";"\x88\xAD\x3F\xC6\x95\xE4\x6B\x26\xAB\x10\x42\xF6\x13\x4D\x42\xC6\xF8\x30\xDC\xFF\x54\x96\x7A\xCC\x0A\x31\xE0";"\x4D\x6E\x9D\x2F\xCD\xD1\x63\x22\x42\x9C\xD5\x2A\xD8\x40\x5A\xD6\xBD\x37\x17\x1E\xD2";"\x9B\x8C\x6D\x8E\x6B\x5E\x8D\xF8\x7F\xBA\x10\x8E\x2C\xFB\xFA\x04\x69\xEC\x33\x65\x5B\x94\x6D\x70\x87\xDE\x12\xA4";"\x48\x48\xDC\x1D\x83\x8E\x19\x6F\xA4\x99\x96\x58\x92\x33\x2E\xA9\xF7\x5E\xFB\x41";"\x85\xFE\x26\xFD\xC7\xC4\x6B\x01\xB6\x0D\x0D\x93\x58\x40\x53";"\x5C\x50\xD4\x0B\xF8\x91\x03\x77\xF6\x76\xB2\x5B\x81\x64\x42\xCF\x8D\x0D\xE7\x48\x8D\x75\xAB\xBF\x49\x18\x9C\x7A\x3F\x00";"\xCE\xE9\x6B\x9A\x00\x5E\xC0\xB9\x3B\x1B\x5C\xE5\x00\xEB\x82\x53";"\xC1\xC3\x00\xF0\x26\x33\x41\x03\x9D\x6C\x79\xCF\x27\x9D\xB4\x11\x9E\x1D\xFD";"\x3F\x70\x04\x9B\x75\x68\xE4\xD8\x59\xA3\xDB\x3C\x28\xDE\xFD\x78\x66";"\xE9\xA3\x02\xF6\x2B\x36\x42\x1E\xD4\x5C\x38\x83\x6C\x8C\xAA\x62\xC8\x5F\x8F\xB4\x7D\xE8\x1D\x57\xB3\xE5";"\xF5\xB9\x3F\xF6\x31\x31\x78\x0A\x9F\x71\x39\xCA\x29\xD8\xC8\x7E\xD5\x4F\x8F";"\x8A\xAA\x7E\xEA\x4E\x7A\xEC\xA3\xC1\x1D\x52\xAB\x5B\xC1\xC5\x57\x3E\xB6\xDC\x96\x5D\x85\x78";"\x60\x20\x80\x76\xA9\xFB\x31\x93\x2C\xC6\x9F\x73\xF5\x14\x64\xBE\x18\x9F\x4A";"\x6C\xEF\x1A\xC8\x30\x4A\x87\xC1\x44\xA8\x06\xC3\x68\xD9\xEA\x07\x6B\xD9\x28\x69\x49\xBD\x5B\x2E\xD4\xD6\x50\x9F\xF6";"\x23\x76\xF1\x81\x5C\x65\xEF\xAF\x58\xB0\xF4\x22\xD5\x88\x8F\x2E\x00\xB1\x0A\x5D";"\xB8\xFB\x56\xF1\x19\x2F\xB4\xE6\x82\x4F\x6E\xB8\x51\xE5\xD3\x6D\x24\x40\xD7\x95\x24\x92";"\x3B\x67\x51\xA8\x6C\x24\x9A\x9F\x15\xF1\xA6\x3A\x29\xD1\xA9\x11\x6A\x8A\x44\x2D\xBE";"\x9F\xC1\x23\xCE\xC5\xF7\x59\x2B\xB2\x24\x48\x98\x40\xBF";"\x34\x72\xA6\x5A\x17\x17\xE5\xBF\x2D\xDC\x8C\x6E\x90\x74\x92\x10\x61\xFA\x23\x10\xDC\x16\xB7\xBE\xD2\x83\x2B\xF0\xB3\x24";"\xC7\xCB\x07\xDE\x26\x29\x46\x09\x90\x30\x78\xC6\x79\x92\xA2\x72\x98\x15\xB3\xA5";"\x8A\x93\x34\xD6\xCD\xD0\x43\x7F\xA1\x19\x43\x91\x07\xA7\x4C\xCF\x9F\x38\xEA\x8D\x1C\xF9\x24\x72";"\x3F\xCD\x38\xF0\x28\x32\xCE\x85\x1F\xFF\xB0\x85\x7D\xA3\xA7\x77\x45\xDA\x31\x73\xB1\xA9\x58\x20\xAD";"\xE1\x8D\x2B\xC0\x12\x42\xDE\xB5\x2F\xEF\x40\x95\x4D\xB3\xB7\x41\x00\xA4\x62\x37\x08\xBA\x69\x7B\xF5\xD7\x19\xA7\xF5\xCC";"\x88\xD6\x27\xD9\x3B\xD2\x15\x73\xB5\x62\x02\x8F\x4A\xA2\xBE\x89\x9D\x36\xE1\xDE\x00";"\x29\x88\x4D\xBE\x2A\x78\x8D\xC1\x71\xB0\xF9\xCF\x2B\xFF\xF3\x7A\x55\xDA\x18\x6B\xBF\xBB\x43\x26\xE2\xA8\x41\xAB\xE1\x2A";"\xB5\xFA\x43\xA3\x59\x6D\xB3\x19\x8D\x49\x2D\xB6\x7C\x83\x92\x31\x3C\x13\xCF\x9B";"\xAB\x12\xDA\x1D\xD2\xF4\x15\x49\xF2\x27\x37\x5C\xBE\x63\x76\xB4";"\xBE\xFD\x7E\x4E\x94\xAE\x3A\x69\x8B\x4B\x2C\xF1\x11\x0F\x13\xAD\xE4\x00\xDE\x93\x2C\xCF\xCF\x8A\x71\x2A\xA1\x1E\x74\x90\x53";"\x66\x36\x91\x70\x99\xA1\x3B\xDB\x2C\xDA\xB2\x67\xE8\x1D\x03\x82\xE1\x89\x47\x05\xE9\x56\xEC\xD8\x54\x3B\xB9\x95\xDA\x23\xC3\x70";"\xA6\xEF\x3D\x28\x96\x82\x24\x6B\x89\x45\x2A\xF3\x13\x09\x4D\xEC\xA7\x32\x94\x99\x20\xC9\x32\xC5";"\xCC\x90\x69\x96\x73\x06\xDA\xB2\x77\xA2\x01\x93\x53\xE7\x85\x14";"\xCF\xA0\x75\x6D\x93\x97\x21\x60\x84\x30\x42\xA6\x65\x43\x4A\xC2\xB2\x3A\x90\x94\x0B\xC6\x38\xDF\x4B\x34";"\x4E\x18\xA7\x5E\xC5\x8B\x2E\x6E\xEF\xC6\x93\x22\x93\x61\x0C\xD0\xE7";"\x5D\x57\xA5\x5F\x01\x2F\x97\xFE\x76\xD0\x99\x5E\x84\x74\xDC";"\xF6\xA5\x1D\xF3\x66\x52\xF4\x5B\xD9\x35\x33\x85\x23\x94\xA2\x3D\xB4\x1A\xC6";"\xE6\x9A\x7C\x94\x49\x33\x80\xF1\x79\x58\x14\xD5\x06\xC9\x98\x19";"\x9B\xC9\x65\xD8\xCD\xC3\x1D\x70\xDE\x52\x07\xD8\x06\xF6\x08\x84\xCB\x69\xA5\x8A\x53\xF5\x3C\x33\x4C\x12\x97";"\x5B\x1C\xAD\x4E\xBC\x42\xD1\xF4\x13\xC3\x9E\x06\xCF\x23\x21\x49\x1D\xA0\x29\x06\xA2\x2D\x83\xB0\xC5\x9E\x3C";"\xFE\xB3\x84\x3E\xEB\xF7\x73\x50\xC7\x35\x4A\xBE\xA5\x50\x65\xB5\x9E\x4F";"\x5A\x2C\xC6\x63\x95\x9C\x34\x2F\x11\xC9\x93\x61\xD7\x08\x16\xA9\xD8\x6E\x5A\x2F\xE7";"\xC2\x97\x68\x96\xCF\xDE\x14\x3A\xAB\x25\x52\xA2\x50\xBC\x10\x82\xE7\x6E\xFC";"\x30\x64\xBE\x6A\x9D\xA2\x7A\x03\x07\xC4\xAF\x70\x9D\x4F\x00\xB9\xE5\x92\x4A\x31\xE5\x0E\xA1\x8B\x05\x71\xE1";"\xDA\xDA\x12\xCE\x21\x7F\x67\x03\xB6\x7D\x0E\x9A\x6A\xAF\xB7\x26\x89\x2A\xB9\xAC\x6F";"\x0B\x57\xED\x18\x82\xD8\x7E\x3B\xB9\x95\xDA\x66\x8D\x7D\x44\xDF\x9C\x6B\xA6\x05\x96\x66\xE0\xF9\x01\x40\xEF\x63\x72\x5C\xB7";"\xAA\x07\xC3\x16\xA3\xC8\x4F\x4F\xF4\x72\x4F\x00\xAB\x70";"\x69\x53\xDB\x4C\xA6\xA3\xCE\xB2\x2D\xE5\xBF\x1C\xBE\x20";"\x33\x64\xB9\x29\x92\xA5\x21\x2C\x62\x86\xEB\x2C\xD2\x02\x0E\xB8\xA9\x5E\x7F\x0C\xE6\x12\xF8\xDC\x30\x54\xE0\x2D\x88";"\xAA\x8F\x50\xCB\x20\x34\x05\x43\xCB\x78\x3C\x8F\x3B\xCB\xA9\x38\x9D\x17";"\x41\x23\xB2\x02\x8D\x86\x3B\x77\xF1\x9F\x95\x6B\x99\x43\x6D\xD1\xB0\x34\x12\x47\x98";"\x26\x9A\x17\x87\x7F\x61\xC3\xD6\x6A\xB9\xFB\x8A\x2A\xE5\xEE";"\x95\xDA\x23\xC3\x39\x01\x90\xF5\x6F\xA4\x41\xD9\x07\xA0\xE4\x07\x52\xF6\x2F\x60\x14\xA9\x64\x7A\xF9";"\x31\x5C\xA1\x41\xBF\x8A\x1B\x34\xF9\x3D\xA9\x41\x87\x62\x7D\x8E\xC8\x25\xB5\xFE\xCA\x39\xA5\x93\x4B\x1A\x9A\x74\x3D\x02\xE0\x18";"\xAC\xAF\x5A\x88\x70\x8A\x06\x4D\xE7\x27\x08\xCD\x35\xEB\xBA\xC7\x9C\x5C\x90\xFF\x40\xBE\x5E\x60\xFC\x53\xD1";"\xC9\xAB\x79\x9C\x04\x11\xE9\xFB\x69\x48\x0C\xE5\x1A\xD7\x8E\x0F\x67\xF0\x1F\x87\x48\x8E\x65\x3D\xCE\x8E\x0C\xE0";"\x14\x6E\xB8\x47\x58\x52\xA8\xA2\x33\x9D\x9E\x4D\x9F\x7D\x81\x13";"\xE8\x41\x96\x4C\xAC\xB6\x42\x01\xA3\x63\x34\x09\xF9\x6B\x74\xF6\xDD\x54\xF6\xFF\x61\x6A\xC9\xFC\x36\x67\xC2\x1A";"\x51\x06\xD4\x46\xE6\x89\x16\x5F\xB4\x35\x98\x5C\xBE\x79\x69\xC1\xF6\x5F\xAA\xF4\xC8\x28\x9C\x8C\x32\x11\x93\x73";"\xA6\xBE\xEA\x1F\xF5\xFA\x78\x59\x96\x38\x7E\xAB\xEA\x0A\x20";"\xB2\xFC\x6B\xA1\x5F\x63\xFD\x16\x92\x00\x10\xFD\x70\x97\xC9\x15\x4B\x0C\xCC\xC4\x21\x99";"\xC8\xEB\x77\xA3\x4F\x49\xE2\xDD\xA7\x79\x25\xEC\x05\x8C\x89\x3F\x59\xF5\xDA\x93\x67\x83";"\x31\x48\x96\x48\xB3\x4B\xD0\xC3\x2F\xEA\xD8\x10\xF6\x1E\x3C\x43\x0D\xAD\x68\x34";"\x92\xD0\x10\x06\xF9\xAB\x38\x6C\x98\x48\x39\xFE\x12\x20\x50\xE7\xA4\x3C\x95\x9E\x03\xED\x12\xF1\x6C\x13\x81\x4F\x60\xB4\x6C\x8F";"\xB8\xBE\xFE\x12\xD2\xA9\x43\x6D\x9A\x1C\x70\xB9\xAC\x40\x67\xF4\xAE\x07\xA3\xDF\x71";"\x0E\x1F\xA9\x50\xFE\x49\xCC\xB2\x38\xFF\xD1\x53\xDB\x7F\x16\x4F\x0F\xB4\x61\x4A\x9A\x71\xB6\xE4\xED";"\xFC\xB6\xC4\x22\xD4\xE8\x25\x71\xCB\x1C\x52\xB3\xBE\x5A\x5F\xE1\xA4\x0B\xC1\xFC\x3D\xCD\xD7\xE8\x50";"\x0A\x52\xEA\x52\x4D\x48\xD4\xF6\x75\x95\xC9\x5F\xD3\x34\xDA\x50\x44\xB9\x74\x4C\x85\x7E\xE0\xB4\xC0";"\x72\x29\xFC\x7B\x96\xE5\x06\x6D\x05\xC3\xB9\x6D\xA1\x1F\x1E\xA2";"\xC2\xEC\x3F\x20\xC0\xC3\x20\x2B\xD4\x10\x53\xA5\x54\x48\x41\x99\x9A\x3F\x95\xDD";"\xCC\xE0\x34\x2C\x90\x80\x26\x6D\x87\x47\x28\xED\x15\x0B\x1F\xA9\xF8\x7C\x90\xCA\x2D\xCE";"\x75\x31\xC2\x66\x8D\xAC\x3D\x81\x06\xC0\xAE\x35\xFE\x07\x16\xB3\xF4\xA5\x57\x03\xE7\x24\x8F\x9F\x1C\x6F\xB1\x9C\xDA";"\xFA\xB1\x04\xBB\x38\x26\xA9\x27\x95\x5C\x35\xFD\x69\x97\xDC\x62\x5B\x12\xC4\x93\x61\xA4\x00\x0B\xBD\xF3";"\x9E\xD2\x10\xC6\x72\x8E\x70\x22\xA0\x68\x40\x98\x46\xA9\x83\xCC\x8D\x36\xCC\xB4\x18\xEC\x62\x73\xF6\x77\xD7\x37\x78\xBD";"\x41\x49\xE0\x17\x65\x54\xD1\xA5\x78\x93\xD5\x18\x8E\x7A\xA6\x18\x77\xED\x29\x0E\xD7\x0F\xED";"\xFA\x8F\x07\xE6\x0B\x62\xBF\x1B\x8B\x0F\x2D\xFA\x6F\xB1\x83\x2F\x52\x01\xC4\x84\x26\x92\x14\x17\x84\xBB\x6D\x5D\x1F\xED\x43";"\x01\x65\xAB\x14\x19\x1E\xBB\xF9\x51\x8E\xD5\x0D\xCE\x3C\xC8\x58\x30\xED\x68\x42\x98\x59\xB7\xF4\xAA\x9C\x20\xF5\x9A\x00";"\x46\x25\xB6\x06\xCC\xD6\x62\x21\x43\x83\xD4\x29\x95\x08\x18\x94\xF0\x38\x55\x13\xDD\x10\xA7\xA0\x28\x39\xCE\x21\x8F\x45\x8E";"\x2E\x46\xB9\x5E\x55\x46\xDF\x8C\x33\x8A\x95\x5E\xC0\x3D\xDD\x5B\x0B\xA7\x6E\x7F\x85";"\x0F\x25\xB3\xA6\x10\x63\xF6\xAC\x4E\x95\xFB\x65\xEA\xDC\xD9\x4A\x37\xB2\x14\x4C\xE9\x1E\xBA\x4F\x9C\xD9\x71\xAD";"\x68\x5B\x83\x40\x8F\xB0\xD7\xA7\x2C\xFD\xB7\x06\xFD\x24";"\xAD\xD1\xCB\x2E\xDD\xE3\x6C\x63\xCA\x03\x6F\xB6\xA4\x47\x4E\xBC\x96\x41\x81\xC3\x27";"\xCE\xAA\x7B\xFA\x14\x0D\xB3\xE4\xC5\x0E\x68\xF9\x1D\x8E";"\xCD\xA2\x7B\x6B\xD8\xD3\x27\x2F\xC8\x19\x41\xAB\x58\x40\x1E\xFE\xB1\x3E\x95\x9C\x4B\x81\x7F\x83";"\xA1\xE2\x3C\xF9\x04\xED\x77\x2E\x9D\x5A\x6D\xA6\x5A\x8D\xF1\xE3\xB6\x52\xBA\xB3\x07\xF0\x10\x29\xBD\x1F\xD1\x3A\x64\xFC\x67\x93";"\x80\xCA\x1E\xCA\x6E\x5A\x40\x0C\xA2\x7C\x3E\xCB\x50\x83\xE5\x6A\xDE\x0D\xB0\xD3\x3E";"\xF4\xFF\x22\xFD\x08\x27\x89\x01\x81\x7C\x29\xE9\x7D\xAA\xF6\x3E\x64\x07\xCA\xAF\x31";"\xA5\x45\x91\x34\xE1\xF7\x4D\x2E\xA0\x7E\x33\x04\xFA\x22\x24\xB0\x9F\x15\xF1\xA6\x3A";"\x6C\x21\xC3\x38\xCA\xFA\x76\xDD\x57\xFE\xBE\x3D\xEC\x08\x1C\xAD\xED\x8D\x46";"\x47\x13\xD7\x32\xC6\xA0\x01\x42\xEE\x2D\x9E\x13\xA7\x61\x78\x81\x86\x4C\xBD\xE5\xD3\x2E\xD2\xA6\x77\x5F\xD7\x73\x0E";"\xEA\xBE\x86\x04\xE3\xEB\x7B\x57\xCC\x21\x73\x4C\xAD\x19\x30\xBF\xCD\x0E\xB3\xA3\x3F\x34\xCD\x98\x74\x32\x91\x41\x69";"\xA9\x04\xD1\x18\xC6\xFB\x07\x48\xE9\x24\x72\x0F\xEA\x25\x7F\x8A\xD6\x49\xB1\xBD\xA8\x2C\xD7";"\xD9\x9E\x67\x9F\x7D\xC4\x5D\x36\xF2\x06\x05\xDA\x08\xF0\x0A\x86\xCD\x67\xE2\xC6\x09\xB5\x41\x7F\x09\x58\xDC\x7F\x31\x84";"\x02\x71\xB2\xBF\x58\x5A\xE9\xE0\x7C\xC9\xA9\x64\xF7\xE2\xCC\x6B\x34\xBE\x55\x7D\xAF\x46\xB3\x46\xCE\xFC\x60\xA2\xD0\x11";"\xDE\xB2\x26\xE9\x10\x06\xA2\xAE\x87\x4E\x2D\xAE\x16\x85\x8D\x2F\x23\xDD\xD2\x92\x65\xA7\x76\x11";"\xF4\xE4\x24\xF3\x12\x2F\xB6\x5A\xDB\x17\x24\xF4\x61\x9D\xF0\x02\x68\x14\xD3\xBA";"\x78\x0F\xAF\x02\xA1\xB2\xC6\xC3\x28\xF3\xF2\x02\xEB\x20\x2C\xA5\x0D\xDE\x73\x31\xFF\x76\xCE\x89\x3F\x7D\x2F\xCE\xBF\x72\x94\x01";"\xCA\xBA\x7E\xF9\x08\x51\xB7\xEA\x87\x52\x55\xF8\x1D\x94\x8F\x04\x73\xB7\xD2\x96";"\x74\x3C\xEC\x1B\x8F\xDF\x26\x6A\xBC\xC9\x8B\x3D\xC3\x5B\x0E\x89\xFE\x3F\x85\x17\xD6\x0A\xFF\xFA\x0E";"\xA9\x8E\x57\x8F\x6D\x71\x57\x03\xA0\x70\x30\xC4\x71\xAE\xA9\x33\x8F\x03";"\x75\x39\xFE\x11\x96\xAA\x25\x6B\xE8\xD4\xDE\x28\xC1\x70\x11";"\x31\xC0\x04\xFB\x59\x7A\x9A\xD7\x50\xAF\xEB\xC9\x31\xD0\xDB\x3E\x5A\xC9\x0C\x2C";"\x49\x2D\xB6\x7F\x89\x82\x11\x75\x11\xC6\x80\x6A\x91\x35\x1E\x8F\xCA\x71\x45\x0E\xDD\x0E\xBA\xD1\x58\x79";"\x06\x8E\x53\xA7\x66\x7A\x91\xF0\x68\xA3\xE3\xCE\x39\xF4\xF5\x34\x4F\xD1\x30\x74\x03\x8A\x57\x6B\xD5\xC3\x43\x98\xD1";"\xD8\x92\x76\xCE\x56\x03\x93\xF0\x26\xEF\x14\xDD\x08\xFD\xB7\x02\x4F\xEA\x36\x7E\x46\xA3\x63\x38\xF1\xD5\x5D\xF5\x90\x83\x63";"\x81\xBA\x68\x8F\x7B\x25\x94\xE6\x63\xBA\x20\xDC\x03\xFE\xF0\x2F\x49\xC6\x2D\x77\x5C\xA4\x2D\x3B\xA3\xCF\x57\xB5\xF3\xCD\x29\xDC";"\xB3\x1D\xED\x3C\xED\xF2\x0E\x11\x99\x0B\x6E\x4E\xAC\x4F\x77\xDC\xC0\x44\x8F\xE0\x3C\x27";"\xF9\x28\xDC\x25\xE5\xBC\x25\x40\xC6\x1C\x7F\x41\xB8\x2D\x5F\xEC\x9C";"\x9B\x9D\x69\x91\x1E\x13\xBA\xB4\x33\x57\x1B\xF0\x57\xF9\xCF\x2B\x3E\xA2\x60\x81\x14\xB2\x39\x44\xB3\xC3\x6E\xB3";"\xAF\x09\xDF\x6F\xCD\xF6\x07\x5C\xFA\x33\x6D\x53\xAA\x7D\x68\xF5\xDF\x55\xC5\xA0";"\x7D\x29\xFC\x6E\x81\xB0\x66\x5C\x0F\xC7\xB9\x7D\x82\x5B\x5C\xB4\xE0\x6D\x50\x50\x8F\x5D\xC3\xC7\x51\x30";"\x65\x8E\x0E\x92\x59\x42\xA3\x97\x13\xB0\xE3\xD6\x72\xEC\xE9\x61\x58\xC7\x3A\x6B\xB7\xF2\x5B\x64\xE6\xAD\x44\xC6\xE6\x3A";"\xD6\xD3\x09\xCF\x74\xFB\x59\x3B\xA6\x5A\x5E\x92\x4A\xA9\xF1\x9E\xC2\x71\xAC";"\xD6\xA3\x32\x9E\x01\x1E\xEE\xE0\x71\x5B\x50\x8F\x5D\xC3\xC7\x51\x7C\xFB\xD1\x86\x54\xC6\x64\x07\x8B\xDF\x34\xA6\x02";"\x9F\xD0\x25\xDD\x43\x04\x84\xE2\x67\x57\x03\xEA\x03\xE5\x8D\x10\x79\xEC\x28\x85\x47\xB6\x34\x79\x8A\xD5\x5D";"\x91\xCA\x6A\x90\x74\x93\x08\x65\xE3\x3F\x0C\xC1\x19\xFA\xEC\xC3\x82";"\x3F\x0F\x81\x6F\xAC\xB7\x12\x9F\x1A\xFC\xE7\x6C\xEE\x13\x26\xE4\xD4\x8D\x57\x25\xE3\x30\x86\x93\x21\x3C\xDA\xD1\x82\x65";"\xF3\xA4\x6C\xE3\x04\x73\xAD\xED\xC9\x4B\x25\xE7\x53\x8A\x95\x2E\x74\xBE\xCC\x99\x63\x92\x3C\x14\x97\xE5\x66\x41\x0A";"\x43\x14\xE9\x19\x07\x69\xC0\xB2\x0B\x93\xC9\x0A\xCB\x39\xC9\x16\x05\xA8\x67\x4A\x92\x5D\x9E";"\x4F\x37\xFD\x65\x9C\xC9\x71\x21\x51\x8D\xD6\x05\xD7\x45\x59\xEB\xDE";"\x79\x0C\x92\x79\xAA\xB2\xD9\x8D\x2E\xF9\xFF\x44\xEA\x2E";"\xFA\x81\x31\xDD\x3D\x35\x41\x01\xAD\x64\x1E\x82\x75\xA4\xA4\x25";"\xDE\xDC\x3C\xC1\x79\x02\x91\xE7\x75\xEE\x69\x94\x4A\xB2\xB4\x40\x0F\xA5\x61\x36\x0F\xF7\x25\x70\x8D\x9A\x57\xBB\xFF\xE0\x34";"\x2E\x73\xD9\x3A\xB6\xAD\x33\x94\x5D\xB8\xE6\x15\xA7\x55\x69\xFB\xE3";"\xC5\xAF\x68\xCC\x5F\x48\xBE\xF4\x85\x5B\x17\xC8\x1B\x80\x81\x1C\x31\xC1\xD4\x9E\x4B\xB4\x61\x1B";"\xBC\xE4\xCA\x39\x9E\xAF\x32\x3B\x93\x73\x24\xF9\xE9\x17\x2B";"\x9C\xC6\x0E\xD5\xC0\xC7\x5B\x3B\xB2\x50\x04\xDE\x42\xB5\x42\xC9\x8C\x6B\x81";"\x80\xE9\x2E\xD4\x44\x12\xA5\xFA\x7A\x57\x5C\xF2\x11\xFB\xDE\x1A\x71\xE4\x0F\x96";"\x94\x98\x6C\x84\x38\x68\xDE\xB5\x2F\xEF\x09\xD3\x4D\xFE\xF8\x03\x62\xF0\x2C\x45\x4D\xB0\x75\x38\xF5\xD5\x5D";"\x85\xEA\x33\x9A\x0F\x5D\xA1\xE9\x6A\x18\x03\xE9\x13\xE8\xC6\x06";"\x01\x6D\xB8\xA2\x45\x4C\xBA\x98\x43\x83\xFD\x21\xC6\x97\x90\x70\x3C\xA9\x14";"\x30\x35\xE8\x24\xC9\xEE\x28\x27\x2A\xD8\xBF\x74\x9C\x0D\x1F\xB4\xC8\x89\x50\x16\xE5\x08\xB4\x81\x1C\x70\xF6";"\xCD\x9F\x71\x9D\x70\x0D\xA1\xF0\x65\x56\x00\xF8\x07\xFE\x86\x04\x58\xED\x7B\x8A\x42\xBB";"\x36\x3C\x1C\xE1\x5C\x6B\xFC\xC6\x0A\xA8\xEA\x3A\x2E\xF4\xDD\x72\x3C\xD1\x22\x5E\xA6\x5B\x41\x76";"\xEF\xF9\x23\xF3\x3F\x1B\xBB\x1F\x9C\x3B\x1C\x9E\x2F\xD9\xC7\x7F\xD6\x4E\x88\x88\x78\xFF\x18\x17\x90\xE4\x90";"\xCD\xAF\x36\xF8\x0D\x14\xAE\xE4\xCD\x4A\x1A\xFA\x1C\x95\x8F\x5D";"\x8D\xFB\x37\x90\xDC\xDA\x6B\x2B\xFF\x75\x10\xE5\x1D\x03\x07\x91\xF0\x74\xD2\x87\x58\x86\x3F\xCE\x04\x34\xAD\x77\x45\x83";"\x15\x51\xE2\x1D\xF8\x67\xD0\xA0\x22\xA1\xED\x14\xD9\x36\x25\x48\x01\xA8\x2C\x11\x87\x64\xA5\xBD\x12\x92";"\xCF\xA7\x7A\xFF\x4B\x36\xA8\xE0\x88\x45\x2A\xFA\x5C\x82\x8B\x24\x7A\xEF\xD2\x93\x6F\xC9";"\x51\x61\xB8\x11\x03\x2D\x91\xF0\x74\xD2\xEB\x19\xC1\x31\xCD\x56\x3F\xA6\x62\x4D\x9F\x76\xF4\xA6\xC4";"\x26\x2E\x0C\xAE\x5D\x75\xB6\x85\x03\xDF\xAE\x64\x61\x83\x9E\x21\x25";"\x95\xC6\x68\x97\x7E\xC5\x52\x37\xF1\x07\x47\x95\x4F\xF1\xDF\xCB\x81\x25";"\x83\xEB\x72\x67\x8E\xBA\x2C\x63\x81\x5D\x12\xEB\x1B\x01\x4C\xD1\xFE\x38\x9F\xCD";"\xE1\xF3\xC1\x33\xA5\x93\x4B\x1A\x9A\x74\x54\x4C\xA6\x72\x77\xF3\xC5\x7F\x83\xE1\x21\x2B\xDC\xC5\x6C\x60";"\xFC\xC4\x1E\x34\xD7\xE5\x61\x6B\xA3\x45\x2A\xF3\x13\x09";"\x29\x84\x5E\xD5\x73\x05\x94\xC2\x72\xB3\x01\xC3\x30\xA5\xFC\x1B\x5D\xDD\x2E\x7A\x08\xB8\x4B\x6E\xFF\xC7\x58\x82\xEC\x73\x62\x91";"\x0F\x6D\xBF\x45\x5C\x1B\xA4\xED\x00\x9A\xDC\x64\xB0\x82\x84\x10\x7F\xF5\x51";"\xAD\xF6\xC2\x31\x9D\xF3\x76\x46\xC7\x1E\x6B\xFA\xA5\x51\x7E\xEE\xE3\x4F\x92\xEF\x28\x95\xCE\xD1";"\x41\x3B\xAE\x00\x8C\x9B\x24\x39\xF7\xD4\x9F\x60\x8D\x3F\x0B\xC0\xF7\x78\xAF\x11\x8E\x2C\xFB\xFA\x04\x69\xEC\x33\x65\x5B\x94";"\xED\x4D\xB8\x70\xA8\xB2\x4E\x4C\xD9\x7F\x53\x4A\xB3\x6D\x74\xBF\xD1\x41\xA6\xE8\x0B\x32\xD3\xE9\x68\x6B\xDD\x0D\x6F\xBD\x13";"\xDD\x80\x5F\x8A\x73\x0C\xC4\xCA\x67\xA1\x4A\x9B\x3F\xE8\xFA\x08\x43\xCC\x08\x79\x47\xAF\x59\x3B\xAF\x83\x13\xB2\xEA";"\x00\x69\xAE\x18\x8B\x9D\x2B\x75\xBB\xC8\x88\x60\x95\x7A\x5E\x95\xE1\x7D\xF4\x24";"\xD0\xD5\x6C\x8D\x0E\x19\x82\xF4\x78\x59\x58\xDE\x04\xF5\xBA";"\x16\x46\xA7\x19\x42\x55\xD1\xFC\x52\xD6\x9B\x5C\x82\x7A\x8C\x18\x77\xA4\x6F\x0E\x9E\x5C\x9F\xB0";"\x36\x6F\xA7\x65\x40\x4E\xFA\xA7\x32\xD0\xD7\x27\xD0\x2F\xC3\x1B\x71\xB6\x1D\x40\xC2\x40\xB1\x0B\xC8";"\x7A\x3F\x8B\x73\xD5\xA7\x26\x9C\x11\xD8\xAC\x75\xE6\x58\x63\xE6\x87\xC7";"\xDF\xA9\x39\x99\x1A\x1E\xE4\xA4\xEA\x1E\x53\xA4\x5A\x8B\x82\x50\x71\xFA\xC5\xC6\x57\x92\x78";"\xCF\xEE\x67\xAF\x19\x19\xA6\xEC\xC2\x59\x0D\xEF\x1B\x95\x8E\x13\x4E\xE3\xD2\x99\x51\xCD\x6B\x46\xD9\xCD\x62\xAE\x4F\xBA\x4E";"\x6F\x4A\x87\x60\xBD\xF0\xF0\xD0\x55\xD6\xBD\x06\xEF\x16\x37\xA8\x10\x95\x07\x63";"\x68\x5E\x81\x3C\x81\xB9\xD1\xA4\x12\xFD\xBB\x49\xC5\x00\x6D\xF3\x78\xD2\x0C\x65";"\x5F\x14\xEA\x13\x96\x91\x14\x7A\xAB\x81\xC6\x4B\x8F\x70\x07\xDB\xA0\x2A\xE4\x4D\x92\x70\xA8\xB2\x4E\x05\x9F";"\x5A\x0C\xC5\x16\xF5\x1F\x8F\xC4\x61\xBF\x81\x40\x9D\x62\x62\x19\x4D\xF5\x25\x7B\xCB\x11\xAD\xAA\x34\x9F\x1A\xB0\x98\x4E\xDB\x26";"\xE2\xB2\x73\xEC\x53\x62\x95\x16\x8A\x47\x27\xE3\x7A\x89\x94\x7F\x33\x42";"\x31\x66\xBF\x27\x90\xA7\x3F\x23\x4A\xAE\xED\x32\xD0\x48\x06\xAF\xE7\x73";"\xE4\x4C\x9A\x62\xB0\xCA\x46\x0D\xA7\x67\xC8\x0D\xBC\x6D\x3F\x87\xD7\x48\xFA\xCC\xD4\x3B\xDF\xEC";"\x14\x5C\xAC\x1B\x55\x4D\xD2\xB0\x76\x82\xDC\x0A\xD1\x26\xC0\x1A\x0C\xA5\x6F";"\xF7\xFD\x33\x21\x9B\x85\x39\x68\x8C\x4A\x6A\xBE\xAA\x0E\x3A\xE9\xAD\x45\xDD";"\x3E\x68\x62\xA9\x56\x6F\xF9\xC6\x55\x80\xAB\x7D\x63\x92\xD0\x6F\x6F\xAF\x41";"\x0F\x12\x97\x44\xB3\x4C\xDE\xBD\x24\xF7\x9E\x02\xCF\x3E\x7F\x76\x0A\xA6\x75\x39";"\x4F\x1D\x9E\x13\x02\x2E\x90\xFF\x75\xD1\x86\x5F\x87\x75\x89\x1B\x4A\xEA\x6D\x4B\xD2\x38";"\xE0\xA8\x68\xC5\x19\x26\xAA\xAB\x9D\x4D\x2F\xFD\x53\xB6\x99\x3D\x69\xEE\xFB\x9E\x68\x92\x26\x22\x9B\xE2\x70\x5C\x0A\xD7";"\xC6\xA0\x5F\x6D\x93\x97\x21\x60\x84\x42\x17\xE8\x16\x06\x18\xDD\xBD\x79\x86\xCA\x63\xD7\x31\xC8\x51\x76\xC4\x28\x01\xD6";"\x56\x31\x99\x4C\xBE\x0C\xB2\xBB\x22\xEA\xCF\x1B\x8F\x2B\x24\x4D\x01\xB6\x75\x3A\x84\x38\xB3\xAE\x37\x8F\x03\xD6";"\x1C\x13\xEA\x09\xF5\x1D\xDB\xB7\x73\x9D\xCB\x0D\x89\x3F\xCE\x44\x08\xE8\x72\x43\x89\x7C\xEA\xAE\xCD\x93\x08\xEB";"\x86\xDF\x24\xCA\x4C\x51\xDC\xBF\x2D\x18\x46\xB5\x47\xB5\xC9\x5B\x63\xE4\x22\xA7\x47\xBD\x78\x42\x82\xC4\x4B";"\x4C\x21\xF9\x2D\x9F\x96\x26\x67\x01\xD0\xA7\x60\x97\x15\x1D\xD4\xA6\x39\x05\x5A";"\x87\xB4\x13\x26\xDE\xD2\x6C\x2C\xCC\x19\x56\xBE\x10\x09\x01\xD7\xB1\x14\x98\xD6\x13\x98\x35\xC6\x55\x48\xA9";"\xEC\xCE\x08\xCE\x78\x75\x42\x00\xA2\x20\x23\xCE\x34\xE4";"\x03\x19\xC3\x04\xAF\x4D\xC7\xC9\x41\xAB\x8C\x51\xB1\x6F\x73\x0D\x44\xE0\x3E\x73\xC4\x3A\xE2\xE4\x70";"\x25\x0A\xD3\x7F\xA6\xBE\xCE\x8A\x5E\xFC\xB0\x12\xFD\x41\x15\xA6\x14\x92\x7F\x6A\xDD\x68\x83\xAA\x1E\x7C\x1A\xC9";"\x07\x7F\xA4\xE6\x07\x10\x86\xE3\x01\xDD\x92\x27\xD4\xC2\xC4\x5B\x7E\xB5\x18\x58\x8C\x19\x98\x7E\x94\xAA\x23\xEA";"\x90\xF4\xD6\x2E\x97\xC6\x7A\x4F\xED\x07\x65\xB3\xE2\x60\x53\xE4\xB5\x7E\xDE\xC0\x3B\xCC\xC2\x97";"\xFC\xA7\x6B\xE2\x48\x27\xB2\xE6\xCA\x41\x23\xF6\x50\xE2\x97\x20\x61\xBF\xB5\x9C";"\x7C\x54\x84\x42\xEC\xBA\xC3\x86\x24\xE6\xA6\x3D\xF6\x20\x3C\xB9\x19\x9C\x36\x3A\xF2\x66\xDA\x80\x19\xB0\x2A\xEC\x9C";"\x0E\x63\xB4\x2A\xD2\xD4\x60\x66\x03\x81\x9B\x60\x95\x27\x0D\xA5\xC8\x7F\x52";"\xCE\x92\x6A\xD9\x20\x04\xE7\xBA\x10\x14\x5D\xA2\x40\xCC\xB2\x38\x79\xE0\x20\x92\x15\xD0\x68\x7C\x83\x9D\x41\xAC\xE2";"\xAD\x02\xD8\x4A\xF4\xE1\x0E\x4C\xF1\x28\x79\x41\xF7\x62\x7C\x9F\xFB\x4F\xA0\xF2\xF2\x21\xCC\xEA\x4D";"\xA7\xC3\x13\xC8\x36\xC0\x4F\x13\xE4\x5D\x0D\xCE\x30\xFD\xE2";"\x8D\xD4\x66\xB6\x7C\x86\x12\x71\x9A\x1D\x42\xB3\x5C\xBA\x5B\xF5\x80\x29\xF2\xCD\x03\xE0\x27\x72\x6B\x06\x93\x5A\x31";"\x8B\xC3\x7F\xFB\xCA\xC9\x55\x16\xBD\x00\x54\x8C\x65\xBE\x41\xC8\x8F\x61\xA7\xFA\x1F\xF2\x30\x38\x5D\x2B\x91";"\x60\x87\x41\xA0\x24\x6C\x85\xD6\x4F\xFB\xE8\xC9\x24\xD1\xA3\x6F\x51\xC4\x1B\x71\xBA\xEA\x57\x5A\xE4\xEF\x2F";"\xCF\xBC\x4E\x99\x04\x1C\xA2\xB4\x78\x5F\x19\xCC\x17\xF9\x88\x08\x52\xFC\x2F\x8B\x5E\x85\x65\x35\xED\xDE\x65\xA1\x05\xC2\x7C";"\xC0\x9B\x71\xBA\x0F\x16\x91\xFA\x6B\x63\x1F\xEF\x0C\xFA\x84\x0B\x6F\xA0\x11";"\x16\x84\x5F\xBB\x7E\x75\x87\xC9\x1D\xBC\xF0\xC3\x76\x9D\x8B\x33\x12\x92\x4C\x6C\xBC\xE8\x5F\x61";"\x0B\x7B\xB8\x6F\x11\x55\xEE\xE7\x33\x96\xCA\x67\xDB\x3C\xD5\x52\x7C\xA0";"\x38\x71\xC6\x3C\xDC\xE6\x72\xD1\x53\xF6\xAA\x7D\xA9\x7D\x6B\xE5\xAC\xC8\x06\x6B";"\xC4\xFC\x38\x20\xD9\x9F\x53\x2D\xD1\x15\x41\xA3\x57\x4E\x13\x98\x90\x36\x90\xD6\x14\xD1\x2E\xCB\x5C\x48\xA9\x64\x4B\xD0";"\x03\x53\xE3\x1B\x8F\x81\x4A\x58\xF0\xC5\xB5\x5A\x95\x63";"\xB5\xF7\x3A\x64\xBE\xAE\x3A\x69\x8B\x4B\x2C\xF1\x11\x4A\x5D\xE9\xE4\x2A\xDE\x93\x64\x9A\x82\x84\x10\x7F\xA7";"\x42\x21\xEA\x1D\x9F\xD6\x69\x77\xEE\x9A\xCD\x29\xDE\x35\x40\xD4\xE1\x3F\x9E\x0B\xC1\x0E\xBF\xCC\x47";"\x41\x21\xDC\xEC\x0C\x16\xA2\xA8\x45\xC3\xDA\x26\xCD\x87\xD3\x40\x31\xF8\x19\x49\xDC\x4C";"\x57\x1B\xB6\x34\xD8\xFE\x76\x39\x42\x8B\xC6\x74\x9F\x0B\x53\xC7\xE8\x8F";"\x0D\x62\xBB\x2B\xD1\xD5\x67\x2E\x0A\xCF\xAA\x6F\x98\x44\x1A\xF7\xD8\x4B\x64\x2E\xB0";"\x86\x05\xDD\x3D\xA9\xE9\x07\x43\xD0\x78\x4E\x42\xAE\x53\x76\xD1\xDE\x5D\xBD\xBE\x1D\x20\xC4\xE8\x6A\x22\xC6\x03";"\x2C\x9F\x42\xED\x6B\x7A\x8F\xD7\x05\x99\xF9\xCB\x39\xC5\xEE\x63\x43\xC0\x11\x6F\xB1";"\xD7\x81\x61\xC7\x0A\x0B\x9F\xF4\x73\x44\x08\xDC\x13\xFC\x86\x15\x02\xC3\x2A\x9E\x46\xB1\x66\x71\x8B\x8B\x51";"\xBC\x14\xC7\x08\xE7\xF4\x09\x72\xE1\x38\x54\x47\xB8\x68\x38\xA9\x9B\x57\xBC\xF6\x83\x49\xD5\xE2\x7C";"\xF0\x04\xDA\x07\xE2\xF0\x4B\x7D\xF2\x25\x88\x42\x86\x65\x7A\x83\xCC\x48\xE6\xAA\x91\x6D\xEC\xF7\x78\x55\xDC\x2A\x76\xA6";"\x99\xAB\x73\x9C\x1B\x17\xEE\xEC\x79\x1F\x11\xF7\x3E\x8C\x89\x1F\x30\xE0\xDA\x82\x56\xC6\x77\x1A\xA7\xC4\x67\xAB\x50";"\x45\x3F\xA4\x5B\xD1\xDC\x17\x63\xEF\xD6\x8E\x44\x90\x73\x0F\xD3\xAF\x32\xA2\x0C\xD6\x48\xF5\x84\x02";"\x81\x41\x8C\x17\xEB\xF0\x19\x4D\xC9\x3A\x75\x4F\xB5\x1D\x2A\xBD\xC0\x58\x8B\xED\x74";"\x81\xEF\x21\x6D\xD2\xC2\x75\x2F\xE8\x07\x51\xBC\x73\x48\x59\xD6\xB7";"\x33\x75\x8E\xA3\x5A\x67\xE7\xA2\x5D\x9C\xAA\x6E\x93\xFF\xD8\x6C\x32\xB1\x0A\x02\xE8\x52";"\x73\x0E\xF9\xE9\x17\x2B\xE9\xA3\x4B\x87\xE7\x6C\xD4\xC6\xD5\x66\x20\x89\x11\x4C";"\x09\x6E\xB7\x63\x82\x92\x22\x6E\x42\xDF\x9D\x6B\x8A\x5D\x36\xA6\xB3\x54\x5F\x19\xCF";"\x87\xA9\x63\x91\x4B\x1C\xAF\xB8\x68\x52\x1A\xEE\x5E\xEC\x85\x08\x66\xE3\x23\xC2\x13\x88\x77\x38\x95\xC1";"\x23\x35\x85\x76\xB1\xA1\x6B\x8F\x16\xF0\xAA\x73\xAF\x13\x3C\xB5\xE9";"\xE7\x54\x90\x75\xBB\xBF\x1D\x50\xD9\x34\x3F\x52\xBB\x4A\x75\xEE\xDD\x11\x88\xEC\x3F\x6B\xBB\x95\x27\x6E\x86\x40";"\x40\x3A\xFE\x60\x83\xDC\x31\x6D\x0D\xC8\xDB\x5A\x97\x13\x13\x82\xF4\x78\x59\x51\x93\x28\xFA\x88\x17\x41";"\x5E\x5F\x8A\x5E\xBE\xC0\x5C\x7F\xFE\x2E\x83\x57\xCB\x63\x7A\x88\xDA";"\x50\x0E\xF3\x1D\x8D\x80\x2F\x25\x95\x9F\xD0\x25\xDD\x43\x47\xD1\xB0\x34\x12\x47\x98\x0A\xF9";"\x7E\x19\x04\xFA\x22\x24\xF9\xD9\x15\xBF\xE9\x2B\x67\xE6\xFD\x7E\x2B\xC6\x4A\x49\xB3\x44";"\xB9\xDD\x32\xC4\x0F\xC2\x4F\x20\xF2\x27\x03\x80\x42\xB7\xBA\x80\x9F\x24\xF3";"\x0E\x7E\xA1\x53\x44\x53\xE1\xA3\x67\xBE\xDB\x33\xEF\x2F\xCE\x43\x37\xA0\x78\x5C\xB9\x40\xB1\x44\xC1\x88\x23\xD4\xC1\x0A\xFB";"\xA7\xDD\xC5\x37\xE7\xAC\x60\x53\xDA\x25\x48\xBE\xAA\x50\x20\xBB\xC0\x0A\xC4";"\x53\x04\xD9\x59\xB4\x4A\xC9\x80\x60\xE0\xDE\x02\xF1\x3E\x35\x47\x09\xD5\x30\x7E\xED\x3F\xDD\xE1\x73\xD2\x52\x8C\xE5\x3A";"\x8C\x93\x6F\x87\x35\xC0\x12\x3F\xBC\x07\x04\x91\x5B\xA7";"\xE1\xE8\x3A\xD3\x1D\x15\xAA\xE8\x3E\x57\x13\xEC\x52\xD9\x88\x13";"\xE7\xFF\x05\xF0\x3B\x36\x05\x0C\xB5\x73\x7A\xC4\x6E\xAA\xA1\x3E\xDF\x19";"\x92\xA9\x27\x89\x95\x92\x39\x79\xBF\x14\x1C\xB1\x42\xBE\x4F\xD1\xFC\x22\xFB\xCD\x30\xD8\x3D";"\x7A\x22\xB9\x79\x96\xB9\x31\x2C\x09\xC8\xAF\x2C\x82\x0B\x0E\xBC\xBD\x54";"\x8D\xE0\x3A\x6E\x85\x96\x76\x29\xC6\x0D\x14\xC3\x19\x07\x1B\x95";"\x1D\x53\xB3\x01\x80\x0F\xD0\xB1\x24\xE6\xCC\x10\x8A\x3B\x3A\x00\x06\xB5\x60\x3F\x9D\x64\xED\xB4";"\x39\x72\x52\xB9\x4E\x3C\xD5\xD4\x47\x97\xE1\x2A\x2A\xD2\xE5\x61";"\xFB\xBC\xC4\x2F\xDB\xAA\x34\x14\xBA\x4E\x23\xF4\xEA\x57\x5A\xE4\xEF\x2F\xC1\x96\x6F\x97\xD1\xD8\x78";"\x37\x36\x92\x78\x98\xE1\x59\xD2\x52\x8C\xE5\x7C\xE7\x02\x6A\x99\xA1\x97\x4B\x27\xF9\x55\x82\x91\x69\x71\xEC\xDB\x96\x72";"\xF7\xB8\x7D\x65\x9B\xAF\x39\x68\x8C\x4A\x2F\xF0\xA7\x48\x10\xFE\xAC\x4E\x89\x92\x3F\xD3\xC4\xCB\x17\x54\xF6";"\x3B\x71\x45\xB4\x6C\x49\xE2\xDC\x43\xB2\xB0\x35\x30\xD6\xA6\x39\x3C\xC4\x0F\x61\xF0\xA6\x5B\x5D\xB6";"\x9E\xD7\xE5\x1F\xDE\xC1\x42\x6C\xF7\x04\x50\x91\x8A\x14\x7A\xF2\xAC";"\xD9\xB4\x67\x9F\x7D\x81\x55\x27\xBC\x6F\x51\x93\x47\xBE\x0A\xC3\x83\x26\xE5\xC4\x08\xC6\x3F\x2D\x4C\x0C\x9F\x72\x0D";"\x89\xD5\x29\x9D\xC6\xC9\x55\x70\xDE\x52\x07\xD8\x06\xF6";"\x24\x7D\xF4\xFE\x53\x7D\xE9\xE6\x6D\x99\xFC\x35\x23\xCC\xDC\x75\x0F\xC8\x13\x57\xAA\x49\x77\x40\xDB\xB1\x35\x99\xCD";"\xBA\xF0\x81\x27\xCA\xED\x7E\x40\xD9\x01\x6D\xF4\xB9\x46\x5B";"\x1B\x49\x92\x41\xAA\x56\x9C\xFC\x6F\xE0\xD2\x55\xCE\x3B\x36\x53\x5A\x82\x6B\x39\x8C\x50\xAF\xAA\x27\x8F\x3A";"\x7C\x32\x88\x75\x8A\xA7\x38\xC8\x41\x8E\xB7\x7C\xEF\x1C\x54\xCA\xAF\xC5";"\x91\x91\x62\xAA\x78\x82\x1E\x75\x94\x4A\x4E\x80\x40\xFD\x9C\xC4\x99\x07\xED\xB3\x0D\xB8\x13\x28\x89\x46\x8D\x67\x2F\x86\x2F\xA2";"\x3A\x32\x0C\xFD\x09\x27\xB1\x90\x14\xBB\xE1\x78\x27\xD8\xE1\x69\x6B\xDD\x0D\x6F\xBD\x13";"\x1B\x49\xE2\x48\xAD\x4F\x8C\xF5\x3B\xE7\xC5\x1B\x8D\x21\x32\x55\x15\xB6";"\x97\xB9\x7D\xD5\xDB\xD2\x62\x14\x99\x3A\x19\xF6\x10\xEC\x0A\x82\xF8\x73\xF9\x84\x59\x89\x77\xC7\x4A\x0F\xA9\x6A\x0B\x88\x7B";"\x32\x7C\xFD\xB1\x53\x6A\xF7\xE8\x4E\x98\xEA\x31\x25\x8E\xD5\x62\x27\x81\x77\x12\xEB\x1B\x01\x05\x97\xFE\x76\xD0";"\x9D\xC3\x66\xD5\x3A\x86\x5C\x3E\xA7\x53\x47\x91\x48\xA5\x0B";"\xE5\x9D\x47\xA6\x74\x01\x97\x92\x48\xA3\x1C\xD3\x01\xE0\xFE\x09\x40\xF5\x75\x3B";"\xAA\xFE\x48\x9C\x66\x78\xF4\x5B\x9F\x7A\x28\xC3\x5C\xD5\xBD\x7F\x9F\x00";"\x77\x3D\x92\x72\xD7\xE1\x15\x81\x1D\xCF\xAD\x7B\xE3\x16\x56\xE9\xB4\x8C\x47\x56\xE1";"\xAD\x05\x96\x18\xE4\xF3\x0C\x01\xF1\x26\x60\x5C\xAB\x69\x3B\xF0\xD2\x5C\xF6\x91\x7C\x62\x9A\xAC\x38";"\x8A\xEF\x30\xAE\x4E\x02\xA9\xF7\x94\x4F\x1C\xAB\x71\xC1\xC5\x57\x3E\xB6\x90\xD9\x1E\x81\x7A\x0A\xDA";"\xDC\x95\x6A\x98\xC5\xD4\x52\x74\xF7\x7D\x5D\x93\x41\xFB\x25\xD5\x87\x2F\xEB\xC3\x50\xC8";"\x27\x8F\x1E\xC5\x2C\x75\x8D\xCF\x6D\xF9\xD0\xC0\x2A\xE4\xF4\x7B\x52\xDD\x35\x6F\xF4\xEB\x1A\x69\xF6\xD3\x04";"\x36\x60\xF0\xE9\x3D\x7F\xE4\xBF\x43\xC8\xF8\x3C\xD3\xDD\xD2\x20\x21\xA8\x17\x5D\xB3\x56\xB2\x4F\x9B\xFB\x72\x86";"\xD4\x94\x2B\x89\x0E\x0A\x83\xBE\x77\x5E\x1D\x9E\x16\xFB\x81\x0E\x07\xDB\x2A";"\x80\xD7\x23\x9C\x1A\xCD\x48\x39\xFE\x45\x46\x8D\x69\xBD\xB0\xC5\xC1\x07\xFC\xF6\x65\xEA\x65\x53\x47\x15\x99\x75\x31\xC2";"\xD4\xB8\x78\xDA\x43\x5C\xC2\xA7\x3D\x19\x5E\xF3\x1E\xEE\x8A\x5D\x61\xE2\x2D\x92\x54\xC0\x76\x1F\x88\xCE";"\x21\x35\x87\x76\xB7\xE3\xED\x93\x14\xF0\x9B\x0B\xF2\x0B\x36\x9D\x1D\x86\x43\x24\xBD\x2F\xA7\x98\x33\x73";"\x96\xC7\x0D\x81\x7E\x90\x05\x33\xAC\x74\x44\x9C\x51\xA5\xB2\xC6\xC7\x40\xB9\xB0\x0E\xF3";"\x5A\x1A\xE7\x1B\x96\x8B\x02\x37\xF6\xD9\x87\x4D\xCE\x35\x63\xDB\x8A\x2A\xE4\x01\xDD\x33\xE9";"\x60\x42\xD7\x25\xA1\xBE\xC0\x83\x2E\xBC\xA0\x04\xEF\x21\x36\xBD\x2E\x96\x61\x3D\xF9\x44\x95\xA6\x34\x69\x18\xCF\xEF\x2D";"\xFD\xB9\x4A\xFE\x35\x34\xB5\x09\x9E\x78\x36\xBD\x76\x8F\xA0\x29\x49\x19\xDE\xA0\x5C\xEB\x08\x04";"\xE2\xA4\x7C\x94\x2E\x1B\xBC\xF6\x6B\x7C\x18\xEC\x11\x87\xA8\x17\x53";"\x81\x8C\x51\xB1\x6F\x73\x0D\x44\xE0\x77\x35\xC4\x74\xAD\xB0\x70\x95\x00\xFC\xB6\x5B\xF5\x1A\x39\x9A\xE9\x9E";"\x5E\x59\xDD\x0B\xFA\x9A\x13\x47\xFE\x2E\xCC\x54\xBF\x6B\x33\xE7\x84\x20\xFE";"\xD3\xC1\x17\xCD\x77\xA1\x05\x4C\xE8\x26\x47\x83\x71\xAB\xB0\x88\x8F\x08\xF4\xE3\x04";"\xD6\xBA\x3C\xD6\x39\x57\xEA\xF6\x69\x1B\x4C\xAF\x57\xAA\xC3\x77\x34\xB0\x6E\xC3\x14\xCA\x32\x34\xC0";"\xDD\x92\x6B\x9B\x81\x85\x17\x7E\xF6\x02\x17\xBF\x57\xA7\x4B";"\x92\xDC\x26\x98\xAA\xDF\x4E\x38\x9A\x1E\x56\x94\x67\xAE\x5B\xCD\x87\x22\xB7\xC1\x19\xC2";"\xCB\xAC\x71\xF5\xDD\xDC\x7D\x06\xD2\x1F\x5A\xAA\x48\x4D\x50\x8D\xA4\x3E\x93";"\xBE\xF3\x44\xBA\x62\x64\xF0\x5F\x99\x7E\x25\xFE\x6B\xD5\x99\x16\x37\x26\xF4\xE3\x42\x9C\x09\x0B\xAB\xF7\x4C\x5C\x02\xEC\x0D";"\x16\x52\xB6\x5B\x41\x50\xD5\xAD\x7B\xB0\xC8\x1C\xC2\x26\xDD\x49\x13\x89\x6C\x4C\x9C\x77";"\xE4\x4C\x9A\x62\xB0\xCA\x46\x0D\xA7\x67\xC8\x0D\xB0\x65\x7B";"\x26\x3F\x89\x60\x8D\xF9\x1B\x9D\x1E\xCA\x85\x7D\xF8\x01\x00\x83\xE7\x8C\x4D\x12\xA7\x55\xAD\x8C\x26\x7B\xF4\xDB\x94\x66\xB2\x77";"\xDF\xBD\x7E\xAE\x0B\x1E\xA8\xA3\xEB\x1D\x52\xAB\x5B\x88\x83\x57\x77\xE5\xE2\x98\x59\x80\x7B\x02";"\x06\x7A\xEE\x55\x4A\x5A\xAA\xB4\x34\x99\xFE\x35\xCF\x0D\xC6\x5B\x27\xFE\x6A\x51\x9B\x5A\xF2\xA0\xC8\x8A\x2B\xA1";"\x9F\xDB\x7D\xCA\x2C\xD5\x59\x73\xB4\x63\x46\xDB\x21\xF1\xF5\x87\xCE\x66\xA0";"\x19\x1C\xEA\x32\x00\x1A\x96\xFD\x3B\x98\xDB\x1C\xC9\x7B\xCC\x51\x09\xBE\x37\x63\xA0\x00\x8D";"\xFB\x80\x14\xC3\x37\x77\x51\x12\xEA\x43\x34\x9C\x7F\xA9\xB6\x00\x9E\x01\xE1\xE0\x05\xEA\x17\x29\xF7\x54\xBD\x5C";"\xFD\xD7\x37\xC2\x3B\x38\x44\x47\xE7\x52\x26\x8E\x60\xAB\xFB";"\xFC\xB5\x0F\xF4\x2D\x29\xF7\x11\x84\x30\x2A\xEA\x65\x80\xAB\x67\x34\x2E\xC5\xB9\x7C\xDF\x27\x06\xA0\xE5\x8E\x51";"\x00\x7B\x47\xB7\x62\x78\xE1\x94\x5E\xA3\xF5\x3F\x36\xD3\xE3\x76";"\x7F\x64\xD2\x0A\x91\x5E\xD2\x8C\x24\xEF\xC5\x08\xFB\x3F\x7D";"\x3E\x73\xB7\x6A\xA7\xA1\x34\xAB\x1A\xF6\xA1\x73\xE2\x55\x74\xA0\xE1\x88\x19\x08\xFC\x05\x85\xDC\x05\x60\xE6\xFC\x9F\x61\x98";"\x22\x86\x57\x9E\x3A\x26\xCC\xC7\x77\xB1\xB8\xEC\x11\xF7\xF8\x06\x5F\x80\x00\x72\x67\xB5\x54\x67\xEC\xF4\x41";"\xB2\x1C\xC2\x17\xEA\xEB\x3A\x5D\xC8\x0C\x76\x53\xAB\x5F\x6C\xB4\xD5\x50\x81\xF1\x3E\x62\x91\xD0\x69\x2A\x86\x05\x67\xAA\x14";"\xC2\xA0\x75\xBE\x09\x30\xA1\xE5\x93\x4D\x5B\xA6\x32\x97\x89\x11\x71\xFA\xD8\x82\x1D\xCE";"\x39\xDF\x5D\x8A\x7D\x66\x82\x8E\x0C\xE0\x49\x8E\x74\xA4\xBE\x4A";"\x0B\x85\x41\x88\x70\x63\x84\xC4\x39\xA4\xF6\xC4\x25\xE3\xB8\x1E\x1B\x99\x75\x3A\x4F\xAC\x5A\x6C\xF3\x96\x4D\x87\xEF";"\x26\x1C\x99\x59\xE8\xF8\x04\x98\x1A\xF8\xAC\x78\xC0\x0D\x2A\xB7\xFC\xCE\x03\x6F\xF1\x60\x8A\xD0\x28\x66\x12\xDE\xDC\x45\x9A";"\x3B\x73\x0C\x99\x14\x43\xCE\xEA\x63\xDE\xAE\x0F\x64\x93\xBD\x21\x60\x84\x42\x17\xE8\x16";"\xB9\xFE\x47\xBF\x5D\x61\xF3\x52\x93\x5E\x15\xF2\x69\x83\xAF\x7B\x3F";"\x22\x6F\xB3\xAC\x72\x63\xF4\xD3\x6F\x8C\xE9\x36\x21\x84\x98\x23\x26\xCD\x5C\x3F\xEA\x18\x00\x1A";"\x05\x53\xA7\x5A\x4A\x5D\xD0\xFB\x64\xD5\xC9\x37\xC2\x2D\xC8\x02\x6B\x8B\x66\x54\x9B\x02\x84\xA3\xCF";"\xD9\xD8\x10\xC5\x4D\x0A\x9A\xDC\x63\xB8\x5C\x9E\x00\xEB\xE7\x44\x13\xAD\x7D";"\xCE\xE2\x3D\xBD\x62\x7F\x23\x58\xDC\x3A\x7F\x89\x78\xDE\x89\x32\x95\x3B\xD8\xAF\x6B";"\x56\x1B\xDC\x02\xFA\x45\xDE\xF7\x3E\xFD\xDC\x12\xDB\x2E";"\x82\xC6\x1B\xC3\x78\xEB\x51\x19\xBB\x60\x44\x87\x50\xA8\xB0\xCA\x94\x1F\xA3\xF1\x0F\xFA\x5C\x25\xB3\x1C\xD3\x67\x2C";"\x11\x46\x9F\x47\xB5\xC9\x5B\x0A\xAA\x64\xCD\x12\xF0\x28\x32\xCE\xC9\x50";"\xE9\x4E\x97\x4F\xAD\xB1\x43\x02\xA2\x7C\x35\x0A\xF8\x20\x3A\xB6\x9D\x17\xF7\xB8\x7D\x65";"\xA0\x89\x4E\xFD\x22\x7E\x44\x16\x8F\x3B\x3F\x94\x73\x8C\xA6\x39\xA6\x15\xDD\xA6\x60\xD8\x17\x19\xAF\xFB\x80\x01\x02\xE7\x12";"\x9B\x92\x68\x8D\x3F\x69\x91\xFB\x73\xAF\x0F\x94\x35\xF0";"\x9A\xCC\x26\x8B\x0F\xC8\x5C\x22\xA1\x7A\x12\xD8\x56\xA9\xA4\xCD\xCD\x25\xE2\xB8\x1A\xFC\x6E\x60\xBD\x52\xA8\x7A\x3A\xE8";"\xF1\xB6\x43\xB9\x11\x29\xB8\x0A\x85\x32\x70\xA5\x6D\x92\xEE\x34\x66";"\x9D\xE1\x25\x7C\x83\xCB\x66\x30\xCD\x5C\x3F\xEA\x18\x00\x1A\xDE\xAF\x27\xD9\xEE\x18\xC9\x34\xCC";"\xA8\xF4\xC3\x38\x94\xAF\x32\x3B\x93\x73\x24\xF9\xE9\x17\x2B\xA5\xA5";"\xEA\xC9\x52\x9A\x68\x72\x0E\x45\x96\x79\x70\x96\x6D\xA6\xA2\x35\xBC\x15\xF0\xA2\x74\xA6\x02\x20\xA1\xE5\xC9\x56\x3A\xF6";"\x03\x60\xE7\x7D\xDA\xD7\x4B\x20\x44\x82\xD7\x28\xD6\x46\x58\xD4\xBB\x39\x15\x5A\xA3\x43";"\xE3\xC1\x0F\xE6\x64\x3F\x44\x1D\xDB\x69\x33\x8E\x75\xDF\xA2";"\xAA\x06\xC6\x43\xF2\xE2\x15\x4F\xC8\x27\x71\x5C\xF6\x72\x70\xF1\xD5\x19\xB8\xF5\xC1\x01\xCD\xE3\x4D\x53\xC8\x1B";"\x6E\x97\x5C\x8F\x7C\x34\x92\xCA\x71\xB4\xE4\xC1\x77\xE0\xF7\x0F\x1A\xB0\x74\x3D\x02\xE0\x5E\x6D\xEC";"\x21\x85\x5D\xB1\x24\x14\x8F\xD7\x5F\xFB\x96\xF3\x34\xD1\xD0\x78\x46";"\x67\x1C\xC7\x30\xC4\xC3\x6A\x3B\xFD\x83\xC4\x39\x84\x7A\x55\x98\xB9\x73\xF6\x55\xD0";"\xE1\xE0\x2A\xF0\x38\x65\xFD\x34\x8F\x5B\x24\xC6\x6D\x9E\x82\x60\x28\x43\xD7\x9C\x6C\x97\x47\x0B\x94\xEE\x6C\x18\x38\xDD";"\x44\x0D\xD5\x01\xFF\xCE\x51\x37\x87\x25\x81\x54\x8E\x61\x31\xAF\xF2\x22\xE1\xB5\xFA\x34\xE1\xE3\x73\x4F";"\x25\x9A\x5E\x9A\x6B\x62\xA9\xCD\x60\xBF\xFE\xCE\x3F\xA1\xB8\x37\x58\xD7\x3C\x6A\xBB\xE4\x3E\x62\xF5";"\x95\xD1\x2A\xD9\xD3\x91\x22\x74\x88\x11\x4E\xAD\x4C\xAD\x56\xD7\xBA\x21\xAF\xD4\x1D\xC8\x3D\x77\x46\x05\xB0\x65\x32\x86\x60";"\xA4\xD9\x1A\xF5\x26\x72\x5C\x00\x8B\x6A\x22\x8B\x3D\xB7\xB5\x24\x95\x54\xF7\xA9\x7C\xA6\x7C\x68";"\xC1\xE4\x3A\x27\xC2\xD0\x2B\x28\xC7\x0C\x7A\xAB\x14\x2E\x52\xE5\xBA\x3A\x97\x9C\x2D\xC0";"\xEB\x3F\xDD\x3A\xFD\xBD\x65\x06\x9E\x78\x31\x06\xFC\x1C\x26\xB2\x91";"\x42\x5F\xF3\xE6\x65\x64\xEF\xB9\x07\xED\xA8\x6D\x95\x8B\x9F\x29\x78\xFC\x5A\x1F\xE0\x1E";"\x1E\x8A\x48\x9A\x5D\x64\x9E\xCC\x6A\xB8\xC6\xD9\x3A\xEF\xF6\x67\x5F\xC4\x35";"\x97\xD8\x1D\xC5\x3B\x4F\xD9\x88\x2C\xEA\x4F\x90\x07\xE8\xB0\x0F\x0D\xC7\x28\x7C\x48\xAF\x68\x6A\xF9\x9E\x42\xB8\xFC";"\x47\x49\xB8\x41\x44\x6D\xE0\xBF\x34\x8E\x9F\x7D\xC5\x35\xC2\x01\x16\xBF\x78\x4F\xD5\x60\xB4\xAC\xE4\x81\x22\xE5\x87";"\xE9\xA9\x04\xAD\x24\x06\xB3\x01\x9D\x00\x08\xF1\x73\xB1\x9B\x24\x6A\x4B\xE5\xAB\x32\x83\x17\x0C";"\x96\xDA\x11\xC0\x73\x86\x19\x0D\xA2\x6E\x0F\xFA\x0E\xEE\xF0\x8C\xC3\x61\xBD\xF2\x4B\xBB\x61\x65\xF7\x5E\xD6\x30\x3C";"\x1D\x49\x9C\x46\xB9\x09\xC2\x88\x77\xF7\xC4\x15\xFE\x72\x14\x47\x0B\x9B\x59\x39\x97\x6E\xB7\x84\x39\x99\x18\xF6\xEF";"\x6D\xC2\x1B\xCB\x79\x60\x8A\x94\x4B\xAF\x1F\xCB\x7C\xE9\xE8\x46\x5F";"\x10\x57\xF1\x48\x54\x47\x9F\xEF\x7A\xC3\x90\x43\x99\x76\xFC\x7F\x46";"\x03\x54\xA9\x59\xC7\xDB\x55\x3C\xB8\x96\xDB\x55\x84\x3A\x08\x9D\xE4\x6E";"\x27\x22\xCD\x35\xEB\xFF\x89\xD8\x5C\xBA\xFF\x40\xBE\x5E\x29\xBA\x53\x9C\x42\x20\xD9\x7F\x9F\xA7\x22";"\xD7\x98\x5D\x85\x7B\x8F\x19\x48\xEC\x2A\x0F\xD0\x0E\xEE\xF0\x8C\xC3\x24\xF3\xB6\x4B\x91\x61\x65\xF7\x5E\xD6";"\x4A\x3E\xAB\x37\x86\x9D\x29\x42\x09\xCC\x80\x70\xB9\x0A\x0D\x9C\xFB\x3D\x13\x2E\xCA\x0A\xF4";"\xF2\xFB\x0D\xE0\x3E\x7E\x01\x47\xF7\x39\x7E\xC7\x3F\xDD\xE1\x73\xD2\x1E\xC3\xA6\x7B\xE4\x50";"\x3A\x2C\x63\xB2\x49\x6B\xBC\xFA\x56\xAA\xC7\x36\x2D\xD2\xA5\x57\x31\x84\x46\x01\xEC\x12\x0A\x1C\xC9\xAE\x30\x9B";"\xE4\xD8\x49\xD5\x20\x33\x4B\x20\x97\x6A\x22\x92\x5F\x94\xAF\x3E\x95\x5B\xB1\x8C\x6C\xE4\x16\x25\xAA\xE5";"\xF7\xE4\x55\xC8\x30\x0C\x80\xDE\xB7\x65\x0A\xDE\x20\xB3\xA3\x1B\x57\xD8\xFC\xBA\x27\x90\x6F\x41\xBF\xD3\x55";"\xA3\xF4\x49\xFC\x29\x3F\xF5\x76\xD8\x36\x7B\xBC\x22\xDA\xEC\x78\x9E\x0B\x89";"\xF1\x2F\xDE\x3F\xE1\xF6\x0E\x50\xA8\x38\x66\x4A\xB9\x76\x6D\xFF\xD1\x1D\xF8\xA6\x2D\x22\xC6\xEC";"\x8C\xBA\x67\x80\x03\x3C\x9D\xE9\x7C\x56\x0E\xEA\x0C\xF7\xCD\x75\x36\xAE";"\x5F\x10\xE5\x5B\x4C\x55\x91\x8F\x78\x82\xC6\x0A\xD2\x76\xC1\x4A\x4B\xA0\x75\x4B\x9A\x61\xBA\xF5\xDF\xC8\x3D\xF0\xB0\x14";"\xA4\xA7\x52\xB0\x68\x72\x0E\x45\xDF\x3F\x70\xC5\x3D\xE3\xE7\x71\xD0\x54\xB2\xE7";"\x73\x24\xF9\xE9\x5B\x64\xE6\xAD\x44\xC6\xE9\x2D\xC1\xCF\x81\x78\x28\xB9\x43\x78\xAE\x51\xB9\x67\xDA\xA0\x21\xF8\xE6\x12\xC1";"\xF5\xBB\x8B\x51\xA1\xA5\x37\x1E\x96\x70\x39\xFE\xAD\x52\x2E\xF7\xAD\x05\xA6";"\xA1\xF6\x4F\xFE\x23\x79\x48\x1B\x97\x34\x29\x8A\x65\x96\xE2\x54\xD5\x4F\x8F\xE0\x35\xAD\x53\x57\xE1";"\xED\xD2\x15\xC9\x22\x32\x43\x0F\xB7\x70\x7C\xC0\x30\xE7\xBF\x3A\xDC";"\xC6\xAB\x6C\x92\xC3\xDA\x28\x29\xB2\x0D\x1E\xAF\x4A\xB0\x01\xDC\xA0\x72\xE4\xD0\x17\x86\x18\xCF\x47\x01\xB3\x6F";"\x2C\x62\xD9\x72\xF4\xF4\x92\xC9\x1E\xA3\xF0\x52\xB6\x4B";"\x5F\x5E\xE6\x13\xCD\x89\x12\x61\xF7\x71\xD8\x0B\xC8\x64\x02\x83\xC3\x27\xCD\x48\x8D\x75\xAB\xBF";"\x3F\x70\x89\x7C\xB0\xB3\x1C\x9F\x02\xF7\x83\x71\xF4\x4B";"\x7E\x2C\xF3\x2A\xBC\xBB\x37\x68\x05\xC4\xA5\x75\xA2\x1B\x12\xB9\xE1\xB4\x47\x03\xE1\x54\xB0\x91\x1E";"\xDF\xAB\x3F\xE2\x1B\x5D\xA5\xE3\x8E\x4F\x10\xA3\x43\x88\x88";"\xA3\xF4\x49\xB9\x67\x7B\xB9\x13\x9B\x77\x37\xBC\x71\x8A\xA8\x65\x90\x08\xDD\x8F";"\x23\x76\xBD\xAC\x55\x65\xFC\x8A\x4E\x81\xEF\x25\x2E\xCE\xC5\x66\x30\x82\x1D\x5B\xAE\x18\x43\x52\xD7\xAF\x36\x94\xCC\x18\xD7";"\x23\x75\x4D\xBA\x28\x48\xFB\xC8\x50\xA1\xF3\xCC\x2D\x84\xD8\x5B";"\xEB\xAD\x6B\x81\x4B\x0B\xA1\xFD\x72\x1A\x12\xEF\x1C\xDC\x94\x12\x41\xF4\x2B\x91\x15\x8A\x64\x61\x88\xE2\x63\xA6\x1D\x86";"\x5F\x25\xF0\x69\xDB\xDE\x61\x0A\x44\x82\xD7\x28\x84\x03";"\x69\x0B\x94\x4D\xA7\x02\xCE\x9F\x37\xA9\xF8\x02\xE6\x22\x2B\x40\x17\x92\x34\x07\xCC\x33\xC9\xEE\x6C\xC3\x5D\xC5\xB0\x6B\xA5\x21";"\x64\x76\xE5\x37\xE5\xF9\x8B\x96\x15\xF7\xBC\x0E\xA0\x1B\x2D\xB2\x36\x80\x41\x2E\xA8\x5F";"\xEC\xB6\x0A\xEE\x62\x30\xB8\x1A\x9B\x31\x34\xF0\x68\x81\xE7\x0D\x6F\x06\xCB\xAE\x7B\x84\x11\x4F";"\x7A\x3F\x00\xFE\x54\x75\xF1\xC3\x75\x9F\xED\x2B\x0A\xD2\xC1\x6E\x38";"\x9A\xBB\x61\x62\x8A\xA2\x28\x0F\x8D\x63\x62\xB8\xAC\x4C\x5D\xA3\x83\x77\xA8\xFA\x15\xFA\xE1\xEE\x69\x0E\x87\x32\x7D\xB9\x05\xE6";"\x94\xDD\x22\xC0\x38\x42\xDE\xB5\x2F\xEF\x40\x95\x4D\xB3\xB7\x41\x00\xA4\x62\x7E\x4E\xF6\x76\x79\xE6";"\x4E\x23\xF4\xEA\x12\x14\xE5\xA1\x41\xC1\xBC\x6F\x97\x85\x99\x6E\x36\xA9\x11\x1D\xC8\x00\xF8\x02\x9E\xF5\x6F\xAF\x80\x1C\xCB\x73";"\xA0\xD2\x16\xF5\x33\xDA\x52\x02\xAA\x60\x04\xBB\x76\xA8\xAF\xDB\x84\x1B\xF9\xA5";"\xD9\xB6\x6B\xF8\x4B\x5A\xE8\xFE\x87\x53\x3D\xEB\x16\x8D\x90\x64\x7A\xF4\xD6\xD3\x33\x9B\x53\x36\xA5\xE2\x22\x85";"\x11\x52\xA3\x14\xFE\x74\xC7\xBF\x00\x96\xD6\x0F\xC0\x34";"\x92\x99\x75\x90\x7D\x14\x95\xFC\x7F\xE5\x4B\x9B\x61\xB1";"\xDB\xD5\x6C\x83\x68\x09\x96\xE3\x2D\xF4\x4E\xC0\x00\xFF\xFA\x10\x52\xE3\x3F\x70\x0A";"\xC2\xB1\x73\xDA\x11\x2D\xFB\xDF\x92\x49\x1B\xE8\x07\x9D\x96\x2A\x7D\xB2\xF2\x9A\x61\x8C\x6A\x02\x99\xF2\x65\xF7\x21\xD4";"\x40\x1E\xEA\x32\xFD\x98\x3D\x7A\xE1\x21\xDA\x71\x84\x60\x74\x8E\xCE\x6A\xA7\xF4\xDC\x7E\xAF\xA3\x34\x48\xCD\x27";"\x6D\xC2\x1B\xCB\x31\x35\xC7\x8E\x26\xE0\x00\xC8\x74\xF0\xE7\x1A\x5C\xD4";"\xBA\xB5\x8B\x60\xB2\xA2\x3E\x15\x8F\x4F\x20\xF5\xED\x5F\x58\xE2\xA1\x48\xC2\xD4\x68\x8B\x86\xF4\x64\x75\x9A\x1D\x5B";"\x6E\x66\xC4\x76\xA5\xAD\x7E\xCD\x5B\xB7\xF5\x2C\xB5\x4B\x7F\xF5\xA8\xDC\x03";"\x04\x64\xFB\xA8\x44\x47\xF4\xAB\x42\xB2\xEC\x3D\xD1\xD0\xEC\x6F\x34\xB4\x0F\x59";"\xEB\x66\xD4\x3F\xEB\xBA\x4D\x2E\xEC\x31\x70\x45\xB6\x22\x62\xE5\xD1\x56\xA5\xEF\x30\x29\x95\xFA\x6F\x2B\xD8\x10";"\x26\x7C\xD0\x21\xF5\xE3\x7D\xD4\x50\xE7\xAD\x72\xC0\x07\x19\xB0\xDF\x89\x40\x02\xE9\x18\x97\x94\x65\x57\xFB\xC0\x98\x70\x89";"\x57\x32\xAF\x50\xB5\x7C\xDC\x9A\x3A\xE3\xCC\x15\x80\x1C\x35\x42\x07\xA4\x6F\x01";"\x09\x17\xB0\x52\xB1\x54\xCF\xE9\x16\xE8\xD6\x38\xC3\x38\x39\x43\x1C\xA3\x6E\x01\xC7\x3D\xE4";"\x1A\x2D\x80\xB8\x5B\x53\xE7\xAA\x57\x84\xD2\x66\x9E\x85\xDD\x64\x7A\xD0\x54";"\xC8\xAA\x0E\xCD\x1B\x32\xAA\x1A\x92\x48\x6C\xD3\x6E\x90\x87\x33\x6C\x03\xC1";"\x87\xE2\x37\x20\x8C\xD0\x77\x2F\xC0\x17\x5D\xA6\x57\x07\x48\xC1\xB3\x28\xB7\xD5\x08\xCB\x08\xCD\x5F\x33\xA2";"\xB5\xF2\xCE\x3B\xD8\xA1\x2E\x12\xC6\x1E\x70\xBF\xE8\x3A\x2A\xA6\xED\x07\xAE\xE6\x2B\xFF\xDE\xD2\x79\x08\xB0";"\x12\x6A\xB8\x57\x02\x54\xFD\xAA\x74\xD9\xCA\x2F\xDA\x33\x81\x5B\x27\xBF\x36\x68\x95\x5E\xB5\x02\xF0\x88\x24";"\x4F\x6C\xF5\x14\x9C\x90\x63\x4A\x01\xD3\x96\x3E\x89\x17\x06\xD8\xAE\x39\x02\x4F\x82\x5A\xB7\xBB\x3E\x05\xA8";"\x84\xCB\x1E\xC9\x3A\xC0\x5F\x4A\xAB\x6A\x49\xD2\x78\xBD\xBF\xCF\x8B\x10\xF6\xB4\x4B\xD5\x26\x26\xBD\x04\x9C\x2E\x7A\xA8\x26";"\x29\x89\x6E\xA6\x64\x4E\x8D\xC1\x4E\xF9\xFF\xC9\x3B\x9D\xEC\x7C\x50\xF0\x18\x6B\x88\xAD\x56\x79\xA8\xAC\x52\x93\xE7";"\xCA\xAE\x71\xAD\x79\x57\xE1\xA0\xC4\x02\x57\xA8\x56\x94\x9D\x00\x6E\xEB\xDB\xDA\x09\xC3\x39\x4D\xDF\xF3\x60\xAC";"\xAB\xC8\x4C\xD0\x1F\x0C\x7F\x56\xED\x76\x21\x94\x34\x92\xAB\x23\x96\x01\xF8\xA9\x71\xBC\x19\x26\xB8\xEB";"\xE5\x1A\xC5\x1A\xE8\xB8\x43\x56\xEA\x39\x7B\x0A\xD2\x20\x3A\xB6\x9D\x17\xF7\xB8\x7D\x65\x9B\xAF\x39\x68\x8C\x4A\x2F\x9C\x9E\x14";"\x7A\x7D\x8B\x70\x99\xAB\x2C\x86\x47\xC8\xA5\x61\xEE\x1C\x19\xAF\xE5\x87\x56\x1E";"\xE8\x1C\xDC\x38\xAD\xBE\x0F\x57\xDF\x77\x3C\x2B\xE1\x1F\x23\xBD\x94\x10\xCE\xA3\x74\x6A\x92\x94\x66\x3A\xCB\x02\x42\xA6";"\xBA\xFF\x09\xF8\x5E\x30\xBD\x01\x85\x17\x0B\xE8\x4A\xD9\xD7";"\xDC\x91\x69\xDD\x10\x13\x83\xF5\x60\x51\x0F\xEA\x03\xEC";"\x40\x67\xA1\x40\x04\x5F\xFF\xAD\x34\xA9\xD5\x26\xC9\x2B\xE6\x53";"\x6A\xCF\x10\xCE\x2E\x30\xCC\x83\x21\xFD\xF7\xC5\x3F\xA1\x8F\x37";"\xC3\xF9\x22\xCB\x0E\xD5\x52\x26\xB7\x24\x0C\xDA\x15\xED\x0A\xE3\x83\x32\xEA\x86\x25\xE0\x26\x3E\x47\x17\x95\x7E\x0C";"\xE1\xE7\x00\xEB\x18\x3F\xE5\x30\x87\x46\x25\xD0\x65\x9E\x85\x36\x42";"\x13\x39\xEE\x02\xA2\x8A\x13\x7B\xB8\xFC\x9C\x58\x90\x57\x01\x94\xDD\x79\xA4\x00\xCC\x7D\xAF\x99\x4D\x04";"\xBB\xFC\x41\xA1\x5F\x63\xFD\x54\xD0\x0E\x63\xB4\x2A\xD2";"\x44\x18\xFB\x55\xCC\xD9\x41\x3A\xBA\x94\xDD\x22\xC0\x38\x42\xDE\xB5\x2F\xEF\x40\x95\x4D\xB3\xB7\x41\x00\xA4\x2B\x71\x08\xB7";"\x1A\x5F\xAB\x1F\xBE\x49\xD2\xA0\x6F\xC0\xF5\x54\xEB\x38\xCB\x54\x0C\xA4\x73\x4D\x9F\x2E\xA2\xB9\x89\x9B\x14";"\xAF\x80\x10\xC3\x37\x77\x2B\x40\xE4\x22\x77\x8D\x78\xA2\xF1\x74\xF1\x1C\xFB\xBE\x43\x89\x15";"\xEA\xC6\x25\xCA\x37\x12\x4C\x0C\xAC\x21\x3B\x83\x74\xFB\xFA\x24\x98\x03\xE2\xAA\x73\xA5\x1E\x21\xBD\xA8\xE6\x0A";"\xA2\xE7\xC2\x77\xF4\xEB\x74\x4B\xD6\x7E\x7D\xA9\xAC\x59\x78\xF1\xD8\x43\xC1\xA7\x77\x45\x8D";"\xDF\xCE\x16\xC7\x1F\x49\xDB\x8A\x2A\xA8\x02\xD1\x31\xE4\xB2\x0D\x4D\xDE\x2D\x2D\x69\x8D\x2D\x44\xF9\xD1\x46";"\xDC\xE5\x26\xD9\xD9\xDF\x44\x2E\xFB\x25\x4D\x93\x76\xBE\x5D\xCF\x81\x2F";"\x65\x1E\xB9\x4C\x85\x90\x31\x63\x01\xC8\x90\x78\xD8\x6A\x5A";"\x0C\x40\xB0\x79\x4A\x4D\xDC\xBB\x7D\xD3\xE7\x11\xCE\x38\xC8\x4F";"\x2D\x9C\x58\x9F\x25\x77\x82\xCE\x71\xB9\xBC\x8A\x3D\xEE\xFE\x36\x37\x97\x77\x38\xFD\xE5\x1B\x2F";"\xA8\xEE\x0A\x8E\x72\xFE\x1E\x39\xA1\x03\x0A\xA9\x46\xA4\x42\xD1\x85\x27\xE8";"\x58\x74\xB1\x72\x91\x71\xF1\xAC\x12\xD8\x85\x51\xF5\x20\x73\x27";"\xF5\xA9\x31\xF7\x11\x2C\xB9\x36\x80\x40\x2C\xF1\x62\x84\x99\x61\x3D";"\x67\xC2\x7D\x98\x7E\x76\x8F\xCF\x6D\xA6\xC5\xC7\x39\xF2\xC8";"\xBA\xFE\xC1\x7D\x89\xA7\x31\x10\x94\x3E\x68\xBB\xA7\x5A\x28\xEA\xAE\x48\x97\xEF";"\xEE\x43\x94\x4A\xB2\xB4\x40\x0F\xA5\x61\x36\x0F\xF7\x6D\x6B\x9B\x94\x6C\xB1\xF1\xCD\x23\xD1\xF6\x67\x08\xF9\x0A\x63\xA1\xA2";"\xCE\xF4\x63\xFC\x3F\x3E\x98\x1D\x91\x78\x1D\xEE\x63\x97\xA9\x65";"\xA9\x1B\xDD\x20\xC7\xF6\x03\x55\xDF\x14\x7A\x62\xAD\x5E\x70\xEE\x9C\x12\xA6\xF6\x39\x2B\xDC\xDB\x69\x2B\x87\x48\x16\xC5";"\x06\x6B\xAC\x52\x83\x9A\x68\x69\xF2\xCD\xDE\x66\x8A\x69\x0E\xB1\xF3\x66\x89\x0B\xDB\x0A";"\x14\x7C\x8E\x5D\x42\x53\xED\xF0\x7E\xB2\xCA\x2D\xDF\x30\xCF\x55\x37\x83\x62\x4D\x8F\x7B\xB0\xA7\xD3\xCC\x6F\xA0\xC0\x08";"\xF8\xA3\x6B\xE6\x02\x25\xA1\xD8\x9A\x47\x25\xFF\x02\x8B\x8E\x2D\x69\xFE\xC0\xC3\x36\xDF\x17\x41\xD3\xB2\x32\xBF";"\x74\x10\xD4\x09\xFF\xC7\x5B\x78\xE0\x25\x9B\x63\x87\x69\x7E\xCE\x8A\x21\xD7\xB2\x8B\x7B\xA1\xEC";"\x85\xFB\xD1\x22\xD4\xFE\x31\x58\xCB\x1F\x29\xFF\xEC\x26\x16\xA2\xE1\x03\xC3\x94\x69\x99\x87\x9B";"\x1A\x54\xB0\x0B\xA9\x5F\xD0\xBB\x3E\xFC\x8F\x26\xDE\x23\x3B\x52\x15\x81\x76";"\x88\xB8\x09\x2A\xC8\xD6\x66\x3D\xD2\x48\x7B\xE0\x64\x4B\x4D\xE3\xAD\x32\x94";"\xD5\xD9\x4A\x8C\x71\x00\xDA\xA3\x2B\xEB\x4C\x91\x71\xAF\xB3\x4D\x04\xA0\x7E\x33";"\x6E\x56\xD3\x4D\xA4\xBB\xC4\x9A\x2F\xEF\xC7\x46\xBD\x64\x54\x0A\x59\xDB\x3B\x7C\xC1\x21\xDF\xE3\x7D";"\xB0\x08\xC0\x70\xE1\xF4\x4E\x4B\xD0\x2B\x30\x46\xB5\x62\x75\xB1\xC4\x5C";"\xD1\xA5\x21\x68\xBA\xAA\x26\x6D\x87\x26\x7D\xB9\x5A\x78\x4B\xEC\xB9\x30\xBF\xD1\x21\xDC\x32\xC5\x58";"\xA4\x0B\x90\x64\xAE\xB0\x4C\x03\xA1\x7D\x32\x0B\xFB\x21\x25\xB7\x9E\x16\xF0\xB9\x3F\x28\xE4\xE6\x7B\x3A\xCE\x56\x3D\xEA";"\x35\x73\x59\xBA\x62\x71\xF2\xCC\x0D\xB9\xFF\x7E\x2A\xDB\xFA\x3A\x2A\xC3\x0A\x7E\xF1\x45\x47\x56\xE3\xE4\x52";"\x33\x14\xEA\x69\xA6\xAC\x29\x7C\x03\xC7\xA8\x30\xD9\x46\x3A\xAB\xE4\x6D\x4B\x12\xE0\x1C\x97\xDD";"\x0B\x59\xAA\x53\x0B\x0E\x91\xB8\x21\x9F\x9D\x3B\xCE\x37\xC6\x43\x0E\x9A\x71\x4B\x87\x76";"\xB7\xF5\x2F\x32\xDB\xFE\x7D\x59\xCE\x10\x33\xE7\xF4\x49\x58\xF0\xA1\x4D\x8E\xD1\x06\xD9\xC2\xDF\x5A\x73\x83";"\xB6\xF0\x6F\xBD\x63\x67\xF1\x1C\x9B\x71\x26\xF4\x26\x95\xA0\x25\x79\x54\xE9\x9A\x3D\xB0\x01\x1C\xBD\xE7\x7D\x4C";"\x44\x22\xAF\xA3\x54\x5B\xA7\xBE\x47\x92\xFD\x73\xC4\xC5";"\x0D\x7E\x4A\xAF\x67\x6A\xE5\xD3\x18\x83\xF0\x24\x21\x94\xB3\x3A\x1F\xCE\x08\x78\xBE\x43\x1C\x1D\xE3\xA1\x57\xD6";"\x5B\x53\xFE\x00\x15\x0D\xD0\xEF\x6B\xD7\x9A\x49\xCF\x36\xCE\x5E\x3A\xEE\x7B\x55\x93\x4D\xA0"}
-local _illIII11_l2={0xB3,0xE9,0x23,0xCE,0x23,0x2A,0xAB,0xF7,0x60}
-local _I11_l_i1il3={0x260,0x160,0x4B4,0x359,0x3DE,0xB1,0x48C,0x163,0x3E,0x361,0x4C,0x35B,0x458,0x106,0x2A7,0x64,0x39,0x1FF,0x137,0x45C,0x374,0x3C8,0x2A9,0x294,0x459,0x8D,0x10B,0x20A,0x232,0x26,0x20D,0x22E,0x142,0x138,0xD0,0x397,0x1E4,0x217,0x83,0x25F,0x6D,0x44B,0x4BA,0x276,0x487,0x5E,0x344,0x233,0x221,0x4D,0x2E0,0x254,0xB6,0x3E7,0x37F,0x422,0x159,0x1A8,0x2F5,0x19E,0x317,0x191,0x456,0x479,0x4D3,0x224,0x3B1,0x60,0x100,0x104,0xA9,0x5D,0x30F,0x39E,0x259,0x297,0x389,0x3BF,0x2BB,0x4CD,0x357,0x41B,0x1F2,0x48B,0x9D,0x188,0x7C,0x30D,0x2A1,0x91,0x330,0x201,0x1B0,0x185,0x4A5,0x33B,0x20B,0x363,0xE9,0x1EB,0x2C2,0x33F,0x2F,0x1F5,0x99,0x401,0x6B,0x34D,0x177,0x24E,0x3DF,0x172,0xF1,0x3FA,0x82,0xBC,0xC8,0x62,0x18E,0x4A3,0x1EA,0x391,0x4,0x2CA,0x272,0x2E3,0x22A,0x1AB,0x2E7,0xD4,0xA0,0x53,0x3E6,0x24A,0x23C,0xC7,0x2B1,0x2DC,0x140,0x25E,0x2D7,0x2F7,0xAE,0x5B,0x2C3,0x1A6,0x23E,0x494,0x454,0x1C7,0x477,0x246,0x203,0x49E,0xAC,0xAA,0x2C4,0x350,0x44A,0xF8,0x9C,0x467,0x43F,0x466,0xF9,0x38B,0xC,0x375,0xDF,0x128,0xCD,0x2AC,0x47F,0xD,0x32A,0x49F,0x338,0x256,0xFD,0x1FA,0x2AA,0x43E,0xAB,0x37C,0x35E,0x470,0xDC,0x28,0x3F8,0x3D,0x237,0x324,0x150,0x2DB,0xF2,0xE5,0x42D,0xE4,0x26F,0x27,0x432,0x403,0x239,0x45,0x2D6,0x412,0x17C,0x9B,0x36D,0x1BE,0x42E,0x18A,0x40,0x1,0x41A,0x24B,0x36E,0x42B,0x384,0x9A,0x3B8,0x461,0xCF,0x3D2,0x39F,0xA,0x21,0x4AC,0x439,0x3A4,0x46C,0x16D,0x63,0x41D,0xE,0x15F,0x267,0x3BA,0x1A0,0x195,0x13A,0x81,0x4CA,0x3E8,0x390,0x19C,0x13D,0xB3,0xB9,0x26E,0x11D,0xD1,0x23A,0x2CD,0x365,0x2D4,0x312,0x4BE,0x42A,0x1D9,0x271,0x55,0x1F,0x58,0x2BC,0x462,0x40E,0x3CE,0x2E6,0x200,0xD9,0x234,0x3AF,0x46E,0x1DF,0x2C5,0x3D3,0x482,0x3D0,0x31A,0x38,0x3B5,0x45B,0x8A,0x21A,0x37B,0x1F7,0x89,0x228,0x33E,0xD5,0x94,0x3F9,0x171,0x192,0x1D8,0x11F,0x31D,0x27F,0x19F,0x162,0x4C3,0xBB,0x464,0x123,0x69,0x36B,0x292,0x241,0xFE,0xC2,0x1CD,0x3CD,0xED,0x38A,0x46D,0x258,0x386,0x37D,0x41F,0x281,0x225,0xEC,0x44D,0x32F,0x4BC,0x1DB,0x404,0x498,0x1A2,0x381,0x334,0x2C9,0xA5,0x426,0x141,0x157,0x474,0x244,0x377,0x435,0x3C4,0x352,0x3F3,0x32,0x5,0xCC,0x291,0x283,0x247,0x383,0x4AE,0x1A4,0x1AE,0x1ED,0xB2,0x121,0x11E,0x52,0x12B,0x51,0x204,0x79,0x199,0x21E,0x469,0x125,0xE7,0x13B,0x287,0x19A,0x11B,0x19,0x434,0x400,0x449,0x3C,0x151,0x296,0x190,0x2FA,0xDA,0x227,0x14C,0x155,0x2C0,0x16C,0x8C,0xE6,0x4D0,0x413,0x3AC,0x3F4,0x42F,0x40C,0x11C,0xE1,0x2A6,0x20,0x77,0x353,0x3FF,0x438,0x4D1,0x173,0x24C,0x1D0,0x3DD,0x20C,0x1B6,0x1F0,0x110,0x3DA,0x3F0,0x10E,0x1E1,0x315,0x1D2,0x371,0x3BE,0x3F6,0x284,0x36F,0x286,0x29,0xD6,0x4A4,0x4C5,0x442,0x460,0x216,0x17B,0xA4,0x1AC,0x111,0x61,0x499,0xDB,0x3A0,0x345,0x26A,0x370,0x10C,0x3CC,0x3DB,0x46,0x321,0x302,0xDD,0x4B2,0x238,0x251,0x35C,0x2B6,0x2E,0x22D,0x332,0x105,0x236,0x15,0x3C5,0x167,0x122,0x169,0x48A,0x1A3,0x3BD,0x2C7,0x212,0x2E4,0x119,0x3B6,0x34A,0x115,0x3AE,0x2ED,0x8B,0x266,0x455,0x219,0x415,0x14A,0x70,0x1E9,0x1A,0x472,0x402,0x252,0x4A6,0x3F7,0x30E,0x277,0x7D,0x497,0x2E2,0x4B3,0x38E,0x427,0xCB,0x290,0x2E8,0x1CA,0x3E1,0x34C,0x430,0x3FD,0x31F,0x57,0x4C0,0x13C,0x4A8,0x1E8,0x471,0x47E,0x32C,0x475,0x3B9,0x47B,0x18F,0x136,0x189,0x16B,0xA1,0x304,0x129,0x1EC,0x4B9,0x18B,0x14E,0x243,0x34F,0x36C,0x4BD,0x1DC,0x255,0x11,0x4A9,0x120,0x450,0x1AA,0x310,0x2B9,0x3B7,0x74,0x13E,0x8F,0x423,0x50,0x2B7,0x2B8,0x250,0x4AF,0xB4,0x382,0x2AB,0x44C,0x65,0x313,0x47C,0x2E5,0x1B1,0x67,0x1FE,0x3CA,0x2B5,0x453,0x14,0x164,0x1C8,0x14D,0x3E9,0x322,0x1D1,0xE8,0x3AD,0x17A,0x42,0x17F,0x1E,0x1FD,0x261,0x1F4,0x4F,0x2F9,0x264,0x30B,0x399,0xB7,0x1EE,0x25B,0x218,0xB5,0x112,0x48,0x328,0x3A3,0x1FB,0x3EC,0x417,0x3EF,0x2B0,0x9,0x3E5,0x1C4,0x46B,0x20F,0x4BF,0x1E3,0x30,0x3B2,0x406,0x80,0x14F,0x2D0,0x44F,0x47A,0x2C1,0x298,0x440,0x28C,0x3BB,0x2D8,0x175,0x448,0x37,0x1C2,0x45E,0x465,0x27E,0x214,0x1B2,0x347,0x14B,0x9E,0xA3,0x388,0x385,0x170,0x25,0x245,0x27B,0x307,0x1D3,0x2FF,0xD3,0x22F,0x4B8,0x2B2,0xEE,0x40D,0x7B,0x2C,0x1A9,0x1D5,0x176,0x41,0x213,0x35D,0x13F,0x39B,0x303,0x56,0x109,0x3C9,0x4CB,0xD8,0x23F,0x3B3,0x4A0,0x481,0x226,0x2DD,0x1F3,0x85,0x230,0x263,0x1A1,0x6,0x1CE,0xEA,0x154,0x153,0x360,0x198,0x2D5,0x2D,0x278,0x29B,0x1B5,0x130,0x97,0x26C,0x1B7,0x4BB,0x1A7,0x2CE,0x3A7,0x7F,0x34B,0x1BF,0x49D,0x24D,0x398,0x325,0x343,0x21B,0x31E,0x2F6,0x3C2,0xD7,0x2E9,0x441,0x132,0x143,0x44,0x2D3,0x273,0x40A,0x1C6,0x2EC,0x268,0x295,0x25D,0x3E3,0x25C,0x26D,0x196,0x47D,0x392,0x3F,0x249,0x316,0x18C,0x68,0x10F,0x197,0x165,0xBA,0x2A3,0x265,0x3F1,0x4CE,0x16,0x339,0x15A,0x181,0x36A,0x1EF,0x209,0x215,0x4A,0x161,0xF5,0x231,0x1E0,0x220,0x342,0x348,0x29A,0x2A2,0x326,0x4A2,0x31B,0x45D,0x1A5,0xA8,0xBE,0x88,0x3D9,0xF6,0x419,0x1BD,0x421,0x21C,0x3C6,0x253,0x22C,0x355,0x38C,0x103,0x2A8,0x35,0x1C0,0x90,0x210,0x4C2,0x2CB,0x1BB,0xE0,0x29E,0x2D2,0x2F2,0x45F,0x395,0x107,0x411,0x30C,0x299,0x23,0x32D,0x480,0x15C,0x301,0x1E6,0x341,0x15D,0x1B,0x34,0x66,0x282,0x7,0x1B9,0x4CF,0x16F,0x3E2,0x2CC,0x116,0x1E2,0x48F,0x124,0x179,0x2FD,0x366,0xF,0x22B,0x1DA,0x424,0xC0,0x478,0x3F2,0x3B0,0x9F,0x443,0xBD,0x28F,0x436,0x21F,0x3B,0x2B4,0x3B4,0x187,0xC9,0x331,0x4AB,0x362,0x405,0x5A,0x387,0x59,0x194,0x183,0x2FC,0x6A,0xFA,0x21D,0x31C,0x379,0x3AB,0x146,0x3FC,0x2BA,0x54,0x3EB,0x205,0x1DD,0x24,0x323,0xA6,0x42C,0x3D6,0x396,0x17D,0x208,0x340,0x1CF,0x182,0x178,0x463,0x336,0x135,0x184,0x139,0x75,0x43D,0x242,0x4B0,0x49B,0x78,0x17E,0xEF,0x2,0x148,0x174,0x445,0x280,0x3A8,0x2EF,0x26B,0x2A5,0x4D2,0x3C7,0x23D,0x3D5,0x49C,0x6F,0x496,0x3A2,0x126,0x48E,0x49,0xFB,0x1C1,0x28A,0x211,0x25A,0x166,0x16E,0x4A1,0x10A,0xF7,0x1C5,0x46A,0x2DE,0x15E,0x29D,0x180,0x452,0x2F1,0x12D,0x134,0x493,0x33C,0x32B,0xC1,0x193,0x4AA,0x2A,0x34E,0x101,0xF3,0x1AF,0x444,0x269,0x3D4,0xCE,0x96,0x20E,0x10,0x489,0x380,0x76,0x6C,0x12C,0x495,0x222,0x223,0x351,0x15B,0x2B3,0x207,0x2E1,0x2A0,0xFF,0x102,0x4B6,0x40F,0x39D,0x378,0x3A6,0x40B,0xE2,0xDE,0x19D,0xB0,0x2EB,0x3CF,0xE3,0x358,0xF0,0x2C8,0x309,0x127,0x2FB,0x37A,0x19B,0xC5,0x4C9,0x2F0,0x3,0x4C1,0x3D7,0x289,0x33D,0x27C,0x2F4,0x2BD,0x394,0x2EA,0x23B,0x6E,0x49A,0xB,0x492,0x306,0x248,0x202,0x10D,0x43,0x3C3,0x420,0x35F,0x168,0x3D1,0x7E,0x1F6,0x4B7,0x418,0x425,0x3A1,0x3E4,0x3EA,0x468,0x431,0x1FC,0x12,0x46F,0x274,0x407,0x92,0x38D,0x5F,0x1C,0x48D,0x4AD,0x5C,0x4C4,0x13,0x314,0x3CB,0x329,0x2DA,0x235,0x2BE,0x4C6,0x18,0x451,0xFC,0x47,0x1F9,0x43C,0x473,0x1D4,0xA7,0x3E0,0x1E7,0x1E5,0x144,0x2EE,0x319,0x429,0xC3,0x149,0x3DC,0x257,0x486,0x393,0x364,0x1D7,0x71,0x2DF,0x39C,0x93,0x3ED,0x270,0x1B3,0x158,0x1C3,0x335,0x279,0x369,0x17,0x275,0x186,0x32E,0xC6,0x43B,0x12E,0x484,0x2FE,0x437,0x4B,0x7A,0x300,0xF4,0x36,0x98,0x35A,0x3C0,0x488,0x457,0x288,0x2D9,0x240,0x3BC,0x30A,0x3EE,0x3AA,0x285,0x1BC,0x33A,0x1F8,0x4B5,0x3A,0x29C,0x113,0x39A,0x8,0x73,0x1CB,0x2D1,0x311,0x38F,0x118,0x41C,0x485,0x409,0x131,0x320,0x31,0x3C1,0x3A5,0xB8,0x87,0x108,0x2A4,0x4E,0x308,0x1B4,0x368,0x491,0x356,0x72,0x117,0x24F,0x2AD,0x28D,0x11A,0x12F,0x41E,0x114,0x3FE,0x1D,0x346,0x327,0x433,0x4CC,0x28B,0x1DE,0x3FB,0x2F3,0x229,0x416,0x410,0xBF,0x18D,0x33,0x95,0x2B,0x372,0x349,0x483,0x376,0x43A,0x293,0x1C9,0x44E,0x84,0x147,0x12A,0x16A,0x333,0x3D8,0xC4,0x45A,0x373,0x206,0x1D6,0x367,0x2C6,0x4A7,0x262,0x408,0x86,0xA2,0x337,0x2BF,0x133,0x414,0xCA,0xAD,0x3A9,0xD2,0x2AE,0x4C8,0x1CC,0x145,0x1B8,0x4B1,0xAF,0x28E,0x3F5,0x2AF,0x22,0x37E,0x428,0x476,0x1BA,0x354,0x8E,0x305,0x152,0x2CF,0x318,0x29F,0x2F8,0x156,0x490,0x27D,0x446,0x27A,0x4C7,0xEB,0x447,0x1F1,0x1AD}
-local _1_l_i1illI2s={0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F}
-local _i1illIII114={0x1,0x1,0x1,0x2,0x1,0x3,0x1,0x4,0x1,0x5,0x1,0x6,0x1,0x7,0x1,0x8,0x1,0x9,0x1,0xA,0x1,0xB,0x1,0xC,0x1,0xD,0x1,0xE,0x1,0xF,0x1,0x10,0x1,0x11,0x1,0x12,0x1,0x13,0x1,0x14,0x1,0x15,0x1,0x16,0x1,0x17,0x1,0x18,0x1,0x19,0x1,0x1A,0x1,0x1B,0x1,0x1C,0x1,0x1D,0x1,0x1E,0x1,0x1F,0x1,0x20,0x1,0x21,0x1,0x22,0x1,0x23,0x1,0x24,0x1,0x25,0x1,0x26,0x1,0x27,0x1,0x28,0x1,0x29,0x1,0x2A,0x1,0x2B,0x1,0x2C,0x1,0x2D,0x1,0x2E,0x1,0x2F,0x1,0x30,0x1,0x31,0x1,0x32,0x1,0x33,0x1,0x34,0x1,0x35,0x1,0x36,0x1,0x37,0x1,0x38,0x1,0x39,0x1,0x3A,0x1,0x3B,0x1,0x3C,0x1,0x3D,0x1,0x3E,0x1,0x3F,0x1,0x40,0x1,0x41,0x1,0x42,0x1,0x43,0x1,0x44,0x1,0x45,0x1,0x46,0x1,0x47,0x1,0x48,0x1,0x49,0x1,0x4A,0x1,0x4B,0x1,0x4C,0x1,0x4D,0x1,0x4E,0x1,0x4F,0x1,0x50,0x1,0x51,0x1,0x52,0x1,0x53,0x1,0x54,0x1,0x55,0x1,0x56,0x1,0x57,0x1,0x58,0x1,0x59,0x1,0x5A,0x1,0x5B,0x1,0x5C,0x1,0x5D,0x1,0x5E,0x1,0x5F,0x1,0x60,0x1,0x61,0x1,0x62,0x1,0x63,0x1,0x64,0x1,0x65,0x1,0x66,0x1,0x67,0x1,0x68,0x1,0x69,0x1,0x6A,0x1,0x6B,0x1,0x6C,0x1,0x6D,0x1,0x6E,0x1,0x6F,0x1,0x70,0x1,0x71,0x1,0x72,0x1,0x73,0x1,0x74,0x1,0x75,0x1,0x76,0x1,0x77,0x1,0x78,0x1,0x79,0x1,0x7A,0x1,0x7B,0x1,0x7C,0x1,0x7D,0x1,0x7E,0x1,0x7F,0x1,0x80,0x1,0x81,0x1,0x82,0x1,0x83,0x1,0x84,0x1,0x85,0x1,0x86,0x1,0x87,0x1,0x88,0x1,0x89,0x1,0x8A,0x1,0x8B,0x1,0x8C,0x1,0x8D,0x1,0x8E,0x1,0x8F,0x1,0x90,0x1,0x91,0x1,0x92,0x1,0x93,0x1,0x94,0x1,0x95,0x1,0x96,0x1,0x97,0x1,0x98,0x1,0x99,0x1,0x9A,0x1,0x9B,0x1,0x9C,0x1,0x9D,0x1,0x9E,0x1,0x9F,0x1,0xA0,0x1,0xA1,0x1,0xA2,0x1,0xA3,0x1,0xA4,0x1,0xA5,0x1,0xA6,0x1,0xA7,0x1,0xA8,0x1,0xA9,0x1,0xAA,0x1,0xAB,0x1,0xAC,0x1,0xAD,0x1,0xAE,0x1,0xAF,0x1,0xB0,0x1,0xB1,0x1,0xB2,0x1,0xB3,0x1,0xB4,0x1,0xB5,0x1,0xB6,0x1,0xB7,0x1,0xB8,0x1,0xB9,0x1,0xBA,0x1,0xBB,0x1,0xBC,0x1,0xBD,0x1,0xBE,0x1,0xBF,0x1,0xC0,0x1,0xC1,0x1,0xC2,0x1,0xC3,0x1,0xC4,0x1,0xC5,0x1,0xC6,0x1,0xC7,0x1,0xC8,0x1,0xC9,0x1,0xCA,0x1,0xCB,0x1,0xCC,0x1,0xCD,0x1,0xCE,0x1,0xCF,0x1,0xD0,0x1,0xD1,0x1,0xD2,0x1,0xD3,0x1,0xD4,0x1,0xD5,0x1,0xD6,0x1,0xD7,0x1,0xD8,0x1,0xD9,0x1,0xDA,0x1,0xDB,0x1,0xDC,0x1,0xDD,0x1,0xDE,0x1,0xDF,0x1,0xE0,0x1,0xE1,0x1,0xE2,0x1,0xE3,0x1,0xE4,0x1,0xE5,0x1,0xE6,0x1,0xE7,0x1,0xE8,0x1,0xE9,0x1,0xEA,0x1,0xEB,0x1,0xEC,0x1,0xED,0x1,0xEE,0x1,0xEF,0x1,0xF0,0x1,0xF1,0x1,0xF2,0x1,0xF3,0x1,0xF4,0x1,0xF5,0x1,0xF6,0x1,0xF7,0x1,0xF8,0x1,0xF9,0x1,0xFA,0x1,0xFB,0x1,0xFC,0x1,0xFD,0x1,0xFE,0x1,0xFF,0x1,0x100,0x1,0x101,0x1,0x102,0x1,0x103,0x1,0x104,0x1,0x105,0x1,0x106,0x1,0x107,0x1,0x108,0x1,0x109,0x1,0x10A,0x1,0x10B,0x1,0x10C,0x1,0x10D,0x1,0x10E,0x1,0x10F,0x1,0x110,0x1,0x111,0x1,0x112,0x1,0x113,0x1,0x114,0x1,0x115,0x1,0x116,0x1,0x117,0x1,0x118,0x1,0x119,0x1,0x11A,0x1,0x11B,0x1,0x11C,0x1,0x11D,0x1,0x11E,0x1,0x11F,0x1,0x120,0x1,0x121,0x1,0x122,0x1,0x123,0x1,0x124,0x1,0x125,0x1,0x126,0x1,0x127,0x1,0x128,0x1,0x129,0x1,0x12A,0x1,0x12B,0x1,0x12C,0x1,0x12D,0x1,0x12E,0x1,0x12F,0x1,0x130,0x1,0x131,0x1,0x132,0x1,0x133,0x1,0x134,0x1,0x135,0x1,0x136,0x1,0x137,0x1,0x138,0x1,0x139,0x1,0x13A,0x1,0x13B,0x1,0x13C,0x1,0x13D,0x1,0x13E,0x1,0x13F,0x1,0x140,0x1,0x141,0x1,0x142,0x1,0x143,0x1,0x144,0x1,0x145,0x1,0x146,0x1,0x147,0x1,0x148,0x1,0x149,0x1,0x14A,0x1,0x14B,0x1,0x14C,0x1,0x14D,0x1,0x14E,0x1,0x14F,0x1,0x150,0x1,0x151,0x1,0x152,0x1,0x153,0x1,0x154,0x1,0x155,0x1,0x156,0x1,0x157,0x1,0x158,0x1,0x159,0x1,0x15A,0x1,0x15B,0x1,0x15C,0x1,0x15D,0x1,0x15E,0x1,0x15F,0x1,0x160,0x1,0x161,0x1,0x162,0x1,0x163,0x1,0x164,0x1,0x165,0x1,0x166,0x1,0x167,0x1,0x168,0x1,0x169,0x1,0x16A,0x1,0x16B,0x1,0x16C,0x1,0x16D,0x1,0x16E,0x1,0x16F,0x1,0x170,0x1,0x171,0x1,0x172,0x1,0x173,0x1,0x174,0x1,0x175,0x1,0x176,0x1,0x177,0x1,0x178,0x1,0x179,0x1,0x17A,0x1,0x17B,0x1,0x17C,0x1,0x17D,0x1,0x17E,0x1,0x17F,0x1,0x180,0x1,0x181,0x1,0x182,0x1,0x183,0x1,0x184,0x1,0x185,0x1,0x186,0x1,0x187,0x1,0x188,0x1,0x189,0x1,0x18A,0x1,0x18B,0x1,0x18C,0x1,0x18D,0x1,0x18E,0x1,0x18F,0x1,0x190,0x1,0x191,0x1,0x192,0x1,0x193,0x1,0x194,0x1,0x195,0x1,0x196,0x1,0x197,0x1,0x198,0x1,0x199,0x1,0x19A,0x1,0x19B,0x1,0x19C,0x1,0x19D,0x1,0x19E,0x1,0x19F,0x1,0x1A0,0x1,0x1A1,0x1,0x1A2,0x1,0x1A3,0x1,0x1A4,0x1,0x1A5,0x1,0x1A6,0x1,0x1A7,0x1,0x1A8,0x1,0x1A9,0x1,0x1AA,0x1,0x1AB,0x1,0x1AC,0x1,0x1AD,0x1,0x1AE,0x1,0x1AF,0x1,0x1B0,0x1,0x1B1,0x1,0x1B2,0x1,0x1B3,0x1,0x1B4,0x1,0x1B5,0x1,0x1B6,0x1,0x1B7,0x1,0x1B8,0x1,0x1B9,0x1,0x1BA,0x1,0x1BB,0x1,0x1BC,0x1,0x1BD,0x1,0x1BE,0x1,0x1BF,0x1,0x1C0,0x1,0x1C1,0x1,0x1C2,0x1,0x1C3,0x1,0x1C4,0x1,0x1C5,0x1,0x1C6,0x1,0x1C7,0x1,0x1C8,0x1,0x1C9,0x1,0x1CA,0x1,0x1CB,0x1,0x1CC,0x1,0x1CD,0x1,0x1CE,0x1,0x1CF,0x1,0x1D0,0x1,0x1D1,0x1,0x1D2,0x1,0x1D3,0x1,0x1D4,0x1,0x1D5,0x1,0x1D6,0x1,0x1D7,0x1,0x1D8,0x1,0x1D9,0x1,0x1DA,0x1,0x1DB,0x1,0x1DC,0x1,0x1DD,0x1,0x1DE,0x1,0x1DF,0x1,0x1E0,0x1,0x1E1,0x1,0x1E2,0x1,0x1E3,0x1,0x1E4,0x1,0x1E5,0x1,0x1E6,0x1,0x1E7,0x1,0x1E8,0x1,0x1E9,0x1,0x1EA,0x1,0x1EB,0x1,0x1EC,0x1,0x1ED,0x1,0x1EE,0x1,0x1EF,0x1,0x1F0,0x1,0x1F1,0x1,0x1F2,0x1,0x1F3,0x1,0x1F4,0x1,0x1F5,0x1,0x1F6,0x1,0x1F7,0x1,0x1F8,0x1,0x1F9,0x1,0x1FA,0x1,0x1FB,0x1,0x1FC,0x1,0x1FD,0x1,0x1FE,0x1,0x1FF,0x1,0x200,0x1,0x201,0x1,0x202,0x1,0x203,0x1,0x204,0x1,0x205,0x1,0x206,0x1,0x207,0x1,0x208,0x1,0x209,0x1,0x20A,0x1,0x20B,0x1,0x20C,0x1,0x20D,0x1,0x20E,0x1,0x20F,0x1,0x210,0x1,0x211,0x1,0x212,0x1,0x213,0x1,0x214,0x1,0x215,0x1,0x216,0x1,0x217,0x1,0x218,0x1,0x219,0x1,0x21A,0x1,0x21B,0x1,0x21C,0x1,0x21D,0x1,0x21E,0x1,0x21F,0x1,0x220,0x1,0x221,0x1,0x222,0x1,0x223,0x1,0x224,0x1,0x225,0x1,0x226,0x1,0x227,0x1,0x228,0x1,0x229,0x1,0x22A,0x1,0x22B,0x1,0x22C,0x1,0x22D,0x1,0x22E,0x1,0x22F,0x1,0x230,0x1,0x231,0x1,0x232,0x1,0x233,0x1,0x234,0x1,0x235,0x1,0x236,0x1,0x237,0x1,0x238,0x1,0x239,0x1,0x23A,0x1,0x23B,0x1,0x23C,0x1,0x23D,0x1,0x23E,0x1,0x23F,0x1,0x240,0x1,0x241,0x1,0x242,0x1,0x243,0x1,0x244,0x1,0x245,0x1,0x246,0x1,0x247,0x1,0x248,0x1,0x249,0x1,0x24A,0x1,0x24B,0x1,0x24C,0x1,0x24D,0x1,0x24E,0x1,0x24F,0x1,0x250,0x1,0x251,0x1,0x252,0x1,0x253,0x1,0x254,0x1,0x255,0x1,0x256,0x1,0x257,0x1,0x258,0x1,0x259,0x1,0x25A,0x1,0x25B,0x1,0x25C,0x1,0x25D,0x1,0x25E,0x1,0x25F,0x1,0x260,0x1,0x261,0x1,0x262,0x1,0x263,0x1,0x264,0x1,0x265,0x1,0x266,0x1,0x267,0x1,0x268,0x1,0x269,0x1,0x26A,0x1,0x26B,0x1,0x26C,0x1,0x26D,0x1,0x26E,0x1,0x26F,0x1,0x270,0x1,0x271,0x1,0x272,0x1,0x273,0x1,0x274,0x1,0x275,0x1,0x276,0x1,0x277,0x1,0x278,0x1,0x279,0x1,0x27A,0x1,0x27B,0x1,0x27C,0x1,0x27D,0x1,0x27E,0x1,0x27F,0x1,0x280,0x1,0x281,0x1,0x282,0x1,0x283,0x1,0x284,0x1,0x285,0x1,0x286,0x1,0x287,0x1,0x288,0x1,0x289,0x1,0x28A,0x1,0x28B,0x1,0x28C,0x1,0x28D,0x1,0x28E,0x1,0x28F,0x1,0x290,0x1,0x291,0x1,0x292,0x1,0x293,0x1,0x294,0x1,0x295,0x1,0x296,0x1,0x297,0x1,0x298,0x1,0x299,0x1,0x29A,0x1,0x29B,0x1,0x29C,0x1,0x29D,0x1,0x29E,0x1,0x29F,0x1,0x2A0,0x1,0x2A1,0x1,0x2A2,0x1,0x2A3,0x1,0x2A4,0x1,0x2A5,0x1,0x2A6,0x1,0x2A7,0x1,0x2A8,0x1,0x2A9,0x1,0x2AA,0x1,0x2AB,0x1,0x2AC,0x1,0x2AD,0x1,0x2AE,0x1,0x2AF,0x1,0x2B0,0x1,0x2B1,0x1,0x2B2,0x1,0x2B3,0x1,0x2B4,0x1,0x2B5,0x1,0x2B6,0x1,0x2B7,0x1,0x2B8,0x1,0x2B9,0x1,0x2BA,0x1,0x2BB,0x1,0x2BC,0x1,0x2BD,0x1,0x2BE,0x1,0x2BF,0x1,0x2C0,0x1,0x2C1,0x1,0x2C2,0x1,0x2C3,0x1,0x2C4,0x1,0x2C5,0x1,0x2C6,0x1,0x2C7,0x1,0x2C8,0x1,0x2C9,0x1,0x2CA,0x1,0x2CB,0x1,0x2CC,0x1,0x2CD,0x1,0x2CE,0x1,0x2CF,0x1,0x2D0,0x1,0x2D1,0x1,0x2D2,0x1,0x2D3,0x1,0x2D4,0x1,0x2D5,0x1,0x2D6,0x1,0x2D7,0x1,0x2D8,0x1,0x2D9,0x1,0x2DA,0x1,0x2DB,0x1,0x2DC,0x1,0x2DD,0x1,0x2DE,0x1,0x2DF,0x1,0x2E0,0x1,0x2E1,0x1,0x2E2,0x1,0x2E3,0x1,0x2E4,0x1,0x2E5,0x1,0x2E6,0x1,0x2E7,0x1,0x2E8,0x1,0x2E9,0x1,0x2EA,0x1,0x2EB,0x1,0x2EC,0x1,0x2ED,0x1,0x2EE,0x1,0x2EF,0x1,0x2F0,0x1,0x2F1,0x1,0x2F2,0x1,0x2F3,0x1,0x2F4,0x1,0x2F5,0x1,0x2F6,0x1,0x2F7,0x1,0x2F8,0x1,0x2F9,0x1,0x2FA,0x1,0x2FB,0x1,0x2FC,0x1,0x2FD,0x1,0x2FE,0x1,0x2FF,0x1,0x300,0x1,0x301,0x1,0x302,0x1,0x303,0x1,0x304,0x1,0x305,0x1,0x306,0x1,0x307,0x1,0x308,0x1,0x309,0x1,0x30A,0x1,0x30B,0x1,0x30C,0x1,0x30D,0x1,0x30E,0x1,0x30F,0x1,0x310,0x1,0x311,0x1,0x312,0x1,0x313,0x1,0x314,0x1,0x315,0x1,0x316,0x1,0x317,0x1,0x318,0x1,0x319,0x1,0x31A,0x1,0x31B,0x1,0x31C,0x1,0x31D,0x1,0x31E,0x1,0x31F,0x1,0x320,0x1,0x321,0x1,0x322,0x1,0x323,0x1,0x324,0x1,0x325,0x1,0x326,0x1,0x327,0x1,0x328,0x1,0x329,0x1,0x32A,0x1,0x32B,0x1,0x32C,0x1,0x32D,0x1,0x32E,0x1,0x32F,0x1,0x330,0x1,0x331,0x1,0x332,0x1,0x333,0x1,0x334,0x1,0x335,0x1,0x336,0x1,0x337,0x1,0x338,0x1,0x339,0x1,0x33A,0x1,0x33B,0x1,0x33C,0x1,0x33D,0x1,0x33E,0x1,0x33F,0x1,0x340,0x1,0x341,0x1,0x342,0x1,0x343,0x1,0x344,0x1,0x345,0x1,0x346,0x1,0x347,0x1,0x348,0x1,0x349,0x1,0x34A,0x1,0x34B,0x1,0x34C,0x1,0x34D,0x1,0x34E,0x1,0x34F,0x1,0x350,0x1,0x351,0x1,0x352,0x1,0x353,0x1,0x354,0x1,0x355,0x1,0x356,0x1,0x357,0x1,0x358,0x1,0x359,0x1,0x35A,0x1,0x35B,0x1,0x35C,0x1,0x35D,0x1,0x35E,0x1,0x35F,0x1,0x360,0x1,0x361,0x1,0x362,0x1,0x363,0x1,0x364,0x1,0x365,0x1,0x366,0x1,0x367,0x1,0x368,0x1,0x369,0x1,0x36A,0x1,0x36B,0x1,0x36C,0x1,0x36D,0x1,0x36E,0x1,0x36F,0x1,0x370,0x1,0x371,0x1,0x372,0x1,0x373,0x1,0x374,0x1,0x375,0x1,0x376,0x1,0x377,0x1,0x378,0x1,0x379,0x1,0x37A,0x1,0x37B,0x1,0x37C,0x1,0x37D,0x1,0x37E,0x1,0x37F,0x1,0x380,0x1,0x381,0x1,0x382,0x1,0x383,0x1,0x384,0x1,0x385,0x1,0x386,0x1,0x387,0x1,0x388,0x1,0x389,0x1,0x38A,0x1,0x38B,0x1,0x38C,0x1,0x38D,0x1,0x38E,0x1,0x38F,0x1,0x390,0x1,0x391,0x1,0x392,0x1,0x393,0x1,0x394,0x1,0x395,0x1,0x396,0x1,0x397,0x1,0x398,0x1,0x399,0x1,0x39A,0x1,0x39B,0x1,0x39C,0x1,0x39D,0x1,0x39E,0x1,0x39F,0x1,0x3A0,0x1,0x3A1,0x1,0x3A2,0x1,0x3A3,0x1,0x3A4,0x1,0x3A5,0x1,0x3A6,0x1,0x3A7,0x1,0x3A8,0x1,0x3A9,0x1,0x3AA,0x1,0x3AB,0x1,0x3AC,0x1,0x3AD,0x1,0x3AE,0x1,0x3AF,0x1,0x3B0,0x1,0x3B1,0x1,0x3B2,0x1,0x3B3,0x1,0x3B4,0x1,0x3B5,0x1,0x3B6,0x1,0x3B7,0x1,0x3B8,0x1,0x3B9,0x1,0x3BA,0x1,0x3BB,0x1,0x3BC,0x1,0x3BD,0x1,0x3BE,0x1,0x3BF,0x1,0x3C0,0x1,0x3C1,0x1,0x3C2,0x1,0x3C3,0x1,0x3C4,0x1,0x3C5,0x1,0x3C6,0x1,0x3C7,0x1,0x3C8,0x1,0x3C9,0x1,0x3CA,0x1,0x3CB,0x1,0x3CC,0x1,0x3CD,0x1,0x3CE,0x1,0x3CF,0x1,0x3D0,0x1,0x3D1,0x1,0x3D2,0x1,0x3D3,0x1,0x3D4,0x1,0x3D5,0x1,0x3D6,0x1,0x3D7,0x1,0x3D8,0x1,0x3D9,0x1,0x3DA,0x1,0x3DB,0x1,0x3DC,0x1,0x3DD,0x1,0x3DE,0x1,0x3DF,0x1,0x3E0,0x1,0x3E1,0x1,0x3E2,0x1,0x3E3,0x1,0x3E4,0x1,0x3E5,0x1,0x3E6,0x1,0x3E7,0x1,0x3E8,0x1,0x3E9,0x1,0x3EA,0x1,0x3EB,0x1,0x3EC,0x1,0x3ED,0x1,0x3EE,0x1,0x3EF,0x1,0x3F0,0x1,0x3F1,0x1,0x3F2,0x1,0x3F3,0x1,0x3F4,0x1,0x3F5,0x1,0x3F6,0x1,0x3F7,0x1,0x3F8,0x1,0x3F9,0x1,0x3FA,0x1,0x3FB,0x1,0x3FC,0x1,0x3FD,0x1,0x3FE,0x1,0x3FF,0x1,0x400,0x1,0x401,0x1,0x402,0x1,0x403,0x1,0x404,0x1,0x405,0x1,0x406,0x1,0x407,0x1,0x408,0x1,0x409,0x1,0x40A,0x1,0x40B,0x1,0x40C,0x1,0x40D,0x1,0x40E,0x1,0x40F,0x1,0x410,0x1,0x411,0x1,0x412,0x1,0x413,0x1,0x414,0x1,0x415,0x1,0x416,0x1,0x417,0x1,0x418,0x1,0x419,0x1,0x41A,0x1,0x41B,0x1,0x41C,0x1,0x41D,0x1,0x41E,0x1,0x41F,0x1,0x420,0x1,0x421,0x1,0x422,0x1,0x423,0x1,0x424,0x1,0x425,0x1,0x426,0x1,0x427,0x1,0x428,0x1,0x429,0x1,0x42A,0x1,0x42B,0x1,0x42C,0x1,0x42D,0x1,0x42E,0x1,0x42F,0x1,0x430,0x1,0x431,0x1,0x432,0x1,0x433,0x1,0x434,0x1,0x435,0x1,0x436,0x1,0x437,0x1,0x438,0x1,0x439,0x1,0x43A,0x1,0x43B,0x1,0x43C,0x1,0x43D,0x1,0x43E,0x1,0x43F,0x1,0x440,0x1,0x441,0x1,0x442,0x1,0x443,0x1,0x444,0x1,0x445,0x1,0x446,0x1,0x447,0x1,0x448,0x1,0x449,0x1,0x44A,0x1,0x44B,0x1,0x44C,0x1,0x44D,0x1,0x44E,0x1,0x44F,0x1,0x450,0x1,0x451,0x1,0x452,0x1,0x453,0x1,0x454,0x1,0x455,0x1,0x456,0x1,0x457,0x1,0x458,0x1,0x459,0x1,0x45A,0x1,0x45B,0x1,0x45C,0x1,0x45D,0x1,0x45E,0x1,0x45F,0x1,0x460,0x1,0x461,0x1,0x462,0x1,0x463,0x1,0x464,0x1,0x465,0x1,0x466,0x1,0x467,0x1,0x468,0x1,0x469,0x1,0x46A,0x1,0x46B,0x1,0x46C,0x1,0x46D,0x1,0x46E,0x1,0x46F,0x1,0x470,0x1,0x471,0x1,0x472,0x1,0x473,0x1,0x474,0x1,0x475,0x1,0x476,0x1,0x477,0x1,0x478,0x1,0x479,0x1,0x47A,0x1,0x47B,0x1,0x47C,0x1,0x47D,0x1,0x47E,0x1,0x47F,0x1,0x480,0x1,0x481,0x1,0x482,0x1,0x483,0x1,0x484,0x1,0x485,0x1,0x486,0x1,0x487,0x1,0x488,0x1,0x489,0x1,0x48A,0x1,0x48B,0x1,0x48C,0x1,0x48D,0x1,0x48E,0x1,0x48F,0x1,0x490,0x1,0x491,0x1,0x492,0x1,0x493,0x1,0x494,0x1,0x495,0x1,0x496,0x1,0x497,0x1,0x498,0x1,0x499,0x1,0x49A,0x1,0x49B,0x1,0x49C,0x1,0x49D,0x1,0x49E,0x1,0x49F,0x1,0x4A0,0x1,0x4A1,0x1,0x4A2,0x1,0x4A3,0x1,0x4A4,0x1,0x4A5,0x1,0x4A6,0x1,0x4A7,0x1,0x4A8,0x1,0x4A9,0x1,0x4AA,0x1,0x4AB,0x1,0x4AC,0x1,0x4AD,0x1,0x4AE,0x1,0x4AF,0x1,0x4B0,0x1,0x4B1,0x1,0x4B2,0x1,0x4B3,0x1,0x4B4,0x1,0x4B5,0x1,0x4B6,0x1,0x4B7,0x1,0x4B8,0x1,0x4B9,0x1,0x4BA,0x1,0x4BB,0x1,0x4BC,0x1,0x4BD,0x1,0x4BE,0x1,0x4BF,0x1,0x4C0,0x1,0x4C1,0x1,0x4C2,0x1,0x4C3,0x1,0x4C4,0x1,0x4C5,0x1,0x4C6,0x1,0x4C7,0x1,0x4C8,0x1,0x4C9,0x1,0x4CA,0x1,0x4CB,0x1,0x4CC,0x1,0x4CD,0x1,0x4CE,0x1,0x4CF,0x1,0x4D0,0x1,0x4D1,0x1,0x4D2,0x1,0x4D3,0x2,0x3}
-local __i1illIII16,_lIII11_l_i17,__l_i1illII8=string.char,string.byte,table.concat
-local _II11_l_i1i5
-do
- local _b32=bit32
- if _b32 and _b32.bxor then _II11_l_i1i5=_b32.bxor
- else _II11_l_i1i5=function(a,b) local r,p=0,1 for _=1,8 do local x,y=a%2,b%2 if x~=y then r=r+p end a=(a-x)/2 b=(b-y)/2 p=p*2 end return r end
- end
+-- Auto Grab photo integration: Asset ID 108199149509537.
+
+
+
+
+-- ============================================================
+--  Elite_Hub | EDICIÓN ROJO CON NEGRO
+-- ============================================================
+
+
+-- MENU MENU INTEGRATION
+-- Visual shell for Elite_Hub while preserving feature callbacks.
+-- AutoGrab, Rojo/Negro, keybinds, pages and saved state remain owned by Elite_Hub.
+-- SECCIÓN 1: CONFIGURACIÓN INICIAL (BRANDING, COLORES, STATE)
+-- ============================================================
+local CANDY_BRAND = "Elite_Hub"
+local CANDY_DISCORD = "https://discord.gg/dpUq7VGB"
+local CANDY_COLORS = {
+	BG = Color3.fromRGB(0, 0, 0),
+	PANEL = Color3.fromRGB(0, 0, 0),
+	CARD = Color3.fromRGB(12, 0, 0),
+	ACCENT = Color3.fromRGB(220, 20, 30),
+	PURPLE = Color3.fromRGB(255, 40, 50),
+	ICE = Color3.fromRGB(255, 70, 80),
+	HOVER = Color3.fromRGB(180, 15, 25),
+	TEXT = Color3.fromRGB(255, 255, 255),
+	SECONDARY = Color3.fromRGB(140, 10, 20),
+	STROKE = Color3.fromRGB(255, 50, 60),
+	INPUT = Color3.fromRGB(220, 20, 30),
+	OFF = Color3.fromRGB(8, 0, 0)
+}
+
+local BG         = Color3.fromRGB(0, 0, 0)
+local SIDEBAR_BG = Color3.fromRGB(0, 0, 0)
+local CARD_BG    = Color3.fromRGB(12, 0, 0)
+local CARD_HOV   = Color3.fromRGB(220, 20, 30)
+local KB_BG      = Color3.fromRGB(15, 0, 0)
+
+local WHITE      = Color3.fromRGB(255, 255, 255)
+local DIM        = Color3.fromRGB(140, 20, 30)
+local DIM2       = Color3.fromRGB(12, 0, 0)
+
+local BORDER     = Color3.fromRGB(255, 50, 60)
+local BORDER2    = Color3.fromRGB(200, 25, 35)
+local OPTION_TRANSPARENCY = 0.42
+local OPTION_HOVER_TRANSPARENCY = 0.22
+local TAB_TRANSPARENCY = 0.35
+local TAB_HOVER_TRANSPARENCY = 0.16
+local INPUT_TRANSPARENCY = 0.24
+
+repeat task.wait() until game:IsLoaded()
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local LP = Players.LocalPlayer
+
+-- ===== ESTILO ROJO CON NEGRO Y RESPUESTA TÁCTIL DE BOTONES =====
+local BUTTON_RED = Color3.fromRGB(220, 20, 30)
+local BUTTON_TOUCH_BLACK = Color3.fromRGB(0, 0, 0)
+
+local function bindPurpleButton(button)
+    if not button:IsA("TextButton") or button:GetAttribute("PurpleButtonBound") then return end
+    if button.BackgroundTransparency >= 0.95 then return end
+    button:SetAttribute("PurpleButtonBound", true)
+    button.AutoButtonColor = false
+    button.BackgroundColor3 = BUTTON_RED
+    button.Activated:Connect(function()
+        if not button.Parent then return end
+        button.BackgroundColor3 = BUTTON_TOUCH_BLACK
+        task.delay(0.14, function()
+            if button and button.Parent then button.BackgroundColor3 = BUTTON_RED end
+        end)
+    end)
 end
-local _illIII11_l11
-local function _llIII11_l_9(_i1illIII115,_1_l_i1illI2) local _I11_l_i1il4={} for _illIII11_l3=1,#_i1illIII115 do local z=_lIII11_l_i17(_i1illIII115,_illIII11_l3) z=_II11_l_i1i5(z,_illIII11_l2[((_illIII11_l3-1)%#_illIII11_l2)+1]) z=_II11_l_i1i5(z,(_1_l_i1illI2+(_illIII11_l3-1)*13)%256) _I11_l_i1il4[_illIII11_l3]=__i1illIII16(z) end return __l_i1illII8(_I11_l_i1il4) end
-local _I11_l_i1il12,_1_l_i1illI10=1,{}
-while _I11_l_i1il12<=#_i1illIII114 do local _i1illIII1113=_i1illIII114[_I11_l_i1il12] if _i1illIII1113==1 then local _II11_l_i1i6=_i1illIII114[_I11_l_i1il12+1] _1_l_i1illI10[_II11_l_i1i6]=_llIII11_l_9(_1_l_i1illI1[_I11_l_i1il3[_II11_l_i1i6]],_1_l_i1illI2s[_II11_l_i1i6]) _I11_l_i1il12=_I11_l_i1il12+2 elseif _i1illIII1113==2 then _illIII11_l11=__l_i1illII8(_1_l_i1illI10) _I11_l_i1il12=_I11_l_i1il12+1 elseif _i1illIII1113==3 then break else _I11_l_i1il12=_I11_l_i1il12+1 end end
-local __l_i1illII0=__i1illIII16(108,111,97,100,115,116,114,105,110,103)
-local _llIII11_l_1=getfenv and getfenv() or _ENV or _G
-local _lIII11_l_i116=loadstring or load
-if not _lIII11_l_i116 and _llIII11_l_1 then _lIII11_l_i116=_llIII11_l_1[__l_i1illII0] end
-if not _lIII11_l_i116 and getrenv then local r=getrenv() _lIII11_l_i116=r.loadstring or r.load end
-if not _lIII11_l_i116 then error("sin loadstring") end
-local _II11_l_i1i14,__i1illIII115=_lIII11_l_i116(_illIII11_l11)
-if not _II11_l_i1i14 then error(__i1illIII115) end
-if setfenv and getfenv then pcall(setfenv,_II11_l_i1i14,getfenv()) end
-return _II11_l_i1i14()
-end end
-return _M()
+
+
+-- SECCIÓN 2: ALERTA DE PING ALTO
+task.spawn(function()
+    local env = (getgenv and getgenv()) or _G
+    env.__CRYON_HIGH_PING_RUN = (env.__CRYON_HIGH_PING_RUN or 0) + 1
+    local thisRun = env.__CRYON_HIGH_PING_RUN
+    env.__CRYON_INTRO_FINISHED_RUN = 0
+    local shown = false
+
+    local function getPingMilliseconds()
+        local ok, value = pcall(function()
+            local stats = game:GetService("Stats")
+            local network = stats:FindFirstChild("Network")
+            local serverStats = network and network:FindFirstChild("ServerStatsItem")
+            local pingItem = serverStats and (serverStats:FindFirstChild("Data Ping") or serverStats:FindFirstChild("Ping"))
+            if not pingItem then
+                return nil
+            end
+
+            local numericValue
+            pcall(function()
+                numericValue = pingItem:GetValue()
+            end)
+            if type(numericValue) == "number" then
+                return numericValue
+            end
+
+            local valueString = pingItem:GetValueString()
+            return tonumber(tostring(valueString):match("[%d%.]+"))
+        end)
+        return ok and tonumber(value) or nil
+    end
+
+    local function showHighPingAlert()
+        local TweenService = game:GetService("TweenService")
+        local CoreGui = game:GetService("CoreGui")
+        local Players = game:GetService("Players")
+        local player = Players.LocalPlayer
+        local playerGui = player and player:FindFirstChildOfClass("PlayerGui")
+
+        pcall(function()
+            local old = CoreGui:FindFirstChild("EliteHubHighPingAlert")
+            if old then old:Destroy() end
+        end)
+        pcall(function()
+            local old = playerGui and playerGui:FindFirstChild("EliteHubHighPingAlert")
+            if old then old:Destroy() end
+        end)
+
+        local gui = Instance.new("ScreenGui")
+        gui.Name = "EliteHubHighPingAlert"
+        gui.ResetOnSpawn = false
+        gui.IgnoreGuiInset = false
+        gui.DisplayOrder = 10000
+        gui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+
+        local parented = pcall(function()
+            gui.Parent = CoreGui
+        end)
+        if not parented or not gui.Parent then
+            gui.Parent = playerGui
+        end
+        if not gui.Parent then
+            gui:Destroy()
+            return
+        end
+
+        local bar = Instance.new("Frame")
+        bar.Name = "AlertBar"
+        bar.AnchorPoint = Vector2.new(0.5, 0)
+        bar.Position = UDim2.new(0.5, 0, 0, -44)
+        bar.Size = UDim2.new(0, 310, 0, 32)
+        bar.BackgroundColor3 = Color3.fromRGB(10,10,12)
+        bar.BackgroundTransparency = 0.06
+        bar.BorderSizePixel = 0
+        bar.ClipsDescendants = true
+        bar.ZIndex = 100
+        bar.Parent = gui
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 12)
+        corner.Parent = bar
+
+        local stroke = Instance.new("UIStroke")
+        stroke.Color = Color3.fromRGB(255, 40, 50)
+        stroke.Transparency = 0.2
+        stroke.Thickness = 1
+        stroke.Parent = bar
+
+        local gradient = Instance.new("UIGradient")
+        gradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(8,8,10)),
+            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 40, 50)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(8,8,10)),
+        })
+        gradient.Parent = bar
+
+        local label = Instance.new("TextLabel")
+        label.BackgroundTransparency = 1
+        label.Position = UDim2.new(0, 10, 0, 0)
+        label.Size = UDim2.new(1, -20, 1, 0)
+        label.Font = Enum.Font.GothamBold
+        label.Text = "high ping! Your ping is more than 150."
+        label.TextColor3 = Color3.fromRGB(220, 20, 30)
+        label.TextSize = 13
+        label.TextStrokeColor3 = Color3.fromRGB(0,0,0)
+        label.TextStrokeTransparency = 0.55
+        label.TextWrapped = false
+        label.TextScaled = false
+        label.ZIndex = 102
+        label.Parent = bar
+
+        local slideIn = TweenService:Create(
+            bar,
+            TweenInfo.new(0.35, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+            {Position = UDim2.new(0.5, 0, 0, 10)}
+        )
+        slideIn:Play()
+        slideIn.Completed:Wait()
+
+        task.wait(2)
+
+        local slideOut = TweenService:Create(
+            bar,
+            TweenInfo.new(0.35, Enum.EasingStyle.Quint, Enum.EasingDirection.In),
+            {Position = UDim2.new(0.5, 0, 0, -44)}
+        )
+        slideOut:Play()
+        slideOut.Completed:Wait()
+        gui:Destroy()
+    end
+
+    while env.__CRYON_HIGH_PING_RUN == thisRun and env.__CRYON_INTRO_FINISHED_RUN ~= thisRun do
+        task.wait(0.1)
+    end
+
+    while env.__CRYON_HIGH_PING_RUN == thisRun and not shown do
+        local ping = getPingMilliseconds()
+        if ping and ping > 150 then
+            shown = true
+            showHighPingAlert()
+            break
+        end
+        task.wait(1)
+    end
+end)
+
+-- SECCIÓN 3: INTRO ANIMADA (la mejor + canción Ajjan.Vs)
+-- RANDOM IMAGE + MUSIC + BEAT EFFECTS + SKIP
+do
+	local envI = (getgenv and getgenv()) or _G
+	if envI.__CRYON_NO_INTRO_SAVED == true then
+		envI.__CRYON_INTRO_FINISHED_RUN = envI.__CRYON_HIGH_PING_RUN or 0
+	else
+		task.spawn(function()
+--============================================================
+-- Elite_Hub INTRO
+-- YOUR ORIGINAL VERSION
+-- RANDOM IMAGE + MUSIC + BEAT EFFECTS + SKIP
+--============================================================
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local SoundService = game:GetService("SoundService")
+local RunService = game:GetService("RunService")
+
+local player = Players.LocalPlayer
+local PlayerGui = player:WaitForChild("PlayerGui")
+
+--============================================================
+-- SETTINGS
+--============================================================
+
+-- Canción de Ajjan.Vs Intro (make by ! kaii)
+local MUSIC_SOUND_ID =
+	"rbxassetid://136350225160627"
+
+local MUSIC_VOLUME =
+	0.75
+
+local BPM =
+	100
+
+local BEAT =
+	60 / BPM
+
+-- IMAGE 2 FIRST
+-- IMAGE 1 SECOND
+-- THEN RANDOM WITHOUT REPEATING
+local IMAGES = {
+	"rbxassetid://77352629689028",
+	"rbxassetid://77352629689028",
+	"rbxassetid://77352629689028",
+	"rbxassetid://77352629689028"
+}
+
+--============================================================
+-- CLEAN OLD
+--============================================================
+
+for _, name in ipairs({
+	"EliteHubIntro"
+}) do
+
+	local old =
+		PlayerGui:FindFirstChild(name)
+
+	if old then
+		old:Destroy()
+	end
+
+end
+
+--============================================================
+-- IMAGE ORDER
+--============================================================
+
+local lastImage =
+	shared.ShadowVS_LastImage
+
+local imageIndex
+
+if not shared.ShadowVS_Run then
+
+	shared.ShadowVS_Run =
+		1
+
+	imageIndex =
+		2
+
+elseif shared.ShadowVS_Run == 1 then
+
+	shared.ShadowVS_Run =
+		2
+
+	imageIndex =
+		1
+
+else
+
+	local choices = {}
+
+	for i = 1, #IMAGES do
+
+		if i ~= lastImage then
+			table.insert(
+				choices,
+				i
+			)
+		end
+
+	end
+
+	imageIndex =
+		choices[
+			math.random(
+				1,
+				#choices
+			)
+		]
+
+end
+
+shared.ShadowVS_LastImage =
+	imageIndex
+
+local IMAGE_ID =
+	IMAGES[imageIndex]
+
+--============================================================
+-- INTRO STATE
+--============================================================
+
+local introActive =
+	true
+
+local introFinished =
+	false
+
+local introSound =
+	nil
+
+--============================================================
+-- GUI
+--============================================================
+
+local gui =
+	Instance.new("ScreenGui")
+
+gui.Name =
+	"EliteHubIntro"
+
+gui.IgnoreGuiInset =
+	true
+
+gui.ResetOnSpawn =
+	false
+
+gui.DisplayOrder =
+	999999
+
+gui.ZIndexBehavior =
+	Enum.ZIndexBehavior.Sibling
+
+gui.Parent =
+	PlayerGui
+
+--============================================================
+-- BACKGROUND
+--============================================================
+
+local background =
+	Instance.new("Frame")
+
+background.Size =
+	UDim2.fromScale(
+		1,
+		1
+	)
+
+background.BackgroundColor3 =
+	Color3.fromRGB(
+		0,
+		0,
+		0
+	)
+
+background.BorderSizePixel =
+	0
+
+background.ClipsDescendants =
+	true
+
+background.Parent =
+	gui
+
+--============================================================
+-- IMAGE
+--============================================================
+
+local image =
+	Instance.new("ImageLabel")
+
+image.AnchorPoint =
+	Vector2.new(
+		0.5,
+		0.5
+	)
+
+image.Position =
+	UDim2.fromScale(
+		0.5,
+		0.5
+	)
+
+image.Size =
+	UDim2.fromScale(
+		1.08,
+		1.08
+	)
+
+image.BackgroundTransparency =
+	1
+
+image.Image =
+	IMAGE_ID
+
+image.ImageTransparency =
+	1
+
+image.ScaleType =
+	Enum.ScaleType.Crop
+
+image.ZIndex =
+	1
+
+image.Parent =
+	background
+
+--============================================================
+-- DARK OVERLAY
+--============================================================
+
+local dark =
+	Instance.new("Frame")
+
+dark.Size =
+	UDim2.fromScale(
+		1,
+		1
+	)
+
+dark.BackgroundColor3 =
+	Color3.fromRGB(
+		0,
+		0,
+		0
+	)
+
+dark.BackgroundTransparency =
+	0.25
+
+dark.BorderSizePixel =
+	0
+
+dark.ZIndex =
+	2
+
+dark.Parent =
+	background
+
+--============================================================
+-- SKIP INTRO BUTTON
+--============================================================
+
+local skip =
+	Instance.new("TextButton")
+
+skip.AnchorPoint =
+	Vector2.new(
+		1,
+		0
+	)
+
+skip.Position =
+	UDim2.new(
+		1,
+		-14,
+		0,
+		14
+	)
+
+skip.Size =
+	UDim2.fromOffset(
+		105,
+		36
+	)
+
+skip.BackgroundColor3 =
+	Color3.fromRGB(
+		15,
+		15,
+		18
+	)
+
+skip.BackgroundTransparency =
+	0.15
+
+skip.BorderSizePixel =
+	0
+
+skip.Text =
+	"SKIP INTRO"
+
+skip.TextColor3 =
+	Color3.fromRGB(
+		255,
+		255,
+		255
+	)
+
+skip.TextSize =
+	12
+
+skip.Font =
+	Enum.Font.GothamBold
+
+skip.AutoButtonColor =
+	false
+
+skip.ZIndex =
+	500
+
+skip.Parent =
+	gui
+
+local skipCorner =
+	Instance.new("UICorner")
+
+skipCorner.CornerRadius =
+	UDim.new(
+		0,
+		7
+	)
+
+skipCorner.Parent =
+	skip
+
+local skipStroke =
+	Instance.new("UIStroke")
+
+skipStroke.Color =
+	Color3.fromRGB(
+		255,
+		255,
+		255
+	)
+
+skipStroke.Transparency =
+	0.75
+
+skipStroke.Thickness =
+	1
+
+skipStroke.Parent =
+	skip
+
+--============================================================
+-- FLASH
+--============================================================
+
+local flash =
+	Instance.new("Frame")
+
+flash.Size =
+	UDim2.fromScale(
+		1,
+		1
+	)
+
+flash.BackgroundColor3 =
+	Color3.fromRGB(
+		255,
+		255,
+		255
+	)
+
+flash.BackgroundTransparency =
+	1
+
+flash.BorderSizePixel =
+	0
+
+flash.ZIndex =
+	400
+
+flash.Parent =
+	gui
+
+--============================================================
+-- TITLE
+--============================================================
+
+local introTitle =
+	Instance.new("TextLabel")
+
+introTitle.AnchorPoint =
+	Vector2.new(
+		0.5,
+		0.5
+	)
+
+introTitle.Position =
+	UDim2.fromScale(
+		0.5,
+		0.5
+	)
+
+introTitle.Size =
+	UDim2.fromScale(
+		1.1,
+		0.22
+	)
+
+introTitle.BackgroundTransparency =
+	1
+
+introTitle.Text =
+	"Elite_Hub"
+
+introTitle.TextColor3 =
+	Color3.fromRGB(
+		255,
+		255,
+		255
+	)
+
+introTitle.TextTransparency =
+	1
+
+introTitle.TextScaled =
+	true
+
+introTitle.Font =
+	Enum.Font.GothamBlack
+
+introTitle.ZIndex =
+	20
+
+introTitle.Parent =
+	background
+
+local titleStroke =
+	Instance.new("UIStroke")
+
+titleStroke.Color =
+	Color3.fromRGB(
+		0,
+		0,
+		0
+	)
+
+titleStroke.Thickness =
+	3
+
+titleStroke.Transparency =
+	1
+
+titleStroke.Parent =
+	introTitle
+
+--============================================================
+-- SUBTITLE
+--============================================================
+
+local introSubtitle =
+	Instance.new("TextLabel")
+
+introSubtitle.AnchorPoint =
+	Vector2.new(
+		0.5,
+		0.5
+	)
+
+introSubtitle.Position =
+	UDim2.fromScale(
+		0.5,
+		0.59
+	)
+
+introSubtitle.Size =
+	UDim2.fromScale(
+		0.6,
+		0.05
+	)
+
+introSubtitle.BackgroundTransparency =
+	1
+
+introSubtitle.Text =
+	"https://discord.gg/zY3tSgnJ"
+
+introSubtitle.TextColor3 =
+	Color3.fromRGB(
+		205,
+		205,
+		205
+	)
+
+introSubtitle.TextTransparency =
+	1
+
+introSubtitle.TextScaled =
+	true
+
+introSubtitle.Font =
+	Enum.Font.GothamBold
+
+introSubtitle.ZIndex =
+	20
+
+introSubtitle.Parent =
+	background
+
+--============================================================
+-- PLAY MUSIC (canción Ajjan.Vs – rbxassetid://136350225160627)
+--============================================================
+
+task.spawn(function()
+
+	if not introActive then
+		return
+	end
+
+	introSound =
+		Instance.new("Sound")
+
+	introSound.Name =
+		"EliteHubIntroMusic"
+
+	introSound.SoundId =
+		MUSIC_SOUND_ID
+
+	introSound.Volume =
+		MUSIC_VOLUME
+
+	introSound.Looped =
+		false
+
+	introSound.Parent =
+		SoundService
+
+	pcall(function()
+		introSound:Play()
+	end)
+
+end)
+
+--============================================================
+-- FINISH
+--============================================================
+
+local function finishIntro()
+
+	if introFinished then
+		return
+	end
+
+	introFinished =
+		true
+
+	introActive =
+		false
+
+	pcall(function()
+		local env = (getgenv and getgenv()) or _G
+		env.__CRYON_INTRO_FINISHED_RUN = env.__CRYON_HIGH_PING_RUN or 0
+	end)
+
+	if introSound then
+
+		pcall(function()
+
+			TweenService:Create(
+				introSound,
+				TweenInfo.new(
+					0.35
+				),
+				{
+					Volume = 0
+				}
+			):Play()
+
+		end)
+
+		task.delay(
+			0.4,
+			function()
+
+				pcall(function()
+
+					introSound:Stop()
+					introSound:Destroy()
+
+				end)
+
+			end
+		)
+
+	end
+
+	pcall(function()
+		gui:Destroy()
+	end)
+
+end
+
+--============================================================
+-- SKIP
+--============================================================
+
+skip.MouseButton1Click:Connect(
+	finishIntro
+)
+
+--============================================================
+-- SKIP HOVER
+--============================================================
+
+skip.MouseEnter:Connect(function()
+
+	TweenService:Create(
+		skip,
+		TweenInfo.new(
+			0.12
+		),
+		{
+			BackgroundColor3 =
+				Color3.fromRGB(
+					55,
+					55,
+					60
+				)
+		}
+	):Play()
+
+end)
+
+skip.MouseLeave:Connect(function()
+
+	TweenService:Create(
+		skip,
+		TweenInfo.new(
+			0.12
+		),
+		{
+			BackgroundColor3 =
+				Color3.fromRGB(
+					15,
+					15,
+					18
+				)
+		}
+	):Play()
+
+end)
+
+--============================================================
+-- IMAGE FADE IN
+--============================================================
+
+TweenService:Create(
+	image,
+	TweenInfo.new(
+		1.1,
+		Enum.EasingStyle.Quint,
+		Enum.EasingDirection.Out
+	),
+	{
+		ImageTransparency =
+			0
+	}
+):Play()
+
+--============================================================
+-- SLOW ZOOM
+--============================================================
+
+TweenService:Create(
+	image,
+	TweenInfo.new(
+		18,
+		Enum.EasingStyle.Sine,
+		Enum.EasingDirection.InOut
+	),
+	{
+		Size =
+			UDim2.fromScale(
+				1.18,
+				1.18
+			)
+	}
+):Play()
+
+--============================================================
+-- BEAT FLASH
+--============================================================
+
+task.spawn(function()
+
+	while introActive
+		and gui.Parent do
+
+		flash.BackgroundTransparency =
+			0.8
+
+		TweenService:Create(
+			flash,
+			TweenInfo.new(
+				0.12,
+				Enum.EasingStyle.Quint,
+				Enum.EasingDirection.Out
+			),
+			{
+				BackgroundTransparency =
+					1
+			}
+		):Play()
+
+		task.wait(
+			BEAT
+		)
+
+	end
+
+end)
+
+--============================================================
+-- TITLE
+--============================================================
+
+task.wait(1.5)
+
+if not introActive then
+	return
+end
+
+TweenService:Create(
+	introTitle,
+	TweenInfo.new(
+		0.7,
+		Enum.EasingStyle.Quint,
+		Enum.EasingDirection.Out
+	),
+	{
+		Size =
+			UDim2.fromScale(
+				0.9,
+				0.18
+			),
+
+		TextTransparency =
+			0
+	}
+):Play()
+
+TweenService:Create(
+	titleStroke,
+	TweenInfo.new(
+		0.5
+	),
+	{
+		Transparency =
+			0
+	}
+):Play()
+
+--============================================================
+-- TITLE SHAKE
+--============================================================
+
+task.wait(1)
+
+for i = 1, 18 do
+
+	if not introActive then
+		return
+	end
+
+	introTitle.Position =
+		UDim2.fromScale(
+			0.5 +
+				math.random(
+					-8,
+					8
+				) / 1000,
+
+			0.5 +
+				math.random(
+					-8,
+					8
+				) / 1000
+		)
+
+	task.wait(
+		0.025
+	)
+
+end
+
+introTitle.Position =
+	UDim2.fromScale(
+		0.5,
+		0.5
+	)
+
+--============================================================
+-- SUBTITLE
+--============================================================
+
+TweenService:Create(
+	introSubtitle,
+	TweenInfo.new(
+		0.6,
+		Enum.EasingStyle.Quint,
+		Enum.EasingDirection.Out
+	),
+	{
+		TextTransparency =
+			0
+	}
+):Play()
+
+--============================================================
+-- HOLD
+--============================================================
+
+task.wait(7)
+
+if not introActive then
+	return
+end
+
+--============================================================
+-- FINAL BEAT FLASHES
+--============================================================
+
+for i = 1, 14 do
+
+	if not introActive then
+		return
+	end
+
+	flash.BackgroundTransparency =
+		0
+
+	task.wait(
+		0.025
+	)
+
+	flash.BackgroundTransparency =
+		1
+
+	task.wait(
+		0.065
+	)
+
+end
+
+--============================================================
+-- EXTRA HOLD
+--============================================================
+
+task.wait(2)
+
+if not introActive then
+	return
+end
+
+--============================================================
+-- TITLE FADE
+--============================================================
+
+TweenService:Create(
+	introTitle,
+	TweenInfo.new(
+		1.2,
+		Enum.EasingStyle.Quint,
+		Enum.EasingDirection.In
+	),
+	{
+		TextTransparency =
+			1
+	}
+):Play()
+
+TweenService:Create(
+	introSubtitle,
+	TweenInfo.new(
+		1,
+		Enum.EasingStyle.Quint,
+		Enum.EasingDirection.In
+	),
+	{
+		TextTransparency =
+			1
+	}
+):Play()
+
+TweenService:Create(
+	titleStroke,
+	TweenInfo.new(
+		1
+	),
+	{
+		Transparency =
+			1
+	}
+):Play()
+
+--============================================================
+-- IMAGE FADE
+--============================================================
+
+TweenService:Create(
+	image,
+	TweenInfo.new(
+		1.5,
+		Enum.EasingStyle.Quint,
+		Enum.EasingDirection.In
+	),
+	{
+		ImageTransparency =
+			1
+	}
+):Play()
+
+TweenService:Create(
+	dark,
+	TweenInfo.new(
+		1.5
+	),
+	{
+		BackgroundTransparency =
+			1
+	}
+):Play()
+
+--============================================================
+-- MUSIC FADE
+--============================================================
+
+if introSound and
+	introSound.Parent then
+
+	TweenService:Create(
+		introSound,
+		TweenInfo.new(
+			1.5,
+			Enum.EasingStyle.Quint,
+			Enum.EasingDirection.In
+		),
+		{
+			Volume =
+				0
+		}
+	):Play()
+
+end
+
+--============================================================
+-- FINAL BLACK FADE
+--============================================================
+
+local finalFade =
+	Instance.new("Frame")
+
+finalFade.Size =
+	UDim2.fromScale(
+		1,
+		1
+	)
+
+finalFade.BackgroundColor3 =
+	Color3.fromRGB(
+		0,
+		0,
+		0
+	)
+
+finalFade.BackgroundTransparency =
+	1
+
+finalFade.BorderSizePixel =
+	0
+
+finalFade.ZIndex =
+	1000
+
+finalFade.Parent =
+	gui
+
+TweenService:Create(
+	finalFade,
+	TweenInfo.new(
+		1.5,
+		Enum.EasingStyle.Quint,
+		Enum.EasingDirection.In
+	),
+	{
+		BackgroundTransparency =
+			0
+	}
+):Play()
+
+task.wait(
+	1.6
+)
+
+finishIntro()
+
+		end)
+	end
+end
+
+
+-- ANIMATIONS isolated (no locals into main hub)
+;(function()
+local currentAnimPack = nil
+local originalAnims = nil -- guarda las animaciones normales del personaje
+
+ANIM_PACKS = {
+	["Adidas Sports"] = {WalkAnim=18537392113,RunAnim=18537384940,JumpAnim=18537380791,FallAnim=18537367238,SwimIdle=18537387180,Swim=18537389531,Animation1=18537376492,Animation2=18537371272,ClimbAnim=18537363391},
+	["Adidas Community"] = {WalkAnim=122150855457006,RunAnim=82598234841035,JumpAnim=75290611992385,FallAnim=98600215928904,SwimIdle=109346520324160,Swim=133308483266208,Animation1=122257458498464,Animation2=102357151005774,ClimbAnim=88763136693023},
+	["Adidas Aura"] = {WalkAnim=83842218823011,RunAnim=118320322718866,JumpAnim=109996626521204,FallAnim=95603166884636,SwimIdle=94922130551805,Swim=134530128383903,Animation1=110211186840347,Animation2=114191137265065,ClimbAnim=97824616490448},
+	["Wicked Popular"] = {WalkAnim=92072849924640,RunAnim=72301599441680,JumpAnim=104325245285198,FallAnim=121152442762481,Animation1=118832222982049,ClimbAnim=131326830509784,SwimIdle=113199415118199,Swim=99384245425157,Animation2=76049494037641},
+	["Elder"] = {WalkAnim=10921111375,RunAnim=10921104374,JumpAnim=10921107367,FallAnim=10921105765,SwimIdle=10921110146,Swim=10921108971,ClimbAnim=10921100400,Animation1=10921101664,Animation2=10921102574},
+	["Zombie"] = {WalkAnim=10921355261,RunAnim=616163682,JumpAnim=10921351278,FallAnim=10921350320,SwimIdle=10921353442,Swim=10921352344,Animation1=10921344533,Animation2=10921345304,ClimbAnim=10921343576},
+	["Mage"] = {WalkAnim=10921152678,RunAnim=10921148209,JumpAnim=10921149743,FallAnim=10921148939,SwimIdle=10921151661,Swim=10921150788,ClimbAnim=10921143404,Animation1=10921144709,Animation2=10921145797},
+	["Catwalk Glam"] = {WalkAnim=109168724482748,RunAnim=81024476153754,JumpAnim=116936326516985,FallAnim=92294537340807,SwimIdle=98854111361360,Swim=134591743181628,ClimbAnim=119377220967554,Animation1=133806214992291,Animation2=94970088341563},
+	["Astronaut"] = {WalkAnim=10921046031,RunAnim=10921039308,JumpAnim=10921042494,FallAnim=10921040576,SwimIdle=10921045006,Swim=10921044000,ClimbAnim=10921032124,Animation1=10921034824,Animation2=10921036806},
+	['Wicked "Dancing Through Life"'] = {WalkAnim=73718308412641,RunAnim=135515454877967,JumpAnim=78508480717326,FallAnim=78147885297412,SwimIdle=129183123083281,Swim=110657013921774,ClimbAnim=129447497744818,Animation1=92849173543269,Animation2=132238900951109},
+	["Werewolf"] = {WalkAnim=10921342074,RunAnim=10921336997,FallAnim=10921337907,SwimIdle=10921341319,Swim=10921340419,ClimbAnim=10921329322,Animation1=10921330408,Animation2=10921333667},
+	["Superhero"] = {WalkAnim=10921298616,RunAnim=10921291831,JumpAnim=10921294559,FallAnim=10921293373,SwimIdle=10921297391,Swim=10921295495,ClimbAnim=10921286911,Animation1=10921288909,Animation2=10921290167},
+	["Toy"] = {WalkAnim=10921312010,RunAnim=10921306285,JumpAnim=10921308158,FallAnim=10921307241,SwimIdle=10921310341,Swim=10921309319,ClimbAnim=10921300839,Animation1=10921301576},
+	["No Boundaries"] = {WalkAnim=18747074203,RunAnim=18747070484,JumpAnim=18747069148,FallAnim=18747062535,SwimIdle=18747071682,Swim=18747073181,ClimbAnim=18747060903,Animation1=18747067405,Animation2=18747063918},
+	["NFL"] = {WalkAnim=110358958299415,RunAnim=117333533048078,JumpAnim=119846112151352,FallAnim=129773241321032,SwimIdle=79090109939093,Swim=132697394189921,ClimbAnim=134630013742019,Animation1=92080889861410,Animation2=74451233229259},
+	["Amazon Unboxed"] = {WalkAnim=90478085024465,RunAnim=134824450619865,JumpAnim=121454505477205,FallAnim=94788218468396,SwimIdle=129126268464847,Swim=105962919001086,ClimbAnim=121145883950231,Animation1=98281136301627},
+	["Vampire"] = {WalkAnim=10921326949,RunAnim=10921320299,JumpAnim=10921322186,FallAnim=10921321317,SwimIdle=10921325443,Swim=10921324408,ClimbAnim=10921314188,Animation1=10921315373},
+	["Ninja"] = {RunAnim=656118852,WalkAnim=656121766,JumpAnim=656117878,FallAnim=656115606,Swim=656119721,SwimIdle=656121397,ClimbAnim=656114359,Idle={656117400,656118341,886742569}},
+	["Robot"] = {RunAnim=616091570,WalkAnim=616095330,JumpAnim=616090535,FallAnim=616087089,Swim=616092998,SwimIdle=616094091,ClimbAnim=616086039,Idle={616088211,616089559,885531463}},
+	["Levitation"] = {RunAnim=616010382,WalkAnim=616013216,JumpAnim=616008936,FallAnim=616005863,Swim=616011509,SwimIdle=616012453,ClimbAnim=616003713,Idle={616006778,616008087,886862142}},
+	["Stylish"] = {RunAnim=616140816,WalkAnim=616146177,JumpAnim=616139451,FallAnim=616134815,Swim=616143377,SwimIdle=616144772,ClimbAnim=616133594,Idle={616136790,616138447,886888594}},
+	["Bubbly"] = {RunAnim=910025107,WalkAnim=910034870,JumpAnim=910016857,FallAnim=910001910,Swim=910028158,SwimIdle=910030921,ClimbAnim=909997997,Idle={910004836,910009958,1018536639}},
+	["Cartoon"] = {RunAnim=742638842,WalkAnim=742640026,JumpAnim=742637942,FallAnim=742637151,Swim=742639220,SwimIdle=742639812,ClimbAnim=742636889,Idle={742637544,742638445,885477856}},
+}
+_animApplying = false
+function _animWaitForAnimate(char)
+	for _=1,40 do
+		local a=char:FindFirstChild("Animate")
+		if a and a:FindFirstChild("idle") and a:FindFirstChild("run") and a:FindFirstChild("walk") then return a end
+		task.wait(0.1)
+	end
+	return nil
+end
+function _animSetAnim(obj,id)
+	if not obj or not id then return end
+	local sid = tostring(id)
+	if not sid:find("rbxassetid://") then
+		sid = "rbxassetid://" .. sid:gsub("%D", "")
+	end
+	pcall(function() obj.AnimationId = sid end)
+end
+function _animStopTracks(hum)
+	if not hum then return end
+	for _,t in ipairs(hum:GetPlayingAnimationTracks()) do pcall(function() t:Stop(0) end) end
+end
+function _animEnsure(folder,name)
+	if not folder then return nil end
+	local a=folder:FindFirstChild(name)
+	if not a then a=Instance.new("Animation");a.Name=name;a.Parent=folder end
+	return a
+end
+function _animPick(pack,...)
+	for i=1,select("#",...) do
+		local k=select(i,...);local v=pack[k];if v~=nil then return v end
+	end
+	return nil
+end
+
+-- Guarda las animaciones originales (normales) del personaje la primera vez
+local function _animSaveOriginals(animate)
+	if originalAnims or not animate then return end
+	local function getId(folder, animName)
+		if not folder then return nil end
+		local a = folder:FindFirstChild(animName)
+		return a and a.AnimationId or nil
+	end
+	originalAnims = {
+		RunAnim   = getId(animate:FindFirstChild("run"), "RunAnim"),
+		WalkAnim  = getId(animate:FindFirstChild("walk"), "WalkAnim"),
+		JumpAnim  = getId(animate:FindFirstChild("jump"), "JumpAnim"),
+		FallAnim  = getId(animate:FindFirstChild("fall"), "FallAnim"),
+		ClimbAnim = getId(animate:FindFirstChild("climb"), "ClimbAnim"),
+		Swim      = getId(animate:FindFirstChild("swim"), "Swim"),
+		SwimIdle  = getId(animate:FindFirstChild("swimidle"), "SwimIdle"),
+		Animation1 = getId(animate:FindFirstChild("idle"), "Animation1"),
+		Animation2 = getId(animate:FindFirstChild("idle"), "Animation2"),
+	}
+end
+
+-- Restaura animaciones normales (Off / Default)
+local function restoreDefaultAnims(char)
+	char = char or LP.Character
+	if not char then return false end
+	local animate = _animWaitForAnimate(char)
+	if not animate then return false end
+	local hum = char:FindFirstChildOfClass("Humanoid")
+	_animStopTracks(hum)
+
+	-- Si tenemos originales guardados, los usamos
+	if originalAnims then
+		_animSetAnim(_animEnsure(animate:FindFirstChild("run"), "RunAnim"), originalAnims.RunAnim)
+		_animSetAnim(_animEnsure(animate:FindFirstChild("walk"), "WalkAnim"), originalAnims.WalkAnim)
+		_animSetAnim(_animEnsure(animate:FindFirstChild("jump"), "JumpAnim"), originalAnims.JumpAnim)
+		_animSetAnim(_animEnsure(animate:FindFirstChild("fall"), "FallAnim"), originalAnims.FallAnim)
+		_animSetAnim(_animEnsure(animate:FindFirstChild("climb"), "ClimbAnim"), originalAnims.ClimbAnim)
+		_animSetAnim(_animEnsure(animate:FindFirstChild("swim"), "Swim"), originalAnims.Swim)
+		_animSetAnim(_animEnsure(animate:FindFirstChild("swimidle"), "SwimIdle"), originalAnims.SwimIdle)
+		local idleFolder = animate:FindFirstChild("idle")
+		if idleFolder then
+			_animSetAnim(_animEnsure(idleFolder, "Animation1"), originalAnims.Animation1)
+			_animSetAnim(_animEnsure(idleFolder, "Animation2"), originalAnims.Animation2)
+		end
+	else
+		-- Fallback: IDs por defecto de Roblox R15
+		local DEFAULT = {
+			RunAnim = "rbxassetid://913376220",
+			WalkAnim = "rbxassetid://913402848",
+			JumpAnim = "rbxassetid://507765000",
+			FallAnim = "rbxassetid://507767968",
+			ClimbAnim = "rbxassetid://507765644",
+			Swim = "rbxassetid://913384386",
+			SwimIdle = "rbxassetid://913389285",
+			Animation1 = "rbxassetid://507766666",
+			Animation2 = "rbxassetid://507766951",
+		}
+		_animSetAnim(_animEnsure(animate:FindFirstChild("run"), "RunAnim"), DEFAULT.RunAnim)
+		_animSetAnim(_animEnsure(animate:FindFirstChild("walk"), "WalkAnim"), DEFAULT.WalkAnim)
+		_animSetAnim(_animEnsure(animate:FindFirstChild("jump"), "JumpAnim"), DEFAULT.JumpAnim)
+		_animSetAnim(_animEnsure(animate:FindFirstChild("fall"), "FallAnim"), DEFAULT.FallAnim)
+		_animSetAnim(_animEnsure(animate:FindFirstChild("climb"), "ClimbAnim"), DEFAULT.ClimbAnim)
+		_animSetAnim(_animEnsure(animate:FindFirstChild("swim"), "Swim"), DEFAULT.Swim)
+		_animSetAnim(_animEnsure(animate:FindFirstChild("swimidle"), "SwimIdle"), DEFAULT.SwimIdle)
+		local idleFolder = animate:FindFirstChild("idle")
+		if idleFolder then
+			_animSetAnim(_animEnsure(idleFolder, "Animation1"), DEFAULT.Animation1)
+			_animSetAnim(_animEnsure(idleFolder, "Animation2"), DEFAULT.Animation2)
+		end
+	end
+
+	animate.Disabled = true
+	task.wait(0.08)
+	animate.Disabled = false
+	if hum then
+		pcall(function()
+			hum:ChangeState(Enum.HumanoidStateType.Landed)
+			task.wait(0.04)
+			hum:ChangeState(Enum.HumanoidStateType.Running)
+		end)
+	end
+	return true
+end
+
+function applyAnimationPack(packName)
+	if _animApplying then return false end
+	_animApplying = true
+
+	-- Off / Normal / Default → volver a animaciones normales
+	if packName == nil or packName == "" or packName == "Off" or packName == "Normal" or packName == "Default" then
+		local ok = pcall(restoreDefaultAnims)
+		currentAnimPack = nil
+		_animApplying = false
+		return ok
+	end
+
+	local pack = ANIM_PACKS[packName]
+	if not pack then _animApplying = false; return false end
+
+	local okApply = pcall(function()
+		local char = LP.Character
+		if not char then
+			char = LP.CharacterAdded:Wait()
+		end
+		local animate = _animWaitForAnimate(char)
+		if not animate then return end
+
+		-- Guardar originales antes de aplicar el primer pack
+		_animSaveOriginals(animate)
+
+		local hum = char:FindFirstChildOfClass("Humanoid")
+		_animStopTracks(hum)
+		_animSetAnim(_animEnsure(animate:FindFirstChild("run"),"RunAnim"),   _animPick(pack,"RunAnim","Run"))
+		_animSetAnim(_animEnsure(animate:FindFirstChild("walk"),"WalkAnim"), _animPick(pack,"WalkAnim","Walk"))
+		_animSetAnim(_animEnsure(animate:FindFirstChild("jump"),"JumpAnim"), _animPick(pack,"JumpAnim","Jump"))
+		_animSetAnim(_animEnsure(animate:FindFirstChild("fall"),"FallAnim"), _animPick(pack,"FallAnim","Fall"))
+		_animSetAnim(_animEnsure(animate:FindFirstChild("climb"),"ClimbAnim"),_animPick(pack,"ClimbAnim","Climb"))
+		_animSetAnim(_animEnsure(animate:FindFirstChild("swim"),"Swim"),      _animPick(pack,"Swim"))
+		_animSetAnim(_animEnsure(animate:FindFirstChild("swimidle"),"SwimIdle"),_animPick(pack,"SwimIdle") or _animPick(pack,"Swim"))
+		local idleFolder = animate:FindFirstChild("idle")
+		if idleFolder then
+			local a1 = _animPick(pack,"Animation1"); local a2 = _animPick(pack,"Animation2")
+			if a1 or a2 then
+				local id1 = a1 or a2; local id2 = a2 or a1 or id1
+				local s1 = idleFolder:FindFirstChild("Animation1"); if not s1 then s1 = Instance.new("Animation"); s1.Name = "Animation1"; s1.Parent = idleFolder end
+				local s2 = idleFolder:FindFirstChild("Animation2"); if not s2 then s2 = Instance.new("Animation"); s2.Name = "Animation2"; s2.Parent = idleFolder end
+				_animSetAnim(s1, id1); _animSetAnim(s2, id2)
+			elseif pack.Idle and #pack.Idle > 0 then
+				for i = 1, math.max(2, #pack.Idle) do
+					local s = idleFolder:FindFirstChild("Animation"..i); if not s then s = Instance.new("Animation"); s.Name = "Animation"..i; s.Parent = idleFolder end
+					if pack.Idle[i] then _animSetAnim(s, pack.Idle[i]) end
+				end
+			end
+		end
+		animate.Disabled = true
+		task.wait(0.08)
+		animate.Disabled = false
+		if hum then
+			pcall(function()
+				hum:ChangeState(Enum.HumanoidStateType.Landed)
+				task.wait(0.04)
+				hum:ChangeState(Enum.HumanoidStateType.Running)
+			end)
+		end
+	end)
+	currentAnimPack = packName
+	_animApplying = false
+	return okApply and true or false
+end
+
+-- re-apply pack after respawn (o restaurar normales si está en Off)
+pcall(function()
+	LP.CharacterAdded:Connect(function()
+		task.delay(0.8, function()
+			if currentAnimPack and ANIM_PACKS[currentAnimPack] then
+				pcall(applyAnimationPack, currentAnimPack)
+			elseif currentAnimPack == nil or currentAnimPack == "Off" then
+				-- no forzar pack; dejar animaciones por defecto del juego
+			end
+		end)
+	end)
+end)
+
+_G.NIGHT_applyAnimationPack = applyAnimationPack
+_G.NIGHT_restoreDefaultAnims = restoreDefaultAnims
+_G.NIGHT_getCurrentAnimPack = function() return currentAnimPack end
+_G.NIGHT_setCurrentAnimPack = function(n) currentAnimPack = n end
+end)()
+
+
+-- ============================================================
+-- Pack Accessory (Bleed 1/2/3) – tomado de VisDuels
+-- ============================================================
+;(function()
+	_G.NIGHT_OriginalOutfit = _G.NIGHT_OriginalOutfit or {shirt = nil, pants = nil}
+	_G.NIGHT_OriginalAccessories = _G.NIGHT_OriginalAccessories or {}
+
+	local ACCESSORY_PACK_ORDER = {"Off", "Bleed 1", "Bleed 2", "Bleed 3"}
+	local currentAccessoryPack = "Off"
+
+	local BLEED_PACKS = {
+		["Bleed 1"] = {
+			accessory   = 306969564,
+			offset      = Vector3.new(0, 0.3, 0),
+			headMesh    = "http://www.roblox.com/asset/?id=134079402",
+			headTexture = "http://www.roblox.com/asset/?id=133940918",
+			shirt       = "http://www.roblox.com/asset/?id=10632503795",
+			pants       = "http://www.roblox.com/asset/?id=123161592384863",
+			korblox     = "right",
+		},
+		["Bleed 2"] = {
+			accessory   = 1744060292,
+			offset      = Vector3.new(0, 1.4, -0.2),
+			headMesh    = "http://www.roblox.com/asset/?id=134079402",
+			headTexture = "http://www.roblox.com/asset/?id=133940918",
+			shirt       = "http://www.roblox.com/asset/?id=11526718530",
+			pants       = "http://www.roblox.com/asset/?id=93710523210027",
+			korblox     = "right",
+		},
+		["Bleed 3"] = {
+			accessory   = 112564966849233,
+			offset      = Vector3.new(0, 0.6, 0),
+			headMesh    = "http://www.roblox.com/asset/?id=134079402",
+			headTexture = "http://www.roblox.com/asset/?id=133940918",
+			shirt       = "http://www.roblox.com/asset/?id=11849088376",
+			pants       = "http://www.roblox.com/asset/?id=16534673928",
+			korblox     = "right",
+		},
+	}
+
+	local function saveOriginalOutfit(char)
+		if not char then return end
+		local shirt = char:FindFirstChildWhichIsA("Shirt")
+		local pants = char:FindFirstChildWhichIsA("Pants")
+		_G.NIGHT_OriginalOutfit.shirt = shirt and shirt.ShirtTemplate or nil
+		_G.NIGHT_OriginalOutfit.pants = pants and pants.PantsTemplate or nil
+	end
+
+	local function restoreOriginalOutfit(char)
+		if not char then return end
+		for _, obj in ipairs(char:GetChildren()) do
+			if obj:IsA("Shirt") or obj:IsA("Pants") then obj:Destroy() end
+		end
+		if _G.NIGHT_OriginalOutfit.shirt then
+			local s = Instance.new("Shirt"); s.ShirtTemplate = _G.NIGHT_OriginalOutfit.shirt; s.Parent = char
+		end
+		if _G.NIGHT_OriginalOutfit.pants then
+			local p = Instance.new("Pants"); p.PantsTemplate = _G.NIGHT_OriginalOutfit.pants; p.Parent = char
+		end
+	end
+
+	local function clearAllOutfit(char)
+		if not char then return end
+		for _, obj in ipairs(char:GetChildren()) do
+			if obj:IsA("Shirt") or obj:IsA("Pants") then obj:Destroy() end
+		end
+	end
+
+	local function saveOriginalAccessories(char)
+		_G.NIGHT_OriginalAccessories = {}
+		if not char then return end
+		for _, child in ipairs(char:GetChildren()) do
+			if child:IsA("Accessory") or child:IsA("Hat") then
+				table.insert(_G.NIGHT_OriginalAccessories, child:Clone())
+			end
+		end
+	end
+
+	local function restoreOriginalAccessories(char)
+		if not char then return end
+		for _, child in ipairs(char:GetChildren()) do
+			if child:IsA("Accessory") or child:IsA("Hat") or child.Name == "AuFfitAccessory" then
+				child:Destroy()
+			end
+		end
+		for _, clone in ipairs(_G.NIGHT_OriginalAccessories) do
+			if clone and clone.Parent == nil then
+				clone:Clone().Parent = char
+			end
+		end
+		_G.NIGHT_OriginalAccessories = {}
+	end
+
+	local function clearAllAccessories(char)
+		if not char then return end
+		for _, child in ipairs(char:GetChildren()) do
+			if child:IsA("Accessory") or child:IsA("Hat") or child.Name == "AuFfitAccessory" then
+				child:Destroy()
+			end
+			if child.Name:find("Korblox_") or child.Name:find("Headless_") then
+				child:Destroy()
+			end
+		end
+		for _, partName in ipairs({"Head","LeftUpperLeg","LeftLowerLeg","LeftFoot","RightUpperLeg","RightLowerLeg","RightFoot"}) do
+			local part = char:FindFirstChild(partName)
+			if part and part:IsA("BasePart") then part.Transparency = 0 end
+		end
+	end
+
+	local function applyBleedOutfit(packName)
+		local config = BLEED_PACKS[packName]
+		if not config then return false end
+		local char = LP.Character
+		if not char then return false end
+		char:WaitForChild("Head", 10)
+		local head = char:FindFirstChild("Head")
+		if not head then return false end
+
+		if config.headMesh then
+			for _, d in ipairs(char:GetChildren()) do
+				if d:IsA("CharacterMesh") and d.BodyPart == Enum.BodyPart.Head then
+					pcall(function() d:Destroy() end)
+				end
+			end
+			local done = false
+			if head:IsA("MeshPart") then
+				done = pcall(function()
+					head.MeshId = config.headMesh
+					if config.headTexture then head.TextureID = config.headTexture end
+				end)
+			end
+			if not done then
+				local sm = head:FindFirstChildWhichIsA("SpecialMesh") or Instance.new("SpecialMesh")
+				sm.Parent = head
+				sm.MeshType = Enum.MeshType.FileMesh
+				sm.MeshId = config.headMesh
+				sm.TextureId = config.headTexture or ""
+			end
+		end
+
+		if config.shirt then
+			local s = char:FindFirstChildWhichIsA("Shirt") or Instance.new("Shirt")
+			s.Name = "Shirt"; s.ShirtTemplate = config.shirt; s.Parent = char
+		end
+		if config.pants then
+			local p = char:FindFirstChildWhichIsA("Pants") or Instance.new("Pants")
+			p.Name = "Pants"; p.PantsTemplate = config.pants; p.Parent = char
+		end
+
+		if config.accessory and head then
+			local old = char:FindFirstChild("AuFfitAccessory")
+			if old then old:Destroy() end
+			local objs
+			local ok, res = pcall(function()
+				return game:GetObjects("rbxassetid://" .. tostring(config.accessory))
+			end)
+			if ok and type(res) == "table" and #res > 0 then
+				objs = res
+			else
+				ok, res = pcall(function()
+					return game:GetService("InsertService"):LoadAsset(config.accessory)
+				end)
+				if ok and res then objs = {res} end
+			end
+			if objs then
+				local handle
+				for _, o in ipairs(objs) do
+					if o:IsA("BasePart") then handle = o; break end
+					local f = o:FindFirstChildWhichIsA("BasePart", true)
+					if f then handle = f; break end
+				end
+				if handle then
+					local h = handle:Clone()
+					h.Name = "AuFfitAccessory"
+					h.CanCollide = false
+					h.Anchored = false
+					h.Massless = true
+					h.Parent = char
+					local weld = Instance.new("Weld")
+					weld.Part0 = head
+					weld.Part1 = h
+					weld.C0 = CFrame.new(config.offset or Vector3.zero)
+					weld.Parent = h
+				end
+				for _, o in ipairs(objs) do pcall(function() o:Destroy() end) end
+			end
+		end
+
+		if config.korblox and config.korblox ~= "none" then
+			local function attachKorblox(side)
+				local ids = { left = 139607673, right = 139607718 }
+				local targets = { left = "LeftUpperLeg", right = "RightUpperLeg" }
+				local hides = {
+					left  = {"LeftUpperLeg","LeftLowerLeg","LeftFoot"},
+					right = {"RightUpperLeg","RightLowerLeg","RightFoot"}
+				}
+				local targetPart = char:FindFirstChild(targets[side])
+				if not targetPart then return false end
+				for _, partName in ipairs(hides[side]) do
+					local limb = char:FindFirstChild(partName)
+					if limb and limb:IsA("BasePart") then limb.Transparency = 1 end
+				end
+				local success, objects = pcall(function()
+					return game:GetObjects("rbxassetid://" .. ids[side])
+				end)
+				if not success or not objects or #objects == 0 then return false end
+				local assetModel = objects[1]
+				local mainMesh = assetModel:IsA("BasePart") and assetModel or assetModel:FindFirstChildWhichIsA("BasePart", true)
+				if not mainMesh then assetModel:Destroy(); return false end
+				mainMesh.CanCollide = false
+				mainMesh.Massless = true
+				mainMesh.CFrame = targetPart.CFrame
+				local weld = Instance.new("WeldConstraint")
+				weld.Part0 = targetPart
+				weld.Part1 = mainMesh
+				weld.Parent = mainMesh
+				assetModel.Parent = char
+				return true
+			end
+			if config.korblox == "left" then attachKorblox("left")
+			elseif config.korblox == "right" then attachKorblox("right") end
+		end
+		return true
+	end
+
+	local function applyAccessoryPack(packName)
+		local char = LP.Character
+		if not char then return end
+		currentAccessoryPack = packName or "Off"
+		if packName == "Off" then
+			clearAllAccessories(char)
+			restoreOriginalOutfit(char)
+			restoreOriginalAccessories(char)
+			return
+		end
+		if not _G.NIGHT_OriginalOutfit.shirt and not _G.NIGHT_OriginalOutfit.pants then
+			saveOriginalOutfit(char)
+		end
+		if #_G.NIGHT_OriginalAccessories == 0 then
+			saveOriginalAccessories(char)
+		end
+		clearAllOutfit(char)
+		clearAllAccessories(char)
+		applyBleedOutfit(packName)
+	end
+
+	_G.NIGHT_applyAccessoryPack = applyAccessoryPack
+	_G.NIGHT_getCurrentAccessoryPack = function() return currentAccessoryPack end
+	_G.NIGHT_setCurrentAccessoryPack = function(n) currentAccessoryPack = n end
+	_G.NIGHT_ACCESSORY_PACK_ORDER = ACCESSORY_PACK_ORDER
+
+	pcall(function()
+		LP.CharacterAdded:Connect(function()
+			task.delay(1.0, function()
+				if currentAccessoryPack and currentAccessoryPack ~= "Off" then
+					pcall(applyAccessoryPack, currentAccessoryPack)
+				end
+			end)
+		end)
+	end)
+end)()
+
+
+-- Anti Die system (isolated, no discord on billboard)
+;(function()
+	local Players = game:GetService("Players")
+	local RunService = game:GetService("RunService")
+	local Workspace = game:GetService("Workspace")
+	local LP = Players.LocalPlayer
+	local enabled = false
+	local heartConn, charAddedConn = nil, nil
+	local deathConns = {}
+	local billboardGui, billboardFrame, billboardUpdater = nil, nil, nil
+
+	local function destroyBillboard()
+		if billboardUpdater then pcall(function() billboardUpdater:Disconnect() end); billboardUpdater = nil end
+		if billboardGui then pcall(function() billboardGui:Destroy() end); billboardGui = nil end
+		billboardFrame = nil
+	end
+
+	local function createBillboard(char)
+		if not char then return end
+		local head = char:FindFirstChild("Head")
+		if not head then return end
+		destroyBillboard()
+		billboardGui = Instance.new("ScreenGui")
+		billboardGui.Name = "EliteHubAntiDieBillboard"
+		billboardGui.ResetOnSpawn = false
+		billboardGui.IgnoreGuiInset = true
+		pcall(function() billboardGui.Parent = game:GetService("CoreGui") end)
+		if not billboardGui.Parent then
+			billboardGui.Parent = LP:FindFirstChildOfClass("PlayerGui") or LP:WaitForChild("PlayerGui")
+		end
+		billboardFrame = Instance.new("Frame", billboardGui)
+		billboardFrame.Size = UDim2.new(0, 160, 0, 36)
+		billboardFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		billboardFrame.BackgroundTransparency = 0.3
+		billboardFrame.BorderSizePixel = 0
+		Instance.new("UICorner", billboardFrame).CornerRadius = UDim.new(0, 8)
+		local txt1 = Instance.new("TextLabel", billboardFrame)
+		txt1.Size = UDim2.new(1, 0, 1, 0)
+		txt1.BackgroundTransparency = 1
+		txt1.Text = "ANTI DIE"
+		txt1.TextColor3 = Color3.fromRGB(255, 255, 255)
+		txt1.Font = Enum.Font.GothamBlack
+		txt1.TextSize = 18
+		txt1.TextXAlignment = Enum.TextXAlignment.Center
+		txt1.TextYAlignment = Enum.TextYAlignment.Center
+		local camera = Workspace.CurrentCamera
+		billboardUpdater = RunService.Heartbeat:Connect(function()
+			if not billboardGui or not billboardGui.Parent then return end
+			if not head or not head.Parent then billboardFrame.Visible = false; return end
+			local pos, onScreen = camera:WorldToScreenPoint(head.Position)
+			if onScreen then
+				billboardFrame.Position = UDim2.new(0, pos.X - 80, 0, pos.Y - 40)
+				billboardFrame.Visible = true
+			else
+				billboardFrame.Visible = false
+			end
+		end)
+	end
+
+	local function protectChar(char)
+		if not char then return end
+		local hum = char:WaitForChild("Humanoid", 5)
+		if not hum then return end
+		hum.MaxHealth = math.huge
+		hum.Health = math.huge
+		table.insert(deathConns, hum.StateChanged:Connect(function(_, new)
+			if not enabled then return end
+			if new == Enum.HumanoidStateType.Dead then
+				hum.Health = math.huge
+				hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
+			end
+		end))
+		hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
+		table.insert(deathConns, hum:GetPropertyChangedSignal("Health"):Connect(function()
+			if not enabled then return end
+			if hum.Health < hum.MaxHealth then hum.Health = math.huge end
+		end))
+		if heartConn then heartConn:Disconnect() end
+		heartConn = RunService.Heartbeat:Connect(function()
+			if not enabled then return end
+			if hum and hum.Parent and hum.Health < hum.MaxHealth then hum.Health = math.huge end
+		end)
+		createBillboard(char)
+	end
+
+	local function startProtect()
+		for _, c in ipairs(deathConns) do pcall(function() c:Disconnect() end) end
+		deathConns = {}
+		if heartConn then heartConn:Disconnect(); heartConn = nil end
+		if charAddedConn then charAddedConn:Disconnect(); charAddedConn = nil end
+		protectChar(LP.Character)
+		charAddedConn = LP.CharacterAdded:Connect(function(c)
+			if not enabled then return end
+			task.wait(0.1)
+			for _, c2 in ipairs(deathConns) do pcall(function() c2:Disconnect() end) end
+			deathConns = {}
+			protectChar(c)
+		end)
+	end
+
+	local function stopProtect()
+		for _, c in ipairs(deathConns) do pcall(function() c:Disconnect() end) end
+		deathConns = {}
+		if heartConn then heartConn:Disconnect(); heartConn = nil end
+		if charAddedConn then charAddedConn:Disconnect(); charAddedConn = nil end
+		destroyBillboard()
+		local char = LP.Character
+		if char then
+			local hum = char:FindFirstChildOfClass("Humanoid")
+			if hum then
+				hum:SetStateEnabled(Enum.HumanoidStateType.Dead, true)
+				hum.MaxHealth = 100
+				hum.Health = math.min(hum.Health, 100)
+			end
+		end
+	end
+
+	_G.NIGHT_setAntiDie = function(on)
+		enabled = on and true or false
+		if enabled then startProtect() else stopProtect() end
+	end
+	_G.NIGHT_getAntiDie = function() return enabled end
+end)()
+
+
+-- Music packs (Chocolate + hub songs)
+;(function()
+	local SoundService = game:GetService("SoundService")
+	local current = nil
+	local sound = nil
+	local PACKS = {
+		["Tryhard"] = {id = "rbxassetid://137188221417776", vol = 0.7},
+		["Tryhard 2"] = {id = "rbxassetid://77142753938657", vol = 0.7},
+		["Tryhard Def"] = {id = "rbxassetid://75196377290071", vol = 0.7},
+		["XD"] = {id = "rbxassetid://90813223538688", vol = 0.7},
+		["67"] = {id = "rbxassetid://98859392001383", vol = 0.7},
+		["3AM"] = {id = "rbxassetid://73755162651548", vol = 0.7},
+		["Beretta"] = {id = "rbxassetid://94281718874647", vol = 0.7},
+		["Brasil"] = {id = "rbxassetid://91225667489242", vol = 0.7},
+		["Brasil 2"] = {id = "rbxassetid://135750430892149", vol = 0.7},
+		["Migizin"] = {id = "rbxassetid://91630262633548", vol = 0.7},
+	}
+	local NAMES = {"Off","Tryhard","Tryhard 2","Tryhard Def","XD","67","3AM","Beretta","Brasil","Brasil 2","Migizin"}
+
+	local function stop()
+		if sound then
+			pcall(function() sound:Stop(); sound:Destroy() end)
+			sound = nil
+		end
+	end
+
+	local function play(name)
+		stop()
+		current = name
+		if not name or name == "Off" then return end
+		local pack = PACKS[name]
+		if not pack then return end
+		pcall(function()
+			local parent = SoundService
+			pcall(function() if gethui then parent = gethui() end end)
+			local s = Instance.new("Sound")
+			s.Name = "EliteHubMusic_" .. tostring(name):gsub("%s","_")
+			s.SoundId = pack.id
+			s.Volume = pack.vol or 0.7
+			s.Looped = true
+			s.Parent = parent
+			s:Play()
+			sound = s
+		end)
+	end
+
+	local function cycle()
+		local idx = 1
+		for i, n in ipairs(NAMES) do
+			if n == current then idx = i; break end
+		end
+		idx = idx % #NAMES + 1
+		play(NAMES[idx])
+		return NAMES[idx]
+	end
+
+	_G.NIGHT_musicPlay = play
+	_G.NIGHT_musicStop = stop
+	_G.NIGHT_musicCycle = cycle
+	_G.NIGHT_musicGet = function() return current or "Off" end
+	_G.NIGHT_musicNames = NAMES
+end)()
+
+
+-- Dual keybind helper (outside main IIFE to save locals)
+_G.NIGHT_rowDualKB = function(baseCard, cLabel, WHITE, DIM, KB_BG, INPUT_TRANSPARENCY, BORDER, UIS, TweenService, State, tabName, label, kbEntry)
+	local c = baseCard(tabName, 48)
+	local titleLabel = cLabel(c, label, 10, 120, 11, WHITE, Enum.Font.GothamBold)
+	titleLabel.Position = UDim2.new(0, 10, 0.5, -8)
+	local function makeHalf(isPad)
+		local b = Instance.new("TextButton", c)
+		b.Size = UDim2.new(0, 52, 0, 22)
+		b.BackgroundColor3 = KB_BG
+		b.BackgroundTransparency = INPUT_TRANSPARENCY
+		b.BorderSizePixel = 0
+		b.TextColor3 = WHITE
+		b.Font = Enum.Font.GothamBold
+		b.TextSize = 8
+		b.ZIndex = 11
+		Instance.new("UICorner", b).CornerRadius = UDim.new(0, 8)
+		local bs = Instance.new("UIStroke", b); bs.Color = BORDER; bs.Thickness = 1
+		local function refresh()
+			if isPad then
+				b.Text = kbEntry.gp and ("GP:" .. kbEntry.gp.Name) or "Pad"
+			else
+				b.Text = kbEntry.kb and kbEntry.kb.Name or "PC"
+			end
+		end
+		refresh()
+		local li, lc = false, nil
+		b.MouseButton1Click:Connect(function()
+			if li then
+				li = false; _anyKeyListening = false
+				if lc then lc:Disconnect(); lc = nil end
+				refresh(); b.TextColor3 = WHITE
+				return
+			end
+			li = true; _anyKeyListening = true
+			b.Text = "···"; b.TextColor3 = DIM
+			lc = UIS.InputBegan:Connect(function(inp)
+				if not li then return end
+				local isKb = inp.UserInputType == Enum.UserInputType.Keyboard
+				local isGp = string.sub(inp.UserInputType.Name, 1, 7) == "Gamepad"
+				if not isKb and not isGp then return end
+				if inp.KeyCode == Enum.KeyCode.Escape then
+					li = false; _anyKeyListening = false
+					if lc then lc:Disconnect(); lc = nil end
+					refresh(); b.TextColor3 = WHITE
+					return
+				end
+				if isPad then kbEntry.gp = inp.KeyCode else kbEntry.kb = inp.KeyCode end
+				li = false; _anyKeyListening = false
+				if lc then lc:Disconnect(); lc = nil end
+				refresh(); b.TextColor3 = WHITE
+				if State.requestConfigSave then State.requestConfigSave() end
+			end)
+		end)
+		return b
+	end
+	local pcBtn = makeHalf(false)
+	pcBtn.Position = UDim2.new(1, -114, 0.5, -11)
+	local padBtn = makeHalf(true)
+	padBtn.Position = UDim2.new(1, -58, 0.5, -11)
+end
+
+
+-- Skins + Medusa Reset (isolated)
+;(function()
+	local Players = game:GetService("Players")
+	local LP = Players.LocalPlayer
+	local current = "Off"
+	local medusaOn = false
+	local medusaBusy = false
+	local medusaConns = {}
+	local medusaCharConn = nil
+	local resetFn = nil
+
+	_G.NIGHT_registerInstaReset = function(fn) resetFn = fn end
+
+	local function clearAccessories()
+		local char = LP.Character
+		if not char then return end
+		for _, child in ipairs(char:GetChildren()) do
+			if child.Name:find("Korblox_") or child.Name:find("Headless_") then
+				pcall(function() child:Destroy() end)
+			end
+		end
+		for _, partName in ipairs({"Head", "RightUpperLeg", "RightLowerLeg", "RightFoot"}) do
+			local part = char:FindFirstChild(partName)
+			if part and part:IsA("BasePart") then part.Transparency = 0 end
+		end
+	end
+
+	local function attachKorblox()
+		local char = LP.Character
+		if not char then return end
+		local targetPart = char:FindFirstChild("RightUpperLeg")
+		if not targetPart then return end
+		local old = char:FindFirstChild("Korblox_RightLeg")
+		if old then old:Destroy() end
+		for _, n in ipairs({"RightUpperLeg", "RightLowerLeg", "RightFoot"}) do
+			local limb = char:FindFirstChild(n)
+			if limb and limb:IsA("BasePart") then limb.Transparency = 1 end
+		end
+		local ok, objects = pcall(function() return game:GetObjects("rbxassetid://139607718") end)
+		if not ok or not objects or #objects == 0 then return end
+		local assetModel = objects[1]
+		assetModel.Name = "Korblox_RightLeg"
+		local mainMesh = assetModel:IsA("BasePart") and assetModel or assetModel:FindFirstChildWhichIsA("BasePart", true)
+		if not mainMesh then return end
+		mainMesh.CanCollide = false
+		mainMesh.CFrame = targetPart.CFrame
+		local weld = Instance.new("WeldConstraint")
+		weld.Part0 = targetPart
+		weld.Part1 = mainMesh
+		weld.Parent = mainMesh
+		assetModel.Parent = char
+	end
+
+	local function attachHeadless()
+		local char = LP.Character
+		if not char then return end
+		local targetPart = char:FindFirstChild("Head")
+		if not targetPart then return end
+		local old = char:FindFirstChild("Headless_Headless")
+		if old then old:Destroy() end
+		targetPart.Transparency = 1
+		local ok, objects = pcall(function() return game:GetObjects("rbxassetid://134082579") end)
+		if not ok or not objects or #objects == 0 then return end
+		local assetModel = objects[1]
+		assetModel.Name = "Headless_Headless"
+		local mainMesh = assetModel:IsA("BasePart") and assetModel or assetModel:FindFirstChildWhichIsA("BasePart", true)
+		if not mainMesh then return end
+		mainMesh.CanCollide = false
+		mainMesh.CFrame = targetPart.CFrame
+		local weld = Instance.new("WeldConstraint")
+		weld.Part0 = targetPart
+		weld.Part1 = mainMesh
+		weld.Parent = mainMesh
+		assetModel.Parent = char
+	end
+
+	local function applySkin(packName)
+		current = packName or "Off"
+		clearAccessories()
+		if current == "Korblox" or current == "Both" then pcall(attachKorblox) end
+		if current == "Headless" or current == "Both" then pcall(attachHeadless) end
+	end
+
+	_G.NIGHT_applySkin = applySkin
+	_G.NIGHT_getSkin = function() return current end
+
+	LP.CharacterAdded:Connect(function()
+		task.delay(0.45, function()
+			if current and current ~= "Off" then pcall(applySkin, current) end
+		end)
+	end)
+
+	local function clearMedusa()
+		for _, c in ipairs(medusaConns) do pcall(function() c:Disconnect() end) end
+		medusaConns = {}
+	end
+
+	local function tryReset()
+		if not medusaOn or medusaBusy then return end
+		medusaBusy = true
+		task.spawn(function()
+			if resetFn then pcall(resetFn) end
+			task.wait(1.1)
+			medusaBusy = false
+		end)
+	end
+
+	local function watchPart(part)
+		if not part or not part:IsA("BasePart") then return end
+		table.insert(medusaConns, part:GetPropertyChangedSignal("Anchored"):Connect(function()
+			if not medusaOn then return end
+			if part.Anchored and part.Transparency == 1 then
+				tryReset()
+			end
+		end))
+	end
+
+	local function watchChar(char)
+		clearMedusa()
+		if not char then return end
+		for _, part in ipairs(char:GetDescendants()) do
+			if part:IsA("BasePart") then watchPart(part) end
+		end
+		table.insert(medusaConns, char.DescendantAdded:Connect(function(part)
+			if part:IsA("BasePart") then watchPart(part) end
+		end))
+	end
+
+	_G.NIGHT_setMedusaReset = function(on)
+		medusaOn = on and true or false
+		if medusaOn then
+			if not medusaCharConn then
+				medusaCharConn = LP.CharacterAdded:Connect(watchChar)
+			end
+			if LP.Character then watchChar(LP.Character) end
+		else
+			clearMedusa()
+		end
+	end
+	_G.NIGHT_getMedusaReset = function() return medusaOn end
+end)()
+
+-- SECCIÓN 4: VARIABLES GLOBALES Y STATE
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local HttpService = game:GetService("HttpService")
+local LP = Players.LocalPlayer
+
+;(function()
+local NS, CS, LS, LS2 = 60, 30, 15, 24.5
+
+local laggerPhase = 0
+
+ninoTimeEnabled = false
+ninoTimerGuiBB = nil
+ninoTimerText = nil
+ninoStunActive = false
+ninoStunStartTime = 0
+ninoStunDuration = 3.0
+ninoStunConnection = nil
+ninoStateChangedConnection = nil
+ninoLastDisplayedSecond = nil
+setNinoTimeVisual = nil
+
+function ninoCreateBillboard()
+	if ninoTimerGuiBB then return end
+	local char = LP.Character
+	if not char then return end
+	local head = char:FindFirstChild("Head")
+	if not head then return end
+	ninoTimerGuiBB = Instance.new("BillboardGui")
+	ninoTimerGuiBB.Name = "NinoTimeBB"
+	ninoTimerGuiBB.Adornee = head
+	ninoTimerGuiBB.Size = UDim2.new(0, 120, 0, 36)
+	ninoTimerGuiBB.StudsOffset = Vector3.new(0, 3.5, 0)
+	ninoTimerGuiBB.AlwaysOnTop = true
+	ninoTimerGuiBB.Parent = game:GetService("CoreGui")
+	ninoTimerText = Instance.new("TextLabel", ninoTimerGuiBB)
+	ninoTimerText.Size = UDim2.new(1, 0, 1, 0)
+	ninoTimerText.BackgroundTransparency = 1
+	ninoTimerText.Text = "READY!!"
+	ninoTimerText.TextColor3 = Color3.fromRGB(45,180,90)
+	ninoTimerText.Font = Enum.Font.GothamBlack
+	ninoTimerText.TextSize = 20
+	ninoTimerText.TextStrokeTransparency = 0.5
+	ninoTimerText.TextStrokeColor3 = Color3.fromRGB(0,0,0)
+	ninoTimerText.TextXAlignment = Enum.TextXAlignment.Center
+	ninoTimerText.TextYAlignment = Enum.TextYAlignment.Center
+end
+
+function ninoUpdateDisplay()
+	if not ninoTimerText then return end
+	if not ninoStunActive then
+		ninoTimerText.Text = "READY!!"
+		ninoTimerText.TextColor3 = Color3.fromRGB(45,180,90)
+		ninoTimerText.TextSize = 20
+		if ninoTimerGuiBB then ninoTimerGuiBB.Enabled = ninoTimeEnabled end
+		return
+	end
+	local elapsed = tick() - ninoStunStartTime
+	local remaining = math.max(0, ninoStunDuration - elapsed)
+	if remaining <= 0 then
+		ninoStunActive = false
+		if ninoStunConnection then ninoStunConnection:Disconnect(); ninoStunConnection = nil end
+		ninoTimerText.Text = "READY!!"
+		ninoTimerText.TextColor3 = Color3.fromRGB(45,180,90)
+		ninoTimerText.TextSize = 20
+		if ninoTimerGuiBB then ninoTimerGuiBB.Enabled = true end
+		return
+	end
+	local second = math.ceil(remaining)
+	if second ~= ninoLastDisplayedSecond then
+		ninoLastDisplayedSecond = second
+		ninoTimerText.Text = tostring(second)
+		ninoTimerText.TextSize = 32
+		if second == 3 then ninoTimerText.TextColor3 = Color3.fromRGB(72,28,115)
+		elseif second == 2 then ninoTimerText.TextColor3 = Color3.fromRGB(45,180,90)
+		elseif second == 1 then ninoTimerText.TextColor3 = Color3.fromRGB(170,95,235) end
+	end
+	if ninoTimerGuiBB then ninoTimerGuiBB.Enabled = true end
+end
+
+function ninoOnStunDetected()
+	if not ninoTimeEnabled then return end
+	if ninoStunActive then return end
+	ninoStunActive = true
+	ninoStunStartTime = tick()
+	ninoLastDisplayedSecond = nil
+	ninoCreateBillboard()
+	ninoUpdateDisplay()
+	if ninoStunConnection then ninoStunConnection:Disconnect() end
+	ninoStunConnection = RunService.Heartbeat:Connect(ninoUpdateDisplay)
+end
+
+function ninoSetupDetection(char)
+	if ninoStateChangedConnection then ninoStateChangedConnection:Disconnect() end
+	local hum = char and char:FindFirstChildOfClass("Humanoid")
+	if not hum then return end
+	ninoStateChangedConnection = hum.StateChanged:Connect(function(_, newState)
+		if not ninoTimeEnabled then return end
+		local isStunned = (newState == Enum.HumanoidStateType.Physics or
+		                   newState == Enum.HumanoidStateType.Ragdoll or
+		                   newState == Enum.HumanoidStateType.FallingDown)
+		if isStunned then ninoOnStunDetected() end
+	end)
+end
+
+function setNinoTime(enabled)
+	ninoTimeEnabled = enabled
+	if setNinoTimeVisual then setNinoTimeVisual(enabled) end
+	if not enabled then
+		if ninoStunConnection then ninoStunConnection:Disconnect(); ninoStunConnection = nil end
+		ninoStunActive = false
+		if ninoTimerGuiBB then ninoTimerGuiBB.Enabled = false end
+		if ninoStateChangedConnection then ninoStateChangedConnection:Disconnect(); ninoStateChangedConnection = nil end
+	else
+		ninoCreateBillboard()
+		local char = LP.Character
+		if char then
+			local hum = char:FindFirstChildOfClass("Humanoid")
+			if hum then
+				local st = hum:GetState()
+				if st == Enum.HumanoidStateType.Physics or st == Enum.HumanoidStateType.Ragdoll then ninoOnStunDetected() end
+			end
+			ninoSetupDetection(char)
+		end
+	end
+end
+local State = {
+	speedToggled = false, laggerToggled = false, autoBatToggled = false,
+	speedProfile = "Normal",
+	profileLaggerNormalSpeed = 40,
+	profileLaggerCarrySpeed = 20,
+	hittingCooldown = false, infJumpEnabled = false,
+	antiRagdollEnabled = false, fpsBoostEnabled = false,
+	antiLagEnabled = false,
+	guiVisible = true,
+	noIntro = (((getgenv and getgenv()) or _G).__CRYON_NO_INTRO_SAVED == true),
+	introEnabled = (((getgenv and getgenv()) or _G).__CRYON_NO_INTRO_SAVED ~= true), selectedIntroMusic = 1,
+	isStealing = false, stealStartTime = nil, lastStealTick = 0,
+	lastKnownHealth = 100,
+	dropActive = false,
+	dropBrainrotActive = false,
+	autoLeftEnabled = false, autoRightEnabled = false,
+	tpBatEnabled = false,
+	unwalkEnabled = false,
+	stretchRezEnabled = false, removeAccessoriesEnabled = false,
+	darkModeEnabled = false, skyStyle = "Off",
+	backgroundAssetId = "139887397490573",
+	backgroundAssetIds = {
+		"119466264281320",
+		"108199149509537",
+		"121087678749100",
+		"98596557474777",
+		"124833425021074",
+		"93357962442247",
+		"137732510773181",
+	},
+	imageChoiceVisuals = {},
+	buttonImages = {}, -- name -> assetId string ("" = none)
+    dropConn = nil,
+    dropBrainrotConn = nil,
+    autoCarryEnabled = true,
+    batV1Speed = 60,
+    batV2Speed = 60,
+}
+
+local _anyKeyListening, uiLocked = false, false
+local setLockUIVisual, MobilePanel, rebuildMobileButtons, resetMobileButtons
+local autoSavePositions = function() end
+local mobilePanelStyle = "darkhub"
+local mobileBtnFrames, mobileBtnActive, allMobileBtns = {}, {}, {}
+local mobileButtonsByName = {}
+local mobileButtonDefaultPositions = {}
+local BTN_POSITIONS_DH = {
+	Drop       = UDim2.new(1, -298, 1, -334),
+	AutoLeft   = UDim2.new(1, -144, 1, -334),
+	AutoBat    = UDim2.new(1, -298, 1, -270),
+	AutoRight  = UDim2.new(1, -144, 1, -270),
+	TPDown     = UDim2.new(1, -298, 1, -206),
+	Speed      = UDim2.new(1, -144, 1, -206),
+	Lagger     = UDim2.new(1, -144, 1, -142),
+}
+
+local KB = {
+	AutoLeft  = {kb = Enum.KeyCode.Z,           gp = nil},
+	AutoRight = {kb = Enum.KeyCode.C,           gp = nil},
+	Drop      = {kb = Enum.KeyCode.X,           gp = nil},
+	TPDown    = {kb = Enum.KeyCode.F,           gp = nil},
+	AutoBat   = {kb = Enum.KeyCode.E,           gp = nil},
+	AutoBatV2 = {kb = nil,                      gp = nil},
+	TPBat     = {kb = nil,                      gp = nil},
+	Speed     = {kb = Enum.KeyCode.Q,           gp = nil},
+	Lagger    = {kb = Enum.KeyCode.R,           gp = nil},
+	InstaReset= {kb = nil,                      gp = nil},
+	GuiHide   = {kb = Enum.KeyCode.LeftControl, gp = nil},
+	MusicPC   = {kb = Enum.KeyCode.M,           gp = nil},
+	MusicPad  = {kb = nil,                      gp = Enum.KeyCode.DPadUp},
+	Taunt     = {kb = nil,                      gp = nil},
+}
+
+local function kbMatch(entry, kc)
+	return kc == entry.kb or (entry.gp and kc == entry.gp)
+end
+
+local function getProfileNormalSpeed()
+	return State.speedProfile == "Lagger" and State.profileLaggerNormalSpeed or NS
+end
+
+local function getProfileCarrySpeed()
+	return State.speedProfile == "Lagger" and State.profileLaggerCarrySpeed or CS
+end
+
+local AP = {
+	L1=Vector3.new(-476.48,-6.28,92.73), L2=Vector3.new(-483.12,-4.95,94.80), L_FACE=Vector3.new(-482.25,-4.96,92.09),
+	R1=Vector3.new(-476.16,-6.52,25.62), R2=Vector3.new(-483.06,-5.03,25.48), R_FACE=Vector3.new(-482.06,-6.93,35.47),
+}
+
+local Steal = {
+	AutoStealEnabled = false, StealRadius = 8, StealDuration = 1.3,
+	Data = {}, plotCache = {}, plotCacheTime = {},
+	cachedPrompts = {}, promptCacheTime = 0,
+}
+
+local Conns = {
+	autoSteal = nil, antiRag = nil,
+	anchor = {}, progress = nil,
+}
+
+local safetyPositionIsValid
+local startBatAimbot, stopBatAimbot
+local function findAnyToolMob()
+	local c=LP.Character
+	if c then for _,v in ipairs(c:GetChildren()) do if v:IsA("Tool") then return v end end end
+	local bp=LP:FindFirstChildOfClass("Backpack")
+	if bp then for _,v in ipairs(bp:GetChildren()) do if v:IsA("Tool") then return v end end end
+	return nil
+end
+local function getClosestPlayerMob2()
+	local root=LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
+	if not root then return nil,math.huge end
+	local cp,cd=nil,math.huge
+	for _,p in pairs(Players:GetPlayers()) do
+		if p~=LP and p.Character then
+			local tr=p.Character:FindFirstChild("HumanoidRootPart")
+			local ph=p.Character:FindFirstChildOfClass("Humanoid")
+			if tr and ph and ph.Health>0 then
+				local d=(root.Position-tr.Position).Magnitude
+				if d<cd then cd=d; cp=p end
+			end
+		end
+	end
+	return cp,cd
+end
+local MOB_SWING_COOLDOWN=0.08
+local function tryHitBatMob()
+	if State.hittingCooldown then return end; State.hittingCooldown=true
+	pcall(function()
+		local c=LP.Character; if not c then return end
+		local hum2=c:FindFirstChildOfClass("Humanoid"); local tool=findAnyToolMob()
+		if tool then
+			if tool.Parent~=c and hum2 then pcall(function() hum2:EquipTool(tool) end) end
+			local remote=tool:FindFirstChildOfClass("RemoteEvent")
+			if remote then pcall(function() remote:FireServer() end)
+			else pcall(function() tool:Activate() end) end
+		end
+	end)
+	task.delay(MOB_SWING_COOLDOWN,function() State.hittingCooldown=false end)
+end
+local _aimbotTarget = nil
+
+local function findBat()
+	local char = LP.Character; if not char then return nil end
+	for _, tool in ipairs(char:GetChildren()) do
+		if tool:IsA("Tool") and (tool.Name:lower():find("bat") or tool.Name:lower():find("slap")) then return tool end
+	end
+	local bp = LP:FindFirstChild("Backpack")
+	if bp then
+		for _, tool in ipairs(bp:GetChildren()) do
+			if tool:IsA("Tool") and (tool.Name:lower():find("bat") or tool.Name:lower():find("slap")) then return tool end
+		end
+	end
+	return nil
+end
+
+local function getClosestTarget()
+	local root = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
+	if not root then return nil end
+	local closest, minDist = nil, math.huge
+	for _, plr in ipairs(Players:GetPlayers()) do
+		if plr ~= LP and plr.Character then
+			local tRoot = plr.Character:FindFirstChild("HumanoidRootPart")
+			local hum = plr.Character:FindFirstChildOfClass("Humanoid")
+			if tRoot and hum and hum.Health > 0 then
+				local dist = (tRoot.Position - root.Position).Magnitude
+				if dist < minDist then minDist = dist; closest = tRoot end
+			end
+		end
+	end
+	return closest
+end
+
+-- ============================================================
+--  FUNCIONES DE BAT AIMBOT V1 (modificadas para excluir TP Bat)
+-- ============================================================
+stopBatAimbot = function()
+	if Conns.aimbot then Conns.aimbot:Disconnect(); Conns.aimbot = nil end
+	_aimbotTarget = nil
+	local c = LP.Character
+	local root = c and c:FindFirstChild("HumanoidRootPart")
+	if root then root.AssemblyLinearVelocity = Vector3.zero; root.AssemblyAngularVelocity = Vector3.zero end
+	local hum2 = c and c:FindFirstChildOfClass("Humanoid")
+	if hum2 then hum2.AutoRotate = true end
+	State.hittingCooldown = false
+	_autoBatTarget = nil
+	_autoBatEquippedThisRun = false
+end
+
+startBatAimbot = function()
+	-- El Aimbot normal usa ahora el comportamiento predictivo de Empire Duels.
+	if State.tpBatEnabled then
+		State._setTPBatEnabled(false)
+	end
+
+	if Conns.aimbot then Conns.aimbot:Disconnect() end
+	State._empireAimbotLastScan = 0
+	State._empireAimbotTarget = nil
+
+	local hum0 = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
+	if hum0 then hum0.AutoRotate = false end
+
+	Conns.aimbot = RunService.Heartbeat:Connect(function()
+		if not State.autoBatToggled then return end
+		local char = LP.Character
+		if not char then return end
+		local root = char:FindFirstChild("HumanoidRootPart")
+		local hum = char:FindFirstChildOfClass("Humanoid")
+		if not root or not hum then return end
+
+		if not char:FindFirstChildOfClass("Tool") then
+			local bat = findBat()
+			if bat then pcall(function() hum:EquipTool(bat) end) end
+		end
+
+		local now = tick()
+		local target = State._empireAimbotTarget
+		if now - (State._empireAimbotLastScan or 0) > 0.1 or not target or not target.Parent then
+			State._empireAimbotLastScan = now
+			target = getClosestTarget()
+			State._empireAimbotTarget = target
+		else
+			local targetHum = target.Parent and target.Parent:FindFirstChildOfClass("Humanoid")
+			if not targetHum or targetHum.Health <= 0 then
+				target = nil
+				State._empireAimbotTarget = nil
+			end
+		end
+
+		if not target then
+			hum.AutoRotate = true
+			root.AssemblyAngularVelocity = Vector3.zero
+			return
+		end
+
+		hum.AutoRotate = false
+		_aimbotTarget = target
+		local targetVel = target.AssemblyLinearVelocity
+		local myPos = root.Position
+		local targetPos = target.Position
+		local predictPos = targetPos + targetVel * 0.14 + target.CFrame.LookVector * 0.3
+		local direction = predictPos - myPos
+		local flatDir = Vector3.new(direction.X, 0, direction.Z)
+		if flatDir.Magnitude > 0.01 then
+			flatDir = flatDir.Unit
+		else
+			flatDir = Vector3.new(0, 0, 1)
+		end
+
+		local chaseSpeed = State.batV1Speed or 58
+		local desiredHeight = targetPos.Y + 3.7
+		local yVel = (desiredHeight - myPos.Y) * 19.5 + targetVel.Y * 0.8
+		if hum.FloorMaterial ~= Enum.Material.Air then yVel = math.max(yVel, 13) end
+		yVel = math.clamp(yVel, -70, 110)
+		local desiredVel = Vector3.new(flatDir.X * chaseSpeed, yVel, flatDir.Z * chaseSpeed)
+		root.AssemblyLinearVelocity = root.AssemblyLinearVelocity:Lerp(desiredVel, 0.8)
+
+		local predictTime = math.clamp(targetVel.Magnitude / 150, 0.05, 0.2)
+		local predictedPos = targetPos + targetVel * predictTime
+		local toPredict = predictedPos - myPos
+		if toPredict.Magnitude > 0.1 then
+			local goalCF = CFrame.lookAt(myPos, predictedPos)
+			local diffCF = root.CFrame:Inverse() * goalCF
+			local rx, ry, rz = diffCF:ToEulerAnglesXYZ()
+			rx = math.clamp(rx, -2.5, 2.5)
+			ry = math.clamp(ry, -2.5, 2.5)
+			rz = math.clamp(rz, -2.5, 2.5)
+			root.AssemblyAngularVelocity = root.CFrame:VectorToWorldSpace(Vector3.new(rx * 42, ry * 42, rz * 42))
+		end
+
+		if State.autoSwingEnabled then
+			local bat = char:FindFirstChildOfClass("Tool") or findBat()
+			if bat and bat:IsA("Tool") then pcall(function() bat:Activate() end) end
+		end
+	end)
+end
+
+LP.CharacterAdded:Connect(function()
+    task.wait(0.5)
+end)
+
+local PLOT_CACHE_DURATION, PROMPT_CACHE_REFRESH, STEAL_COOLDOWN = 2, 0.15, 0.1
+
+local h, hrp, speedLbl
+local setAutoGrab, setAutoBat, setInfJump, setSuperJump, setAntiRag, setFps, setUnwalkToggle, autoLeftSetVisual, autoRightSetVisual, autoBatSetVisual, setIntroToggle, setNoIntroToggle
+local setAntiLag, setStretchRez, setRemoveAccessories, setDarkMode, setSkyStyle, setSkySelectorVisual
+local setMedusaCounter, setBatCounter, setInstaGrab, setAutoSwingVisual
+local startAntiRagdoll, stopAntiRagdoll, applyFPSBoost, startAutoSteal, stopAutoSteal
+local mobileSpeedSetActive, mobileLaggerSetActive, mobileLaggerCarrySetActive, saveConfig, loadConfig = nil, nil, nil, nil, nil
+
+State._configLoading = false
+State._configLoaded = false
+State._saveAfterLoad = false
+State._saveRequestId = 0
+State._lastSaveError = nil
+State._configDirty = false
+State._positionDirty = false
+
+State._resolveFileFunction = function(name)
+	local direct = nil
+	if name == "writefile" then direct = writefile
+	elseif name == "readfile" then direct = readfile
+	elseif name == "isfile" then direct = isfile
+	elseif name == "delfile" then direct = delfile
+	elseif name == "makefolder" then direct = makefolder
+	elseif name == "isfolder" then direct = isfolder end
+	if type(direct) == "function" then return direct end
+
+	local environments = {}
+	pcall(function()
+		if getgenv then table.insert(environments, getgenv()) end
+	end)
+	pcall(function()
+		if getrenv then table.insert(environments, getrenv()) end
+	end)
+	table.insert(environments, _G)
+
+	for _, environment in ipairs(environments) do
+		if type(environment) == "table" then
+			local candidate = rawget(environment, name)
+			if type(candidate) == "function" then return candidate end
+			local synEnvironment = rawget(environment, "syn")
+			if type(synEnvironment) == "table" then
+				local synCandidate = rawget(synEnvironment, name)
+				if type(synCandidate) == "function" then return synCandidate end
+			end
+		end
+	end
+
+	if type(syn) == "table" and type(syn[name]) == "function" then
+		return syn[name]
+	end
+	return nil
+end
+
+State._safeWriteFile = function(path, data)
+	local writer = State._resolveFileFunction("writefile")
+	if type(writer) ~= "function" then
+		return false, "writefile no disponible en este ejecutor"
+	end
+	local ok, err = pcall(writer, path, data)
+	if not ok then return false, tostring(err) end
+	return true
+end
+
+State._safeReadFile = function(path)
+	local reader = State._resolveFileFunction("readfile")
+	if type(reader) ~= "function" then
+		return nil, "readfile no disponible en este ejecutor"
+	end
+	local ok, result = pcall(reader, path)
+	if not ok or type(result) ~= "string" or result == "" then
+		return nil, ok and "archivo vacío" or tostring(result)
+	end
+	return result
+end
+
+State._safeDeleteFile = function(path)
+	local deleter = State._resolveFileFunction("delfile")
+	if type(deleter) ~= "function" then return false end
+	local ok = pcall(deleter, path)
+	return ok
+end
+
+State._readValidJsonFile = function(path)
+	local raw = State._safeReadFile(path)
+	if type(raw) ~= "string" then return nil, nil end
+	local ok, decoded = pcall(function() return HttpService:JSONDecode(raw) end)
+	if not ok or type(decoded) ~= "table" then return nil, raw end
+	return decoded, raw
+end
+
+State._writeVerifiedJson = function(path, encoded)
+	local writeOk, writeErr = State._safeWriteFile(path, encoded)
+	if not writeOk then return false, writeErr end
+	local decoded, raw = State._readValidJsonFile(path)
+	if type(decoded) ~= "table" or raw ~= encoded then
+		return false, "la verificación del archivo falló: " .. tostring(path)
+	end
+	return true
+end
+
+State._atomicJsonSave = function(mainPath, backupPath, tempPath, encoded)
+	local jsonOk, decoded = pcall(function() return HttpService:JSONDecode(encoded) end)
+	if not jsonOk or type(decoded) ~= "table" then
+		return false, "JSON inválido antes de guardar"
+	end
+
+	local currentData, currentRaw = State._readValidJsonFile(mainPath)
+
+	if type(currentData) == "table" and currentRaw == encoded then
+		return true
+	end
+
+	if type(currentData) == "table" and type(currentRaw) == "string" then
+		local backupOk, backupErr = State._safeWriteFile(backupPath, currentRaw)
+		if not backupOk then return false, backupErr end
+	end
+
+	local tempOk, tempErr = State._safeWriteFile(tempPath, encoded)
+	if not tempOk then return false, tempErr end
+
+	local mainOk, mainErr = State._safeWriteFile(mainPath, encoded)
+	if not mainOk then return false, mainErr end
+
+	if type(currentData) ~= "table" then
+		State._safeWriteFile(backupPath, encoded)
+	end
+
+	return true
+end
+
+State.requestConfigSave = function()
+	if State._configLoading or not State._configLoaded then
+		State._saveAfterLoad = true
+		State._configDirty = true
+		return
+	end
+	if State._configLoadFailed then
+		return
+	end
+
+	State._configDirty = true
+	State._saveRequestId = State._saveRequestId + 1
+	local requestId = State._saveRequestId
+
+	task.delay(1.75, function()
+		if requestId ~= State._saveRequestId or State._configLoading then return end
+		if not State._configDirty then return end
+		if saveConfig then
+			local ok, result = pcall(saveConfig)
+			if not ok then State._lastSaveError = tostring(result) end
+		end
+	end)
+end
+local normalBox, carryBox, laggerBox, laggerBox2, durValBtn, uiScaleBox
+local modeValLbl, progressFill, progressPct, progressRadLbl
+local radValBtn
+local alConn, arConn, alPhase, arPhase = nil, nil, 1, 1
+local autoTPDownEnabled, autoTPDownConn, autoTPDownHeight = false, nil, 20
+
+local startBatAimbotV2, stopBatAimbotV2
+local _autoBatLastScan = 0
+local _autoBatTarget = nil
+local _autoBatEquippedThisRun = false
+
+local autoBatV2SetVisual, setAutoBatV2, setHideButtonsVisual, setAutoTPDownVisual
+
+local btnInstaReset = nil
+
+State.buttonsSizeValue = State.buttonsSizeValue or 50
+State.buttonsShape = State.buttonsShape or "Normal"
+
+function getMobileButtonPixels(value)
+	value = math.clamp(math.floor((tonumber(value) or 50) + 0.5), 0, 100)
+	return math.floor(36 + (value * 0.48) + 0.5)
+end
+
+function normalizeMobileButtonsShape(shape)
+	shape = tostring(shape or "Normal")
+	if shape == "Circle" or shape == "Normal" or shape == "Square" or shape == "Rectangle" then
+		return shape
+	end
+	return "Normal"
+end
+
+function applyShapeToMobileButton(button)
+	if not button or not button.Parent then return end
+
+	local pixels = getMobileButtonPixels(State.buttonsSizeValue)
+	local textPixels = math.clamp(math.floor(8 + State.buttonsSizeValue * 0.07 + 0.5), 8, 15)
+	local shape = normalizeMobileButtonsShape(State.buttonsShape)
+	local width, height = pixels, pixels
+	local radius = UDim.new(0, math.clamp(math.floor(pixels * 0.30 + 0.5), 8, math.floor(pixels / 2)))
+
+	if shape == "Circle" then
+		radius = UDim.new(1, 0)
+	elseif shape == "Square" then
+		radius = UDim.new(0, 0)
+	elseif shape == "Rectangle" then
+		width = math.floor(pixels * 1.55 + 0.5)
+		height = math.max(28, math.floor(pixels * 0.75 + 0.5))
+		radius = UDim.new(0, math.max(5, math.floor(height * 0.18 + 0.5)))
+	end
+
+	button.Size = UDim2.new(0, width, 0, height)
+	button.TextSize = textPixels
+
+	local corner = button:FindFirstChild("ButtonShapeCorner")
+	if not corner or not corner:IsA("UICorner") then
+		corner = button:FindFirstChildOfClass("UICorner")
+	end
+	if not corner then
+		corner = Instance.new("UICorner")
+		corner.Parent = button
+	end
+	corner.Name = "ButtonShapeCorner"
+	corner.CornerRadius = radius
+
+	-- Sincronizar esquina de la imagen del botón
+	local img = button:FindFirstChild("ButtonImage")
+	if img and img:IsA("ImageLabel") then
+		local imgCorner = img:FindFirstChild("ButtonImageCorner")
+		if not imgCorner then
+			imgCorner = Instance.new("UICorner")
+			imgCorner.Name = "ButtonImageCorner"
+			imgCorner.Parent = img
+		end
+		imgCorner.CornerRadius = radius
+	end
+end
+
+function applyMobileButtonsShape(shape)
+	State.buttonsShape = normalizeMobileButtonsShape(shape)
+	for _, mobileBtn in pairs(mobileButtonsByName) do
+		applyShapeToMobileButton(mobileBtn)
+	end
+	for _, specialBtn in ipairs({btnBatV2, btnInstaReset}) do
+		applyShapeToMobileButton(specialBtn)
+	end
+	return State.buttonsShape
+end
+
+function applyMobileButtonsSize(value)
+	State.buttonsSizeValue = math.clamp(math.floor((tonumber(value) or 50) + 0.5), 0, 100)
+	applyMobileButtonsShape(State.buttonsShape)
+end
+
+-- ===== IMÁGENES EN BOTONES MÓVILES (usa los mismos assetIds del script) =====
+function ensureButtonImageLabel(button)
+	if not button or not button.Parent then return nil end
+	local img = button:FindFirstChild("ButtonImage")
+	if img and img:IsA("ImageLabel") then return img end
+	img = Instance.new("ImageLabel")
+	img.Name = "ButtonImage"
+	img.Size = UDim2.new(1, 0, 1, 0)
+	img.Position = UDim2.new(0, 0, 0, 0)
+	img.BackgroundTransparency = 1
+	img.ImageTransparency = 0.15
+	img.ScaleType = Enum.ScaleType.Crop
+	img.ZIndex = button.ZIndex
+	img.Image = ""
+	img.Parent = button
+	-- Esquinas iguales al botón
+	local corner = button:FindFirstChild("ButtonShapeCorner")
+	if corner then
+		local imgCorner = Instance.new("UICorner")
+		imgCorner.Name = "ButtonImageCorner"
+		imgCorner.CornerRadius = corner.CornerRadius
+		imgCorner.Parent = img
+	end
+	return img
+end
+
+function applyImageToMobileButton(button, assetId)
+	if not button then return end
+	local img = ensureButtonImageLabel(button)
+	if not img then return end
+	assetId = tostring(assetId or "")
+	if assetId == "" or assetId == "None" or assetId == "Off" then
+		img.Image = ""
+		img.Visible = false
+		return
+	end
+	img.Visible = true
+	local idStr = assetId:gsub("%D", "")
+	img.Image = "rbxthumb://type=Asset&id=" .. idStr .. "&w=420&h=420"
+	task.defer(function()
+		if img and img.Parent and (img.Image == "" or img.IsLoaded == false) then
+			img.Image = "rbxassetid://" .. idStr
+		end
+	end)
+end
+
+function setMobileButtonImage(name, assetId)
+	State.buttonImages[name] = (assetId and assetId ~= "" and assetId ~= "None" and assetId ~= "Off") and tostring(assetId) or ""
+	local btn = mobileButtonsByName[name]
+	if btn then
+		applyImageToMobileButton(btn, State.buttonImages[name])
+	end
+	-- Botones especiales
+	if name == "BatV2" and btnBatV2 then
+		applyImageToMobileButton(btnBatV2, State.buttonImages[name])
+	elseif name == "InstaReset" and btnInstaReset then
+		applyImageToMobileButton(btnInstaReset, State.buttonImages[name])
+	end
+	if State.requestConfigSave then State.requestConfigSave() end
+end
+
+function applyAllButtonImages()
+	for name, id in pairs(State.buttonImages or {}) do
+		local btn = mobileButtonsByName[name]
+		if btn then applyImageToMobileButton(btn, id) end
+	end
+	if btnBatV2 and State.buttonImages["BatV2"] then
+		applyImageToMobileButton(btnBatV2, State.buttonImages["BatV2"])
+	end
+	if btnInstaReset and State.buttonImages["InstaReset"] then
+		applyImageToMobileButton(btnInstaReset, State.buttonImages["InstaReset"])
+	end
+end
+
+local MedusaConfig = {
+	Enabled = false,
+	Radius = 15,
+	Delay = 0.15,
+	LastUsed = 0,
+	RadiusPart = nil
+}
+
+local SAFETY_VOID_MARGIN = 18
+local SAFETY_MAX_FLOOR_RAY = 4000
+local safetyLastGroundedCFrame = nil
+local safetyRestoring = false
+
+local function safetyVoidY()
+	local ok, value = pcall(function() return workspace.FallenPartsDestroyHeight end)
+	if ok and type(value) == "number" then return value end
+	return -500
+end
+
+local function safetyFiniteNumber(value)
+	return type(value) == "number" and value == value and value > -math.huge and value < math.huge
+end
+
+safetyPositionIsValid = function(position)
+	return typeof(position) == "Vector3"
+		and safetyFiniteNumber(position.X)
+		and safetyFiniteNumber(position.Y)
+		and safetyFiniteNumber(position.Z)
+		and position.Y > safetyVoidY() + SAFETY_VOID_MARGIN
+end
+
+local function safetyCharacterParts()
+	local character = LP.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	local root = character and character:FindFirstChild("HumanoidRootPart")
+	if not character or not humanoid or humanoid.Health <= 0 or not root then
+		return nil, nil, nil
+	end
+	return character, humanoid, root
+end
+
+local function safetyFloorPosition(root, character)
+	if not root or not character or not safetyPositionIsValid(root.Position) then return nil end
+
+	local ignore = {character}
+	if MedusaConfig and MedusaConfig.RadiusPart then
+		table.insert(ignore, MedusaConfig.RadiusPart)
+	end
+
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	local offset = (humanoid and humanoid.HipHeight or 2) + (root.Size.Y / 2) + 0.05
+	local origin = root.Position + Vector3.new(0, 5, 0)
+	local distanceToVoid = math.max(100, origin.Y - safetyVoidY() + 50)
+	local rayDistance = math.min(SAFETY_MAX_FLOOR_RAY, distanceToVoid)
+	local hitPosition = nil
+
+	pcall(function()
+		local params = RaycastParams.new()
+		params.FilterDescendantsInstances = ignore
+		params.FilterType = Enum.RaycastFilterType.Exclude
+		pcall(function() params.RespectCanCollide = true end)
+		local result = workspace:Raycast(origin, Vector3.new(0, -rayDistance, 0), params)
+		if result and result.Instance and result.Position then
+			hitPosition = result.Position
+		end
+	end)
+
+	if not hitPosition then
+		pcall(function()
+			local ray = Ray.new(origin, Vector3.new(0, -rayDistance, 0))
+			local part, position = workspace:FindPartOnRayWithIgnoreList(ray, ignore)
+			if part and position then hitPosition = position end
+		end)
+	end
+
+	if not hitPosition then return nil end
+	local landing = Vector3.new(root.Position.X, hitPosition.Y + offset, root.Position.Z)
+	if not safetyPositionIsValid(landing) then return nil end
+	return landing
+end
+
+local function safetyTeleport(root, humanoid, destination, preserveYaw)
+	if not root or not root.Parent or not humanoid or humanoid.Health <= 0 then return false end
+	if not safetyPositionIsValid(destination) then return false end
+
+	local yaw = 0
+	if preserveYaw ~= false then
+		local _, currentYaw, _ = root.CFrame:ToOrientation()
+		yaw = currentYaw
+	end
+
+	root.AssemblyLinearVelocity = Vector3.zero
+	root.AssemblyAngularVelocity = Vector3.zero
+	root.CFrame = CFrame.new(destination) * CFrame.Angles(0, yaw, 0)
+	root.AssemblyLinearVelocity = Vector3.zero
+	root.AssemblyAngularVelocity = Vector3.zero
+	pcall(function() humanoid.PlatformStand = false end)
+	return true
+end
+
+local function safetyTeleportToFloor(character, humanoid, root)
+	local landing = safetyFloorPosition(root, character)
+	if not landing then
+		root.AssemblyLinearVelocity = Vector3.zero
+		root.AssemblyAngularVelocity = Vector3.zero
+		return false
+	end
+	return safetyTeleport(root, humanoid, landing, true)
+end
+
+RunService.Heartbeat:Connect(function()
+	local character, humanoid, root = safetyCharacterParts()
+	if not character then return end
+
+	if safetyPositionIsValid(root.Position)
+		and humanoid.FloorMaterial ~= Enum.Material.Air
+		and root.AssemblyLinearVelocity.Magnitude < 180 then
+		safetyLastGroundedCFrame = root.CFrame
+	end
+
+	local riskyMovement = State.dropActive
+		or State.dropBrainrotActive
+		or autoTPDownEnabled
+		or State.tpBatEnabled
+		or State.autoBatToggled
+		or State.autoBatV2Enabled
+
+	if riskyMovement and not safetyPositionIsValid(root.Position) and not safetyRestoring then
+		safetyRestoring = true
+		root.AssemblyLinearVelocity = Vector3.zero
+		root.AssemblyAngularVelocity = Vector3.zero
+		if safetyLastGroundedCFrame and safetyPositionIsValid(safetyLastGroundedCFrame.Position) then
+			root.CFrame = safetyLastGroundedCFrame + Vector3.new(0, 2, 0)
+		end
+		task.defer(function() safetyRestoring = false end)
+	end
+end)
+
+local function showDiscordInProgressBar()
+	if not progressPct or not progressFill then return end
+
+	local originalText = progressPct.Text
+	local originalColor = progressPct.TextColor3
+	local originalSize = progressPct.TextSize
+	local originalAlign = progressPct.TextXAlignment
+
+	progressPct.Text = "Elite_Hub  ·  Dominando!!!"
+	progressPct.TextColor3 = Color3.fromRGB(255, 40, 50)
+	progressPct.TextSize = 13
+	progressPct.TextXAlignment = Enum.TextXAlignment.Center
+	progressPct.ZIndex = 12
+
+	if progressRadLbl then progressRadLbl.Visible = false end
+
+	task.delay(4, function()
+		if progressPct then
+			progressPct.Text = originalText or "0%"
+			progressPct.TextColor3 = originalColor or Color3.fromRGB(200,200,230)
+			progressPct.TextSize = originalSize or 11
+			progressPct.TextXAlignment = originalAlign or Enum.TextXAlignment.Left
+			progressPct.ZIndex = 5
+		end
+		if progressRadLbl then progressRadLbl.Visible = true end
+	end)
+end
+
+local function stopAutoLeft()
+	if alConn then alConn:Disconnect(); alConn = nil end
+	alPhase = 1
+	local char = LP.Character
+	if char then local hum = char:FindFirstChildOfClass("Humanoid"); if hum then hum:Move(Vector3.zero, false) end end
+end
+
+local function stopAutoRight()
+	if arConn then arConn:Disconnect(); arConn = nil end
+	arPhase = 1
+	local char = LP.Character
+	if char then local hum = char:FindFirstChildOfClass("Humanoid"); if hum then hum:Move(Vector3.zero, false) end end
+end
+
+-- ============================================================
+--  AUTO LEFT / RIGHT (con exclusión de TP Bat)
+-- ============================================================
+local function startAutoLeft()
+	if State.tpBatEnabled then
+		State._setTPBatEnabled(false)
+	end
+
+	if alConn then alConn:Disconnect() end
+	alPhase = 1
+	alConn = RunService.Heartbeat:Connect(function()
+		if not State.autoLeftEnabled then return end
+		local char = LP.Character; if not char then return end
+		local hrp2 = char:FindFirstChild("HumanoidRootPart")
+		local hum = char:FindFirstChildOfClass("Humanoid")
+		if not hrp2 or not hum then return end
+		local spd = getProfileNormalSpeed()
+		if alPhase == 1 then
+			local tgt = Vector3.new(AP.L1.X, hrp2.Position.Y, AP.L1.Z)
+			if (tgt - hrp2.Position).Magnitude < 1 then
+				alPhase = 2
+				local d = AP.L2 - hrp2.Position; local mv = Vector3.new(d.X,0,d.Z).Unit
+				hum:Move(mv,false); hrp2.AssemblyLinearVelocity = Vector3.new(mv.X*spd, hrp2.AssemblyLinearVelocity.Y, mv.Z*spd); return
+			end
+			local d = AP.L1 - hrp2.Position; local mv = Vector3.new(d.X,0,d.Z).Unit
+			hum:Move(mv,false); hrp2.AssemblyLinearVelocity = Vector3.new(mv.X*spd, hrp2.AssemblyLinearVelocity.Y, mv.Z*spd)
+		elseif alPhase == 2 then
+			local tgt = Vector3.new(AP.L2.X, hrp2.Position.Y, AP.L2.Z)
+			if (tgt - hrp2.Position).Magnitude < 1 then
+				hum:Move(Vector3.zero,false); hrp2.AssemblyLinearVelocity = Vector3.zero
+				State.autoLeftEnabled = false
+				if alConn then alConn:Disconnect(); alConn = nil end
+				alPhase = 1
+				if autoLeftSetVisual then autoLeftSetVisual(false) end
+				if (AP.L_FACE - hrp2.Position).Magnitude > 0.01 then
+					hrp2.CFrame = CFrame.new(hrp2.Position, Vector3.new(AP.L_FACE.X, hrp2.Position.Y, AP.L_FACE.Z))
+				end
+				return
+			end
+			local d = AP.L2 - hrp2.Position; local mv = Vector3.new(d.X,0,d.Z).Unit
+			hum:Move(mv,false); hrp2.AssemblyLinearVelocity = Vector3.new(mv.X*spd, hrp2.AssemblyLinearVelocity.Y, mv.Z*spd)
+		end
+	end)
+end
+
+local function startAutoRight()
+	if State.tpBatEnabled then
+		State._setTPBatEnabled(false)
+	end
+
+	if arConn then arConn:Disconnect() end
+	arPhase = 1
+	arConn = RunService.Heartbeat:Connect(function()
+		if not State.autoRightEnabled then return end
+		local char = LP.Character; if not char then return end
+		local hrp2 = char:FindFirstChild("HumanoidRootPart")
+		local hum = char:FindFirstChildOfClass("Humanoid")
+		if not hrp2 or not hum then return end
+		local spd = getProfileNormalSpeed()
+		if arPhase == 1 then
+			local tgt = Vector3.new(AP.R1.X, hrp2.Position.Y, AP.R1.Z)
+			if (tgt - hrp2.Position).Magnitude < 1 then
+				arPhase = 2
+				local d = AP.R2 - hrp2.Position; local mv = Vector3.new(d.X,0,d.Z).Unit
+				hum:Move(mv,false); hrp2.AssemblyLinearVelocity = Vector3.new(mv.X*spd, hrp2.AssemblyLinearVelocity.Y, mv.Z*spd); return
+			end
+			local d = AP.R1 - hrp2.Position; local mv = Vector3.new(d.X,0,d.Z).Unit
+			hum:Move(mv,false); hrp2.AssemblyLinearVelocity = Vector3.new(mv.X*spd, hrp2.AssemblyLinearVelocity.Y, mv.Z*spd)
+		elseif arPhase == 2 then
+			local tgt = Vector3.new(AP.R2.X, hrp2.Position.Y, AP.R2.Z)
+			if (tgt - hrp2.Position).Magnitude < 1 then
+				hum:Move(Vector3.zero,false); hrp2.AssemblyLinearVelocity = Vector3.zero
+				State.autoRightEnabled = false
+				if arConn then arConn:Disconnect(); arConn = nil end
+				arPhase = 1
+				if autoRightSetVisual then autoRightSetVisual(false) end
+				if (AP.R_FACE - hrp2.Position).Magnitude > 0.01 then
+					hrp2.CFrame = CFrame.new(hrp2.Position, Vector3.new(AP.R_FACE.X, hrp2.Position.Y, AP.R_FACE.Z))
+				end
+				return
+			end
+			local d = AP.R2 - hrp2.Position; local mv = Vector3.new(d.X,0,d.Z).Unit
+			hum:Move(mv,false); hrp2.AssemblyLinearVelocity = Vector3.new(mv.X*spd, hrp2.AssemblyLinearVelocity.Y, mv.Z*spd)
+		end
+	end)
+end
+
+-- SECCIÓN 5: FUNCIONES DE DROP Y TP DOWN
+local DROP_ASCEND_DURATION = 0.2
+local DROP_ASCEND_SPEED = 150
+local _tpDownActive = false
+
+local function runDrop()
+	if not State._manualDropRequest then return end
+	State._manualDropRequest = false
+	if State.dropActive then return end
+	local char = LP.Character; if not char then return end
+	local root = char:FindFirstChild("HumanoidRootPart"); if not root then return end
+	State.dropActive = true
+	local t0 = tick()
+	State.dropConn = RunService.Heartbeat:Connect(function()
+		local r = char and char:FindFirstChild("HumanoidRootPart")
+		if not r then 
+			if State.dropConn then State.dropConn:Disconnect(); State.dropConn = nil end
+			State.dropActive = false
+			return 
+		end
+		
+		pcall(function()
+			if not _tpDownActive then
+				local hum = char:FindFirstChildOfClass("Humanoid")
+				if hum and hum.FloorMaterial == Enum.Material.Air and r.Position.Y >= autoTPDownHeight then
+					r.CFrame = CFrame.new(Vector3.new(r.Position.X, -6.84, r.Position.Z))
+						* CFrame.Angles(0, select(2, r.CFrame:ToEulerAnglesYXZ()), 0)
+					r.AssemblyLinearVelocity = Vector3.zero
+				end
+			end
+		end)
+
+		if tick() - t0 >= DROP_ASCEND_DURATION then
+			if State.dropConn then State.dropConn:Disconnect(); State.dropConn = nil end
+			local rp = RaycastParams.new()
+			rp.FilterDescendantsInstances = {char}
+			rp.FilterType = Enum.RaycastFilterType.Exclude
+			local rr = workspace:Raycast(r.Position, Vector3.new(0, -2000, 0), rp)
+			if rr then
+				local hum2 = char:FindFirstChildOfClass("Humanoid")
+				local off = (hum2 and hum2.HipHeight or 2) + (r.Size.Y / 2)
+				r.CFrame = CFrame.new(r.Position.X, rr.Position.Y + off, r.Position.Z)
+				r.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+			end
+			State.dropActive = false
+			return
+		end
+		r.AssemblyLinearVelocity = Vector3.new(r.AssemblyLinearVelocity.X, DROP_ASCEND_SPEED, r.AssemblyLinearVelocity.Z)
+	end)
+end
+
+local _tpDownActive = false
+local function runTPDown()
+	if _tpDownActive then return end
+	_tpDownActive = true
+	pcall(function()
+		local character, humanoid, root = safetyCharacterParts()
+		if character then safetyTeleportToFloor(character, humanoid, root) end
+	end)
+	_tpDownActive = false
+end
+
+State._tpBatHittingCooldown = false
+State._tpBatHRP = nil
+State._tpBatH = nil
+
+State._tpBatGetTool = function()
+	local char = LP.Character
+	if not char then return nil end
+
+	local bat = char:FindFirstChild("Bat")
+	if bat then return bat end
+
+	local backpack = LP:FindFirstChild("Backpack")
+	if backpack then
+		bat = backpack:FindFirstChild("Bat")
+		if bat then
+			bat.Parent = char
+			return bat
+		end
+	end
+
+	return nil
+end
+
+State._tpBatTryHit = function()
+	if State._tpBatHittingCooldown then return end
+	State._tpBatHittingCooldown = true
+
+	pcall(function()
+		local bat = State._tpBatGetTool()
+		if bat then
+			bat:Activate()
+
+			local remoteEvent = bat:FindFirstChildWhichIsA("RemoteEvent")
+			if remoteEvent then
+				remoteEvent:FireServer()
+			end
+
+			local remoteFunction = bat:FindFirstChildWhichIsA("RemoteFunction")
+			if remoteFunction then
+				pcall(function()
+					remoteFunction:InvokeServer()
+				end)
+			end
+		end
+	end)
+
+	task.delay(0.08, function()
+		State._tpBatHittingCooldown = false
+	end)
+end
+
+State._tpBatClosest = function()
+	if not State._tpBatHRP then return nil, math.huge end
+
+	local closest, closestDistance = nil, math.huge
+	for _, player in pairs(Players:GetPlayers()) do
+		if player ~= LP and player.Character then
+			local targetRoot = player.Character:FindFirstChild("HumanoidRootPart")
+			if targetRoot then
+				local distance = (State._tpBatHRP.Position - targetRoot.Position).Magnitude
+				if distance < closestDistance then
+					closestDistance = distance
+					closest = player
+				end
+			end
+		end
+	end
+
+	return closest, closestDistance
+end
+
+-- ============================================================
+--  TP BAT (con desactivación de Auto Left/Right y Bat V1/V2)
+-- ============================================================
+State._setTPBatEnabled = function(on)
+	on = on == true
+
+	if on then
+		if State.autoLeftEnabled then
+			State.autoLeftEnabled = false
+			stopAutoLeft()
+			if autoLeftSetVisual then autoLeftSetVisual(false) end
+		end
+		if State.autoRightEnabled then
+			State.autoRightEnabled = false
+			stopAutoRight()
+			if autoRightSetVisual then autoRightSetVisual(false) end
+		end
+		if State.autoBatToggled then
+			State.autoBatToggled = false
+			if autoBatSetVisual then autoBatSetVisual(false) end
+			stopBatAimbot()
+		end
+		if State.autoBatV2Enabled then
+			State.autoBatV2Enabled = false
+			if autoBatV2SetVisual then autoBatV2SetVisual(false) end
+			if mobileBatV2SetActive then mobileBatV2SetActive(false) end
+			stopBatAimbotV2()
+		end
+	else
+	end
+
+	State.tpBatEnabled = on
+	if State._tpBatSetter then State._tpBatSetter(on) end
+	if State._tpBatConfigSetVisual then State._tpBatConfigSetVisual(on) end
+end
+
+RunService.Heartbeat:Connect(function()
+	if not State.tpBatEnabled then return end
+
+	if not State._tpBatH or not State._tpBatHRP
+		or not State._tpBatH.Parent or not State._tpBatHRP.Parent then
+		local char = LP.Character
+		if char then
+			State._tpBatH = char:FindFirstChildOfClass("Humanoid")
+			State._tpBatHRP = char:FindFirstChild("HumanoidRootPart")
+		end
+		if not State._tpBatH or not State._tpBatHRP then return end
+	end
+
+	local target = State._tpBatClosest()
+	if target and target.Character then
+		local targetRoot = target.Character:FindFirstChild("HumanoidRootPart")
+		if targetRoot then
+			if sethiddenproperty then
+				pcall(function()
+					sethiddenproperty(State._tpBatHRP, "PhysicsRepRootPart", targetRoot)
+				end)
+			end
+
+			local targetPosition = targetRoot.Position + Vector3.new(0, 0.9, 0)
+			if (State._tpBatHRP.Position - targetPosition).Magnitude > 5 then
+				State._tpBatHRP.CFrame = CFrame.new(targetPosition)
+			end
+
+			local camera = workspace.CurrentCamera
+			if camera then
+				camera.CFrame = CFrame.new(camera.CFrame.Position, targetRoot.Position)
+			end
+
+			State._tpBatTryHit()
+		end
+	end
+end)
+
+RunService.RenderStepped:Connect(function()
+	if not State.tpBatEnabled then return end
+	if not State._tpBatH or not State._tpBatHRP then return end
+	if not State._tpBatH.Parent or not State._tpBatHRP.Parent then return end
+
+	local target = State._tpBatClosest()
+	if target and target.Character then
+		local targetRoot = target.Character:FindFirstChild("HumanoidRootPart")
+		if targetRoot then
+			local camera = workspace.CurrentCamera
+			if camera then
+				camera.CFrame = CFrame.new(camera.CFrame.Position, targetRoot.Position)
+			end
+			State._tpBatTryHit()
+		end
+	end
+end)
+
+LP.CharacterAdded:Connect(function(character)
+	task.wait(0.2)
+	State._tpBatH = character:FindFirstChildOfClass("Humanoid")
+	State._tpBatHRP = character:FindFirstChild("HumanoidRootPart")
+end)
+
+if LP.Character then
+	task.spawn(function()
+		task.wait(0.2)
+		State._tpBatH = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
+		State._tpBatHRP = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
+	end)
+end
+
+local function startAutoTPDown()
+	if autoTPDownConn then task.cancel(autoTPDownConn); autoTPDownConn = nil end
+	autoTPDownConn = task.spawn(function()
+		while autoTPDownEnabled do
+			task.wait(0.1)
+			pcall(function()
+				local char = LP.Character; if not char then return end
+				local root = char:FindFirstChild("HumanoidRootPart"); if not root then return end
+				local hum = char:FindFirstChildOfClass("Humanoid"); if not hum then return end
+				if hum.FloorMaterial ~= Enum.Material.Air then return end
+				if root.Position.Y < autoTPDownHeight then return end
+				safetyTeleportToFloor(char, hum, root)
+			end)
+		end
+	end)
+end
+
+local function stopAutoTPDown()
+	autoTPDownEnabled = false
+	if autoTPDownConn then task.cancel(autoTPDownConn); autoTPDownConn = nil end
+end
+
+local function cursedInstaReset()
+	local char = LP.Character
+	if not char then return end
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	if not hrp then return end
+
+	-- RESET de Ice Hub: conserva X/Z y aplica el impulso vertical observado.
+	hrp.AssemblyLinearVelocity = Vector3.new(
+		hrp.AssemblyLinearVelocity.X,
+		10000000,
+		hrp.AssemblyLinearVelocity.Z
+	)
+end
+pcall(function() if _G.NIGHT_registerInstaReset then _G.NIGHT_registerInstaReset(cursedInstaReset) end end)
+
+for _, name in pairs({"FEARV2GUI"}) do
+	local old = game:GetService("CoreGui"):FindFirstChild(name)
+	if old then old:Destroy() end
+	local pg = LP:FindFirstChild("PlayerGui")
+	if pg then local o = pg:FindFirstChild(name); if o then o:Destroy() end end
+end
+
+-- SECCIÓN 6: GUI PRINCIPAL
+local function makeDraggable(frame)
+	local dragging, dragInput, dragStart, startPos = false, nil, nil, nil
+	local moved = false
+	frame.Active = true
+
+	local function finishDrag()
+		if not dragging then return end
+		dragging = false
+		dragInput = nil
+		if moved then
+			moved = false
+			if State.requestPositionSave then State.requestPositionSave() end
+			if State.requestConfigSave then State.requestConfigSave() end
+		end
+	end
+
+	frame.InputBegan:Connect(function(inp)
+		if uiLocked then return end
+		if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+			dragging = true
+			moved = false
+			dragInput = inp.UserInputType == Enum.UserInputType.Touch and inp or nil
+			dragStart = inp.Position
+			startPos = frame.Position
+			inp.Changed:Connect(function()
+				if inp.UserInputState == Enum.UserInputState.End then finishDrag() end
+			end)
+		end
+	end)
+
+	frame.InputChanged:Connect(function(inp)
+		if uiLocked then finishDrag(); return end
+		if inp.UserInputType == Enum.UserInputType.MouseMovement or inp.UserInputType == Enum.UserInputType.Touch then
+			dragInput = inp
+		end
+	end)
+
+	UIS.InputChanged:Connect(function(inp)
+		if uiLocked then finishDrag(); return end
+		if dragging and (inp == dragInput or inp.UserInputType == Enum.UserInputType.MouseMovement) then
+			local d = inp.Position - dragStart
+			if math.abs(d.X) > 1 or math.abs(d.Y) > 1 then moved = true end
+			frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset+d.X, startPos.Y.Scale, startPos.Y.Offset+d.Y)
+		end
+	end)
+
+	UIS.InputEnded:Connect(function(inp)
+		if dragging and (inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch) then
+			finishDrag()
+		end
+	end)
+end
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "CTDuelsGUI"
+gui.ResetOnSpawn = false
+gui.DisplayOrder = 10
+gui.IgnoreGuiInset = true
+
+gui.DescendantAdded:Connect(function(child)
+    task.defer(function() bindPurpleButton(child) end)
+end)
+task.defer(function()
+    for _, child in ipairs(gui:GetDescendants()) do bindPurpleButton(child) end
+end)
+if not pcall(function() gui.Parent = game:GetService("CoreGui") end) then
+	gui.Parent = LP:WaitForChild("PlayerGui")
+end
+
+local _C={
+	[1]=Color3.fromRGB(0,0,0),
+	[2]=Color3.fromRGB(6,6,8),
+	[3]=Color3.fromRGB(12,12,14),
+	[4]=Color3.fromRGB(235,235,240),
+	[5]=Color3.fromRGB(150,150,160),
+	[6]=Color3.fromRGB(190,190,200),
+	[7]=Color3.fromRGB(250,250,255),
+	[8]=Color3.fromRGB(130,130,140),
+	[9]=Color3.fromRGB(22,22,26),
+	[10]=Color3.fromRGB(18,18,22),
+}
+local BG=_C[1];local SIDEBAR_BG=_C[2];local CARD_BG=_C[3];local CARD_HOV=_C[4]
+local BORDER=_C[5];local BORDER2=_C[6];local WHITE=_C[7];local DIM=_C[8]
+local DIM2=_C[9];local KB_BG=_C[10];local INPUT_BG=_C[10]
+
+local function makeDraggableY(guiObject)
+    local UserInputService = game:GetService("UserInputService")
+    local dragging, dragStart, startPos, moved = false, nil, nil, false
+    guiObject.Active = true
+
+    local function finishDrag()
+        if not dragging then return end
+        dragging = false
+        if moved then
+            moved = false
+            if State.requestPositionSave then State.requestPositionSave() end
+            if State.requestConfigSave then State.requestConfigSave() end
+        end
+    end
+
+    guiObject.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            moved = false
+            dragStart = input.Position
+            startPos = guiObject.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then finishDrag() end
+            end)
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - dragStart
+            if math.abs(delta.Y) > 1 then moved = true end
+            local newY = startPos.Y.Offset + delta.Y
+            local visibleOffset = 375
+
+            local frameHeight = guiObject.AbsoluteSize.Y
+            local screenHeight = guiObject.Parent.AbsoluteSize.Y
+
+            local minY = visibleOffset - frameHeight
+            local maxY = screenHeight - visibleOffset
+            local clampedY = math.clamp(newY, minY, maxY)
+
+            guiObject.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset, startPos.Y.Scale, clampedY)
+        end
+    end)
+
+    UserInputService.InputEnded:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
+            finishDrag()
+        end
+    end)
+end
+
+local W, H, SW =384, 542, 92
+local CORNER = 26
+
+local uiScaleValue = 80
+local mainUIScale = nil
+local main = Instance.new("Frame", gui)
+main.Name = "Main"
+main.Size = UDim2.new(0, W, 0, H)
+main.Position = UDim2.new(0, 18, 0.5, -271)
+main.BackgroundColor3 = BG
+main.BorderSizePixel = 0
+main.Active = true
+main.ClipsDescendants = true
+main.Visible = false
+main.BackgroundTransparency = 0
+
+local mainCorner = Instance.new("UICorner", main)
+mainCorner.CornerRadius = UDim.new(0, CORNER)
+
+local mainStroke = Instance.new("UIStroke", main)
+mainStroke.Color = BORDER
+mainStroke.Thickness = 1.25
+mainStroke.Transparency = 0.08
+
+local premiumInnerBorder = Instance.new("Frame", main)
+premiumInnerBorder.Name = "PremiumInnerBorder"
+premiumInnerBorder.Size = UDim2.new(1, -8, 1, -8)
+premiumInnerBorder.Position = UDim2.new(0, 4, 0, 4)
+premiumInnerBorder.BackgroundTransparency = 1
+premiumInnerBorder.BorderSizePixel = 0
+premiumInnerBorder.ZIndex = 2
+local premiumInnerCorner = Instance.new("UICorner", premiumInnerBorder)
+premiumInnerCorner.CornerRadius = UDim.new(0, math.max(CORNER - 4, 0))
+local premiumInnerStroke = Instance.new("UIStroke", premiumInnerBorder)
+premiumInnerStroke.Color = Color3.fromRGB(150,150,160)
+premiumInnerStroke.Thickness = 1
+premiumInnerStroke.Transparency = 0.48
+
+mainUIScale = Instance.new("UIScale", main)
+mainUIScale.Scale = 0.90
+
+local fullUIBackground = Instance.new("ImageLabel", main)
+fullUIBackground.Name = "FullUIBackground"
+fullUIBackground.Size = UDim2.new(1, -2, 1, -2)
+fullUIBackground.Position = UDim2.new(0, 1, 0, 1)
+fullUIBackground.BackgroundTransparency = 1
+fullUIBackground.BorderSizePixel = 0
+fullUIBackground.Image = "rbxassetid://" .. tostring(State.backgroundAssetId)
+fullUIBackground.ImageTransparency = 0.08
+fullUIBackground.ScaleType = Enum.ScaleType.Crop
+fullUIBackground.ZIndex = 1
+local fullUIBackgroundCorner = Instance.new("UICorner", fullUIBackground)
+fullUIBackgroundCorner.CornerRadius = UDim.new(0, math.max(CORNER - 1, 0))
+
+-- ============================================================
+--  EFECTOS DE PARTÍCULAS EN LA UI (ambient + sparkles)
+-- ============================================================
+do
+	local PARTICLE_COLORS = {
+		Color3.fromRGB(255, 40, 50),
+		Color3.fromRGB(235,235,240),
+		Color3.fromRGB(200,200,210),
+		Color3.fromRGB(190,190,200),
+		Color3.fromRGB(220,220,230),
+		Color3.fromRGB(200,200,210),
+	}
+
+	local particleLayer = Instance.new("Frame", main)
+	particleLayer.Name = "UIParticleLayer"
+	particleLayer.Size = UDim2.new(1, 0, 1, 0)
+	particleLayer.Position = UDim2.new(0, 0, 0, 0)
+	particleLayer.BackgroundTransparency = 1
+	particleLayer.BorderSizePixel = 0
+	particleLayer.ClipsDescendants = true
+	particleLayer.ZIndex = 2
+	Instance.new("UICorner", particleLayer).CornerRadius = UDim.new(0, CORNER)
+
+	local activeParticles = {}
+	local MAX_PARTICLES = 18
+	local particleEnabled = true
+	local rng = Random.new()
+
+	local function spawnParticle()
+		if not particleEnabled or not main.Visible or not particleLayer.Parent then return end
+		if #activeParticles >= MAX_PARTICLES then return end
+
+		local size = rng:NextInteger(2, 5)
+		local p = Instance.new("Frame")
+		p.Name = "UIParticle"
+		p.Size = UDim2.fromOffset(size, size)
+		p.BackgroundColor3 = PARTICLE_COLORS[rng:NextInteger(1, #PARTICLE_COLORS)]
+		p.BackgroundTransparency = rng:NextNumber(0.15, 0.45)
+		p.BorderSizePixel = 0
+		p.ZIndex = 3
+		p.AnchorPoint = Vector2.new(0.5, 0.5)
+		Instance.new("UICorner", p).CornerRadius = UDim.new(1, 0)
+
+		local glow = Instance.new("UIStroke", p)
+		glow.Color = p.BackgroundColor3
+		glow.Thickness = 1.2
+		glow.Transparency = 0.55
+
+		local startX = rng:NextNumber(0.02, 0.98)
+		local startY = rng:NextNumber(0.55, 1.05)
+		p.Position = UDim2.new(startX, 0, startY, 0)
+		p.Parent = particleLayer
+
+		local lifetime = rng:NextNumber(2.8, 5.5)
+		local driftX = rng:NextNumber(-0.12, 0.12)
+		local riseY = rng:NextNumber(-0.55, -0.28)
+		local endX = math.clamp(startX + driftX, 0.01, 0.99)
+		local endY = math.clamp(startY + riseY, -0.08, 0.95)
+		local endSize = size * rng:NextNumber(0.3, 0.7)
+
+		table.insert(activeParticles, p)
+
+		local fadeIn = TweenService:Create(p, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			BackgroundTransparency = rng:NextNumber(0.05, 0.25)
+		})
+		local move = TweenService:Create(p, TweenInfo.new(lifetime, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+			Position = UDim2.new(endX, 0, endY, 0),
+			Size = UDim2.fromOffset(endSize, endSize),
+			BackgroundTransparency = 1
+		})
+		local glowFade = TweenService:Create(glow, TweenInfo.new(lifetime * 0.9, Enum.EasingStyle.Quad), {
+			Transparency = 1
+		})
+
+		fadeIn:Play()
+		move:Play()
+		glowFade:Play()
+
+		task.delay(lifetime + 0.15, function()
+			for i = #activeParticles, 1, -1 do
+				if activeParticles[i] == p then
+					table.remove(activeParticles, i)
+					break
+				end
+			end
+			if p and p.Parent then p:Destroy() end
+		end)
+	end
+
+	task.spawn(function()
+		while particleLayer and particleLayer.Parent do
+			if main.Visible and particleEnabled then
+				spawnParticle()
+				if rng:NextNumber() < 0.35 then
+					task.wait(0.08)
+					spawnParticle()
+				end
+			end
+			task.wait(rng:NextNumber(0.22, 0.55))
+		end
+	end)
+
+	local function burstParticles(count)
+		count = count or 10
+		for i = 1, count do
+			task.delay(i * 0.04, spawnParticle)
+		end
+	end
+
+	State._uiParticleBurst = burstParticles
+	State._uiParticleEnabled = function(on)
+		particleEnabled = on == true
+		if not particleEnabled then
+			for _, p in ipairs(activeParticles) do
+				if p and p.Parent then p:Destroy() end
+			end
+			activeParticles = {}
+		end
+	end
+
+	task.defer(function()
+		task.wait(0.6)
+		if main.Visible then burstParticles(12) end
+	end)
+end
+
+State._tabBgImages = State._tabBgImages or {}
+
+State.applyBackgroundImage = function(assetId, shouldSave)
+	assetId = tostring(assetId or "")
+	local valid = false
+	for _, id in ipairs(State.backgroundAssetIds) do
+		if id == assetId then valid = true; break end
+	end
+	if not valid then assetId = State.backgroundAssetIds[1] end
+
+	State.backgroundAssetId = assetId
+	if fullUIBackground and fullUIBackground.Parent then
+		fullUIBackground.Image = "rbxassetid://" .. tostring(assetId)
+		fullUIBackground.ImageTransparency = 0.08
+		fullUIBackground.Visible = true
+	end
+
+	-- Aplicar la misma foto de fondo a los botones laterales (tabs del sidebar)
+	local idStr = tostring(assetId)
+	local imgUrl = "rbxthumb://type=Asset&id=" .. idStr .. "&w=420&h=420"
+	for _, img in pairs(State._tabBgImages) do
+		if img and img.Parent then
+			img.Image = imgUrl
+			img.ImageTransparency = 0.28
+			img.Visible = true
+			-- fallback si rbxthumb no carga
+			task.defer(function()
+				if img and img.Parent and (img.Image == "" or img.IsLoaded == false) then
+					img.Image = "rbxassetid://" .. idStr
+				end
+			end)
+		end
+	end
+
+	for id, visual in pairs(State.imageChoiceVisuals) do
+		local selected = id == assetId
+		if visual.stroke then
+			visual.stroke.Color = selected and WHITE or BORDER
+			visual.stroke.Thickness = selected and 2.2 or 1
+		end
+		if visual.badge then
+			visual.badge.Text = selected and ("✓ " .. tostring(visual.index)) or tostring(visual.index)
+			visual.badge.BackgroundColor3 = selected and WHITE or Color3.fromRGB(14,14,16)
+			visual.badge.TextColor3 = selected and BG or WHITE
+		end
+	end
+
+	if shouldSave and State.requestConfigSave then
+		State.requestConfigSave()
+	end
+end
+
+local topbar = Instance.new("Frame", main)
+topbar.Size = UDim2.new(1, 0, 0, 48)
+topbar.BackgroundColor3 = SIDEBAR_BG
+topbar.BackgroundTransparency = 0.32
+topbar.BorderSizePixel = 0
+topbar.ZIndex = 10
+Instance.new("UICorner", topbar).CornerRadius = UDim.new(0, CORNER)
+local topPatch = Instance.new("Frame", topbar)
+topPatch.Size = UDim2.new(1, 0, 0, CORNER)
+topPatch.Position = UDim2.new(0, 0, 1, -CORNER)
+topPatch.BackgroundColor3 = SIDEBAR_BG
+topPatch.BackgroundTransparency = 0.32
+topPatch.BorderSizePixel = 0
+topPatch.ZIndex = 9
+local topDiv = Instance.new("Frame", topbar)
+topDiv.Size = UDim2.new(1, 0, 0, 1)
+topDiv.Position = UDim2.new(0, 0, 1, -1)
+topDiv.BackgroundColor3 = BORDER
+topDiv.BorderSizePixel = 0
+topDiv.ZIndex = 11
+
+local premiumTopLine = Instance.new("Frame", topbar)
+premiumTopLine.Name = "PremiumTopLine"
+premiumTopLine.Size = UDim2.new(1, -28, 0, 2)
+premiumTopLine.Position = UDim2.new(0, 14, 0, 3)
+premiumTopLine.BackgroundColor3 = WHITE
+premiumTopLine.BorderSizePixel = 0
+premiumTopLine.ZIndex = 14
+local premiumTopCorner = Instance.new("UICorner", premiumTopLine)
+premiumTopCorner.CornerRadius = UDim.new(1, 0)
+local premiumTopGradient = Instance.new("UIGradient", premiumTopLine)
+premiumTopGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(8,8,10)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 40, 50)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(8,8,10))
+})
+premiumTopGradient.Transparency = NumberSequence.new({
+    NumberSequenceKeypoint.new(0, 0.55),
+    NumberSequenceKeypoint.new(0.5, 0.02),
+    NumberSequenceKeypoint.new(1, 0.55)
+})
+
+local titleLbl = Instance.new("TextLabel", topbar)
+titleLbl.Size = UDim2.new(0, 190, 1, 0)
+titleLbl.Position = UDim2.new(0, 17, 0, -3)
+titleLbl.BackgroundTransparency = 1
+titleLbl.Text = "Elite_Hub"
+titleLbl.TextColor3 = WHITE
+titleLbl.Font = Enum.Font.GothamBlack
+titleLbl.TextSize = 15
+titleLbl.TextXAlignment = Enum.TextXAlignment.Left
+titleLbl.ZIndex = 12
+
+local verLbl = Instance.new("TextLabel", topbar)
+verLbl.Size = UDim2.new(0, 240, 0, 14)
+verLbl.Position = UDim2.new(0, 18, 0, 28)
+verLbl.BackgroundTransparency = 1
+verLbl.Text = "ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ Elite_Hub · Dominando!!!"
+verLbl.TextColor3 = DIM
+verLbl.Font = Enum.Font.Gotham
+verLbl.TextSize = 8
+verLbl.TextXAlignment = Enum.TextXAlignment.Left
+verLbl.ZIndex = 12
+
+local minBtn = Instance.new("TextButton", topbar)
+minBtn.Size = UDim2.new(0, 26, 0, 26)
+minBtn.Position = UDim2.new(1, -36, 0.5, -13)
+minBtn.BackgroundColor3 = KB_BG
+minBtn.BorderSizePixel = 0
+minBtn.Text = "–"
+minBtn.TextColor3 = WHITE
+minBtn.Font = Enum.Font.GothamBlack
+minBtn.TextSize = 16
+minBtn.ZIndex = 13
+Instance.new("UICorner", minBtn).CornerRadius = UDim.new(1, 0)
+Instance.new("UIStroke", minBtn).Color = BORDER
+minBtn.MouseEnter:Connect(function() TweenService:Create(minBtn, TweenInfo.new(0.1), {BackgroundColor3=CARD_HOV}):Play() end)
+minBtn.MouseLeave:Connect(function() TweenService:Create(minBtn, TweenInfo.new(0.1), {BackgroundColor3=KB_BG}):Play() end)
+
+do
+	local dragging = false
+	local dragInput = nil
+	local dragStart = nil
+	local startPosition = nil
+	local moved = false
+
+	local dragZone = Instance.new("TextButton", topbar)
+	dragZone.Name = "TopbarDragZone"
+	dragZone.Size = UDim2.new(1, -48, 1, 0)
+	dragZone.Position = UDim2.new(0, 0, 0, 0)
+	dragZone.BackgroundTransparency = 1
+	dragZone.BorderSizePixel = 0
+	dragZone.Text = ""
+	dragZone.AutoButtonColor = false
+	dragZone.Active = true
+	dragZone.ZIndex = 13
+
+	local function finishDrag()
+		if not dragging then return end
+		dragging = false
+		dragInput = nil
+		if moved then
+			moved = false
+			if State.requestPositionSave then State.requestPositionSave() end
+			if State.requestConfigSave then State.requestConfigSave() end
+		end
+	end
+
+	dragZone.InputBegan:Connect(function(input)
+		if uiLocked then return end
+		if input.UserInputType ~= Enum.UserInputType.MouseButton1
+		and input.UserInputType ~= Enum.UserInputType.Touch then return end
+
+		dragging = true
+		moved = false
+		dragInput = input.UserInputType == Enum.UserInputType.Touch and input or nil
+		dragStart = input.Position
+		startPosition = main.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				finishDrag()
+			end
+		end)
+	end)
+
+	dragZone.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement
+		or input.UserInputType == Enum.UserInputType.Touch then
+			dragInput = input
+		end
+	end)
+
+	UIS.InputChanged:Connect(function(input)
+		if uiLocked then finishDrag(); return end
+		if not dragging then return end
+		if input ~= dragInput and input.UserInputType ~= Enum.UserInputType.MouseMovement then return end
+
+		local delta = input.Position - dragStart
+
+		if math.abs(delta.X) > 1 or math.abs(delta.Y) > 1 then moved = true end
+		main.Position = UDim2.new(
+			startPosition.X.Scale, startPosition.X.Offset + delta.X,
+			startPosition.Y.Scale, startPosition.Y.Offset + delta.Y
+		)
+	end)
+
+	UIS.InputEnded:Connect(function(input)
+		if dragging and (input.UserInputType == Enum.UserInputType.MouseButton1
+		or input.UserInputType == Enum.UserInputType.Touch) then
+			finishDrag()
+		end
+	end)
+end
+
+local sidebar = Instance.new("Frame", main)
+sidebar.Size = UDim2.new(0, SW, 1, -48)
+sidebar.Position = UDim2.new(0, 0, 0, 48)
+sidebar.BackgroundColor3 = SIDEBAR_BG
+sidebar.BackgroundTransparency = 0.32
+sidebar.BorderSizePixel = 0
+sidebar.ZIndex = 5
+sidebar.ClipsDescendants = true
+do local _sc=Instance.new("UICorner",sidebar); _sc.CornerRadius=UDim.new(0,CORNER) end
+do local _st=Instance.new("Frame",main); _st.Size=UDim2.new(0,SW,0,CORNER); _st.Position=UDim2.new(0,0,0,48); _st.BackgroundColor3=SIDEBAR_BG; _st.BackgroundTransparency=0.32; _st.BorderSizePixel=0; _st.ZIndex=4 end
+do local _sd=Instance.new("Frame",sidebar); _sd.Size=UDim2.new(0,1,1,0); _sd.Position=UDim2.new(1,-1,0,0); _sd.BackgroundColor3=BORDER; _sd.BorderSizePixel=0; _sd.ZIndex=6 end
+
+local content = Instance.new("Frame", main)
+content.Name = "ContentArea"
+content.Size = UDim2.new(1, -(SW + 1), 1, -48 - CORNER)
+content.Position = UDim2.new(0, SW + 1, 0, 48)
+content.BackgroundColor3 = BG
+content.BackgroundTransparency = 1
+content.BorderSizePixel = 0
+content.ClipsDescendants = true
+content.ZIndex = 100
+
+local mini = Instance.new("TextButton", gui)
+mini.Name = "CTDuelsMini"
+mini.Size = UDim2.new(0, 90, 0, 32)
+mini.Position = UDim2.new(0, 20, 0, 70)
+mini.BackgroundColor3 = BG
+mini.BorderSizePixel = 0
+mini.Text = "Elite_Hub"
+mini.TextColor3 = WHITE
+mini.Font = Enum.Font.GothamBold
+mini.TextSize = 11
+mini.TextXAlignment = Enum.TextXAlignment.Center
+mini.ZIndex = 20
+mini.Visible = true
+Instance.new("UICorner", mini).CornerRadius = UDim.new(0, 16)
+local miniStroke = Instance.new("UIStroke", mini)
+miniStroke.Color = Color3.fromRGB(255, 40, 50)
+miniStroke.Thickness = 1.5
+
+makeDraggable(mini)
+mini.InputEnded:Connect(function(inp)
+	if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+		if State.requestConfigSave then State.requestConfigSave() end
+	end
+end)
+
+local function showGui()
+    main.Visible = true
+    mini.Visible = false
+    State.guiVisible = true
+
+    main.BackgroundTransparency = 0
+    mainUIScale.Scale = 0.85
+
+    TweenService:Create(main, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
+    TweenService:Create(mainUIScale, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Scale = uiScaleValue / 100}):Play()
+
+    if State._uiParticleBurst then
+        task.defer(function() State._uiParticleBurst(10) end)
+    end
+end
+
+local function hideGui()
+    TweenService:Create(main, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {BackgroundTransparency = 1}):Play()
+    TweenService:Create(mainUIScale, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Scale = 0.85}):Play()
+
+    task.delay(0.2, function()
+        main.Visible = false
+        mini.Visible = true
+        State.guiVisible = false
+    end)
+end
+
+minBtn.MouseButton1Click:Connect(hideGui)
+mini.MouseButton1Click:Connect(showGui)
+mini.MouseEnter:Connect(function() TweenService:Create(mini,TweenInfo.new(0.1),{BackgroundColor3=CARD_HOV}):Play() end)
+mini.MouseLeave:Connect(function() TweenService:Create(mini,TweenInfo.new(0.1),{BackgroundColor3=BG}):Play() end)
+
+local tabs = {}
+local tabPages = {}
+local activeTabName = nil
+local tabDefs = {
+	{name="Speed"},
+	{name="Bat Aimbot"},
+	{name="Mechanics"},
+	{name="Movement"},
+	{name="Performance"},
+	{name="Settings"},
+	{name="Background"},
+	{name="Songs"},
+	{name="Animations"},
+	{name="Keybinds"},
+}
+local switchTab
+local pageLOs = {}
+
+local tabListFrame = Instance.new("ScrollingFrame", sidebar)
+tabListFrame.Size = UDim2.new(1, 0, 1, 0)
+tabListFrame.Position = UDim2.new(0, 0, 0, 0)
+tabListFrame.BackgroundTransparency = 1
+tabListFrame.BorderSizePixel = 0
+tabListFrame.ZIndex = 6
+tabListFrame.ScrollBarThickness = 3
+tabListFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 40, 50)
+tabListFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+tabListFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+tabListFrame.ScrollingDirection = Enum.ScrollingDirection.Y
+tabListFrame.ElasticBehavior = Enum.ElasticBehavior.Never
+
+local tabLL = Instance.new("UIListLayout", tabListFrame)
+tabLL.SortOrder = Enum.SortOrder.LayoutOrder
+tabLL.Padding = UDim.new(0, 8)
+local tabPad = Instance.new("UIPadding", tabListFrame)
+tabPad.PaddingTop = UDim.new(0, 18)
+tabPad.PaddingBottom = UDim.new(0, 18)
+tabPad.PaddingLeft = UDim.new(0, 8)
+tabPad.PaddingRight = UDim.new(0, 8)
+
+local ACTIVE_TAB_BG  = CARD_HOV
+local ACTIVE_TAB_TXT = WHITE
+local IDLE_TAB_BG    = CARD_BG
+local IDLE_TAB_TXT   = WHITE
+
+switchTab = function(name)
+	activeTabName = name
+	for _, td in ipairs(tabDefs) do
+		local t = tabs[td.name]
+		local isA = td.name == name
+		TweenService:Create(t.frame, TweenInfo.new(0.14), {
+			BackgroundColor3 = isA and ACTIVE_TAB_BG or IDLE_TAB_BG,
+			BackgroundTransparency = isA and 0.35 or 0.55
+		}):Play()
+		TweenService:Create(t.lbl, TweenInfo.new(0.14), {
+			TextColor3 = isA and ACTIVE_TAB_TXT or IDLE_TAB_TXT
+		}):Play()
+		if t.mark then
+			TweenService:Create(t.mark, TweenInfo.new(0.14), {
+				BackgroundTransparency = isA and 0.02 or 1
+			}):Play()
+		end
+		if t.overlay then
+			TweenService:Create(t.overlay, TweenInfo.new(0.14), {
+				BackgroundTransparency = isA and 0.78 or 0.62
+			}):Play()
+		end
+		if t.bgImg then
+			TweenService:Create(t.bgImg, TweenInfo.new(0.14), {
+				ImageTransparency = isA and 0.18 or 0.28
+			}):Play()
+		end
+		tabPages[td.name].Visible = isA
+	end
+end
+
+for i, td in ipairs(tabDefs) do
+	local btn = Instance.new("TextButton", tabListFrame)
+	btn.Size = UDim2.new(1, 0, 0, 44)
+	btn.BackgroundColor3 = IDLE_TAB_BG
+	btn.BackgroundTransparency = 0.55
+	btn.BorderSizePixel = 0
+	btn.Text = ""
+	btn.LayoutOrder = i
+	btn.ZIndex = 7
+	btn.ClipsDescendants = true
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 11)
+	local bSt = Instance.new("UIStroke", btn)
+	bSt.Color = BORDER
+	bSt.Thickness = 1
+
+	-- Foto de fondo del background seleccionado en cada botón lateral (más visible)
+	local idStr0 = tostring(State.backgroundAssetId or "139887397490573")
+	local tabBgImg = Instance.new("ImageLabel", btn)
+	tabBgImg.Name = "TabBackgroundImage"
+	tabBgImg.Size = UDim2.new(1, 0, 1, 0)
+	tabBgImg.Position = UDim2.new(0, 0, 0, 0)
+	tabBgImg.BackgroundTransparency = 1
+	tabBgImg.BorderSizePixel = 0
+	tabBgImg.Image = "rbxthumb://type=Asset&id=" .. idStr0 .. "&w=420&h=420"
+	tabBgImg.ImageTransparency = 0.28
+	tabBgImg.ScaleType = Enum.ScaleType.Crop
+	tabBgImg.ZIndex = 8
+	Instance.new("UICorner", tabBgImg).CornerRadius = UDim.new(0, 11)
+	task.defer(function()
+		if tabBgImg and tabBgImg.Parent and (tabBgImg.Image == "" or tabBgImg.IsLoaded == false) then
+			tabBgImg.Image = "rbxassetid://" .. idStr0
+		end
+	end)
+	State._tabBgImages = State._tabBgImages or {}
+	table.insert(State._tabBgImages, tabBgImg)
+
+	-- Overlay oscuro para legibilidad del texto
+	local tabOverlay = Instance.new("Frame", btn)
+	tabOverlay.Name = "TabDarkOverlay"
+	tabOverlay.Size = UDim2.new(1, 0, 1, 0)
+	tabOverlay.BackgroundColor3 = Color3.fromRGB(8, 14, 28)
+	tabOverlay.BackgroundTransparency = 0.62
+	tabOverlay.BorderSizePixel = 0
+	tabOverlay.ZIndex = 8
+	Instance.new("UICorner", tabOverlay).CornerRadius = UDim.new(0, 11)
+
+	local lbl = Instance.new("TextLabel", btn)
+	lbl.Size = UDim2.new(1, 0, 1, 0)
+	lbl.Position = UDim2.new(0, 0, 0, 0)
+	lbl.BackgroundTransparency = 1
+	lbl.Text = td.name
+	lbl.TextColor3 = IDLE_TAB_TXT
+	lbl.Font = Enum.Font.GothamBold
+	lbl.TextSize = (td.name == "Performance" or td.name == "Background") and 8 or 9
+	lbl.TextXAlignment = Enum.TextXAlignment.Center
+	lbl.TextWrapped = false
+	lbl.TextTruncate = Enum.TextTruncate.AtEnd
+	lbl.ZIndex = 11
+	local activeMark = Instance.new("Frame", btn)
+	activeMark.Name = "ActiveMark"
+	activeMark.Size = UDim2.new(0, 3, 0, 14)
+	activeMark.Position = UDim2.new(0, 3, 0.5, -7)
+	activeMark.BackgroundColor3 = WHITE
+	activeMark.BackgroundTransparency = 1
+	activeMark.BorderSizePixel = 0
+	activeMark.ZIndex = 12
+	Instance.new("UICorner", activeMark).CornerRadius = UDim.new(1, 0)
+
+	tabs[td.name] = {frame=btn, lbl=lbl, mark=activeMark, bgImg=tabBgImg, overlay=tabOverlay}
+
+	local page = Instance.new("ScrollingFrame", content)
+	page.Size = UDim2.new(1, 0, 1, 0)
+	page.BackgroundColor3 = BG
+	page.BackgroundTransparency = 1
+	page.BorderSizePixel = 0
+	page.ScrollBarThickness = 3
+	page.ScrollBarImageColor3 = BORDER
+	page.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	page.CanvasSize = UDim2.new(0, 0, 0, 0)
+	page.Visible = false
+	page.ZIndex = 3
+	local pll = Instance.new("UIListLayout", page)
+	pll.SortOrder = Enum.SortOrder.LayoutOrder
+	pll.Padding = UDim.new(0, 7)
+	local pp = Instance.new("UIPadding", page)
+	pp.PaddingLeft = UDim.new(0, 13)
+	pp.PaddingRight = UDim.new(0, 13)
+	pp.PaddingTop = UDim.new(0, 12)
+	pp.PaddingBottom = UDim.new(0, 12)
+	tabPages[td.name] = page
+	pageLOs[td.name] = 0
+	btn.Activated:Connect(function()
+		switchTab(td.name)
+		if State._uiParticleBurst then State._uiParticleBurst(4) end
+	end)
+	btn.MouseEnter:Connect(function()
+		if activeTabName ~= td.name then
+			TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundColor3=ACTIVE_TAB_BG, BackgroundTransparency=0.4}):Play()
+			if tabOverlay then TweenService:Create(tabOverlay, TweenInfo.new(0.1), {BackgroundTransparency=0.72}):Play() end
+			if tabBgImg then TweenService:Create(tabBgImg, TweenInfo.new(0.1), {ImageTransparency=0.2}):Play() end
+		end
+	end)
+	btn.MouseLeave:Connect(function()
+		if activeTabName ~= td.name then
+			TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundColor3=IDLE_TAB_BG, BackgroundTransparency=0.55}):Play()
+			if tabOverlay then TweenService:Create(tabOverlay, TweenInfo.new(0.1), {BackgroundTransparency=0.62}):Play() end
+			if tabBgImg then TweenService:Create(tabBgImg, TweenInfo.new(0.1), {ImageTransparency=0.28}):Play() end
+		end
+	end)
+end
+
+local function lo(tabName) pageLOs[tabName] = pageLOs[tabName] + 1; return pageLOs[tabName] end
+local function pg(tabName) return tabPages[tabName] end
+
+local function makeSecHeader(tabName, text)
+	local f = Instance.new("Frame", pg(tabName))
+	f.Size = UDim2.new(1, 0, 0, 24)
+	f.BackgroundTransparency = 1
+	f.BorderSizePixel = 0
+	f.LayoutOrder = lo(tabName)
+	f.ZIndex = 4
+
+	local accent = Instance.new("Frame", f)
+	accent.Size = UDim2.new(0, 3, 0, 12)
+	accent.Position = UDim2.new(0, 0, 0.5, -6)
+	accent.BackgroundColor3 = WHITE
+	accent.BorderSizePixel = 0
+	accent.ZIndex = 5
+	Instance.new("UICorner", accent).CornerRadius = UDim.new(1, 0)
+
+	local t = Instance.new("TextLabel", f)
+	t.Size = UDim2.new(1, -12, 0, 16)
+	t.Position = UDim2.new(0, 9, 0, 1)
+	t.BackgroundTransparency = 1
+	t.Text = text:upper()
+	t.TextColor3 = WHITE
+	t.Font = Enum.Font.GothamBold
+	t.TextSize = 8
+	t.TextXAlignment = Enum.TextXAlignment.Left
+	t.TextWrapped = false
+	t.TextTruncate = Enum.TextTruncate.AtEnd
+	t.ZIndex = 5
+
+	local line = Instance.new("Frame", f)
+	line.Size = UDim2.new(1, -9, 0, 1)
+	line.Position = UDim2.new(0, 9, 1, -2)
+	line.BackgroundColor3 = BORDER
+	line.BackgroundTransparency = 0.25
+	line.BorderSizePixel = 0
+	line.ZIndex = 4
+end
+
+local _unwalkSavedAnimate = nil
+local function startUnwalk()
+    local c = LP.Character; if not c then return end
+    local hum = c:FindFirstChildOfClass("Humanoid")
+    if hum then for _,t in ipairs(hum:GetPlayingAnimationTracks()) do pcall(function() t:Stop() end) end end
+    local anim = c:FindFirstChild("Animate")
+    if anim then _unwalkSavedAnimate = anim:Clone(); anim:Destroy() end
+end
+local function stopUnwalk()
+    local c = LP.Character
+    if c then
+        local existing = c:FindFirstChild("Animate")
+        if not existing then
+            local src = game:GetService("StarterPlayer"):FindFirstChildOfClass("StarterCharacterScripts")
+            local starterAnim = src and src:FindFirstChild("Animate")
+            if starterAnim then starterAnim:Clone().Parent = c
+            elseif _unwalkSavedAnimate then _unwalkSavedAnimate:Clone().Parent = c end
+        end
+    end
+    _unwalkSavedAnimate = nil
+end
+
+local function baseCard(tabName, h2)
+	local c = Instance.new("Frame", pg(tabName))
+	c.Size = UDim2.new(1, 0, 0, h2 or 38)
+	c.BackgroundColor3 = CARD_BG
+	c.BackgroundTransparency = OPTION_TRANSPARENCY
+	c.BorderSizePixel = 0
+	c.LayoutOrder = lo(tabName)
+	c.ZIndex = 4
+	Instance.new("UICorner", c).CornerRadius = UDim.new(0, 12)
+	local cSt = Instance.new("UIStroke", c)
+	cSt.Color = BORDER
+	cSt.Thickness = 1
+	cSt.Transparency = 0.18
+
+	local sideAccent = Instance.new("Frame", c)
+	sideAccent.Name = "VisualAccent"
+	sideAccent.Size = UDim2.new(0, 2, 0.54, 0)
+	sideAccent.Position = UDim2.new(0, 1, 0.23, 0)
+	sideAccent.BackgroundColor3 = BORDER
+	sideAccent.BackgroundTransparency = 0.2
+	sideAccent.BorderSizePixel = 0
+	sideAccent.ZIndex = 5
+	Instance.new("UICorner", sideAccent).CornerRadius = UDim.new(1, 0)
+
+	local bottomDetail = Instance.new("Frame", c)
+	bottomDetail.Name = "BottomDetail"
+	bottomDetail.Size = UDim2.new(1, -24, 0, 1)
+	bottomDetail.Position = UDim2.new(0, 12, 1, -1)
+	bottomDetail.BackgroundColor3 = Color3.fromRGB(150,150,160)
+	bottomDetail.BackgroundTransparency = 0.58
+	bottomDetail.BorderSizePixel = 0
+	bottomDetail.ZIndex = 5
+
+	c.MouseEnter:Connect(function() TweenService:Create(c, TweenInfo.new(0.1), {BackgroundColor3=CARD_HOV, BackgroundTransparency=OPTION_HOVER_TRANSPARENCY}):Play() end)
+	c.MouseLeave:Connect(function() TweenService:Create(c, TweenInfo.new(0.1), {BackgroundColor3=CARD_BG, BackgroundTransparency=OPTION_TRANSPARENCY}):Play() end)
+	return c
+end
+
+local function cLabel(p, text, x, w, sz, col, font, xa)
+	local l = Instance.new("TextLabel", p)
+	l.Size = UDim2.new(0, w or 140, 1, 0)
+	l.Position = UDim2.new(0, x or 10, 0, 0)
+	l.BackgroundTransparency = 1
+	l.Text = text
+	l.TextColor3 = col or WHITE
+	l.Font = font or Enum.Font.GothamBold
+	l.TextSize = sz or 11
+	l.TextXAlignment = xa or Enum.TextXAlignment.Left
+	l.ZIndex = 10
+	return l
+end
+
+local function makePillToggle(parent, defOn, onToggle)
+	local PW, PH = 36, 19
+	local pbg = Instance.new("Frame", parent)
+	pbg.Size = UDim2.new(0, PW, 0, PH)
+	pbg.Position = UDim2.new(1, -(PW+10), 0.5, -PH/2)
+	pbg.BackgroundColor3 = defOn and WHITE or DIM2
+	pbg.BorderSizePixel = 0
+	pbg.ZIndex = 8
+	Instance.new("UICorner", pbg).CornerRadius = UDim.new(0, 10)
+	local ps = Instance.new("UIStroke", pbg); ps.Color = defOn and WHITE or BORDER2; ps.Thickness = 1
+	local dot = Instance.new("Frame", pbg)
+	dot.Size = UDim2.new(0, 13, 0, 13)
+	dot.Position = defOn and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 2, 0.5, -6)
+	dot.BackgroundColor3 = defOn and BG or BORDER
+	dot.BorderSizePixel = 0
+	dot.ZIndex = 9
+	Instance.new("UICorner", dot).CornerRadius = UDim.new(1, 0)
+	local isOn = defOn or false
+	local function setV(on)
+		isOn = on
+		TweenService:Create(pbg, TweenInfo.new(0.18), {BackgroundColor3=on and WHITE or DIM2}):Play()
+		TweenService:Create(ps,  TweenInfo.new(0.18), {Color=on and WHITE or BORDER2}):Play()
+		TweenService:Create(dot, TweenInfo.new(0.18, Enum.EasingStyle.Back), {
+			Position = on and UDim2.new(1,-15,0.5,-6) or UDim2.new(0,2,0.5,-6),
+			BackgroundColor3 = on and BG or BORDER
+		}):Play()
+	end
+	local clk = Instance.new("TextButton", parent)
+	clk.Size = UDim2.new(1, 0, 1, 0)
+	clk.BackgroundTransparency = 1
+	clk.Text = ""
+	clk.ZIndex = 6
+	clk.MouseButton1Click:Connect(function()
+		if _anyKeyListening then return end
+		isOn = not isOn; setV(isOn); if onToggle then pcall(onToggle, isOn) end
+		if State.requestConfigSave then State.requestConfigSave() end
+	end)
+	return setV
+end
+
+local function makeKB(parent, kbEntry, onChange)
+	local b = Instance.new("TextButton", parent)
+	b.Size = UDim2.new(0, 44, 0, 20)
+	b.BackgroundColor3 = KB_BG
+	b.BackgroundTransparency = INPUT_TRANSPARENCY
+	b.BorderSizePixel = 0
+	local function getDisplayText()
+		if kbEntry.gp then return "GP:"..kbEntry.gp.Name
+		elseif kbEntry.kb then return kbEntry.kb.Name
+		else return "None" end
+	end
+	b.Text = getDisplayText()
+	State._bindButtons = State._bindButtons or {}
+	State._bindButtons[kbEntry] = b
+	b.TextColor3 = WHITE
+	b.Font = Enum.Font.GothamBold
+	b.TextSize = 8
+	b.ZIndex = 11
+	Instance.new("UICorner", b).CornerRadius = UDim.new(0, 10)
+	local bs = Instance.new("UIStroke", b); bs.Color = BORDER; bs.Thickness = 1
+	local li = false; local lc; local pv = b.Text
+	b.MouseButton1Click:Connect(function()
+		if li then li=false; _anyKeyListening=false; if lc then lc:Disconnect(); lc=nil end; b.Text=pv; b.TextColor3=WHITE; return end
+		pv=b.Text; li=true; _anyKeyListening=true; b.Text="···"; b.TextColor3=DIM
+		TweenService:Create(bs, TweenInfo.new(0.1), {Color=WHITE}):Play()
+		lc = UIS.InputBegan:Connect(function(inp)
+			if not li then return end
+			local isKb = inp.UserInputType == Enum.UserInputType.Keyboard
+			local isGp = string.sub(inp.UserInputType.Name, 1, 7) == "Gamepad"
+			if not isKb and not isGp then return end
+			if inp.KeyCode == Enum.KeyCode.Escape then
+				li=false; _anyKeyListening=false; if lc then lc:Disconnect(); lc=nil end
+				b.Text=pv; b.TextColor3=WHITE; TweenService:Create(bs,TweenInfo.new(0.1),{Color=BORDER}):Play(); return
+			end
+			if isGp then
+				kbEntry.gp = inp.KeyCode; kbEntry.kb = nil
+				b.Text = "GP:"..inp.KeyCode.Name; pv = b.Text
+			else
+				kbEntry.kb = inp.KeyCode; kbEntry.gp = nil
+				b.Text = inp.KeyCode.Name; pv = b.Text
+			end
+			b.TextColor3=WHITE
+			li=false; _anyKeyListening=false; if lc then lc:Disconnect(); lc=nil end
+			TweenService:Create(bs, TweenInfo.new(0.1), {Color=BORDER}):Play()
+			if onChange then onChange(inp.KeyCode) end
+			if isGp then
+				kbEntry.gp = inp.KeyCode; kbEntry.kb = nil
+			else
+				kbEntry.kb = inp.KeyCode; kbEntry.gp = nil
+			end
+			if State.requestConfigSave then State.requestConfigSave() end
+		end)
+	end)
+	return b
+end
+
+local function rowToggle(tabName, label, sub, defOn, onToggle)
+	local c = baseCard(tabName, sub and 58 or 38)
+	local titleLabel = cLabel(c, label, 10, 160, 11, WHITE, Enum.Font.GothamBold)
+	if sub then
+		titleLabel.Size = UDim2.new(0, 160, 0, 18)
+		titleLabel.Position = UDim2.new(0, 10, 0, 7)
+		local sl = cLabel(c, sub, 10, 170, 9, DIM, Enum.Font.Gotham)
+		sl.Size = UDim2.new(0, 170, 0, 13)
+		sl.Position = UDim2.new(0, 10, 0, 35)
+	end
+	return makePillToggle(c, defOn, onToggle)
+end
+
+local function rowToggleKB(tabName, label, sub, kbEntry, defOn, onToggle, onKeyChange)
+	local c = baseCard(tabName, sub and 58 or 38)
+	local titleLabel = cLabel(c, label, 10, 120, 11, WHITE, Enum.Font.GothamBold)
+	if sub then
+		titleLabel.Size = UDim2.new(0, 120, 0, 18)
+		titleLabel.Position = UDim2.new(0, 10, 0, 7)
+		local sl = cLabel(c, sub, 10, 150, 9, DIM, Enum.Font.Gotham)
+		sl.Size = UDim2.new(0, 150, 0, 13)
+		sl.Position = UDim2.new(0, 10, 0, 35)
+	end
+	local kb = makeKB(c, kbEntry, function(k) if onKeyChange then onKeyChange(k) end end)
+	kb.Position = UDim2.new(1, -(44+10+36+8+19), 0.5, -10)
+	kb.ZIndex = 11
+	local PW, PH = 36, 19
+	local pbg = Instance.new("Frame", c)
+	pbg.Size = UDim2.new(0, PW, 0, PH)
+	pbg.Position = UDim2.new(1, -(PW+10), 0.5, -PH/2)
+	pbg.BackgroundColor3 = defOn and WHITE or DIM2
+	pbg.BorderSizePixel = 0
+	pbg.ZIndex = 8
+	Instance.new("UICorner", pbg).CornerRadius = UDim.new(0, 10)
+	local ps = Instance.new("UIStroke", pbg); ps.Color = defOn and WHITE or BORDER2; ps.Thickness = 1
+	local dot = Instance.new("Frame", pbg)
+	dot.Size = UDim2.new(0, 13, 0, 13)
+	dot.Position = defOn and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 2, 0.5, -6)
+	dot.BackgroundColor3 = defOn and BG or BORDER
+	dot.BorderSizePixel = 0
+	dot.ZIndex = 9
+	Instance.new("UICorner", dot).CornerRadius = UDim.new(1, 0)
+	local isOn = defOn or false
+	local function setV(on)
+		isOn = on
+		TweenService:Create(pbg, TweenInfo.new(0.18), {BackgroundColor3=on and WHITE or DIM2}):Play()
+		TweenService:Create(ps,  TweenInfo.new(0.18), {Color=on and WHITE or BORDER2}):Play()
+		TweenService:Create(dot, TweenInfo.new(0.18, Enum.EasingStyle.Back), {
+			Position = on and UDim2.new(1,-15,0.5,-6) or UDim2.new(0,2,0.5,-6),
+			BackgroundColor3 = on and BG or BORDER
+		}):Play()
+	end
+	local clk = Instance.new("TextButton", c)
+	clk.Size = UDim2.new(1, 0, 1, 0)
+	clk.BackgroundTransparency = 1
+	clk.Text = ""
+	clk.ZIndex = 6
+	clk.MouseButton1Click:Connect(function()
+		if _anyKeyListening then return end
+		isOn = not isOn; setV(isOn); if onToggle then pcall(onToggle, isOn) end
+		if State.requestConfigSave then State.requestConfigSave() end
+	end)
+	return setV, kb
+end
+
+local function rowKBOnly(tabName, label, sub, kbEntry, onKeyChange)
+	local c = baseCard(tabName, sub and 58 or 38)
+	local titleLabel = cLabel(c, label, 10, 160, 11, WHITE, Enum.Font.GothamBold)
+	if sub then
+		titleLabel.Size = UDim2.new(0, 160, 0, 18)
+		titleLabel.Position = UDim2.new(0, 10, 0, 7)
+		local sl = cLabel(c, sub, 10, 170, 9, DIM, Enum.Font.Gotham)
+		sl.Size = UDim2.new(0, 170, 0, 13)
+		sl.Position = UDim2.new(0, 10, 0, 35)
+	end
+	local kb = makeKB(c, kbEntry, function(k) if onKeyChange then onKeyChange(k) end end)
+	kb.Position = UDim2.new(1, -(44+10), 0.5, -10)
+	kb.ZIndex = 11
+	return kb
+end
+
+
+local function rowInput(tabName, label, sub, default, onChange)
+	local c = baseCard(tabName, sub and 58 or 38)
+	local titleLabel = cLabel(c, label, 10, 130, 11, WHITE, Enum.Font.GothamBold)
+	if sub then
+		titleLabel.Size = UDim2.new(0, 130, 0, 18)
+		titleLabel.Position = UDim2.new(0, 10, 0, 7)
+		local sl = cLabel(c, sub, 10, 160, 9, DIM, Enum.Font.Gotham)
+		sl.Size = UDim2.new(0, 160, 0, 13)
+		sl.Position = UDim2.new(0, 10, 0, 35)
+	end
+	local box = Instance.new("TextBox", c)
+	box.Size = UDim2.new(0, 64, 0, 24)
+	box.Position = UDim2.new(1, -74, 0.5, -12)
+	box.BackgroundColor3 = INPUT_BG
+	box.BackgroundTransparency = INPUT_TRANSPARENCY
+	box.BorderSizePixel = 0
+	box.Text = tostring(default)
+	box.TextColor3 = WHITE
+	box.Font = Enum.Font.GothamBold
+	box.TextSize = 11
+	box.ClearTextOnFocus = false
+	box.ZIndex = 11
+	Instance.new("UICorner", box).CornerRadius = UDim.new(0, 12)
+	local bs = Instance.new("UIStroke", box); bs.Color = BORDER; bs.Thickness = 1; bs.ZIndex = 12
+	box.Focused:Connect(function() TweenService:Create(bs, TweenInfo.new(0.1), {Color=WHITE}):Play() end)
+	box.FocusLost:Connect(function()
+		TweenService:Create(bs, TweenInfo.new(0.1), {Color=BORDER}):Play()
+		if onChange then local n = tonumber(box.Text); if n then onChange(n) else box.Text = tostring(default) end end
+		if State.requestConfigSave then State.requestConfigSave() end
+	end)
+	return box
+end
+
+local function rowActionBtn(tabName, label, onClick)
+	local b = Instance.new("TextButton", pg(tabName))
+	b.Size = UDim2.new(1, 0, 0, 36)
+	b.BackgroundColor3 = CARD_BG
+	b.BackgroundTransparency = OPTION_TRANSPARENCY
+	b.BorderSizePixel = 0
+	b.Text = label
+	b.TextColor3 = WHITE
+	b.Font = Enum.Font.GothamBold
+	b.TextSize = 11
+	b.LayoutOrder = lo(tabName)
+	b.ZIndex = 5
+	Instance.new("UICorner", b).CornerRadius = UDim.new(0, 14)
+	local bSt = Instance.new("UIStroke", b)
+	bSt.Color = BORDER
+	bSt.Thickness = 1.2
+
+	local pressScale = Instance.new("UIScale", b)
+	pressScale.Scale = 1
+
+	b.MouseButton1Click:Connect(function()
+		TweenService:Create(pressScale, TweenInfo.new(0.06), {Scale=0.975}):Play()
+		TweenService:Create(b, TweenInfo.new(0.08), {BackgroundColor3=CARD_HOV, BackgroundTransparency=OPTION_HOVER_TRANSPARENCY}):Play()
+		task.delay(0.08, function()
+			if pressScale and pressScale.Parent then
+				TweenService:Create(pressScale, TweenInfo.new(0.09, Enum.EasingStyle.Back), {Scale=1}):Play()
+			end
+		end)
+		task.delay(0.15, function()
+			if b and b.Parent then
+				TweenService:Create(b, TweenInfo.new(0.1), {BackgroundColor3=CARD_BG, BackgroundTransparency=OPTION_TRANSPARENCY}):Play()
+			end
+		end)
+		if onClick then pcall(onClick) end
+	end)
+	b.MouseEnter:Connect(function() TweenService:Create(b, TweenInfo.new(0.1), {BackgroundColor3=CARD_HOV, BackgroundTransparency=OPTION_HOVER_TRANSPARENCY}):Play() end)
+	b.MouseLeave:Connect(function() TweenService:Create(b, TweenInfo.new(0.1), {BackgroundColor3=CARD_BG, BackgroundTransparency=OPTION_TRANSPARENCY}):Play() end)
+	return b
+end
+
+local function rowCycleSelector(tabName, label, options, defaultValue, onChange)
+	local c = baseCard(tabName, 40)
+	cLabel(c, label, 10, 110, 11, WHITE, Enum.Font.GothamBold)
+
+	local left = Instance.new("TextButton", c)
+	left.Size = UDim2.new(0, 26, 0, 24)
+	left.Position = UDim2.new(1, -142, 0.5, -12)
+	left.BackgroundColor3 = INPUT_BG
+	left.BackgroundTransparency = INPUT_TRANSPARENCY
+	left.BorderSizePixel = 0
+	left.Text = "←"
+	left.TextColor3 = WHITE
+	left.Font = Enum.Font.GothamBlack
+	left.TextSize = 15
+	left.ZIndex = 12
+	Instance.new("UICorner", left).CornerRadius = UDim.new(0, 12)
+	local leftStroke = Instance.new("UIStroke", left); leftStroke.Color = BORDER; leftStroke.Thickness = 1
+
+	local valueLabel = Instance.new("TextLabel", c)
+	valueLabel.Size = UDim2.new(0, 78, 0, 24)
+	valueLabel.Position = UDim2.new(1, -112, 0.5, -12)
+	valueLabel.BackgroundColor3 = INPUT_BG
+	valueLabel.BackgroundTransparency = INPUT_TRANSPARENCY
+	valueLabel.BorderSizePixel = 0
+	valueLabel.TextColor3 = WHITE
+	valueLabel.Font = Enum.Font.GothamBold
+	valueLabel.TextSize = 9
+	valueLabel.TextXAlignment = Enum.TextXAlignment.Center
+	valueLabel.ZIndex = 11
+	Instance.new("UICorner", valueLabel).CornerRadius = UDim.new(0, 12)
+	local valueStroke = Instance.new("UIStroke", valueLabel); valueStroke.Color = BORDER; valueStroke.Thickness = 1
+
+	local right = Instance.new("TextButton", c)
+	right.Size = UDim2.new(0, 26, 0, 24)
+	right.Position = UDim2.new(1, -30, 0.5, -12)
+	right.BackgroundColor3 = INPUT_BG
+	right.BackgroundTransparency = INPUT_TRANSPARENCY
+	right.BorderSizePixel = 0
+	right.Text = "→"
+	right.TextColor3 = WHITE
+	right.Font = Enum.Font.GothamBlack
+	right.TextSize = 15
+	right.ZIndex = 12
+	Instance.new("UICorner", right).CornerRadius = UDim.new(0, 12)
+	local rightStroke = Instance.new("UIStroke", right); rightStroke.Color = BORDER; rightStroke.Thickness = 1
+
+	local index = 1
+	for i, option in ipairs(options) do
+		if option == defaultValue then index = i; break end
+	end
+
+	local function setValue(value, fireCallback)
+		if type(value) == "number" then
+			index = ((math.floor(value) - 1) % #options) + 1
+		else
+			for i, option in ipairs(options) do
+				if option == value then index = i; break end
+			end
+		end
+		valueLabel.Text = options[index]
+		if fireCallback and onChange then pcall(onChange, options[index], index) end
+		return options[index]
+	end
+
+	local function move(direction)
+		setValue(index + direction, true)
+		if State.requestConfigSave then State.requestConfigSave() end
+	end
+
+	left.Activated:Connect(function() move(-1) end)
+	right.Activated:Connect(function() move(1) end)
+	left.MouseEnter:Connect(function() TweenService:Create(left, TweenInfo.new(0.1), {BackgroundTransparency=0.05}):Play() end)
+	left.MouseLeave:Connect(function() TweenService:Create(left, TweenInfo.new(0.1), {BackgroundTransparency=INPUT_TRANSPARENCY}):Play() end)
+	right.MouseEnter:Connect(function() TweenService:Create(right, TweenInfo.new(0.1), {BackgroundTransparency=0.05}):Play() end)
+	right.MouseLeave:Connect(function() TweenService:Create(right, TweenInfo.new(0.1), {BackgroundTransparency=INPUT_TRANSPARENCY}):Play() end)
+
+	setValue(defaultValue, false)
+	return setValue, function() return options[index] end
+end
+
+-- SECCIÓN 7: PESTAÑA SPEED Y AUTO CARRY
+do
+makeSecHeader("Speed", "Speed Configuration")
+
+do
+	local c = baseCard("Speed", 48)
+	cLabel(c, "Speed Profile", 10, 92, 11, WHITE, Enum.Font.GothamBold)
+
+	local holder = Instance.new("Frame", c)
+	holder.Name = "SpeedProfileSelector"
+	holder.Size = UDim2.new(0, 150, 0, 28)
+	holder.Position = UDim2.new(1, -160, 0.5, -14)
+	holder.BackgroundTransparency = 1
+	holder.BorderSizePixel = 0
+	holder.ZIndex = 12
+
+	local layout = Instance.new("UIListLayout", holder)
+	layout.FillDirection = Enum.FillDirection.Horizontal
+	layout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+	layout.VerticalAlignment = Enum.VerticalAlignment.Center
+	layout.Padding = UDim.new(0, 6)
+
+	local function makeProfileButton(label)
+		local b = Instance.new("TextButton", holder)
+		b.Name = label .. "Profile"
+		b.Size = UDim2.new(0, 72, 0, 28)
+		b.BackgroundColor3 = CARD_BG
+		b.BackgroundTransparency = 0.12
+		b.BorderSizePixel = 0
+		b.Text = string.upper(label)
+		b.TextColor3 = DIM
+		b.TextSize = 10
+		b.Font = Enum.Font.GothamBold
+		b.AutoButtonColor = false
+		b.ZIndex = 13
+		Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
+		local stroke = Instance.new("UIStroke", b)
+		stroke.Color = Color3.fromRGB(150,150,160)
+		stroke.Thickness = 1
+		stroke.Transparency = 0.3
+		return b, stroke
+	end
+
+	local normalProfileBtn, normalProfileStroke = makeProfileButton("Normal")
+	local laggerProfileBtn, laggerProfileStroke = makeProfileButton("Lagger")
+
+	local function refreshProfileVisual()
+		local normalActive = State.speedProfile ~= "Lagger"
+		TweenService:Create(normalProfileBtn, TweenInfo.new(0.12), {
+			BackgroundColor3 = normalActive and Color3.fromRGB(255, 40, 50) or CARD_BG,
+			TextColor3 = normalActive and WHITE or DIM,
+			BackgroundTransparency = normalActive and 0.02 or 0.12
+		}):Play()
+		TweenService:Create(laggerProfileBtn, TweenInfo.new(0.12), {
+			BackgroundColor3 = not normalActive and Color3.fromRGB(255, 40, 50) or CARD_BG,
+			TextColor3 = not normalActive and WHITE or DIM,
+			BackgroundTransparency = not normalActive and 0.02 or 0.12
+		}):Play()
+		normalProfileStroke.Color = normalActive and Color3.fromRGB(255, 40, 50) or Color3.fromRGB(150,150,160)
+		laggerProfileStroke.Color = not normalActive and Color3.fromRGB(255, 40, 50) or Color3.fromRGB(150,150,160)
+	end
+
+	local function selectProfile(profile)
+		State.speedProfile = profile == "Lagger" and "Lagger" or "Normal"
+		refreshProfileVisual()
+		if normalBox then
+			normalBox.Text = tostring(State.speedProfile == "Lagger" and State.profileLaggerNormalSpeed or NS)
+		end
+		if carryBox then
+			carryBox.Text = tostring(State.speedProfile == "Lagger" and State.profileLaggerCarrySpeed or CS)
+		end
+		if modeValLbl then
+			if State.laggerToggled then
+				modeValLbl.Text = laggerPhase == 2 and "Lagger 2" or "Lagger 1"
+			elseif State.speedToggled then
+				modeValLbl.Text = State.speedProfile == "Lagger" and ("Carry · " .. tostring(State.profileLaggerCarrySpeed)) or "Carry"
+			else
+				modeValLbl.Text = State.speedProfile == "Lagger" and ("Lagger · " .. tostring(State.profileLaggerNormalSpeed)) or "Normal"
+			end
+		end
+		if State.requestConfigSave then State.requestConfigSave() end
+	end
+
+	normalProfileBtn.Activated:Connect(function() selectProfile("Normal") end)
+	laggerProfileBtn.Activated:Connect(function() selectProfile("Lagger") end)
+
+	State._refreshSpeedProfileVisual = refreshProfileVisual
+	State._selectSpeedProfile = selectProfile
+	refreshProfileVisual()
+end
+
+normalBox = rowInput("Speed", "Normal Speed", nil, NS, function(v)
+	if v > 0 and v <= 500 then
+		if State.speedProfile == "Lagger" then
+			State.profileLaggerNormalSpeed = v
+		else
+			NS = v
+		end
+		if State.requestConfigSave then State.requestConfigSave() end
+	end
+end)
+carryBox = rowInput("Speed", "Carry Speed", nil, CS, function(v)
+	if v > 0 and v <= 500 then
+		if State.speedProfile == "Lagger" then
+			State.profileLaggerCarrySpeed = v
+		else
+			CS = v
+			_G.CarrySpeedValue = v
+		end
+		if State.requestConfigSave then State.requestConfigSave() end
+	end
+end)
+laggerBox = rowInput("Speed", "Lagger 1", nil, LS, function(v) if v>0 and v<=500 then LS=v end end)
+laggerBox2 = rowInput("Speed", "Lagger 2", nil, LS2, function(v) if v>0 and v<=500 then LS2=v end end)
+
+-- ===== TOGGLE AUTO CARRY (AHORA PERSISTE) =====
+do
+    local sv
+    sv = rowToggle("Speed", "Auto Carry", "Se activa carry automáticamente al agarrar el Brainrot", State.autoCarryEnabled,
+    function(on)
+        State.autoCarryEnabled = on
+        if State.requestConfigSave then State.requestConfigSave() end
+    end)
+    State.autoCarrySetVisual = sv
+end
+
+do
+	local c = baseCard("Speed", 38)
+	cLabel(c, "Mode", 10, 80, 11, WHITE, Enum.Font.GothamBold)
+	modeValLbl = cLabel(c, "Normal", 88, 80, 10, DIM, Enum.Font.GothamBold, Enum.TextXAlignment.Center)
+	local kb = makeKB(c, KB.Speed, function(k) end)
+	kb.Position = UDim2.new(1, -(44+10), 0.5, -10)
+	kb.ZIndex = 11
+	local clk = Instance.new("TextButton", c)
+	clk.Size = UDim2.new(0.65, 0, 1, 0)
+	clk.BackgroundTransparency = 1
+	clk.Text = ""
+	clk.ZIndex = 6
+	clk.Active = true
+	clk.Activated:Connect(function()
+		if _anyKeyListening then return end
+		State.speedToggled = not State.speedToggled
+		if State.speedToggled then
+			State.laggerToggled = false
+			if mobileLaggerSetActive then mobileLaggerSetActive(false) end
+		end
+		if mobileSpeedSetActive then mobileSpeedSetActive(State.speedToggled) end
+		modeValLbl.Text = State.laggerToggled and "Lagger" or (State.speedToggled and (State.speedProfile == "Lagger" and ("Carry · " .. tostring(State.profileLaggerCarrySpeed)) or "Carry") or (State.speedProfile == "Lagger" and ("Lagger · " .. tostring(State.profileLaggerNormalSpeed)) or "Normal"))
+		if State.requestConfigSave then State.requestConfigSave() end
+	end)
+end
+
+do
+	local c = baseCard("Speed", 38)
+	cLabel(c, "Lagger Mode", 10, 120, 11, WHITE, Enum.Font.GothamBold)
+	local kb = makeKB(c, KB.Lagger, function(k) KB.Lagger.kb = k end)
+	kb.Position = UDim2.new(1, -(44+10), 0.5, -10)
+	kb.ZIndex = 11
+	local clk = Instance.new("TextButton", c)
+	clk.Size = UDim2.new(0.65, 0, 1, 0)
+	clk.BackgroundTransparency = 1
+	clk.Text = ""
+	clk.ZIndex = 6
+	clk.Active = true
+	clk.Activated:Connect(function()
+		if _anyKeyListening then return end
+		State.laggerToggled = not State.laggerToggled
+		if State.laggerToggled then
+			State.speedToggled = false
+			if mobileSpeedSetActive then mobileSpeedSetActive(false) end
+		end
+		modeValLbl.Text = State.laggerToggled and "Lagger" or (State.speedToggled and (State.speedProfile == "Lagger" and ("Carry · " .. tostring(State.profileLaggerCarrySpeed)) or "Carry") or (State.speedProfile == "Lagger" and ("Lagger · " .. tostring(State.profileLaggerNormalSpeed)) or "Normal"))
+		if mobileLaggerSetActive then mobileLaggerSetActive(State.laggerToggled) end
+		if State.requestConfigSave then State.requestConfigSave() end
+	end)
+end
+
+makeSecHeader("Bat Aimbot", "Bat Combat V1 & V2")
+do
+	local sv
+	sv, _ = rowToggleKB("Bat Aimbot", "Auto Bat V1", "Modo predictivo", KB.AutoBat, false,
+	function(on)
+		State.autoBatToggled = on
+		if on then
+			if State.autoLeftEnabled then State.autoLeftEnabled = false; if autoLeftSetVisual then autoLeftSetVisual(false) end; stopAutoLeft() end
+			if State.autoRightEnabled then State.autoRightEnabled = false; if autoRightSetVisual then autoRightSetVisual(false) end; stopAutoRight() end
+			if State.autoBatV2Enabled then
+				State.autoBatV2Enabled = false
+				if autoBatV2SetVisual then autoBatV2SetVisual(false) end
+				if mobileBatV2SetActive then mobileBatV2SetActive(false) end
+				stopBatAimbotV2()
+			end
+			if State.tpBatEnabled then State._setTPBatEnabled(false) end
+			startBatAimbot()
+		else
+			stopBatAimbot()
+		end
+		if mobileBatV1SetActive then mobileBatV1SetActive(on) end
+	end,
+	function(k) KB.AutoBat.kb = k end)
+	autoBatSetVisual = sv
+	setAutoBat = sv
+end
+
+do
+	local sv
+	sv, _ = rowToggleKB("Bat Aimbot", "bat v2", "Versión avanzada ", KB.AutoBatV2, false,
+	function(on)
+		State.autoBatV2Enabled = on
+		if on then
+			if State.autoLeftEnabled then State.autoLeftEnabled = false; if autoLeftSetVisual then autoLeftSetVisual(false) end; stopAutoLeft() end
+			if State.autoRightEnabled then State.autoRightEnabled = false; if autoRightSetVisual then autoRightSetVisual(false) end; stopAutoRight() end
+			if State.autoBatToggled then
+				State.autoBatToggled = false
+				if autoBatSetVisual then autoBatSetVisual(false) end
+				stopBatAimbot()
+			end
+			if State.tpBatEnabled then State._setTPBatEnabled(false) end
+			if startBatAimbotV2 then startBatAimbotV2() end
+		else
+			if stopBatAimbotV2 then stopBatAimbotV2() end
+		end
+		if mobileBatV2SetActive then mobileBatV2SetActive(on) end
+	end,
+	function() end)
+	autoBatV2SetVisual = sv
+	setAutoBatV2 = sv
+end
+
+State._setTPBatEnabled = function(on)
+	on = on == true
+
+	if on then
+		if State.autoLeftEnabled then
+			State.autoLeftEnabled = false
+			stopAutoLeft()
+			if autoLeftSetVisual then autoLeftSetVisual(false) end
+		end
+		if State.autoRightEnabled then
+			State.autoRightEnabled = false
+			stopAutoRight()
+			if autoRightSetVisual then autoRightSetVisual(false) end
+		end
+		if State.autoBatToggled then
+			State.autoBatToggled = false
+			if autoBatSetVisual then autoBatSetVisual(false) end
+			stopBatAimbot()
+		end
+		if State.autoBatV2Enabled then
+			State.autoBatV2Enabled = false
+			if autoBatV2SetVisual then autoBatV2SetVisual(false) end
+			if mobileBatV2SetActive then mobileBatV2SetActive(false) end
+			stopBatAimbotV2()
+		end
+	else
+	end
+
+	State.tpBatEnabled = on
+	if State._tpBatSetter then State._tpBatSetter(on) end
+	if State._tpBatConfigSetVisual then State._tpBatConfigSetVisual(on) end
+end
+
+State._tpBatConfigSetVisual = rowToggleKB("Bat Aimbot", "TP BAT", "Teleport y golpe automático", KB.TPBat, false,
+function(on)
+	State._setTPBatEnabled(on)
+	if State._tpBatSetter then State._tpBatSetter(on) end
+end,
+function() end)
+
+makeSecHeader("Mechanics", "Game Mechanics")
+
+if not KB.InstaReset then KB.InstaReset = {kb=nil, gp=nil} end
+
+local cInsta = baseCard("Mechanics", 48)
+cInsta.LayoutOrder = lo("Mechanics")
+cLabel(cInsta, "Insta Reset", 10, 120, 11, WHITE, Enum.Font.GothamBold)
+local slInsta = cLabel(cInsta, "Reset Instantáneo", 10, 150, 9, DIM, Enum.Font.Gotham)
+slInsta.Size = UDim2.new(0, 150, 0, 13); slInsta.Position = UDim2.new(0, 10, 0, 24)
+
+local plusBtn = Instance.new("TextButton", cInsta)
+plusBtn.Size = UDim2.new(0, 20, 0, 20)
+plusBtn.Position = UDim2.new(1, -(44+10+36+8+20+4), 0.5, -10)
+plusBtn.BackgroundColor3 = KB_BG
+plusBtn.BorderSizePixel = 0
+plusBtn.Text = "+"
+plusBtn.TextColor3 = WHITE
+plusBtn.Font = Enum.Font.GothamBold
+plusBtn.TextSize = 14
+plusBtn.ZIndex = 11
+Instance.new("UICorner", plusBtn).CornerRadius = UDim.new(0, 10)
+local pbs = Instance.new("UIStroke", plusBtn); pbs.Color = BORDER; pbs.Thickness = 1
+plusBtn.MouseButton1Click:Connect(function()
+	TweenService:Create(plusBtn, TweenInfo.new(0.1), {BackgroundColor3=CARD_HOV}):Play()
+	task.delay(0.1, function() TweenService:Create(plusBtn, TweenInfo.new(0.1), {BackgroundColor3=KB_BG}):Play() end)
+
+	if btnInstaReset then
+		btnInstaReset.Visible = not btnInstaReset.Visible
+		if State.requestConfigSave then State.requestConfigSave() end
+	end
+end)
+
+local kbInsta = makeKB(cInsta, KB.InstaReset, function() end)
+kbInsta.Position = UDim2.new(1, -(44+10+36+8), 0.5, -10)
+kbInsta.ZIndex = 11
+
+local setInstaToggleVisual
+setInstaToggleVisual = makePillToggle(cInsta, false, function(on)
+	State.instaResetEnabled = on
+	if on then
+		if btnInstaReset then
+			TweenService:Create(btnInstaReset, TweenInfo.new(0.08), {BackgroundColor3=WHITE, TextColor3=BG}):Play()
+			task.delay(0.22, function()
+				TweenService:Create(btnInstaReset, TweenInfo.new(0.15), {BackgroundColor3=BG, TextColor3=WHITE}):Play()
+			end)
+		end
+
+		task.spawn(cursedInstaReset)
+
+		task.wait(0.2)
+		if setInstaToggleVisual then setInstaToggleVisual(false) end
+	end
+end)
+
+setInfJump       = rowToggle("Mechanics", "Infinite Jump",  nil, false, function(on) State.infJumpEnabled = on end)
+setSuperJump     = rowToggle("Mechanics", "Infinite Jump Hold",     nil, false, function(on) State.superJumpEnabled = on end)
+setLinieVisual   = rowToggle("Mechanics", "Linia ESP", nil, false, function(on) State.linieEnabled = on end)
+setAntiRag       = rowToggle("Mechanics", "Anti Ragdoll",   nil, false, function(on) State.antiRagdollEnabled=on; if on then startAntiRagdoll() else stopAntiRagdoll() end end)
+setUnwalkToggle  = rowToggle("Mechanics", "Unwalk",         nil, false, function(on) State.unwalkEnabled=on; if on then startUnwalk() else stopUnwalk() end end)
+setMedusaCounter = rowToggle("Mechanics", "Medusa Counter", nil, false, function(on) State.medusaCounterEnabled=on; if on then setupMedusaCounter(LP.Character) else stopMedusaCounter() end end)
+setBatCounter = rowToggle("Mechanics", "Bat Counter",    nil, false, function(on) State.batCounterEnabled=on; if on then startBatCounter() else stopBatCounter() end end)
+
+setAutoMedusaVisual = rowToggle("Mechanics", "Auto Medusa", "Uso automático y predictivo", false, function(on)
+	MedusaConfig.Enabled = on
+end)
+
+rowToggle("Mechanics", "Medusa Reset", "Resetea al ser petrificado", false, function(on)
+	pcall(function() if _G.NIGHT_setMedusaReset then _G.NIGHT_setMedusaReset(on) end end)
+	State.autoResetEnabled = on
+	if State.requestConfigSave then State.requestConfigSave() end
+end)
+setNinoTimeVisual = rowToggle("Mechanics", "Nino time", "Contador de stun de 3 segundos", false, function(on)
+	setNinoTime(on)
+	if State.requestConfigSave then State.requestConfigSave() end
+end)
+
+rowInput("Mechanics", "Medusa Radius", "Rango de detección", MedusaConfig.Radius, function(v)
+	MedusaConfig.Radius = v
+	if MedusaConfig.RadiusPart then
+		MedusaConfig.RadiusPart.Size = Vector3.new(0.2, MedusaConfig.Radius*2, MedusaConfig.Radius*2)
+	end
+end)
+
+rowInput("Mechanics", "Medusa Delay", "Spam Delay", MedusaConfig.Delay, function(v)
+	MedusaConfig.Delay = v
+end)
+
+RunService.Heartbeat:Connect(function()
+    if not State.superJumpEnabled then return end
+    local c = LP.Character
+    if not c then return end
+    local root = c:FindFirstChild("HumanoidRootPart")
+    local hum = c:FindFirstChildOfClass("Humanoid")
+    if not root or not hum then return end
+
+    local isJumpHeld = UIS:IsKeyDown(Enum.KeyCode.Space) or (hum.Jump == true)
+
+    if isJumpHeld and root.Velocity.Y < 35 then
+        root.Velocity = Vector3.new(root.Velocity.X, 55, root.Velocity.Z)
+    end
+
+    if root.Velocity.Y < -120 then
+        root.Velocity = Vector3.new(root.Velocity.X, -120, root.Velocity.Z)
+    end
+end)
+
+makeSecHeader("Movement", "Movement & Teleport")
+rowKBOnly("Movement", "TP Down", "Teleport to floor", KB.TPDown, function(k) KB.TPDown.kb=k end)
+do
+	local sv
+	sv, _ = rowToggleKB("Movement", "Auto Left", nil, KB.AutoLeft, false,
+	function(on)
+		State.autoLeftEnabled = on
+		if on then
+			if State.autoRightEnabled then State.autoRightEnabled=false; if autoRightSetVisual then autoRightSetVisual(false) end; stopAutoRight() end
+			if State.autoBatToggled then State.autoBatToggled=false; if autoBatSetVisual then autoBatSetVisual(false) end; stopBatAimbot() end
+			if State.autoBatV2Enabled then
+				State.autoBatV2Enabled = false
+				if autoBatV2SetVisual then autoBatV2SetVisual(false) end
+				if mobileBatV2SetActive then mobileBatV2SetActive(false) end
+				stopBatAimbotV2()
+			end
+			if State.tpBatEnabled then State._setTPBatEnabled(false) end
+			local char = LP.Character
+			local hum = char and char:FindFirstChildOfClass("Humanoid")
+			local hrp = char and char:FindFirstChild("HumanoidRootPart")
+			if hum and hrp and hum.WalkSpeed > 0 and not hrp.Anchored then
+				startAutoLeft()
+			end
+		else stopAutoLeft() end
+		if mobileAutoLeftSetActive then mobileAutoLeftSetActive(on) end
+	end, function(k) KB.AutoLeft.kb=k end)
+	autoLeftSetVisual = sv
+end
+do
+	local sv
+	sv, _ = rowToggleKB("Movement", "Auto Right", nil, KB.AutoRight, false,
+	function(on)
+		State.autoRightEnabled = on
+		if on then
+			if State.autoLeftEnabled then State.autoLeftEnabled=false; if autoLeftSetVisual then autoLeftSetVisual(false) end; stopAutoLeft() end
+			if State.autoBatToggled then State.autoBatToggled=false; if autoBatSetVisual then autoBatSetVisual(false) end; stopBatAimbot() end
+			if State.autoBatV2Enabled then State.autoBatV2Enabled=false; if autoBatV2SetVisual then autoBatV2SetVisual(false) end; stopBatAimbotV2() end
+			if State.tpBatEnabled then State._setTPBatEnabled(false) end
+			local char = LP.Character
+			local hum = char and char:FindFirstChildOfClass("Humanoid")
+			local hrp = char and char:FindFirstChild("HumanoidRootPart")
+			if hum and hrp and hum.WalkSpeed > 0 and not hrp.Anchored then
+				startAutoRight()
+			end
+		else stopAutoRight() end
+		if mobileAutoRightSetActive then mobileAutoRightSetActive(on) end
+	end, function(k) KB.AutoRight.kb=k end)
+	autoRightSetVisual = sv
+end
+rowKBOnly("Movement", "Drop",    nil, KB.Drop,   function(k) KB.Drop.kb=k end)
+
+do
+	setAutoTPDownVisual = rowToggle("Movement", "Auto TP Down", nil, false, function(on)
+		autoTPDownEnabled = on
+		if mobileAutoTPSetActive then mobileAutoTPSetActive(on) end
+		if on then startAutoTPDown() else stopAutoTPDown() end
+	end)
+	rowInput("Movement", "TP Down Height", nil, autoTPDownHeight, function(v)
+		autoTPDownHeight = math.clamp(v, 0, 500)
+	end)
+end
+
+makeSecHeader("Performance", "Performance")
+
+-- ============================================================
+--  ELIMINADO EL TOGGLE DE HITBOX FOLLOWER
+-- ============================================================
+
+do
+	local _Lighting = game:GetService("Lighting")
+	local _antiLagConn = nil
+
+	local function applyAntiLag(instance)
+		if instance:IsA("ParticleEmitter") then
+			instance.Enabled = false
+		elseif instance:IsA("Decal") then
+			instance.Transparency = 1
+		elseif instance:IsA("BasePart") then
+			instance.Material = Enum.Material.Plastic
+			instance.Reflectance = 0
+			instance.CastShadow = false
+		end
+	end
+
+	local function optimizeLighting()
+		_Lighting.GlobalShadows = false
+		_Lighting.FogEnd = 9e9
+		_Lighting.Brightness = 1
+		_Lighting.EnvironmentDiffuseScale = 0
+		_Lighting.EnvironmentSpecularScale = 0
+		for _, child in pairs(_Lighting:GetChildren()) do
+			if child:IsA("BloomEffect") or child:IsA("BlurEffect") or child:IsA("SunRaysEffect") then
+				child.Enabled = false
+			end
+		end
+	end
+
+	local function enableAntiLag()
+		optimizeLighting()
+		for _, desc in pairs(workspace:GetDescendants()) do
+			applyAntiLag(desc)
+			if desc:IsA("Accessory") then desc:Destroy() end
+		end
+		if _antiLagConn then _antiLagConn:Disconnect() end
+		_antiLagConn = workspace.DescendantAdded:Connect(function(desc)
+			applyAntiLag(desc)
+			if desc:IsA("Accessory") then desc:Destroy() end
+		end)
+	end
+
+	local function disableAntiLag()
+		if _antiLagConn then _antiLagConn:Disconnect(); _antiLagConn = nil end
+	end
+
+	setAntiLag = function(on)
+		State.antiLagEnabled = on
+		if on then enableAntiLag() else disableAntiLag() end
+	end
+	local setAntiLagVisual = rowToggle("Performance", "Anti Lag", nil, false, function(on) setAntiLag(on) end)
+	local rawSetAntiLag = setAntiLag
+	setAntiLag = function(on) setAntiLagVisual(on); rawSetAntiLag(on) end
+end
+
+do
+	local connection = nil
+	local function rawSet(on)
+		State.stretchRezEnabled = on
+		if on then
+			workspace.CurrentCamera.FieldOfView = 120
+			if connection then connection:Disconnect() end
+			connection = RunService.RenderStepped:Connect(function()
+				if not State.stretchRezEnabled then
+					if connection then connection:Disconnect(); connection = nil end
+					return
+				end
+				workspace.CurrentCamera.FieldOfView = 120
+			end)
+		else
+			if connection then connection:Disconnect(); connection = nil end
+			workspace.CurrentCamera.FieldOfView = 70
+		end
+	end
+	local visual = rowToggle("Performance", "Stretch Rez", nil, false, function(on) rawSet(on) end)
+	setStretchRez = function(on) visual(on); rawSet(on) end
+end
+
+do
+	local connection = nil
+	local function removeFromCharacter(character)
+		if not character then return end
+		for _, obj in ipairs(character:GetDescendants()) do
+			if obj:IsA("Accessory") or obj:IsA("Hat") then
+				pcall(function() obj:Destroy() end)
+			end
+		end
+	end
+	local function rawSet(on)
+		State.removeAccessoriesEnabled = on
+		if on then
+			for _, player in pairs(Players:GetPlayers()) do
+				removeFromCharacter(player.Character)
+			end
+			if not connection then
+				connection = Players.PlayerAdded:Connect(function(player)
+					player.CharacterAdded:Connect(function(character)
+						task.wait(0.5)
+						if State.removeAccessoriesEnabled then removeFromCharacter(character) end
+					end)
+				end)
+			end
+		else
+			if connection then connection:Disconnect(); connection = nil end
+		end
+	end
+	local visual = rowToggle("Performance", "Remove Accessories", nil, false, function(on) rawSet(on) end)
+	setRemoveAccessories = function(on) visual(on); rawSet(on) end
+end
+
+do
+	local Lighting = game:GetService("Lighting")
+	local defaults = {
+		Brightness = Lighting.Brightness,
+		ClockTime = Lighting.ClockTime,
+		ExposureCompensation = Lighting.ExposureCompensation,
+		OutdoorAmbient = Lighting.OutdoorAmbient,
+		Ambient = Lighting.Ambient,
+		FogColor = Lighting.FogColor,
+	}
+	local styles = {
+		{name="Off"},
+		{name="Galaxy", tint=Color3.fromRGB(255, 40, 50), ambient=Color3.fromRGB(15, 40, 80), atmosphere=Color3.fromRGB(150,150,160), decay=Color3.fromRGB(10, 25, 50)},
+		{name="Aurora", tint=Color3.fromRGB(190,190,200), ambient=Color3.fromRGB(20, 50, 90), atmosphere=Color3.fromRGB(255, 40, 50), decay=Color3.fromRGB(15, 35, 70)},
+		{name="Green", tint=Color3.fromRGB(165,255,165), ambient=Color3.fromRGB(35,92,42), atmosphere=Color3.fromRGB(78,232,98), decay=Color3.fromRGB(14,48,20)},
+		{name="Blue", tint=Color3.fromRGB(57,198,255), ambient=Color3.fromRGB(12,58,118), atmosphere=Color3.fromRGB(27,148,255), decay=Color3.fromRGB(15,30,76)},
+		{name="Red", tint=Color3.fromRGB(255,80,80), ambient=Color3.fromRGB(120,20,40), atmosphere=Color3.fromRGB(200,50,50), decay=Color3.fromRGB(100,20,30)},
+		{name="Pink", tint=Color3.fromRGB(255,175,228), ambient=Color3.fromRGB(120,38,90), atmosphere=Color3.fromRGB(255,98,195), decay=Color3.fromRGB(62,14,48)},
+		{name="Orange", tint=Color3.fromRGB(255,195,125), ambient=Color3.fromRGB(18,58,130), atmosphere=Color3.fromRGB(18,135,255), decay=Color3.fromRGB(6,28,68)},
+		{name="Cyan", tint=Color3.fromRGB(145,255,255), ambient=Color3.fromRGB(8,95,105), atmosphere=Color3.fromRGB(20,225,240), decay=Color3.fromRGB(8,48,58)},
+	}
+	local function findStyle(name)
+		for _, style in ipairs(styles) do
+			if style.name == name then return style end
+		end
+		return styles[1]
+	end
+	local function clearSky()
+		for _, name in ipairs({"GalaxySky", "CryonColorSky", "CryonSkyTint", "CryonSkyAtmosphere", "CryonSkyBloom"}) do
+			local object = Lighting:FindFirstChild(name)
+			if object then object:Destroy() end
+		end
+	end
+	local function apply(styleName)
+		local style = findStyle(styleName)
+		clearSky()
+		State.skyStyle = style.name
+		State.darkModeEnabled = style.name ~= "Off"
+		if style.name == "Off" then
+			Lighting.Brightness = defaults.Brightness
+			Lighting.ClockTime = defaults.ClockTime
+			Lighting.ExposureCompensation = defaults.ExposureCompensation
+			Lighting.OutdoorAmbient = defaults.OutdoorAmbient
+			Lighting.Ambient = defaults.Ambient
+			Lighting.FogColor = defaults.FogColor
+			return style.name
+		end
+		local sky = Instance.new("Sky")
+		sky.Name = "CryonColorSky"
+		sky.SkyboxBk = "rbxassetid://159454299"
+		sky.SkyboxDn = "rbxassetid://159454296"
+		sky.SkyboxFt = "rbxassetid://159454293"
+		sky.SkyboxLf = "rbxassetid://159454286"
+		sky.SkyboxRt = "rbxassetid://159454289"
+		sky.SkyboxUp = "rbxassetid://159454291"
+		sky.StarCount = 3000
+		sky.Parent = Lighting
+		local correction = Instance.new("ColorCorrectionEffect")
+		correction.Name = "CryonSkyTint"
+		correction.TintColor = style.tint
+		correction.Brightness = 0.05
+		correction.Contrast = 0.16
+		correction.Saturation = 0.12
+		correction.Parent = Lighting
+		local atmosphere = Instance.new("Atmosphere")
+		atmosphere.Name = "CryonSkyAtmosphere"
+		atmosphere.Color = style.atmosphere
+		atmosphere.Decay = style.decay
+		atmosphere.Density = 0.20
+		atmosphere.Offset = 0.05
+		atmosphere.Glare = style.name == "Aurora" and 0.42 or 0.2
+		atmosphere.Haze = style.name == "Aurora" and 1.55 or 0.85
+		atmosphere.Parent = Lighting
+		local bloom = Instance.new("BloomEffect")
+		bloom.Name = "CryonSkyBloom"
+		bloom.Intensity = style.name == "Aurora" and 0.62 or 0.42
+		bloom.Size = 28
+		bloom.Threshold = 1.05
+		bloom.Parent = Lighting
+		Lighting.Brightness = 1.45
+		Lighting.ClockTime = 0
+		Lighting.ExposureCompensation = 0.10
+		Lighting.OutdoorAmbient = style.ambient
+		Lighting.Ambient = style.ambient:Lerp(Color3.fromRGB(12, 12, 12), 0.16)
+		Lighting.FogColor = style.atmosphere:Lerp(Color3.fromRGB(8, 8, 8), 0.05)
+		return style.name
+	end
+	local names = {}
+	for _, style in ipairs(styles) do table.insert(names, style.name) end
+	setSkySelectorVisual = rowCycleSelector("Performance", "Sky Color", names, State.skyStyle or "Off", function(styleName)
+		apply(styleName)
+	end)
+	setSkyStyle = function(styleName)
+		local applied = apply(styleName)
+		if setSkySelectorVisual then setSkySelectorVisual(applied, false) end
+		return applied
+	end
+	setDarkMode = function(on)
+		return setSkyStyle(on and ((State.skyStyle and State.skyStyle ~= "Off") and State.skyStyle or "Galaxy") or "Off")
+	end
+end
+
+setNoIntroToggle = rowToggle("Performance", "No Intro", "Desactiva la intro al volver a ejecutar", State.noIntro == true, function(on)
+    State.noIntro = on == true
+    State.introEnabled = not State.noIntro
+    if State.requestConfigSave then State.requestConfigSave() else pcall(saveConfig) end
+end)
+
+makeSecHeader("Settings", "Interface & Binds")
+
+uiScaleBox = rowInput("Settings", "UI Scale", nil, uiScaleValue, function(v)
+	local n = math.clamp(math.floor(v + 0.5), 50, 150)
+	uiScaleValue = n
+	if mainUIScale then mainUIScale.Scale = n / 100 end
+	if uiScaleBox then uiScaleBox.Text = tostring(n) end
+	if State.requestConfigSave then State.requestConfigSave() else pcall(saveConfig) end
+end)
+
+buttonsSizeBox = rowInput("Settings", "Buttons Size", "0 = mínimo • 100 = máximo", State.buttonsSizeValue, function(v)
+	local n = math.clamp(math.floor(v + 0.5), 0, 100)
+	applyMobileButtonsSize(n)
+	if buttonsSizeBox then buttonsSizeBox.Text = tostring(n) end
+	if State.requestConfigSave then State.requestConfigSave() else pcall(saveConfig) end
+end)
+
+State._buttonsShapeSelectorVisual = rowCycleSelector(
+	"Settings",
+	"Buttons Shape",
+	{"Circle", "Normal", "Square", "Rectangle"},
+	State.buttonsShape,
+	function(shapeName)
+		applyMobileButtonsShape(shapeName)
+	end
+)
+
+rowKBOnly("Settings", "Hide / Show GUI", nil, KB.GuiHide, function(k) KB.GuiHide.kb=k end)
+
+setHideButtonsVisual = rowToggle("Settings", "Hide Buttons", "Oculta todos los botones flotantes", false, function(on)
+	State.hideButtonsEnabled = on
+	local visible = not on
+
+	if MobilePanel then MobilePanel.Visible = visible end
+	for _, mobileBtn in pairs(mobileButtonsByName) do
+		if mobileBtn and mobileBtn.Parent then
+			mobileBtn.Visible = visible
+		end
+	end
+
+	if btnBatV2 then btnBatV2.Visible = visible end
+	if btnInstaReset then btnInstaReset.Visible = visible end
+	if State.requestConfigSave then State.requestConfigSave() else pcall(saveConfig) end
+end)
+
+setLockUIVisual = rowToggle("Settings", "Lock UI", nil, false, function(on)
+	uiLocked = on
+	if State.requestConfigSave then State.requestConfigSave() else pcall(saveConfig) end
+end)
+
+makeSecHeader("Songs", "Songs")
+
+do
+	local songParent = game:GetService("CoreGui")
+	local starterGui = game:GetService("StarterGui")
+	local assetFunction = getcustomasset or getsynasset
+
+	local function notifySong(title, message)
+		warn("[Elite_Hub " .. string.upper(title) .. "] " .. tostring(message))
+		pcall(function()
+			starterGui:SetCore("SendNotification", {
+				Title = title,
+				Text = tostring(message),
+				Duration = 6
+			})
+		end)
+	end
+
+	local function fileExists(path)
+		if type(isfile) ~= "function" then
+			return false
+		end
+		local ok, exists = pcall(isfile, path)
+		return ok and exists == true
+	end
+
+	local function validAudio(data)
+		if type(data) ~= "string" or #data < 2048 then
+			return false
+		end
+		local header = data:sub(1, 256):lower()
+		return not (
+			header:find("<html", 1, true)
+			or header:find("<!doctype", 1, true)
+			or header:find("access denied", 1, true)
+			or header:find("not found", 1, true)
+			or header:find("error", 1, true)
+		)
+	end
+
+	local function downloadAudio(url, path)
+		if type(writefile) ~= "function" then
+			return false, "writefile no está disponible"
+		end
+
+		local data, lastError
+		local requestFunction = request
+			or http_request
+			or (syn and syn.request)
+			or (fluxus and fluxus.request)
+
+		if type(requestFunction) == "function" then
+			local ok, response = pcall(requestFunction, {
+				Url = url,
+				Method = "GET",
+				Headers = {
+					["User-Agent"] = "Mozilla/5.0",
+					["Accept"] = "audio/mpeg,audio/*;q=0.9,*/*;q=0.8"
+				}
+			})
+			if ok and type(response) == "table" then
+				local code = tonumber(response.StatusCode or response.Status or response.status_code) or 0
+				local body = response.Body or response.body
+				if (code == 0 or (code >= 200 and code < 300)) and validAudio(body) then
+					data = body
+				else
+					lastError = "respuesta HTTP inválida (" .. tostring(code) .. ")"
+				end
+			elseif not ok then
+				lastError = tostring(response)
+			end
+		end
+
+		if not data then
+			local ok, result = pcall(function()
+				return game:HttpGet(url, true)
+			end)
+			if ok and validAudio(result) then
+				data = result
+			elseif not ok then
+				lastError = tostring(result)
+			elseif not lastError then
+				lastError = "el enlace no devolvió un MP3 válido"
+			end
+		end
+
+		if not data then
+			return false, lastError or "no se pudo descargar el audio"
+		end
+
+		local ok, err = pcall(writefile, path, data)
+		if not ok then
+			return false, tostring(err)
+		end
+		return true
+	end
+
+	local function addSong(config)
+		local sound
+		local wantedOn = false
+		local preparing = false
+		local started = false
+		local loadedConnection
+
+		local function destroySound()
+			if loadedConnection then
+				loadedConnection:Disconnect()
+				loadedConnection = nil
+			end
+			if sound then
+				pcall(function() sound:Destroy() end)
+				sound = nil
+			end
+			started = false
+		end
+
+		local function createSound()
+			if type(assetFunction) ~= "function" then
+				return false, "getcustomasset/getsynasset no está disponible"
+			end
+
+			local ok, assetId = pcall(assetFunction, config.file)
+			if not ok or type(assetId) ~= "string" or assetId == "" then
+				return false, "el archivo local todavía no está disponible"
+			end
+
+			destroySound()
+			sound = Instance.new("Sound")
+			sound.Name = config.soundName
+			sound.SoundId = assetId
+			sound.Volume = config.volume
+			sound.Looped = true
+			sound.Parent = songParent
+
+			if config.startAt and config.startAt > 0 then
+				pcall(function() sound.TimePosition = config.startAt end)
+				loadedConnection = sound.Loaded:Connect(function()
+					if loadedConnection then
+						loadedConnection:Disconnect()
+						loadedConnection = nil
+					end
+					if sound and sound.Parent then
+						pcall(function() sound.TimePosition = config.startAt end)
+					end
+				end)
+			end
+			return true
+		end
+
+		local function playNow()
+			if not sound or not sound.Parent then
+				return
+			end
+			if started then
+				local ok = pcall(function() sound:Resume() end)
+				if not ok then
+					pcall(function() sound:Play() end)
+				end
+			else
+				if config.startAt and config.startAt > 0 then
+					pcall(function() sound.TimePosition = config.startAt end)
+				end
+				pcall(function() sound:Play() end)
+				started = true
+			end
+		end
+
+		local function prepare()
+			if sound and sound.Parent then
+				if wantedOn then playNow() end
+				return
+			end
+			if preparing then return end
+			preparing = true
+
+			local alreadyDownloaded = fileExists(config.file)
+			local created = select(1, createSound())
+
+			if not created then
+				if not alreadyDownloaded then
+					notifySong(config.title, "Descargando " .. config.title .. " por primera vez...")
+				end
+				local downloaded, downloadError = downloadAudio(config.url, config.file)
+				if not downloaded then
+					preparing = false
+					if config.notifications then
+						notifySong(config.title, "No se pudo descargar: " .. tostring(downloadError))
+					else
+						warn("[Elite_Hub SONGS] " .. config.title .. ": " .. tostring(downloadError))
+					end
+					return
+				end
+				local okCreate, createError = createSound()
+				if not okCreate then
+					preparing = false
+					if config.notifications then
+						notifySong(config.title, tostring(createError))
+					else
+						warn("[Elite_Hub SONGS] " .. config.title .. ": " .. tostring(createError))
+					end
+					return
+				end
+			end
+
+			preparing = false
+			if wantedOn then playNow() end
+		end
+
+		if fileExists(config.file) then
+			task.defer(function()
+				if not sound then
+					createSound()
+				end
+			end)
+		end
+
+		rowToggle("Songs", config.title, nil, false, function(on)
+			wantedOn = on
+			if on then
+				if sound and sound.Parent then
+					playNow()
+				else
+					task.spawn(prepare)
+				end
+			elseif sound then
+				pcall(function() sound:Pause() end)
+			end
+		end)
+	end
+
+	local songs = {
+		{
+			title = "Tuff Song",
+			url = "https://files.catbox.moe/rvf2vy.mp3",
+			file = "tuffsong.mp3",
+			soundName = "CTDuels_TuffSong",
+			volume = 0.75
+		},
+		{
+			title = "orula",
+			url = "https://files.catbox.moe/v20ko9.mp3",
+			file = "friosong.mp3",
+			soundName = "CTDuels_Orula",
+			volume = 0.85
+		},
+		{
+			title = "X.O.X.O",
+			url = "https://files.catbox.moe/jghp0f.mp3",
+			file = "xoxosong.mp3",
+			soundName = "CTDuels_XOXO",
+			volume = 0.75
+		},
+		{
+			title = "beretta",
+			url = "https://file.garden/algLafWA1jk8WMfK/Beretta%20-%20video%20oficial(MP3_160K).mp3",
+			file = "overseer_beretta_filegarden.mp3",
+			soundName = "CTDuels_Beretta",
+			volume = 0.75,
+			startAt = 10,
+			notifications = true
+		},
+		{
+			title = "to the O",
+			url = "https://file.garden/algLafWA1jk8WMfK/King%20Von%20-%20Took%20Her%20To%20The%20O%20(Lyrics)(MP3_160K).mp3",
+			file = "overseer_to_the_o_filegarden.mp3",
+			soundName = "CTDuels_ToTheO",
+			volume = 0.75,
+			notifications = true
+		},
+		{
+			title = "LAJA",
+			url = "https://file.garden/algLafWA1jk8WMfK/LAJA%20-%20NADIE%20TA%20FRIO%20(Letra)(MP3_160K).mp3",
+			file = "overseer_laja_nadie_ta_frio_filegarden.mp3",
+			soundName = "CTDuels_LAJA",
+			volume = 0.75,
+			notifications = true
+		},
+		{
+			title = "HORA 0",
+			url = "https://file.garden/algLafWA1jk8WMfK/Myke%20Towers%20-%20HORA%20CERO%20(Lyrics)(MP3_160K).mp3",
+			file = "overseer_hora_0_filegarden.mp3",
+			soundName = "CTDuels_HORA_0",
+			volume = 0.75,
+			notifications = true
+		},
+		{
+			title = "Lucid Dreams",
+			url = "https://file.garden/algLafWA1jk8WMfK/Lucid%20Dreams%20-%20Clean%20-%20Juice%20WRLD(MP3_160K).mp3",
+			file = "overseer_lucid_dreams_filegarden.mp3",
+			soundName = "CTDuels_LucidDreams",
+			volume = 0.75,
+			notifications = true
+		}
+	}
+
+	for _, config in ipairs(songs) do
+		addSong(config)
+	end
+end
+
+local saveBtn; saveBtn = rowActionBtn("Settings", "Save Config", function()
+	if saveConfig then
+		local ok, saved = pcall(saveConfig, saveBtn)
+		if (not ok or saved ~= true) and State._lastSaveError then
+			warn("[Elite_Hub AUTO SAVE] " .. tostring(State._lastSaveError))
+		end
+	elseif State.savePositionBackup then
+		local saved = State.savePositionBackup()
+		if saveBtn and saveBtn.Parent then
+			local previous = saveBtn.Text
+			saveBtn.Text = saved and "Positions Saved!" or "Save Failed!"
+			task.delay(1.5, function()
+				if saveBtn and saveBtn.Parent then saveBtn.Text = previous end
+			end)
+		end
+	end
+end)
+rowActionBtn("Settings", "Reset Mobile Buttons", function()
+    if resetMobileButtons then
+        resetMobileButtons()
+    end
+    if pbFrame then
+        pbFrame.Position = UDim2.new(0.5, -150, 0, 80)
+    end
+    if setAutoGrabLocked then
+        setAutoGrabLocked(false, true)
+    end
+    if setAutoGrab then
+        setAutoGrab(false)
+    end
+end)
+
+end
+
+State.buildBackgroundPage = function()
+	makeSecHeader("Background", "Background Images")
+
+	local infoCard = baseCard("Background", 46)
+	cLabel(infoCard, "Choose a background", 10, 250, 11, WHITE, Enum.Font.GothamBold)
+	local infoSub = cLabel(infoCard, "Tap an image to apply and save it", 10, 280, 9, DIM, Enum.Font.Gotham)
+	infoSub.Size = UDim2.new(1, -20, 0, 14)
+	infoSub.Position = UDim2.new(0, 10, 0, 25)
+
+	local totalBgs = #State.backgroundAssetIds
+	local rows = math.ceil(totalBgs / 2)
+	local gridH = rows * 88 + 8
+
+	local grid = Instance.new("Frame", pg("Background"))
+	grid.Name = "BackgroundImageGrid"
+	grid.Size = UDim2.new(1, -4, 0, gridH)
+	grid.BackgroundTransparency = 1
+	grid.BorderSizePixel = 0
+	grid.ClipsDescendants = false
+	grid.LayoutOrder = lo("Background")
+	grid.ZIndex = 4
+
+	local layout = Instance.new("UIGridLayout", grid)
+	layout.SortOrder = Enum.SortOrder.LayoutOrder
+	layout.FillDirection = Enum.FillDirection.Horizontal
+	layout.FillDirectionMaxCells = 2
+	layout.CellSize = UDim2.new(0.5, -5, 0, 80)
+	layout.CellPadding = UDim2.new(0, 8, 0, 8)
+	layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	layout.VerticalAlignment = Enum.VerticalAlignment.Top
+
+	for index, assetId in ipairs(State.backgroundAssetIds) do
+		local thumb = Instance.new("ImageButton", grid)
+		thumb.Name = "BackgroundImage" .. tostring(index)
+		thumb.LayoutOrder = index
+		thumb.BackgroundColor3 = Color3.fromRGB(18, 32, 55)
+		thumb.BackgroundTransparency = 0.05
+		thumb.BorderSizePixel = 0
+		thumb.AutoButtonColor = false
+		thumb.ClipsDescendants = true
+		-- rbxthumb carga mejor la preview en el tab
+		local idStr = tostring(assetId)
+		thumb.Image = "rbxthumb://type=Asset&id=" .. idStr .. "&w=420&h=420"
+		thumb.ImageTransparency = 0
+		thumb.ScaleType = Enum.ScaleType.Crop
+		-- fallback si rbxthumb falla
+		task.defer(function()
+			if thumb and thumb.Parent and (thumb.Image == "" or thumb.IsLoaded == false) then
+				thumb.Image = "rbxassetid://" .. idStr
+			end
+		end)
+		thumb.ZIndex = 6
+		Instance.new("UICorner", thumb).CornerRadius = UDim.new(0, 12)
+
+		local thumbStroke = Instance.new("UIStroke", thumb)
+		thumbStroke.Color = BORDER
+		thumbStroke.Thickness = 1
+
+		local badge = Instance.new("TextLabel", thumb)
+		badge.AnchorPoint = Vector2.new(1, 1)
+		badge.Size = UDim2.new(0, 28, 0, 18)
+		badge.Position = UDim2.new(1, -5, 1, -5)
+		badge.BackgroundColor3 = Color3.fromRGB(12, 22, 40)
+		badge.BackgroundTransparency = 0.08
+		badge.BorderSizePixel = 0
+		badge.Text = tostring(index)
+		badge.TextColor3 = WHITE
+		badge.Font = Enum.Font.GothamBlack
+		badge.TextSize = 9
+		badge.ZIndex = 8
+		Instance.new("UICorner", badge).CornerRadius = UDim.new(1, 0)
+
+		State.imageChoiceVisuals[assetId] = {stroke=thumbStroke, badge=badge, index=index}
+		thumb.Activated:Connect(function()
+			State.applyBackgroundImage(assetId, true)
+		end)
+	end
+
+	State.applyBackgroundImage(State.backgroundAssetId, false)
+end
+State.buildBackgroundPage()
+State.buildBackgroundPage = nil
+
+-- ============================================================
+--  APARTADO: IMÁGENES PARA LOS BOTONES MÓVILES
+--  Usa exactamente los mismos assetIds que el selector de fondo
+-- ============================================================
+makeSecHeader("Background", "Button Images")
+do
+	local btnNames = {
+		{"Drop", "Drop"},
+		{"AutoLeft", "Auto Left"},
+		{"AutoRight", "Auto Right"},
+		{"AutoBat", "Bat Aimbot"},
+		{"Speed", "Carry Spd"},
+		{"Lagger", "Lagger"},
+		{"TPDown", "TP Down"},
+		{"TPBat", "TP Bat"},
+		{"AutoTP", "Auto TP"},
+		{"Taunt", "Taunt"},
+		{"MusicPad", "Music Pad"},
+		{"BatV2", "Bat V2"},
+		{"InstaReset", "Insta Reset"},
+	}
+
+	-- Opciones legibles + mapa a assetId reales del script
+	local imageOptions = {"None"}
+	local optionToId = {["None"] = ""}
+	local idToOption = {[""] = "None"}
+
+	local function addOption(label, assetId)
+		table.insert(imageOptions, label)
+		optionToId[label] = tostring(assetId)
+		idToOption[tostring(assetId)] = label
+	end
+
+	addOption("Default BG", State.backgroundAssetId or "139887397490573")
+	for i, id in ipairs(State.backgroundAssetIds) do
+		addOption("Image " .. i, id)
+	end
+
+	local infoCard = baseCard("Background", 40)
+	cLabel(infoCard, "Imágenes en botones móviles", 10, 260, 11, WHITE, Enum.Font.GothamBold)
+	local infoSub = cLabel(infoCard, "Usa las mismas imágenes del selector de fondo", 10, 280, 9, DIM, Enum.Font.Gotham)
+	infoSub.Size = UDim2.new(1, -20, 0, 14)
+	infoSub.Position = UDim2.new(0, 10, 0, 22)
+
+	for _, pair in ipairs(btnNames) do
+		local internalName, displayName = pair[1], pair[2]
+		local savedId = State.buttonImages[internalName] or ""
+		local currentLabel = idToOption[tostring(savedId)] or "None"
+
+		rowCycleSelector("Background", displayName, imageOptions, currentLabel, function(selected)
+			local assetId = optionToId[selected] or ""
+			setMobileButtonImage(internalName, assetId)
+		end)
+	end
+end
+
+makeSecHeader("Animations", "Animation Packs")
+State._animPackSelectorVisual = rowCycleSelector("Animations", "Anim Pack", {"Normal","Adidas Sports","Adidas Community","Adidas Aura","Wicked Popular","Elder","Zombie","Mage","Catwalk Glam","Astronaut","Werewolf","Superhero","Toy","No Boundaries","NFL","Amazon Unboxed","Vampire","Ninja","Robot","Levitation","Stylish","Bubbly","Cartoon"}, "Normal", function(name)
+	pcall(function()
+		if _G.NIGHT_applyAnimationPack then
+			_G.NIGHT_applyAnimationPack(name) -- "Normal" / "Off" restaura animaciones por defecto
+		end
+	end)
+	if State.requestConfigSave then State.requestConfigSave() end
+end)
+
+makeSecHeader("Animations", "Skins")
+State._skinPackSelectorVisual = rowCycleSelector("Animations", "Skin Pack", {"Off","Korblox","Headless","Both"}, "Off", function(name)
+	pcall(function() if _G.NIGHT_applySkin then _G.NIGHT_applySkin(name) end end)
+	if State.requestConfigSave then State.requestConfigSave() end
+end)
+
+makeSecHeader("Animations", "Anti Die")
+rowToggle("Animations", "Anti Die", "Previene la muerte", false, function(on)
+	pcall(function() if _G.NIGHT_setAntiDie then _G.NIGHT_setAntiDie(on) end end)
+end)
+
+makeSecHeader("Animations", "Pack Accessory")
+State._accessoryPackSelectorVisual = rowCycleSelector(
+	"Animations",
+	"Pack Accessory",
+	_G.NIGHT_ACCESSORY_PACK_ORDER or {"Off","Bleed 1","Bleed 2","Bleed 3"},
+	"Off",
+	function(name)
+		pcall(function()
+			if _G.NIGHT_applyAccessoryPack then
+				_G.NIGHT_applyAccessoryPack(name)
+			end
+		end)
+		if State.requestConfigSave then State.requestConfigSave() end
+	end
+)
+
+makeSecHeader("Animations", "Music")
+do
+	local musicOpts = _G.NIGHT_musicNames or {"Off","Tryhard","Tryhard 2","Tryhard Def","XD","67","3AM","Beretta","Brasil","Brasil 2","Migizin"}
+	State._musicPackSelectorVisual = rowCycleSelector("Animations", "Music Pack", musicOpts, "Off", function(name)
+		pcall(function() if _G.NIGHT_musicPlay then _G.NIGHT_musicPlay(name) end end)
+		if State.requestConfigSave then State.requestConfigSave() end
+	end)
+	if not KB.MusicPC then KB.MusicPC = {kb = Enum.KeyCode.M, gp = nil} end
+	if not KB.MusicPad then KB.MusicPad = {kb = nil, gp = Enum.KeyCode.DPadUp} end
+end
+
+
+makeSecHeader("Keybinds", "Botones laterales · PC + Control")
+do
+	local dkb = _G.NIGHT_rowDualKB
+	local function r(label, entry)
+		if dkb then
+			dkb(baseCard, cLabel, WHITE, DIM, KB_BG, INPUT_TRANSPARENCY, BORDER, UIS, TweenService, State, "Keybinds", label, entry)
+		end
+	end
+	if not KB.Taunt then KB.Taunt = {kb=nil, gp=nil} end
+	r("Carry Speed", KB.Speed)
+	r("Lagger", KB.Lagger)
+	r("Drop BR", KB.Drop)
+	r("TP Down", KB.TPDown)
+	r("Auto Left", KB.AutoLeft)
+	r("Auto Right", KB.AutoRight)
+	r("Auto Bat V1", KB.AutoBat)
+	r("Bat V2", KB.AutoBatV2)
+	r("TP Bat", KB.TPBat)
+	r("Insta Reset", KB.InstaReset)
+	r("Taunt", KB.Taunt)
+	r("Music", KB.MusicPC)
+	r("Hide GUI", KB.GuiHide)
+end
+
+
+-- SECCIÓN 8: BOTONES MÓVILES
+do
+    	local BTN_SIZE = 60
+	local BTN_GAP  = 12
+	local PADDING  = 6
+	MobilePanel = Instance.new("Frame")
+	MobilePanel.Name = "MobileButtonsPanel"
+	MobilePanel.Size = UDim2.new(0, PADDING * 2 + 3 * BTN_SIZE + 2 * BTN_GAP, 0, PADDING * 2 + 4 * BTN_SIZE + 3 * BTN_GAP)
+	MobilePanel.Position = UDim2.new(1, -140, 0, 10)
+	MobilePanel.BackgroundColor3 = Color3.fromRGB(16,16,18)
+	MobilePanel.BackgroundTransparency = 1
+	MobilePanel.BorderSizePixel = 0
+	MobilePanel.ZIndex = 1
+	MobilePanel.Parent = gui
+
+	local Q_OFF      = Color3.fromRGB(12, 12, 10)
+	local Q_ON       = Color3.fromRGB(220, 20, 30)
+	local Q_TEXT_OFF = Color3.fromRGB(220, 200, 80)
+
+	State._purpleAnimatedButtons = State._purpleAnimatedButtons or {}
+	State._purpleAnimationPeriod = 5.5
+
+	local purpleTextPalette = {
+		Color3.fromRGB(16,16,18),
+		Color3.fromRGB(255, 40, 50),
+		Color3.fromRGB(180,180,190),
+		Color3.fromRGB(220, 20, 30),
+		Color3.fromRGB(210,210,220),
+		Color3.fromRGB(180,180,190),
+	}
+
+	local function checkSpeedAndDropBeforeAction(stateCheckName, actionCallback)
+		task.spawn(function()
+			local char = LP.Character
+			local hum = char and char:FindFirstChildOfClass("Humanoid")
+			
+			if hum then
+				if hum.WalkSpeed < 20 then
+					if State[stateCheckName] and actionCallback then
+						actionCallback()
+					end
+					return
+				end
+				
+				while hum and hum.WalkSpeed >= 20 and hum.WalkSpeed <= 24 and State[stateCheckName] do
+					task.wait(0.5) 
+					
+					char = LP.Character
+					hum = char and char:FindFirstChildOfClass("Humanoid")
+				end
+				
+				if hum and hum.WalkSpeed >= 30 and State[stateCheckName] and actionCallback then
+					actionCallback()
+				end
+			end
+		end)
+	end
+
+	local function paletteColor(palette, progress)
+		local count = #palette
+		if count == 0 then return Color3.fromRGB(230,230,235) end
+		if count == 1 then return palette[1] end
+		progress = progress % 1
+		local scaled = progress * count
+		local index = math.floor(scaled) + 1
+		local nextIndex = (index % count) + 1
+		local alpha = scaled - math.floor(scaled)
+		alpha = alpha * alpha * (3 - 2 * alpha)
+		return palette[index]:Lerp(palette[nextIndex], alpha)
+	end
+
+	State._registerPurpleAnimatedButton = function(button)
+		if not button then return end
+		button:SetAttribute("PurpleActive", false)
+		button:SetAttribute("PurpleFlash", false)
+		button.BackgroundColor3 = Q_OFF
+		button.TextColor3 = Q_TEXT_OFF
+		State._purpleAnimatedButtons[button] = {
+			background = button.BackgroundColor3,
+			text = button.TextColor3,
+		}
+	end
+
+	if not State._purpleAnimationStarted then
+		State._purpleAnimationStarted = true
+		task.spawn(function()
+			local lastClock = os.clock()
+			while gui and gui.Parent do
+				local now = os.clock()
+				local dt = math.min(now - lastClock, 0.1)
+				lastClock = now
+				local progress = (now / State._purpleAnimationPeriod) % 1
+				local animatedRed = paletteColor(purpleTextPalette, progress)
+				local blend = 1 - math.exp(-dt * 8)
+
+				for button, visual in pairs(State._purpleAnimatedButtons) do
+					if button and button.Parent then
+						local active = button:GetAttribute("PurpleActive") == true
+						local flash = button:GetAttribute("PurpleFlash") == true
+						local targetBackground
+						local targetText
+
+						if active or flash then
+							targetBackground = Q_ON
+							targetText = Color3.fromRGB(200,200,210)
+						else
+							targetBackground = Q_OFF
+							targetText = Q_TEXT_OFF
+						end
+
+						visual.background = visual.background:Lerp(targetBackground, blend)
+						visual.text = visual.text:Lerp(targetText, blend)
+						button.BackgroundColor3 = visual.background
+						button.TextColor3 = visual.text
+					else
+						State._purpleAnimatedButtons[button] = nil
+					end
+				end
+
+				RunService.RenderStepped:Wait()
+			end
+		end)
+	end
+
+	State._blueShineLabels = State._blueShineLabels or {}
+	State._blueShineGradients = State._blueShineGradients or {}
+
+	local function attachBlueTextShine(button)
+		if not button or button:FindFirstChild("BlueTextShine") then return end
+
+		button.TextTransparency = 1
+
+		local shineText = Instance.new("TextLabel")
+		shineText.Name = "BlueTextShine"
+		shineText.BackgroundTransparency = 1
+		shineText.BorderSizePixel = 0
+		shineText.Size = UDim2.fromScale(1, 1)
+		shineText.Position = UDim2.fromScale(0, 0)
+		shineText.Text = button.Text
+		shineText.TextColor3 = Color3.fromRGB(255, 255, 255)
+		shineText.TextTransparency = 0
+		shineText.TextScaled = button.TextScaled
+		shineText.TextSize = button.TextSize
+		shineText.Font = button.Font
+		shineText.TextWrapped = button.TextWrapped
+		shineText.LineHeight = button.LineHeight
+		shineText.TextXAlignment = button.TextXAlignment
+		shineText.TextYAlignment = button.TextYAlignment
+		shineText.ZIndex = button.ZIndex + 1
+		shineText.Active = false
+		shineText.Selectable = false
+		shineText.Parent = button
+
+		local shineGradient = Instance.new("UIGradient")
+		shineGradient.Name = "CleanBlueShine"
+		shineGradient.Rotation = 0
+		shineGradient.Offset = Vector2.new(-1.25, 0)
+		shineGradient.Color = ColorSequence.new({
+			ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 20, 30)),
+			ColorSequenceKeypoint.new(0.38, Color3.fromRGB(16,16,18)),
+			ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 40, 50)),
+			ColorSequenceKeypoint.new(0.62, Color3.fromRGB(16,16,18)),
+			ColorSequenceKeypoint.new(1.00, Color3.fromRGB(220, 20, 30)),
+		})
+		shineGradient.Parent = shineText
+
+		State._blueShineLabels[button] = shineText
+		State._blueShineGradients[button] = shineGradient
+
+		button:GetPropertyChangedSignal("Text"):Connect(function()
+			if shineText.Parent then shineText.Text = button.Text end
+		end)
+		button:GetPropertyChangedSignal("Visible"):Connect(function()
+
+			if shineText.Parent then shineText.Visible = button.Visible end
+		end)
+		button:GetPropertyChangedSignal("TextSize"):Connect(function()
+			if shineText.Parent then shineText.TextSize = button.TextSize end
+		end)
+		button:GetPropertyChangedSignal("ZIndex"):Connect(function()
+			if shineText.Parent then shineText.ZIndex = button.ZIndex + 1 end
+		end)
+	end
+
+	if not State._blueShineSequenceStarted then
+		State._blueShineSequenceStarted = true
+		task.spawn(function()
+			while gui and gui.Parent do
+				local animatedAny = false
+				for button, gradient in pairs(State._blueShineGradients) do
+					if not (gui and gui.Parent) then break end
+					if button and button.Parent and gradient and gradient.Parent and button.Visible then
+						animatedAny = true
+						gradient.Offset = Vector2.new(-1.25, 0)
+						local tween = TweenService:Create(
+							gradient,
+							TweenInfo.new(1.45, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
+							{Offset = Vector2.new(1.25, 0)}
+						)
+						tween:Play()
+						tween.Completed:Wait()
+						task.wait(0.06)
+					elseif button and not button.Parent then
+						State._blueShineLabels[button] = nil
+						State._blueShineGradients[button] = nil
+					end
+				end
+				if not animatedAny then task.wait(0.5) else task.wait(0.8) end
+			end
+		end)
+	end
+
+	local function createMobileButton(name, displayText, col, row, isToggle, onAction)
+		local xPos = PADDING + col * (BTN_SIZE + BTN_GAP)
+		local yPos = PADDING + row * (BTN_SIZE + BTN_GAP)
+
+		local btn = Instance.new("TextButton")
+		btn.Name = "Btn_" .. name
+		btn.Size = UDim2.new(0, BTN_SIZE, 0, BTN_SIZE)
+		local defaultPos = UDim2.new(1, -140 + xPos, 0, 10 + yPos)
+		btn.Position = defaultPos
+		btn.BackgroundColor3 = Q_OFF
+		btn.Text = displayText
+		btn.TextColor3 = Q_TEXT_OFF
+		btn.TextScaled = false; btn.TextSize = 11
+		btn.Font = Enum.Font.GothamBold
+		btn.TextWrapped = true; btn.LineHeight = 1.2
+		btn.BorderSizePixel = 0; btn.AutoButtonColor = false
+		btn.ZIndex = -1
+		btn.Parent = gui
+		State._registerPurpleAnimatedButton(btn)
+		attachBlueTextShine(btn)
+		mobileButtonsByName[name] = btn
+		mobileButtonDefaultPositions[name] = defaultPos
+		makeDraggable(btn)
+		btn.InputEnded:Connect(function(inp)
+			if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+				if State.requestConfigSave then State.requestConfigSave() end
+			end
+		end)
+		Instance.new("UICorner", btn).Name = "ButtonShapeCorner"
+
+		-- Imagen de fondo del botón (usa los mismos assets del script)
+		ensureButtonImageLabel(btn)
+		if State.buttonImages[name] and State.buttonImages[name] ~= "" then
+			applyImageToMobileButton(btn, State.buttonImages[name])
+		end
+
+		local mobileStroke = Instance.new("UIStroke")
+		mobileStroke.Name = "BlueOuterStroke"
+		mobileStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+		mobileStroke.Color = Color3.fromRGB(220,220,230)
+		mobileStroke.Thickness = 0.9
+		mobileStroke.Transparency = 0.22
+		mobileStroke.LineJoinMode = Enum.LineJoinMode.Round
+		mobileStroke.Parent = btn
+
+		applyMobileButtonsSize(State.buttonsSizeValue)
+
+		local isOn = false
+		local function setter(s)
+			isOn = s
+			btn:SetAttribute("PurpleActive", s == true)
+		end
+
+		local function flash()
+			btn:SetAttribute("PurpleFlash", true)
+			task.delay(0.35, function()
+				if btn and btn.Parent then
+					btn:SetAttribute("PurpleFlash", false)
+				end
+			end)
+		end
+
+		btn.Activated:Connect(function()
+			if isToggle then
+				isOn = not isOn; setter(isOn)
+				if onAction then onAction(isOn) end
+			else
+				flash()
+				if onAction then onAction() end
+			end
+			if State.requestConfigSave then State.requestConfigSave() end
+		end)
+
+		return btn, setter
+	end
+
+	createMobileButton("Drop", "DROP\nBR", 0, 0, false, function() State._manualDropRequest = true; task.spawn(runDrop) end)
+
+	-- TAUNT: Elite_Hub ON TOP 
+	local _tauntBusy = false
+	local function doNightTaunt()
+		if _tauntBusy then return end
+		_tauntBusy = true
+		local msg = "Elite_Hub ON TOP 🏆"
+		pcall(function()
+			local TextChatService = game:GetService("TextChatService")
+			local channel = TextChatService:FindFirstChild("TextChannels")
+			channel = channel and (channel:FindFirstChild("RBXGeneral") or channel:FindFirstChildWhichIsA("TextChannel"))
+			if channel and channel.SendAsync then
+				channel:SendAsync(msg)
+				return
+			end
+		end)
+		pcall(function()
+			local chat = game:GetService("Chat")
+			if chat and chat.SubmitMessage then
+				chat:SubmitMessage(msg, "All")
+			end
+		end)
+		pcall(function()
+			local rep = game:GetService("ReplicatedStorage")
+			local ev = rep:FindFirstChild("DefaultChatSystemChatEvents")
+			ev = ev and ev:FindFirstChild("SayMessageRequest")
+			if ev then ev:FireServer(msg, "All") end
+		end)
+		task.delay(1.2, function() _tauntBusy = false end)
+	end
+	createMobileButton("Taunt", "TAUNT Elite_Hub 👑", 1, 5, false, function()
+		task.spawn(doNightTaunt)
+	end)
+
+
+	createMobileButton("MusicPad", "MUSIC\nPAD", 1, 6, false, function()
+		pcall(function() if _G.NIGHT_musicCycle then _G.NIGHT_musicCycle() end end)
+	end)
+	btnBatV2 = Instance.new("TextButton")
+	btnBatV2.Name = "Btn_BatnV2"
+	btnBatV2.Size = UDim2.new(0, BTN_SIZE, 0, BTN_SIZE)
+	btnBatV2.Position = UDim2.new(1, -140 - BTN_SIZE - BTN_GAP, 0, 10 + PADDING)
+	btnBatV2.BackgroundColor3 = Q_OFF
+	btnBatV2.Text = "BAT V2"
+	btnBatV2.TextColor3 = Q_TEXT_OFF
+	btnBatV2.TextScaled = false; btnBatV2.TextSize = 11
+	btnBatV2.Font = Enum.Font.GothamBold
+	btnBatV2.TextWrapped = true; btnBatV2.LineHeight = 1.2
+	btnBatV2.BorderSizePixel = 0; btnAutoButtonColor = false
+	btnBatV2.ZIndex = 1
+	btnBatV2.Parent = gui
+	State._registerPurpleAnimatedButton(btnBatV2)
+	attachBlueTextShine(btnBatV2)
+	Instance.new("UICorner", btnBatV2).Name = "ButtonShapeCorner"
+	ensureButtonImageLabel(btnBatV2)
+	if State.buttonImages["BatV2"] and State.buttonImages["BatV2"] ~= "" then
+		applyImageToMobileButton(btnBatV2, State.buttonImages["BatV2"])
+	end
+	local batV2Stroke = Instance.new("UIStroke")
+	batV2Stroke.Name = "BlueOuterStroke"
+	batV2Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	batV2Stroke.Color = Color3.fromRGB(220,220,230)
+	batV2Stroke.Thickness = 0.9
+	batV2Stroke.Transparency = 0.22
+	batV2Stroke.LineJoinMode = Enum.LineJoinMode.Round
+	batV2Stroke.Parent = btnBatV2
+	applyMobileButtonsSize(State.buttonsSizeValue)
+
+	makeDraggable(btnBatV2)
+	btnBatV2.InputEnded:Connect(function(inp)
+		if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+			if State.requestConfigSave then State.requestConfigSave() end
+		end
+	end)
+
+	State._batV2On = false
+	State._setBatV2Visual = function(s)
+		State._batV2On = s
+		btnBatV2:SetAttribute("PurpleActive", s == true)
+		if autoBatV2SetVisual then autoBatV2SetVisual(s) end
+	end
+
+	btnBatV2.Activated:Connect(function()
+		State._batV2On = not State._batV2On
+		State._setBatV2Visual(State._batV2On)
+		State.autoBatV2Enabled = State._batV2On
+		
+		if _G.setRagdollTpState then _G.setRagdollTpState(not State._batV2On) end
+
+		if State._batV2On then
+			if State.autoLeftEnabled then State.autoLeftEnabled = false; if autoLeftSetVisual then autoLeftSetVisual(false) end; stopAutoLeft() end
+			if State.autoRightEnabled then State.autoRightEnabled = false; if autoRightSetVisual then autoRightSetVisual(false) end; stopAutoRight() end
+			if State.autoBatToggled then
+				State.autoBatToggled = false
+				if autoBatSetVisual then autoBatSetVisual(false) end
+				stopBatAimbot()
+			end
+			if State.tpBatEnabled then State._setTPBatEnabled(false) end
+			checkSpeedAndDropBeforeAction("autoBatV2Enabled", function()
+				if startBatAimbotV2 then startBatAimbotV2() end
+			end)
+		else
+			if stopBatAimbotV2 then stopBatAimbotV2() end
+		end
+		if State.requestConfigSave then State.requestConfigSave() end
+	end)
+
+	local oldAutoBatV2SetVisual = autoBatV2SetVisual
+	autoBatV2SetVisual = function(on)
+		State._batV2On = on
+		btnBatV2:SetAttribute("PurpleActive", on == true)
+		if oldAutoBatV2SetVisual then oldAutoBatV2SetVisual(on) end
+	end
+	mobileBatV2SetActive = function(on) autoBatV2SetVisual(on) end
+
+	btnInstaReset = Instance.new("TextButton")
+	btnInstaReset.Name = "Btn_InstaReset"
+	btnInstaReset.Size = UDim2.new(0, BTN_SIZE, 0, BTN_SIZE)
+	btnInstaReset.Position = UDim2.new(1, -140 - BTN_SIZE - BTN_GAP, 0, 10 + PADDING + BTN_SIZE + BTN_GAP)
+	btnInstaReset.BackgroundColor3 = Q_OFF
+	btnInstaReset.Text = "INSTA\nRESET"
+	btnInstaReset.TextColor3 = Q_TEXT_OFF
+	btnInstaReset.TextScaled = false; btnInstaReset.TextSize = 11
+	btnInstaReset.Font = Enum.Font.GothamBold
+	btnInstaReset.TextWrapped = true; btnInstaReset.LineHeight = 1.2
+	btnInstaReset.BorderSizePixel = 0; btnInstaReset.AutoButtonColor = false
+	btnInstaReset.ZIndex = 1
+	btnInstaReset.Parent = gui
+	State._registerPurpleAnimatedButton(btnInstaReset)
+	attachBlueTextShine(btnInstaReset)
+	Instance.new("UICorner", btnInstaReset).Name = "ButtonShapeCorner"
+	ensureButtonImageLabel(btnInstaReset)
+	if State.buttonImages["InstaReset"] and State.buttonImages["InstaReset"] ~= "" then
+		applyImageToMobileButton(btnInstaReset, State.buttonImages["InstaReset"])
+	end
+	local instaResetStroke = Instance.new("UIStroke")
+	instaResetStroke.Name = "BlueOuterStroke"
+	instaResetStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	instaResetStroke.Color = Color3.fromRGB(220,220,230)
+	instaResetStroke.Thickness = 0.9
+	instaResetStroke.Transparency = 0.22
+	instaResetStroke.LineJoinMode = Enum.LineJoinMode.Round
+	instaResetStroke.Parent = btnInstaReset
+	applyMobileButtonsSize(State.buttonsSizeValue)
+
+	makeDraggable(btnInstaReset)
+	btnInstaReset.InputEnded:Connect(function(inp)
+		if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+			if State.requestConfigSave then State.requestConfigSave() end
+		end
+	end)
+
+	btnInstaReset.Activated:Connect(function()
+		btnInstaReset:SetAttribute("PurpleFlash", true)
+		task.delay(0.35, function()
+			if btnInstaReset and btnInstaReset.Parent then
+				btnInstaReset:SetAttribute("PurpleFlash", false)
+			end
+		end)
+
+		if setInstaToggleVisual then
+			setInstaToggleVisual(true)
+			task.delay(0.2, function() setInstaToggleVisual(false) end)
+		end
+
+		task.spawn(cursedInstaReset)
+		if State.requestConfigSave then State.requestConfigSave() end
+	end)
+
+	resetMobileButtons = function()
+		for name, btn in pairs(mobileButtonsByName) do
+			local defaultPos = mobileButtonDefaultPositions[name]
+			if btn and defaultPos then btn.Position = defaultPos end
+		end
+		btnBatV2.Position = UDim2.new(1, -140 - BTN_SIZE - BTN_GAP, 0, 10 + PADDING)
+		btnInstaReset.Position = UDim2.new(1, -140 - BTN_SIZE - BTN_GAP, 0, 10 + PADDING + BTN_SIZE + BTN_GAP)
+		if State.requestPositionSave then State.requestPositionSave() end
+		if State.requestConfigSave then State.requestConfigSave() end
+	end
+
+	-- Aplicar imágenes guardadas a todos los botones (mismos assets del script)
+	task.defer(function()
+		pcall(applyAllButtonImages)
+	end)
+
+	do
+		local setter = select(2, createMobileButton("AutoLeft", "AUTO\nLEFT", 1, 0, true, function(on)
+			State.autoLeftEnabled = on
+			if on then
+				local requiredTpEnable = false
+				if State.autoRightEnabled then State.autoRightEnabled=false; if autoRightSetVisual then autoRightSetVisual(false) end; stopAutoRight() end
+				if State.autoBatToggled then 
+					State.autoBatToggled=false; 
+					if autoBatSetVisual then autoBatSetVisual(false) end; 
+					stopBatAimbot()
+					requiredTpEnable = true
+				end
+				if State.autoBatV2Enabled then
+					State.autoBatV2Enabled = false
+					if autoBatV2SetVisual then autoBatV2SetVisual(false) end
+					if mobileBatV2SetActive then mobileBatV2SetActive(false) end
+					stopBatAimbotV2()
+					requiredTpEnable = true
+				end
+				if State.tpBatEnabled then State._setTPBatEnabled(false) end
+
+				if requiredTpEnable and _G.setRagdollTpState then _G.setRagdollTpState(true) end
+
+				local char = LP.Character
+				local hum = char and char:FindFirstChildOfClass("Humanoid")
+				local root = char and char:FindFirstChild("HumanoidRootPart")
+				if hum and root and hum.WalkSpeed > 0 and not root.Anchored then 
+					checkSpeedAndDropBeforeAction("autoLeftEnabled", function()
+						startAutoLeft() 
+					end)
+				end
+			else
+				stopAutoLeft()
+			end
+		end))
+		local previous = autoLeftSetVisual
+		autoLeftSetVisual = function(on)
+			setter(on)
+			if previous then previous(on) end
+		end
+		mobileAutoLeftSetActive = function(on) autoLeftSetVisual(on) end
+		if mobileBtnActive then mobileBtnActive.AutoLeft = setter end
+		local btn = mobileButtonsByName["AutoLeft"]
+		if btn then
+			btn.TextColor3 = Color3.fromRGB(255,255,255)
+		end
+	end
+
+	do
+		local setter = select(2, createMobileButton("AutoBat", "BAT\nAIMBOT", 0, 1, true, function(on)
+			State.autoBatToggled = on
+			
+			if _G.setRagdollTpState then _G.setRagdollTpState(not on) end
+
+			if on then
+				if State.autoLeftEnabled then State.autoLeftEnabled=false; if autoLeftSetVisual then autoLeftSetVisual(false) end; stopAutoLeft() end
+				if State.autoRightEnabled then State.autoRightEnabled=false; if autoRightSetVisual then autoRightSetVisual(false) end; stopAutoRight() end
+				if State._batV2On then
+					State._batV2On = false
+					State._setBatV2Visual(false)
+					State.autoBatV2Enabled = false
+					if autoBatV2SetVisual then autoBatV2SetVisual(false) end
+					if stopBatAimbotV2 then stopBatAimbotV2() end
+				end
+				if State.tpBatEnabled then State._setTPBatEnabled(false) end
+				checkSpeedAndDropBeforeAction("autoBatToggled", function()
+					startBatAimbot() 
+				end)
+			else
+				stopBatAimbot()
+			end
+		end))
+		local previous = autoBatSetVisual
+		autoBatSetVisual = function(on)
+			setter(on)
+			if previous then previous(on) end
+		end
+		mobileBatV1SetActive = function(on) autoBatSetVisual(on) end
+		if mobileBtnActive then mobileBtnActive.AutoBat = setter end
+	end
+
+	do
+		local setter = select(2, createMobileButton("AutoRight", "AUTO\nRIGHT", 1, 1, true, function(on)
+			State.autoRightEnabled = on
+			if on then
+				local requiredTpEnable = false
+				if State.autoLeftEnabled then State.autoLeftEnabled=false; if autoLeftSetVisual then autoLeftSetVisual(false) end; stopAutoLeft() end
+				if State.autoBatToggled then 
+					State.autoBatToggled=false; 
+					if autoBatSetVisual then autoBatSetVisual(false) end; 
+					stopBatAimbot()
+					requiredTpEnable = true
+				end
+				if State.autoBatV2Enabled then
+					State.autoBatV2Enabled = false
+					if autoBatV2SetVisual then autoBatV2SetVisual(false) end
+					if mobileBatV2SetActive then mobileBatV2SetActive(false) end
+					stopBatAimbotV2()
+					requiredTpEnable = true
+				end
+				if State.tpBatEnabled then State._setTPBatEnabled(false) end
+
+				if requiredTpEnable and _G.setRagdollTpState then _G.setRagdollTpState(true) end
+
+				local char = LP.Character
+				local hum = char and char:FindFirstChildOfClass("Humanoid")
+				local root = char and char:FindFirstChild("HumanoidRootPart")
+				if hum and root and hum.WalkSpeed > 0 and not root.Anchored then 
+					checkSpeedAndDropBeforeAction("autoRightEnabled", function()
+						startAutoRight() 
+					end)
+				end
+			else
+				stopAutoRight()
+			end
+		end))
+		local previous = autoRightSetVisual
+		autoRightSetVisual = function(on)
+			setter(on)
+			if previous then previous(on) end
+		end
+		mobileAutoRightSetActive = function(on) autoRightSetVisual(on) end
+		if mobileBtnActive then mobileBtnActive.AutoRight = setter end
+		local btn = mobileButtonsByName["AutoRight"]
+		if btn then
+			btn.TextColor3 = Color3.fromRGB(255,255,255)
+		end
+	end
+
+	createMobileButton("TPDown", "TP\nDOWN", 0, 2, false, function() task.spawn(runTPDown) end)
+
+	State._tpBatButton, State._tpBatSetter = createMobileButton("TPBat", "TP\nBAT", 0, 4, true, function(on)
+		State._setTPBatEnabled(on)
+		if State._tpBatConfigSetVisual then State._tpBatConfigSetVisual(on) end
+	end)
+	State._tpBatSetVisual = function(on)
+		State._setTPBatEnabled(on)
+		if State._tpBatSetter then State._tpBatSetter(on) end
+		if State._tpBatConfigSetVisual then State._tpBatConfigSetVisual(on) end
+	end
+
+	do
+		local setter = select(2, createMobileButton("Speed", "CARRY\nSPD", 1, 2, true, function(on)
+			State.speedToggled = on
+			if on then
+				State.laggerToggled = false
+				laggerPhase = 0
+				if mobileLaggerSetActive then mobileLaggerSetActive(false) end
+				if modeValLbl then modeValLbl.Text = State.speedProfile == "Lagger" and ("Carry · " .. tostring(State.profileLaggerCarrySpeed)) or "Carry" end
+			else
+				if modeValLbl then modeValLbl.Text = State.speedProfile == "Lagger" and ("Lagger · " .. tostring(State.profileLaggerNormalSpeed)) or "Normal" end
+			end
+		end))
+		mobileSpeedSetActive = function(on) setter(on) end
+	end
+
+	do
+		local setter = select(2, createMobileButton("AutoTP", "AUTO\nTP", 1, 3, true, function(on)
+			autoTPDownEnabled = on
+			if on then
+				if startAutoTPDown then task.spawn(startAutoTPDown) end
+			else
+				if stopAutoTPDown then stopAutoTPDown() end
+			end
+		end))
+		local previous = setAutoTPDownVisual
+		setAutoTPDownVisual = function(on)
+			setter(on)
+			if previous then previous(on) end
+		end
+		mobileAutoTPSetActive = function(on) setAutoTPDownVisual(on) end
+	end
+
+	do
+		local cycle = 0
+		local button, setter
+		button, setter = createMobileButton("Lagger", "LAGGER\nOff", 0, 3, true, function()
+			if cycle == 0 or cycle == 2 then
+				cycle = 1
+				State.laggerToggled = true
+				laggerPhase = 1
+				State.speedToggled = false
+				if mobileSpeedSetActive then mobileSpeedSetActive(false) end
+				if modeValLbl then modeValLbl.Text = "Lagger 1" end
+				button.Text = "LAGGER\n1"
+				task.defer(function() setter(true) end)
+			elseif cycle == 1 then
+				cycle = 2
+				State.laggerToggled = true
+				laggerPhase = 2
+				State.speedToggled = false
+				if mobileSpeedSetActive then mobileSpeedSetActive(false) end
+				if modeValLbl then modeValLbl.Text = "Lagger 2" end
+				button.Text = "LAGGER\n2"
+				task.defer(function() setter(true) end)
+			end
+		end)
+		mobileLaggerSetActive = function(on)
+			if on then
+				cycle = (laggerPhase == 2) and 2 or 1
+				laggerPhase = cycle
+				State.laggerToggled = true
+				button.Text = cycle == 2 and "LAGGER\n2" or "LAGGER\n1"
+				setter(true)
+			else
+				cycle = 0
+				laggerPhase = 0
+				State.laggerToggled = false
+				button.Text = "LAGGER\nOff"
+				setter(false)
+			end
+		end
+	end
+
+	do
+		local wasFrozen = false
+		local prevInfJump = false
+		local prevSuperJump = false
+		local prevSpeedToggle = false
+
+		RunService.Heartbeat:Connect(function()
+			local char = LP.Character
+			if not char then return end
+			local hrp = char:FindFirstChild("HumanoidRootPart")
+			local hum = char:FindFirstChildOfClass("Humanoid")
+			if not hrp or not hum then return end
+
+			local isCurrentlyFrozen = hrp.Anchored or hum.WalkSpeed == 0
+
+			if isCurrentlyFrozen then
+				if State.autoBatV2Enabled or State._batV2On then
+					State._batV2On = false
+					State._setBatV2Visual(false)
+					State.autoBatV2Enabled = false
+					if autoBatV2SetVisual then autoBatV2SetVisual(false) end
+					if stopBatAimbotV2 then stopBatAimbotV2() end
+					if _G.setRagdollTpState then _G.setRagdollTpState(true) end
+				end
+
+				if State.autoBatToggled then
+					State.autoBatToggled = false
+					if autoBatSetVisual then autoBatSetVisual(false) end
+					stopBatAimbot()
+					if _G.setRagdollTpState then _G.setRagdollTpState(true) end
+				end
+
+				if not wasFrozen then
+					wasFrozen = true
+					prevInfJump = State.infJumpEnabled
+					prevSuperJump = State.superJumpEnabled
+					prevSpeedToggle = State.speedToggled
+
+					if State.infJumpEnabled then
+						State.infJumpEnabled = false
+						if setInfJump then setInfJump(false) end
+					end
+					if State.superJumpEnabled then
+						State.superJumpEnabled = false
+						if setSuperJump then setSuperJump(false) end
+					end
+					if State.speedToggled then
+						State.speedToggled = false
+						if mobileSpeedSetActive then mobileSpeedSetActive(false) end
+						if modeValLbl then
+							modeValLbl.Text = State.laggerToggled and "Lagger" or (State.speedToggled and (State.speedProfile == "Lagger" and ("Carry · " .. tostring(State.profileLaggerCarrySpeed)) or "Carry") or (State.speedProfile == "Lagger" and ("Lagger · " .. tostring(State.profileLaggerNormalSpeed)) or "Normal"))
+						end
+					end
+
+					if State.dropActive then
+						if State.dropConn then
+							State.dropConn:Disconnect()
+							State.dropConn = nil
+						end
+						State.dropActive = false
+					end
+					if State.dropBrainrotActive then
+						if State.dropBrainrotConn then
+							State.dropBrainrotConn:Disconnect()
+							State.dropBrainrotConn = nil
+						end
+						State.dropBrainrotActive = false
+					end
+
+					if State.autoLeftEnabled then stopAutoLeft() end
+					if State.autoRightEnabled then stopAutoRight() end
+				end
+			else
+				if wasFrozen then
+					wasFrozen = false
+
+					if prevInfJump then
+						State.infJumpEnabled = true
+						if setInfJump then setInfJump(true) end
+					end
+					if prevSuperJump then
+						State.superJumpEnabled = true
+						if setSuperJump then setSuperJump(true) end
+					end
+					if prevSpeedToggle then
+						State.speedToggled = true
+						if mobileSpeedSetActive then mobileSpeedSetActive(true) end
+						if modeValLbl then
+							modeValLbl.Text = State.laggerToggled and "Lagger" or (State.speedToggled and (State.speedProfile == "Lagger" and ("Carry · " .. tostring(State.profileLaggerCarrySpeed)) or "Carry") or (State.speedProfile == "Lagger" and ("Lagger · " .. tostring(State.profileLaggerNormalSpeed)) or "Normal"))
+						end
+					end
+
+					if State.autoLeftEnabled then startAutoLeft() end
+					if State.autoRightEnabled then startAutoRight() end
+				end
+			end
+		end)
+	end
+end
+
+
+-- SECCIÓN 9: ESP (LÍNEA)
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+
+local ESP = {}
+
+local function CreateESP(player)
+    if player == LocalPlayer then return end
+    if ESP[player] then return end
+
+    local Line = Drawing.new("Line")
+    Line.Color = Color3.fromRGB(16,16,18)
+    Line.Thickness = 0.1
+    Line.Transparency = 0.7
+    Line.Visible = false
+
+    local Distance = Drawing.new("Text")
+    Distance.Color = Color3.fromRGB(230,230,235)
+    Distance.Size = 11
+    Distance.Center = true
+    Distance.Outline = true
+    Distance.Visible = false
+
+    ESP[player] = {Line, Distance}
+end
+
+for _, v in ipairs(Players:GetPlayers()) do
+    CreateESP(v)
+end
+
+Players.PlayerAdded:Connect(CreateESP)
+
+Players.PlayerRemoving:Connect(function(player)
+    if ESP[player] then
+        for _, obj in ipairs(ESP[player]) do
+            obj:Remove()
+        end
+        ESP[player] = nil
+    end
+    if player.Character then
+        local hl = player.Character:FindFirstChild("HologramRed")
+        if hl then hl:Destroy() end
+    end
+end)
+
+RunService.RenderStepped:Connect(function()
+    Camera = workspace.CurrentCamera
+
+    for player, objs in pairs(ESP) do
+        local char = player.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        local head = char and char:FindFirstChild("Head")
+
+        if State.linieEnabled and hrp and hum and head and hum.Health > 0 then
+            local pos, visible = Camera:WorldToViewportPoint(hrp.Position)
+
+            local holo = char:FindFirstChild("HologramRed")
+            if not holo then
+                holo = Instance.new("Highlight")
+                holo.Name = "HologramRed"
+                holo.FillColor = Color3.fromRGB(16,16,18)
+                holo.FillTransparency = 0.5
+                holo.OutlineColor = Color3.fromRGB(255, 40, 50)
+                holo.OutlineTransparency = 0.2
+                holo.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                holo.Parent = char
+            else
+                holo.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+            end
+
+            if visible then
+                local distance = math.floor((hrp.Position - Camera.CFrame.Position).Magnitude)
+                local headPos = Camera:WorldToViewportPoint(head.Position + Vector3.new(0, 0.5, 0))
+                local feetPos = Camera:WorldToViewportPoint(hrp.Position - Vector3.new(0, 3, 0))
+                local height = math.abs(headPos.Y - feetPos.Y)
+
+                objs[1].Visible = true
+                objs[1].From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
+                objs[1].To = Vector2.new(pos.X, pos.Y)
+
+                objs[2].Visible = true
+                objs[2].Position = Vector2.new(pos.X, pos.Y - height / 2 - 16)
+                objs[2].Text = distance .. " Studs"
+
+            else
+                for _, obj in ipairs(objs) do
+                    obj.Visible = false
+                end
+            end
+        else
+            if char then
+                local hl = char:FindFirstChild("HologramRed")
+                if hl then hl:Destroy() end
+            end
+            for _, obj in ipairs(objs) do
+                obj.Visible = false
+            end
+        end
+    end
+end)
+
+State._positionConfigFile = "Vereuxv2_positions.json"
+State._positionBackupFile = "Vereuxv2_positions.backup.json"
+State._positionTempFile = "Vereuxv2_positions.tmp.json"
+State._positionSaveRequestId = 0
+
+State._positionSnapshot = function(guiObject)
+    if not guiObject then return nil end
+    local ok, position = pcall(function() return guiObject.Position end)
+    if not ok or not position then return nil end
+    return {xs=position.X.Scale, xo=position.X.Offset, ys=position.Y.Scale, yo=position.Y.Offset}
+end
+
+State._restoreSavedPosition = function(guiObject, data)
+    if not guiObject or type(data) ~= "table" or data.xs == nil then return end
+    pcall(function()
+        guiObject.Position = UDim2.new(
+            tonumber(data.xs) or 0,
+            tonumber(data.xo) or 0,
+            tonumber(data.ys) or 0,
+            tonumber(data.yo) or 0
+        )
+    end)
+end
+
+State.savePositionBackup = function()
+    local buttonPositions = {}
+    for name, button in pairs(mobileButtonsByName) do
+        buttonPositions[name] = State._positionSnapshot(button)
+    end
+
+    local payload = {
+        version = 2,
+        mainPos = State._positionSnapshot(main),
+        miniPos = State._positionSnapshot(mini),
+        panelPos = State._positionSnapshot(MobilePanel),
+        pbPos = State._positionSnapshot(pbFrame),
+        batV2Pos = State._positionSnapshot(btnBatV2),
+        instaResetPos = State._positionSnapshot(btnInstaReset),
+        autoStealBarPos = State._positionSnapshot(State.autoStealBarFrame),
+        mobileButtonPositions = buttonPositions,
+    }
+
+    local encodedOk, encoded = pcall(function() return HttpService:JSONEncode(payload) end)
+    if not encodedOk then return false end
+
+    if encoded == State._lastPositionJson then
+        State._positionDirty = false
+        return true
+    end
+
+    local saved, err = State._atomicJsonSave(
+        State._positionConfigFile,
+        State._positionBackupFile,
+        State._positionTempFile,
+        encoded
+    )
+    if saved then
+        State._lastPositionJson = encoded
+        State._positionDirty = false
+    else
+        State._lastSaveError = err
+    end
+    return saved
+end
+
+State.loadPositionBackup = function()
+    local mainData, mainRaw = State._readValidJsonFile(State._positionConfigFile)
+    local tempData, tempRaw = State._readValidJsonFile(State._positionTempFile)
+    local backupData, backupRaw = State._readValidJsonFile(State._positionBackupFile)
+
+    local data, raw, recovered = nil, nil, false
+    if type(tempData) == "table" and (type(mainData) ~= "table" or tempRaw ~= mainRaw) then
+        data, raw, recovered = tempData, tempRaw, true
+    elseif type(mainData) == "table" then
+        data, raw = mainData, mainRaw
+    elseif type(backupData) == "table" then
+        data, raw, recovered = backupData, backupRaw, true
+    end
+
+    if type(data) ~= "table" then return false end
+    State._lastPositionJson = raw
+    State._positionDirty = false
+
+    local function apply()
+        State._restoreSavedPosition(main, data.mainPos)
+        State._restoreSavedPosition(mini, data.miniPos)
+        State._restoreSavedPosition(MobilePanel, data.panelPos)
+        State._restoreSavedPosition(pbFrame, data.pbPos)
+        State._restoreSavedPosition(btnBatV2, data.batV2Pos)
+        State._restoreSavedPosition(btnInstaReset, data.instaResetPos)
+        State._restoreSavedPosition(State.autoStealBarFrame, data.autoStealBarPos)
+        if type(data.mobileButtonPositions) == "table" then
+            for name, positionData in pairs(data.mobileButtonPositions) do
+                State._restoreSavedPosition(mobileButtonsByName[name], positionData)
+            end
+        end
+    end
+
+    apply()
+    task.delay(0.45, apply)
+    task.delay(1.2, apply)
+
+    if recovered and type(raw) == "string" then
+        task.defer(function()
+            State._atomicJsonSave(
+                State._positionConfigFile,
+                State._positionBackupFile,
+                State._positionTempFile,
+                raw
+            )
+        end)
+    end
+    return true
+end
+
+State.requestPositionSave = function()
+    State._positionDirty = true
+    State._positionSaveRequestId = State._positionSaveRequestId + 1
+    local requestId = State._positionSaveRequestId
+
+    task.delay(0.55, function()
+        if requestId ~= State._positionSaveRequestId then return end
+        if not State._positionDirty then return end
+        local ok, result = pcall(State.savePositionBackup)
+        if not ok then State._lastSaveError = tostring(result) end
+    end)
+end
+
+task.spawn(function()
+    task.wait(0.15)
+    pcall(State.loadPositionBackup)
+end)
+
+-- SECCIÓN 10: BAT AIMBOT V2 Y FUNCIONES DE CONTEO
+local function getAutoBatTarget()
+    local root = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
+    if not root then return nil end
+    local now = tick()
+    if now - _autoBatLastScan <= 0.1 and _autoBatTarget and _autoBatTarget.Parent then
+        local hum = _autoBatTarget.Parent:FindFirstChildOfClass("Humanoid")
+        local char = _autoBatTarget.Parent
+        local hasAntiBat = char:FindFirstChild("Anti-Bat") or char:FindFirstChild("AntiBat") or char:FindFirstChild("Shield")
+        if hum and hum.Health > 0 and not hasAntiBat then return _autoBatTarget end
+    end
+    _autoBatLastScan = now
+    _autoBatTarget = nil
+    local closest, minDist = nil, math.huge
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LP and plr.Character then
+            local tRoot = plr.Character:FindFirstChild("HumanoidRootPart")
+            local hum = plr.Character:FindFirstChildOfClass("Humanoid")
+            local tChar = plr.Character
+
+            local hasAntiBat = tChar:FindFirstChild("Anti-Bat") or tChar:FindFirstChild("AntiBat") or tChar:FindFirstChild("Shield")
+
+            if tRoot and hum and hum.Health > 0 and not hasAntiBat then
+                local dist = (tRoot.Position - root.Position).Magnitude
+                if dist < minDist then minDist = dist; closest = tRoot end
+            end
+        end
+    end
+    _autoBatTarget = closest
+    return _autoBatTarget
+end
+
+local LUST_BYPASS_AIMBOT_SPEED = 60
+local BAT_V2_FOLLOW_DIST = 1.0
+local BAT_V2_HEIGHT_OFFSET = 1.5
+local BAT_V2_VERTICAL_OFFSET = 0.0
+local BAT_V2_HIT_DIST = 4.5
+local BAT_V2_SWING_COOLDOWN = 0.1
+
+local bypassHittingCooldown = false
+
+local function getClosestPlayerV2()
+    local char = LP.Character
+    if not char then return nil, math.huge end
+
+    local root = char:FindFirstChild("HumanoidRootPart")
+    if not root then return nil, math.huge end
+
+    local closest, bestDistance = nil, math.huge
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LP and player.Character then
+            local targetRoot = player.Character:FindFirstChild("HumanoidRootPart")
+            local targetHumanoid = player.Character:FindFirstChildOfClass("Humanoid")
+            if targetRoot and targetHumanoid and targetHumanoid.Health > 0 then
+                local distance = (root.Position - targetRoot.Position).Magnitude
+                if distance < bestDistance then
+                    bestDistance = distance
+                    closest = player
+                end
+            end
+        end
+    end
+
+    return closest, bestDistance
+end
+
+local function tryHitBypassBat()
+    if bypassHittingCooldown then return end
+    bypassHittingCooldown = true
+
+    pcall(function()
+        local char = LP.Character
+        if not char then return end
+
+        local currentTool = char:FindFirstChildOfClass("Tool")
+        if currentTool and not isBatToolLust(currentTool) then
+            bypassHittingCooldown = false
+            return
+        end
+
+        local bat = findBat()
+        if bat then
+            if bat.Parent ~= char then
+                local humanoid = char:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    pcall(function() humanoid:EquipTool(bat) end)
+                end
+            end
+
+            local remote = bat:FindFirstChildOfClass("RemoteEvent")
+            if remote then
+                pcall(function() remote:FireServer() end)
+            else
+                pcall(function() bat:Activate() end)
+            end
+        end
+    end)
+
+    task.delay(BAT_V2_SWING_COOLDOWN, function()
+        bypassHittingCooldown = false
+    end)
+    task.delay(0.2, function()
+        if bypassHittingCooldown then
+            bypassHittingCooldown = false
+        end
+    end)
+end
+
+startBatAimbotV2 = function()
+    if State.tpBatEnabled then
+        State._setTPBatEnabled(false)
+    end
+
+    if Conns.aimbotV2 then return end
+    State.autoBatV2Enabled = true
+
+    Conns.aimbotV2 = RunService.Heartbeat:Connect(function()
+        if not State.autoBatV2Enabled then return end
+
+        local char = LP.Character
+        if not char then return end
+
+        local root = char:FindFirstChild("HumanoidRootPart")
+        local humanoid = char:FindFirstChildOfClass("Humanoid")
+        if not root or not humanoid or humanoid.Health <= 0 then return end
+
+        local humanoidState = humanoid:GetState()
+        if humanoidState == Enum.HumanoidStateType.Physics
+            or humanoidState == Enum.HumanoidStateType.Ragdoll
+            or humanoidState == Enum.HumanoidStateType.FallingDown then
+            return
+        end
+
+        if not char:FindFirstChildOfClass("Tool") then
+            local bat = findBat()
+            if bat then
+                pcall(function() humanoid:EquipTool(bat) end)
+            end
+        end
+
+        local target = getClosestPlayerV2()
+        if target and target.Character then
+            local targetRoot = target.Character:FindFirstChild("HumanoidRootPart")
+            if targetRoot then
+                local targetVelocity = targetRoot.AssemblyLinearVelocity
+                local movementDirection = targetVelocity.Magnitude > 0.1
+                    and targetVelocity.Unit
+                    or targetRoot.CFrame.LookVector
+
+                local offset = movementDirection * BAT_V2_FOLLOW_DIST
+                    + Vector3.new(0, BAT_V2_HEIGHT_OFFSET + BAT_V2_VERTICAL_OFFSET, 0)
+                local desiredPosition = targetRoot.Position + offset
+                local directionToTarget = desiredPosition - root.Position
+
+                local speed = State.batV2Speed or 60
+                if directionToTarget.Magnitude > 0.5 then
+                    local movementVector = directionToTarget.Unit * speed
+                    root.AssemblyLinearVelocity = Vector3.new(
+                        movementVector.X,
+                        movementVector.Y,
+                        movementVector.Z
+                    )
+                else
+                    root.AssemblyLinearVelocity = root.AssemblyLinearVelocity * 0.95
+                    if root.AssemblyLinearVelocity.Magnitude < 1 then
+                        root.AssemblyLinearVelocity = Vector3.zero
+                    end
+                end
+
+                if State.autoSwingEnabled
+                    and (root.Position - targetRoot.Position).Magnitude <= BAT_V2_HIT_DIST then
+                    tryHitBypassBat()
+                end
+            end
+        else
+            root.AssemblyLinearVelocity = root.AssemblyLinearVelocity * 0.9
+            if root.AssemblyLinearVelocity.Magnitude < 1 then
+                root.AssemblyLinearVelocity = Vector3.zero
+            end
+        end
+    end)
+end
+
+stopBatAimbotV2 = function()
+    State.autoBatV2Enabled = false
+
+    if Conns.aimbotV2 then
+        Conns.aimbotV2:Disconnect()
+        Conns.aimbotV2 = nil
+    end
+
+    local char = LP.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    local humanoid = char and char:FindFirstChildOfClass("Humanoid")
+
+    if humanoid then
+        humanoid.AutoRotate = true
+        humanoid.PlatformStand = false
+        pcall(function()
+            humanoid:ChangeState(Enum.HumanoidStateType.Running)
+        end)
+    end
+
+    if root then
+        root.AssemblyLinearVelocity = Vector3.new(0, -0.1, 0)
+        root.AssemblyAngularVelocity = Vector3.zero
+        pcall(function()
+            if sethiddenproperty then
+                sethiddenproperty(root, "PhysicsRepRootPart", nil)
+            end
+        end)
+    end
+
+    bypassHittingCooldown = false
+    State.lastMoveDir = Vector3.zero
+end
+
+-- SECCIÓN 11: AUTO STEAL (Elite_Hub) CON PERSISTENCIA
+;(function()
+
+local function _isfile(path)
+    local checker = State._resolveFileFunction("isfile")
+    if type(checker) == "function" then
+        local ok, exists = pcall(checker, path)
+        if ok then return exists == true end
+    end
+    local raw = State._safeReadFile(path)
+    return type(raw) == "string"
+end
+local function _readfile(path)
+    local raw, err = State._safeReadFile(path)
+    if type(raw) ~= "string" then error(err or "readfile failed", 0) end
+    return raw
+end
+local function _writefile(path, data)
+    local ok, err = State._safeWriteFile(path, data)
+    if not ok then error(err or "writefile failed", 0) end
+    return true
+end
+local getconnections = getconnections or get_signal_cons or getconnects or (syn and syn.get_signal_cons)
+
+local MOVE_KEYS={[Enum.KeyCode.W]=true,[Enum.KeyCode.A]=true,[Enum.KeyCode.S]=true,[Enum.KeyCode.D]=true,
+    [Enum.KeyCode.Up]=true,[Enum.KeyCode.Left]=true,[Enum.KeyCode.Down]=true,[Enum.KeyCode.Right]=true}
+local PLOT_CACHE_DURATION=2; local PROMPT_CACHE_REFRESH=0.15
+local STEAL_COOLDOWN=0.1; local MEDUSA_COOLDOWN=25; local DROP_AUTO_OFF_DELAY=0.15
+local CONFIG_FILE="Vereuxv2.json"
+State._configTempFile="Vereuxv2.tmp.json"
+State._legacyConfigFile="Vereuxv2.json"
+State._configBackupFile="Vereuxv2.backup.json"
+State._legacyConfigBackupFile="Vereuxvs.backup.json"
+State._legacyConfigTempFile="VereuxV2Config.tmp.json"
+
+State.autoLeftPhase=1; State.autoRightPhase=1
+State.medusaLastUsed=0; State.medusaDebounce=false; State.medusaCounterEnabled=false
+State.batAimbotToggled=false; State.autoSwingEnabled=false
+State.hittingCooldown=false
+State.batCounterEnabled=false; State.batCounterDebounce=false
+State.dropEnabled=false; State._tpInProgress=false
+State.lastMoveDir=Vector3.new(0,0,0)
+State._prevCarry=CS; State._prevSpeed=false
+State.laggerEnabled=false
+
+Conns.autoLeft=nil; Conns.autoRight=nil; Conns.aimbot=nil
+Conns.batCounter=nil; Conns.unwalk=nil
+
+local Presets={}
+local PRESET_FILE="FEARV2Presets.json"; local LAST_PRESET_FILE="FEARV2LastPreset.json"
+local function buildPresetSnapshot()
+    return {normalSpeed=NS,carrySpeed=CS,laggerSpeed=LS,stealRadius=Steal.StealRadius,
+        infJump=State.infJumpEnabled,
+        antiRagdoll=State.antiRagdollEnabled,fpsBoost=State.fpsBoostEnabled,
+        medusaCounter=State.medusaCounterEnabled,batCounter=State.batCounterEnabled,
+        autoSteal=Steal.AutoStealEnabled,
+        skinPack=(function() local ok,n=pcall(function() return _G.NIGHT_getSkin and _G.NIGHT_getSkin() end) return (ok and n) or "Off" end)(),
+        medusaReset=State.autoResetEnabled,uiScale=uiScaleValue}
+end
+local function savePresetsFile()
+    local ok,enc=pcall(function() return HttpService:JSONEncode(Presets) end)
+    if ok then pcall(function() _writefile(PRESET_FILE,enc) end) end
+end
+local function loadPresetsFile()
+    local hasFile=false; pcall(function() hasFile=_isfile(PRESET_FILE) end)
+    if not hasFile then return end
+    local raw; pcall(function() raw=_readfile(PRESET_FILE) end)
+    if not raw then return end
+    local ok,dec=pcall(function() return HttpService:JSONDecode(raw) end)
+    if ok and dec then Presets=dec end
+end
+local function saveLastPresetName(name)
+    local ok,enc=pcall(function() return HttpService:JSONEncode({lastPreset=name}) end)
+    if ok then pcall(function() _writefile(LAST_PRESET_FILE,enc) end) end
+end
+local function loadLastPresetName()
+    local hasFile=false; pcall(function() hasFile=_isfile(LAST_PRESET_FILE) end)
+    if not hasFile then return nil end
+    local raw; pcall(function() raw=_readfile(LAST_PRESET_FILE) end)
+    if not raw then return nil end
+    local ok,dec=pcall(function() return HttpService:JSONDecode(raw) end)
+    if ok and dec then return dec.lastPreset end; return nil
+end
+
+local function createRadiusPart()
+	local p = Instance.new("Part")
+	p.Name = "MedusaRadius"
+	p.Anchored = true
+	p.CanCollide = false
+	pcall(function() p.CanQuery = false end)
+	p.Transparency = 1
+	p.Material = Enum.Material.Neon
+	p.Color = Color3.fromRGB(255, 40, 50)
+	p.Shape = Enum.PartType.Cylinder
+	p.Size = Vector3.new(0.2, MedusaConfig.Radius*2, MedusaConfig.Radius*2)
+	p.Parent = workspace
+	MedusaConfig.RadiusPart = p
+end
+
+local function isMedusaEquipped()
+	local char = LP.Character
+	if not char then return nil end
+	for _, tool in ipairs(char:GetChildren()) do
+		if tool:IsA("Tool") and tool.Name == "Medusa's Head" then
+			return tool
+		end
+	end
+	return nil
+end
+
+RunService.Heartbeat:Connect(function()
+	if not MedusaConfig.Enabled then
+		if MedusaConfig.RadiusPart then MedusaConfig.RadiusPart.Transparency = 1 end
+		return
+	end
+
+	local char = LP.Character
+	local root = char and char:FindFirstChild("HumanoidRootPart")
+	if not root then return end
+
+	if not MedusaConfig.RadiusPart then createRadiusPart() end
+	MedusaConfig.RadiusPart.Transparency = 0.7
+	MedusaConfig.RadiusPart.CFrame = CFrame.new(root.Position + Vector3.new(0, -2.5, 0)) * CFrame.Angles(0, 0, math.rad(90))
+
+	local tool = isMedusaEquipped()
+	if tool and (tick() - MedusaConfig.LastUsed >= MedusaConfig.Delay) then
+		for _, plr in ipairs(Players:GetPlayers()) do
+			if plr ~= LP and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+				local pRoot = plr.Character.HumanoidRootPart
+				if (pRoot.Position - root.Position).Magnitude <= MedusaConfig.Radius then
+					tool:Activate()
+					MedusaConfig.LastUsed = tick()
+					break
+				end
+			end
+		end
+	end
+end)
+
+local function doTpDown()
+    pcall(function()
+        local character, humanoid, root = safetyCharacterParts()
+        if character then safetyTeleportToFloor(character, humanoid, root) end
+    end)
+end
+
+local function runDropBrainrot()
+        if State.dropBrainrotActive then return end
+        local char, hum, root = safetyCharacterParts()
+        if not char then return end
+        State.dropBrainrotActive=true; local t0=tick()
+        State.dropBrainrotConn = RunService.Heartbeat:Connect(function()
+                local currentChar=LP.Character
+                local r=currentChar and currentChar:FindFirstChild("HumanoidRootPart")
+                local currentHum=currentChar and currentChar:FindFirstChildOfClass("Humanoid")
+                if not r or not currentHum or currentHum.Health<=0 then
+                        if State.dropBrainrotConn then State.dropBrainrotConn:Disconnect(); State.dropBrainrotConn = nil end
+                        State.dropBrainrotActive=false
+                        return
+                end
+                if tick()-t0>=DROP_ASCEND_DURATION then
+                        if State.dropBrainrotConn then State.dropBrainrotConn:Disconnect(); State.dropBrainrotConn = nil end
+                        r.AssemblyLinearVelocity=Vector3.zero
+                        r.AssemblyAngularVelocity=Vector3.zero
+                        safetyTeleportToFloor(currentChar,currentHum,r)
+                        State.dropBrainrotActive=false
+                        return
+                end
+                r.AssemblyLinearVelocity=Vector3.new(r.AssemblyLinearVelocity.X,DROP_ASCEND_SPEED,r.AssemblyLinearVelocity.Z)
+        end)
+end
+
+local BAT_COUNTER_SLAP_LIST={"Bat","Slap","Iron Slap","Gold Slap","Diamond Slap","Emerald Slap","Ruby Slap","Dark Matter Slap","Flame Slap","Nuclear Slap","Galaxy Slap","Glitched Slap"}
+local function findBatForCounter()
+    local c=LP.Character; if not c then return nil end
+    local bp=LP:FindFirstChildOfClass("Backpack")
+    for _,name in ipairs(BAT_COUNTER_SLAP_LIST) do
+        local t=c:FindFirstChild(name) or (bp and bp:FindFirstChild(name)); if t then return t end
+    end
+    for _,ch in ipairs(c:GetChildren()) do if ch:IsA("Tool") and ch.Name:lower():find("bat") then return ch end end
+    if bp then for _,ch in ipairs(bp:GetChildren()) do if ch:IsA("Tool") and ch.Name:lower():find("bat") then return ch end end end
+    return nil
+end
+local function swingBatForCounter(bat,char)
+    local hum2=char:FindFirstChildOfClass("Humanoid")
+    if bat.Parent~=char then if hum2 then pcall(function() hum2:EquipTool(bat) end) end; task.wait(0.05) end
+    local remote=bat:FindFirstChildOfClass("RemoteEvent") or bat:FindFirstChildOfClass("RemoteFunction")
+    if remote and remote:IsA("RemoteEvent") then
+        pcall(function() remote:FireServer() end); task.wait(0.15); pcall(function() remote:FireServer() end)
+    else pcall(function() bat:Activate() end); task.wait(0.15); pcall(function() bat:Activate() end) end
+end
+local function startBatCounter()
+    if Conns.batCounter then return end
+    Conns.batCounter=RunService.Heartbeat:Connect(function()
+        if not State.batCounterEnabled then return end
+        if State.batCounterDebounce then return end
+        local char=LP.Character; if not char then return end
+        local hum2=char:FindFirstChildOfClass("Humanoid"); if not hum2 then return end
+        local st=hum2:GetState()
+        if st==Enum.HumanoidStateType.Physics or st==Enum.HumanoidStateType.Ragdoll or st==Enum.HumanoidStateType.FallingDown then
+            State.batCounterDebounce=true
+            task.spawn(function()
+                local bat=findBatForCounter()
+                if bat then swingBatForCounter(bat,char) end
+                task.wait(0.5); State.batCounterDebounce=false
+            end)
+        end
+    end)
+end
+local function stopBatCounter()
+    if Conns.batCounter then Conns.batCounter:Disconnect(); Conns.batCounter=nil end
+    State.batCounterDebounce=false
+end
+
+local function findMedusa()
+    local c=LP.Character; if not c then return nil end
+    for _,t in ipairs(c:GetChildren()) do if t:IsA("Tool") then local n=t.Name:lower(); if n:find("medusa") or n:find("head") or n:find("stone") then return t end end end
+    local bp=LP:FindFirstChildOfClass("Backpack")
+    if bp then for _,t in ipairs(bp:GetChildren()) do if t:IsA("Tool") then local n=t.Name:lower(); if n:find("medusa") or n:find("head") or n:find("stone") then return t end end end end
+    return nil
+end
+local function useMedusaCounter()
+    if State.medusaDebounce then return end; if tick()-State.medusaLastUsed<MEDUSA_COOLDOWN then return end
+    local c=LP.Character; if not c then return end; State.medusaDebounce=true
+    local med=findMedusa(); if not med then State.medusaDebounce=false; return end
+    if med.Parent~=c then local hum2=c:FindFirstChildOfClass("Humanoid"); if hum2 then hum2:EquipTool(med) end end
+    pcall(function() med:Activate() end); State.medusaLastUsed=tick(); State.medusaDebounce=false
+end
+local function onAnchorChanged(part) return part:GetPropertyChangedSignal("Anchored"):Connect(function() if part.Anchored and part.Transparency==1 then useMedusaCounter() end end) end
+local function setupMedusaCounter(char)
+    for _,c2 in pairs(Conns.anchor) do pcall(function() c2:Disconnect() end) end; Conns.anchor={}
+    if not char then return end
+    for _,part in ipairs(char:GetDescendants()) do if part:IsA("BasePart") then table.insert(Conns.anchor,onAnchorChanged(part)) end end
+    table.insert(Conns.anchor,char.DescendantAdded:Connect(function(part) if part:IsA("BasePart") then table.insert(Conns.anchor,onAnchorChanged(part)) end end))
+end
+local function stopMedusaCounter() for _,c2 in pairs(Conns.anchor) do pcall(function() c2:Disconnect() end) end; Conns.anchor={} end
+
+local function faceSouth() pcall(function() local c=LP.Character; if not c then return end; local root=c:FindFirstChild("HumanoidRootPart"); if root then root.CFrame=CFrame.new(root.Position)*CFrame.Angles(0,0,0) end end) end
+local function faceNorth() pcall(function() local c=LP.Character; if not c then return end; local root=c:FindFirstChild("HumanoidRootPart"); if root then root.CFrame=CFrame.new(root.Position)*CFrame.Angles(0,math.rad(180),0) end end) end
+
+local function startAutoLeft()
+    if State.tpBatEnabled then
+        State._setTPBatEnabled(false)
+    end
+
+    if Conns.autoLeft then Conns.autoLeft:Disconnect() end; State.autoLeftPhase=1
+    Conns.autoLeft=RunService.Heartbeat:Connect(function()
+        if not State.autoLeftEnabled then return end
+        local c=LP.Character; if not c then return end
+        local root=c:FindFirstChild("HumanoidRootPart"); local hum2=c:FindFirstChildOfClass("Humanoid"); if not root or not hum2 then return end
+        local spd=getProfileNormalSpeed()
+        if State.autoLeftPhase==1 then
+            local tgt=Vector3.new(AP.L1.X,root.Position.Y,AP.L1.Z); if (tgt-root.Position).Magnitude<1 then State.autoLeftPhase=2; local d=(AP.L2-root.Position); local mv=Vector3.new(d.X,0,d.Z).Unit; hum2:Move(mv,false); root.AssemblyLinearVelocity=Vector3.new(mv.X*spd,root.AssemblyLinearVelocity.Y,mv.Z*spd); return end
+            local d=(AP.L1-root.Position); local mv=Vector3.new(d.X,0,d.Z).Unit; hum2:Move(mv,false); root.AssemblyLinearVelocity=Vector3.new(mv.X*spd,root.AssemblyLinearVelocity.Y,mv.Z*spd)
+        elseif State.autoLeftPhase==2 then
+            local tgt=Vector3.new(AP.L2.X,root.Position.Y,AP.L2.Z); if (tgt-root.Position).Magnitude<1 then hum2:Move(Vector3.zero,false); root.AssemblyLinearVelocity=Vector3.zero; State.autoLeftEnabled=false; if Conns.autoLeft then Conns.autoLeft:Disconnect(); Conns.autoLeft=nil end; State.autoLeftPhase=1; if autoLeftSetVisual then autoLeftSetVisual(false) end; faceSouth(); return end
+            local d=(AP.L2-root.Position); local mv=Vector3.new(d.X,0,d.Z).Unit; hum2:Move(mv,false); root.AssemblyLinearVelocity=Vector3.new(mv.X*spd,root.AssemblyLinearVelocity.Y,mv.Z*spd)
+        end
+    end)
+end
+local function stopAutoLeft()
+    if Conns.autoLeft then Conns.autoLeft:Disconnect(); Conns.autoLeft=nil end; State.autoLeftPhase=1
+    local c=LP.Character; if c then local hum2=c:FindFirstChildOfClass("Humanoid"); if hum2 then hum2:Move(Vector3.zero,false) end end
+end
+local function startAutoRight()
+    if State.tpBatEnabled then
+        State._setTPBatEnabled(false)
+    end
+
+    if Conns.autoRight then Conns.autoRight:Disconnect() end; State.autoRightPhase=1
+    Conns.autoRight=RunService.Heartbeat:Connect(function()
+        if not State.autoRightEnabled then return end
+        local c=LP.Character; if not c then return end
+        local root=c:FindFirstChild("HumanoidRootPart"); local hum2=c:FindFirstChildOfClass("Humanoid"); if not root or not hum2 then return end
+        local spd=getProfileNormalSpeed()
+        if State.autoRightPhase==1 then
+            local tgt=Vector3.new(AP.R1.X,root.Position.Y,AP.R1.Z); if (tgt-root.Position).Magnitude<1 then State.autoRightPhase=2; local d=(AP.R2-root.Position); local mv=Vector3.new(d.X,0,d.Z).Unit; hum2:Move(mv,false); root.AssemblyLinearVelocity=Vector3.new(mv.X*spd,root.AssemblyLinearVelocity.Y,mv.Z*spd); return end
+            local d=(AP.R1-root.Position); local mv=Vector3.new(d.X,0,d.Z).Unit; hum2:Move(mv,false); root.AssemblyLinearVelocity=Vector3.new(mv.X*spd,root.AssemblyLinearVelocity.Y,mv.Z*spd)
+        elseif State.autoRightPhase==2 then
+            local tgt=Vector3.new(AP.R2.X,root.Position.Y,AP.R2.Z); if (tgt-root.Position).Magnitude<1 then hum2:Move(Vector3.zero,false); root.AssemblyLinearVelocity=Vector3.zero; State.autoRightEnabled=false; if Conns.autoRight then Conns.autoRight:Disconnect(); Conns.autoRight=nil end; State.autoRightPhase=1; if autoRightSetVisual then autoRightSetVisual(false) end; faceNorth(); return end
+            local d=(AP.R2-root.Position); local mv=Vector3.new(d.X,0,d.Z).Unit; hum2:Move(mv,false); root.AssemblyLinearVelocity=Vector3.new(mv.X*spd,root.AssemblyLinearVelocity.Y,mv.Z*spd)
+        end
+    end)
+end
+local function stopAutoRight()
+    if Conns.autoRight then Conns.autoRight:Disconnect(); Conns.autoRight=nil end; State.autoRightPhase=1
+    local c=LP.Character; if c then local hum2=c:FindFirstChildOfClass("Humanoid"); if hum2 then hum2:Move(Vector3.zero,false) end end
+end
+
+local antiRagdollConn = nil
+
+local function resetAntiRagdollCharacter(char)
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    if not hum or not root or hum.Health <= 0 then return end
+
+    pcall(function()
+        hum:ChangeState(Enum.HumanoidStateType.GettingUp)
+        hum:ChangeState(Enum.HumanoidStateType.Running)
+
+        root.Velocity = Vector3.zero
+        root.RotVelocity = Vector3.zero
+        root.AssemblyLinearVelocity = Vector3.zero
+        root.AssemblyAngularVelocity = Vector3.zero
+
+        hum.PlatformStand = false
+        hum.Sit = false
+        hum.AutoRotate = true
+        hum.JumpPower = hum.JumpPower > 0 and hum.JumpPower or 50
+        hum.WalkSpeed = hum.WalkSpeed > 0 and hum.WalkSpeed or 16
+
+        for _, obj in ipairs(char:GetDescendants()) do
+            if obj:IsA("Motor6D") then
+                obj.Enabled = true
+            elseif obj:IsA("Constraint")
+                or obj:IsA("BallSocketConstraint")
+                or obj:IsA("HingeConstraint") then
+                obj.Enabled = true
+            elseif obj:IsA("BasePart") then
+                obj.CanCollide = true
+                obj.AssemblyLinearVelocity = Vector3.zero
+                obj.AssemblyAngularVelocity = Vector3.zero
+            end
+        end
+
+        workspace.CurrentCamera.CameraSubject = hum
+
+        local playerModule = LP.PlayerScripts:FindFirstChild("PlayerModule")
+        if playerModule then
+            local controlModule = playerModule:FindFirstChild("ControlModule")
+            if controlModule then
+                local success, module = pcall(require, controlModule)
+                if success and module and module.Enable then
+                    module:Enable()
+                end
+            end
+        end
+    end)
+end
+
+startAntiRagdoll = function()
+    if antiRagdollConn then return end
+
+    antiRagdollConn = RunService.Heartbeat:Connect(function()
+        if not State.antiRagdollEnabled then return end
+
+        local char = LP.Character
+        if not char then return end
+
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if not hum then return end
+
+        local state = hum:GetState()
+
+        if state == Enum.HumanoidStateType.Physics
+            or state == Enum.HumanoidStateType.Ragdoll
+            or state == Enum.HumanoidStateType.FallingDown
+            or state == Enum.HumanoidStateType.Dead
+            or hum.PlatformStand == true
+            or hum.Sit == true then
+
+            resetAntiRagdollCharacter(char)
+        end
+    end)
+end
+
+stopAntiRagdoll = function()
+    if antiRagdollConn then
+        antiRagdollConn:Disconnect()
+        antiRagdollConn = nil
+    end
+end
+
+local ContentProvider = game:GetService("ContentProvider")
+local Anims = {
+    idle1 = "rbxassetid://133806214992291",
+    idle2 = "rbxassetid://94970088341563",
+    walk = "rbxassetid://707897309",
+    run = "rbxassetid://707861613",
+    jump = "rbxassetid://116936326516985",
+    fall = "rbxassetid://116936326516985",
+    climb = "rbxassetid://116936326516985",
+    swim = "rbxassetid://116936326516985",
+    swimidle = "rbxassetid://116936326516985"
+}
+
+task.spawn(function() pcall(function() ContentProvider:PreloadAsync(Anims) end) end)
+
+local function applyAnimPack(char)
+    local a = char:FindFirstChild("Animate")
+    if not a then return end
+    local function s(o, id) if o then o.AnimationId = id end end
+
+    s(a.idle and a.idle.Animation1, Anims.idle1)
+    s(a.idle and a.idle.Animation2, Anims.idle2)
+    s(a.walk and a.walk.WalkAnim, Anims.walk)
+    s(a.run and a.run.RunAnim, Anims.run)
+    s(a.jump and a.jump.JumpAnim, Anims.jump)
+    s(a.fall and a.fall.FallAnim, Anims.fall)
+    s(a.climb and a.climb.ClimbAnim, Anims.climb)
+    s(a.swim and a.swim.Swim, Anims.swim)
+    s(a.swimidle and a.swimidle.SwimIdle, Anims.swimidle)
+end
+
+local animHBConn
+function startNuevaAnimacion()
+    if animHBConn then animHBConn:Disconnect(); animHBConn = nil end
+    local char = LP.Character
+    if char then
+        applyAnimPack(char)
+        local hum2 = char:FindFirstChildOfClass("Humanoid")
+        if hum2 then
+            for _, t in ipairs(hum2:GetPlayingAnimationTracks()) do t:Stop(0) end
+            hum2:ChangeState(Enum.HumanoidStateType.Running)
+        end
+    end
+
+    animHBConn = RunService.Heartbeat:Connect(function()
+        if not State.nuevaAnimacionEnabled then return end
+        local c = LP.Character
+        if c then applyAnimPack(c) end
+    end)
+end
+
+function stopNuevaAnimacion()
+    if animHBConn then animHBConn:Disconnect(); animHBConn = nil end
+end
+
+local applyFPSBoost
+applyFPSBoost=function()
+    pcall(function() setfpscap(999999999) end)
+    local function pO(v) pcall(function()
+        if v:IsA("Model") then v.LevelOfDetail=Enum.ModelLevelOfDetail.Disabled; v.ModelStreamingMode=Enum.ModelStreamingMode.Nonatomic
+        elseif v:IsA("MeshPart") then v.CastShadow=false; v.DoubleSided=false; v.RenderFidelity=Enum.RenderFidelity.Performance
+        elseif v:IsA("BasePart") then v.CastShadow=false; v.Material=Enum.Material.Plastic; v.Reflectance=0
+        elseif v:IsA("Decal") or v:IsA("Texture") then v.Transparency=1
+        elseif v:IsA("SpecialMesh") then v.TextureId=""
+        elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") or v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Beam") then v.Enabled=false
+        elseif v:IsA("SurfaceAppearance") or v:IsA("MaterialVariant") then v:Destroy()
+        elseif v:IsA("Attachment") then v.Visible=false end
+    end) end
+    for _,v in pairs(workspace:GetDescendants()) do pO(v) end
+    pcall(function()
+        local L=game:GetService("Lighting")
+        for _,v in pairs(L:GetDescendants()) do pcall(function() if v:IsA("Sky") or v:IsA("Atmosphere") or v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("DepthOfFieldEffect") or v:IsA("Clouds") or v:IsA("PostEffect") or v:IsA("ColorCorrectionEffect") then v:Destroy() end end) end
+        pcall(function() sethiddenproperty(L,"Technology",Enum.Technology.Legacy) end)
+        L.GlobalShadows=false; L.FogEnd=9e9; L.Brightness=0
+        local ter=workspace:FindFirstChildOfClass("Terrain")
+        if ter then pcall(function() sethiddenproperty(ter,"Decoration",false) end); ter.WaterReflectance=0; ter.WaterTransparency=0.7; ter.WaterWaveSize=0; ter.WaterWaveSpeed=0 end
+    end)
+    workspace.DescendantAdded:Connect(function(v) if State.fpsBoostEnabled then task.spawn(pO,v) end end)
+end
+
+repeat task.wait() until game:IsLoaded()
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UIS = game:GetService("UserInputService")
+local LP = Players.LocalPlayer
+local plots = workspace:WaitForChild("Plots")
+
+-- ============================================================
+--  AUTO STEAL DE Elite_Hub (REEMPLAZADO COMPLETAMENTE)
+-- ============================================================
+local CONFIG = {
+	AUTO_STEAL_ENABLED = true,
+	HOLD_MIN = 1.3,
+	HOLD_MAX = 2.6,
+	ENTRY_DELAY = 0.3,
+	COOLDOWN = 0.05,
+	STEAL_RANGE = 8,
+	PRIME_RANGE = 80
+}
+
+local AnimalsData = {}
+local syncRemotes = nil
+local plotAnimalSync = {caches = {}, connections = {}}
+local allAnimalsCache = {}
+local PromptMemoryCache = {}
+local InternalStealCache = {}
+local stealConnection = nil
+
+local StealState = {
+	active = false,
+	startTime = 0,
+	phase = "idle",
+	label = "",
+	lastResult = "",
+	lastResultTime = 0,
+	totalSteals = 0,
+	failedSteals = 0
+}
+
+local function initializeAutoStealSync()
+	local ok = pcall(function()
+		local Packages = ReplicatedStorage:WaitForChild("Packages", 10)
+		local Datas = ReplicatedStorage:WaitForChild("Datas", 10)
+		if not Packages or not Datas then return end
+		AnimalsData = require(Datas:WaitForChild("Animals"))
+		local folder = Packages:WaitForChild("Synchronizer")
+		syncRemotes = {
+			channelFolder = folder:WaitForChild("Channel"),
+			routeRemote = folder:WaitForChild("CommunicationRoute"),
+			requestData = folder:FindFirstChild("RequestData")
+		}
+	end)
+	return ok and syncRemotes ~= nil
+end
+
+local function splitSyncPath(path)
+	if typeof(path) == "table" then return path end
+	local out = {}
+	for part in string.gmatch(tostring(path), "[^%.]+") do
+		table.insert(out, tonumber(part) or part)
+	end
+	return out
+end
+
+local function resolveSyncPath(path, root)
+	local current = root
+	local parent = nil
+	local key = nil
+	for _, part in ipairs(splitSyncPath(path)) do
+		parent = current
+		key = part
+		current = current and current[part] or nil
+	end
+	return current, parent, key
+end
+
+local function applyPlotSyncDiff(channelName, packet)
+	local cache = plotAnimalSync.caches[channelName]
+	if typeof(cache) ~= "table" then return end
+	local path, action, a, b = packet[1], packet[2], packet[3], packet[4]
+	local current, parent, key = resolveSyncPath(path, cache)
+	if action == "Changed" then
+		if parent ~= nil then parent[key] = a end
+	elseif action == "ArrayInsert" then
+		if current ~= nil then table.insert(current, b, a) end
+	elseif action == "ArrayRemoved" then
+		if current ~= nil then table.remove(current, b) end
+	elseif action == "DictionaryInsert" then
+		if current ~= nil then current[b] = a end
+	elseif action == "DictionaryRemoved" then
+		if current ~= nil then current[b] = nil end
+	end
+end
+
+local function attachPlotChannel(remote)
+	if not syncRemotes or plotAnimalSync.connections[remote] then return end
+	local channelName = tostring(remote.Name)
+	if not plots:FindFirstChild(channelName) then return end
+	if syncRemotes.requestData and plotAnimalSync.caches[channelName] == nil then
+		local ok, data = pcall(function() return syncRemotes.requestData:InvokeServer(channelName) end)
+		plotAnimalSync.caches[channelName] = (ok and typeof(data) == "table") and data or {}
+	elseif plotAnimalSync.caches[channelName] == nil then
+		plotAnimalSync.caches[channelName] = {}
+	end
+	plotAnimalSync.connections[remote] = remote.OnClientEvent:Connect(function(queue)
+		for _, packet in ipairs(queue) do
+			applyPlotSyncDiff(channelName, packet)
+		end
+	end)
+end
+
+local function detachPlotChannel(channelName)
+	for remote, conn in pairs(plotAnimalSync.connections) do
+		if tostring(remote.Name) == tostring(channelName) then
+			conn:Disconnect()
+			plotAnimalSync.connections[remote] = nil
+			plotAnimalSync.caches[tostring(channelName)] = nil
+			break
+		end
+	end
+end
+
+local function startAutoStealSync()
+	if not initializeAutoStealSync() then return false end
+	for _, child in ipairs(syncRemotes.channelFolder:GetChildren()) do
+		if child:IsA("RemoteEvent") then attachPlotChannel(child) end
+	end
+	syncRemotes.channelFolder.ChildAdded:Connect(function(child)
+		if child:IsA("RemoteEvent") then attachPlotChannel(child) end
+	end)
+	syncRemotes.routeRemote.OnClientEvent:Connect(function(actions)
+		for _, action in ipairs(actions) do
+			local kind, channelName = action[1], tostring(action[2])
+			if not plots:FindFirstChild(channelName) then continue end
+			if kind == "ListenerAdded" then
+				local remote = syncRemotes.channelFolder:FindFirstChild(channelName)
+				if remote and remote:IsA("RemoteEvent") then attachPlotChannel(remote) end
+			elseif kind == "ListenerRemoved" then
+				detachPlotChannel(channelName)
+			end
+		end
+	end)
+	return true
+end
+
+local function getPlotChannelData(plotName)
+	return plotAnimalSync.caches[plotName]
+end
+
+local function getPlotOwner(plot)
+	local sign = plot:FindFirstChild("PlotSign")
+	local frame = sign and sign:FindFirstChild("SurfaceGui") and sign.SurfaceGui:FindFirstChild("Frame")
+	local label = frame and frame:FindFirstChild("TextLabel")
+	if not label or label.Text == "Empty Base" then return nil end
+	return label.Text:gsub("'s [Bb]ase$", ""):gsub("%s+$", "")
+end
+
+local function isMyBaseAnimal(animalData)
+	if not animalData or not animalData.plot then return false end
+	local plot = plots:FindFirstChild(animalData.plot)
+	if not plot then return false end
+	return getPlotOwner(plot) == LP.DisplayName
+end
+
+local function getAnimalPosition(animalData)
+	local plot = plots:FindFirstChild(animalData.plot)
+	if not plot then return nil end
+	local podiums = plot:FindFirstChild("AnimalPodiums")
+	if not podiums then return nil end
+	local podium = podiums:FindFirstChild(animalData.slot)
+	if not podium then return nil end
+	return podium:GetPivot().Position
+end
+
+local function findProximityPromptForAnimal(animalData)
+	if not animalData then return nil end
+	local cached = PromptMemoryCache[animalData.uid]
+	if cached and cached.Parent then return cached end
+	local plot = plots:FindFirstChild(animalData.plot)
+	if not plot then return nil end
+	local podiums = plot:FindFirstChild("AnimalPodiums")
+	if not podiums then return nil end
+	local podium = podiums:FindFirstChild(animalData.slot)
+	if not podium then return nil end
+	local base = podium:FindFirstChild("Base")
+	if not base then return nil end
+	local spawn = base:FindFirstChild("Spawn")
+	if not spawn then return nil end
+	local attach = spawn:FindFirstChild("PromptAttachment")
+	if not attach then return nil end
+	for _, p in ipairs(attach:GetChildren()) do
+		if p:IsA("ProximityPrompt") then
+			PromptMemoryCache[animalData.uid] = p
+			return p
+		end
+	end
+	return nil
+end
+
+local function distToAnimal(animalData)
+	local character = LP.Character
+	if not character then return math.huge end
+	local hrp = character:FindFirstChild("HumanoidRootPart") or character:FindFirstChild("UpperTorso")
+	if not hrp then return math.huge end
+	local pos = getAnimalPosition(animalData)
+	if not pos then return math.huge end
+	return (hrp.Position - pos).Magnitude
+end
+
+local function pickClosest()
+	local character = LP.Character
+	if not character then return nil end
+	local hrp = character:FindFirstChild("HumanoidRootPart") or character:FindFirstChild("UpperTorso")
+	if not hrp then return nil end
+	local best, bestDist = nil, math.huge
+	for _, animalData in ipairs(allAnimalsCache) do
+		if isMyBaseAnimal(animalData) then continue end
+		local pos = getAnimalPosition(animalData)
+		if not pos then continue end
+		local dist = (hrp.Position - pos).Magnitude
+		if dist > CONFIG.PRIME_RANGE then continue end
+		if dist < bestDist then
+			bestDist = dist
+			best = animalData
+		end
+	end
+	return best
+end
+
+local function buildStealCallbacks(prompt)
+	if InternalStealCache[prompt] then return end
+	local data = {holdCallbacks = {}, triggerCallbacks = {}, ready = true}
+	local ok1, conns1 = false, nil
+	if getconnections then ok1, conns1 = pcall(getconnections, prompt.PromptButtonHoldBegan) end
+	if ok1 and type(conns1) == "table" then
+		for _, conn in ipairs(conns1) do
+			if type(conn.Function) == "function" then
+				table.insert(data.holdCallbacks, conn.Function)
+			end
+		end
+	end
+	local ok2, conns2 = false, nil
+	if getconnections then ok2, conns2 = pcall(getconnections, prompt.Triggered) end
+	if ok2 and type(conns2) == "table" then
+		for _, conn in ipairs(conns2) do
+			if type(conn.Function) == "function" then
+				table.insert(data.triggerCallbacks, conn.Function)
+			end
+		end
+	end
+	if (#data.holdCallbacks > 0) or (#data.triggerCallbacks > 0) then
+		InternalStealCache[prompt] = data
+	end
+end
+
+local function executeStealAsync(prompt, animalData)
+	local data = InternalStealCache[prompt]
+	if not data or not data.ready then return false end
+	data.ready = false
+	local label = animalData.name or "Animal"
+	StealState.active = true
+	StealState.startTime = tick()
+	StealState.phase = "holding"
+	StealState.label = label
+	task.spawn(function()
+		for _, fn in ipairs(data.holdCallbacks) do
+			task.spawn(fn)
+		end
+		task.wait(CONFIG.HOLD_MIN)
+		StealState.phase = "waitingRange"
+		local alreadyInRange = distToAnimal(animalData) <= CONFIG.STEAL_RANGE
+		local fired = false
+		while true do
+			local elapsed = tick() - StealState.startTime
+			if elapsed > CONFIG.HOLD_MAX then break end
+			if not prompt.Parent then break end
+			if distToAnimal(animalData) <= CONFIG.STEAL_RANGE then
+				if not alreadyInRange then task.wait(CONFIG.ENTRY_DELAY) end
+				for _, fn in ipairs(data.triggerCallbacks) do
+					task.spawn(fn)
+				end
+				fired = true
+				break
+			end
+			task.wait()
+		end
+		if fired then
+			StealState.totalSteals = StealState.totalSteals + 1
+			StealState.lastResult = "Stole " .. label
+			StealState.phase = "success"
+		else
+			StealState.failedSteals = StealState.failedSteals + 1
+			StealState.lastResult = "Missed window: " .. label
+			StealState.phase = "failed"
+		end
+		StealState.active = false
+		StealState.lastResultTime = tick()
+		task.wait(CONFIG.COOLDOWN)
+		data.ready = true
+	end)
+	return true
+end
+
+local function attemptSteal(prompt, animalData)
+	if not prompt or not prompt.Parent then return false end
+	buildStealCallbacks(prompt)
+	if not InternalStealCache[prompt] then return false end
+	return executeStealAsync(prompt, animalData)
+end
+
+local function scanAllPlots()
+	local newCache = {}
+	for _, plot in ipairs(plots:GetChildren()) do
+		local cache = getPlotChannelData(plot.Name)
+		if not cache then continue end
+		local animalList = cache.AnimalList
+		if typeof(animalList) ~= "table" then continue end
+		for slot, animalData in pairs(animalList) do
+			if type(animalData) == "table" then
+				local animalName = animalData.Index
+				local animalInfo = AnimalsData[animalName]
+				if not animalInfo then continue end
+				table.insert(newCache, {
+					name = animalInfo.DisplayName or animalName,
+					plot = plot.Name,
+					slot = tostring(slot),
+					uid = plot.Name .. "_" .. tostring(slot)
+				})
+			end
+		end
+	end
+	allAnimalsCache = newCache
+	return #allAnimalsCache
+end
+
+function startAutoSteal()
+	if stealConnection then return end
+	stealConnection = RunService.Heartbeat:Connect(function()
+		if not CONFIG.AUTO_STEAL_ENABLED then return end
+		if StealState.active then return end
+		local target = pickClosest()
+		if not target then return end
+		local prompt = PromptMemoryCache[target.uid]
+		if not prompt or not prompt.Parent then
+			prompt = findProximityPromptForAnimal(target)
+		end
+		if prompt then
+			attemptSteal(prompt, target)
+		end
+	end)
+end
+
+function stopAutoSteal()
+	if not stealConnection then return end
+	stealConnection:Disconnect()
+	stealConnection = nil
+	StealState.active = false
+	StealState.phase = "idle"
+end
+
+local CoreGui = game:GetService("CoreGui")
+
+local oldGui = CoreGui:FindFirstChild("CandyStealBar")
+if oldGui then oldGui:Destroy() end
+
+local gui2 = Instance.new("ScreenGui")
+gui2.Name = "CandyStealBar"
+gui2.ResetOnSpawn = false
+gui2.DisplayOrder = 100
+gui2.IgnoreGuiInset = true
+gui2.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+gui2.Parent = CoreGui
+
+local frame = Instance.new("Frame", gui2)
+local UIS = game:GetService("UserInputService")
+frame.Active = true
+
+local dragging = false
+local dragStart
+local startPos
+
+frame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch
+    or input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = frame.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+UIS.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.Touch
+    or input.UserInputType == Enum.UserInputType.MouseMovement) then
+        local delta = input.Position - dragStart
+        frame.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+UIS.InputEnded:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.Touch
+    or input.UserInputType == Enum.UserInputType.MouseButton1) then
+        dragging = false
+    end
+end)
+
+-- ============================================================
+-- BARRA DE ROBO CT DUELS (AZUL) CON BOTÓN ÚNICO TOGGLE + RADIUS
+-- + MOVIBLE + BOTÓN LOCK
+-- ============================================================
+local pbFrame = Instance.new("Frame", gui2)
+pbFrame.Size = UDim2.new(0, 300, 0, 42)
+pbFrame.Position = UDim2.new(0.5, -150, 0, 80)
+pbFrame.BackgroundColor3 = Color3.fromRGB(6,6,8)
+pbFrame.BorderSizePixel = 0
+pbFrame.ClipsDescendants = false
+pbFrame.Active = true
+pbFrame.Selectable = false
+pbFrame.ZIndex = 50
+Instance.new("UICorner", pbFrame).CornerRadius = UDim.new(0, 12)
+
+-- Estado de lock de la barra Auto Grab
+local autoGrabLocked = false
+State.autoGrabLocked = false
+local lockBtn = nil -- se crea más abajo
+local toggleBtn = nil -- se crea más abajo
+
+local pbDragging = false
+local pbDragStart = nil
+local pbStartPos = nil
+local pbIgnoreDragUntil = 0
+
+local function refreshLockBtnVisual()
+	if not lockBtn or not lockBtn.Parent then return end
+	if autoGrabLocked then
+		lockBtn.Text = "LOCK"
+		lockBtn.BackgroundColor3 = Color3.fromRGB(255, 40, 50)
+		lockBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	else
+		lockBtn.Text = "MOVE"
+		lockBtn.BackgroundColor3 = Color3.fromRGB(12, 12, 14)
+		lockBtn.TextColor3 = Color3.fromRGB(200, 200, 210)
+	end
+end
+
+local function setAutoGrabLocked(locked, skipSave)
+	autoGrabLocked = locked and true or false
+	State.autoGrabLocked = autoGrabLocked
+	pbDragging = false
+	pbDragStart = nil
+	pbStartPos = nil
+	pbIgnoreDragUntil = tick() + 0.25
+	refreshLockBtnVisual()
+	if not skipSave and State.requestConfigSave then
+		State.requestConfigSave()
+	end
+end
+
+local function isOverAutoGrabButton(screenPos)
+	local ok, objects = pcall(function()
+		return UIS:GetGuiObjectsAtPosition(screenPos.X, screenPos.Y)
+	end)
+	if not ok or type(objects) ~= "table" then return false end
+	for _, obj in ipairs(objects) do
+		if obj == lockBtn or obj == toggleBtn then
+			return true
+		end
+		if obj and obj:IsA("GuiObject") then
+			local n = obj.Name
+			if n == "AutoGrabLockBtn" or n == "AutoGrabToggleBtn" then
+				return true
+			end
+		end
+	end
+	return false
+end
+
+pbFrame.InputBegan:Connect(function(input)
+	if autoGrabLocked or uiLocked then return end
+	if tick() < pbIgnoreDragUntil then return end
+	if input.UserInputType ~= Enum.UserInputType.Touch
+		and input.UserInputType ~= Enum.UserInputType.MouseButton1 then
+		return
+	end
+	if isOverAutoGrabButton(input.Position) then
+		pbDragging = false
+		return
+	end
+	pbDragging = true
+	pbDragStart = input.Position
+	pbStartPos = pbFrame.Position
+end)
+
+UIS.InputChanged:Connect(function(input)
+	if not pbDragging or autoGrabLocked or uiLocked then return end
+	if input.UserInputType == Enum.UserInputType.Touch
+		or input.UserInputType == Enum.UserInputType.MouseMovement then
+		local delta = input.Position - pbDragStart
+		pbFrame.Position = UDim2.new(
+			pbStartPos.X.Scale,
+			pbStartPos.X.Offset + delta.X,
+			pbStartPos.Y.Scale,
+			pbStartPos.Y.Offset + delta.Y
+		)
+	end
+end)
+
+UIS.InputEnded:Connect(function(input)
+	if not pbDragging then return end
+	if input.UserInputType == Enum.UserInputType.Touch
+		or input.UserInputType == Enum.UserInputType.MouseButton1 then
+		pbDragging = false
+		if State.requestConfigSave then State.requestConfigSave() end
+	end
+end)
+
+-- Auto Grab photo supplied by the user. The dark overlay keeps the status text readable.
+local autoGrabPhoto = Instance.new("ImageLabel", pbFrame)
+autoGrabPhoto.Name = "AutoGrabPhoto"
+autoGrabPhoto.Size = UDim2.new(1, 0, 1, 0)
+autoGrabPhoto.Position = UDim2.new(0, 0, 0, 0)
+autoGrabPhoto.BackgroundTransparency = 1
+autoGrabPhoto.BorderSizePixel = 0
+autoGrabPhoto.Image = "rbxassetid://108199149509537"
+autoGrabPhoto.ImageTransparency = 0.42
+autoGrabPhoto.ScaleType = Enum.ScaleType.Crop
+autoGrabPhoto.ZIndex = -1
+Instance.new("UICorner", autoGrabPhoto).CornerRadius = UDim.new(0, 12)
+
+local autoGrabPhotoOverlay = Instance.new("Frame", pbFrame)
+autoGrabPhotoOverlay.Name = "AutoGrabPhotoOverlay"
+autoGrabPhotoOverlay.Size = UDim2.new(1, 0, 1, 0)
+autoGrabPhotoOverlay.Position = UDim2.new(0, 0, 0, 0)
+autoGrabPhotoOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+autoGrabPhotoOverlay.BackgroundTransparency = 0.48
+autoGrabPhotoOverlay.BorderSizePixel = 0
+autoGrabPhotoOverlay.ZIndex = 0
+Instance.new("UICorner", autoGrabPhotoOverlay).CornerRadius = UDim.new(0, 12)
+
+local pbs = Instance.new("UIStroke", pbFrame)
+pbs.Color = Color3.fromRGB(255, 40, 50)
+pbs.Thickness = 1.4
+pbs.Transparency = 0.1
+local pbsGrad = Instance.new("UIGradient", pbs)
+pbsGrad.Color = ColorSequence.new(Color3.fromRGB(255, 40, 50), Color3.fromRGB(190,190,200))
+pbsGrad.Rotation = 25
+
+local progressStripe = Instance.new("Frame", pbFrame)
+progressStripe.Size = UDim2.new(0, 3, 1, -14)
+progressStripe.Position = UDim2.new(0, 6, 0, 7)
+progressStripe.BackgroundColor3 = Color3.fromRGB(255, 40, 50)
+progressStripe.BorderSizePixel = 0
+progressStripe.ZIndex = 2
+Instance.new("UICorner", progressStripe).CornerRadius = UDim.new(0, 8)
+
+-- Pill del Status
+local statusPill = Instance.new("Frame", pbFrame)
+statusPill.Size = UDim2.new(0, 78, 0, 20)
+statusPill.Position = UDim2.new(0, 14, 0, 5)
+statusPill.BackgroundColor3 = Color3.fromRGB(10,10,12)
+statusPill.BorderSizePixel = 0
+statusPill.ZIndex = 2
+Instance.new("UICorner", statusPill).CornerRadius = UDim.new(0, 30)
+
+local progressPillStroke = Instance.new("UIStroke", statusPill)
+progressPillStroke.Color = Color3.fromRGB(255, 40, 50)
+progressPillStroke.Thickness = 1
+progressPillStroke.Transparency = 0.45
+
+local progressDot = Instance.new("Frame", statusPill)
+progressDot.Size = UDim2.new(0, 6, 0, 6)
+progressDot.Position = UDim2.new(0, 7, 0.5, -3)
+progressDot.BackgroundColor3 = Color3.fromRGB(255, 40, 50)
+progressDot.BorderSizePixel = 0
+progressDot.ZIndex = 2
+Instance.new("UICorner", progressDot).CornerRadius = UDim.new(0, 10)
+
+local progressDotGlow = Instance.new("UIStroke", progressDot)
+progressDotGlow.Color = Color3.fromRGB(255, 40, 50)
+progressDotGlow.Thickness = 2
+progressDotGlow.Transparency = 0.4
+
+local progressPct = Instance.new("TextLabel", statusPill)
+progressPct.Size = UDim2.new(1, -20, 1, 0)
+progressPct.Position = UDim2.new(0, 20, 0, 0)
+progressPct.BackgroundTransparency = 1
+progressPct.Text = (CONFIG.AUTO_STEAL_ENABLED and "READY" or "IDLE")
+progressPct.TextColor3 = Color3.fromRGB(230,230,235)
+progressPct.Font = Enum.Font.GothamBlack
+progressPct.TextSize = 9
+progressPct.TextXAlignment = Enum.TextXAlignment.Left
+progressPct.ZIndex = 2
+
+local progressRadLbl = Instance.new("TextLabel", pbFrame)
+progressRadLbl.Size = UDim2.new(0, 78, 0, 20)
+progressRadLbl.Position = UDim2.new(0, 96, 0, 5)
+progressRadLbl.BackgroundTransparency = 1
+progressRadLbl.Text = "Radius: " .. tostring(CONFIG.STEAL_RANGE)
+progressRadLbl.TextColor3 = Color3.fromRGB(190,190,200)
+progressRadLbl.Font = Enum.Font.GothamBlack
+progressRadLbl.TextSize = 9
+progressRadLbl.TextXAlignment = Enum.TextXAlignment.Center
+progressRadLbl.ZIndex = 2
+
+-- Botón LOCK / MOVE (fija o libera la posición de la barra)
+lockBtn = Instance.new("TextButton", pbFrame)
+lockBtn.Name = "AutoGrabLockBtn"
+lockBtn.Size = UDim2.new(0, 46, 0, 22)
+lockBtn.Position = UDim2.new(1, -106, 0, 4)
+lockBtn.BorderSizePixel = 0
+lockBtn.Font = Enum.Font.GothamBold
+lockBtn.TextSize = 10
+lockBtn.Text = "MOVE"
+lockBtn.BackgroundColor3 = Color3.fromRGB(12, 12, 14)
+lockBtn.TextColor3 = Color3.fromRGB(200, 200, 210)
+lockBtn.AutoButtonColor = false
+lockBtn.Active = true
+lockBtn.Selectable = true
+lockBtn.ZIndex = 60
+Instance.new("UICorner", lockBtn).CornerRadius = UDim.new(0, 8)
+local lockStroke = Instance.new("UIStroke", lockBtn)
+lockStroke.Thickness = 1.2
+lockStroke.Color = Color3.fromRGB(255, 40, 50)
+lockStroke.Transparency = 0.35
+lockStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+local lastLockToggleAt = 0
+local function toggleAutoGrabLock()
+	local now = tick()
+	if now - lastLockToggleAt < 0.2 then return end
+	lastLockToggleAt = now
+	pbDragging = false
+	pbIgnoreDragUntil = now + 0.25
+	setAutoGrabLocked(not autoGrabLocked)
+end
+
+-- Solo Activated (cubre PC + móvil); evita doble toggle
+lockBtn.Activated:Connect(toggleAutoGrabLock)
+lockBtn.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.Touch
+		or input.UserInputType == Enum.UserInputType.MouseButton1 then
+		pbDragging = false
+		pbIgnoreDragUntil = tick() + 0.25
+	end
+end)
+
+refreshLockBtnVisual()
+
+toggleBtn = Instance.new("TextButton", pbFrame)
+toggleBtn.Name = "AutoGrabToggleBtn"
+toggleBtn.Size = UDim2.new(0, 44, 0, 22)
+toggleBtn.Position = UDim2.new(1, -54, 0, 4)
+toggleBtn.BorderSizePixel = 0
+toggleBtn.Font = Enum.Font.GothamBold
+toggleBtn.TextSize = 10
+toggleBtn.Active = true
+toggleBtn.Selectable = true
+toggleBtn.ZIndex = 60
+Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0, 8)
+
+local btnStroke = Instance.new("UIStroke", toggleBtn)
+btnStroke.Thickness = 1.2
+btnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+local btnGrad = Instance.new("UIGradient", toggleBtn)
+btnGrad.Rotation = 90
+
+local function updateButtonUI(enabled)
+    if enabled then
+        toggleBtn.Text = "STOP"
+        toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 40, 50)
+        toggleBtn.TextColor3 = Color3.fromRGB(255,255,255)
+        btnStroke.Color = Color3.fromRGB(190,190,200)
+        btnGrad.Color = ColorSequence.new(Color3.fromRGB(255, 40, 50), Color3.fromRGB(150,150,160))
+        
+        progressPct.Text = "READY"
+        progressPct.TextColor3 = Color3.fromRGB(230,230,235)
+    else
+        toggleBtn.Text = "START"
+        toggleBtn.BackgroundColor3 = Color3.fromRGB(12,12,14)
+        toggleBtn.TextColor3 = Color3.fromRGB(180,180,180)
+        btnStroke.Color = Color3.fromRGB(40,40,48)
+        btnGrad.Color = ColorSequence.new(Color3.fromRGB(16,16,18), Color3.fromRGB(14,14,16))
+        
+        progressPct.Text = "IDLE"
+        progressPct.TextColor3 = Color3.fromRGB(190,190,200)
+    end
+end
+
+toggleBtn.Activated:Connect(function()
+	pbDragging = false
+    CONFIG.AUTO_STEAL_ENABLED = not CONFIG.AUTO_STEAL_ENABLED
+    
+    if CONFIG.AUTO_STEAL_ENABLED then
+        pcall(startAutoSteal)
+    else
+        pcall(stopAutoSteal)
+    end
+    
+    updateButtonUI(CONFIG.AUTO_STEAL_ENABLED)
+end)
+
+toggleBtn.InputBegan:Connect(function()
+	pbDragging = false
+end)
+
+updateButtonUI(CONFIG.AUTO_STEAL_ENABLED)
+refreshLockBtnVisual()
+
+local pbg = Instance.new("Frame", pbFrame)
+pbg.Size = UDim2.new(1, -28, 0, 7)
+pbg.Position = UDim2.new(0, 14, 1, -12)
+pbg.BackgroundColor3 = Color3.fromRGB(6,6,8)
+pbg.BorderSizePixel = 0
+pbg.ZIndex = 2
+Instance.new("UICorner", pbg).CornerRadius = UDim.new(0, 30)
+
+local pbgStroke = Instance.new("UIStroke", pbg)
+pbgStroke.Color = Color3.fromRGB(150,150,160)
+pbgStroke.Thickness = 1
+pbgStroke.Transparency = 0.45
+
+local progressFill = Instance.new("Frame", pbg)
+progressFill.Size = UDim2.new(0, 0, 1, 0)
+progressFill.BackgroundColor3 = Color3.fromRGB(255, 40, 50)
+progressFill.BorderSizePixel = 0
+progressFill.ZIndex = 2
+Instance.new("UICorner", progressFill).CornerRadius = UDim.new(0, 30)
+
+local fillGrad = Instance.new("UIGradient", progressFill)
+fillGrad.Color = ColorSequence.new(Color3.fromRGB(255,255,255), Color3.fromRGB(190,190,200))
+fillGrad.Transparency = NumberSequence.new({
+	NumberSequenceKeypoint.new(0, 0.55),
+	NumberSequenceKeypoint.new(1, 0)
+})
+
+local progressLastFill = 0
+
+local function updateStealBar(dt)
+	local recent = StealState.lastResultTime > 0 and (tick() - StealState.lastResultTime) < 1.4
+	local targetPct = 0
+	local targetColor = Color3.fromRGB(255, 40, 50)
+	local status = CONFIG.AUTO_STEAL_ENABLED and "READY" or "IDLE"
+
+	if StealState.active then
+		targetPct = math.clamp((tick() - StealState.startTime) / CONFIG.HOLD_MAX, 0, 1)
+		if StealState.phase == "waitingRange" then
+			status = "WAITING"
+			targetColor = Color3.fromRGB(150,150,160)
+		else
+			status = "STEALING"
+			targetColor = Color3.fromRGB(190,190,200)
+		end
+	elseif recent then
+		local success = StealState.phase == "success" or string.find(StealState.lastResult, "Stole") ~= nil
+		targetPct = 1
+		status = success and "SUCCESS" or "FAILED"
+		targetColor = success and Color3.fromRGB(230,230,235) or Color3.fromRGB(150,150,160)
+	elseif CONFIG.AUTO_STEAL_ENABLED then
+		local scan = math.sin(tick() * 2.2) * 0.5 + 0.5
+		targetPct = scan * 0.75
+		status = "SCAN"
+		targetColor = Color3.fromRGB(255, 40, 50)
+	end
+
+	progressLastFill = progressLastFill + (targetPct - progressLastFill) * math.min((dt or 0.016) * 14, 1)
+	progressFill.Size = UDim2.new(progressLastFill, 0, 1, 0)
+	progressFill.BackgroundColor3 = progressFill.BackgroundColor3:Lerp(targetColor, math.min((dt or 0.016) * 8, 1))
+	progressPct.Text = status
+	progressPct.TextColor3 = targetColor
+end
+
+RunService.RenderStepped:Connect(updateStealBar)
+
+task.spawn(function()
+	if startAutoStealSync() then
+		scanAllPlots()
+		while task.wait(5) do
+			scanAllPlots()
+		end
+	end
+end)
+
+CONFIG.AUTO_STEAL_ENABLED = true
+startAutoSteal()
+updateButtonUI(true)
+
+print("✅ Auto Steal ACTIVADO (Elite_Hub)")
+
+RunService.Stepped:Connect(function()
+    for _,p in ipairs(Players:GetPlayers()) do
+        if p~=LP and p.Character then
+            for _,part in ipairs(p.Character:GetChildren()) do
+                if part:IsA("BasePart") and part.CanCollide then
+                    part.CanCollide = false
+                end
+            end
+        end
+    end
+end)
+
+-- SECCIÓN 12: PERSISTENCIA (SAVE/LOAD) CON AUTO CARRY Y AUTO STEAL
+saveConfig = function(btn)
+    if State._configLoading or not State._configLoaded then
+        State._saveAfterLoad = true
+        return false
+    end
+
+    if State._configLoadFailed and not btn then
+        return false
+    end
+
+    if State._saveInProgress then
+        State._saveQueued = true
+        return false
+    end
+
+    State._saveInProgress = true
+
+    local function keySnapshot(entry)
+        return {
+            kb = entry and entry.kb and entry.kb.Name or nil,
+            gp = entry and entry.gp and entry.gp.Name or nil,
+        }
+    end
+
+    local function positionSnapshot(guiObject)
+        if not guiObject then return nil end
+        local ok, p = pcall(function() return guiObject.Position end)
+        if not ok or not p then return nil end
+        return {
+            xs = p.X.Scale,
+            xo = p.X.Offset,
+            ys = p.Y.Scale,
+            yo = p.Y.Offset,
+        }
+    end
+
+    local savedStealRadius = Steal.StealRadius
+    local savedAutoStealEnabled = Steal.AutoStealEnabled
+    if CONFIG then
+        if type(CONFIG.STEAL_RANGE) == "number" then
+            savedStealRadius = CONFIG.STEAL_RANGE
+        end
+        if CONFIG.AUTO_STEAL_ENABLED ~= nil then
+            savedAutoStealEnabled = CONFIG.AUTO_STEAL_ENABLED == true
+        end
+    end
+
+    local cfg = {
+        configVersion = 8,
+
+        normalSpeed = NS,
+        carrySpeed = CS,
+        profileLaggerNormalSpeed = State.profileLaggerNormalSpeed,
+        profileLaggerCarrySpeed = State.profileLaggerCarrySpeed,
+        speedProfile = State.speedProfile,
+        laggerSpeed = LS,
+        laggerCarrySpeed = LS2,
+        stealRadius = savedStealRadius,
+        stealDuration = Steal.StealDuration,
+
+        uiScale = uiScaleValue,
+        backgroundAssetId = State.backgroundAssetId,
+        animPack = (function()
+            local ok, name = pcall(function()
+                if _G.NIGHT_getCurrentAnimPack then return _G.NIGHT_getCurrentAnimPack() end
+            end)
+            if ok and type(name) == "string" and name ~= "" then return name end
+            return nil
+        end)(),
+        musicPack = (function()
+            local ok, name = pcall(function()
+                if _G.NIGHT_musicGet then return _G.NIGHT_musicGet() end
+            end)
+            if ok and type(name) == "string" and name ~= "" then return name end
+            return "Off"
+        end)(),
+        skinPack = (function()
+            local ok, name = pcall(function()
+                if _G.NIGHT_getSkin then return _G.NIGHT_getSkin() end
+            end)
+            if ok and type(name) == "string" and name ~= "" then return name end
+            return "Off"
+        end)(),
+        accessoryPack = (function()
+            local ok, name = pcall(function()
+                if _G.NIGHT_getCurrentAccessoryPack then return _G.NIGHT_getCurrentAccessoryPack() end
+            end)
+            if ok and type(name) == "string" and name ~= "" then return name end
+            return "Off"
+        end)(),
+        musicPCKey = keySnapshot(KB.MusicPC),
+        tauntKey = keySnapshot(KB.Taunt),
+        musicPadKey = keySnapshot(KB.MusicPad),
+        buttonsSize = State.buttonsSizeValue,
+        buttonsShape = State.buttonsShape,
+        buttonImages = State.buttonImages or {},
+        uiLocked = uiLocked,
+        autoGrabLocked = State.autoGrabLocked == true,
+        guiVisible = State.guiVisible,
+
+        autoLeftKey = keySnapshot(KB.AutoLeft),
+        autoRightKey = keySnapshot(KB.AutoRight),
+        dropKey = keySnapshot(KB.Drop),
+        tpDownKey = keySnapshot(KB.TPDown),
+        autoBatKey = keySnapshot(KB.AutoBat),
+        autoBatV2Key = keySnapshot(KB.AutoBatV2),
+        instaResetKey = keySnapshot(KB.InstaReset),
+        tpBatKey = keySnapshot(KB.TPBat),
+        speedKey = keySnapshot(KB.Speed),
+        laggerKey = keySnapshot(KB.Lagger),
+        guiHideKey = keySnapshot(KB.GuiHide),
+
+        infJump = State.infJumpEnabled,
+        superJump = State.superJumpEnabled,
+        antiRagdoll = State.antiRagdollEnabled,
+        fpsBoost = State.fpsBoostEnabled,
+        medusaCounter = State.medusaCounterEnabled,
+        ninoTime = ninoTimeEnabled,
+        batCounter = State.batCounterEnabled,
+        autoStealEnabled = savedAutoStealEnabled,
+        unwalkEnabled = State.unwalkEnabled,
+        desyncEnabled = State.desyncEnabled,
+        autoSwing = State.autoSwingEnabled,
+        autoBatToggled = State.autoBatToggled,
+        autoBatV2Toggled = State.autoBatV2Enabled,
+        tpBatEnabled = State.tpBatEnabled,
+        stretchRez = State.stretchRezEnabled,
+        removeAccessories = State.removeAccessoriesEnabled,
+        antiLag = State.antiLagEnabled,
+        darkMode = State.darkModeEnabled,
+        skyStyle = State.skyStyle,
+        noIntro = State.noIntro == true,
+        introEnabled = State.noIntro ~= true,
+        selectedIntroMusic = State.selectedIntroMusic,
+        autoTPDown = autoTPDownEnabled,
+        autoTPDownHeight = autoTPDownHeight,
+
+        speedToggled = State.speedToggled,
+        laggerMode = State.laggerToggled,
+        laggerPhase = laggerPhase,
+
+        linieEnabled = State.linieEnabled,
+        autoMedusaEnabled = MedusaConfig and MedusaConfig.Enabled or nil,
+        medusaRadius = MedusaConfig and MedusaConfig.Radius or nil,
+        medusaDelay = MedusaConfig and MedusaConfig.Delay or nil,
+        nuevaAnimacion = State.nuevaAnimacionEnabled,
+        instaReset = State.instaResetEnabled,
+        instaResetVisible = btnInstaReset and btnInstaReset.Visible or nil,
+        hideButtons = State.hideButtonsEnabled,
+
+        autoCarryEnabled = State.autoCarryEnabled,
+
+        batV1Speed = State.batV1Speed,
+        batV2Speed = State.batV2Speed,
+
+        panelPos = positionSnapshot(MobilePanel),
+        mobileButtonPositions = (function()
+            local positions = {}
+            for name, mobileBtn in pairs(mobileButtonsByName) do
+                positions[name] = positionSnapshot(mobileBtn)
+            end
+            return positions
+        end)(),
+        mainPos = positionSnapshot(main),
+        miniPos = positionSnapshot(mini),
+        pbPos = positionSnapshot(pbFrame),
+        batV2Pos = positionSnapshot(btnBatV2),
+        instaResetPos = positionSnapshot(btnInstaReset),
+        autoStealBarPos = positionSnapshot(frame),
+    }
+
+    local encodeOk, encoded = pcall(function()
+        return HttpService:JSONEncode(cfg)
+    end)
+
+    local saved = false
+    if encodeOk and encoded then
+        if not btn and encoded == State._lastConfigJson then
+            State._configDirty = false
+            State._saveInProgress = false
+            State._saveQueued = false
+            return true
+        end
+
+        local atomicOk, atomicResult, atomicErr = pcall(function()
+            return State._atomicJsonSave(
+                CONFIG_FILE,
+                State._configBackupFile,
+                State._configTempFile,
+                encoded
+            )
+        end)
+
+        saved = atomicOk and atomicResult == true
+        if saved then
+            State._lastConfigJson = encoded
+            State._lastSaveError = nil
+            State._configLoadFailed = false
+            State._allowInitialConfigCreation = false
+
+            if State.savePositionBackup then pcall(State.savePositionBackup) end
+
+            State._configDirty = false
+        else
+            State._lastConfigJson = nil
+            State._lastSaveError = tostring((atomicOk and atomicErr) or atomicResult or "No se pudo escribir la configuración")
+            warn("[Elite_Hub AUTO SAVE] " .. State._lastSaveError)
+        end
+    else
+        State._lastSaveError = "No se pudo convertir la configuración a JSON"
+    end
+
+    State._saveInProgress = false
+
+    if btn and btn.Parent then
+        local previousText = btn.Text
+        btn.Text = saved and "Saved!" or "Failed!"
+        task.delay(1.5, function()
+            if btn and btn.Parent then btn.Text = previousText end
+        end)
+    end
+
+    if State._saveQueued then
+        State._saveQueued = false
+        if State.requestConfigSave then State.requestConfigSave() end
+    end
+
+    return saved
+end
+
+loadConfig = function()
+    local function readConfigFile(path)
+        local decoded, raw = State._readValidJsonFile(path)
+        if type(decoded) ~= "table" then return nil, raw end
+        return decoded, raw
+    end
+
+    local mainCfg, mainRaw = readConfigFile(CONFIG_FILE)
+    local tempCfg, tempRaw = readConfigFile(State._configTempFile)
+    local backupCfg, backupRaw = readConfigFile(State._configBackupFile)
+    local legacyCfg, legacyRaw = readConfigFile(State._legacyConfigFile)
+    local legacyTempCfg, legacyTempRaw = readConfigFile(State._legacyConfigTempFile)
+    local legacyBackupCfg, legacyBackupRaw = readConfigFile(State._legacyConfigBackupFile)
+
+    local cfg, raw = nil, nil
+    local loadedFromBackup = false
+    local loadedFromLegacy = false
+    local loadedFromTemp = false
+
+    if type(tempCfg) == "table" and (type(mainCfg) ~= "table" or tempRaw ~= mainRaw) then
+        cfg, raw = tempCfg, tempRaw
+        loadedFromTemp = true
+    elseif type(mainCfg) == "table" then
+        cfg, raw = mainCfg, mainRaw
+    elseif type(backupCfg) == "table" then
+        cfg, raw = backupCfg, backupRaw
+        loadedFromBackup = true
+    elseif type(legacyTempCfg) == "table" and (type(legacyCfg) ~= "table" or legacyTempRaw ~= legacyRaw) then
+        cfg, raw = legacyTempCfg, legacyTempRaw
+        loadedFromLegacy = true
+        loadedFromTemp = true
+    elseif type(legacyCfg) == "table" then
+        cfg, raw = legacyCfg, legacyRaw
+        loadedFromLegacy = true
+    elseif type(legacyBackupCfg) == "table" then
+        cfg, raw = legacyBackupCfg, legacyBackupRaw
+        loadedFromLegacy = true
+        loadedFromBackup = true
+    end
+
+    local hadAnyConfigFile = false
+    for _, path in ipairs({
+        CONFIG_FILE,
+        State._configTempFile,
+        State._configBackupFile,
+        State._legacyConfigFile,
+        State._legacyConfigTempFile,
+        State._legacyConfigBackupFile,
+    }) do
+        local exists = false
+        pcall(function() exists = _isfile(path) end)
+        if exists then hadAnyConfigFile = true break end
+    end
+
+    if not cfg then
+        State._configLoaded = true
+        State._configLoadFailed = hadAnyConfigFile
+        State._allowInitialConfigCreation = not hadAnyConfigFile
+        State._saveAfterLoad = false
+        State._lastSaveError = hadAnyConfigFile and "Se encontraron configuraciones dañadas; no se sobrescribieron" or nil
+        if State.loadPositionBackup then pcall(State.loadPositionBackup) end
+        return false
+    end
+
+    State._configLoading = true
+    State._configLoadFailed = false
+    State._allowInitialConfigCreation = false
+
+    local applyOk = pcall(function()
+        if type(cfg.normalSpeed) == "number" then
+            NS = cfg.normalSpeed
+            if normalBox then normalBox.Text = tostring(NS) end
+        end
+        if type(cfg.carrySpeed) == "number" then
+            CS = cfg.carrySpeed
+            if carryBox then carryBox.Text = tostring(CS) end
+        end
+        if type(cfg.profileLaggerNormalSpeed) == "number" then
+            State.profileLaggerNormalSpeed = cfg.profileLaggerNormalSpeed
+        end
+        if type(cfg.profileLaggerCarrySpeed) == "number" then
+            State.profileLaggerCarrySpeed = cfg.profileLaggerCarrySpeed
+        end
+        if type(cfg.laggerSpeed) == "number" then
+            LS = cfg.laggerSpeed
+            if laggerBox then laggerBox.Text = tostring(LS) end
+        end
+        if type(cfg.laggerCarrySpeed) == "number" then
+            LS2 = cfg.laggerCarrySpeed
+            if laggerBox2 then laggerBox2.Text = tostring(LS2) end
+        end
+
+        if type(cfg.uiScale) == "number" then
+            uiScaleValue = math.clamp(math.floor(cfg.uiScale + 0.5), 50, 150)
+            if mainUIScale then mainUIScale.Scale = uiScaleValue / 100 end
+            if uiScaleBox then uiScaleBox.Text = tostring(uiScaleValue) end
+        end
+
+        if cfg.backgroundAssetId and State.applyBackgroundImage then
+            State.applyBackgroundImage(cfg.backgroundAssetId, false)
+        elseif State.applyBackgroundImage then
+            State.applyBackgroundImage(State.backgroundAssetId, false)
+        end
+
+        if type(cfg.animPack) == "string" and cfg.animPack ~= "" and cfg.animPack ~= "Off" and cfg.animPack ~= "Normal" and cfg.animPack ~= "Default" then
+            pcall(function()
+                if _G.NIGHT_setCurrentAnimPack then _G.NIGHT_setCurrentAnimPack(cfg.animPack) end
+                if _G.NIGHT_applyAnimationPack then _G.NIGHT_applyAnimationPack(cfg.animPack) end
+            end)
+            if State._animPackSelectorVisual then
+                pcall(function() State._animPackSelectorVisual(cfg.animPack, false) end)
+            end
+        elseif cfg.animPack == "Off" or cfg.animPack == "Normal" or cfg.animPack == "Default" or cfg.animPack == nil then
+            pcall(function()
+                if _G.NIGHT_applyAnimationPack then _G.NIGHT_applyAnimationPack("Normal") end
+                if _G.NIGHT_setCurrentAnimPack then _G.NIGHT_setCurrentAnimPack(nil) end
+            end)
+            if State._animPackSelectorVisual then
+                pcall(function() State._animPackSelectorVisual("Normal", false) end)
+            end
+        end
+
+        if type(cfg.musicPack) == "string" and cfg.musicPack ~= "" then
+            pcall(function()
+                if _G.NIGHT_musicPlay then _G.NIGHT_musicPlay(cfg.musicPack) end
+            end)
+            if State._musicPackSelectorVisual then
+                pcall(function() State._musicPackSelectorVisual(cfg.musicPack, false) end)
+            end
+        end
+
+        if type(cfg.skinPack) == "string" and cfg.skinPack ~= "" then
+            local skinName = cfg.skinPack
+            pcall(function()
+                if _G.NIGHT_applySkin then _G.NIGHT_applySkin(skinName) end
+            end)
+            if State._skinPackSelectorVisual then
+                pcall(function() State._skinPackSelectorVisual(skinName, false) end)
+            end
+            -- Reaplicar tras un momento por si el personaje aún no está listo
+            task.delay(0.6, function()
+                pcall(function()
+                    if _G.NIGHT_applySkin then _G.NIGHT_applySkin(skinName) end
+                end)
+            end)
+            task.delay(1.5, function()
+                pcall(function()
+                    if _G.NIGHT_applySkin then _G.NIGHT_applySkin(skinName) end
+                end)
+            end)
+        end
+
+        if type(cfg.accessoryPack) == "string" and cfg.accessoryPack ~= "" then
+            local accName = cfg.accessoryPack
+            pcall(function()
+                if _G.NIGHT_setCurrentAccessoryPack then _G.NIGHT_setCurrentAccessoryPack(accName) end
+                if _G.NIGHT_applyAccessoryPack then _G.NIGHT_applyAccessoryPack(accName) end
+            end)
+            if State._accessoryPackSelectorVisual then
+                pcall(function() State._accessoryPackSelectorVisual(accName, false) end)
+            end
+            task.delay(0.8, function()
+                pcall(function()
+                    if _G.NIGHT_applyAccessoryPack then _G.NIGHT_applyAccessoryPack(accName) end
+                end)
+            end)
+            task.delay(1.6, function()
+                pcall(function()
+                    if _G.NIGHT_applyAccessoryPack then _G.NIGHT_applyAccessoryPack(accName) end
+                end)
+            end)
+        end
+
+        if type(cfg.buttonsSize) == "number" then
+            State.buttonsSizeValue = math.clamp(math.floor(cfg.buttonsSize + 0.5), 0, 100)
+        end
+        if cfg.buttonsShape ~= nil then
+            State.buttonsShape = normalizeMobileButtonsShape(cfg.buttonsShape)
+        end
+        applyMobileButtonsSize(State.buttonsSizeValue)
+        if buttonsSizeBox then buttonsSizeBox.Text = tostring(State.buttonsSizeValue) end
+        if State._buttonsShapeSelectorVisual then
+            State._buttonsShapeSelectorVisual(State.buttonsShape, false)
+        end
+
+        -- Cargar imágenes de botones (mismos assets del script)
+        if type(cfg.buttonImages) == "table" then
+            State.buttonImages = cfg.buttonImages
+            task.defer(function()
+                pcall(applyAllButtonImages)
+            end)
+        end
+
+        if cfg.uiLocked ~= nil then
+            uiLocked = cfg.uiLocked == true
+            if setLockUIVisual then setLockUIVisual(uiLocked) end
+        end
+
+        if cfg.autoGrabLocked ~= nil then
+            pcall(function()
+                setAutoGrabLocked(cfg.autoGrabLocked == true, true)
+            end)
+        end
+
+        if cfg.guiVisible ~= nil then
+            State.guiVisible = cfg.guiVisible == true
+            if main then main.Visible = State.guiVisible end
+            if mini then mini.Visible = not State.guiVisible end
+        end
+
+        if cfg.selectedIntroMusic ~= nil then
+            State.selectedIntroMusic = cfg.selectedIntroMusic
+            if getgenv and getgenv().FEARV2MusicBtn then
+                getgenv().FEARV2MusicBtn.Text = "Music " .. tostring(State.selectedIntroMusic)
+            end
+        end
+        if cfg.noIntro ~= nil then
+            State.noIntro = cfg.noIntro == true
+        elseif cfg.introEnabled ~= nil then
+            State.noIntro = cfg.introEnabled ~= true
+        end
+        State.introEnabled = not State.noIntro
+        if setNoIntroToggle then setNoIntroToggle(State.noIntro, false) end
+        if setIntroToggle then setIntroToggle(State.introEnabled, false) end
+
+        if type(cfg.autoTPDownHeight) == "number" then
+            autoTPDownHeight = math.clamp(cfg.autoTPDownHeight, 0, 500)
+        end
+        if cfg.autoTPDown ~= nil then
+            autoTPDownEnabled = cfg.autoTPDown == true
+            if setAutoTPDownVisual then setAutoTPDownVisual(autoTPDownEnabled) end
+            if autoTPDownEnabled then startAutoTPDown() else stopAutoTPDown() end
+        end
+
+        local savedRadius = cfg.stealRadius or cfg.grabRadius
+        if savedRadius == 61 or savedRadius == 63 then
+            savedRadius = 10
+        end
+        if type(savedRadius) == "number" then
+            -- Cap the saved value so an older config cannot restore a larger Auto Grab range.
+            savedRadius = math.min(savedRadius, 8)
+            Steal.StealRadius = savedRadius
+            if progressRadLbl then progressRadLbl.Text = "Radius: " .. tostring(savedRadius) end
+            if radValBtn then radValBtn.Text = tostring(savedRadius) end
+            if radBox then radBox.Text = tostring(savedRadius) end
+            if CONFIG then CONFIG.STEAL_RANGE = savedRadius end
+        end
+        if type(cfg.stealDuration) == "number" then
+            Steal.StealDuration = cfg.stealDuration
+            if durValBtn then durValBtn.Text = tostring(Steal.StealDuration) end
+        end
+
+        if MedusaConfig then
+            if type(cfg.medusaRadius) == "number" then
+                MedusaConfig.Radius = cfg.medusaRadius
+                if MedusaConfig.RadiusPart then
+                    MedusaConfig.RadiusPart.Size = Vector3.new(0.2, MedusaConfig.Radius * 2, MedusaConfig.Radius * 2)
+                end
+            end
+            if type(cfg.medusaDelay) == "number" then
+                MedusaConfig.Delay = cfg.medusaDelay
+            end
+        end
+
+        local function loadKey(entry, data)
+            if not entry or type(data) ~= "table" then return end
+            entry.kb = nil
+            entry.gp = nil
+            if data.kb and Enum.KeyCode[data.kb] then entry.kb = Enum.KeyCode[data.kb] end
+            if data.gp and Enum.KeyCode[data.gp] then entry.gp = Enum.KeyCode[data.gp] end
+
+            if State._bindButtons and State._bindButtons[entry] then
+                State._bindButtons[entry].Text =
+                    entry.gp and ("GP:" .. entry.gp.Name)
+                    or (entry.kb and entry.kb.Name or "None")
+            end
+        end
+
+        loadKey(KB.AutoLeft, cfg.autoLeftKey)
+        loadKey(KB.AutoRight, cfg.autoRightKey)
+        loadKey(KB.Drop, cfg.dropKey)
+        loadKey(KB.TPDown, cfg.tpDownKey)
+        loadKey(KB.AutoBat, cfg.autoBatKey)
+        loadKey(KB.AutoBatV2, cfg.autoBatV2Key)
+        loadKey(KB.InstaReset, cfg.instaResetKey)
+        loadKey(KB.TPBat, cfg.tpBatKey)
+        loadKey(KB.Speed, cfg.speedKey)
+        loadKey(KB.Lagger, cfg.laggerKey)
+        loadKey(KB.GuiHide, cfg.guiHideKey)
+        loadKey(KB.MusicPC, cfg.musicPCKey)
+        loadKey(KB.MusicPad, cfg.musicPadKey)
+        loadKey(KB.Taunt, cfg.tauntKey)
+
+        if cfg.infJump ~= nil then
+            State.infJumpEnabled = cfg.infJump == true
+            if setInfJump then setInfJump(State.infJumpEnabled) end
+        end
+        if cfg.superJump ~= nil then
+            State.superJumpEnabled = cfg.superJump == true
+            if setSuperJump then setSuperJump(State.superJumpEnabled) end
+        end
+        if cfg.antiRagdoll ~= nil then
+            State.antiRagdollEnabled = cfg.antiRagdoll == true
+            if setAntiRag then setAntiRag(State.antiRagdollEnabled) end
+            if State.antiRagdollEnabled then startAntiRagdoll() else stopAntiRagdoll() end
+        end
+        if cfg.fpsBoost ~= nil then
+            State.fpsBoostEnabled = cfg.fpsBoost == true
+            if setFps then setFps(State.fpsBoostEnabled) end
+            if State.fpsBoostEnabled then pcall(applyFPSBoost) end
+        end
+        if cfg.medusaCounter ~= nil then
+            State.medusaCounterEnabled = cfg.medusaCounter == true
+            if setMedusaCounter then setMedusaCounter(State.medusaCounterEnabled) end
+            if State.medusaCounterEnabled then setupMedusaCounter(LP.Character) else stopMedusaCounter() end
+            if cfg.medusaReset ~= nil then
+                State.autoResetEnabled = cfg.medusaReset == true
+                pcall(function() if _G.NIGHT_setMedusaReset then _G.NIGHT_setMedusaReset(State.autoResetEnabled) end end)
+            end
+        end
+        if cfg.ninoTime ~= nil then setNinoTime(cfg.ninoTime == true) end
+        if cfg.batCounter ~= nil then
+            State.batCounterEnabled = cfg.batCounter == true
+            if setBatCounter then setBatCounter(State.batCounterEnabled) end
+            if State.batCounterEnabled then startBatCounter() else stopBatCounter() end
+        end
+        if cfg.autoStealEnabled ~= nil then
+            local autoStealOn = cfg.autoStealEnabled == true
+            Steal.AutoStealEnabled = autoStealOn
+            if CONFIG then CONFIG.AUTO_STEAL_ENABLED = autoStealOn end
+            if setAutoGrab then setAutoGrab(autoStealOn) end
+
+            if progressPct then progressPct.Text = autoStealOn and "READY" or "IDLE" end
+            if toggleBtn then
+                if autoStealOn then
+                    toggleBtn.Text = "STOP"
+                    toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 40, 50)
+                    toggleBtn.TextColor3 = Color3.fromRGB(255,255,255)
+                    btnStroke.Color = Color3.fromRGB(190,190,200)
+                    btnGrad.Color = ColorSequence.new(Color3.fromRGB(255, 40, 50), Color3.fromRGB(150,150,160))
+                else
+                    toggleBtn.Text = "START"
+                    toggleBtn.BackgroundColor3 = Color3.fromRGB(12,12,14)
+                    toggleBtn.TextColor3 = Color3.fromRGB(180,180,180)
+                    btnStroke.Color = Color3.fromRGB(40,40,48)
+                    btnGrad.Color = ColorSequence.new(Color3.fromRGB(16,16,18), Color3.fromRGB(14,14,16))
+                end
+            end
+
+            if autoStealOn then pcall(startAutoSteal) else pcall(stopAutoSteal) end
+        end
+        if cfg.autoSwing ~= nil then
+            State.autoSwingEnabled = cfg.autoSwing == true
+            if setAutoSwingVisual then setAutoSwingVisual(State.autoSwingEnabled) end
+        end
+        if cfg.unwalkEnabled ~= nil then
+            State.unwalkEnabled = cfg.unwalkEnabled == true
+            if setUnwalkToggle then setUnwalkToggle(State.unwalkEnabled) end
+            if State.unwalkEnabled then startUnwalk() else stopUnwalk() end
+        end
+
+        if cfg.stretchRez ~= nil and setStretchRez then
+            State.stretchRezEnabled = cfg.stretchRez == true
+            setStretchRez(State.stretchRezEnabled)
+        end
+        if cfg.removeAccessories ~= nil and setRemoveAccessories then
+            State.removeAccessoriesEnabled = cfg.removeAccessories == true
+            setRemoveAccessories(State.removeAccessoriesEnabled)
+        end
+        if cfg.antiLag ~= nil and setAntiLag then
+            State.antiLagEnabled = cfg.antiLag == true
+            setAntiLag(State.antiLagEnabled)
+        end
+
+        if cfg.skyStyle ~= nil and setSkyStyle then
+            setSkyStyle(cfg.skyStyle)
+        elseif cfg.darkMode ~= nil and setDarkMode then
+            setDarkMode(cfg.darkMode == true)
+        end
+
+        if cfg.desyncEnabled ~= nil then
+            State.desyncEnabled = cfg.desyncEnabled == true
+            task.defer(function()
+                if setDesync then setDesync(State.desyncEnabled) end
+                if saDesync then saDesync(State.desyncEnabled) end
+                if State.desyncEnabled and startDesyncSession then startDesyncSession() end
+            end)
+        end
+
+        if cfg.linieEnabled ~= nil then
+            State.linieEnabled = cfg.linieEnabled == true
+            if setLinieVisual then setLinieVisual(State.linieEnabled) end
+        end
+        if cfg.autoMedusaEnabled ~= nil then
+            if MedusaConfig then MedusaConfig.Enabled = cfg.autoMedusaEnabled == true end
+            if setAutoMedusaVisual then setAutoMedusaVisual(cfg.autoMedusaEnabled == true) end
+        end
+
+        if cfg.nuevaAnimacion ~= nil then
+            State.nuevaAnimacionEnabled = cfg.nuevaAnimacion == true
+            if setNuevaAnimacionVisual then setNuevaAnimacionVisual(State.nuevaAnimacionEnabled) end
+            if State.nuevaAnimacionEnabled then
+                task.defer(startNuevaAnimacion)
+            else
+                task.defer(stopNuevaAnimacion)
+            end
+        end
+
+        local savedInstaReset = cfg.instaReset
+        if savedInstaReset == nil then savedInstaReset = cfg.instaResetEnabled end
+        if savedInstaReset ~= nil then
+            State.instaResetEnabled = savedInstaReset == true
+            if setInstaToggleVisual then setInstaToggleVisual(State.instaResetEnabled) end
+        end
+
+        if cfg.hideButtons ~= nil then
+            State.hideButtonsEnabled = cfg.hideButtons == true
+            if setHideButtonsVisual then setHideButtonsVisual(State.hideButtonsEnabled) end
+
+            local visible = not State.hideButtonsEnabled
+            if MobilePanel then MobilePanel.Visible = visible end
+            for _, mobileBtn in pairs(mobileButtonsByName) do
+                if mobileBtn then mobileBtn.Visible = visible end
+            end
+            if btnBatV2 then btnBatV2.Visible = visible end
+            if btnInstaReset then
+                btnInstaReset.Visible = visible and (cfg.instaResetVisible ~= false)
+            end
+        elseif cfg.instaResetVisible ~= nil and btnInstaReset then
+            btnInstaReset.Visible = cfg.instaResetVisible == true
+        end
+
+        State.speedProfile = cfg.speedProfile == "Lagger" and "Lagger" or "Normal"
+        if State._refreshSpeedProfileVisual then State._refreshSpeedProfileVisual() end
+        if normalBox then
+            normalBox.Text = tostring(State.speedProfile == "Lagger" and State.profileLaggerNormalSpeed or NS)
+        end
+        if carryBox then
+            carryBox.Text = tostring(State.speedProfile == "Lagger" and State.profileLaggerCarrySpeed or CS)
+        end
+
+        State.speedToggled = cfg.speedToggled == true
+        State.laggerToggled = cfg.laggerMode == true
+        laggerPhase = tonumber(cfg.laggerPhase) or (State.laggerToggled and 1 or 0)
+        laggerPhase = math.clamp(math.floor(laggerPhase), 0, 2)
+
+        if State.laggerToggled then
+            State.speedToggled = false
+        elseif laggerPhase ~= 0 then
+            laggerPhase = 0
+        end
+
+        if mobileSpeedSetActive then mobileSpeedSetActive(State.speedToggled) end
+        if mobileLaggerSetActive then mobileLaggerSetActive(State.laggerToggled) end
+        if modeValLbl then
+            modeValLbl.Text =
+                laggerPhase == 2 and "Lagger Carry"
+                or (State.laggerToggled and "Lagger")
+                or (State.speedToggled and (State.speedProfile == "Lagger" and ("Carry · " .. tostring(State.profileLaggerCarrySpeed)) or "Carry"))
+                or (State.speedProfile == "Lagger" and ("Lagger · " .. tostring(State.profileLaggerNormalSpeed)) or "Normal")
+        end
+
+        State._setTPBatEnabled(cfg.tpBatEnabled == true)
+        if State._tpBatSetVisual then State._tpBatSetVisual(State.tpBatEnabled) end
+        if State._tpBatConfigSetVisual then State._tpBatConfigSetVisual(State.tpBatEnabled) end
+
+        local autoBatV1 = cfg.autoBatToggled == true
+        local autoBatV2 = cfg.autoBatV2Toggled == true
+        if autoBatV1 then autoBatV2 = false end
+
+        State.autoBatToggled = autoBatV1
+        State.autoBatV2Enabled = autoBatV2
+
+        if autoBatSetVisual then autoBatSetVisual(State.autoBatToggled) end
+        if autoBatV2SetVisual then autoBatV2SetVisual(State.autoBatV2Enabled) end
+        if State.autoBatToggled then
+            task.defer(startBatAimbot)
+        elseif State.autoBatV2Enabled then
+            task.defer(startBatAimbotV2)
+        else
+            pcall(stopBatAimbot)
+            if stopBatAimbotV2 then pcall(stopBatAimbotV2) end
+        end
+
+        if type(cfg.batV1Speed) == "number" then
+            State.batV1Speed = cfg.batV1Speed
+            if batV1SpeedBox then batV1SpeedBox.Text = tostring(State.batV1Speed) end
+        end
+        if type(cfg.batV2Speed) == "number" then
+            State.batV2Speed = cfg.batV2Speed
+            if batV2SpeedBox then batV2SpeedBox.Text = tostring(State.batV2Speed) end
+        end
+
+        if cfg.autoCarryEnabled ~= nil then
+            State.autoCarryEnabled = cfg.autoCarryEnabled == true
+            if State.autoCarrySetVisual then
+                State.autoCarrySetVisual(State.autoCarryEnabled)
+            end
+        end
+
+        local function restorePosition(guiObject, data)
+            if guiObject and type(data) == "table" and data.xs ~= nil then
+                guiObject.Position = UDim2.new(
+                    data.xs,
+                    data.xo or 0,
+                    data.ys or 0,
+                    data.yo or 0
+                )
+            end
+        end
+
+        local function restoreSavedPositions()
+            restorePosition(main, cfg.mainPos)
+            restorePosition(mini, cfg.miniPos)
+            restorePosition(MobilePanel, cfg.panelPos)
+
+            if type(cfg.mobileButtonPositions) == "table" then
+                for name, positionData in pairs(cfg.mobileButtonPositions) do
+                    restorePosition(mobileButtonsByName[name], positionData)
+                end
+            end
+
+            restorePosition(pbFrame, cfg.pbPos)
+            restorePosition(btnBatV2, cfg.batV2Pos)
+            restorePosition(btnInstaReset, cfg.instaResetPos)
+            restorePosition(frame, cfg.autoStealBarPos)
+        end
+
+        restoreSavedPositions()
+        task.delay(0.7, restoreSavedPositions)
+        task.delay(1.35, function()
+            restoreSavedPositions()
+            task.defer(function()
+                if State.loadPositionBackup and not State._positionDirty then
+                    pcall(State.loadPositionBackup)
+                end
+            end)
+        end)
+    end)
+
+    State._configLoading = false
+    State._configLoaded = true
+    State._configLoadFailed = not applyOk
+
+    if applyOk then
+        State._lastConfigJson = raw
+        State._lastSaveError = nil
+        State._configDirty = false
+    else
+        State._lastSaveError = "La configuración se leyó, pero no se pudo aplicar; no será sobrescrita"
+    end
+
+    local pendingSave = State._saveAfterLoad
+    State._saveAfterLoad = false
+
+    if applyOk and (loadedFromBackup or loadedFromLegacy or loadedFromTemp or pendingSave) then
+        if loadedFromBackup or loadedFromLegacy or loadedFromTemp then State._lastConfigJson = nil end
+        State.requestConfigSave()
+    end
+
+    return applyOk
+end
+
+State._otherSpeedLabels = State._otherSpeedLabels or {}
+State._otherSpeedConnections = State._otherSpeedConnections or {}
+
+State._attachOtherSpeedBillboard = function(player, character)
+    if not player or player == LP or not character then return end
+
+    task.spawn(function()
+        local head = character:WaitForChild("Head", 8)
+        local root = character:WaitForChild("HumanoidRootPart", 8)
+        local humanoid = character:FindFirstChildOfClass("Humanoid") or character:WaitForChild("Humanoid", 8)
+        if not head or not root or not humanoid then return end
+
+        local old = head:FindFirstChild("CRYONOtherSpeedBB")
+        if old then old:Destroy() end
+
+        local bb = Instance.new("BillboardGui")
+        bb.Name = "CRYONOtherSpeedBB"
+        bb.Adornee = head
+        bb.Parent = head
+        bb.Size = UDim2.new(0, 180, 0, 36)
+        bb.StudsOffset = Vector3.new(0, 3, 0)
+        bb.AlwaysOnTop = true
+        bb.LightInfluence = 0
+        bb.MaxDistance = 1000
+
+        local label = Instance.new("TextLabel")
+        label.Name = "OtherSpeedBillLbl"
+        label.Parent = bb
+        label.Size = UDim2.new(1, 0, 1, 0)
+        label.BackgroundTransparency = 1
+        label.Text = "0.0"
+        label.TextColor3 = Color3.fromRGB(255, 40, 50)
+        label.Font = Enum.Font.GothamBlack
+        label.TextScaled = true
+        label.TextStrokeTransparency = 0
+        label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+
+        State._otherSpeedLabels[player] = {
+            label = label,
+            root = root,
+            humanoid = humanoid,
+        }
+    end)
+end
+
+State._setupOtherPlayerBillboard = function(player)
+    if not player or player == LP then return end
+
+    local previousConnection = State._otherSpeedConnections[player]
+    if previousConnection then
+        pcall(function() previousConnection:Disconnect() end)
+    end
+
+    State._otherSpeedConnections[player] = player.CharacterAdded:Connect(function(character)
+        State._attachOtherSpeedBillboard(player, character)
+    end)
+
+    if player.Character then
+        State._attachOtherSpeedBillboard(player, player.Character)
+    end
+end
+
+task.spawn(function()
+    for _, otherPlayer in ipairs(Players:GetPlayers()) do
+        State._setupOtherPlayerBillboard(otherPlayer)
+    end
+end)
+
+Players.PlayerAdded:Connect(function(player)
+    State._setupOtherPlayerBillboard(player)
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+    local connection = State._otherSpeedConnections[player]
+    if connection then pcall(function() connection:Disconnect() end) end
+    State._otherSpeedConnections[player] = nil
+    State._otherSpeedLabels[player] = nil
+end)
+
+task.spawn(function()
+    while gui and gui.Parent do
+        for player, data in pairs(State._otherSpeedLabels) do
+            local label = data and data.label
+            local root = data and data.root
+            local humanoid = data and data.humanoid
+
+            if player.Parent and label and label.Parent and root and root.Parent and humanoid and humanoid.Health > 0 then
+                local velocity = root.AssemblyLinearVelocity
+                local horizontalSpeed = Vector3.new(velocity.X, 0, velocity.Z).Magnitude
+                label.Text = string.format("%.1f", horizontalSpeed)
+                label.Visible = true
+            elseif label and label.Parent then
+                label.Visible = false
+            end
+        end
+        task.wait(0.08)
+    end
+end)
+
+local h,hrp,speedLbl
+local function setupChar(char)
+    task.wait(0.1)
+    h=char:WaitForChild("Humanoid",5)
+    hrp=char:WaitForChild("HumanoidRootPart",5)
+    if not h or not hrp then return end
+
+    restartMovement()
+
+    local head=char:FindFirstChild("Head")
+    if head then
+        local oldBB=head:FindFirstChild("FEARV2MobileBB"); if oldBB then oldBB:Destroy() end
+        local bb=Instance.new("BillboardGui",head); bb.Name="FEARV2MobileBB"
+        bb.Size=UDim2.new(0,160,0,24); bb.StudsOffset=Vector3.new(0,3,0); bb.AlwaysOnTop=true
+        speedLbl=Instance.new("TextLabel",bb); speedLbl.Name="SpeedBillLbl"
+        speedLbl.Size=UDim2.new(0,160,0,24); speedLbl.Position=UDim2.new(0,0,0,0); speedLbl.BackgroundTransparency=1
+        speedLbl.Text="0.0"; speedLbl.TextColor3=Color3.fromRGB(255, 40, 50)
+        speedLbl.Font=Enum.Font.GothamBlack; speedLbl.TextScaled=true
+        speedLbl.TextStrokeTransparency=0; speedLbl.TextStrokeColor3=Color3.fromRGB(0, 0, 0)
+    end
+
+
+    if State.unwalkEnabled then task.wait(0.3); startUnwalk() end
+    stopAntiRagdoll()
+    if State.antiRagdollEnabled then task.wait(0.5); startAntiRagdoll() end
+
+    if State.medusaCounterEnabled then setupMedusaCounter(char) end
+
+    if State.autoBatToggled then stopBatAimbot(); task.wait(0.2); pcall(startBatAimbot) end
+    if State.batCounterEnabled then task.wait(0.3); startBatCounter() end
+    if Steal.AutoStealEnabled then pcall(stopAutoSteal); task.wait(0.5); pcall(startAutoSteal) end
+end
+
+LP.CharacterAdded:Connect(setupChar)
+if LP.Character then task.spawn(function() setupChar(LP.Character) end) end
+
+RunService.Stepped:Connect(function()
+    for _,p in ipairs(Players:GetPlayers()) do
+        if p~=LP and p.Character then
+            for _,part in ipairs(p.Character:GetChildren()) do
+                if part:IsA("BasePart") and part.CanCollide then
+                    part.CanCollide = false
+                end
+            end
+        end
+    end
+end)
+
+UIS.JumpRequest:Connect(function()
+    if not State.infJumpEnabled then return end
+    local c=LP.Character; if not c then return end; local root=c:FindFirstChild("HumanoidRootPart")
+    if root then root.Velocity=Vector3.new(root.Velocity.X,55,root.Velocity.Z) end
+end)
+
+-- ============================================================================
+--  MOVIMIENTO AL ESTILO YSLEM + NEW ERA (ENCAPSULADO Y REINICIO AUTOMÁTICO)
+--  Carry Speed: método de message (3) – spoof AssemblyLinearVelocity + PreSimulation
+-- ============================================================================
+local moveConn = nil
+local speedEnabled = true
+
+-- ── Variables para el sistema Yslem (Normal / Lagger) ────
+local yslemActive = false
+local batV2Active = false
+local _lv = nil
+local _lv_att = nil
+local _ownerWatchConn = nil
+local ownTimer = 0
+local ownInterval = 0.8 + math.random() * 0.4
+
+-- ── Carry Speed (message 3 style) ────────────────────────
+local spoofedVelocity = Vector3.zero
+local carryVelocityConn = nil
+
+-- Hooks de spoof (solo una vez; executor: hookmetamethod / newcclosure / checkcaller)
+pcall(function()
+    if not (hookmetamethod and newcclosure and checkcaller) then return end
+    local oldIndex
+    oldIndex = hookmetamethod(game, "__index", newcclosure(function(self, key)
+        if not checkcaller() and (key == "AssemblyLinearVelocity" or key == "Velocity") then
+            if typeof(self) == "Instance" and self:IsA("BasePart") and self.Name == "HumanoidRootPart" and self:IsDescendantOf(LP.Character) then
+                return spoofedVelocity
+            end
+        end
+        return oldIndex(self, key)
+    end))
+
+    local oldNewIndex
+    oldNewIndex = hookmetamethod(game, "__newindex", newcclosure(function(self, key, value)
+        if not checkcaller() and (key == "AssemblyLinearVelocity" or key == "Velocity") then
+            if typeof(self) == "Instance" and self:IsA("BasePart") and self.Name == "HumanoidRootPart" and self:IsDescendantOf(LP.Character) then
+                spoofedVelocity = value
+                return
+            end
+        end
+        return oldNewIndex(self, key, value)
+    end))
+end)
+
+local function applyCarryVelocitySpeed(speed)
+    if not State.speedToggled or State.laggerToggled then return end
+    if State.autoBatToggled or State.autoLeftEnabled or State.autoRightEnabled or batV2Active then return end
+    if State._tpInProgress then return end
+
+    local char = LP.Character
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    if not char or not hum or not root or hum.Health <= 0 then return end
+
+    local dir = hum.MoveDirection
+    if dir.Magnitude > 0.05 then
+        pcall(function()
+            if root.SetNetworkOwner then root:SetNetworkOwner(LP) end
+        end)
+        local unit = dir.Unit
+        spoofedVelocity = Vector3.new(unit.X * 16, root.AssemblyLinearVelocity.Y, unit.Z * 16)
+        root.AssemblyLinearVelocity = Vector3.new(unit.X * speed, root.AssemblyLinearVelocity.Y, unit.Z * speed)
+        State.lastMoveDir = unit
+    else
+        if State.antiRagdollEnabled and State.lastMoveDir and State.lastMoveDir.Magnitude > 0 then
+            local anyHeld = false
+            for key in pairs(MOVE_KEYS) do
+                if UIS:IsKeyDown(key) then anyHeld = true; break end
+            end
+            if anyHeld then
+                local unit = State.lastMoveDir
+                spoofedVelocity = Vector3.new(unit.X * 16, root.AssemblyLinearVelocity.Y, unit.Z * 16)
+                root.AssemblyLinearVelocity = Vector3.new(unit.X * speed, root.AssemblyLinearVelocity.Y, unit.Z * speed)
+                return
+            end
+        end
+        spoofedVelocity = Vector3.new(0, root.AssemblyLinearVelocity.Y, 0)
+    end
+end
+
+local function startCarryVelocity()
+    if carryVelocityConn then return end
+    carryVelocityConn = RunService.PreSimulation:Connect(function()
+        local spd = getProfileCarrySpeed()
+        applyCarryVelocitySpeed(spd)
+    end)
+end
+
+local function stopCarryVelocity()
+    if carryVelocityConn then
+        pcall(function() carryVelocityConn:Disconnect() end)
+        carryVelocityConn = nil
+    end
+end
+
+local function cleanLV()
+    if _lv then pcall(function() _lv:Destroy() end); _lv = nil end
+    if _lv_att then pcall(function() _lv_att:Destroy() end); _lv_att = nil end
+end
+
+local function setupLV(hrp)
+    cleanLV()
+    local att = Instance.new("Attachment", hrp)
+    att.Name = "_YS_A"
+    local lv = Instance.new("LinearVelocity", hrp)
+    lv.Name = "_YS_LV"
+    lv.Attachment0 = att
+    lv.VelocityConstraintMode = Enum.VelocityConstraintMode.Plane
+    lv.PrimaryTangentAxis = Vector3.new(1, 0, 0)
+    lv.SecondaryTangentAxis = Vector3.new(0, 0, 1)
+    lv.MaxForce = math.huge
+    lv.PlaneVelocity = Vector2.zero
+    lv.RelativeTo = Enum.ActuatorRelativeTo.World
+    _lv_att = att
+    _lv = lv
+end
+
+local function claimOwn(hrp)
+    pcall(function() hrp:SetNetworkOwner(LP) end)
+end
+
+local function startOwnerWatch(hrp)
+    if _ownerWatchConn then pcall(function() _ownerWatchConn:Disconnect() end) end
+    _ownerWatchConn = hrp:GetPropertyChangedSignal("ReceiveAge"):Connect(function()
+        if yslemActive then task.defer(function() claimOwn(hrp) end) end
+    end)
+end
+
+-- Yslem (LinearVelocity) solo para Normal / Lagger; Carry usa el método de message (3)
+local function updateYslemState()
+    local usingCarryMethod = State.speedToggled and not State.laggerToggled
+    local shouldBeActive = speedEnabled
+        and not usingCarryMethod
+        and not State.autoBatToggled
+        and not State.autoLeftEnabled
+        and not State.autoRightEnabled
+        and not batV2Active
+
+    if shouldBeActive == yslemActive then return end
+
+    yslemActive = shouldBeActive
+    if yslemActive then
+        if hrp then
+            setupLV(hrp)
+            claimOwn(hrp)
+            startOwnerWatch(hrp)
+        end
+    else
+        cleanLV()
+        if _ownerWatchConn then pcall(function() _ownerWatchConn:Disconnect() end); _ownerWatchConn = nil end
+    end
+end
+
+local function startMovement()
+    if moveConn then moveConn:Disconnect(); moveConn = nil end
+    moveConn = RunService.RenderStepped:Connect(function()
+        if not (h and hrp) then return end
+        if State._tpInProgress then return end
+
+        updateYslemState()
+
+        -- Asegurar PreSimulation de Carry activo cuando toca
+        if State.speedToggled and not State.laggerToggled then
+            startCarryVelocity()
+        else
+            stopCarryVelocity()
+        end
+
+        pcall(function()
+            if speedLbl then
+                local hspd = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z).Magnitude
+                speedLbl.Text = string.format("%.1f", hspd)
+            end
+        end)
+    end)
+end
+
+local heartbeatConn = nil
+local function startYslemHeartbeat()
+    if heartbeatConn then return end
+    heartbeatConn = RunService.Heartbeat:Connect(function(dt)
+        -- Si Carry está activo (método message 3), no aplicar LinearVelocity
+        if State.speedToggled and not State.laggerToggled then
+            if _lv then _lv.PlaneVelocity = Vector2.zero end
+            return
+        end
+
+        if not yslemActive then
+            if _lv then _lv.PlaneVelocity = Vector2.zero end
+            return
+        end
+
+        if not (h and hrp) then return end
+
+        ownTimer = ownTimer + dt
+        if ownTimer >= ownInterval then
+            claimOwn(hrp)
+            ownTimer = 0
+            ownInterval = 0.8 + math.random() * 0.4
+        end
+
+        if not _lv or _lv.Parent ~= hrp then setupLV(hrp) end
+
+        local md = h.MoveDirection
+        local spd = State.laggerToggled
+            and (laggerPhase == 2 and LS2 or LS)
+            or getProfileNormalSpeed()
+
+        if spd == 0 then
+            _lv.PlaneVelocity = Vector2.zero
+        elseif md.Magnitude > 0 then
+            local dir = md.Unit
+            State.lastMoveDir = dir
+            _lv.PlaneVelocity = Vector2.new(dir.X * spd, dir.Z * spd)
+        elseif State.antiRagdollEnabled and State.lastMoveDir.Magnitude > 0 then
+            local anyHeld = false
+            for key in pairs(MOVE_KEYS) do
+                if UIS:IsKeyDown(key) then anyHeld = true; break end
+            end
+            if anyHeld then
+                local dir = State.lastMoveDir
+                _lv.PlaneVelocity = Vector2.new(dir.X * spd, dir.Z * spd)
+            else
+                _lv.PlaneVelocity = Vector2.zero
+            end
+        else
+            _lv.PlaneVelocity = Vector2.zero
+        end
+    end)
+end
+
+local function stopMovement()
+    if moveConn then moveConn:Disconnect(); moveConn = nil end
+    if heartbeatConn then heartbeatConn:Disconnect(); heartbeatConn = nil end
+    stopCarryVelocity()
+    cleanLV()
+    if _ownerWatchConn then pcall(function() _ownerWatchConn:Disconnect() end); _ownerWatchConn = nil end
+    yslemActive = false
+end
+
+local function restartMovement()
+    stopMovement()
+    startMovement()
+    startYslemHeartbeat()
+    if State.speedToggled and not State.laggerToggled then
+        startCarryVelocity()
+    end
+end
+
+startMovement()
+startYslemHeartbeat()
+if State.speedToggled and not State.laggerToggled then
+    startCarryVelocity()
+end
+
+local oldStartAutoLeft = startAutoLeft
+local oldStopAutoLeft = stopAutoLeft
+startAutoLeft = function()
+    oldStartAutoLeft()
+    restartMovement()
+end
+stopAutoLeft = function()
+    oldStopAutoLeft()
+    restartMovement()
+end
+
+local oldStartAutoRight = startAutoRight
+local oldStopAutoRight = stopAutoRight
+startAutoRight = function()
+    oldStartAutoRight()
+    restartMovement()
+end
+stopAutoRight = function()
+    oldStopAutoRight()
+    restartMovement()
+end
+
+local oldStartBat = startBatAimbot
+local oldStopBat = stopBatAimbot
+startBatAimbot = function()
+    oldStartBat()
+    restartMovement()
+end
+stopBatAimbot = function()
+    oldStopBat()
+    restartMovement()
+end
+
+local oldStartBatV2 = startBatAimbotV2
+local oldStopBatV2 = stopBatAimbotV2
+startBatAimbotV2 = function()
+    batV2Active = true
+    oldStartBatV2()
+    restartMovement()
+end
+stopBatAimbotV2 = function()
+    batV2Active = false
+    oldStopBatV2()
+    restartMovement()
+end
+
+-- ============================================================================
+
+UIS.InputBegan:Connect(function(inp,gp)
+    if _anyKeyListening then return end
+    if gp and string.sub(inp.UserInputType.Name, 1, 7) ~= "Gamepad" then return end
+    local kc=inp.KeyCode; if kc==Enum.KeyCode.Unknown then return end
+    if kbMatch(KB.Speed,kc) then
+        State.laggerToggled = false; laggerPhase = 0
+        State.speedToggled = not State.speedToggled
+        if mobileLaggerSetActive then mobileLaggerSetActive(false) end
+        if modeValLbl then modeValLbl.Text = State.speedToggled and "Carry" or "Normal" end
+    elseif kbMatch(KB.AutoLeft,kc) then
+        State.autoLeftEnabled=not State.autoLeftEnabled
+        if State.autoLeftEnabled and State.autoBatToggled then State.autoBatToggled=false; stopBatAimbot(); if autoBatSetVisual then autoBatSetVisual(false) end end
+        if State.autoLeftEnabled and State.tpBatEnabled then State._setTPBatEnabled(false) end
+        if State.autoLeftEnabled then startAutoLeft() else stopAutoLeft() end
+        if autoLeftSetVisual then autoLeftSetVisual(State.autoLeftEnabled) end
+    elseif kbMatch(KB.AutoRight,kc) then
+        State.autoRightEnabled=not State.autoRightEnabled
+        if State.autoRightEnabled and State.autoBatToggled then State.autoBatToggled=false; stopBatAimbot(); if autoBatSetVisual then autoBatSetVisual(false) end end
+        if State.autoRightEnabled and State.tpBatEnabled then State._setTPBatEnabled(false) end
+        if State.autoRightEnabled then startAutoRight() else stopAutoRight() end
+        if autoRightSetVisual then autoRightSetVisual(State.autoRightEnabled) end
+    elseif kbMatch(KB.Drop,kc) then
+        if not State.dropActive then State._manualDropRequest = true; task.spawn(runDrop) end
+    elseif kbMatch(KB.TPDown,kc) then
+        task.spawn(doTpDown)
+    elseif kbMatch(KB.Lagger,kc) then
+        if laggerPhase == 1 then
+            laggerPhase = 2; State.laggerToggled = true; State.speedToggled = false
+            if mobileLaggerSetActive then mobileLaggerSetActive(true) end
+            if modeValLbl then modeValLbl.Text = "Lagger 2" end
+        else
+            laggerPhase = 1; State.laggerToggled = true; State.speedToggled = false
+            if mobileSpeedSetActive then mobileSpeedSetActive(false) end
+            if mobileLaggerSetActive then mobileLaggerSetActive(true) end
+            if modeValLbl then modeValLbl.Text = "Lagger 1" end
+        end
+    elseif kbMatch(KB.AutoBat,kc) then
+        State.autoBatToggled=not State.autoBatToggled
+        if State.autoBatToggled then
+            if State.autoLeftEnabled then State.autoLeftEnabled=false; stopAutoLeft(); if autoLeftSetVisual then autoLeftSetVisual(false) end end
+            if State.autoRightEnabled then State.autoRightEnabled=false; stopAutoRight(); if autoRightSetVisual then autoRightSetVisual(false) end end
+            if State.tpBatEnabled then State._setTPBatEnabled(false) end
+            pcall(startBatAimbot)
+        else stopBatAimbot() end
+        if autoBatSetVisual then autoBatSetVisual(State.autoBatToggled) end
+    elseif kbMatch(KB.AutoBatV2,kc) then
+        State.autoBatV2Enabled = not State.autoBatV2Enabled
+        if State.autoBatV2Enabled then
+            if State.autoLeftEnabled then State.autoLeftEnabled=false; stopAutoLeft(); if autoLeftSetVisual then autoLeftSetVisual(false) end end
+            if State.autoRightEnabled then State.autoRightEnabled=false; stopAutoRight(); if autoRightSetVisual then autoRightSetVisual(false) end end
+            if State.autoBatToggled then State.autoBatToggled=false; stopBatAimbot(); if autoBatSetVisual then autoBatSetVisual(false) end end
+            if State.tpBatEnabled then State._setTPBatEnabled(false) end
+            if startBatAimbotV2 then startBatAimbotV2() end
+        else
+            if stopBatAimbotV2 then stopBatAimbotV2() end
+        end
+        if autoBatV2SetVisual then autoBatV2SetVisual(State.autoBatV2Enabled) end
+    elseif kbMatch(KB.TPBat,kc) then
+        State._setTPBatEnabled(not State.tpBatEnabled)
+        if State._tpBatSetVisual then State._tpBatSetVisual(State.tpBatEnabled) end
+    elseif kbMatch(KB.InstaReset,kc) then
+        task.spawn(cursedInstaReset)
+        if btnInstaReset and btnInstaReset.Parent then
+            btnInstaReset:SetAttribute("PurpleFlash", true)
+            task.delay(0.35, function() if btnInstaReset and btnInstaReset.Parent then btnInstaReset:SetAttribute("PurpleFlash", false) end end)
+        end
+        if setInstaToggleVisual then
+            setInstaToggleVisual(true)
+            task.delay(0.2, function() if setInstaToggleVisual then setInstaToggleVisual(false) end end)
+        end
+    elseif kbMatch(KB.GuiHide,kc) then
+        State.guiVisible=not State.guiVisible
+        pcall(function() main.Visible=State.guiVisible end)
+        pcall(function() mini.Visible=not State.guiVisible end)
+    elseif (KB.MusicPC and kbMatch(KB.MusicPC,kc)) or (KB.MusicPad and kbMatch(KB.MusicPad,kc)) then
+        pcall(function()
+            if _G.NIGHT_musicCycle then _G.NIGHT_musicCycle() end
+        end)
+        if State.requestConfigSave then State.requestConfigSave() end
+    elseif KB.Taunt and kbMatch(KB.Taunt,kc) then
+        pcall(function()
+            local btn = mobileButtonsByName and mobileButtonsByName["Taunt"]
+            if btn then btn:Activate() end
+        end)
+    end
+
+    if State.requestConfigSave then State.requestConfigSave() end
+end)
+
+loadPresetsFile()
+
+task.spawn(function()
+    local lastPresetName = loadLastPresetName()
+    if lastPresetName and lastPresetName ~= "" then
+        for _, preset in ipairs(Presets) do
+            if preset.name == lastPresetName then
+                pcall(function() applyPreset(preset.data) end)
+                break
+            end
+        end
+    end
+
+    task.wait(0.2)
+    local loaded = loadConfig()
+
+    -- Ya no forzamos la barra arriba: se puede mover y se guarda la posición.
+    -- Si no hay posición guardada, queda en el centro superior por defecto.
+
+    task.wait(0.5)
+    if not loaded and State._allowInitialConfigCreation then
+        pcall(saveConfig)
+    end
+end)
+
+Players.LocalPlayer.AncestryChanged:Connect(function(_, parent)
+    if parent == nil and State._configLoaded and not State._configLoadFailed then
+        if State._configDirty then pcall(saveConfig) end
+        if State._positionDirty and State.savePositionBackup then
+            pcall(State.savePositionBackup)
+        end
+    end
+end)
+
+pcall(function()
+    game:BindToClose(function()
+        if State._configLoaded and not State._configLoadFailed then
+            if State._configDirty then pcall(saveConfig) end
+            if State._positionDirty and State.savePositionBackup then
+                pcall(State.savePositionBackup)
+            end
+        end
+    end)
+end)
+
+-- ============================================================
+--  AUTO CARRY – Monitoreo de velocidad (20-25) con condición de Lagger
+-- ============================================================
+task.spawn(function()
+    while gui and gui.Parent do
+        task.wait(0.5)
+        if State.autoCarryEnabled and not State.laggerToggled then
+            local char = LP.Character
+            if char then
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum then
+                    local ws = hum.WalkSpeed
+                    if ws >= 20 and ws <= 25 and not State.speedToggled then
+                        State.speedToggled = true
+                        if mobileSpeedSetActive then mobileSpeedSetActive(true) end
+                        if modeValLbl then
+                            modeValLbl.Text = State.speedProfile == "Lagger" and ("Carry · " .. tostring(State.profileLaggerCarrySpeed)) or "Carry"
+                        end
+                    end
+                end
+            end
+        end
+    end
+end)
+
+-- ===== NUEVAS CASILLAS PARA VELOCIDAD DE BAT V1 Y V2 =====
+local batV1SpeedBox = rowInput("Bat Aimbot", "Bat V1 Speed", "Velocidad de persecución", State.batV1Speed, function(v)
+	if v > 0 and v <= 500 then
+		State.batV1Speed = v
+		if State.requestConfigSave then State.requestConfigSave() end
+	end
+end)
+
+local batV2SpeedBox = rowInput("Bat Aimbot", "Bat V2 Speed", "Velocidad de persecución", State.batV2Speed, function(v)
+	if v > 0 and v <= 500 then
+		State.batV2Speed = v
+		if State.requestConfigSave then State.requestConfigSave() end
+	end
+end)
+
+print("[🌀 Elite_Hub] Loaded con Auto Carry, Lagger y Velocidades de Bat configurables!")
+
+end)()
+end)()
