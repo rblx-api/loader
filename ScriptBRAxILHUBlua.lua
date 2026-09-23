@@ -19,9 +19,6 @@ local player = Players.LocalPlayer
 
 -- ============================================================
 -- WHITE MOVING SHADOW SYSTEM
--- Sombra blanca DENTRO de los botones que recorre desde
--- el borde SUPERIOR-IZQUIERDO hasta el INFERIOR-IZQUIERDO
--- en 1.30 segundos. Todos los botones sincronizados.
 -- ============================================================
 local _whiteShadows = {}
 local _shadowStartTime = tick()
@@ -596,21 +593,88 @@ task.spawn(function()
         if desc:IsA("RemoteEvent") and desc.Name:sub(1,3)=="RE/" then cursedResetRemote=desc;break end
     end
 end)
-cursedInstaReset=function()
-    if not cursedResetRemote then
-        for _,desc in ipairs(game:GetDescendants()) do if desc:IsA("RemoteEvent") and desc.Name:sub(1,3)=="RE/" then cursedResetRemote=desc;break end end
+
+-- ============================================================
+-- BRAxIL HUB — INSTANT RESET
+-- ============================================================
+local braxilResetCooldown = false
+local BRAXIL_HUB_RESET_GUID = "f888ee6e-c86d-46e1-93d7-0639d6635d42"
+
+local function findBraxilResetRemote()
+    for _, desc in ipairs(game:GetDescendants()) do
+        if desc:IsA("RemoteEvent") and desc.Name:sub(1,3) == "RE/" then
+            cursedResetRemote = desc
+            return true
+        end
     end
-    if not cursedResetRemote then return end
-    local character=LP.Character;local humanoid=character and character:FindFirstChildOfClass("Humanoid")
-    if humanoid and humanoid.Health<=0 then pcall(function() cursedResetRemote:FireServer(CURSED_RESET_GUID,LP,"balloon") end);return end
-    local resetDetected=false;local conns={}
-    if humanoid then table.insert(conns,humanoid.Died:Connect(function() resetDetected=true end)) end
-    if character then table.insert(conns,character.AncestryChanged:Connect(function(_,parent) if not parent then resetDetected=true end end)) end
-    task.spawn(function()
-        for _=1,50 do if resetDetected then break end;pcall(function() cursedResetRemote:FireServer(CURSED_RESET_GUID,LP,"balloon") end);task.wait() end
-        for _,conn in ipairs(conns) do pcall(function() conn:Disconnect() end) end
-    end)
+    return false
 end
+
+cursedInstaReset = function()
+    if braxilResetCooldown then return end
+    braxilResetCooldown = true
+
+    if not cursedResetRemote then findBraxilResetRemote() end
+    if not cursedResetRemote then
+        for _, desc in ipairs(game:GetDescendants()) do
+            if desc:IsA("RemoteEvent") and desc.Name:sub(1,3) == "RE/" then
+                cursedResetRemote = desc
+                break
+            end
+        end
+    end
+
+    if cursedResetRemote then
+        local character = LP.Character
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+
+        if humanoid and humanoid.Health <= 0 then
+            pcall(function()
+                cursedResetRemote:FireServer(BRAXIL_HUB_RESET_GUID, LP, "balloon")
+            end)
+            task.delay(0.3, function() braxilResetCooldown = false end)
+            return
+        end
+
+        local resetDetected = false
+        local conns = {}
+
+        if humanoid then
+            table.insert(conns, humanoid.Died:Connect(function() resetDetected = true end))
+            table.insert(conns, humanoid:GetPropertyChangedSignal("Health"):Connect(function()
+                if humanoid.Health <= 0 then resetDetected = true end
+            end))
+        end
+
+        if character then
+            table.insert(conns, character.AncestryChanged:Connect(function(_, parent)
+                if not parent then resetDetected = true end
+            end))
+        end
+
+        task.spawn(function()
+            for i = 1, 50 do
+                if resetDetected then break end
+                pcall(function()
+                    cursedResetRemote:FireServer(BRAXIL_HUB_RESET_GUID, LP, "balloon")
+                end)
+                task.wait()
+            end
+            for _, conn in ipairs(conns) do
+                pcall(function() conn:Disconnect() end)
+            end
+            task.delay(0.3, function() braxilResetCooldown = false end)
+        end)
+    else
+        local char = LP.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if hum then hum.Health = 0 end
+        task.delay(0.3, function() braxilResetCooldown = false end)
+    end
+end
+-- ============================================================
+-- FIN BRAxIL HUB — INSTANT RESET
+-- ============================================================
 
 local KB={DropBrainrot={kb=nil,gp=nil},AutoLeft={kb=nil,gp=nil},AutoRight={kb=nil,gp=nil},AutoBat={kb=nil,gp=nil},TPFloor={kb=nil,gp=nil},InstaReset={kb=nil,gp=nil},GuiHide={kb=nil,gp=nil},SpeedToggle={kb=nil,gp=nil},LaggerToggle={kb=nil,gp=nil}}
 local AP_L1,AP_L2=Vector3.new(-476.47,-6.28,92.73),Vector3.new(-483.12,-4.95,94.81)
@@ -1322,41 +1386,159 @@ function BRAXIL.closestRoot()
     end
     return best,dist
 end
-function BRAXIL.tpHit()
-    if BRAXIL.hitCD then return end
-    BRAXIL.hitCD=true
+
+-- ============================================================
+-- BRAXIL HUB TP BAT (reemplaza la función anterior)
+-- ============================================================
+local TPBat = {
+    enabled = false,
+    hittingCooldown = false,
+    HRP = nil,
+    H = nil,
+    heartbeatConn = nil,
+    renderConn = nil,
+    charAddedConn = nil,
+}
+
+local function tpBatGetBatTool()
+    local char = LP.Character
+    if not char then return nil end
+    local bat = char:FindFirstChild("Bat")
+    if bat then return bat end
+    local backpack = LP:FindFirstChild("Backpack")
+    if backpack then
+        bat = backpack:FindFirstChild("Bat")
+        if bat then
+            bat.Parent = char
+            return bat
+        end
+    end
+    return nil
+end
+
+local function tpBatTryHit()
+    if TPBat.hittingCooldown then return end
+    TPBat.hittingCooldown = true
     pcall(function()
-        local bat=BRAXIL.findBat()
+        local bat = tpBatGetBatTool()
         if bat then
             bat:Activate()
-            local ev=bat:FindFirstChildWhichIsA("RemoteEvent")
-            if ev then ev:FireServer() end
+            local remoteEvent = bat:FindFirstChildWhichIsA("RemoteEvent")
+            if remoteEvent then remoteEvent:FireServer() end
+            local remoteFunction = bat:FindFirstChildWhichIsA("RemoteFunction")
+            if remoteFunction then pcall(function() remoteFunction:InvokeServer() end) end
         end
     end)
-    task.delay(0.08,function() BRAXIL.hitCD=false end)
+    task.delay(0.08, function() TPBat.hittingCooldown = false end)
 end
+
+local function tpBatGetClosestPlayer()
+    if not TPBat.HRP then return nil, math.huge end
+    local closest, closestDist = nil, math.huge
+    for _, p in pairs(Players:GetPlayers()) do
+        if p ~= LP and p.Character then
+            local targetRoot = p.Character:FindFirstChild("HumanoidRootPart")
+            if targetRoot then
+                local dist = (TPBat.HRP.Position - targetRoot.Position).Magnitude
+                if dist < closestDist then
+                    closestDist = dist
+                    closest = p
+                end
+            end
+        end
+    end
+    return closest, closestDist
+end
+
+local function tpBatUpdateRefs()
+    local char = LP.Character
+    if char then
+        TPBat.H = char:FindFirstChildOfClass("Humanoid")
+        TPBat.HRP = char:FindFirstChild("HumanoidRootPart")
+    end
+end
+
+local function tpBatHeartbeatLoop()
+    if not TPBat.enabled then return end
+    if not TPBat.H or not TPBat.HRP or not TPBat.H.Parent or not TPBat.HRP.Parent then
+        tpBatUpdateRefs()
+        if not TPBat.H or not TPBat.HRP then return end
+    end
+    local target = tpBatGetClosestPlayer()
+    if target and target.Character then
+        local targetRoot = target.Character:FindFirstChild("HumanoidRootPart")
+        if targetRoot then
+            if sethiddenproperty then
+                pcall(function() sethiddenproperty(TPBat.HRP, "PhysicsRepRootPart", targetRoot) end)
+            end
+            local targetPosition = targetRoot.Position + Vector3.new(0, 0.9, 0)
+            if (TPBat.HRP.Position - targetPosition).Magnitude > 5 then
+                TPBat.HRP.CFrame = CFrame.new(targetPosition)
+            end
+            local camera = workspace.CurrentCamera
+            if camera then
+                camera.CFrame = CFrame.new(camera.CFrame.Position, targetRoot.Position)
+            end
+            tpBatTryHit()
+        end
+    end
+end
+
+local function tpBatRenderLoop()
+    if not TPBat.enabled then return end
+    if not TPBat.H or not TPBat.HRP or not TPBat.H.Parent or not TPBat.HRP.Parent then
+        tpBatUpdateRefs()
+        if not TPBat.H or not TPBat.HRP then return end
+    end
+    local target = tpBatGetClosestPlayer()
+    if target and target.Character then
+        local targetRoot = target.Character:FindFirstChild("HumanoidRootPart")
+        if targetRoot then
+            local camera = workspace.CurrentCamera
+            if camera then
+                camera.CFrame = CFrame.new(camera.CFrame.Position, targetRoot.Position)
+            end
+            tpBatTryHit()
+        end
+    end
+end
+
 function BRAXIL.startTPBat()
-    if BRAXIL.tpConn then return end
-    BRAXIL.tpBat=true
-    BRAXIL.tpConn=RunService.Heartbeat:Connect(function()
-        if not BRAXIL.tpBat then return end
-        local char=LP.Character; if not char then return end
-        local hrp=char:FindFirstChild("HumanoidRootPart"); if not hrp then return end
-        local tr=BRAXIL.closestRoot()
-        if tr then
-            if sethiddenproperty then pcall(function() sethiddenproperty(hrp,"PhysicsRepRootPart",tr) end) end
-            local targetPos=tr.Position+Vector3.new(0,0.9,0)
-            if (hrp.Position-targetPos).Magnitude>8 then hrp.CFrame=CFrame.new(targetPos) end
-            local cam=workspace.CurrentCamera
-            if cam then cam.CFrame=CFrame.new(cam.CFrame.Position,tr.Position) end
-            BRAXIL.tpHit()
+    if TPBat.enabled then return end
+    TPBat.enabled = true
+    BRAXIL.tpBat = true
+    tpBatUpdateRefs()
+    if TPBat.heartbeatConn then TPBat.heartbeatConn:Disconnect() end
+    if TPBat.renderConn then TPBat.renderConn:Disconnect() end
+    TPBat.heartbeatConn = RunService.Heartbeat:Connect(tpBatHeartbeatLoop)
+    TPBat.renderConn = RunService.RenderStepped:Connect(tpBatRenderLoop)
+    if TPBat.charAddedConn then TPBat.charAddedConn:Disconnect() end
+    TPBat.charAddedConn = LP.CharacterAdded:Connect(function()
+        task.wait(0.2)
+        tpBatUpdateRefs()
+    end)
+    print("BRAxIL HUB TP Bat activado")
+end
+
+function BRAXIL.stopTPBat()
+    if not TPBat.enabled then return end
+    TPBat.enabled = false
+    BRAXIL.tpBat = false
+    if TPBat.heartbeatConn then TPBat.heartbeatConn:Disconnect(); TPBat.heartbeatConn = nil end
+    if TPBat.renderConn then TPBat.renderConn:Disconnect(); TPBat.renderConn = nil end
+    if TPBat.charAddedConn then TPBat.charAddedConn:Disconnect(); TPBat.charAddedConn = nil end
+    pcall(function()
+        local camera = workspace.CurrentCamera
+        if camera then
+            camera.CFrame = CFrame.new(camera.CFrame.Position, Vector3.zero)
         end
     end)
+    print("BRAxIL HUB TP Bat desactivado")
 end
-function BRAXIL.stopTPBat()
-    if BRAXIL.tpConn then BRAXIL.tpConn:Disconnect();BRAXIL.tpConn=nil end
-    BRAXIL.tpBat=false
-end
+-- ============================================================
+-- FIN BRAXIL HUB TP BAT
+-- ============================================================
+
 function BRAXIL.v2Swing()
     if BRAXIL.v2CD then return end
     BRAXIL.v2CD=true
@@ -1588,7 +1770,6 @@ local function buildMobileButtons()
             end
         end)
 
-        -- Sombra blanca animada en cada botón
         registerWhiteShadow(frame, 10)
 
         return frame, setter
@@ -1666,7 +1847,7 @@ local function buildMobileButtons()
     end)
     mobBtnRefs["lagger"] = refLagger
 
-    local _, refReset = makeMobileBtn("instaReset", "INSTA\nRESET", 0, 0, false, function() cursedInstaReset() end)
+    local _, refReset = makeMobileBtn("instaReset", "BRAxIL\nHUB", 0, 0, false, function() cursedInstaReset() end)
     mobBtnRefs["instaReset"] = refReset
 
     initialBtnPositions = {
@@ -1933,8 +2114,9 @@ _GuiKeys = Keys
     HSep.Position=UDim2.new(0,14,0,62); HSep.Size=UDim2.new(1,-28,0,1); HSep.BackgroundColor3=C.blue
     HSep.BackgroundTransparency=0.7; HSep.BorderSizePixel=0; HSep.Parent=Inner; HSep.ZIndex=2
 
+    -- ✅ CAMBIO 1: LeftPanel ahora en el lado IZQUIERDO
     LeftPanel=Instance.new("Frame")
-    LeftPanel.Name="LeftPanel"; LeftPanel.Size=UDim2.new(0,85,1,-118); LeftPanel.Position=UDim2.new(1,-85,0,63)
+    LeftPanel.Name="LeftPanel"; LeftPanel.Size=UDim2.new(0,85,1,-118); LeftPanel.Position=UDim2.new(0,0,0,63)
     LeftPanel.BackgroundColor3=C.bgDark; LeftPanel.BackgroundTransparency=0.5; LeftPanel.BorderSizePixel=0
     LeftPanel.Parent=Inner; guiCorner(LeftPanel,12); LeftPanel.ZIndex=2
 
@@ -1948,8 +2130,9 @@ _GuiKeys = Keys
     CatPad.PaddingTop=UDim.new(0,10); CatPad.PaddingBottom=UDim.new(0,10); CatPad.Parent=CatList
     GuiRefs.categoryList=CatList
 
+    -- ✅ CAMBIO 2: ContentFrame ahora a la DERECHA del panel de categorías
     local CF=Instance.new("ScrollingFrame")
-    CF.Name="ContentFrame"; CF.Size=UDim2.new(1,-95,1,-118); CF.Position=UDim2.new(0,0,0,63)
+    CF.Name="ContentFrame"; CF.Size=UDim2.new(1,-95,1,-118); CF.Position=UDim2.new(0,95,0,63)
     CF.BackgroundTransparency=1; CF.BorderSizePixel=0
     CF.ScrollBarThickness=8
     CF.ScrollBarImageColor3=Color3.fromRGB(255,255,255)
@@ -2077,6 +2260,7 @@ local function addCycleRow(parent,label,value,order,onCycle)
     return Row,CB
 end
 
+-- ✅ ORDEN: Speed → Combat → Steal → Movement → Visual
 local Categories={"Speed","Combat","Steal","Movement","Visual"}
 local CategoryRefs={contents={},btnsSide={},active="Speed"}
 ;(function()
@@ -2166,8 +2350,8 @@ end)()
         saveConfig()
     end)
     BRAXIL.setAntiKickVisual=svAntiKick
-    addSectLbl(cp,"TP BAT / BAT V2",15)
-    local _,svTPBat=addToggleRow(cp,"TP Bat",BRAXIL.tpBat,16,nil,function(on)
+    addSectLbl(cp,"BRAXIL HUB TP BAT / BAT V2",15)
+    local _,svTPBat=addToggleRow(cp,"TP Bat (BRAxIL HUB)",BRAXIL.tpBat,16,nil,function(on)
         if on then BRAXIL.startTPBat() else BRAXIL.stopTPBat() end
         if mobBtnRefs.tpBat then mobBtnRefs.tpBat(on) end
     end)
@@ -2179,7 +2363,7 @@ end)()
     BRAXIL.setBatV2Visual=svBatV2
     addSectLbl(cp,"ACTIONS",9)
     addActionRow(cp,"Drop Brainrot","dropBrainrot",function() runDrop() end,10)
-    addActionRow(cp,"Insta Reset","instaReset",function() cursedInstaReset() end,11)
+    addActionRow(cp,"BRAxIL HUB","instaReset",function() cursedInstaReset() end,11)
     addActionRow(cp,"TP Down","tpDown",function() runTPFloor() end,12)
 end)()
 
