@@ -1,11 +1,11 @@
--- ONLY HUB
+-- Bless Ping Lagger + Auto Brainrot
 -- PC + Controller keybind | Customizable | Auto-save | Auto Brainrot Detection
 
 local UserInputService = game:GetService("UserInputService")
 local TweenService     = game:GetService("TweenService")
 local HttpService      = game:GetService("HttpService")
 local Players          = game:GetService("Players")
-local RunService       = game:GetService("RunService")
+local RunService       = game:GetService("RunService") -- new
 
 local plr              = Players.LocalPlayer
 local plrGui           = plr:WaitForChild("PlayerGui")
@@ -13,14 +13,14 @@ local plrGui           = plr:WaitForChild("PlayerGui")
 -- ══════════════════════════════════════════════════════════════════════
 -- CONFIG & SAVE
 -- ══════════════════════════════════════════════════════════════════════
-local CONFIG_FILE = "OnlyHub_Config.json"
+local CONFIG_FILE = "BlessPingLagger_Config.json"
 
 local DEFAULT_CFG = {
     power         = 100000,
     interval      = 0.125,
     keybindKb     = "F",
     keybindGp     = "ButtonR2",
-    autoBrainrot  = true,
+    autoBrainrot  = true,   -- new
 }
 
 local cfg = {
@@ -63,45 +63,45 @@ local listeningFor     = nil
 local remote           = nil
 local brainrotMode     = false
 local lastBrainrotState = false
-local manualOverride   = false
+local manualOverride   = false -- true when user manually turned it off while holding brainrot
 
 -- ══════════════════════════════════════════════════════════════════════
--- COLOURS  (TEMA BLANCO - ONLY HUB)
+-- COLOURS
 -- ══════════════════════════════════════════════════════════════════════
 local C = {
-    bg      = Color3.fromRGB(255,255,255),
-    panel   = Color3.fromRGB(245,245,245),
-    card    = Color3.fromRGB(230,230,230),
-    purple1 = Color3.fromRGB(255,255,255),
-    purple2 = Color3.fromRGB(235,235,235),
-    purple3 = Color3.fromRGB(30,30,30),
-    glow    = Color3.fromRGB(255,0,0),
-    white   = Color3.fromRGB(0,0,0),
-    dim     = Color3.fromRGB(90,90,90),
-    green   = Color3.fromRGB(0,170,90),
-    yellow  = Color3.fromRGB(200,150,0),
-    red     = Color3.fromRGB(220,40,60),
-    waiting = Color3.fromRGB(255,140,0),
-    inputBg = Color3.fromRGB(255,255,255),
+    bg      = Color3.fromRGB(5,   5,   5),
+    panel   = Color3.fromRGB(10,  10,  10),
+    card    = Color3.fromRGB(18,  18,  18),
+    purple1 = Color3.fromRGB(150,  0,   0),
+    purple2 = Color3.fromRGB(210, 15,  15),
+    purple3 = Color3.fromRGB(255, 70,  70),
+    glow    = Color3.fromRGB(105,  0,   0),
+    white   = Color3.fromRGB(245,245,245),
+    dim     = Color3.fromRGB(155,135,135),
+    green   = Color3.fromRGB(255, 55,  55),
+    yellow  = Color3.fromRGB(255,120, 80),
+    red     = Color3.fromRGB(255, 65,  65),
+    waiting = Color3.fromRGB(255,110, 70),
+    inputBg = Color3.fromRGB(12,  12,  12),
 }
 
 local T = {
-    bg      = 0.05,
-    panel   = 0.05,
-    card    = 0.10,
-    header  = 0.05,
-    inputBg = 0.00,
+    bg      = 0.35,
+    panel   = 0.30,
+    card    = 0.28,
+    header  = 0.12,
+    inputBg = 0.20,
 }
 
 -- ══════════════════════════════════════════════════════════════════════
 -- DESTROY OLD GUI
 -- ══════════════════════════════════════════════════════════════════════
 for _, kid in pairs(plrGui:GetChildren()) do
-    if kid.Name == "OnlyHubGui" then kid:Destroy() end
+    if kid.Name == "BlessPingLaggerGui" then kid:Destroy() end
 end
 
 local screen = Instance.new("ScreenGui")
-screen.Name         = "OnlyHubGui"
+screen.Name         = "BlessPingLaggerGui"
 screen.ResetOnSpawn = false
 screen.DisplayOrder = 15
 screen.Parent       = plrGui
@@ -174,10 +174,10 @@ mainFrame.Active           = true
 mainFrame.ClipsDescendants = false
 mainFrame.Parent           = screen
 Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 12)
-applyGradient(mainFrame, C.bg, Color3.fromRGB(230,230,230), 160)
+applyGradient(mainFrame, C.bg, Color3.fromRGB(24,0,0), 160)
 
 local mainStroke = Instance.new("UIStroke", mainFrame)
-mainStroke.Color        = C.glow
+mainStroke.Color        = C.purple1
 mainStroke.Thickness    = 1.5
 mainStroke.Transparency = 0.35
 
@@ -206,7 +206,7 @@ local titleLbl = Instance.new("TextLabel", header)
 titleLbl.Size               = UDim2.new(1,-70,1,0)
 titleLbl.Position           = UDim2.new(0,10,0,0)
 titleLbl.BackgroundTransparency = 1
-titleLbl.Text               = "ONLY HUB"
+titleLbl.Text               = "BLESS PING LAGGER"
 titleLbl.TextColor3         = C.white
 titleLbl.Font               = Enum.Font.GothamBlack
 titleLbl.TextSize           = 9
@@ -217,7 +217,7 @@ titleLbl.ZIndex             = 3
 local statusPill = Instance.new("Frame", header)
 statusPill.Size             = UDim2.new(0,40,0,16)
 statusPill.Position         = UDim2.new(1,-82,0.5,-8)
-statusPill.BackgroundColor3 = Color3.fromRGB(240,240,240)
+statusPill.BackgroundColor3 = Color3.fromRGB(30,0,0)
 statusPill.BackgroundTransparency = 0.15
 statusPill.BorderSizePixel  = 0
 statusPill.ZIndex           = 3
@@ -236,7 +236,7 @@ statusLbl.ZIndex            = 4
 local settingsEmojiBtn = Instance.new("TextButton", header)
 settingsEmojiBtn.Size             = UDim2.new(0,24,0,24)
 settingsEmojiBtn.Position         = UDim2.new(1,-28,0.5,-12)
-settingsEmojiBtn.BackgroundColor3 = Color3.fromRGB(240,240,240)
+settingsEmojiBtn.BackgroundColor3 = Color3.fromRGB(30,0,0)
 settingsEmojiBtn.BackgroundTransparency = 0.15
 settingsEmojiBtn.BorderSizePixel  = 0
 settingsEmojiBtn.AutoButtonColor  = false
@@ -250,7 +250,7 @@ settingsEmojiBtn.MouseEnter:Connect(function()
     tw(settingsEmojiBtn,{BackgroundColor3=C.purple1},0.1) 
 end)
 settingsEmojiBtn.MouseLeave:Connect(function() 
-    tw(settingsEmojiBtn,{BackgroundColor3=Color3.fromRGB(240,240,240)},0.1) 
+    tw(settingsEmojiBtn,{BackgroundColor3=Color3.fromRGB(30,0,0)},0.1) 
 end)
 
 -- Activate button
@@ -267,7 +267,7 @@ Instance.new("UICorner", activateBtn).CornerRadius = UDim.new(0,8)
 local activateGrad = applyGradient(activateBtn, C.purple1, C.purple2, 135)
 
 local activateStroke = Instance.new("UIStroke", activateBtn)
-activateStroke.Color        = Color3.fromRGB(255,0,0)
+activateStroke.Color        = C.purple3
 activateStroke.Thickness    = 1.2
 activateStroke.Transparency = 0.4
 
@@ -281,9 +281,9 @@ activateLbl.TextSize        = 11
 activateLbl.ZIndex          = 5
 
 -- ══════════════════════════════════════════════════════════════════════
--- SETTINGS PANEL
+-- SETTINGS PANEL (with Auto Brainrot toggle)
 -- ══════════════════════════════════════════════════════════════════════
-local SET_W, SET_H = 220, 340
+local SET_W, SET_H = 220, 340  -- increased height for new row
 
 local settingsFrame = Instance.new("Frame")
 settingsFrame.Name             = "SettingsPanel"
@@ -298,7 +298,7 @@ settingsFrame.Visible          = false
 settingsFrame.ZIndex           = 20
 settingsFrame.Parent           = screen
 Instance.new("UICorner", settingsFrame).CornerRadius = UDim.new(0,12)
-applyGradient(settingsFrame, C.panel, Color3.fromRGB(220,220,220), 160)
+applyGradient(settingsFrame, C.panel, Color3.fromRGB(16,0,0), 160)
 
 local setStroke = Instance.new("UIStroke", settingsFrame)
 setStroke.Color        = C.glow
@@ -315,7 +315,7 @@ setHeader.BackgroundTransparency = T.header
 setHeader.BorderSizePixel  = 0
 setHeader.ZIndex           = 21
 Instance.new("UICorner", setHeader).CornerRadius = UDim.new(0,12)
-applyGradient(setHeader, C.glow, Color3.fromRGB(200,0,0), 135)
+applyGradient(setHeader, C.glow, C.purple1, 135)
 
 local setHeaderFill = Instance.new("Frame", settingsFrame)
 setHeaderFill.Size             = UDim2.new(1,0,0,8)
@@ -324,14 +324,14 @@ setHeaderFill.BackgroundColor3 = C.glow
 setHeaderFill.BackgroundTransparency = T.header
 setHeaderFill.BorderSizePixel  = 0
 setHeaderFill.ZIndex           = 21
-applyGradient(setHeaderFill, C.glow, Color3.fromRGB(200,0,0), 135)
+applyGradient(setHeaderFill, C.glow, C.purple1, 135)
 
 local setTitle = Instance.new("TextLabel", setHeader)
 setTitle.Size               = UDim2.new(1,-80,1,0)
 setTitle.Position           = UDim2.new(0,10,0,0)
 setTitle.BackgroundTransparency = 1
 setTitle.Text               = "Settings"
-setTitle.TextColor3         = Color3.fromRGB(255,255,255)
+setTitle.TextColor3         = C.white
 setTitle.Font               = Enum.Font.GothamBlack
 setTitle.TextSize           = 11
 setTitle.TextXAlignment     = Enum.TextXAlignment.Left
@@ -340,7 +340,7 @@ setTitle.ZIndex             = 22
 local setCloseBtn = Instance.new("TextButton", setHeader)
 setCloseBtn.Size             = UDim2.new(0,24,0,24)
 setCloseBtn.Position         = UDim2.new(1,-28,0.5,-12)
-setCloseBtn.BackgroundColor3 = Color3.fromRGB(240,240,240)
+setCloseBtn.BackgroundColor3 = Color3.fromRGB(30,0,0)
 setCloseBtn.BackgroundTransparency = 0.15
 setCloseBtn.BorderSizePixel  = 0
 setCloseBtn.AutoButtonColor  = false
@@ -351,52 +351,7 @@ setCloseBtn.TextSize         = 11
 setCloseBtn.ZIndex           = 23
 Instance.new("UICorner", setCloseBtn).CornerRadius = UDim.new(0,6)
 setCloseBtn.MouseEnter:Connect(function() tw(setCloseBtn,{BackgroundColor3=C.red},0.1) end)
-setCloseBtn.MouseLeave:Connect(function() tw(setCloseBtn,{BackgroundColor3=Color3.fromRGB(240,240,240)},0.1) end)
-
--- ── ONLY HUB TOP orbit decorations ─────────────
-local fh2Container = Instance.new("Frame", screen)
-fh2Container.Name = "OnlyHubTop_Orbit"
-fh2Container.Size = UDim2.new(1,0,1,0)
-fh2Container.Position = UDim2.new(0,0,0,0)
-fh2Container.BackgroundTransparency = 1
-fh2Container.BorderSizePixel = 0
-fh2Container.ClipsDescendants = false
-fh2Container.ZIndex = 14
-
-local function addOnlyHubTopOrbit(angleOffset, radiusX, radiusY, speed)
-    local lbl = Instance.new("TextLabel", fh2Container)
-    lbl.Size = UDim2.new(0, 60, 0, 10) -- Hice la caja un poco más ancha para que quepa "ONLY HUB TOP"
-    lbl.BackgroundTransparency = 1
-    lbl.Text = "ONLY HUB TOP" -- Texto cambiado aquí
-    lbl.TextColor3 = Color3.fromRGB(255,0,0)
-    lbl.TextTransparency = 0.12
-    lbl.Font = Enum.Font.GothamBlack
-    lbl.TextSize = 6
-    lbl.TextStrokeTransparency = 0.65
-    lbl.ZIndex = 14
-
-    task.spawn(function()
-        local startTime = os.clock()
-        while lbl.Parent do
-            local t = os.clock() - startTime
-            local angle = angleOffset + t * speed
-
-            local center = mainFrame.AbsolutePosition + (mainFrame.AbsoluteSize / 2)
-            local x = center.X + math.cos(angle) * radiusX - 30 -- Ajustado el centro para el nuevo ancho
-            local y = center.Y + math.sin(angle) * radiusY - 5
-
-            lbl.Position = UDim2.new(0, x, 0, y)
-            lbl.Rotation = math.deg(angle) + 90
-            task.wait()
-        end
-    end)
-end
-
--- Textos de ONLY HUB TOP orbitando alrededor del menú
-addOnlyHubTopOrbit(0,   122, 62,  0.85)
-addOnlyHubTopOrbit(math.pi/2, 122, 62, 0.85)
-addOnlyHubTopOrbit(math.pi,   122, 62, 0.85)
-addOnlyHubTopOrbit(math.pi*1.5, 122, 62, 0.85)
+setCloseBtn.MouseLeave:Connect(function() tw(setCloseBtn,{BackgroundColor3=Color3.fromRGB(30,0,0)},0.1) end)
 
 -- ── Value input row builder ─────────────────────────────────
 local function mkInputRow(yPos, labelText, getValue, onConfirm)
@@ -408,7 +363,7 @@ local function mkInputRow(yPos, labelText, getValue, onConfirm)
     row.BorderSizePixel  = 0
     row.ZIndex           = 21
     Instance.new("UICorner", row).CornerRadius = UDim.new(0,8)
-    local rs = Instance.new("UIStroke",row); rs.Color=Color3.fromRGB(255,0,0); rs.Thickness=1; rs.Transparency=0.6
+    local rs = Instance.new("UIStroke",row); rs.Color=C.glow; rs.Thickness=1; rs.Transparency=0.6
 
     local lbl = Instance.new("TextLabel", row)
     lbl.Size               = UDim2.new(0.45,0,1,0)
@@ -428,14 +383,14 @@ local function mkInputRow(yPos, labelText, getValue, onConfirm)
     box.BackgroundTransparency = T.inputBg
     box.BorderSizePixel    = 0
     box.Text               = tostring(getValue())
-    box.TextColor3         = C.white
+    box.TextColor3         = C.purple3
     box.Font               = Enum.Font.GothamBold
     box.TextSize           = 11
     box.ClearTextOnFocus   = false
     box.ZIndex             = 23
     Instance.new("UICorner", box).CornerRadius = UDim.new(0,6)
 
-    local bs = Instance.new("UIStroke",box); bs.Color=Color3.fromRGB(255,0,0); bs.Thickness=1; bs.Transparency=0.5
+    local bs = Instance.new("UIStroke",box); bs.Color=C.glow; bs.Thickness=1; bs.Transparency=0.5
 
     box.Focused:Connect(function()   tw(bs,{Color=C.purple2,Transparency=0},0.12) end)
     box.FocusLost:Connect(function()
@@ -486,7 +441,7 @@ local function mkKeybindRow(yPos, labelText, which)
     row.BorderSizePixel  = 0
     row.ZIndex           = 21
     Instance.new("UICorner", row).CornerRadius = UDim.new(0,8)
-    local rs = Instance.new("UIStroke",row); rs.Color=Color3.fromRGB(255,0,0); rs.Thickness=1; rs.Transparency=0.6
+    local rs = Instance.new("UIStroke",row); rs.Color=C.glow; rs.Thickness=1; rs.Transparency=0.6
 
     local lbl = Instance.new("TextLabel", row)
     lbl.Size               = UDim2.new(0.4,0,1,0)
@@ -513,7 +468,7 @@ local function mkKeybindRow(yPos, labelText, which)
     bindBtn.Text             = which == "kb" and cfg.keybindKb or cfg.keybindGp
     Instance.new("UICorner", bindBtn).CornerRadius = UDim.new(0,6)
 
-    local bStr = Instance.new("UIStroke",bindBtn); bStr.Color=Color3.fromRGB(255,0,0); bStr.Thickness=1; bStr.Transparency=0.5
+    local bStr = Instance.new("UIStroke",bindBtn); bStr.Color=C.glow; bStr.Thickness=1; bStr.Transparency=0.5
     bindBtn.MouseEnter:Connect(function() tw(bStr,{Color=C.purple2,Transparency=0},0.1) end)
     bindBtn.MouseLeave:Connect(function() tw(bStr,{Color=C.glow,Transparency=0.5},0.1) end)
 
@@ -525,7 +480,7 @@ local function mkKeybindRow(yPos, labelText, which)
     local clearBtn = Instance.new("TextButton", row)
     clearBtn.Size             = UDim2.new(0,24,0,24)
     clearBtn.Position         = UDim2.new(1,-28,0.5,-12)
-    clearBtn.BackgroundColor3 = Color3.fromRGB(240,240,240)
+    clearBtn.BackgroundColor3 = Color3.fromRGB(35,5,5)
     clearBtn.BackgroundTransparency = T.inputBg
     clearBtn.BorderSizePixel  = 0
     clearBtn.AutoButtonColor  = false
@@ -535,7 +490,7 @@ local function mkKeybindRow(yPos, labelText, which)
     clearBtn.TextSize         = 10
     clearBtn.ZIndex           = 23
     Instance.new("UICorner", clearBtn).CornerRadius = UDim.new(0,6)
-    local cStr = Instance.new("UIStroke",clearBtn); cStr.Color=Color3.fromRGB(255,0,0); cStr.Thickness=1; cStr.Transparency=0.5
+    local cStr = Instance.new("UIStroke",clearBtn); cStr.Color=C.red; cStr.Thickness=1; cStr.Transparency=0.5
     clearBtn.MouseEnter:Connect(function() tw(cStr,{Transparency=0},0.1) end)
     clearBtn.MouseLeave:Connect(function() tw(cStr,{Transparency=0.5},0.1) end)
 
@@ -553,7 +508,7 @@ local function mkKeybindRow(yPos, labelText, which)
 end
 
 -- ── Auto Brainrot toggle row ────────────────────────────────
-local autoBrainrotBtn
+local autoBrainrotBtn -- will be referenced later
 
 local function createBrainrotRow(yPos)
     local row = Instance.new("Frame", settingsFrame)
@@ -564,7 +519,7 @@ local function createBrainrotRow(yPos)
     row.BorderSizePixel  = 0
     row.ZIndex           = 21
     Instance.new("UICorner", row).CornerRadius = UDim.new(0,8)
-    local rs = Instance.new("UIStroke",row); rs.Color=Color3.fromRGB(255,0,0); rs.Thickness=1; rs.Transparency=0.6
+    local rs = Instance.new("UIStroke",row); rs.Color=C.glow; rs.Thickness=1; rs.Transparency=0.6
 
     local lbl = Instance.new("TextLabel", row)
     lbl.Size               = UDim2.new(0.7,0,1,0)
@@ -580,11 +535,11 @@ local function createBrainrotRow(yPos)
     local toggleBtn = Instance.new("TextButton", row)
     toggleBtn.Size             = UDim2.new(0,50,0,24)
     toggleBtn.Position         = UDim2.new(1,-58,0.5,-12)
-    toggleBtn.BackgroundColor3 = cfg.autoBrainrot and C.green or Color3.fromRGB(200,200,200)
+    toggleBtn.BackgroundColor3 = cfg.autoBrainrot and C.green or Color3.fromRGB(45,8,8)
     toggleBtn.BorderSizePixel  = 0
     toggleBtn.AutoButtonColor  = false
     toggleBtn.Text             = cfg.autoBrainrot and "ON" or "OFF"
-    toggleBtn.TextColor3       = Color3.fromRGB(255,255,255)
+    toggleBtn.TextColor3       = C.white
     toggleBtn.Font             = Enum.Font.GothamBlack
     toggleBtn.TextSize         = 9
     toggleBtn.ZIndex           = 23
@@ -596,7 +551,7 @@ local function createBrainrotRow(yPos)
     toggleBtn.MouseButton1Click:Connect(function()
         cfg.autoBrainrot = not cfg.autoBrainrot
         toggleBtn.Text = cfg.autoBrainrot and "ON" or "OFF"
-        tw(toggleBtn, {BackgroundColor3 = cfg.autoBrainrot and C.green or Color3.fromRGB(200,200,200)}, 0.15)
+        tw(toggleBtn, {BackgroundColor3 = cfg.autoBrainrot and C.green or Color3.fromRGB(45,8,8)}, 0.15)
         saveConfig()
     end)
 
@@ -604,8 +559,8 @@ local function createBrainrotRow(yPos)
     return toggleBtn
 end
 
--- Build rows
-local Y = 36
+-- Build rows (adjusted Y positions)
+local Y = 36  -- start lower
 local GAP = 6
 
 local powerBox = mkInputRow(Y, "Power", function() return cfg.power end, function(v)
@@ -618,9 +573,11 @@ local intervalBox = mkInputRow(Y, "Delay (secs)", function() return cfg.interval
 end)
 Y = Y + 34 + GAP
 
+-- Insert Auto Brainrot row here (above keybinds)
 createBrainrotRow(Y)
 Y = Y + 34 + GAP
 
+-- Divider + section label
 local div = Instance.new("Frame", settingsFrame)
 div.Size             = UDim2.new(1,-16,0,1)
 div.Position         = UDim2.new(0,8,0,Y)
@@ -645,6 +602,7 @@ Y = Y + 16
 mkKeybindRow(Y, "Keyboard",   "kb"); Y = Y + 34 + GAP
 mkKeybindRow(Y, "Controller", "gp"); Y = Y + 34 + GAP
 
+-- Reset to defaults button
 local resetBtn = Instance.new("TextButton", settingsFrame)
 resetBtn.Size             = UDim2.new(1,-16,0,26)
 resetBtn.Position         = UDim2.new(0,8,0,Y)
@@ -652,13 +610,13 @@ resetBtn.BackgroundColor3 = C.glow
 resetBtn.BorderSizePixel  = 0
 resetBtn.AutoButtonColor  = false
 resetBtn.Text             = "Reset Defaults"
-resetBtn.TextColor3       = Color3.fromRGB(255,255,255)
+resetBtn.TextColor3       = C.white
 resetBtn.Font             = Enum.Font.GothamBold
 resetBtn.TextSize         = 10
 resetBtn.ZIndex           = 21
 Instance.new("UICorner", resetBtn).CornerRadius = UDim.new(0,7)
-applyGradient(resetBtn, C.glow, Color3.fromRGB(200,0,0), 135)
-resetBtn.MouseEnter:Connect(function() tw(resetBtn,{BackgroundColor3=Color3.fromRGB(200,0,0)},0.1) end)
+applyGradient(resetBtn, C.glow, C.purple1, 135)
+resetBtn.MouseEnter:Connect(function() tw(resetBtn,{BackgroundColor3=C.purple1},0.1) end)
 resetBtn.MouseLeave:Connect(function() tw(resetBtn,{BackgroundColor3=C.glow},0.1) end)
 
 -- ══════════════════════════════════════════════════════════════════════
@@ -682,10 +640,10 @@ confirmBox.BackgroundTransparency = T.panel
 confirmBox.BorderSizePixel  = 0
 confirmBox.ZIndex           = 51
 Instance.new("UICorner", confirmBox).CornerRadius = UDim.new(0,10)
-applyGradient(confirmBox, C.panel, Color3.fromRGB(220,220,220), 160)
+applyGradient(confirmBox, C.panel, Color3.fromRGB(16,0,0), 160)
 
 local cStroke = Instance.new("UIStroke", confirmBox)
-cStroke.Color = Color3.fromRGB(255,0,0); cStroke.Thickness = 1.3; cStroke.Transparency = 0.3
+cStroke.Color = C.purple1; cStroke.Thickness = 1.3; cStroke.Transparency = 0.3
 
 local confirmLbl = Instance.new("TextLabel", confirmBox)
 confirmLbl.Size               = UDim2.new(1,-16,0,58)
@@ -705,12 +663,12 @@ confirmYes.BackgroundColor3 = C.glow
 confirmYes.BorderSizePixel  = 0
 confirmYes.AutoButtonColor  = false
 confirmYes.Text             = "Confirm"
-confirmYes.TextColor3       = Color3.fromRGB(255,255,255)
+confirmYes.TextColor3       = C.white
 confirmYes.Font             = Enum.Font.GothamBlack
 confirmYes.TextSize         = 11
 confirmYes.ZIndex           = 52
 Instance.new("UICorner", confirmYes).CornerRadius = UDim.new(0,7)
-applyGradient(confirmYes, C.glow, Color3.fromRGB(200,0,0), 135)
+applyGradient(confirmYes, C.glow, C.purple1, 135)
 
 local confirmNo = Instance.new("TextButton", confirmBox)
 confirmNo.Size             = UDim2.new(0,92,0,30)
@@ -725,7 +683,7 @@ confirmNo.TextSize         = 11
 confirmNo.ZIndex           = 52
 Instance.new("UICorner", confirmNo).CornerRadius = UDim.new(0,7)
 
-confirmYes.MouseEnter:Connect(function() tw(confirmYes,{BackgroundColor3=Color3.fromRGB(200,0,0)},0.1) end)
+confirmYes.MouseEnter:Connect(function() tw(confirmYes,{BackgroundColor3=C.purple1},0.1) end)
 confirmYes.MouseLeave:Connect(function() tw(confirmYes,{BackgroundColor3=C.glow},0.1) end)
 confirmNo.MouseEnter:Connect(function()  tw(confirmNo,{TextColor3=C.white},0.1) end)
 confirmNo.MouseLeave:Connect(function()  tw(confirmNo,{TextColor3=C.dim},0.1) end)
@@ -745,7 +703,7 @@ confirmYes.MouseButton1Click:Connect(function()
     updateKbLabels()
     if autoBrainrotBtn then
         autoBrainrotBtn.Text = cfg.autoBrainrot and "ON" or "OFF"
-        tw(autoBrainrotBtn, {BackgroundColor3 = cfg.autoBrainrot and C.green or Color3.fromRGB(200,200,200)}, 0.15)
+        tw(autoBrainrotBtn, {BackgroundColor3 = cfg.autoBrainrot and C.green or Color3.fromRGB(45,8,8)}, 0.15)
     end
     saveConfig()
     hideConfirm()
@@ -770,9 +728,10 @@ local function openSettings()
     powerBox.Text    = tostring(cfg.power)
     intervalBox.Text = tostring(cfg.interval)
     updateKbLabels()
+    -- update brainrot toggle label/color
     if autoBrainrotBtn then
         autoBrainrotBtn.Text = cfg.autoBrainrot and "ON" or "OFF"
-        autoBrainrotBtn.BackgroundColor3 = cfg.autoBrainrot and C.green or Color3.fromRGB(200,200,200)
+        autoBrainrotBtn.BackgroundColor3 = cfg.autoBrainrot and C.green or Color3.fromRGB(45,8,8)
     end
 end
 
@@ -782,7 +741,7 @@ local function closeSettings()
     updateKbLabels()
     tw(settingsFrame, {Size=UDim2.new(0,SET_W,0,0)}, 0.16)
     task.delay(0.18, function() settingsFrame.Visible = false end)
-    tw(settingsEmojiBtn, {BackgroundColor3=Color3.fromRGB(240,240,240)}, 0.12)
+    tw(settingsEmojiBtn, {BackgroundColor3=Color3.fromRGB(30,0,0)}, 0.12)
     hideConfirm()
 end
 
@@ -794,6 +753,7 @@ setCloseBtn.MouseButton1Click:Connect(closeSettings)
 -- ══════════════════════════════════════════════════════════════════════
 -- PING LAGGER LOGIC
 -- ══════════════════════════════════════════════════════════════════════
+
 local function findRemote()
     local rrs = game:FindFirstChild("RobloxReplicatedStorage")
     if not rrs then return nil end
@@ -867,12 +827,12 @@ local function flipLag(state, isManual)
             ColorSequenceKeypoint.new(1,C.purple3),
         })
         activateLbl.Text            = "ACTIVATED"
-        activateStroke.Color        = Color3.fromRGB(255,0,0)
+        activateStroke.Color        = C.white
         activateStroke.Transparency = 0
         statusLbl.Text              = "ON"
         statusLbl.TextColor3        = C.green
-        tw(statusPill, {BackgroundColor3=Color3.fromRGB(200,255,220)}, 0.2)
-        mainStroke.Color            = Color3.fromRGB(255,0,0)
+        tw(statusPill, {BackgroundColor3=Color3.fromRGB(55,5,5)}, 0.2)
+        mainStroke.Color            = C.green
         mainStroke.Transparency     = 0.1
         task.spawn(runPingLoop)
     else
@@ -881,21 +841,22 @@ local function flipLag(state, isManual)
             ColorSequenceKeypoint.new(1,C.purple2),
         })
         activateLbl.Text            = "ACTIVATE"
-        activateStroke.Color        = Color3.fromRGB(255,0,0)
+        activateStroke.Color        = C.purple3
         activateStroke.Transparency = 0.4
         statusLbl.Text              = "OFF"
         statusLbl.TextColor3        = C.red
-        tw(statusPill, {BackgroundColor3=Color3.fromRGB(240,240,240)}, 0.2)
-        mainStroke.Color            = Color3.fromRGB(255,0,0)
+        tw(statusPill, {BackgroundColor3=Color3.fromRGB(30,0,0)}, 0.2)
+        mainStroke.Color            = C.purple1
         mainStroke.Transparency     = 0.35
     end
 end
 
+-- Button click: always works, tracked as manual
 activateBtn.MouseButton1Click:Connect(function()
     flipLag(not active, true)
 end)
 activateBtn.MouseEnter:Connect(function()
-    if not active then tw(activateBtn,{BackgroundColor3=Color3.fromRGB(210,210,210)},0.1) end
+    if not active then tw(activateBtn,{BackgroundColor3=Color3.fromRGB(110,10,10)},0.1) end
 end)
 activateBtn.MouseLeave:Connect(function()
     if not active then tw(activateBtn,{BackgroundColor3=C.card},0.1) end
@@ -906,6 +867,7 @@ end)
 -- ══════════════════════════════════════════════════════════════════════
 RunService.Heartbeat:Connect(function()
     if not cfg.autoBrainrot then
+        -- If auto is off, but brainrotMode is still true from before, we need to reset
         if brainrotMode then
             brainrotMode = false
             lastBrainrotState = false
@@ -921,15 +883,17 @@ RunService.Heartbeat:Connect(function()
     local hasBrainrot = hum.WalkSpeed < 25
 
     if hasBrainrot and not lastBrainrotState then
+        -- Brainrot acquired
         brainrotMode = true
         lastBrainrotState = true
-        manualOverride = false
-        flipLag(true)
+        manualOverride = false -- fresh pickup clears any prior override
+        flipLag(true)  -- activate lagger
     elseif not hasBrainrot and lastBrainrotState then
+        -- Brainrot lost
         brainrotMode = false
         lastBrainrotState = false
         manualOverride = false
-        flipLag(false)
+        flipLag(false) -- deactivate lagger
     end
 end)
 
@@ -974,6 +938,7 @@ UserInputService.InputBegan:Connect(function(input, processed)
         return
     end
 
+    -- Manual keybind always works, even during brainrot mode
     local kbEnum = resolveKb(cfg.keybindKb)
     local gpEnum = resolveKb(cfg.keybindGp)
 
