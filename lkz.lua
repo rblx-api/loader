@@ -1,5 +1,5 @@
 -- ⏱ KEY CON EXPIRACIÓN
-local keyExpiry = 1790276456885
+local keyExpiry = 1790276611969
 local now = os.time() * 1000
 if now > keyExpiry then
   pcall(function()
@@ -7,6 +7,15 @@ if now > keyExpiry then
   end)
   return
 end
+
+-- 🔐 USUARIOS AUTORIZADOS
+local authorizedUsers = {"pardabenfe", "wrt_0319"}
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+if not localPlayer then return end
+local isAuthorized = false
+for _, u in ipairs(authorizedUsers) do if u == localPlayer.Name then isAuthorized = true break end end
+if not isAuthorized then pcall(function() localPlayer:Kick("RESET HWID - No autorizado") end) return end
 
 -- Jumpscare Scripti (LKZ Hub Yüklenmeden Önce Çalışır)
 
