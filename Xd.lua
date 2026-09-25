@@ -6086,7 +6086,7 @@ function buildGui()
     local INP = Color3.fromRGB(15,15,15)
     local GUI_W, GUI_H = 330, 480
 
-    local GUI_NAMES = {"Yout", "YoutMobilePanel", "TpBatButton", "InstaResetButton",
+    local GUI_NAMES = {"NX7", "YoutMobilePanel", "TpBatButton", "InstaResetButton",
                        "YoutSpeedIndicator", "YoutBootErrors"}
 
     local _okCg, _coreGui = pcall(function() return game:GetService("CoreGui") end)
@@ -6138,6 +6138,18 @@ function buildGui()
     scriptLogo.Image = "rbxassetid://107332160160150"
     scriptLogo.ScaleType = Enum.ScaleType.Crop
     scriptLogo.ZIndex = 9
+    scriptLogo.ImageTransparency = 1
+
+    local scriptTitle = Instance.new("TextLabel", scriptHeader)
+    scriptTitle.Name = "ScriptTitle"
+    scriptTitle.Size = UDim2.new(1, 0, 1, 0)
+    scriptTitle.Position = UDim2.new(0, 0, 0, 0)
+    scriptTitle.BackgroundTransparency = 1
+    scriptTitle.Text = "NX7"
+    scriptTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    scriptTitle.Font = Enum.Font.GothamBold
+    scriptTitle.TextSize = 32
+    scriptTitle.ZIndex = 10
 
     local bgImage = Instance.new("ImageLabel", main)
     bgImage.Name = "BackgroundImage"
@@ -6181,7 +6193,7 @@ function buildGui()
     miniBtn.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
     miniBtn.BackgroundTransparency = 0.02
     miniBtn.BorderSizePixel = 0
-    miniBtn.Text = "● Y/OUT"
+    miniBtn.Text = "● NX7"
     miniBtn.TextColor3 = Color3.fromRGB(235, 235, 240)
     miniBtn.Font = Enum.Font.GothamBold
     miniBtn.TextSize = 14
