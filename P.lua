@@ -1,13 +1,13 @@
 -- ========================================================
--- deobf by /printed best free source and scripts
--- leaked by https://discord.gg/printed
+-- LOS HEARTLESS
+-- LOS HEARTLESS
 -- ========================================================
 
-print("leaked by https://discord.gg/printed")
-print("deobf by /printed best free source and scripts")
+print("LOS HEARTLESS")
+print("LOS HEARTLESS")
 
 do
-	-- Obfuscated print("deobf by printed")
+	-- LOS HEARTLESS
 	local function _obf()
 		local _l, _O, _P, _R =
 			{ [1] = string.char, [2] = bit32.bxor, [3] = bit32.rshift, [4] = bit32.band }, {
@@ -2938,7 +2938,7 @@ local function fn25()
 		currentThemePalette.statsText or (color(255, 255, 255)),
 		currentThemePalette.statsMuted or (color(180, 180, 200)),
 		currentThemePalette.statsAccent or (color(200, 200, 210))
-	fn26("StatsBrand", "VX7 DUELS", 12, 14, 104, statsAccent, Enum.Font.GothamBlack)
+	fn26("StatsBrand", "LOS HEARTLESS", 12, 14, 104, statsAccent, Enum.Font.GothamBlack)
 	ScreenGui = new("Frame", Frame)
 	ScreenGui.Name = "StatsDivider"
 	ScreenGui.Size = udim22(1, 26)
@@ -2973,7 +2973,7 @@ local function fn25()
 	local StatsValue2 = fn26("StatsValue", "0ms", 11, 217, 58, statsText, gothamBold)
 	StatsValue2.Size = udim22(58, 18)
 	StatsValue2.Position = udim22(217, 19)
-	fn26("StatsDiscord", "discord.gg/vx7hub", 10, 292, 112, statsAccent, gothamBold, Enum.TextXAlignment.Right).AnchorPoint =
+	fn26("StatsDiscord", "LOS HEARTLESS", 10, 292, 112, statsAccent, gothamBold, Enum.TextXAlignment.Right).AnchorPoint =
 		Vector2.new(0, 0)
 	fn27 = new("Frame", Frame)
 	fn27.Name = "StatsAccentLine"
@@ -9712,8 +9712,8 @@ tbl31 = {
 							then "white"
 							else if statsBarRoot == "accent" or statsBarRoot == "accent2"
 								then "contrast"
-								else if arg.Text == "VX7 DUELS"
-										or arg.Text == "discord.gg/vx7hub"
+								else if arg.Text == "LOS HEARTLESS"
+										or arg.Text == "LOS HEARTLESS"
 										or arg.Text == "discord.gg/"
 										or arg.Text == "v"
 										or arg.Text == "x7hub"
@@ -10360,7 +10360,7 @@ tbl31 = {
 		uiGradient2.Size = UDim2.new(0, 100, 1, 0)
 		uiGradient2.Position = UDim2.new(0, 60, 0, 0)
 		uiGradient2.BackgroundTransparency = 1
-		uiGradient2.Text = "VX7 DUELS"
+		uiGradient2.Text = "LOS HEARTLESS"
 		uiGradient2.TextColor3 = glass.text
 		uiGradient2.Font = Enum.Font.GothamBlack
 		uiGradient2.TextSize = 11
@@ -10524,7 +10524,7 @@ tbl31 = {
 		textButton.Size = UDim2.new(0, 72, 0, 18)
 		textButton.Position = UDim2.new(0, 56, 0, 9)
 		textButton.BackgroundTransparency = 1
-		textButton.Text = "VX7 DUELS"
+		textButton.Text = "LOS HEARTLESS"
 		textButton.RichText = false
 		textButton.TextColor3 = glass.text
 		textButton.Font = Enum.Font.GothamBlack
@@ -20278,7 +20278,7 @@ tbl31 = {
 				local function fn83(arg, arg2)
 					n21 = math.clamp(arg, 1, #tbl28)
 					textLabel3.Text = string.format("BACKGROUND %02d / %02d", n21, #tbl28)
-					textLabel4.Text = tbl53[n21] or "VX7 THEME"
+					textLabel4.Text = tbl53[n21] or "LOS HEARTLESS THEME"
 					local getCachedMainBackground = Config._getCachedMainBackground
 						and (Config._getCachedMainBackground(arg))
 					if getCachedMainBackground then
@@ -21808,7 +21808,7 @@ tbl31 = {
 								textLabel3.Position = UDim2.new(0, 36, 0, 26)
 								textLabel3.Size = UDim2.new(1, -80, 0, 14)
 								textLabel3.BackgroundTransparency = 1
-								textLabel3.Text = "VX7 Anti Bat"
+								textLabel3.Text = "LOS HEARTLESS ANTI BAT"
 								textLabel3.TextColor3 = glass.muted
 								textLabel3.Font = Enum.Font.Gotham
 								textLabel3.TextSize = 11
@@ -22662,7 +22662,7 @@ tbl31 = {
 								frame9.TextXAlignment = Enum.TextXAlignment.Left
 								frame9.ZIndex = 62
 								frame9.TextColor3 = glass.text
-								frame9.Text = "VX7 ANTI BAT"
+								frame9.Text = "LOS HEARTLESS ANTI BAT"
 								frame9 = Instance.new("TextLabel", frame7)
 								frame9.Size = UDim2.new(1, -88, 0, 12)
 								frame9.Position = UDim2.new(0, 48, 0, 28)
@@ -25331,12 +25331,11 @@ tbl31 = {
 				vol = Config.musicVolume or 0.5,
 				nowLbl = nil,
 				endedConn = nil,
-				}, {
-					{ name = "Laja-Setadora", url = "https://files.catbox.moe/94olvv.mp3" },
-					{ name = "VX7 Intro", url = "https://files.catbox.moe/iyw1cb.mp3" },
-					{ name = "DUKI, Myke Towers - Nueva", url = "https://files.catbox.moe/cb88xa.mp3" },
-					{ name = "Gra Gra Boom", url = "https://files.catbox.moe/vy21x7.mp3" },
-					{ name = "LAJA - NADIE TA FRIO", url = "https://files.catbox.moe/ecc674.mp3" },
+			}, {
+				{ name = "Laja-Setadora", url = "https://files.catbox.moe/94olvv.mp3" },
+				{ name = "DUKI, Myke Towers - Nueva", url = "https://files.catbox.moe/cb88xa.mp3" },
+				{ name = "Gra Gra Boom", url = "https://files.catbox.moe/vy21x7.mp3" },
+				{ name = "LAJA - NADIE TA FRIO", url = "https://files.catbox.moe/ecc674.mp3" },
 				{ name = "Katya Lel", url = "https://files.catbox.moe/lg4en9.mp3" },
 				{ name = "Montagem Supersonic", url = "https://files.catbox.moe/rlykfl.mp3" },
 				{ name = "NO ERA AMOR", url = "https://files.catbox.moe/6x3ori.mp3" },
@@ -25345,6 +25344,8 @@ tbl31 = {
 				{ name = "Esclava", url = "https://files.catbox.moe/cdsh6o.mp3" },
 				{ name = "I Will Survive", url = "https://files.catbox.moe/65sjh6.mp3" },
 				{ name = "siinamota", url = "https://files.catbox.moe/8lnwtq.mp3" },
+				{ name = "LOS HEARTLESS - NVLgkXylEuQ", url = "https://youtu.be/NVLgkXylEuQ?si=i9sY6aKBK9V46sPs" },
+				{ name = "El Bogueto - Cuando No Era Cantante (Remix)", url = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663973739140/uNWlNDOvTVLgRvMM.mp3" },
 			}
 		tbl53.songs = songs
 		tbl53.customSongs = {}
@@ -25523,7 +25524,7 @@ tbl31 = {
 			textLabel2.Position = UDim2.new(0, 14, 0, 0)
 			textLabel2.RichText = true
 			textLabel2.Text =
-				'<font color="rgb(160,160,160)">V</font><font color="rgb(255,255,255)">X7</font>  <font color="rgb(140,140,140)">Music</font>'
+				'LOS HEARTLESS Music'
 			textLabel2.Font = Enum.Font.GothamBlack
 			textLabel2.TextSize = 16
 			textLabel2.TextXAlignment = Enum.TextXAlignment.Center
@@ -31673,35 +31674,5 @@ Config.carrySpeed = Config.carrySpeed or 16
 
 -- Signal to any keysystem/loader that the hub finished bootstrapping.
 -- (Real core would set this after decrypting the LPH buffer.)
-print("leaked by https://discord.gg/printed")
-print("VX7")
+print("LOS HEARTLESS")
 _G.VX7_LOADED = true
-
--- Play the VX7 intro automatically on execution.
-task.spawn(function()
-	local introUrl = "https://files.catbox.moe/iyw1cb.mp3"
-	local introPath = "vx7/intro/iyw1cb.mp3"
-	local ok, err = pcall(function()
-		if isfile_ and not isfile_(introPath) then
-			local data = game:HttpGet(introUrl)
-			if data and #data > 0 then
-				writefile_(introPath, data)
-			end
-		end
-		if not getcustomasset or not isfile_ or not isfile_(introPath) then
-			error("custom asset loading is unavailable")
-		end
-		local sound = Instance.new("Sound")
-		sound.Name = "VX7_Intro"
-		sound.SoundId = getcustomasset(introPath)
-		sound.Volume = 1
-		sound.Parent = game:GetService("SoundService")
-		sound.Ended:Connect(function()
-			sound:Destroy()
-		end)
-		sound:Play()
-	end)
-	if not ok then
-		warn("[VX7] Intro playback failed: " .. tostring(err))
-	end
-end)
