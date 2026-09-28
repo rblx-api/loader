@@ -1,13 +1,13 @@
 -- ========================================================
--- LOS HEARTLESS
--- LOS HEARTLESS
+-- deobf by /printed best free source and scripts
+-- leaked by https://discord.gg/printed
 -- ========================================================
 
-print("LOS HEARTLESS")
-print("LOS HEARTLESS")
+print("leaked by https://discord.gg/printed")
+print("deobf by /printed best free source and scripts")
 
 do
-	-- LOS HEARTLESS
+	-- Obfuscated print("deobf by printed")
 	local function _obf()
 		local _l, _O, _P, _R =
 			{ [1] = string.char, [2] = bit32.bxor, [3] = bit32.rshift, [4] = bit32.band }, {
@@ -110,85 +110,6 @@ local function fn2(child)
 	end)
 end
 local playerGui = localPlayer:WaitForChild("PlayerGui")
-
--- Elite Family intro shown once when the script starts.
-task.spawn(function()
-    local introGui = Instance.new("ScreenGui")
-    introGui.Name = "VX7Intro"
-    introGui.ResetOnSpawn = false
-    introGui.IgnoreGuiInset = true
-    introGui.DisplayOrder = 2147483647
-    introGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    introGui.Parent = playerGui
-
-    local overlay = Instance.new("Frame", introGui)
-    overlay.Size = UDim2.fromScale(1, 1)
-    overlay.BackgroundColor3 = Color3.fromRGB(5, 5, 10)
-    overlay.BackgroundTransparency = 0
-    overlay.BorderSizePixel = 0
-    overlay.ZIndex = 1
-
-    local artwork = Instance.new("ImageLabel", overlay)
-    artwork.Size = UDim2.fromScale(1, 1)
-    artwork.BackgroundTransparency = 1
-    artwork.Image = "rbxassetid://117453595633818"
-    artwork.ScaleType = Enum.ScaleType.Crop
-    artwork.ImageTransparency = 0.18
-    artwork.ZIndex = 2
-
-    local tint = Instance.new("Frame", overlay)
-    tint.Size = UDim2.fromScale(1, 1)
-    tint.BackgroundColor3 = Color3.fromRGB(20, 5, 35)
-    tint.BackgroundTransparency = 0.38
-    tint.BorderSizePixel = 0
-    tint.ZIndex = 3
-
-    local title = Instance.new("TextLabel", overlay)
-    title.Size = UDim2.new(1, -40, 0, 80)
-    title.Position = UDim2.new(0, 20, 0.5, -40)
-    title.BackgroundTransparency = 1
-    title.Text = "ELITE FAMILY"
-    title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    title.TextStrokeColor3 = Color3.fromRGB(125, 35, 220)
-    title.TextStrokeTransparency = 0.15
-    title.Font = Enum.Font.GothamBlack
-    title.TextScaled = true
-    title.ZIndex = 4
-
-    local line = Instance.new("Frame", overlay)
-    line.Size = UDim2.new(0, 0, 0, 3)
-    line.Position = UDim2.new(0.5, 0, 0.5, 52)
-    line.AnchorPoint = Vector2.new(0.5, 0)
-    line.BackgroundColor3 = Color3.fromRGB(205, 105, 255)
-    line.BorderSizePixel = 0
-    line.ZIndex = 4
-    Instance.new("UICorner", line).CornerRadius = UDim.new(1, 0)
-
-    local sub = Instance.new("TextLabel", overlay)
-    sub.Size = UDim2.new(1, -40, 0, 24)
-    sub.Position = UDim2.new(0, 20, 0.5, 66)
-    sub.BackgroundTransparency = 1
-    sub.Text = "LOADING..."
-    sub.TextColor3 = Color3.fromRGB(220, 180, 255)
-    sub.Font = Enum.Font.GothamBold
-    sub.TextSize = 12
-    sub.ZIndex = 4
-
-    local tweenInfo = TweenInfo.new(0.7, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
-    TweenService:Create(title, tweenInfo, {TextTransparency = 0}):Play()
-    TweenService:Create(line, tweenInfo, {Size = UDim2.new(0, 220, 0, 3)}):Play()
-    task.wait(2.2)
-    local fade = TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
-    for _, item in ipairs({artwork, tint, title, line, sub}) do
-        if item:IsA("GuiObject") then
-            local goal = item:IsA("TextLabel") and {TextTransparency = 1} or item:IsA("ImageLabel") and {ImageTransparency = 1} or {BackgroundTransparency = 1}
-            TweenService:Create(item, fade, goal):Play()
-        end
-    end
-    task.wait(0.6)
-    if introGui and introGui.Parent then introGui:Destroy() end
-end)
-
 for i, child in ipairs(playerGui:GetChildren()) do
 	fn2(child)
 end
@@ -3017,7 +2938,7 @@ local function fn25()
 		currentThemePalette.statsText or (color(255, 255, 255)),
 		currentThemePalette.statsMuted or (color(180, 180, 200)),
 		currentThemePalette.statsAccent or (color(200, 200, 210))
-	fn26("StatsBrand", "LOS HEARTLESS", 12, 14, 104, statsAccent, Enum.Font.GothamBlack)
+	fn26("StatsBrand", "VX7 DUELS", 12, 14, 104, statsAccent, Enum.Font.GothamBlack)
 	ScreenGui = new("Frame", Frame)
 	ScreenGui.Name = "StatsDivider"
 	ScreenGui.Size = udim22(1, 26)
@@ -3052,7 +2973,7 @@ local function fn25()
 	local StatsValue2 = fn26("StatsValue", "0ms", 11, 217, 58, statsText, gothamBold)
 	StatsValue2.Size = udim22(58, 18)
 	StatsValue2.Position = udim22(217, 19)
-	fn26("StatsDiscord", "LOS HEARTLESS", 10, 292, 112, statsAccent, gothamBold, Enum.TextXAlignment.Right).AnchorPoint =
+	fn26("StatsDiscord", "discord.gg/vx7hub", 10, 292, 112, statsAccent, gothamBold, Enum.TextXAlignment.Right).AnchorPoint =
 		Vector2.new(0, 0)
 	fn27 = new("Frame", Frame)
 	fn27.Name = "StatsAccentLine"
@@ -9791,8 +9712,8 @@ tbl31 = {
 							then "white"
 							else if statsBarRoot == "accent" or statsBarRoot == "accent2"
 								then "contrast"
-								else if arg.Text == "LOS HEARTLESS"
-										or arg.Text == "LOS HEARTLESS"
+								else if arg.Text == "VX7 DUELS"
+										or arg.Text == "discord.gg/vx7hub"
 										or arg.Text == "discord.gg/"
 										or arg.Text == "v"
 										or arg.Text == "x7hub"
@@ -10439,7 +10360,7 @@ tbl31 = {
 		uiGradient2.Size = UDim2.new(0, 100, 1, 0)
 		uiGradient2.Position = UDim2.new(0, 60, 0, 0)
 		uiGradient2.BackgroundTransparency = 1
-		uiGradient2.Text = "LOS HEARTLESS"
+		uiGradient2.Text = "VX7 DUELS"
 		uiGradient2.TextColor3 = glass.text
 		uiGradient2.Font = Enum.Font.GothamBlack
 		uiGradient2.TextSize = 11
@@ -10603,7 +10524,7 @@ tbl31 = {
 		textButton.Size = UDim2.new(0, 72, 0, 18)
 		textButton.Position = UDim2.new(0, 56, 0, 9)
 		textButton.BackgroundTransparency = 1
-		textButton.Text = "LOS HEARTLESS"
+		textButton.Text = "VX7 DUELS"
 		textButton.RichText = false
 		textButton.TextColor3 = glass.text
 		textButton.Font = Enum.Font.GothamBlack
@@ -20357,7 +20278,7 @@ tbl31 = {
 				local function fn83(arg, arg2)
 					n21 = math.clamp(arg, 1, #tbl28)
 					textLabel3.Text = string.format("BACKGROUND %02d / %02d", n21, #tbl28)
-					textLabel4.Text = tbl53[n21] or "LOS HEARTLESS THEME"
+					textLabel4.Text = tbl53[n21] or "VX7 THEME"
 					local getCachedMainBackground = Config._getCachedMainBackground
 						and (Config._getCachedMainBackground(arg))
 					if getCachedMainBackground then
@@ -21887,7 +21808,7 @@ tbl31 = {
 								textLabel3.Position = UDim2.new(0, 36, 0, 26)
 								textLabel3.Size = UDim2.new(1, -80, 0, 14)
 								textLabel3.BackgroundTransparency = 1
-								textLabel3.Text = "LOS HEARTLESS ANTI BAT"
+								textLabel3.Text = "VX7 Anti Bat"
 								textLabel3.TextColor3 = glass.muted
 								textLabel3.Font = Enum.Font.Gotham
 								textLabel3.TextSize = 11
@@ -22741,7 +22662,7 @@ tbl31 = {
 								frame9.TextXAlignment = Enum.TextXAlignment.Left
 								frame9.ZIndex = 62
 								frame9.TextColor3 = glass.text
-								frame9.Text = "LOS HEARTLESS ANTI BAT"
+								frame9.Text = "VX7 ANTI BAT"
 								frame9 = Instance.new("TextLabel", frame7)
 								frame9.Size = UDim2.new(1, -88, 0, 12)
 								frame9.Position = UDim2.new(0, 48, 0, 28)
@@ -25410,11 +25331,12 @@ tbl31 = {
 				vol = Config.musicVolume or 0.5,
 				nowLbl = nil,
 				endedConn = nil,
-			}, {
-				{ name = "Laja-Setadora", url = "https://files.catbox.moe/94olvv.mp3" },
-				{ name = "DUKI, Myke Towers - Nueva", url = "https://files.catbox.moe/cb88xa.mp3" },
-				{ name = "Gra Gra Boom", url = "https://files.catbox.moe/vy21x7.mp3" },
-				{ name = "LAJA - NADIE TA FRIO", url = "https://files.catbox.moe/ecc674.mp3" },
+				}, {
+					{ name = "Laja-Setadora", url = "https://files.catbox.moe/94olvv.mp3" },
+					{ name = "VX7 Intro", url = "https://files.catbox.moe/iyw1cb.mp3" },
+					{ name = "DUKI, Myke Towers - Nueva", url = "https://files.catbox.moe/cb88xa.mp3" },
+					{ name = "Gra Gra Boom", url = "https://files.catbox.moe/vy21x7.mp3" },
+					{ name = "LAJA - NADIE TA FRIO", url = "https://files.catbox.moe/ecc674.mp3" },
 				{ name = "Katya Lel", url = "https://files.catbox.moe/lg4en9.mp3" },
 				{ name = "Montagem Supersonic", url = "https://files.catbox.moe/rlykfl.mp3" },
 				{ name = "NO ERA AMOR", url = "https://files.catbox.moe/6x3ori.mp3" },
@@ -31751,5 +31673,35 @@ Config.carrySpeed = Config.carrySpeed or 16
 
 -- Signal to any keysystem/loader that the hub finished bootstrapping.
 -- (Real core would set this after decrypting the LPH buffer.)
-print("LOS HEARTLESS")
+print("leaked by https://discord.gg/printed")
+print("VX7")
 _G.VX7_LOADED = true
+
+-- Play the VX7 intro automatically on execution.
+task.spawn(function()
+	local introUrl = "https://files.catbox.moe/iyw1cb.mp3"
+	local introPath = "vx7/intro/iyw1cb.mp3"
+	local ok, err = pcall(function()
+		if isfile_ and not isfile_(introPath) then
+			local data = game:HttpGet(introUrl)
+			if data and #data > 0 then
+				writefile_(introPath, data)
+			end
+		end
+		if not getcustomasset or not isfile_ or not isfile_(introPath) then
+			error("custom asset loading is unavailable")
+		end
+		local sound = Instance.new("Sound")
+		sound.Name = "VX7_Intro"
+		sound.SoundId = getcustomasset(introPath)
+		sound.Volume = 1
+		sound.Parent = game:GetService("SoundService")
+		sound.Ended:Connect(function()
+			sound:Destroy()
+		end)
+		sound:Play()
+	end)
+	if not ok then
+		warn("[VX7] Intro playback failed: " .. tostring(err))
+	end
+end)
