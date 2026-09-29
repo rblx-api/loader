@@ -11,7 +11,6 @@ local TweenService = game:GetService("TweenService")
 local HttpService = game:GetService("HttpService")
 local Workspace = game:GetService("Workspace")
 local LP = Players.LocalPlayer
-local HttpRequest = request or http_request or (syn and syn.request) or nil
 
 -- // THEME (Estilo de la imagen: Fondo negro, bordes/detalles morados)
 local C_BORDER = Color3.fromRGB(150, 80, 220)
@@ -24,7 +23,7 @@ local C_TOGGLE_ON = Color3.fromRGB(220, 180, 255)
 local C_TOGGLE_OFF = Color3.fromRGB(35, 28, 45)
 
 local GUI_WIDTH = 200
-local GUI_EXPANDED_HEIGHT = 190   -- Altura ajustada al quitar un botón
+local GUI_EXPANDED_HEIGHT = 190
 local GUI_COLLAPSED_HEIGHT = 35
 
 -- // CONFIGURACIÓN (persistente)
@@ -61,30 +60,22 @@ local Keys = {
 }
 
 -- =====================================================
---  CARTEL FLOTANTE (activado por ANTI DROP) - Solo texto
+--  SISTEMA DE CARTELES FLOTANTES DINÁMICOS
 -- =====================================================
-local billboardGui = nil
-local billboardFrame = nil
-local billboardUpdater = nil
-local billboardCharAddedConn = nil
+local activeBillboards = {}
 
-local function createBillboard(char)
-    if not char then return end
-    local head = char:FindFirstChild("Head")
-    if not head then return end
+local function createBillboard(nameKey, displayText, yOffsetMultiplier)
+    if activeBillboards[nameKey] then return end
 
-    if billboardGui then billboardGui:Destroy() end
-    if billboardUpdater then billboardUpdater:Disconnect(); billboardUpdater = nil end
-
-    billboardGui = Instance.new("ScreenGui")
-    billboardGui.Name = "404HavenAntiDropBillboard"
+    local billboardGui = Instance.new("ScreenGui")
+    billboardGui.Name = "404HavenBillboard_" .. nameKey
     billboardGui.ResetOnSpawn = false
     billboardGui.IgnoreGuiInset = true
     billboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     billboardGui.Parent = game:GetService("CoreGui")
 
-    billboardFrame = Instance.new("Frame", billboardGui)
-    billboardFrame.Size = UDim2.new(0, 180, 0, 36)
+    local billboardFrame = Instance.new("Frame", billboardGui)
+    billboardFrame.Size = UDim2.new(0, 180, 0, 32)
     billboardFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     billboardFrame.BackgroundTransparency = 0.3
     billboardFrame.BorderSizePixel = 0
@@ -93,48 +84,52 @@ local function createBillboard(char)
 
     local txt1 = Instance.new("TextLabel", billboardFrame)
     txt1.Size = UDim2.new(1, 0, 1, 0)
-    txt1.Position = UDim2.new(0, 0, 0, 0)
     txt1.BackgroundTransparency = 1
-    txt1.Text = "HAVEN ANTI DROP"
+    txt1.Text = displayText
     txt1.TextColor3 = Color3.fromRGB(255, 255, 255)
     txt1.Font = Enum.Font.GothamBlack
-    txt1.TextSize = 15
+    txt1.TextSize = 14
     txt1.TextXAlignment = Enum.TextXAlignment.Center
     txt1.TextYAlignment = Enum.TextYAlignment.Center
 
     local camera = Workspace.CurrentCamera
-    billboardUpdater = RunService.Heartbeat:Connect(function()
+    local updater
+    updater = RunService.Heartbeat:Connect(function()
         if not billboardGui or not billboardGui.Parent then
-            if billboardUpdater then billboardUpdater:Disconnect(); billboardUpdater = nil end
+            if updater then updater:Disconnect() end
             return
         end
-        if not head or not head.Parent then
+        local char = LP.Character
+        local head = char and char:FindFirstChild("Head")
+        if not head then
             billboardFrame.Visible = false
             return
         end
         local pos, onScreen = camera:WorldToScreenPoint(head.Position)
         if onScreen then
-            billboardFrame.Position = UDim2.new(0, pos.X - 90, 0, pos.Y - 30)
+            -- Se usa el multiplicador para apilar los carteles verticalmente si hay varios activos
+            billboardFrame.Position = UDim2.new(0, pos.X - 90, 0, pos.Y - (35 * yOffsetMultiplier))
             billboardFrame.Visible = true
         else
             billboardFrame.Visible = false
         end
     end)
+
+    activeBillboards[nameKey] = {
+        gui = billboardGui,
+        updater = updater
+    }
 end
 
-local function destroyBillboard()
-    if billboardUpdater then
-        billboardUpdater:Disconnect()
-        billboardUpdater = nil
-    end
-    if billboardGui then
-        billboardGui:Destroy()
-        billboardGui = nil
-    end
-    billboardFrame = nil
-    if billboardCharAddedConn then
-        billboardCharAddedConn:Disconnect()
-        billboardCharAddedConn = nil
+local function destroyBillboard(nameKey)
+    if activeBillboards[nameKey] then
+        if activeBillboards[nameKey].updater then
+            activeBillboards[nameKey].updater:Disconnect()
+        end
+        if activeBillboards[nameKey].gui then
+            activeBillboards[nameKey].gui:Destroy()
+        end
+        activeBillboards[nameKey] = nil
     end
 end
 
@@ -142,6 +137,11 @@ end
 for _, name in pairs({"404UI", "AntiDieUI", "VioletteTPBat", "404HavenBgPicker"}) do
     local old = game:GetService("CoreGui"):FindFirstChild(name)
     if old then old:Destroy() end
+end
+
+-- Limpiar posibles restos de carteles anteriores
+for k, _ in pairs(activeBillboards) do
+    destroyBillboard(k)
 end
 
 local gui = Instance.new("ScreenGui")
@@ -407,16 +407,7 @@ local function startAntiDrop()
     setreadonly(mt, true)
     antiDropActive = true
 
-    local char = LP.Character
-    if char then createBillboard(char) end
-
-    if billboardCharAddedConn then billboardCharAddedConn:Disconnect() end
-    billboardCharAddedConn = LP.CharacterAdded:Connect(function(c)
-        if Config.AntiDrop then
-            task.wait(0.1)
-            createBillboard(c)
-        end
-    end)
+    createBillboard("AntiDrop", "HAVEN ANTI DROP", 1)
 end
 
 local function stopAntiDrop()
@@ -430,7 +421,7 @@ local function stopAntiDrop()
         oldNewIdx = nil
     end
     antiDropActive = false
-    destroyBillboard()
+    destroyBillboard("AntiDrop")
 end
 
 -- LÓGICA: ANTI DIE
@@ -480,6 +471,7 @@ local function startAntiDie()
         deathConns = {}
         protectChar(c)
     end)
+    createBillboard("AntiDie", "HAVEN ANTI DIE", 2)
 end
 
 local function stopAntiDie()
@@ -496,8 +488,10 @@ local function stopAntiDie()
             hum.Health = 100
         end
     end
+    destroyBillboard("AntiDie")
 end
 
+-- LÓGICA: HOLD JUMP
 RunService.Heartbeat:Connect(function()
     if not Config.HoldJump then return end
     local char = LP.Character
@@ -509,7 +503,15 @@ RunService.Heartbeat:Connect(function()
     end
 end)
 
--- CONSTRUCCIÓN DE LOS 3 TOGGLES RESTANTES
+local function startHoldJump()
+    createBillboard("HoldJump", "HAVEN HOLD JUMP", 3)
+end
+
+local function stopHoldJump()
+    destroyBillboard("HoldJump")
+end
+
+-- CONSTRUCCIÓN DE LOS 3 TOGGLES
 local yPos = 54
 
 -- 1. ANTI DROP
@@ -538,11 +540,13 @@ update3(Config.HoldJump)
 btn3.MouseButton1Click:Connect(function()
     Config.HoldJump = not Config.HoldJump
     update3(Config.HoldJump)
+    if Config.HoldJump then startHoldJump() else stopHoldJump() end
     SaveConfig()
 end)
 
 if Config.AntiDrop then startAntiDrop() end
 if Config.AntiDie then startAntiDie() end
+if Config.HoldJump then startHoldJump() end
 
 updateStatusPanel()
 
@@ -591,4 +595,4 @@ invisibleKeyBtn.MouseButton1Click:Connect(function()
     end)
 end)
 
-print("404 | HAVEN - Sin TP Bat aplicado correctamente.")
+print("404 | HAVEN - Carteles flotantes dinámicos aplicados.")
