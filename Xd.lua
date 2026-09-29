@@ -1,3 +1,1274 @@
+local function __runIntroBeforeYEP3SS()
+--============================================================
+-- SHADOW.VS INTRO
+-- YOUR ORIGINAL VERSION
+-- RANDOM IMAGE + MUSIC + BEAT EFFECTS + SKIP
+--============================================================
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local SoundService = game:GetService("SoundService")
+local RunService = game:GetService("RunService")
+local ContentProvider = game:GetService("ContentProvider")
+
+local player = Players.LocalPlayer
+local PlayerGui = player:WaitForChild("PlayerGui")
+
+--============================================================
+-- SETTINGS
+--============================================================
+
+local MUSIC_URL =
+		"https://files.manuscdn.com/user_upload_by_module/session_file/310519663968634751/fUWlQabjGTNTkaqT.mp3"
+
+local MUSIC_FILE =
+		"NikeDuels_Music.mp3"
+
+local MUSIC_VOLUME =
+	0.75
+
+local BPM =
+	100
+
+local BEAT =
+	60 / BPM
+
+-- IMAGE 2 FIRST
+-- IMAGE 1 SECOND
+-- THEN RANDOM WITHOUT REPEATING
+local IMAGES = {
+			"rbxassetid://105028976077977"
+}
+
+local SECOND_IMAGE_ID =
+			"rbxassetid://132732506696594"
+
+local MIDDLE_IMAGE_ID =
+			"rbxassetid://105028976077977"
+
+local FINAL_IMAGE_ID =
+			"rbxassetid://79145776650507"
+
+--============================================================
+-- CLEAN OLD
+--============================================================
+
+for _, name in ipairs({
+	"ShadowVSIntro"
+}) do
+
+	local old =
+		PlayerGui:FindFirstChild(name)
+
+	if old then
+		old:Destroy()
+	end
+
+end
+
+--============================================================
+-- IMAGE ORDER
+--============================================================
+
+local lastImage =
+		shared.ShadowVS_LastImage
+
+local imageIndex
+
+imageIndex = 1
+
+shared.ShadowVS_LastImage =
+	imageIndex
+
+local IMAGE_ID =
+	IMAGES[imageIndex]
+
+--============================================================
+-- INTRO STATE
+--============================================================
+
+local introActive =
+		true
+
+local introFinished =
+		false
+
+_G._YEP3SSIntroActive = true
+_G._YEP3SSIntroDone = false
+
+local introSound =
+	nil
+
+--============================================================
+-- GUI
+--============================================================
+
+local gui =
+	Instance.new("ScreenGui")
+
+gui.Name =
+	"ShadowVSIntro"
+
+gui.IgnoreGuiInset =
+	true
+
+gui.ResetOnSpawn =
+	false
+
+gui.DisplayOrder =
+	999999
+
+gui.ZIndexBehavior =
+	Enum.ZIndexBehavior.Sibling
+
+-- Do not show a black frame while the first image is loading.
+gui.Enabled = false
+
+gui.Parent =
+	PlayerGui
+
+--============================================================
+-- BACKGROUND
+--============================================================
+
+local background =
+	Instance.new("Frame")
+
+background.Size =
+	UDim2.fromScale(
+		1,
+		1
+	)
+
+background.BackgroundColor3 =
+	Color3.fromRGB(
+		0,
+		0,
+		0
+	)
+
+background.BorderSizePixel =
+	0
+
+background.ClipsDescendants =
+	true
+
+background.Parent =
+	gui
+
+--============================================================
+-- IMAGE
+--============================================================
+
+local image =
+	Instance.new("ImageLabel")
+
+image.AnchorPoint =
+	Vector2.new(
+		0.5,
+		0.5
+	)
+
+image.Position =
+	UDim2.fromScale(
+		0.5,
+		0.5
+	)
+
+image.Size =
+	UDim2.fromScale(
+		1.08,
+		1.08
+	)
+
+image.BackgroundTransparency =
+	1
+
+image.Image =
+	IMAGE_ID
+
+image.ImageTransparency =
+	0
+
+image.ScaleType =
+	Enum.ScaleType.Crop
+
+image.ZIndex =
+	1
+
+image.Parent =
+	background
+
+-- Wait for the first image before showing the intro.
+pcall(function()
+	ContentProvider:PreloadAsync({ image })
+end)
+image.ImageTransparency = 0
+
+-- PRELOAD IMAGE AND FORCE VISIBILITY
+task.spawn(function()
+	pcall(function()
+		ContentProvider:PreloadAsync({ image })
+	end)
+	if introActive and image.Parent then
+		image.ImageTransparency = 0
+	end
+end)
+
+--============================================================
+-- DARK OVERLAY
+--============================================================
+
+local dark =
+	Instance.new("Frame")
+
+dark.Size =
+	UDim2.fromScale(
+		1,
+		1
+	)
+
+dark.BackgroundColor3 =
+	Color3.fromRGB(
+		0,
+		0,
+		0
+	)
+
+dark.BackgroundTransparency =
+	0.25
+
+dark.BorderSizePixel =
+	0
+
+dark.ZIndex =
+	2
+
+dark.Parent =
+	background
+
+--============================================================
+-- SKIP INTRO BUTTON
+--============================================================
+
+local skip =
+	Instance.new("TextButton")
+
+skip.AnchorPoint =
+	Vector2.new(
+		1,
+		0
+	)
+
+skip.Position =
+	UDim2.new(
+		1,
+		-14,
+		0,
+		14
+	)
+
+skip.Size =
+	UDim2.fromOffset(
+		105,
+		36
+	)
+
+skip.BackgroundColor3 =
+	Color3.fromRGB(
+		15,
+		15,
+		18
+	)
+
+skip.BackgroundTransparency =
+	0.15
+
+skip.BorderSizePixel =
+	0
+
+skip.Text =
+	"SKIP INTRO"
+
+skip.TextColor3 =
+	Color3.fromRGB(
+		255,
+		255,
+		255
+	)
+
+skip.TextSize =
+	12
+
+skip.Font =
+	Enum.Font.GothamBold
+
+skip.AutoButtonColor =
+	false
+
+skip.ZIndex =
+	500
+
+skip.Parent =
+	gui
+
+local skipCorner =
+	Instance.new("UICorner")
+
+skipCorner.CornerRadius =
+	UDim.new(
+		0,
+		7
+	)
+
+skipCorner.Parent =
+	skip
+
+local skipStroke =
+	Instance.new("UIStroke")
+
+skipStroke.Color =
+	Color3.fromRGB(
+		255,
+		255,
+		255
+	)
+
+skipStroke.Transparency =
+	0.75
+
+skipStroke.Thickness =
+	1
+
+skipStroke.Parent =
+	skip
+
+--============================================================
+-- FLASH
+--============================================================
+
+local flash =
+	Instance.new("Frame")
+
+flash.Size =
+	UDim2.fromScale(
+		1,
+		1
+	)
+
+flash.BackgroundColor3 =
+	Color3.fromRGB(
+		255,
+		255,
+		255
+	)
+
+flash.BackgroundTransparency =
+	1
+
+flash.BorderSizePixel =
+	0
+
+flash.ZIndex =
+	400
+
+flash.Parent =
+	gui
+
+--============================================================
+-- DECORATIVE SQUARES
+--============================================================
+local decorSquares = {}
+local squarePositions = {
+	UDim2.fromScale(0.23, 0.30),
+	UDim2.fromScale(0.77, 0.30),
+	UDim2.fromScale(0.23, 0.70),
+	UDim2.fromScale(0.77, 0.70)
+}
+
+for _, squarePosition in ipairs(squarePositions) do
+	local square =
+		Instance.new("Frame")
+	square.AnchorPoint =
+		Vector2.new(0.5, 0.5)
+	square.Position =
+		squarePosition
+	square.Size =
+		UDim2.fromOffset(76, 76)
+	square.BackgroundColor3 =
+		Color3.fromRGB(255, 255, 255)
+	square.BackgroundTransparency =
+		1
+	square.BorderSizePixel =
+		0
+	square.ZIndex =
+		8
+	square.Parent =
+		gui
+
+	local squareStroke =
+		Instance.new("UIStroke")
+	squareStroke.Color =
+		Color3.fromRGB(220, 220, 220)
+	squareStroke.Thickness =
+		1.5
+	squareStroke.Transparency =
+		1
+	squareStroke.Parent =
+		square
+
+	local squareCorner =
+		Instance.new("UICorner")
+	squareCorner.CornerRadius =
+		UDim.new(0, 6)
+	squareCorner.Parent =
+		square
+
+	table.insert(
+		decorSquares,
+		{
+			frame = square,
+			stroke = squareStroke
+		}
+	)
+end
+
+for index, squareData in ipairs(decorSquares) do
+	task.delay(
+		0.18 * index,
+		function()
+			if not introActive then
+				return
+			end
+			TweenService:Create(
+				squareData.stroke,
+				TweenInfo.new(
+					0.65,
+					Enum.EasingStyle.Quint,
+					Enum.EasingDirection.Out
+				),
+				{
+					Transparency =
+						0.35
+				}
+			):Play()
+		end
+	)
+end
+
+task.spawn(function()
+	local squareTime = 0
+	while introActive and gui.Parent do
+		task.wait(0.03)
+		squareTime = squareTime + 0.03
+		for index, squareData in ipairs(decorSquares) do
+			if squareData.frame and squareData.frame.Parent then
+				local phase = (index - 1) * math.pi / 2
+				local basePosition = squarePositions[index]
+				local movementX
+				local movementY
+				if index == 1 then
+					movementX = math.cos(squareTime * 0.9) * 0.025
+					movementY = math.sin(squareTime * 0.9) * 0.025
+				else
+					movementX = math.sin(squareTime * 0.85 + phase) * 0.012
+					movementY = math.cos(squareTime * 0.7 + phase) * 0.012
+				end
+				squareData.frame.Position =
+					UDim2.fromScale(
+						basePosition.X.Scale + movementX,
+						basePosition.Y.Scale + movementY
+					)
+				squareData.frame.Rotation =
+					math.sin(squareTime * 0.65 + phase) * 5
+				if squareData.stroke and squareData.stroke.Parent then
+					squareData.stroke.Transparency =
+						0.3 + math.sin(squareTime * 1.4 + phase) * 0.12
+				end
+			end
+		end
+	end
+end)
+
+--============================================================
+-- TITLE
+--============================================================
+
+local introTitle =
+	Instance.new("TextLabel")
+
+introTitle.AnchorPoint =
+	Vector2.new(
+		0.5,
+		0.5
+	)
+
+introTitle.Position =
+	UDim2.fromScale(
+		0.5,
+		0.5
+	)
+
+introTitle.Size =
+	UDim2.fromScale(
+		1.1,
+		0.22
+	)
+
+introTitle.BackgroundTransparency =
+	1
+
+introTitle.Text =
+	"NIKE DUELS"
+
+introTitle.TextColor3 =
+	Color3.fromRGB(
+		255,
+		255,
+		255
+	)
+
+introTitle.TextTransparency =
+	1
+
+introTitle.TextScaled =
+	true
+
+introTitle.Font =
+	Enum.Font.GothamBlack
+
+introTitle.ZIndex =
+	20
+
+introTitle.Parent =
+	background
+
+local titleStroke =
+	Instance.new("UIStroke")
+
+titleStroke.Color =
+	Color3.fromRGB(
+		0,
+		0,
+		0
+	)
+
+titleStroke.Thickness =
+	3
+
+titleStroke.Transparency =
+	1
+
+titleStroke.Parent =
+	introTitle
+
+--============================================================
+-- SUBTITLE
+--============================================================
+
+local introSubtitle =
+	Instance.new("TextLabel")
+
+introSubtitle.AnchorPoint =
+	Vector2.new(
+		0.5,
+		0.5
+	)
+
+introSubtitle.Position =
+	UDim2.fromScale(
+		0.5,
+		0.59
+	)
+
+introSubtitle.Size =
+	UDim2.fromScale(
+		0.6,
+		0.05
+	)
+
+introSubtitle.BackgroundTransparency =
+	1
+
+introSubtitle.Text =
+	"DUELS"
+
+introSubtitle.TextColor3 =
+	Color3.fromRGB(
+		205,
+		205,
+		205
+	)
+
+introSubtitle.TextTransparency =
+	1
+
+introSubtitle.TextScaled =
+	true
+
+introSubtitle.Font =
+	Enum.Font.GothamBold
+
+introSubtitle.ZIndex =
+	20
+
+introSubtitle.Parent =
+	background
+
+--============================================================
+-- MUSIC LOADER
+--============================================================
+
+local function loadMusic()
+
+	local asset
+
+	pcall(function()
+
+		if isfile and
+			isfile(MUSIC_FILE) then
+
+			asset =
+				getcustomasset(
+					MUSIC_FILE
+				)
+
+		end
+
+	end)
+
+	if not asset then
+
+		local success, data =
+			pcall(function()
+
+				return game:HttpGet(
+					MUSIC_URL
+				)
+
+			end)
+
+		if success and
+			data and
+			#data > 1000 then
+
+			pcall(function()
+
+				writefile(
+					MUSIC_FILE,
+					data
+				)
+
+			end)
+
+			pcall(function()
+
+				asset =
+					getcustomasset(
+						MUSIC_FILE
+					)
+
+			end)
+
+		end
+
+	end
+
+	return asset
+
+end
+
+--============================================================
+-- PLAY MUSIC
+--============================================================
+
+task.spawn(function()
+
+	local asset =
+		loadMusic()
+
+	if not asset or
+		not introActive then
+		return
+	end
+
+	introSound =
+		Instance.new("Sound")
+
+	introSound.Name =
+		"ShadowVSIntroMusic"
+
+	introSound.SoundId =
+		asset
+
+	introSound.Volume =
+		MUSIC_VOLUME
+
+	introSound.Looped =
+		false
+
+	introSound.Parent =
+		SoundService
+
+	pcall(function()
+		introSound:Play()
+	end)
+
+end)
+
+--============================================================
+-- FINISH
+--============================================================
+
+local function finishIntro()
+
+	if introFinished then
+		return
+	end
+
+	introFinished =
+		true
+
+	introActive =
+		false
+	introDone = true
+	_G._YEP3SSIntroActive = false
+	_G._YEP3SSIntroDone = true
+	if _G._YEP3SSShowMenuAfterIntro then
+		pcall(_G._YEP3SSShowMenuAfterIntro)
+	end
+	-- Si el script todavía está terminando de construir la interfaz, espera
+	-- solo a que existan Main y los botones; no espera otra carga completa.
+	task.spawn(function()
+		local roots = {PlayerGui, game:GetService("CoreGui")}
+		for _ = 1, 240 do
+			for _, root in ipairs(roots) do
+				local hub = root:FindFirstChild("AmbitiousHub")
+				local main = hub and hub:FindFirstChild("Main", true)
+				local mobile = root:FindFirstChild("AmbitiousHubMobileButtons")
+				if main and mobile then
+					main.Visible = true
+					mobile.Enabled = true
+					return
+				end
+			end
+			task.wait()
+		end
+	end)
+
+	if introSound then
+
+		pcall(function()
+
+			TweenService:Create(
+				introSound,
+				TweenInfo.new(
+					0.35
+				),
+				{
+					Volume = 0
+				}
+			):Play()
+
+		end)
+
+		task.delay(
+			0.4,
+			function()
+
+				pcall(function()
+
+					introSound:Stop()
+					introSound:Destroy()
+
+				end)
+
+			end
+		)
+
+	end
+
+	-- SKIP debe liberar la interfaz inmediatamente, sin esperar el fade de audio.
+	gui.Enabled = false
+	pcall(function()
+		gui:Destroy()
+	end)
+
+end
+
+--============================================================
+-- SKIP
+--============================================================
+
+skip.MouseButton1Down:Connect(
+	finishIntro
+)
+
+--============================================================
+-- SKIP HOVER
+--============================================================
+
+skip.MouseEnter:Connect(function()
+
+	TweenService:Create(
+		skip,
+		TweenInfo.new(
+			0.12
+		),
+		{
+			BackgroundColor3 =
+				Color3.fromRGB(
+					55,
+					55,
+					60
+				)
+		}
+	):Play()
+
+end)
+
+skip.MouseLeave:Connect(function()
+
+	TweenService:Create(
+		skip,
+		TweenInfo.new(
+			0.12
+		),
+		{
+			BackgroundColor3 =
+				Color3.fromRGB(
+					15,
+					15,
+					18
+				)
+		}
+	):Play()
+
+end)
+
+--============================================================
+-- IMAGE FADE IN
+--============================================================
+-- The first image is already visible from startup.
+image.ImageTransparency = 0
+gui.Enabled = true
+
+--============================================================
+-- SLOW ZOOM
+--============================================================
+
+TweenService:Create(
+	image,
+	TweenInfo.new(
+		18,
+		Enum.EasingStyle.Sine,
+		Enum.EasingDirection.InOut
+	),
+	{
+		Size =
+			UDim2.fromScale(
+				1.18,
+				1.18
+			)
+		}
+	):Play()
+
+local function changeIntroImage(assetId)
+	TweenService:Create(
+		image,
+		TweenInfo.new(
+			0.25,
+			Enum.EasingStyle.Quint,
+			Enum.EasingDirection.In
+		),
+		{
+			ImageTransparency =
+				1
+		}
+	):Play()
+	task.wait(
+		0.28
+	)
+	image.Image =
+		assetId
+	pcall(function()
+		ContentProvider:PreloadAsync({ image })
+	end)
+	TweenService:Create(
+		image,
+		TweenInfo.new(
+			0.35,
+			Enum.EasingStyle.Quint,
+			Enum.EasingDirection.Out
+		),
+		{
+			ImageTransparency =
+				0
+		}
+	):Play()
+end
+
+task.spawn(function()
+	task.wait(
+		4
+	)
+	if not introActive then
+		return
+	end
+	changeIntroImage(
+		SECOND_IMAGE_ID
+	)
+	task.wait(
+		3.5
+	)
+	if not introActive then
+		return
+	end
+	changeIntroImage(
+		MIDDLE_IMAGE_ID
+	)
+end)
+
+--============================================================
+-- BEAT FLASH
+--============================================================
+
+task.spawn(function()
+
+	while introActive
+		and gui.Parent do
+
+		flash.BackgroundTransparency =
+			0.8
+
+		TweenService:Create(
+			flash,
+			TweenInfo.new(
+				0.12,
+				Enum.EasingStyle.Quint,
+				Enum.EasingDirection.Out
+			),
+			{
+				BackgroundTransparency =
+					1
+			}
+		):Play()
+
+		task.wait(
+			BEAT
+		)
+
+	end
+
+end)
+
+--============================================================
+-- TITLE
+--============================================================
+
+task.wait(1.5)
+
+if not introActive then
+	return
+end
+
+TweenService:Create(
+	introTitle,
+	TweenInfo.new(
+		0.7,
+		Enum.EasingStyle.Quint,
+		Enum.EasingDirection.Out
+	),
+	{
+		Size =
+			UDim2.fromScale(
+				0.9,
+				0.18
+			),
+
+		TextTransparency =
+			0
+	}
+):Play()
+
+TweenService:Create(
+	titleStroke,
+	TweenInfo.new(
+		0.5
+	),
+	{
+		Transparency =
+			0
+	}
+):Play()
+
+--============================================================
+-- TITLE SHAKE
+--============================================================
+
+task.wait(1)
+
+for i = 1, 18 do
+
+	if not introActive then
+		return
+	end
+
+	introTitle.Position =
+		UDim2.fromScale(
+			0.5 +
+				math.random(
+					-8,
+					8
+				) / 1000,
+
+			0.5 +
+				math.random(
+					-8,
+					8
+				) / 1000
+		)
+
+	task.wait(
+		0.025
+	)
+
+end
+
+introTitle.Position =
+	UDim2.fromScale(
+		0.5,
+		0.5
+	)
+
+--============================================================
+-- SUBTITLE
+--============================================================
+
+TweenService:Create(
+	introSubtitle,
+	TweenInfo.new(
+		0.6,
+		Enum.EasingStyle.Quint,
+		Enum.EasingDirection.Out
+	),
+	{
+		TextTransparency =
+			0
+	}
+):Play()
+
+--============================================================
+-- HOLD
+--============================================================
+
+task.wait(7)
+
+if not introActive then
+	return
+end
+
+--============================================================
+-- FINAL BEAT FLASHES
+--============================================================
+
+for i = 1, 14 do
+
+	if not introActive then
+		return
+	end
+
+	flash.BackgroundTransparency =
+		0
+
+	task.wait(
+		0.025
+	)
+
+	flash.BackgroundTransparency =
+		1
+
+	task.wait(
+		0.065
+	)
+
+end
+
+--============================================================
+-- EXTRA HOLD
+--============================================================
+
+task.wait(2)
+
+if not introActive then
+	return
+end
+
+--============================================================
+-- TITLE FADE
+--============================================================
+image.ImageTransparency =
+	1
+image.Image =
+	FINAL_IMAGE_ID
+TweenService:Create(
+	image,
+	TweenInfo.new(
+		0.35,
+		Enum.EasingStyle.Quint,
+		Enum.EasingDirection.Out
+	),
+	{
+		ImageTransparency =
+			0
+	}
+):Play()
+task.wait(
+	0.45
+)
+TweenService:Create(
+	introTitle,
+	TweenInfo.new(
+		1.2,
+		Enum.EasingStyle.Quint,
+		Enum.EasingDirection.In
+	),
+	{
+		TextTransparency =
+			1
+	}
+):Play()
+
+TweenService:Create(
+	introSubtitle,
+	TweenInfo.new(
+		1,
+		Enum.EasingStyle.Quint,
+		Enum.EasingDirection.In
+	),
+	{
+		TextTransparency =
+			1
+	}
+):Play()
+
+TweenService:Create(
+	titleStroke,
+	TweenInfo.new(
+		1
+	),
+	{
+		Transparency =
+			1
+	}
+):Play()
+
+--============================================================
+-- IMAGE FADE
+--============================================================
+
+TweenService:Create(
+	image,
+	TweenInfo.new(
+		1.5,
+		Enum.EasingStyle.Quint,
+		Enum.EasingDirection.In
+	),
+	{
+		ImageTransparency =
+			1
+	}
+):Play()
+
+TweenService:Create(
+	dark,
+	TweenInfo.new(
+		1.5
+	),
+	{
+		BackgroundTransparency =
+			1
+	}
+):Play()
+
+--============================================================
+-- MUSIC FADE
+--============================================================
+
+if introSound and
+	introSound.Parent then
+
+	TweenService:Create(
+		introSound,
+		TweenInfo.new(
+			1.5,
+			Enum.EasingStyle.Quint,
+			Enum.EasingDirection.In
+		),
+		{
+			Volume =
+				0
+		}
+	):Play()
+
+end
+
+--============================================================
+-- FINAL BLACK FADE
+--============================================================
+
+local finalFade =
+	Instance.new("Frame")
+
+finalFade.Size =
+	UDim2.fromScale(
+		1,
+		1
+	)
+
+finalFade.BackgroundColor3 =
+	Color3.fromRGB(
+		0,
+		0,
+		0
+	)
+
+finalFade.BackgroundTransparency =
+	1
+
+finalFade.BorderSizePixel =
+	0
+
+finalFade.ZIndex =
+	1000
+
+finalFade.Parent =
+	gui
+
+TweenService:Create(
+	finalFade,
+	TweenInfo.new(
+		1.5,
+		Enum.EasingStyle.Quint,
+		Enum.EasingDirection.In
+	),
+	{
+		BackgroundTransparency =
+			0
+	}
+):Play()
+
+task.wait(
+	1.6
+)
+
+finishIntro()
+
+end
+
+-- START INTRO
+__runIntroBeforeYEP3SS()
+
 -- ============================================================
 -- GUARD DOPPIA ESECUZIONE
 -- Se l'hub e' gia' in esecuzione in questa sessione il chunk si ferma qui:
@@ -117,7 +1388,8 @@ _G._AmbitiousSyncAfterHit = {
 }
 
 local selectedAimbotMode = "V1"
-local AIMBOT_SPEED = 58
+-- Bat Aimbot V1 basado en CryonDuels: velocidad de persecución 60.
+local AIMBOT_SPEED = 60
 local LAGGER_AIMBOT_SPEED = 40
 _G.AmbitiousBatAimbotV2Speed = _G.AmbitiousBatAimbotV2Speed or 58
 if _G.AmbitiousBatAimbotV2LaggerSpeed == nil or tonumber(_G.AmbitiousBatAimbotV2LaggerSpeed) == 58 then _G.AmbitiousBatAimbotV2LaggerSpeed = 40 end
@@ -3288,6 +4560,7 @@ end
 local _antiDieConfig = {
     healthThreshold    = 25,    -- soglia HP sotto cui si cura
     invincibilityFrames = 0.5,  -- secondi di invincibilità post-heal
+    infiniteHealth     = true,  -- protezione de Paralaperradebenja
     blockDeadState     = true,  -- disabilita lo stato Dead sull'Humanoid
     blockDamageEvents  = true,  -- override TakeDamage + segnale Damage
     autoRepairCharacter = true, -- ricrea parti mancanti come parti invisibili
@@ -3301,7 +4574,10 @@ local _antiDieHeartbeatConn   = nil -- RunService.Heartbeat (loop principale)
 local function _antiDieSuperHeal(hum)
     if not hum or not hum.Parent then return end
     if tick() < _antiDieInvincibleUntil then return end
-    local maxHP = hum.MaxHealth or 100
+    local maxHP = (_antiDieConfig.infiniteHealth and math.huge) or hum.MaxHealth or 100
+    if _antiDieConfig.infiniteHealth then
+        pcall(function() hum.MaxHealth = math.huge end)
+    end
     hum.Health = maxHP
     _antiDieInvincibleUntil = tick() + _antiDieConfig.invincibilityFrames
     -- azzera BoolValue "dead" e ripristina NumberValue health nel character
@@ -3421,6 +4697,12 @@ local function applyGodMode(character)
     -- =============================================
     humanoid.BreakJointsOnDeath = false
     humanoid.RequiresNeck       = false
+    if _antiDieConfig.infiniteHealth then
+        pcall(function()
+            humanoid.MaxHealth = math.huge
+            humanoid.Health = math.huge
+        end)
+    end
 
     -- =============================================
     -- 3) Rimuovi script Health ostile
@@ -3454,6 +4736,13 @@ local function applyGodMode(character)
         if newState == Enum.HumanoidStateType.Dead
         or newState == Enum.HumanoidStateType.Ragdoll
         or newState == Enum.HumanoidStateType.FallingDown then
+            if _antiDieConfig.infiniteHealth then
+                pcall(function()
+                    humanoid.MaxHealth = math.huge
+                    humanoid.Health = math.huge
+                    humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
+                end)
+            end
             humanoid:ChangeState(Enum.HumanoidStateType.Running)
         end
     end))
@@ -3658,6 +4947,9 @@ local function applyGodMode(character)
                 if humanoid.Health < humanoid.MaxHealth then
                     _antiDieSuperHeal(humanoid)
                 end
+                if _antiDieConfig.infiniteHealth and humanoid.MaxHealth ~= math.huge then
+                    humanoid.MaxHealth = math.huge
+                end
                 if humanoid.BreakJointsOnDeath == true then
                     humanoid.BreakJointsOnDeath = false
                 end
@@ -3775,6 +5067,8 @@ local function stopAntiDie(silent)
                 pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.GettingUp, true) end)
                 hum.BreakJointsOnDeath = true
                 hum.RequiresNeck       = true
+                hum.MaxHealth          = 100
+                hum.Health              = 100
             end
         end)
         -- Rimuovi ForceField aggiunto da anti-die
@@ -3791,7 +5085,7 @@ local function stopAntiDie(silent)
         antiDieCharAddedConn = nil
     end
 
-    -- 4) Ripristino sicurezza sul personaggio corrente
+        -- 4) Ripristino sicurezza sul personaggio corrente
     local char = LP.Character
     if char then
         local hum = char:FindFirstChildOfClass("Humanoid")
@@ -3803,6 +5097,8 @@ local function stopAntiDie(silent)
                 pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.GettingUp, true) end)
                 hum.BreakJointsOnDeath = true
                 hum.RequiresNeck       = true
+                hum.MaxHealth          = 100
+                hum.Health              = 100
             end)
         end
         pcall(function()
@@ -4519,10 +5815,12 @@ local customBgSelected = nil   -- stringa ID custom selezionato, o nil se si usa
 -- Dove sta la barra delle tab (MOVEMENT / COMBAT / ...) dentro la finestra.
 -- Sta su _G e non su un local del main chunk per non consumare uno dei 200
 -- slot di registro. Valori ammessi: "Up", "Bottom", "Left", "Right".
-_G._AmbitiousTabPosition = _G._AmbitiousTabPosition or "Up"
+-- Le schede del mod menu partono ordinate in verticale sul lato sinistro.
+-- Si forza Left anche se una versione precedente ha lasciato un valore in _G.
+_G._AmbitiousTabPosition = "Left"
 function _G.AmbitiousValidTabPosition(v)
   if v == "Up" or v == "Bottom" or v == "Left" or v == "Right" then return v end
-  return "Up"
+  return "Left"
 end
 -- <<< TAB POSITION END
 local ambitiousGuiScaleValue = 0.75
@@ -4778,6 +6076,18 @@ MUSIC_PLAYER_OPTIONS = MUSIC_PLAYER_OPTIONS or {
   {name="Darkmoney RMX", url="https://files.catbox.moe/rz4mzu.mp3", file="AmbitiousHubMusic49.mp3"},
   {name="Ghetto RMX", url="https://files.catbox.moe/omj56p.mp3", file="AmbitiousHubMusic50.mp3"},
   {name="Copacabana RMX", url="https://files.catbox.moe/g43412.mp3", file="AmbitiousHubMusic51.mp3"},
+  {name="Tuff Song", url="https://files.catbox.moe/rvf2vy.mp3", file="ninja_tuffsong.mp3", volume=0.75},
+  {name="orula", url="https://files.catbox.moe/v20ko9.mp3", file="ninja_orula.mp3", volume=0.85},
+  {name="X.O.X.O", url="https://files.catbox.moe/jghp0f.mp3", file="ninja_xoxo.mp3", volume=0.75},
+  {name="beretta", url="https://file.garden/algLafWA1jk8WMfK/Beretta%20-%20video%20oficial(MP3_160K).mp3", file="ninja_beretta.mp3", volume=0.75, startAt=10},
+  {name="to the O", url="https://file.garden/algLafWA1jk8WMfK/King%20Von%20-%20Took%20Her%20To%20The%20O%20(Lyrics)(MP3_160K).mp3", file="ninja_to_the_o.mp3", volume=0.75},
+  {name="LAJA", url="https://file.garden/algLafWA1jk8WMfK/LAJA%20-%20NADIE%20TA%20FRIO%20(Letra)(MP3_160K).mp3", file="ninja_laja.mp3", volume=0.75},
+  {name="HORA 0", url="https://file.garden/algLafWA1jk8WMfK/Myke%20Towers%20-%20HORA%20CERO%20(Lyrics)(MP3_160K).mp3", file="ninja_hora_0.mp3", volume=0.75},
+  {name="Lucid Dreams", url="https://file.garden/algLafWA1jk8WMfK/Lucid%20Dreams%20-%20Clean%20-%20Juice%20WRLD(MP3_160K).mp3", file="ninja_lucid_dreams.mp3", volume=0.75},
+  {name="WARE", url="https://files.catbox.moe/p2pp91.mp3", file="ninja_ware.mp3", volume=0.75},
+  {name="WOW", url="https://files.catbox.moe/14rdtj.mp3", file="ninja_wow.mp3", volume=0.75},
+  {name="Seteadora", url="https://files.catbox.moe/94olvv.mp3", file="ninja_seteadora.mp3", volume=0.75},
+  {name="aparente", assetId="rbxassetid://99570200535378", volume=0.75},
 }
 
 selectedMusicSong = selectedMusicSong or 1
@@ -4816,7 +6126,9 @@ function _musicRefreshUI()
 end
 
 function cacheMusicSong(option, allowDownload)
-  if not option or not option.url or option.url == "" then return nil end
+  if not option then return nil end
+  if option.assetId and option.assetId ~= "" then return option.assetId end
+  if not option.url or option.url == "" then return nil end
   if not (writefile and getcustomasset) then return nil end
   local baseName = option.file or ("AmbitiousHubMusic_" .. tostring(option.name or "song") .. ".mp3")
   -- REVISIONE DEL FILE.
@@ -4883,11 +6195,14 @@ function createMusicSound(option, name)
   if not soundId then return nil end
   local sound = Instance.new("Sound")
   sound.Name = name or "AmbitiousHubMusicPlayer"
-  sound.Volume = musicPlayerVolume
+  sound.Volume = option.volume or musicPlayerVolume
   sound.PlaybackSpeed = musicPlayerSpeed
   sound.Looped = false
   sound.SoundId = soundId
   sound.Parent = SoundService
+  if option.startAt then
+    pcall(function() sound.TimePosition = option.startAt end)
+  end
   return sound
 end
 
@@ -4941,7 +6256,7 @@ function playMusicSong(index)
       return
     end
     if not sound then _safeNotify("SONG FAILED"); return end
-    sound.Volume = musicPlayerVolume
+    sound.Volume = option.volume or musicPlayerVolume
     sound.PlaybackSpeed = musicPlayerSpeed
     sound.TimePosition = 0
     _musicPlayerSound = sound
@@ -5082,7 +6397,7 @@ _G.AmbitiousMobileHideIncluded = function(key)
   if v == nil then return true end
   return v == true
 end
-_G.AmbitiousMobileButtonScale = 0.75
+_G.AmbitiousMobileButtonScale = 1.05
 _G.AmbitiousMobileButtonPositions = _G.AmbitiousMobileButtonPositions or {}
 savedMainPositionTable = nil
 savedMiniPositionTable = nil
@@ -5581,7 +6896,7 @@ function loadAmbitiousConfig()
   _G.AmbitiousGuiLocked = data.guiLocked == true
   _G.AmbitiousHideMobileButtons = data.hideMobileButtons == true
   _G.AmbitiousMobileHideList = (type(data.mobileHideList) == "table") and data.mobileHideList or {}
-  _G.AmbitiousMobileButtonScale = math.clamp(tonumber(data.ambitiousMobileButtonScale) or tonumber(_G.AmbitiousMobileButtonScale) or 0.75, 0.30, 1.35)
+  _G.AmbitiousMobileButtonScale = 1.05
   _G.AmbitiousMobileButtonPositions = type(data.mobileButtonPositions) == "table" and data.mobileButtonPositions or {}
   applySavedKeybinds(keybindData.keybinds)
   if keybindData.tpDownKeybind ~= nil then
@@ -7263,7 +8578,7 @@ function _G.AmbitiousGetNormalAimbotSpeed()
   if currentSpeedMode == "Lagger" or currentSpeedMode == "Lagger Carry" then
     return tonumber(LAGGER_AIMBOT_SPEED) or 40
   end
-  return tonumber(AIMBOT_SPEED) or 58
+  return tonumber(AIMBOT_SPEED) or 60
 end
 
 function _G.AmbitiousGetBatAimbotV2Speed()
@@ -7277,7 +8592,7 @@ function _G.AmbitiousGetSelectedAimbotSpeedValues()
   if selectedAimbotMode == "V2" then
     return tonumber(_G.AmbitiousBatAimbotV2Speed) or 58, tonumber(_G.AmbitiousBatAimbotV2LaggerSpeed) or 40
   end
-  return tonumber(AIMBOT_SPEED) or 58, tonumber(LAGGER_AIMBOT_SPEED) or 40
+  return tonumber(AIMBOT_SPEED) or 60, tonumber(LAGGER_AIMBOT_SPEED) or 40
 end
 
 function _G.AmbitiousSetSelectedAimbotSpeedValues(normalValue, laggerValue)
@@ -7650,6 +8965,10 @@ _G.AmbitiousNormalAimbotStart = _G.AmbitiousStartNormalAimbot
 _G.AmbitiousNormalAimbotStop = _G.AmbitiousStopNormalAimbot
 _G.AmbitiousBatAimbotV2Start = _G.AmbitiousStartBatAimbotV2
 _G.AmbitiousBatAimbotV2Stop = _G.AmbitiousStopBatAimbotV2
+-- Compatibilidad CryonDuels: el Bat Aimbot V1 de NikeDuels usa la misma
+-- persecución, predicción, equipamiento y Auto Swing de CryonDuels.
+_G.AmbitiousCryonBatAimbotStart = _G.AmbitiousStartNormalAimbot
+_G.AmbitiousCryonBatAimbotStop = _G.AmbitiousStopNormalAimbot
 
 -- Mirror TP Down
 -- Helpers interne nel do-block: liberano 6 slot locals dal main chunk.
@@ -7787,7 +9106,7 @@ do
       if now - tpBatSwingCooldown < TP_BAT_SWING_COOLDOWN then return end
       local char = LP.Character
       if not char then return end
-      local bat = char:FindFirstChild("Bat") or LP.Backpack:FindFirstChild("Bat")
+      local bat = (_G.AmbitiousFindAimbotBat and _G.AmbitiousFindAimbotBat()) or char:FindFirstChild("Bat") or (LP.Backpack and LP.Backpack:FindFirstChild("Bat"))
       if bat then
           if bat.Parent == LP.Backpack then
               local hum = char:FindFirstChildOfClass("Humanoid")
@@ -7911,9 +9230,11 @@ do
       hrp.AssemblyAngularVelocity = Vector3.zero
   end
 
+  -- TP BAT usa la logica Anti Desync di NikeDuels:
+  -- aggancia PhysicsRepRootPart al bersaglio, segue il target e mantiene
+  -- l'attacco automatico. L'interfaccia continua a chiamarlo "TP Bat".
   local function tpBatFrame(dt)
       if not tpBatEnabled then return end
-      dt = (type(dt) == "number" and dt > 0 and dt < 0.1) and dt or (1 / 60)
 
       local char = LP.Character
       if not char then return end
@@ -7924,124 +9245,37 @@ do
       local target = getClosestEnemy()
       if not (target and target.Character) then return end
       local tr = target.Character:FindFirstChild("HumanoidRootPart")
-      if not tr then return end
+      local targetHum = target.Character:FindFirstChildOfClass("Humanoid")
+      if not tr or not targetHum or targetHum.Health <= 0 then return end
 
-      -- >>> ANTI VOID BEGIN
-      -- Nemico tpato nel void: si lavora sul punto d'origine.
-      local _tpRaw, _tpGhost = tr.Position, false
+      -- Se il bersaglio e' nel void, usa la posizione fantasma per la mira
+      -- e non agganciare la root fisica a una parte ormai fuori mappa.
+      local targetPos = tr.Position
+      local targetIsGhost = false
       if _G.AmbitiousAntiVoid then
-          _tpRaw, _tpGhost = _G.AmbitiousAntiVoid.posForPart(tr, tr.Position)
+          targetPos, targetIsGhost = _G.AmbitiousAntiVoid.posForPart(tr, targetPos)
       end
-      -- PhysicsRepRootPart si aggancia al nemico solo se e' ancora in mappa.
+
       if sethiddenproperty then
-          if _tpGhost then
+          if targetIsGhost then
               pcall(function() sethiddenproperty(hrp, "PhysicsRepRootPart", nil) end)
           else
               pcall(function() sethiddenproperty(hrp, "PhysicsRepRootPart", tr) end)
           end
       end
-      -- <<< ANTI VOID END
 
-      -- Bat Aimbot V2 / Bat Counter V2 => SEMPRE V1
-      local forcedV1 = (_G.AmbitiousBatAimbotV2On == true)
-                    or (_G.AmbitiousBatCounterV2On == true)
-      local ver = forcedV1 and 1 or math.clamp(tonumber(_G.AmbitiousTPBatVersion) or 1, 1, 5)
-
-      if ver == 1 then
-          -- ---------- V1: logica originale ----------
-          local targetPos = _tpRaw + Vector3.new(0, 0.9, 0)
-          -- La distanza minima di 8 stud vale solo per il TP Bat avviato a mano.
-          if forcedV1 or (hrp.Position - targetPos).Magnitude > 8 then
-              hrp.CFrame = CFrame.new(targetPos)
-          end
-      else
-          -- ---------- BASE COMUNE V2..V5 ----------
-          local center = _tpRaw + Vector3.new(0, 0.9, 0)
-          local flatVel = Vector3.zero
-          if not _tpGhost then
-              local tv = tpBatTrackVel(tr)
-              flatVel = Vector3.new(tv.X, 0, tv.Z)
-              if flatVel.Magnitude > 110 then
-                  flatVel = flatVel.Unit * 110
-              end
-          end
-          local predicted = center + flatVel * 0.05
-
-          if ver == 2 then
-              -- ---------- V2: ORBITA FISSA ----------
-              TPB.orbitAngle = (TPB.orbitAngle or 0) + TPB.orbitSpeed * dt
-              local ang = TPB.orbitAngle
-              local orbitPos = predicted + Vector3.new(
-                  math.cos(ang) * TPB.orbitRadius,
-                  0,
-                  math.sin(ang) * TPB.orbitRadius
-              )
-              tpBatSnap(hrp, orbitPos, predicted)
-          else
-              local look  = tr.CFrame.LookVector
-              local right = tr.CFrame.RightVector
-
-              -- V3 resta sul punto predetto, V4/V5 si spostano 0.5 stud avanti
-              local anchor = predicted
-              if ver ~= 3 and flatVel.Magnitude > 0.5 then
-                  anchor = predicted + flatVel.Unit * 0.5
-              end
-
-              if ver == 5 then
-                  -- ---------- V5: VORTEX ----------
-                  TPB.orbitAngle = (TPB.orbitAngle or 0) + TPB.v5SpinSpeed * dt * 5
-                  local ang = TPB.orbitAngle
-                  local n = TPB.v5Teleports
-                  local rMin, rMax = TPB.v5RadiusMin, TPB.v5RadiusMax
-                  for i = 1, n do
-                      local t = i / n
-                      local radius = rMin + (rMax - rMin) * math.abs(math.sin(t * math.pi * 3))
-                      local angle = ang + t * 12
-                      local pos = anchor
-                          + right * (math.cos(angle) * radius)
-                          + look  * (math.sin(angle) * radius)
-                          + Vector3.new(0, math.sin(angle * 1.5) * 0.15, 0)
-                      tpBatSnap(hrp, pos, anchor)
-                  end
-                  local face = anchor + Vector3.new(
-                      math.sin(ang) * 0.3,
-                      0.1,
-                      math.cos(ang) * 0.3
-                  )
-                  tpBatSnap(hrp, anchor + Vector3.new(0, 0.15, 0), face)
-              else
-                  -- ---------- V3 / V4: BODY SPAM PATTERN ----------
-                  TPB.spinAngle = (TPB.spinAngle or 0) + TPB.spinSpeed * dt * 4.4
-                  local spin = TPB.spinAngle
-                  local c, s = math.cos(spin), math.sin(spin)
-                  for i = 1, TPB.teleports do
-                      local jx = ((i % 5) - 2) * 0.05
-                      local jz = ((i % 7) - 3) * 0.04
-                      local jy = ((i % 3) - 1) * 0.025
-                      local ox = jx * c - jz * s
-                      local oz = jx * s + jz * c
-                      local pos = anchor + right * ox + look * (0.12 + oz) + Vector3.new(0, jy, 0)
-                      tpBatSnap(hrp, pos, anchor)
-                  end
-                  local face = anchor + Vector3.new(
-                      math.sin(spin) * 0.4,
-                      0,
-                      math.cos(spin) * 0.4
-                  )
-                  tpBatSnap(hrp, anchor + Vector3.new(0, 0.15, 0), face)
-              end
-          end
+      -- Comportamento Anti Desync originale: snap sul bersaglio solo quando
+      -- la distanza supera la soglia, evitando micro-teleport continui.
+      local aimPos = targetPos + Vector3.new(0, 0.9, 0)
+      if (hrp.Position - aimPos).Magnitude > 8 then
+          pcall(function() hrp.CFrame = CFrame.new(aimPos) end)
       end
 
-      -- CAMERA LOCK: identico per tutte le versioni
-      if tpBatCameraLockEnabled then
-          pcall(function()
-              workspace.CurrentCamera.CFrame = CFrame.new(
-                  workspace.CurrentCamera.CFrame.Position,
-                  _tpRaw   -- >>> ANTI VOID <<<
-              )
-          end)
-      end
+      -- L'Anti Desync di NikeDuels mantiene la camera sul bersaglio.
+      pcall(function()
+          local cam = workspace.CurrentCamera
+          if cam then cam.CFrame = CFrame.new(cam.CFrame.Position, targetPos) end
+      end)
 
       trySwingBat()
   end
@@ -8139,6 +9373,18 @@ function _G.AmbitiousStopTPBat()
         tpBatResetConn:Disconnect()
         tpBatResetConn = nil
     end
+
+    -- Rimuove l'aggancio Anti Desync e ripristina la camera quando TP Bat
+    -- viene spento, anche dopo un hard stop o un ragdoll.
+    local stopChar = LP.Character
+    local stopRoot = stopChar and stopChar:FindFirstChild("HumanoidRootPart")
+    if stopRoot and sethiddenproperty then
+        pcall(function() sethiddenproperty(stopRoot, "PhysicsRepRootPart", nil) end)
+    end
+    pcall(function()
+        local cam = workspace.CurrentCamera
+        if cam and stopRoot then cam.CFrame = CFrame.new(cam.CFrame.Position, stopRoot.Position) end
+    end)
 
     -- Disconnetti tutte le CharacterAdded per-player IMMEDIATAMENTE
     for plr, conn in pairs(tpBatPlayerConns) do
@@ -11140,7 +12386,7 @@ local function setupOverheadInfo(char)
     discordLbl.Size = UDim2.new(1, 0, 0, 30)
     discordLbl.Position = UDim2.new(0, 0, 0, 26)
     discordLbl.BackgroundTransparency = 1
-    discordLbl.Text = "discord.gg/ambitiouss"
+    discordLbl.Text = "NIKE DUELS"
     discordLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
     discordLbl.TextStrokeColor3 = Color3.fromRGB(10, 5, 30)
     discordLbl.TextStrokeTransparency = 0
@@ -11154,9 +12400,9 @@ local function setupOverheadInfo(char)
     discordGrad.Rotation = 0
     discordGrad.Transparency = NumberSequence.new(0)
     discordGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
-        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 70, 70)),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(190, 20, 20)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(70, 0, 0)),
     })
 
     -- DIVISORE (GRADIENTE GALATTICO)
@@ -11174,9 +12420,9 @@ local function setupOverheadInfo(char)
     dividerGrad.Rotation = 0
     dividerGrad.Transparency = NumberSequence.new(0.3)
     dividerGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
-        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 70, 70)),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(190, 20, 20)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(70, 0, 0)),
     })
 
     -- LABEL SPEED (GRADIENTE GALATTICO SUL TESTO)
@@ -11199,9 +12445,9 @@ local function setupOverheadInfo(char)
     speedGrad.Rotation = 0
     speedGrad.Transparency = NumberSequence.new(0)
     speedGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
-        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 70, 70)),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(190, 20, 20)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(70, 0, 0)),
     })
 end
 
@@ -11729,12 +12975,12 @@ _G._AmbitiousApplyAccent = function()
     soft = Color3.fromRGB(92, 92, 102)
     base = Color3.fromRGB(62, 62, 70)
   else
-    c0   = Color3.fromRGB(202, 148, 255)
-    c1   = Color3.fromRGB(147, 51, 234)
-    c2   = Color3.fromRGB(101, 31, 190)
-    edge = Color3.fromRGB(216, 180, 254)
-    soft = Color3.fromRGB(126, 71, 190)
-    base = Color3.fromRGB(147, 51, 234)
+    c0   = Color3.fromRGB(255, 90, 90)
+    c1   = Color3.fromRGB(210, 0, 0)
+    c2   = Color3.fromRGB(90, 0, 0)
+    edge = Color3.fromRGB(255, 100, 100)
+    soft = Color3.fromRGB(150, 0, 0)
+    base = Color3.fromRGB(210, 0, 0)
   end
 
   local cs = ColorSequence.new({
@@ -11815,7 +13061,7 @@ _G._AmbitiousToggleOnColor = function()
   if _G._AmbitiousAccentIsGrey() then
     return Color3.fromRGB(62, 62, 70), Color3.fromRGB(178, 178, 192)
   end
-  return Color3.fromRGB(147, 51, 234), Color3.fromRGB(216, 180, 254)
+  return Color3.fromRGB(210, 0, 0), Color3.fromRGB(255, 100, 100)
 end
 
 -- Dopo che una tendina si chiude il canvas si accorcia, ma Roblox lascia
@@ -11986,20 +13232,24 @@ Gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 Gui.Parent = HubGui
 
 local FULL_MAIN_SIZE = UDim2.new(0, 324, 0, 576)
+-- El AnchorPoint es central; la mitad del ancho deja el borde izquierdo
+-- exactamente pegado al borde de la pantalla.
+_G._AmbitiousFixedMenuPosition = UDim2.new(0, FULL_MAIN_SIZE.X.Offset / 2, 0.35, 0)
 local Main = Instance.new("Frame")
 Main.Name = "Main"
 Main.AnchorPoint = Vector2.new(0.5, 0.5)
 Main.Size = FULL_MAIN_SIZE
-Main.Position = tableToUDim2(savedMainPositionTable, UDim2.new(0.5, 0, 0.5, 0))
+Main.Position = _G._AmbitiousFixedMenuPosition
 savedMainPositionTable = udim2ToTable(Main.Position)
 Main.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 Main.BorderSizePixel = 0
 Main.Active = true
 Main.ClipsDescendants = true
+Main.Visible = (_G._YEP3SSIntroDone == true)
 Main.Parent = Gui
 corner(Main, 28)
 stroke(Main, COLORS.stroke, 1.1, 0.35)
-
+-- La ventana vuelve a poder moverse.
 makeDraggable(Main)
 -- Posizione di riposo della hub: e' QUESTA l'unica verita'. L'animazione di
 -- apertura/chiusura sposta Main, ma e' un fatto puramente visivo e non deve
@@ -12023,16 +13273,51 @@ end)
 -- e' mai visto. Rimosso, erano due immagini caricate per mostrarne una.
 
 -- Title image (logo in alto centrato)
+local NINJA_DUELS_LOGO_FILE = "nike_duels_logo_exact.png"
+local NINJA_DUELS_LOGO_URL = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663975820460/ewvqSdocdMJUHeRY.png"
+local NINJA_DUELS_LOGO = ""
+pcall(function()
+  if writefile and getcustomasset then
+    local hasLogo = false
+    pcall(function() hasLogo = isfile and isfile(NINJA_DUELS_LOGO_FILE) end)
+    if not hasLogo then
+      local data = game:HttpGet(NINJA_DUELS_LOGO_URL)
+      if data and #data > 0 then writefile(NINJA_DUELS_LOGO_FILE, data) end
+    end
+    if isfile and isfile(NINJA_DUELS_LOGO_FILE) then
+      NINJA_DUELS_LOGO = getcustomasset(NINJA_DUELS_LOGO_FILE)
+    end
+  end
+end)
+
 local AmbitiousTitleImage = Instance.new("ImageLabel")
 AmbitiousTitleImage.Name = "AmbitiousTitleImage"
 AmbitiousTitleImage.AnchorPoint = Vector2.new(0.5, 0)
 AmbitiousTitleImage.Position = UDim2.new(0.5, 0, 0, -106)
-AmbitiousTitleImage.Size = UDim2.new(0, 1000, 0, 300)
+AmbitiousTitleImage.Size = UDim2.new(0, 500, 0, 150)
 AmbitiousTitleImage.BackgroundTransparency = 1
-AmbitiousTitleImage.Image = "rbxassetid://128938872032759"
+AmbitiousTitleImage.Image = NINJA_DUELS_LOGO
+-- El encabezado visible usa el nombre nuevo, no el logo antiguo.
+AmbitiousTitleImage.Visible = NINJA_DUELS_LOGO ~= ""
 AmbitiousTitleImage.ScaleType = Enum.ScaleType.Fit
 AmbitiousTitleImage.ZIndex = 5
 AmbitiousTitleImage.Parent = Main
+_G._AmbitiousTopTitle = Instance.new("TextLabel")
+_G._AmbitiousTopTitle.Name = "NikeDuelsTitle"
+_G._AmbitiousTopTitle.AnchorPoint = Vector2.new(0.5, 0)
+_G._AmbitiousTopTitle.Position = UDim2.new(0.5, 0, 0, 8)
+_G._AmbitiousTopTitle.Size = UDim2.new(1, -80, 0, 34)
+_G._AmbitiousTopTitle.BackgroundTransparency = 1
+_G._AmbitiousTopTitle.Text = "NIKE DUELS"
+_G._AmbitiousTopTitle.TextColor3 = COLORS.white
+_G._AmbitiousTopTitle.Font = Enum.Font.GothamBlack
+_G._AmbitiousTopTitle.TextSize = 24
+_G._AmbitiousTopTitle.TextXAlignment = Enum.TextXAlignment.Center
+_G._AmbitiousTopTitle.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+_G._AmbitiousTopTitle.TextStrokeTransparency = 0.25
+_G._AmbitiousTopTitle.ZIndex = 6
+_G._AmbitiousTopTitle.Parent = Main
+_G._AmbitiousTopTitle.Visible = NINJA_DUELS_LOGO == ""
 
 -- >>> TITLE STYLE BEGIN
 -- Due varianti del logo in alto. Lo stile 1 e' quello storico, il 2 e' la
@@ -12049,9 +13334,9 @@ _G.AmbitiousTitleStyles = {
   -- che clippa: serve perche' gli asset hanno quantita' diverse di bordo
   -- trasparente attorno al logo e con ScaleType Fit quel bordo vuoto
   -- conta come immagine, facendo sembrare il logo minuscolo.
-  { image = "rbxassetid://128938872032759", scale = 1,    prev = 2.5 },
-  { image = "rbxassetid://80924330621180",  scale = 0.64, prev = 1.3 },
-  { image = "rbxassetid://105333739149934", scale = 0.56, prev = 1.3 },
+  { image = NINJA_DUELS_LOGO, scale = 0.34, prev = 2.5 },
+  { image = NINJA_DUELS_LOGO, scale = 0.32, prev = 1.3 },
+  { image = NINJA_DUELS_LOGO, scale = 0.28, prev = 1.3 },
 }
 _G.AmbitiousTitleStyle = math.clamp(
   math.floor(tonumber(_G.AmbitiousTitleStyle or (savedConfig and savedConfig.titleStyle)) or 1),
@@ -12076,18 +13361,19 @@ local MiniFrame = Instance.new("Frame")
 MiniFrame.Name = "MiniFrame"
 MiniFrame.AnchorPoint = Vector2.new(0, 0)
 MiniFrame.Size = UDim2.new(0, 130, 0, 35)
-local MINI_DEFAULT_POSITION = UDim2.new(0, 132, 0, 112)
-MiniFrame.Position = MINI_DEFAULT_POSITION
+-- Boton para volver a abrir la hub: lado izquierdo, zona medio-arriba.
+_G._AmbitiousMiniDefaultPosition = UDim2.new(0, 12, 0.25, 0)
+MiniFrame.Position = _G._AmbitiousMiniDefaultPosition
 savedMiniPositionTable = nil
 MiniFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-MiniFrame.BackgroundTransparency = 0
+MiniFrame.BackgroundTransparency = 1
 MiniFrame.BorderSizePixel = 0
 MiniFrame.Visible = false
 MiniFrame.Active = true
 MiniFrame.ZIndex = 20
 MiniFrame.Parent = Gui
 corner(MiniFrame, 8)
-stroke(MiniFrame, Color3.fromRGB(120, 120, 130), 1, 0.22)
+stroke(MiniFrame, Color3.fromRGB(120, 120, 130), 1, 1)
 
 local MiniButton = Instance.new("TextButton")
 MiniButton.Name = "MiniButton"
@@ -12108,12 +13394,28 @@ local MiniLogo = Instance.new("ImageLabel")
 MiniLogo.Name = "MiniLogo"
 MiniLogo.AnchorPoint = Vector2.new(0.5, 0.5)
 MiniLogo.Position = UDim2.new(0.5, 0, 0.5, 0)
-MiniLogo.Size = UDim2.new(4, 0, 4, 0)
+MiniLogo.Size = UDim2.new(1, 0, 1, 0)
 MiniLogo.BackgroundTransparency = 1
-MiniLogo.Image = "rbxassetid://128938872032759"
+MiniLogo.Image = NINJA_DUELS_LOGO
+MiniLogo.Visible = NINJA_DUELS_LOGO ~= ""
 MiniLogo.ScaleType = Enum.ScaleType.Fit
 MiniLogo.ZIndex = 22
 MiniLogo.Parent = MiniButton
+_G._AmbitiousMiniTitle = Instance.new("TextLabel")
+_G._AmbitiousMiniTitle.Name = "NikeDuelsMiniTitle"
+_G._AmbitiousMiniTitle.Size = UDim2.new(1, 0, 1, 0)
+_G._AmbitiousMiniTitle.BackgroundTransparency = 1
+_G._AmbitiousMiniTitle.Text = "NIKE DUELS"
+_G._AmbitiousMiniTitle.TextColor3 = COLORS.white
+_G._AmbitiousMiniTitle.Font = Enum.Font.GothamBlack
+_G._AmbitiousMiniTitle.TextSize = 13
+_G._AmbitiousMiniTitle.TextScaled = true
+_G._AmbitiousMiniTitle.TextXAlignment = Enum.TextXAlignment.Center
+_G._AmbitiousMiniTitle.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+_G._AmbitiousMiniTitle.TextStrokeTransparency = 0.25
+_G._AmbitiousMiniTitle.ZIndex = 23
+_G._AmbitiousMiniTitle.Parent = MiniButton
+_G._AmbitiousMiniTitle.Visible = NINJA_DUELS_LOGO == ""
 
 do
   local miniDragging = false
@@ -12132,7 +13434,7 @@ do
     end
   end)
   UserInputService.InputChanged:Connect(function(input)
-    if not miniDragging then return end
+    if _G.AmbitiousGuiLocked == true or not miniDragging then return end
     if input.UserInputType ~= Enum.UserInputType.MouseMovement and input.UserInputType ~= Enum.UserInputType.Touch then return end
     if not miniDragStart or not miniStartPos then return end
     local delta = input.Position - miniDragStart
@@ -12292,7 +13594,7 @@ _G._AmbitiousHubRest = function()
   return p
 end
 
--- CHIUSURA: scivola fuori dal bordo piu' vicino
+-- CHIUSURA: scivola sempre fuori dal lato sinistro
 _G.AmbitiousHubClose = function(showMini)
   -- Lo stato lo decidono queste due funzioni, non chi le chiama: prima il
   -- bottone "-" si fidava del proprio flag, che restava disallineato se la
@@ -12309,7 +13611,7 @@ _G.AmbitiousHubClose = function(showMini)
 
   local restPos = _G._AmbitiousHubRest()
   local restSize = FULL_MAIN_SIZE or Main.Size
-  local dir = _G._AmbitiousHubEdgeFor(restPos)
+  local dir = "Left"
   local offPos = _G._AmbitiousHubOffscreen(restPos, dir)
 
   -- SOLO Position. Ne' Size ne' Rotation:
@@ -12338,7 +13640,7 @@ _G.AmbitiousHubClose = function(showMini)
   end)
 end
 
--- APERTURA: rientra dallo stesso bordo con frenata elastica
+-- APERTURA: rientra sempre dal lato sinistro con frenata elastica
 _G.AmbitiousHubOpen = function()
   _G.__AmbitiousDuelsMinimized = false
   if _G.AmbitiousIdleWake then _G.AmbitiousIdleWake() end
@@ -12348,7 +13650,7 @@ _G.AmbitiousHubOpen = function()
 
   local restPos  = _G._AmbitiousHubRest()
   local restSize = FULL_MAIN_SIZE or Main.Size
-  local dir = _G._AmbitiousHubEdgeFor(restPos)
+  local dir = "Left"
 
   _G._AmbitiousHubAnimating = true
   Main.Size     = restSize   -- misura sempre piena: niente re-layout, niente tagli
@@ -12502,10 +13804,10 @@ end)
 -- <<< IDLE FADE END
 
 local BackgroundIDs = {
-  "77599245856089",
-  "128085595627413",
-  "120663379122080",
-  "71944223395764",
+  "132732506696594",
+  "105028976077977",
+  "127437797637522",
+  "79145776650507",
 }
 do
   local _saved = tonumber(savedConfig.currentBackground)
@@ -12529,7 +13831,10 @@ do
     _G.AmbitiousFontChoice = savedConfig.customFont
   end
   if type(savedConfig.tabPosition) == "string" then
-    _G._AmbitiousTabPosition = _G.AmbitiousValidTabPosition(savedConfig.tabPosition)
+    -- "Up" era la posizione predefinita delle versioni precedenti: migra
+    -- quel valore al nuovo layout verticale a sinistra. Le altre preferenze
+    -- esplicite (Bottom/Left/Right) restano invariate.
+    _G._AmbitiousTabPosition = "Left"
   end
   -- <<< TAB POSITION END
 end
@@ -12553,6 +13858,7 @@ MiniBg.Position = UDim2.new(0, 0, 0, 0)
 MiniBg.BackgroundTransparency = 1
 MiniBg.ScaleType = Enum.ScaleType.Crop
 MiniBg.ZIndex = 20
+MiniBg.Visible = false
 MiniBg.Parent = MiniFrame
 local _miniBgCorner = Instance.new("UICorner")
 _miniBgCorner.CornerRadius = UDim.new(0, 8)
@@ -12641,41 +13947,6 @@ Close.Parent = Main
 corner(Close, 8)
 stroke(Close, COLORS.stroke, 1, 0.35)
 
-AmbitiousLockTopButton = Instance.new("TextButton")
-AmbitiousLockTopButton.Name = "LockGUI"
-AmbitiousLockTopButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-AmbitiousLockTopButton.BackgroundTransparency = 0.28
-AmbitiousLockTopButton.TextColor3 = COLORS.white
-AmbitiousLockTopButton.TextSize = 8
-AmbitiousLockTopButton.Font = Enum.Font.GothamBlack
-AmbitiousLockTopButton.Size = UDim2.new(0, 32, 0, 28)
-AmbitiousLockTopButton.Position = UDim2.new(0, 12, 0, 10)   -- spostato a sinistra
-AmbitiousLockTopButton.AutoButtonColor = false
-AmbitiousLockTopButton.ZIndex = 5
-AmbitiousLockTopButton.Parent = Main
-corner(AmbitiousLockTopButton, 8)
-stroke(AmbitiousLockTopButton, COLORS.stroke, 1, 0.35)
-
-function AmbitiousUpdateGuiLockVisual()
-  if AmbitiousLockTopButton then
-    AmbitiousLockTopButton.Text = (_G.AmbitiousGuiLocked == true) and "UNLOCK" or "LOCK"
-    AmbitiousLockTopButton.BackgroundTransparency = (_G.AmbitiousGuiLocked == true) and 0.08 or 0.28
-    local st = AmbitiousLockTopButton:FindFirstChildOfClass("UIStroke")
-    if st then
-      st.Transparency = (_G.AmbitiousGuiLocked == true) and 0.08 or 0.35
-      st.Color = (_G.AmbitiousGuiLocked == true) and Color3.fromRGB(255,255,255) or COLORS.stroke
-    end
-  end
-  if setLockGuiVisual then pcall(setLockGuiVisual, _G.AmbitiousGuiLocked == true) end
-end
-
-AmbitiousLockTopButton.Activated:Connect(function()
-  _G.AmbitiousGuiLocked = not (_G.AmbitiousGuiLocked == true)
-  AmbitiousUpdateGuiLockVisual()
-  saveAmbitiousConfig()
-end)
-AmbitiousUpdateGuiLockVisual()
-
 local Content = Instance.new("Frame")
 Content.Name = "Content"
 Content.BackgroundTransparency = 1
@@ -12684,11 +13955,19 @@ Content.Size = UDim2.new(1, -26, 1, -137)
 Content.ZIndex = 3
 Content.Parent = Main
 
-local Tabs = Instance.new("Frame")
+local Tabs = Instance.new("ScrollingFrame")
 Tabs.Name = "Tabs"
 Tabs.BackgroundTransparency = 1
+Tabs.BorderSizePixel = 0
+Tabs.Visible = true
 Tabs.Position = UDim2.new(0, 12, 0, 97)
-Tabs.Size = UDim2.new(1, -24, 0, 34)
+Tabs.Size = UDim2.new(0, 86, 1, -153)
+Tabs.CanvasSize = UDim2.new(0, 0, 0, 0)
+Tabs.AutomaticCanvasSize = Enum.AutomaticSize.Y
+Tabs.ScrollingDirection = Enum.ScrollingDirection.Y
+Tabs.ScrollBarThickness = 0
+Tabs.ScrollBarImageTransparency = 1
+Tabs.Active = true
 Tabs.ZIndex = 3
 Tabs.Parent = Main
 
@@ -12699,9 +13978,43 @@ TabLayout.SortOrder = Enum.SortOrder.LayoutOrder
 TabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 TabLayout.Parent = Tabs
 
+-- Desplazamiento manual de la columna lateral: se puede arrastrar con mouse
+-- o touch hacia arriba/abajo, igual que una lista móvil.
+_G._AmbitiousTabScrollState = _G._AmbitiousTabScrollState or {
+  dragging = false,
+  startY = 0,
+  startCanvasY = 0,
+}
+_G._AmbitiousBeginTabScroll = function(input)
+  if input.UserInputType ~= Enum.UserInputType.MouseButton1
+     and input.UserInputType ~= Enum.UserInputType.Touch then return end
+  local s = _G._AmbitiousTabScrollState
+  s.dragging = true
+  s.startY = input.Position.Y
+  s.startCanvasY = Tabs.CanvasPosition.Y
+end
+_G._AmbitiousUpdateTabScroll = function(input)
+  local s = _G._AmbitiousTabScrollState
+  if not s.dragging then return end
+  if input.UserInputType ~= Enum.UserInputType.MouseMovement
+     and input.UserInputType ~= Enum.UserInputType.Touch then return end
+  local maxY = math.max(0, Tabs.CanvasSize.Y.Offset - Tabs.AbsoluteSize.Y)
+  local nextY = math.clamp(s.startCanvasY - (input.Position.Y - s.startY), 0, maxY)
+  Tabs.CanvasPosition = Vector2.new(0, nextY)
+end
+Tabs.InputBegan:Connect(_G._AmbitiousBeginTabScroll)
+Tabs.InputChanged:Connect(_G._AmbitiousUpdateTabScroll)
+UserInputService.InputChanged:Connect(_G._AmbitiousUpdateTabScroll)
+UserInputService.InputEnded:Connect(function(input)
+  if input.UserInputType == Enum.UserInputType.MouseButton1
+     or input.UserInputType == Enum.UserInputType.Touch then
+    _G._AmbitiousTabScrollState.dragging = false
+  end
+end)
+
 local pages = {}
 local tabButtons = {}
-local tabNames = {"MOVEMENT", "COMBAT", "KEYBINDS", "VISUALS", "SETTINGS"}
+local tabNames = {"MOVEMENT", "COMBAT", "KEYBINDS", "VISUALS", "MUSICAS", "SETTINGS"}
 local activeTab = "MOVEMENT"
 
 function addPage(name)
@@ -12822,7 +14135,7 @@ end
   -- larghezza in tutte e quattro le disposizioni, e dentro le pagine non
   -- cambia assolutamente niente.
   local W_NARROW = 324   -- Up / Bottom
-  local W_WIDE   = 359   -- Left / Right (324 + 35 di colonna)
+  local W_WIDE   = 410   -- Left / Right (stessa larghezza del mod menu Nike)
   -- Col testo ruotato la colonna deve contenere solo l'ALTEZZA di una riga
   -- di testo, non la larghezza di una lettera: 30 bastano e avanzano.
   local BAR_W    = 30    -- larghezza della colonna verticale
@@ -12852,20 +14165,14 @@ end
     },
     Left = {
       wide       = true,
-      tabsPos    = UDim2.new(0, 10, 0, 97),
-      tabsSize   = UDim2.new(0, BAR_W, 1, -109),
+      tabsPos    = UDim2.new(0, 12, 0, 103),
+      tabsSize   = UDim2.new(0, 86, 1, -153),
       dir        = V,
-      pad        = UDim.new(0, 3),
-      hAlign     = Enum.HorizontalAlignment.Center,
-      -- Centrata, non incollata in alto: le cinque tab occupano circa 430
-      -- dei 467 pixel della colonna, e da Top lasciavano tutto il vuoto in
-      -- fondo. Da Center il margine si divide sopra e sotto.
-      vAlign     = Enum.VerticalAlignment.Center,
-      rot        = -90,   -- a sinistra si legge dal basso verso l'alto
-      -- L'area contenuti arriva in fondo come con le tab in alto: con -109
-      -- si fermava 12px prima e l'ultima riga restava sospesa a mezz'aria.
-      contentPos = UDim2.new(0, 48, 0, 97),
-      contentSize= UDim2.new(1, -61, 1, -96),
+      pad        = UDim.new(0, 6),
+      hAlign     = Enum.HorizontalAlignment.Left,
+      vAlign     = Enum.VerticalAlignment.Top,
+      contentPos = UDim2.new(0, 108, 0, 103),
+      contentSize= UDim2.new(1, -121, 1, -153),
     },
     Right = {
       wide       = true,
@@ -12961,22 +14268,39 @@ end
     if not L then return end
     _G._AmbitiousTabPosition = pos
 
-    -- La finestra si allarga/restringe. FULL_MAIN_SIZE e' la misura che tutti
+  -- La finestra si allarga/restringe. FULL_MAIN_SIZE e' la misura che tutti
     -- i ripristini della hub usano (minimize, intro, duels), quindi va
     -- aggiornata anche lei: altrimenti al primo ripristino tornerebbe stretta
     -- con le tab ancora di lato.
     FULL_MAIN_SIZE = UDim2.new(0, L.wide and W_WIDE or W_NARROW, 0, 576)
     Main.Size = FULL_MAIN_SIZE
+    -- Mantieni la finestra ancorata a sinistra anche quando cambia larghezza.
+    if not _G._AmbitiousHubAnimating then
+      _G._AmbitiousFixedMenuPosition = UDim2.new(0, FULL_MAIN_SIZE.X.Offset / 2, 0.35, 0)
+      _G._AmbitiousHubRestPos = _G._AmbitiousFixedMenuPosition
+      Main.Position = _G._AmbitiousFixedMenuPosition
+      savedMainPositionTable = udim2ToTable(Main.Position)
+    end
 
     Tabs.Position = L.tabsPos
     Tabs.Size     = L.tabsSize
+    if pos == "Left" then
+      -- Las cinco pestañas caben en pantalla, pero dejamos una zona de
+      -- desplazamiento para que el usuario pueda moverlas manualmente.
+      Tabs.AutomaticCanvasSize = Enum.AutomaticSize.None
+      Tabs.CanvasSize = UDim2.new(0, 0, 0, 520)
+      Tabs.CanvasPosition = Vector2.new(0, 0)
+    else
+      Tabs.AutomaticCanvasSize = Enum.AutomaticSize.Y
+      Tabs.CanvasSize = UDim2.new(0, 0, 0, 0)
+    end
 
     TabLayout.FillDirection       = L.dir
     TabLayout.Padding             = L.pad
     TabLayout.HorizontalAlignment = L.hAlign
     TabLayout.VerticalAlignment   = L.vAlign
 
-    for name, btn in pairs(tabButtons) do
+  for name, btn in pairs(tabButtons) do
       -- Padding interno riusato tra un cambio di modalita' e l'altro.
       local pad = btn:FindFirstChild("TabPad")
       if not pad then
@@ -12985,7 +14309,31 @@ end
         pad.Parent = btn
       end
 
-      if L.dir == V then
+      if pos == "Left" then
+        -- Layout uguale a NikeDuels: card grandi impilate e barra scrollabile.
+        btn.AutomaticSize = Enum.AutomaticSize.None
+        local lbl = btn:FindFirstChild("VWord")
+        if lbl then lbl.Visible = false end
+        btn.Text = ({KEYBINDS = "PC", VISUALS = "VISUAL"})[name] or name
+        btn.TextSize = 11
+        btn.TextScaled = true
+        btn.TextWrapped = true
+        btn.TextXAlignment = Enum.TextXAlignment.Center
+        btn.TextYAlignment = Enum.TextYAlignment.Center
+        pad.PaddingTop    = UDim.new(0, 0)
+        pad.PaddingBottom = UDim.new(0, 0)
+        btn.Size = UDim2.new(1, 0, 0, 66)
+        btn.Visible = true
+        btn.Active = true
+        local constraint = btn:FindFirstChild("TabTextConstraint")
+        if not constraint then
+          constraint = Instance.new("UITextSizeConstraint")
+          constraint.Name = "TabTextConstraint"
+          constraint.MinTextSize = 6
+          constraint.MaxTextSize = 13
+          constraint.Parent = btn
+        end
+      elseif L.dir == V then
         -- Il bottone non scrive niente: il testo e' la label ruotata.
         -- Alto quanto la parola e' larga da orizzontale, piu' l'aria.
         btn.Text = ""
@@ -13029,7 +14377,7 @@ do
   end
 end
 
--- Applica quello caricato dal config (o il default "Up").
+-- Applica quello caricato dal config (o il default "Left").
 _G.AmbitiousApplyTabPosition(_G._AmbitiousTabPosition)
 -- <<< TAB POSITION END
 
@@ -13139,7 +14487,7 @@ function toggleRow(parent, labelText, default, order)
   -- Riempimento viola che sfuma quando il toggle e' acceso
   local fill = Instance.new("Frame")
   fill.Name = "Fill"
-  fill.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  fill.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   fill.BackgroundTransparency = default and 0 or 1
   fill.Size = UDim2.new(1, 0, 1, 0)
   fill.BorderSizePixel = 0
@@ -13148,9 +14496,9 @@ function toggleRow(parent, labelText, default, order)
   corner(fill, 11)
   local fillGrad = Instance.new("UIGradient")
   fillGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   fillGrad.Rotation = 18
   fillGrad.Parent = fill
@@ -13166,7 +14514,7 @@ function toggleRow(parent, labelText, default, order)
   corner(knob, 999)
   local knobStroke = Instance.new("UIStroke")
   knobStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-  knobStroke.Color = default and Color3.fromRGB(216, 180, 254) or Color3.fromRGB(120, 120, 135)
+  knobStroke.Color = default and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(120, 120, 135)
   knobStroke.Thickness = 1.4
   knobStroke.Transparency = 0.15
   knobStroke.Parent = knob
@@ -13254,7 +14602,7 @@ _G.AmbitiousActionToggleRow = function(parent, labelText, default, order)
   -- Riempimento viola che sfuma quando il toggle e' acceso
   local fill = Instance.new("Frame")
   fill.Name = "Fill"
-  fill.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  fill.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   fill.BackgroundTransparency = default and 0 or 1
   fill.Size = UDim2.new(1, 0, 1, 0)
   fill.BorderSizePixel = 0
@@ -13263,9 +14611,9 @@ _G.AmbitiousActionToggleRow = function(parent, labelText, default, order)
   corner(fill, 11)
   local fillGrad = Instance.new("UIGradient")
   fillGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   fillGrad.Rotation = 18
   fillGrad.Parent = fill
@@ -13281,7 +14629,7 @@ _G.AmbitiousActionToggleRow = function(parent, labelText, default, order)
   corner(knob, 999)
   local knobStroke = Instance.new("UIStroke")
   knobStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-  knobStroke.Color = default and Color3.fromRGB(216, 180, 254) or Color3.fromRGB(120, 120, 135)
+  knobStroke.Color = default and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(120, 120, 135)
   knobStroke.Thickness = 1.4
   knobStroke.Transparency = 0.15
   knobStroke.Parent = knob
@@ -13630,12 +14978,12 @@ _G.AmbitiousAimbotSelectorRow = function(parent, order)
   holder.ClipsDescendants = true
   holder.Parent = parent
   corner(holder, 14)
-  stroke(holder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(holder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(holder, nil, "soft")
 
   local slide = Instance.new("Frame")
   slide.Name = "SelectedSlide"
-  slide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  slide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   slide.BackgroundTransparency = 0.1
   slide.Size = UDim2.new(0.5, -3, 1, -8)
   slide.Position = UDim2.new(0, 4, 0, 4)
@@ -13645,15 +14993,15 @@ _G.AmbitiousAimbotSelectorRow = function(parent, order)
   corner(slide, 13)
   local slideStroke = Instance.new("UIStroke")
   slideStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-  slideStroke.Color = Color3.fromRGB(216, 180, 254)
+  slideStroke.Color = Color3.fromRGB(255, 100, 100)
   slideStroke.Thickness = 1.5
   slideStroke.Transparency = 0.1
   slideStroke.Parent = slide
   local slideGradient = Instance.new("UIGradient")
   slideGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   slideGradient.Transparency = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 0.08),
@@ -13763,12 +15111,12 @@ function autoStealSelectorRow(parent, order)
   holder.ClipsDescendants = true
   holder.Parent = parent
   corner(holder, 14)
-  stroke(holder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(holder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(holder, nil, "soft")
 
   local slide = Instance.new("Frame")
   slide.Name = "SelectedSlide"
-  slide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  slide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   slide.BackgroundTransparency = 0.1
   slide.Size = UDim2.new(0.5, -3, 1, -8)
   slide.Position = UDim2.new(0, 4, 0, 4)
@@ -13778,15 +15126,15 @@ function autoStealSelectorRow(parent, order)
   corner(slide, 13)
   local slideStroke = Instance.new("UIStroke")
   slideStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-  slideStroke.Color = Color3.fromRGB(216, 180, 254)
+  slideStroke.Color = Color3.fromRGB(255, 100, 100)
   slideStroke.Thickness = 1.5
   slideStroke.Transparency = 0.1
   slideStroke.Parent = slide
   local slideGradient = Instance.new("UIGradient")
   slideGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   slideGradient.Transparency = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 0.08),
@@ -13992,12 +15340,12 @@ _G._AmbitiousBuildAutoCarryModeSelector = function(row, parentFrame)
   acHolder.Visible = false
   acHolder.Parent = parentFrame
   corner(acHolder, 14)
-  stroke(acHolder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(acHolder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(acHolder, nil, "soft")
 
   local acSlide = Instance.new("Frame")
   acSlide.Name = "SelectedSlide"
-  acSlide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  acSlide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   acSlide.BackgroundTransparency = 0.1
   acSlide.Size = UDim2.new(0.5, -3, 1, -8)
   acSlide.Position = UDim2.new(0, 4, 0, 4)
@@ -14007,15 +15355,15 @@ _G._AmbitiousBuildAutoCarryModeSelector = function(row, parentFrame)
   corner(acSlide, 13)
   local acSlideStroke = Instance.new("UIStroke")
   acSlideStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-  acSlideStroke.Color = Color3.fromRGB(216, 180, 254)
+  acSlideStroke.Color = Color3.fromRGB(255, 100, 100)
   acSlideStroke.Thickness = 1.5
   acSlideStroke.Transparency = 0.1
   acSlideStroke.Parent = acSlide
   local acSlideGrad = Instance.new("UIGradient")
   acSlideGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   acSlideGrad.Transparency = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 0.08),
@@ -14228,7 +15576,7 @@ do
   atpdHolder.Visible = false
   atpdHolder.Parent = Movement
   corner(atpdHolder, 14)
-  stroke(atpdHolder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(atpdHolder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(atpdHolder, nil, "soft")
 
   local atpdLabel = Instance.new("TextLabel")
@@ -14326,12 +15674,12 @@ _G._AmbitiousBuildDropMethodSelector = function(parentFrame, rowOrder, holderOrd
   dropMethodHolder.Visible = false
   dropMethodHolder.Parent = parentFrame
   corner(dropMethodHolder, 14)
-  stroke(dropMethodHolder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(dropMethodHolder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(dropMethodHolder, nil, "soft")
 
   local dropSlide = Instance.new("Frame")
   dropSlide.Name = "SelectedSlide"
-  dropSlide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  dropSlide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   dropSlide.BackgroundTransparency = 0.1
   dropSlide.Size = UDim2.new(0.5, -3, 1, -8)
   dropSlide.Position = UDim2.new(0, 4, 0, 4)
@@ -14341,15 +15689,15 @@ _G._AmbitiousBuildDropMethodSelector = function(parentFrame, rowOrder, holderOrd
   corner(dropSlide, 13)
   local dropSlideStroke = Instance.new("UIStroke")
   dropSlideStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-  dropSlideStroke.Color = Color3.fromRGB(216, 180, 254)
+  dropSlideStroke.Color = Color3.fromRGB(255, 100, 100)
   dropSlideStroke.Thickness = 1.5
   dropSlideStroke.Transparency = 0.1
   dropSlideStroke.Parent = dropSlide
   local dropSlideGradient = Instance.new("UIGradient")
   dropSlideGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   dropSlideGradient.Transparency = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 0.08),
@@ -14490,7 +15838,7 @@ _G._AmbitiousBuildLookAtRadiusSelector = function(row, parentFrame)
   laeHolder.Visible = false
   laeHolder.Parent = parentFrame
   corner(laeHolder, 14)
-  stroke(laeHolder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(laeHolder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(laeHolder, nil, "soft")
 
   local laeLabel = Instance.new("TextLabel")
@@ -14584,7 +15932,7 @@ _G._AmbitiousBuildTPDownMethodSelector = function(parentFrame, rowOrder, holderO
   holder.Visible = false
   holder.Parent = parentFrame
   corner(holder, 14)
-  stroke(holder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(holder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(holder, nil, "soft")
 
   -- Tre segmenti: NORMAL, SLOW FALL, ZIGZAG.
@@ -14595,7 +15943,7 @@ _G._AmbitiousBuildTPDownMethodSelector = function(parentFrame, rowOrder, holderO
 
   local slide = Instance.new("Frame")
   slide.Name = "SelectedSlide"
-  slide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  slide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   slide.BackgroundTransparency = 0.1
   slide.Size = UDim2.new(tpmW, -8, 1, -8)
   slide.Position = UDim2.new(0, 4, 0, 4)
@@ -14605,15 +15953,15 @@ _G._AmbitiousBuildTPDownMethodSelector = function(parentFrame, rowOrder, holderO
   corner(slide, 13)
   local slideStroke = Instance.new("UIStroke")
   slideStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-  slideStroke.Color = Color3.fromRGB(216, 180, 254)
+  slideStroke.Color = Color3.fromRGB(255, 100, 100)
   slideStroke.Thickness = 1.5
   slideStroke.Transparency = 0.1
   slideStroke.Parent = slide
   local slideGrad = Instance.new("UIGradient")
   slideGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   slideGrad.Transparency = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 0.08),
@@ -14730,12 +16078,12 @@ _G._AmbitiousBuildJumpModeSelector = function(row, parentFrame)
   jumpModeHolder.Visible = false
   jumpModeHolder.Parent = parentFrame
   corner(jumpModeHolder, 14)
-  stroke(jumpModeHolder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(jumpModeHolder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(jumpModeHolder, nil, "soft")
 
   local jumpModeSlide = Instance.new("Frame")
   jumpModeSlide.Name = "SelectedSlide"
-  jumpModeSlide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  jumpModeSlide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   jumpModeSlide.BackgroundTransparency = 0.1
   jumpModeSlide.Size = UDim2.new(0.5, -3, 1, -8)
   jumpModeSlide.Position = UDim2.new(0, 4, 0, 4)
@@ -14751,9 +16099,9 @@ _G._AmbitiousBuildJumpModeSelector = function(row, parentFrame)
   jmsStroke.Parent = jumpModeSlide
   local jmsGrad = Instance.new("UIGradient")
   jmsGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   jmsGrad.Transparency = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 0.08),
@@ -14881,12 +16229,12 @@ do
   irHolder.Visible = false
   irHolder.Parent = Movement
   corner(irHolder, 14)
-  stroke(irHolder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(irHolder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(irHolder, nil, "soft")
 
   local irSlide = Instance.new("Frame")
   irSlide.Name = "SelectedSlide"
-  irSlide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  irSlide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   irSlide.BackgroundTransparency = 0.1
   irSlide.Size = UDim2.new(0.5, -8, 1, -8)
   irSlide.Position = UDim2.new(0, 4, 0, 4)
@@ -14896,15 +16244,15 @@ do
   corner(irSlide, 13)
   local irSlideStroke = Instance.new("UIStroke")
   irSlideStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-  irSlideStroke.Color = Color3.fromRGB(216, 180, 254)
+  irSlideStroke.Color = Color3.fromRGB(255, 100, 100)
   irSlideStroke.Thickness = 1.5
   irSlideStroke.Transparency = 0.1
   irSlideStroke.Parent = irSlide
   local irSlideGrad = Instance.new("UIGradient")
   irSlideGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   irSlideGrad.Rotation = 22
   irSlideGrad.Parent = irSlide
@@ -15009,12 +16357,12 @@ do
   adHolder.Visible = false
   adHolder.Parent = Movement
   corner(adHolder, 14)
-  stroke(adHolder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(adHolder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(adHolder, nil, "soft")
 
   local adSlide = Instance.new("Frame")
   adSlide.Name = "SelectedSlide"
-  adSlide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  adSlide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   adSlide.BackgroundTransparency = 0.1
   adSlide.Size = UDim2.new(0.5, -8, 1, -8)
   adSlide.Position = UDim2.new(0, 4, 0, 4)
@@ -15024,15 +16372,15 @@ do
   corner(adSlide, 13)
   local adSlideStroke = Instance.new("UIStroke")
   adSlideStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-  adSlideStroke.Color = Color3.fromRGB(216, 180, 254)
+  adSlideStroke.Color = Color3.fromRGB(255, 100, 100)
   adSlideStroke.Thickness = 1.5
   adSlideStroke.Transparency = 0.1
   adSlideStroke.Parent = adSlide
   local adSlideGrad = Instance.new("UIGradient")
   adSlideGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   adSlideGrad.Rotation = 22
   adSlideGrad.Parent = adSlide
@@ -15195,12 +16543,12 @@ _G._AmbitiousBuildAntiRagdollModeSelector = function(row, parentFrame)
   arHolder.Visible = false
   arHolder.Parent = parentFrame
   corner(arHolder, 14)
-  stroke(arHolder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(arHolder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(arHolder, nil, "soft")
 
   local arSlide = Instance.new("Frame")
   arSlide.Name = "SelectedSlide"
-  arSlide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  arSlide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   arSlide.BackgroundTransparency = 0.1
   arSlide.Size = UDim2.new(0.5, -3, 1, -8)
   arSlide.Position = UDim2.new(0, 4, 0, 4)
@@ -15210,15 +16558,15 @@ _G._AmbitiousBuildAntiRagdollModeSelector = function(row, parentFrame)
   corner(arSlide, 13)
   local arSlideStroke = Instance.new("UIStroke")
   arSlideStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-  arSlideStroke.Color = Color3.fromRGB(216, 180, 254)
+  arSlideStroke.Color = Color3.fromRGB(255, 100, 100)
   arSlideStroke.Thickness = 1.5
   arSlideStroke.Transparency = 0.1
   arSlideStroke.Parent = arSlide
   local arSlideGrad = Instance.new("UIGradient")
   arSlideGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   arSlideGrad.Transparency = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 0.08),
@@ -15455,35 +16803,12 @@ Combat = pages.COMBAT
 -- Ordine: neutri (marrone compreso, cosi' non finisce vicino al rosso),
 -- poi rossi/arancioni/gialli, verdi, ciano/blu, viola/rosa.
 _G.AmbitiousColorPresets = {
-  -- neutri
+  -- Solo blanco, negro y rojo para mantener la paleta del menú.
   Color3.fromRGB(255, 255, 255),
-  Color3.fromRGB(230, 230, 230),
-  Color3.fromRGB(50, 50, 50),
   Color3.fromRGB(0, 0, 0),
-  Color3.fromRGB(139, 69, 19),
-  -- rossi / arancioni / gialli
-  Color3.fromRGB(220, 20, 60),
   Color3.fromRGB(255, 0, 0),
+  Color3.fromRGB(150, 0, 0),
   Color3.fromRGB(255, 80, 80),
-  Color3.fromRGB(255, 128, 0),
-  Color3.fromRGB(255, 140, 0),
-  Color3.fromRGB(255, 200, 0),
-  Color3.fromRGB(255, 215, 0),
-  -- verdi
-  Color3.fromRGB(0, 255, 0),
-  Color3.fromRGB(80, 255, 120),
-  Color3.fromRGB(0, 128, 128),
-  Color3.fromRGB(64, 224, 208),
-  -- ciano / blu
-  Color3.fromRGB(0, 255, 255),
-  Color3.fromRGB(0, 180, 255),
-  Color3.fromRGB(0, 100, 255),
-  Color3.fromRGB(123, 104, 238),
-  -- viola / rosa
-  Color3.fromRGB(128, 0, 255),
-  Color3.fromRGB(255, 0, 255),
-  Color3.fromRGB(255, 105, 180),
-  Color3.fromRGB(255, 180, 200),
 }
 
 -- Costruisce una riga "<nome> Color" a tendina, identica a quella del
@@ -15552,7 +16877,7 @@ _G._AmbitiousBuildColorPickerRow = function(cfg)
   -- ---- BOTTONE PICK ----
   local btnHolder = Instance.new("Frame")
   btnHolder.Name = "ColorButtonHolder"
-  btnHolder.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  btnHolder.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   btnHolder.BackgroundTransparency = 0.28
   btnHolder.BorderSizePixel = 0
   btnHolder.Size = UDim2.new(0, 66, 0, 30)
@@ -15561,13 +16886,13 @@ _G._AmbitiousBuildColorPickerRow = function(cfg)
   btnHolder.ZIndex = 6
   btnHolder.Parent = row
   corner(btnHolder, 15)
-  stroke(btnHolder, Color3.fromRGB(216, 180, 254), 1.5, 0.15)
+  stroke(btnHolder, Color3.fromRGB(255, 100, 100), 1.5, 0.15)
 
   local pickGrad = Instance.new("UIGradient")
   pickGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   pickGrad.Rotation = 18
   pickGrad.Parent = btnHolder
@@ -15931,12 +17256,12 @@ end)
   semiSubHolder.Visible = selectedStealMode == "Semi"
   semiSubHolder.Parent = Combat
   corner(semiSubHolder, 14)
-  stroke(semiSubHolder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(semiSubHolder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(semiSubHolder, nil, "soft")
 
   local subSlide = Instance.new("Frame")
   subSlide.Name = "SelectedSlide"
-  subSlide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  subSlide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   subSlide.BackgroundTransparency = 0.1
   subSlide.Size = UDim2.new(1/3, -3, 1, -8)
   subSlide.Position = UDim2.new(0, 4, 0, 4)
@@ -15946,15 +17271,15 @@ end)
   corner(subSlide, 13)
   local subSlideStroke = Instance.new("UIStroke")
   subSlideStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-  subSlideStroke.Color = Color3.fromRGB(216, 180, 254)
+  subSlideStroke.Color = Color3.fromRGB(255, 100, 100)
   subSlideStroke.Thickness = 1.5
   subSlideStroke.Transparency = 0.1
   subSlideStroke.Parent = subSlide
   local subSlideGradient = Instance.new("UIGradient")
   subSlideGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   subSlideGradient.Transparency = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 0.08),
@@ -16386,12 +17711,12 @@ _G._AmbitiousBuildAimbotChaseSelector = function(parent, key, titleText, order)
   holder.Visible = (selectedAimbotMode == key)
   holder.Parent = parent
   corner(holder, 14)
-  stroke(holder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(holder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(holder, nil, "soft")
 
   local slide = Instance.new("Frame")
   slide.Name = "SelectedSlide"
-  slide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  slide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   slide.BackgroundTransparency = 0.1
   slide.Size = UDim2.new(0.5, -3, 1, -8)
   slide.Position = UDim2.new(0, 4, 0, 4)
@@ -16401,15 +17726,15 @@ _G._AmbitiousBuildAimbotChaseSelector = function(parent, key, titleText, order)
   corner(slide, 13)
   local slideStroke = Instance.new("UIStroke")
   slideStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-  slideStroke.Color = Color3.fromRGB(216, 180, 254)
+  slideStroke.Color = Color3.fromRGB(255, 100, 100)
   slideStroke.Thickness = 1.5
   slideStroke.Transparency = 0.1
   slideStroke.Parent = slide
   local slideGrad = Instance.new("UIGradient")
   slideGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   slideGrad.Transparency = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 0.08),
@@ -16626,12 +17951,12 @@ section(Combat, "TP BAT", 10)
   tpvVerHolder.ClipsDescendants = true
   tpvVerHolder.Parent = tpvHolder
   corner(tpvVerHolder, 14)
-  stroke(tpvVerHolder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(tpvVerHolder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(tpvVerHolder, nil, "soft")
 
   local tpvSlide = Instance.new("Frame")
   tpvSlide.Name = "TPBatVersionSlide"
-  tpvSlide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  tpvSlide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   tpvSlide.BackgroundTransparency = 0.1
   tpvSlide.AnchorPoint = Vector2.new(0.5, 0.5)
   tpvSlide.Size = UDim2.new(tpvSegW, -4, 1, -8)
@@ -16642,15 +17967,15 @@ section(Combat, "TP BAT", 10)
   corner(tpvSlide, 13)
   local tpvSlideStroke = Instance.new("UIStroke")
   tpvSlideStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-  tpvSlideStroke.Color = Color3.fromRGB(216, 180, 254)
+  tpvSlideStroke.Color = Color3.fromRGB(255, 100, 100)
   tpvSlideStroke.Thickness = 1.5
   tpvSlideStroke.Transparency = 0.1
   tpvSlideStroke.Parent = tpvSlide
   local tpvSlideGrad = Instance.new("UIGradient")
   tpvSlideGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   tpvSlideGrad.Transparency = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 0.08),
@@ -16793,12 +18118,12 @@ _G._AmbitiousBuildBatCounterModeSelector = function(row, parentFrame)
   batModeHolder.Visible = false
   batModeHolder.Parent = parentFrame
   corner(batModeHolder, 14)
-  stroke(batModeHolder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(batModeHolder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(batModeHolder, nil, "soft")
 
   local batModeSlide = Instance.new("Frame")
   batModeSlide.Name = "SelectedSlide"
-  batModeSlide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  batModeSlide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   batModeSlide.BackgroundTransparency = 0.1
   batModeSlide.Size = UDim2.new(0.5, -3, 1, -8)
   batModeSlide.Position = UDim2.new(0, 4, 0, 4)
@@ -16814,9 +18139,9 @@ _G._AmbitiousBuildBatCounterModeSelector = function(row, parentFrame)
   bmsStroke.Parent = batModeSlide
   local bmsGrad = Instance.new("UIGradient")
   bmsGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   bmsGrad.Transparency = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 0.08),
@@ -17041,7 +18366,7 @@ end
 
   local spamFill = Instance.new("Frame")
   spamFill.Name = "Fill"
-  spamFill.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  spamFill.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   spamFill.BackgroundTransparency = 1
   spamFill.Size = UDim2.new(1, 0, 1, 0)
   spamFill.BorderSizePixel = 0
@@ -17050,9 +18375,9 @@ end
   corner(spamFill, 11)
   local spamFillGrad = Instance.new("UIGradient")
   spamFillGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   spamFillGrad.Rotation = 18
   spamFillGrad.Parent = spamFill
@@ -17141,12 +18466,12 @@ end
   verHolder.ClipsDescendants = true
   verHolder.Parent = atpHolder
   corner(verHolder, 14)
-  stroke(verHolder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+  stroke(verHolder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
   _G._AmbitiousRegAccent(verHolder, nil, "soft")
 
   local verSlide = Instance.new("Frame")
   verSlide.Name = "AntiTPBatSlide"
-  verSlide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  verSlide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   verSlide.BackgroundTransparency = 0.1
   verSlide.AnchorPoint = Vector2.new(0.5, 0.5)
   verSlide.Size = UDim2.new(1 / ATP_N, -4, 1, -8)
@@ -17157,15 +18482,15 @@ end
   corner(verSlide, 13)
   local verSlideStroke = Instance.new("UIStroke")
   verSlideStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-  verSlideStroke.Color = Color3.fromRGB(216, 180, 254)
+  verSlideStroke.Color = Color3.fromRGB(255, 100, 100)
   verSlideStroke.Thickness = 1.5
   verSlideStroke.Transparency = 0.1
   verSlideStroke.Parent = verSlide
   local verSlideGrad = Instance.new("UIGradient")
   verSlideGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   verSlideGrad.Transparency = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 0.08),
@@ -17351,7 +18676,7 @@ speedKeybindRow(Keybinds, "Instant Reset", "InstantReset", 12)
 do
   THEME_ACCENT = THEME_ACCENT or Color3.fromRGB(230, 230, 230)
   THEME_ACCENT_DIM = THEME_ACCENT_DIM or Color3.fromRGB(145, 145, 145)
-  PlayerESP = PlayerESP or {enabled=false, playerData={}, conns={}, discordText="discord.gg/ambitiouss"}
+  PlayerESP = PlayerESP or {enabled=false, playerData={}, conns={}, discordText="NIKE DUELS"}
   BoxedESPOptions = BoxedESPOptions or {box=false, tracker=false, trackerColor=Color3.fromRGB(230,230,230)}
   BoxedESPData = BoxedESPData or {}
   BoxedESPConn = BoxedESPConn or nil
@@ -17407,9 +18732,9 @@ function startPlayerESP()
         speedGrad.Rotation = 0
         speedGrad.Transparency = NumberSequence.new(0)
         speedGrad.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
-            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
-            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
+            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 70, 70)),
+            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(190, 20, 20)),
+            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(70, 0, 0)),
         })
 
         local conn = RunService.Heartbeat:Connect(function()
@@ -19716,7 +21041,7 @@ function __AmbitiousDuelsSetupVisualsUI()
 
     local holder = Instance.new("Frame")
     holder.Name = "SkyValueHolder"
-    holder.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    holder.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
     holder.BackgroundTransparency = 0.28
     holder.BorderSizePixel = 0
     holder.Size = UDim2.new(0, 124, 0, 30)
@@ -19725,13 +21050,13 @@ function __AmbitiousDuelsSetupVisualsUI()
     holder.ZIndex = 7
     holder.Parent = row
     corner(holder, 15)
-    stroke(holder, Color3.fromRGB(216, 180, 254), 1.5, 0.15)
+    stroke(holder, Color3.fromRGB(255, 100, 100), 1.5, 0.15)
 
     local skyHolderGrad = Instance.new("UIGradient")
     skyHolderGrad.Color = ColorSequence.new({
-      ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-      ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+      ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+      ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
     })
     skyHolderGrad.Rotation = 18
     skyHolderGrad.Parent = holder
@@ -20203,7 +21528,7 @@ function __AmbitiousDuelsSetupVisualsUI()
     -- PICK button dentro la tendina
     local vividBtnHolder = Instance.new("Frame")
     vividBtnHolder.Name = "VividButtonHolder"
-    vividBtnHolder.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    vividBtnHolder.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
     vividBtnHolder.BackgroundTransparency = 0.28
     vividBtnHolder.BorderSizePixel = 0
     vividBtnHolder.Size = UDim2.new(0, 66, 0, 30)
@@ -20212,13 +21537,13 @@ function __AmbitiousDuelsSetupVisualsUI()
     vividBtnHolder.ZIndex = 9
     vividBtnHolder.Parent = vividChangerRow
     corner(vividBtnHolder, 15)
-    stroke(vividBtnHolder, Color3.fromRGB(216, 180, 254), 1.5, 0.15)
+    stroke(vividBtnHolder, Color3.fromRGB(255, 100, 100), 1.5, 0.15)
 
     local vividPickGrad = Instance.new("UIGradient")
     vividPickGrad.Color = ColorSequence.new({
-      ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-      ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+      ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+      ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
     })
     vividPickGrad.Rotation = 18
     vividPickGrad.Parent = vividBtnHolder
@@ -20469,7 +21794,7 @@ function __AmbitiousDuelsSetupVisualsUI()
       -- RESET TO DEFAULT footer
       local resetHolder = Instance.new("Frame")
       resetHolder.Name = "ResetHolder"
-      resetHolder.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+      resetHolder.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
       resetHolder.BackgroundTransparency = 0
       resetHolder.BorderSizePixel = 0
       resetHolder.Size = UDim2.new(1, -24, 0, 36)
@@ -20477,13 +21802,13 @@ function __AmbitiousDuelsSetupVisualsUI()
       resetHolder.ZIndex = 4
       resetHolder.Parent = pickerFrame
       corner(resetHolder, 18)
-      stroke(resetHolder, Color3.fromRGB(216, 180, 254), 1.5, 0.15)
+      stroke(resetHolder, Color3.fromRGB(255, 100, 100), 1.5, 0.15)
 
       local vividResetGrad = Instance.new("UIGradient")
       vividResetGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
       })
       vividResetGrad.Rotation = 18
       vividResetGrad.Parent = resetHolder
@@ -20644,7 +21969,7 @@ function __AmbitiousDuelsSetupVisualsUI()
 
     local uakFill = Instance.new("Frame")
     uakFill.Name = "Fill"
-    uakFill.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    uakFill.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
     uakFill.BackgroundTransparency = (_G.AmbitiousUAKEnabled == true) and 0 or 1
     uakFill.Size = UDim2.new(1, 0, 1, 0)
     uakFill.BorderSizePixel = 0
@@ -20653,9 +21978,9 @@ function __AmbitiousDuelsSetupVisualsUI()
     corner(uakFill, 11)
     local uakFillGrad = Instance.new("UIGradient")
     uakFillGrad.Color = ColorSequence.new({
-      ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-      ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+      ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+      ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
     })
     uakFillGrad.Rotation = 18
     uakFillGrad.Parent = uakFill
@@ -20673,7 +21998,7 @@ function __AmbitiousDuelsSetupVisualsUI()
     local uakKnobStroke = Instance.new("UIStroke")
     uakKnobStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     uakKnobStroke.Color = (_G.AmbitiousUAKEnabled == true)
-      and Color3.fromRGB(216, 180, 254) or Color3.fromRGB(120, 120, 135)
+      and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(120, 120, 135)
     uakKnobStroke.Thickness = 1.4
     uakKnobStroke.Transparency = 0.15
     uakKnobStroke.Parent = uakKnob
@@ -20823,13 +22148,13 @@ function __AmbitiousDuelsSetupVisualsUI()
     animPackHolder.ClipsDescendants = true
     animPackHolder.Parent = Utility
     corner(animPackHolder, 14)
-    stroke(animPackHolder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+    stroke(animPackHolder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
     _G._AmbitiousRegAccent(animPackHolder, nil, "soft")
 
     -- Slide indicator (si muove orizzontalmente)
     local animSlide = Instance.new("Frame")
     animSlide.Name = "AnimSlide"
-    animSlide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    animSlide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
     animSlide.BackgroundTransparency = 0.1
     animSlide.AnchorPoint = Vector2.new(0.5, 0.5)
     animSlide.Size = UDim2.new(1/NUM_PACKS, -4, 1, -8)
@@ -20840,15 +22165,15 @@ function __AmbitiousDuelsSetupVisualsUI()
     corner(animSlide, 13)
     local animSlideStroke = Instance.new("UIStroke")
     animSlideStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    animSlideStroke.Color = Color3.fromRGB(216, 180, 254)
+    animSlideStroke.Color = Color3.fromRGB(255, 100, 100)
     animSlideStroke.Thickness = 1.5
     animSlideStroke.Transparency = 0.1
     animSlideStroke.Parent = animSlide
     local animSlideGrad = Instance.new("UIGradient")
     animSlideGrad.Color = ColorSequence.new({
-      ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-      ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+      ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+      ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
     })
     animSlideGrad.Transparency = NumberSequence.new({
       NumberSequenceKeypoint.new(0, 0.08),
@@ -20963,7 +22288,7 @@ function __AmbitiousDuelsSetupVisualsUI()
 
     local capHolder = Instance.new("Frame")
     capHolder.Name = "CustomAnimBtnHolder"
-    capHolder.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    capHolder.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
     capHolder.BackgroundTransparency = 0.28
     capHolder.BorderSizePixel = 0
     capHolder.Size = UDim2.new(0, 66, 0, 30)
@@ -20972,13 +22297,13 @@ function __AmbitiousDuelsSetupVisualsUI()
     capHolder.ZIndex = 6
     capHolder.Parent = capRow
     corner(capHolder, 15)
-    stroke(capHolder, Color3.fromRGB(216, 180, 254), 1.5, 0.15)
+    stroke(capHolder, Color3.fromRGB(255, 100, 100), 1.5, 0.15)
 
     local capGrad = Instance.new("UIGradient")
     capGrad.Color = ColorSequence.new({
-      ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-      ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+      ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+      ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
     })
     capGrad.Rotation = 18
     capGrad.Parent = capHolder
@@ -22310,7 +23635,7 @@ function __AmbitiousDuelsSetupVisualsUI()
 
       local fill=Instance.new("Frame")
       fill.Name="Fill"
-      fill.BackgroundColor3=Color3.fromRGB(147, 51, 234)
+      fill.BackgroundColor3=Color3.fromRGB(210, 0, 0)
       fill.BackgroundTransparency=entry.enabled and 0 or 1
       fill.Size=UDim2.new(1,0,1,0)
       fill.BorderSizePixel=0
@@ -22319,9 +23644,9 @@ function __AmbitiousDuelsSetupVisualsUI()
       corner(fill,11)
       local acFillGrad=Instance.new("UIGradient")
       acFillGrad.Color=ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
       })
       acFillGrad.Rotation=18
       acFillGrad.Parent=fill
@@ -22337,7 +23662,7 @@ function __AmbitiousDuelsSetupVisualsUI()
       corner(knob,999)
       local knobStroke=Instance.new("UIStroke")
       knobStroke.ApplyStrokeMode=Enum.ApplyStrokeMode.Border
-      knobStroke.Color=entry.enabled and Color3.fromRGB(216, 180, 254) or Color3.fromRGB(120, 120, 135)
+      knobStroke.Color=entry.enabled and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(120, 120, 135)
       knobStroke.Thickness=1.4
       knobStroke.Transparency=0.15
       knobStroke.Parent=knob
@@ -22414,7 +23739,7 @@ function __AmbitiousDuelsSetupVisualsUI()
       -- PICK button stile Tracker Color (holder scuro + testo bianco)
       local pickHolder=Instance.new("Frame")
       pickHolder.Name="PickHolder"
-      pickHolder.BackgroundColor3=Color3.fromRGB(147, 51, 234)
+      pickHolder.BackgroundColor3=Color3.fromRGB(210, 0, 0)
       pickHolder.BackgroundTransparency=0.28
       pickHolder.BorderSizePixel=0
       pickHolder.Size=UDim2.new(0,48,0,26)
@@ -22423,13 +23748,13 @@ function __AmbitiousDuelsSetupVisualsUI()
       pickHolder.ZIndex=8
       pickHolder.Parent=subRow
       corner(pickHolder,13)
-      stroke(pickHolder,Color3.fromRGB(216, 180, 254),1.5,0.15)
+      stroke(pickHolder,Color3.fromRGB(255, 100, 100),1.5,0.15)
 
       local pickGradAc = Instance.new("UIGradient")
       pickGradAc.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
       })
       pickGradAc.Rotation = 18
       pickGradAc.Parent = pickHolder
@@ -22576,7 +23901,7 @@ function __AmbitiousDuelsSetupVisualsUI()
 
     local ctBtnHolder = Instance.new("Frame")
     ctBtnHolder.Name = "CustomToolsPickHolder"
-    ctBtnHolder.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    ctBtnHolder.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
     ctBtnHolder.BackgroundTransparency = 0.28
     ctBtnHolder.BorderSizePixel = 0
     ctBtnHolder.Size = UDim2.new(0, 66, 0, 30)
@@ -22585,13 +23910,13 @@ function __AmbitiousDuelsSetupVisualsUI()
     ctBtnHolder.ZIndex = 9
     ctBtnHolder.Parent = ctSelRow
     corner(ctBtnHolder, 15)
-    stroke(ctBtnHolder, Color3.fromRGB(216, 180, 254), 1.5, 0.15)
+    stroke(ctBtnHolder, Color3.fromRGB(255, 100, 100), 1.5, 0.15)
 
     local ctGrad = Instance.new("UIGradient")
     ctGrad.Color = ColorSequence.new({
-      ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-      ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+      ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+      ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
     })
     ctGrad.Rotation = 18
     ctGrad.Parent = ctBtnHolder
@@ -23114,12 +24439,12 @@ do
     segHolder.Visible = false
     segHolder.Parent = Utility
     corner(segHolder, 14)
-    stroke(segHolder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+    stroke(segHolder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
     _G._AmbitiousRegAccent(segHolder, nil, "soft")
 
     local segSlide = Instance.new("Frame")
     segSlide.Name = "SelectedSlide"
-    segSlide.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    segSlide.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
     segSlide.BackgroundTransparency = 0.1
     segSlide.AnchorPoint = Vector2.new(0.5, 0.5)
     segSlide.Size = UDim2.new(1 / SEG_N, -4, 1, -8)
@@ -23130,15 +24455,15 @@ do
     corner(segSlide, 13)
     local segSlideStroke = Instance.new("UIStroke")
     segSlideStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    segSlideStroke.Color = Color3.fromRGB(216, 180, 254)
+    segSlideStroke.Color = Color3.fromRGB(255, 100, 100)
     segSlideStroke.Thickness = 1.5
     segSlideStroke.Transparency = 0.1
     segSlideStroke.Parent = segSlide
     local segSlideGrad = Instance.new("UIGradient")
     segSlideGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
     })
     segSlideGrad.Rotation = 22
     segSlideGrad.Parent = segSlide
@@ -23384,7 +24709,7 @@ do
     fovHolder.Visible = false
     fovHolder.Parent = Utility
     corner(fovHolder, 14)
-    stroke(fovHolder, Color3.fromRGB(126, 71, 190), 1.4, 0.32)
+    stroke(fovHolder, Color3.fromRGB(150, 0, 0), 1.4, 0.32)
     _G._AmbitiousRegAccent(fovHolder, nil, "soft")
 
     local fovLabel = Instance.new("TextLabel")
@@ -23471,6 +24796,7 @@ end -- chiude __AmbitiousDuelsSetupVisualsUI
 -- SETTINGS PAGE
 -- ============================================================
 Settings = pages.SETTINGS
+Musicas = pages.MUSICAS
 ambitiousGuiScaleValue = tonumber(savedConfig.ambitiousGuiScaleValue) or 0.75
 ambitiousGuiScaleValue = math.clamp(tonumber(ambitiousGuiScaleValue) or 0.50, 0.50, 1.50)
 ambitiousProgressBarScaleValue = tonumber(savedConfig.ambitiousProgressBarScaleValue) or 0.85
@@ -23627,7 +24953,7 @@ _G.__AmbitiousDuelsSetupSettingsUI = function()
 
       local fill = Instance.new("Frame")
       fill.Name = "Fill"
-      fill.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+      fill.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
       fill.BackgroundTransparency = startOn and 0 or 1
       fill.Size = UDim2.new(1, 0, 1, 0)
       fill.BorderSizePixel = 0
@@ -23636,9 +24962,9 @@ _G.__AmbitiousDuelsSetupSettingsUI = function()
       corner(fill, 11)
       local fillGrad = Instance.new("UIGradient")
       fillGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
       })
       fillGrad.Rotation = 18
       fillGrad.Parent = fill
@@ -23654,7 +24980,7 @@ _G.__AmbitiousDuelsSetupSettingsUI = function()
       corner(knob, 999)
       local knobStroke = Instance.new("UIStroke")
       knobStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-      knobStroke.Color = startOn and Color3.fromRGB(216, 180, 254) or Color3.fromRGB(120, 120, 135)
+      knobStroke.Color = startOn and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(120, 120, 135)
       knobStroke.Thickness = 1.4
       knobStroke.Transparency = 0.15
       knobStroke.Parent = knob
@@ -23890,7 +25216,7 @@ makeImageButton(4, 220) -- +68
     -- Holder stile Sky Theme per il bottone PICK
     local customBgBtnHolder = Instance.new("Frame")
     customBgBtnHolder.Name = "CustomBgBtnHolder"
-    customBgBtnHolder.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    customBgBtnHolder.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
     customBgBtnHolder.BackgroundTransparency = 0.28
     customBgBtnHolder.BorderSizePixel = 0
     customBgBtnHolder.Size = UDim2.new(0, 66, 0, 30)
@@ -23899,13 +25225,13 @@ makeImageButton(4, 220) -- +68
     customBgBtnHolder.ZIndex = 6
     customBgBtnHolder.Parent = customBgRow
     corner(customBgBtnHolder, 15)
-    stroke(customBgBtnHolder, Color3.fromRGB(216, 180, 254), 1.5, 0.15)
+    stroke(customBgBtnHolder, Color3.fromRGB(255, 100, 100), 1.5, 0.15)
 
     local customBgPickGrad = Instance.new("UIGradient")
     customBgPickGrad.Color = ColorSequence.new({
-      ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-      ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+      ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+      ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
     })
     customBgPickGrad.Rotation = 18
     customBgPickGrad.Parent = customBgBtnHolder
@@ -24962,11 +26288,13 @@ end
 
     local tabPosRow = baseRow(Settings, "Tab Position", 3)
     tabPosRow.Size = UDim2.new(1, -4, 0, 42)
+    tabPosRow.Visible = false
+    tabPosRow.Parent = nil
 
     -- Holder del PICK, stesso stile della Custom Background.
     local tpHolder = Instance.new("Frame")
     tpHolder.Name = "TabPosBtnHolder"
-    tpHolder.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    tpHolder.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
     tpHolder.BackgroundTransparency = 0.28
     tpHolder.BorderSizePixel = 0
     tpHolder.Size = UDim2.new(0, 66, 0, 30)
@@ -24975,13 +26303,13 @@ end
     tpHolder.ZIndex = 6
     tpHolder.Parent = tabPosRow
     corner(tpHolder, 15)
-    stroke(tpHolder, Color3.fromRGB(216, 180, 254), 1.5, 0.15)
+    stroke(tpHolder, Color3.fromRGB(255, 100, 100), 1.5, 0.15)
 
     local tpGrad = Instance.new("UIGradient")
     tpGrad.Color = ColorSequence.new({
-      ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-      ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+      ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+      ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
     })
     tpGrad.Rotation = 18
     tpGrad.Parent = tpHolder
@@ -25336,6 +26664,7 @@ end
         Size = UDim2.new(0, 380, 0, 404),
         Position = UDim2.new(0.5, -190, 0.5, -202)
       }):Play()
+
     end)
   end)()
   -- <<< TAB POSITION END
@@ -25348,10 +26677,12 @@ end
   ;(function()
     local cfRow = baseRow(Settings, "Custom Fonts", 3)
     cfRow.Size = UDim2.new(1, -4, 0, 42)
+    cfRow.Visible = false
+    cfRow.Parent = nil
 
     local cfHolder = Instance.new("Frame")
     cfHolder.Name = "CustomFontsBtnHolder"
-    cfHolder.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    cfHolder.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
     cfHolder.BackgroundTransparency = 0.28
     cfHolder.BorderSizePixel = 0
     cfHolder.Size = UDim2.new(0, 66, 0, 30)
@@ -25360,13 +26691,13 @@ end
     cfHolder.ZIndex = 6
     cfHolder.Parent = cfRow
     corner(cfHolder, 15)
-    stroke(cfHolder, Color3.fromRGB(216, 180, 254), 1.5, 0.15)
+    stroke(cfHolder, Color3.fromRGB(255, 100, 100), 1.5, 0.15)
 
     local cfGrad = Instance.new("UIGradient")
     cfGrad.Color = ColorSequence.new({
-      ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-      ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+      ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+      ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
     })
     cfGrad.Rotation = 18
     cfGrad.Parent = cfHolder
@@ -25679,6 +27010,7 @@ end
         Size = UDim2.new(0, 380, 0, 520),
         Position = UDim2.new(0.5, -190, 0.5, -260)
       }):Play()
+
     end)
   end)()
   -- ===== FINE CUSTOM FONTS ROW =====
@@ -25901,9 +27233,25 @@ end
 
   speedKeybindRow(Settings, "Toggle UI", "ToggleUI", 6)
 
-  section(Settings, "MOBILE BUTTONS", 7)
-  stepperRow(Settings, "Mobile Buttons Size", tonumber(_G.AmbitiousMobileButtonScale) or 0.75, 10, function(v)
-    _G.AmbitiousMobileButtonScale = math.clamp(tonumber(v) or 0.35, 0.30, 1.35)
+  -- Lock UI: when enabled, every custom UI drag is disabled, including
+  -- the hub, mini button, steal bar and mobile floating buttons.
+  local lockRow, setLockGuiVisual = toggleRow(Settings, "Lock UI", _G.AmbitiousGuiLocked == true, 7)
+  local lockButton = lockRow and lockRow:FindFirstChild("ToggleButton")
+  if lockButton then
+    lockButton.Activated:Connect(function()
+      _G.AmbitiousGuiLocked = not (_G.AmbitiousGuiLocked == true)
+      if setLockGuiVisual then setLockGuiVisual(_G.AmbitiousGuiLocked == true) end
+      saveAmbitiousConfig()
+    end)
+  end
+  if setLockGuiVisual then setLockGuiVisual(_G.AmbitiousGuiLocked == true) end
+  _G.AmbitiousUpdateGuiLockVisual = function()
+    if setLockGuiVisual then pcall(setLockGuiVisual, _G.AmbitiousGuiLocked == true) end
+  end
+
+  section(Settings, "MOBILE BUTTONS", 8)
+  stepperRow(Settings, "Mobile Buttons Size", tonumber(_G.AmbitiousMobileButtonScale) or 1.05, 10, function(v)
+    _G.AmbitiousMobileButtonScale = math.clamp(tonumber(v) or 1.05, 0.30, 1.35)
     if _G.AmbitiousApplyMobileButtonSize then _G.AmbitiousApplyMobileButtonSize() end
     saveAmbitiousConfig()
   end, 0.30, 1.35)
@@ -25912,7 +27260,7 @@ end
     local row = baseRow(Settings, "Reset Mobile Buttons", 11)
     local mobResetBg = Instance.new("Frame")
     mobResetBg.Name = "ResetMobileButtonsBg"
-    mobResetBg.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    mobResetBg.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
     mobResetBg.BackgroundTransparency = 0
     mobResetBg.BorderSizePixel = 0
     mobResetBg.Size = UDim2.new(0, 78, 0, 24)
@@ -25920,7 +27268,7 @@ end
     mobResetBg.ZIndex = 7
     mobResetBg.Parent = row
     corner(mobResetBg, 12)
-    stroke(mobResetBg, Color3.fromRGB(216, 180, 254), 1.5, 0.15)
+    stroke(mobResetBg, Color3.fromRGB(255, 100, 100), 1.5, 0.15)
 
     local button = Instance.new("TextButton")
     button.Name = "ResetMobileButtons"
@@ -25940,9 +27288,9 @@ end
 
     local mobResetGrad = Instance.new("UIGradient")
     mobResetGrad.Color = ColorSequence.new({
-      ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-      ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+      ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+      ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
     })
     mobResetGrad.Rotation = 18
     mobResetGrad.Parent = mobResetBg
@@ -25958,7 +27306,7 @@ end
       if _G.AmbitiousResetMobileButtons then
         _G.AmbitiousResetMobileButtons()
       else
-        _G.AmbitiousMobileButtonScale = 0.75
+        _G.AmbitiousMobileButtonScale = 1.05
         _G.AmbitiousHideMobileButtons = false
         if _G.AmbitiousApplyMobileButtonsHidden then _G.AmbitiousApplyMobileButtonsHidden() end
         if _G.AmbitiousApplyMobileButtonSize then _G.AmbitiousApplyMobileButtonSize() end
@@ -25967,9 +27315,9 @@ end
     end)
   end
 
-  section(Settings, "INTRO", 50)
+  section(Musicas, "INTRO", 2)
   do
-    local row, setVisual = toggleRow(Settings, "Intro", _introEnabled, 51)
+    local row, setVisual = toggleRow(Musicas, "Intro", _introEnabled, 3)
     setIntroVisual = setVisual
     local btn = row and row:FindFirstChild("ToggleButton")
     if btn then
@@ -25990,9 +27338,9 @@ end
     row.BackgroundTransparency = 0.22
     row.Size = UDim2.new(1, -4, 0, 42)
     row.BorderSizePixel = 0
-    row.LayoutOrder = 52
+    row.LayoutOrder = 4
     row.ZIndex = 4
-    row.Parent = Settings
+    row.Parent = Musicas
     corner(row, 10)
     stroke(row, COLORS.strokeSoft, 1.15, 0.32)
 
@@ -26013,7 +27361,7 @@ end
 
     local songBg = Instance.new("Frame")
     songBg.Name = "IntroSongBg"
-    songBg.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    songBg.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
     songBg.BackgroundTransparency = 0
     songBg.BorderSizePixel = 0
     songBg.Size = UDim2.new(0, 120, 0, 30)
@@ -26022,7 +27370,7 @@ end
     songBg.ZIndex = 6
     songBg.Parent = row
     corner(songBg, 15)
-    stroke(songBg, Color3.fromRGB(216, 180, 254), 1.5, 0.15)
+    stroke(songBg, Color3.fromRGB(255, 100, 100), 1.5, 0.15)
 
     local btn = Instance.new("TextButton")
     btn.Name = "Intro Song Button"
@@ -26042,9 +27390,9 @@ end
 
     local songGrad = Instance.new("UIGradient")
     songGrad.Color = ColorSequence.new({
-      ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-      ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+      ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+      ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
     })
     songGrad.Rotation = 18
     songGrad.Parent = songBg
@@ -26071,14 +27419,14 @@ end
   end
 
   -- ===== MUSIC PLAYER =====
-  section(Settings, "MUSIC PLAYER", 53)
+  section(Musicas, "MUSIC PLAYER", 1)
   do
-    local mpRow = baseRow(Settings, "Music Player", 54)
+    local mpRow = baseRow(Musicas, "Music Player", 5)
     mpRow.Size = UDim2.new(1, -4, 0, 42)
 
     local mpHolder = Instance.new("Frame")
     mpHolder.Name = "MusicPlayerButtonHolder"
-    mpHolder.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    mpHolder.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
     mpHolder.BackgroundTransparency = 0.28
     mpHolder.BorderSizePixel = 0
     mpHolder.Size = UDim2.new(0, 66, 0, 30)
@@ -26087,13 +27435,13 @@ end
     mpHolder.ZIndex = 9
     mpHolder.Parent = mpRow
     corner(mpHolder, 15)
-    stroke(mpHolder, Color3.fromRGB(216, 180, 254), 1.5, 0.15)
+    stroke(mpHolder, Color3.fromRGB(255, 100, 100), 1.5, 0.15)
 
     local mpPickGrad = Instance.new("UIGradient")
     mpPickGrad.Color = ColorSequence.new({
-      ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-      ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+      ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+      ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+      ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
     })
     mpPickGrad.Rotation = 18
     mpPickGrad.Parent = mpHolder
@@ -26220,9 +27568,9 @@ local function _mpToggleRow(parent, labelText, getVal, setVal, yPos)
     -- Gradiente (sarà gestito da _G._AmbitiousApplyAccent)
     local pillBgGrad = Instance.new("UIGradient")
     pillBgGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(220, 100, 255)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 70, 70)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
     })
     pillBgGrad.Rotation = 18
     pillBgGrad.Enabled = false
@@ -26251,7 +27599,7 @@ local function _mpToggleRow(parent, labelText, getVal, setVal, yPos)
 
     local function apply(v)
         local isGrey = _G._AmbitiousAccentIsGrey and _G._AmbitiousAccentIsGrey() or false
-        local onBase, onEdge = Color3.fromRGB(147, 51, 234), Color3.fromRGB(216, 180, 254)
+        local onBase, onEdge = Color3.fromRGB(210, 0, 0), Color3.fromRGB(255, 100, 100)
         if _G._AmbitiousToggleOnColor then
             local b, e = _G._AmbitiousToggleOnColor()
             if b then onBase = b end
@@ -26422,7 +27770,7 @@ end
 
       local barFill = Instance.new("Frame")
       barFill.Name = "ProgressFill"
-      barFill.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+      barFill.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
       barFill.BorderSizePixel = 0
       barFill.Size = UDim2.new(0, 0, 1, 0)
       barFill.ZIndex = 5
@@ -26430,8 +27778,8 @@ end
       corner(barFill, 3)
       local barGrad = Instance.new("UIGradient")
       barGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(147, 51, 234)),
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(210, 0, 0)),
       })
       barGrad.Parent = barFill
       _G._AmbitiousRegAccent(barFill, barGrad, "button")
@@ -26477,7 +27825,7 @@ end
 
       local playHolder = Instance.new("Frame")
       playHolder.Name = "PlayHolder"
-      playHolder.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+      playHolder.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
       playHolder.BorderSizePixel = 0
       playHolder.Size = UDim2.new(0, 58, 0, 46)
       playHolder.Position = UDim2.new(0.5, -29, 0, 2)
@@ -26485,13 +27833,13 @@ end
       playHolder.ZIndex = 6
       playHolder.Parent = ctrl
       corner(playHolder, 14)
-      stroke(playHolder, Color3.fromRGB(216, 180, 254), 1.5, 0.15)
+      stroke(playHolder, Color3.fromRGB(255, 100, 100), 1.5, 0.15)
 
       local playGrad = Instance.new("UIGradient")
       playGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
       })
       playGrad.Rotation = 18
       playGrad.Parent = playHolder
@@ -26727,7 +28075,7 @@ end
 
   local resetBg = Instance.new("Frame")
   resetBg.Name = "ResetBg"
-  resetBg.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+  resetBg.BackgroundColor3 = Color3.fromRGB(210, 0, 0)
   resetBg.BackgroundTransparency = 0
   resetBg.BorderSizePixel = 0
   resetBg.Size = UDim2.new(1, -16, 0, 42)
@@ -26754,16 +28102,16 @@ end
 
   local resetGrad = Instance.new("UIGradient")
   resetGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(202, 148, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(147, 51, 234)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(101, 31, 190)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 0)),
   })
   resetGrad.Rotation = 18
   resetGrad.Parent = resetBg
 
   local resetStroke = Instance.new("UIStroke")
   resetStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-  resetStroke.Color = Color3.fromRGB(216, 180, 254)
+  resetStroke.Color = Color3.fromRGB(255, 100, 100)
   resetStroke.Thickness = 1.5
   resetStroke.Transparency = 0.15
   resetStroke.Parent = resetBg
@@ -26888,7 +28236,7 @@ end
       _G._AmbitiousSyncAfterHit.enabled = false; _stopSyncAfterHitWatcher()
       _G.AmbitiousStealRadii = {Normal = 62, Semi = 60, SemiV2Radius = 60, SemiV2SemiRadius = 8}
       selectedAimbotMode = "V1"
-      AIMBOT_SPEED = 58; LAGGER_AIMBOT_SPEED = 40
+      AIMBOT_SPEED = 60; LAGGER_AIMBOT_SPEED = 40
       _G._AmbitiousAimbotChase = { V1 = "NORMAL", V2 = "NORMAL" }   -- >>> AIMBOT CHASE MODE <<<
       _G.AmbitiousBatAimbotV2Speed = 58; _G.AmbitiousBatAimbotV2LaggerSpeed = 40; TP_BAT_SPEED = 58
       autoSwingEnabled = false; mirrorTPDownEnabled = false; tpBatAutoSwingEnabled = false
@@ -26934,9 +28282,9 @@ end
       -- >>> CUSTOM FONTS <<< si torna ai font originali di ogni elemento
       if _G.AmbitiousFonts then pcall(_G.AmbitiousFonts.set, "Default", true) end
       if _G.AmbitiousFontPickerClose then pcall(_G.AmbitiousFontPickerClose) end
-      _G._AmbitiousTabPosition = "Up"
+      _G._AmbitiousTabPosition = "Left"
       if _G.AmbitiousTabPosClose then pcall(_G.AmbitiousTabPosClose) end
-      if _G.AmbitiousApplyTabPosition then pcall(_G.AmbitiousApplyTabPosition, "Up") end
+      if _G.AmbitiousApplyTabPosition then pcall(_G.AmbitiousApplyTabPosition, "Left") end
       -- >>> TITLE STYLE <<< torna allo stile 1, anche visivamente
       if _G.AmbitiousApplyTitleStyle then pcall(_G.AmbitiousApplyTitleStyle, 1) end
       if _G.AmbitiousRefreshTitleStyleSelector then pcall(_G.AmbitiousRefreshTitleStyleSelector) end
@@ -26963,7 +28311,7 @@ end
       end
       if _G.AmbitiousRefreshAfterDropSelector then pcall(_G.AmbitiousRefreshAfterDropSelector) end
       if _G.AmbitiousRefreshDropMethodSelector then pcall(_G.AmbitiousRefreshDropMethodSelector) end   -- >>> DROP METHOD <<<
-      _G.AmbitiousGuiLocked = false; _G.AmbitiousHideMobileButtons = false; _G.AmbitiousMobileButtonScale = 0.75
+      _G.AmbitiousGuiLocked = false; _G.AmbitiousHideMobileButtons = false; _G.AmbitiousMobileButtonScale = 1.05
       _G.AmbitiousMobileHideList = {}   -- >>> HIDE PER BOTTONE <<<
       if _G.AmbitiousRefreshMobileHideList then pcall(_G.AmbitiousRefreshMobileHideList) end
       if AmbitiousUpdateGuiLockVisual then AmbitiousUpdateGuiLockVisual() end
@@ -27348,27 +28696,29 @@ _G.__AmbitiousDuelsSetupStealBar = function()
   -- Sfondo = stesso background scelto nell'hub (built-in o custom),
   -- in semi trasparenza.
   -- ============================================================
-  local W, H = 380, 44
-  local RADIUS = 11
+  -- Estilo visual del Auto Steal inspirado en la tarjeta compacta de la
+  -- referencia: la lógica de progreso/estado/drag se mantiene intacta.
+  local W, H = 400, 70
+  local RADIUS = 12
 
   local C = {
-    line   = Color3.fromRGB(140, 90, 235),
-    txt    = Color3.fromRGB(246, 243, 255),
-    txtDim = Color3.fromRGB(150, 143, 168),
+    line   = Color3.fromRGB(72, 165, 255),
+    txt    = Color3.fromRGB(242, 248, 255),
+    txtDim = Color3.fromRGB(165, 190, 220),
     good   = Color3.fromRGB(130, 245, 160),
     warn   = Color3.fromRGB(255, 214, 100),
     bad    = Color3.fromRGB(255, 105, 105),
   }
 
   local GRAD_ACTIVE = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB( 88,  40, 210)),
-    ColorSequenceKeypoint.new(0.45, Color3.fromRGB(150,  70, 245)),
-    ColorSequenceKeypoint.new(0.78, Color3.fromRGB(224, 100, 255)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 168, 240)),
+    ColorSequenceKeypoint.new(0.00, Color3.fromRGB( 25, 105, 205)),
+    ColorSequenceKeypoint.new(0.45, Color3.fromRGB( 35, 160, 255)),
+    ColorSequenceKeypoint.new(0.78, Color3.fromRGB( 95, 205, 255)),
+    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(175, 235, 255)),
   })
   local GRAD_IDLE = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB( 60,  56,  78)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(108, 100, 132)),
+    ColorSequenceKeypoint.new(0.00, Color3.fromRGB( 10,  20,  38)),
+    ColorSequenceKeypoint.new(1.00, Color3.fromRGB( 35,  55,  85)),
   })
   local GRAD_DONE = ColorSequence.new({
     ColorSequenceKeypoint.new(0.00, Color3.fromRGB( 30, 150, 130)),
@@ -27404,6 +28754,7 @@ _G.__AmbitiousDuelsSetupStealBar = function()
       end
     end)
     UIS.InputChanged:Connect(function(input)
+      if _G.AmbitiousGuiLocked == true then return end
       if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
         local delta = input.Position - dragStart
         frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
@@ -27418,8 +28769,8 @@ _G.__AmbitiousDuelsSetupStealBar = function()
   _G.AmbitiousStealBarDefaultPosition = UDim2.new(0.5, -math.floor(W / 2), 1, -128)
   pbFrame.Position = tableToUDim2(savedStealBarPositionTable, _G.AmbitiousStealBarDefaultPosition)
   savedStealBarPositionTable = udim2ToTable(pbFrame.Position)
-  pbFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-  pbFrame.BackgroundTransparency = 0.35
+  pbFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+  pbFrame.BackgroundTransparency = 0
   pbFrame.BorderSizePixel = 0
   pbFrame.Active = true
   pbFrame.ClipsDescendants = true
@@ -27428,8 +28779,8 @@ _G.__AmbitiousDuelsSetupStealBar = function()
 
   local cardStroke = Instance.new("UIStroke", pbFrame)
   cardStroke.Color = C.line
-  cardStroke.Thickness = 1.2
-  cardStroke.Transparency = 0.4
+  cardStroke.Thickness = 1.5
+  cardStroke.Transparency = 0.3
 
   drag(pbFrame)
 
@@ -27488,7 +28839,7 @@ _G.__AmbitiousDuelsSetupStealBar = function()
   scrim.Name = "Scrim"
   scrim.Size = UDim2.new(1, 0, 1, 0)
   scrim.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-  scrim.BackgroundTransparency = 0.45
+  scrim.BackgroundTransparency = 1
   scrim.BorderSizePixel = 0
   scrim.ZIndex = 2
   Instance.new("UICorner", scrim).CornerRadius = UDim.new(0, RADIUS)
@@ -27533,7 +28884,9 @@ _G.__AmbitiousDuelsSetupStealBar = function()
   -- ===================== RIEMPIMENTO (tutta la card) =====================
   local washClip = Instance.new("Frame", pbFrame)
   washClip.Name = "WashClip"
-  washClip.Size = UDim2.new(0, 0, 1, 0)
+  washClip.Size = UDim2.new(0, 0, 0, 16)
+  -- Cleanhub: la barra ocupa la fila inferior, debajo del encabezado y FPS.
+  washClip.Position = UDim2.new(0, 8, 0, 48)
   washClip.BackgroundTransparency = 1
   washClip.BorderSizePixel = 0
   washClip.ClipsDescendants = true
@@ -27541,7 +28894,7 @@ _G.__AmbitiousDuelsSetupStealBar = function()
 
   local wash = Instance.new("Frame", washClip)
   wash.Name = "Wash"
-  wash.Size = UDim2.new(0, W, 1, 0)
+  wash.Size = UDim2.new(0, W - 16, 1, 0)
   wash.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
   wash.BorderSizePixel = 0
   wash.ZIndex = 3
@@ -27552,9 +28905,9 @@ _G.__AmbitiousDuelsSetupStealBar = function()
   washGrad.Rotation = 0
   washGrad.Color = GRAD_ACTIVE
   washGrad.Transparency = NumberSequence.new({
-    NumberSequenceKeypoint.new(0.00, 0.62),
-    NumberSequenceKeypoint.new(0.55, 0.44),
-    NumberSequenceKeypoint.new(1.00, 0.26),
+    NumberSequenceKeypoint.new(0.00, 0.18),
+    NumberSequenceKeypoint.new(0.55, 0.04),
+    NumberSequenceKeypoint.new(1.00, 0.00),
   })
 
   local edge = Instance.new("Frame", pbFrame)
@@ -27577,34 +28930,45 @@ _G.__AmbitiousDuelsSetupStealBar = function()
   -- ===================== TITOLO (centro, in alto) =====================
   local hubTitleLbl = Instance.new("TextLabel", pbFrame)
   hubTitleLbl.Name = "HubTitle"
-  hubTitleLbl.AnchorPoint = Vector2.new(0.5, 0.5)
-  hubTitleLbl.Position = UDim2.new(0.5, 0, 0.5, 0)
-  hubTitleLbl.Size = UDim2.new(0, 220, 0, 20)
+  hubTitleLbl.AnchorPoint = Vector2.new(0.5, 0)
+  hubTitleLbl.Position = UDim2.new(0.5, 0, 0, 2)
+  hubTitleLbl.Size = UDim2.new(1, -24, 0, 18)
   hubTitleLbl.BackgroundTransparency = 1
-  hubTitleLbl.Text = "discord.gg/ambitiouss"
-  hubTitleLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+  hubTitleLbl.Text = "NIKE DUELS  •  AUTO STEAL"
+  hubTitleLbl.TextColor3 = C.line
   hubTitleLbl.TextStrokeColor3 = Color3.fromRGB(8, 4, 24)
   hubTitleLbl.TextStrokeTransparency = 0.35
   hubTitleLbl.Font = Enum.Font.GothamBlack
-  hubTitleLbl.TextSize = 16
+  hubTitleLbl.TextSize = 12
   hubTitleLbl.TextXAlignment = Enum.TextXAlignment.Center
   hubTitleLbl.TextYAlignment = Enum.TextYAlignment.Center
   hubTitleLbl.ZIndex = 10
 
   local hubTitleGrad = Instance.new("UIGradient", hubTitleLbl)
   hubTitleGrad.Rotation = 0
-  hubTitleGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 175, 250)),
-    ColorSequenceKeypoint.new(0.50, Color3.fromRGB(190, 115, 255)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(125,  85, 245)),
-  })
+  hubTitleGrad.Color = ColorSequence.new(C.line, Color3.fromRGB(190, 235, 255))
+
+  local fpsNeon = Instance.new("TextLabel", pbFrame)
+  fpsNeon.Name = "FPSNeon"
+  fpsNeon.Size = UDim2.new(0, 150, 0, 18)
+  fpsNeon.Position = UDim2.new(0.5, -75, 0, 22)
+  fpsNeon.BackgroundTransparency = 1
+  fpsNeon.Text = "--FPS · --ms"
+  fpsNeon.TextColor3 = C.line
+  fpsNeon.Font = Enum.Font.GothamBold
+  fpsNeon.TextSize = 12
+  fpsNeon.TextScaled = true
+  fpsNeon.TextXAlignment = Enum.TextXAlignment.Center
+  fpsNeon.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+  fpsNeon.TextStrokeTransparency = 0.2
+  fpsNeon.ZIndex = 13
 
   -- ===================== SINISTRA: % sopra, STEAL sotto =====================
   local leftHolder = Instance.new("Frame", pbFrame)
   leftHolder.Name = "Left"
-  leftHolder.AnchorPoint = Vector2.new(0, 0.5)
-  leftHolder.Position = UDim2.new(0, 10, 0.5, 0)
-  leftHolder.Size = UDim2.new(0, 68, 0, 32)
+  leftHolder.AnchorPoint = Vector2.new(0, 0)
+  leftHolder.Position = UDim2.new(0, 12, 0, 22)
+  leftHolder.Size = UDim2.new(0, 160, 0, 22)
   leftHolder.BackgroundTransparency = 1
   leftHolder.ZIndex = 10
 
@@ -27619,7 +28983,7 @@ _G.__AmbitiousDuelsSetupStealBar = function()
   local textStack = Instance.new("Frame", leftHolder)
   textStack.Name = "TextStack"
   textStack.LayoutOrder = 1
-  textStack.Size = UDim2.new(0, LEFT_W, 0, 32)
+  textStack.Size = UDim2.new(0, LEFT_W, 0, 22)
   textStack.BackgroundTransparency = 1
   textStack.ZIndex = 10
 
@@ -27658,6 +29022,7 @@ _G.__AmbitiousDuelsSetupStealBar = function()
   stateRow.Size = UDim2.new(1, 0, 0, 13)
   stateRow.BackgroundTransparency = 1
   stateRow.ZIndex = 10
+  stateRow.Visible = false
 
   local stealLbl = Instance.new("TextLabel", stateRow)
   stealLbl.Name = "StateLabel"
@@ -27682,6 +29047,7 @@ _G.__AmbitiousDuelsSetupStealBar = function()
   rightHolder.Size = UDim2.new(0, STAT_W, 0, 32)
   rightHolder.BackgroundTransparency = 1
   rightHolder.ZIndex = 10
+  rightHolder.Visible = false
 
   local rList = Instance.new("UIListLayout", rightHolder)
   rList.FillDirection = Enum.FillDirection.Vertical
@@ -27789,7 +29155,7 @@ _G.__AmbitiousDuelsSetupStealBar = function()
       if math.abs(targetP - shownP) < 0.004 then shownP = targetP end
     end
 
-    washClip.Size = UDim2.new(shownP, 0, 1, 0)
+    washClip.Size = UDim2.new(shownP, 0, 0, 16)
     progressPct.Text = math.floor(shownP * 100 + 0.5) .. "%"
 
     -- La testina si spegne prima di toccare il bordo: altrimenti a fine
@@ -27813,7 +29179,7 @@ _G.__AmbitiousDuelsSetupStealBar = function()
     -- A fondo corsa niente interpolazione: il pieno deve comparire subito
     if p >= 0.999 then
       shownP = 1
-      washClip.Size = UDim2.new(1, 0, 1, 0)
+      washClip.Size = UDim2.new(1, 0, 0, 16)
       edge.BackgroundTransparency = 1
       progressPct.Text = "100%"
     end
@@ -27822,7 +29188,7 @@ _G.__AmbitiousDuelsSetupStealBar = function()
   function StealBar.Reset()
     targetP = 0
     shownP = 0
-    washClip.Size = UDim2.new(0, 0, 1, 0)
+    washClip.Size = UDim2.new(0, 0, 0, 16)
     wash.BackgroundTransparency = 0
     edge.BackgroundTransparency = 1
     edge.Position = UDim2.new(0, 0, 0, 0)
@@ -27867,6 +29233,9 @@ _G.__AmbitiousDuelsSetupStealBar = function()
 
       sbFpsLabel.Text = tostring(sbFpsCurrent)
       sbPingLabel.Text = tostring(sbPingCurrent)
+      if fpsNeon and fpsNeon.Parent then
+        fpsNeon.Text = string.format("%dFPS · %dms", sbFpsCurrent, sbPingCurrent)
+      end
 
       if sbFpsCurrent >= 120 then
         sbFpsLabel.TextColor3 = C.good
@@ -28002,339 +29371,8 @@ end
 
 _G.__AmbitiousDuelsSetupMinimizeToggle()
 
-_G.__AmbitiousDuelsRunIntro = function()
-  local TS = TweenService
-  local introGuiParent = Gui and Gui.Parent or HubGui
-  local origSize = FULL_MAIN_SIZE or Main.Size
-  local wasMinimizedBeforeIntro = (_G.__AmbitiousDuelsMinimized == true)
+-- Intro ejecutada al inicio del script; no se duplica al final.
 
-  if not _introEnabled then
-    stopIntroPlayback()
-    stopIntroPreview()
-    Main.Size = origSize
-    if not wasMinimizedBeforeIntro then
-      Main.Visible = true
-      MiniFrame.Visible = false
-    else
-      Main.Visible = false
-      MiniFrame.Visible = true
-    end
-    return
-  end
-
-  playIntroMusic()
-  Main.Visible = false
-  MiniFrame.Visible = false
-  Main.Size = UDim2.new(0, 0, 0, 0)
-
-  task.spawn(function()
-    local introGui = Instance.new("ScreenGui")
-    introGui.Name = "AmbitiousHubIntro"
-    introGui.IgnoreGuiInset = true
-    introGui.DisplayOrder = 100
-    introGui.ResetOnSpawn = false
-    introGui.Parent = introGuiParent
-    local introActive = true
-
-    function finishIntro()
-      if not introActive then return end
-      introActive = false
-      stopIntroPlayback()
-      MiniFrame.Visible = false
-      Main.Visible = true
-      pcall(function()
-        TS:Create(Main, TweenInfo.new(0.7, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = origSize}):Play()
-      end)
-      task.delay(0.75, function()
-        pcall(function() introGui:Destroy() end)
-      end)
-    end
-
-    local darkBg = Instance.new("Frame", introGui)
-    darkBg.Size = UDim2.new(1, 0, 1, 0)
-    darkBg.BackgroundColor3 = Color3.fromRGB(8, 8, 10)
-    darkBg.BackgroundTransparency = 1
-    darkBg.BorderSizePixel = 0
-    darkBg.ZIndex = 1
-
-    local bgGrad = Instance.new("UIGradient", darkBg)
-    bgGrad.Color = ColorSequence.new({
-      ColorSequenceKeypoint.new(0, Color3.fromRGB(42,42,46)),
-      ColorSequenceKeypoint.new(0.45, Color3.fromRGB(18,18,20)),
-      ColorSequenceKeypoint.new(1, Color3.fromRGB(10,10,12))
-    })
-    bgGrad.Rotation = 90
-
-    local redWash = Instance.new("Frame", introGui)
-    redWash.Size = UDim2.new(1,0,1,0)
-    redWash.BackgroundColor3 = Color3.fromRGB(255,255,255)
-    redWash.BackgroundTransparency = 1
-    redWash.BorderSizePixel = 0
-    redWash.ZIndex = 2
-
-local skipBtn = Instance.new("TextButton", introGui)
-skipBtn.Name = "SkipIntro"
-skipBtn.AnchorPoint = Vector2.new(1,0)
-skipBtn.Position = UDim2.new(1,-22,0,22)
-skipBtn.Size = UDim2.new(0,104,0,34)
-skipBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  -- base
-skipBtn.BackgroundTransparency = 0
-skipBtn.BorderSizePixel = 0
-skipBtn.Text = "SKIP INTRO"
-skipBtn.TextColor3 = Color3.fromRGB(0, 0, 0)  -- TESTO NERO
-skipBtn.TextSize = 11
-skipBtn.Font = Enum.Font.GothamBlack
-skipBtn.AutoButtonColor = false
-skipBtn.ZIndex = 80
-Instance.new("UICorner", skipBtn).CornerRadius = UDim.new(0,10)
-
--- Gradiente (i colori verranno aggiornati)
-local grad = Instance.new("UIGradient", skipBtn)
-grad.Rotation = 0
-grad.Transparency = NumberSequence.new(0)
-
--- Colori iniziali (galattici)
-grad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
-    ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
-})
-
--- Funzione per ruotare le tonalità (hue) di un colore
-local function shiftHue(color, offset)
-    local r, g, b = color.R, color.G, color.B
-    local max = math.max(r, g, b)
-    local min = math.min(r, g, b)
-    local h, s, v
-    v = max
-    local d = max - min
-    s = (max == 0) and 0 or d / max
-    if max == min then
-        h = 0
-    else
-        if max == r then
-            h = (g - b) / d + (g < b and 6 or 0)
-        elseif max == g then
-            h = (b - r) / d + 2
-        else
-            h = (r - g) / d + 4
-        end
-        h = h / 6
-    end
-    h = (h + offset) % 1
-    local function hueToRgb(p, q, t)
-        if t < 0 then t = t + 1 end
-        if t > 1 then t = t - 1 end
-        if t < 1/6 then return p + (q - p) * 6 * t end
-        if t < 1/2 then return q end
-        if t < 2/3 then return p + (q - p) * (2/3 - t) * 6 end
-        return p
-    end
-    if s == 0 then
-        return Color3.fromRGB(v, v, v)
-    end
-    local q = v * (1 - s * (1 - (h * 6 % 1)))
-    local p = v * (1 - s)
-    local tr = v
-    local tg = v
-    local tb = v
-    if h < 1/6 then
-        tr = v
-        tg = v * (1 - s * (1 - (h * 6)))
-        tb = v * (1 - s)
-    elseif h < 1/3 then
-        tr = v * (1 - s * (h * 6 - 1))
-        tg = v
-        tb = v * (1 - s)
-    elseif h < 1/2 then
-        tr = v * (1 - s)
-        tg = v
-        tb = v * (1 - s * (1 - (h * 6 - 2)))
-    elseif h < 2/3 then
-        tr = v * (1 - s)
-        tg = v * (1 - s * (h * 6 - 3))
-        tb = v
-    elseif h < 5/6 then
-        tr = v * (1 - s * (1 - (h * 6 - 4)))
-        tg = v * (1 - s)
-        tb = v
-    else
-        tr = v
-        tg = v * (1 - s)
-        tb = v * (1 - s * (h * 6 - 5))
-    end
-    return Color3.new(tr, tg, tb)
-end
-
--- Animazione: cambia i colori lentamente
-task.spawn(function()
-    local hueOffset = 0
-    local speed = 0.002  -- velocità lenta per effetto morbido
-    while skipBtn and skipBtn.Parent do
-        hueOffset = (hueOffset + speed) % 1
-        
-        -- Colori base (galattici) con tonalità spostata
-        local c1 = shiftHue(Color3.fromRGB(220, 100, 255), hueOffset)
-        local c2 = shiftHue(Color3.fromRGB(120, 60, 220), hueOffset)
-        local c3 = shiftHue(Color3.fromRGB(40, 20, 150), hueOffset)
-        
-        grad.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.00, c1),
-            ColorSequenceKeypoint.new(0.50, c2),
-            ColorSequenceKeypoint.new(1.00, c3),
-        })
-        
-        task.wait(0.05)
-    end
-end)
-
-skipBtn.MouseButton1Click:Connect(finishIntro)
-
-local center = Instance.new("Frame", introGui)
-center.AnchorPoint = Vector2.new(0.5,0.5)
-center.Position = UDim2.new(0.5,0,0.5,0)
-center.Size = UDim2.new(0,660,0,250)
-center.BackgroundTransparency = 1
-center.ZIndex = 40
-
-local lineTop = Instance.new("Frame", center)
-lineTop.AnchorPoint = Vector2.new(0.5,0)
-lineTop.Position = UDim2.new(0.5,0,0,58)
-lineTop.Size = UDim2.new(0,0,0,2)  -- parte da 0, poi si espande
-lineTop.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  -- base per gradiente
-lineTop.BackgroundTransparency = 0
-lineTop.BorderSizePixel = 0
-lineTop.ZIndex = 41
-
-local lineTopGrad = Instance.new("UIGradient", lineTop)
-lineTopGrad.Rotation = 0
-lineTopGrad.Transparency = NumberSequence.new(0)
-lineTopGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
-    ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
-})
-
-local lineBot = Instance.new("Frame", center)
-lineBot.AnchorPoint = Vector2.new(0.5,1)
-lineBot.Position = UDim2.new(0.5,0,1,-8)
-lineBot.Size = UDim2.new(0,0,0,2)  -- parte da 0, poi si espande
-lineBot.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  -- base per gradiente
-lineBot.BackgroundTransparency = 0
-lineBot.BorderSizePixel = 0
-lineBot.ZIndex = 41
-
-local lineBotGrad = Instance.new("UIGradient", lineBot)
-lineBotGrad.Rotation = 0
-lineBotGrad.Transparency = NumberSequence.new(0)
-lineBotGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
-    ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
-})
-
-    local titleShadow = Instance.new("TextLabel", center)
-    titleShadow.Size = UDim2.new(1,0,0,86)
-    titleShadow.Position = UDim2.new(0,4,0,83)
-    titleShadow.BackgroundTransparency = 1
-    titleShadow.Text = "Ambitious Hub"
-    titleShadow.TextColor3 = Color3.fromRGB(0,0,0)
-    titleShadow.Font = Enum.Font.GothamBlack
-    titleShadow.TextSize = 72
-    titleShadow.TextTransparency = 1
-    titleShadow.TextStrokeTransparency = 1
-    titleShadow.ZIndex = 42
-
-local title = Instance.new("TextLabel", center)
-title.Size = UDim2.new(1,0,0,86)
-title.Position = UDim2.new(0,0,0,78)
-title.BackgroundTransparency = 1
-title.Text = "Ambitious Hub"
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.Font = Enum.Font.GothamBlack
-title.TextSize = 72
-title.TextTransparency = 1
-title.TextStrokeTransparency = 1
-title.TextStrokeColor3 = Color3.fromRGB(35,35,35)
-title.ZIndex = 43
-
-local titleGrad = Instance.new("UIGradient", title)
-titleGrad.Rotation = 0
-titleGrad.Transparency = NumberSequence.new(0)
-titleGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
-    ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
-})
-
-
-
-local subtitle = Instance.new("TextLabel", center)
-subtitle.Size = UDim2.new(1,0,0,26)
-subtitle.Position = UDim2.new(0,0,0,169)
-subtitle.BackgroundTransparency = 1
-subtitle.Text = "Made By @ironl @d1v1ne | .gg/uraniumm @hb0u @aggredire."
-subtitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-subtitle.Font = Enum.Font.GothamMedium
-subtitle.TextSize = 19
-subtitle.TextTransparency = 1
-subtitle.ZIndex = 43
-
-local subGrad = Instance.new("UIGradient", subtitle)
-subGrad.Rotation = 0
-subGrad.Transparency = NumberSequence.new(0)
-subGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(200, 150, 255)),
-    ColorSequenceKeypoint.new(0.50, Color3.fromRGB(150, 100, 230)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(80, 60, 200)),
-})
-
-
-
-
-
-    TS:Create(darkBg, TweenInfo.new(0.65), {BackgroundTransparency = 0.22}):Play()
-    task.wait(0.85)
-
-    TS:Create(lineTop, TweenInfo.new(0.45, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0,500,0,2)}):Play()
-    TS:Create(lineBot, TweenInfo.new(0.45, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0,500,0,2)}):Play()
-
-    task.wait(0.12)
-    TS:Create(titleShadow, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {TextTransparency = 0.35, TextStrokeTransparency = 1}):Play()
-    TS:Create(title, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {TextTransparency = 0, TextStrokeTransparency = 0.18}):Play()
-
-    task.wait(0.42)
-    TS:Create(subtitle, TweenInfo.new(0.42), {TextTransparency = 0}):Play()
-
-    for i = 1, 3 do
-      if not introActive then break end
-      TS:Create(title, TweenInfo.new(0.06), {TextColor3 = Color3.fromRGB(185,185,185)}):Play()
-      task.wait(0.06)
-      TS:Create(title, TweenInfo.new(0.06), {TextColor3 = Color3.fromRGB(245,245,245)}):Play()
-      task.wait(0.06)
-    end
-
-    task.wait(3.05)
-    if not introActive then return end
-
-    TS:Create(center, TweenInfo.new(0.55, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Size = UDim2.new(0,0,0,0)}):Play()
-    TS:Create(title, TweenInfo.new(0.36), {TextTransparency = 1, TextStrokeTransparency = 1}):Play()
-    TS:Create(titleShadow, TweenInfo.new(0.36), {TextTransparency = 1}):Play()
-    TS:Create(subtitle, TweenInfo.new(0.32), {TextTransparency = 1}):Play()
-    TS:Create(lineTop, TweenInfo.new(0.32, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Size = UDim2.new(0,0,0,2)}):Play()
-    TS:Create(lineBot, TweenInfo.new(0.32, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Size = UDim2.new(0,0,0,2)}):Play()
-    TS:Create(darkBg, TweenInfo.new(0.75), {BackgroundTransparency = 1}):Play()
-
-    Main.Visible = true
-    MiniFrame.Visible = false
-    TS:Create(Main, TweenInfo.new(0.7, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = origSize}):Play()
-    task.wait(0.9)
-    introActive = false
-    pcall(function() introGui:Destroy() end)
-  end)
-end
-
-_G.__AmbitiousDuelsRunIntro()
 
 
 
@@ -28868,7 +29906,6 @@ end)
 -- MOBILE BUTTONS
 -- ============================================================
 task.defer(function()
-  task.wait(0.35)
   local TS = game:GetService("TweenService")
   local old = HubGui:FindFirstChild("AmbitiousHubMobileButtons")
   if old then old:Destroy() end
@@ -28882,6 +29919,7 @@ task.defer(function()
   mobileGui.IgnoreGuiInset = true
   mobileGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
   mobileGui.DisplayOrder = 1000
+  mobileGui.Enabled = (_G._YEP3SSIntroDone == true)
   mobileGui.Parent = HubGui
 
   _G.AmbitiousMobileButtonRefs = {}
@@ -28907,7 +29945,7 @@ task.defer(function()
   end
 
   function _G.AmbitiousApplyMobileButtonSize()
-    _G.AmbitiousMobileButtonScale = math.clamp(tonumber(_G.AmbitiousMobileButtonScale) or 0.75, 0.30, 1.35)
+    _G.AmbitiousMobileButtonScale = math.clamp(tonumber(_G.AmbitiousMobileButtonScale) or 1.05, 0.30, 1.35)
     for _, entry in pairs(mobileButtons) do
       local holder = entry and entry.holder
       if holder then
@@ -28948,7 +29986,7 @@ task.defer(function()
     }):Play()
     if st then
       TS:Create(st, TweenInfo.new(0.18), {
-        Color = state and Color3.fromRGB(190,190,190) or Color3.fromRGB(85,85,85),
+        Color = state and Color3.fromRGB(55, 155, 255) or Color3.fromRGB(85,85,85),
         Thickness = 1,
         Transparency = state and 0 or 0.4,
       }):Play()
@@ -28977,7 +30015,8 @@ local function makeButton(key, label, pos, onPress)
     -- Contenitore
     local holder = Instance.new("Frame")
     holder.Name = "MBH_" .. key
-    holder.Size = UDim2.new(0, 78, 0, 58)
+    -- Forma Cleanhub: boton compacto cuadrado de 60x60.
+    holder.Size = UDim2.new(0, 60, 0, 60)
     
     local savedPos = _G.AmbitiousMobileButtonPositions and _G.AmbitiousMobileButtonPositions[key]
     if savedPos and type(savedPos) == "table" then
@@ -29005,22 +30044,26 @@ local function makeButton(key, label, pos, onPress)
     btn.Text = label
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     btn.Font = Enum.Font.GothamBlack
-    btn.TextSize = 10
+    btn.TextSize = 11
     btn.TextWrapped = true
     btn.AutoButtonColor = false
     btn.ZIndex = 1002
     btn.Active = true
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 10)
-
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 18)
+    local btnStroke = Instance.new("UIStroke", btn)
+    btnStroke.Name = "CleanhubStyleStroke"
+    btnStroke.Color = Color3.fromRGB(85, 85, 85)
+    btnStroke.Thickness = 1
+    btnStroke.Transparency = 0.4
     -- Gradiente per il TESTO (spento)
     local txtGrad = Instance.new("UIGradient", btn)
     txtGrad.Name = "_AmbitiousShimmerGradient"
     txtGrad.Rotation = 0
     txtGrad.Transparency = NumberSequence.new(0)
     txtGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
-        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 70, 70)),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(190, 20, 20)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(70, 0, 0)),
     })
 
     -- Gradiente per lo SFONDO (acceso)
@@ -29029,9 +30072,9 @@ local function makeButton(key, label, pos, onPress)
     bgGrad.Rotation = 0
     bgGrad.Transparency = NumberSequence.new(0)
     bgGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
-        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 70, 70)),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(190, 20, 20)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(70, 0, 0)),
     })
     bgGrad.Enabled = false  -- disabilitato di default
 
@@ -29040,11 +30083,12 @@ local function makeButton(key, label, pos, onPress)
     glow.Name = "Glow"
     glow.Size = UDim2.new(1, 4, 1, 4)
     glow.Position = UDim2.new(0, -2, 0, -2)
-    glow.BackgroundColor3 = Color3.fromRGB(180, 50, 255)
+    -- Brillo azul al tocar, conservando los colores del boton.
+    glow.BackgroundColor3 = Color3.fromRGB(35, 130, 255)
     glow.BackgroundTransparency = 0.9
     glow.BorderSizePixel = 0
     glow.ZIndex = 1000
-    Instance.new("UICorner", glow).CornerRadius = UDim.new(0, 13)
+    Instance.new("UICorner", glow).CornerRadius = UDim.new(0, 16)
 
     -- Funzione per aggiornare lo stato
     local function updateButton(state)
@@ -29056,6 +30100,8 @@ local function makeButton(key, label, pos, onPress)
             txtGrad.Enabled = false                               -- disabilita gradiente testo
             bgGrad.Enabled = true                                 -- abilita gradiente sfondo
             glow.BackgroundTransparency = 0.3
+            btnStroke.Color = Color3.fromRGB(55, 155, 255)
+            btnStroke.Transparency = 0
         else
             -- OFF: sfondo nero, TESTO GALATTICO
             btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -29064,13 +30110,17 @@ local function makeButton(key, label, pos, onPress)
             txtGrad.Enabled = true                                -- abilita gradiente testo
             bgGrad.Enabled = false                                -- disabilita gradiente sfondo
             glow.BackgroundTransparency = 0.9
+            btnStroke.Color = Color3.fromRGB(85, 85, 85)
+            btnStroke.Transparency = 0.4
         end
     end
 
     -- Funzione per ottenere lo stato logico
     local function getLogicalState()
-        if key == "autoPlay" then
-            return _G.AmbitiousAutoPlay and _G.AmbitiousAutoPlay.active() or false
+        if key == "autoLeft" then
+            return autoLeftEnabled == true
+        elseif key == "autoRight" then
+            return autoRightEnabled == true
         elseif key == "aimbot" then
             return (_G.AmbitiousNormalAimbotOn == true) or (_G.AmbitiousBatAimbotV2On == true)
         elseif key == "tpBat" then
@@ -29146,9 +30196,9 @@ local function makeButton(key, label, pos, onPress)
     end)
 
     mobileButtons[key] = {
-        holder = holder,
-        btn = btn,
-        setActive = function(state) updateButton(state) end
+      holder = holder,
+      btn = btn,
+      setActive = function(state) updateButton(state) end
     }
 
     -- Stato di visibilita' subito coerente col toggle e con la lista
@@ -29165,23 +30215,21 @@ end
   local x1, x2, x3 = -218, -154, -90
   local y1, y2, y3, y4 = -150, -102, -54, -6
 local defaults = {
+    tpBat        = UDim2.new(1, x1, 0.5, y1),
     drop         = UDim2.new(1, x2, 0.5, y1),
-    autoPlay     = UDim2.new(1, x3, 0.5, y1),
-    tpBat   = UDim2.new(1, x1, 0.5, y1),
-    aimbot       = UDim2.new(1, x2, 0.5, y2),
+    autoLeft     = UDim2.new(1, x3, 0.5, y1),
     instantReset = UDim2.new(1, x1, 0.5, y2),
+    aimbot       = UDim2.new(1, x2, 0.5, y2),
+    autoRight    = UDim2.new(1, x3, 0.5, y2),
     antiTPBat    = UDim2.new(1, x1, 0.5, y3),
-    -- Float sta nella casella sotto Auto Play, quella lasciata libera da
-    -- Auto Right quando i due bottoni sono diventati uno solo.
-    float        = UDim2.new(1, x3, 0.5, y2),
     tp           = UDim2.new(1, x2, 0.5, y3),
-    carry        = UDim2.new(1, x3, 0.5, y3),
-    laggerNormal = UDim2.new(1, x2, 0.5, y4),
-    laggerCarry  = UDim2.new(1, x3, 0.5, y4),
+    laggerNormal = UDim2.new(1, x1, 0.5, y4),
+    laggerCarry  = UDim2.new(1, x2, 0.5, y4),
+    carry        = UDim2.new(1, x3, 0.5, y4),
 }
 
   function _G.AmbitiousResetMobileButtons()
-    _G.AmbitiousMobileButtonScale = 0.75
+    _G.AmbitiousMobileButtonScale = 1.05
     _G.AmbitiousHideMobileButtons = false
     -- >>> HIDE PER BOTTONE <<< si torna a "tutti inclusi"
     _G.AmbitiousMobileHideList = {}
@@ -29191,7 +30239,7 @@ local defaults = {
       local holder = entry and entry.holder
       if holder then
         holder.Position = defaultPos
-        holder.Size = UDim2.new(0, 78, 0, 58)
+        holder.Size = UDim2.new(0, 60, 0, 60)
         local btn = entry.btn
         if btn then
           btn.Position = UDim2.new(0, 0, 0, 0)
@@ -29216,12 +30264,22 @@ local defaults = {
     pulse(btn)
   end)
 
-  makeButton("autoPlay", "AUTO\nPLAY", defaults.autoPlay, function(btn)
-    if _G.AmbitiousAutoPlayToggle then _G.AmbitiousAutoPlayToggle() end
+  makeButton("autoLeft", "AUTO\nLEFT", defaults.autoLeft, function(btn)
+    if _G.AmbitiousSetAutoLeft then
+      _G.AmbitiousSetAutoLeft(not (autoLeftEnabled == true))
+    end
     task.delay(0.03, function()
-      -- Non basta guardare "in ascolto": a lato gia' rilevato il bottone
-      -- rappresenta la direzione accesa, e quella e' un'altra cosa.
-      setActive(btn, _G.AmbitiousAutoPlay and _G.AmbitiousAutoPlay.active() or false)
+      setActive(btn, autoLeftEnabled == true)
+      if mobileButtons.autoRight then mobileButtons.autoRight.setActive(autoRightEnabled == true) end
+    end)
+  end)
+  makeButton("autoRight", "AUTO\nRIGHT", defaults.autoRight, function(btn)
+    if _G.AmbitiousSetAutoRight then
+      _G.AmbitiousSetAutoRight(not (autoRightEnabled == true))
+    end
+    task.delay(0.03, function()
+      setActive(btn, autoRightEnabled == true)
+      if mobileButtons.autoLeft then mobileButtons.autoLeft.setActive(autoLeftEnabled == true) end
     end)
   end)
 
@@ -29273,12 +30331,6 @@ local defaults = {
     end)
   end)
 
-  makeButton("float", "FLOAT", defaults.float, function(btn)
-    if _G.AmbitiousFloatToggle then _G.AmbitiousFloatToggle() end
-    task.delay(0.03, function()
-      setActive(btn, _G.AmbitiousFloatOn == true)
-    end)
-  end)
 
   makeButton("tp", "TP\nDOWN", defaults.tp, function(btn)
     if runTPFloor then runTPFloor() end
@@ -29320,8 +30372,11 @@ local defaults = {
   -- tramite _G.AmbitiousRefreshMobileButtonStates() chiamata
   -- nelle funzioni che cambiano effettivamente lo stato.
   function _G.AmbitiousRefreshMobileButtonStates()
-    if mobileButtons.autoPlay then
-      mobileButtons.autoPlay.setActive(_G.AmbitiousAutoPlay and _G.AmbitiousAutoPlay.active() or false)
+    if mobileButtons.autoLeft then
+      mobileButtons.autoLeft.setActive(autoLeftEnabled == true)
+    end
+    if mobileButtons.autoRight then
+      mobileButtons.autoRight.setActive(autoRightEnabled == true)
     end
     if mobileButtons.aimbot then
       mobileButtons.aimbot.setActive((_G.AmbitiousNormalAimbotOn == true) or (_G.AmbitiousBatAimbotV2On == true))
@@ -29332,9 +30387,6 @@ local defaults = {
       end
       -- e la stessa versione nella lista Hide Mobile Buttons
       if _G._AmbHideOptLabel_aimbot then pcall(_G._AmbHideOptLabel_aimbot) end
-    end
-    if mobileButtons.float then
-      mobileButtons.float.setActive(_G.AmbitiousFloatOn == true)
     end
     if mobileButtons.tpBat then
       mobileButtons.tpBat.setActive(_G.AmbitiousTPBatMobileActive and _G.AmbitiousTPBatMobileActive() or false)
@@ -29356,4 +30408,24 @@ loadAmbitiousConfig = function()
         local idx = stretchCurrentIndex or 1
         _G.StretchRez.apply(idx)
     end
+end
+
+-- La intro corre mientras se construye el script. Al terminar o saltarla,
+-- se habilitan juntos el mod menu y todos los botones flotantes.
+_G._YEP3SSShowMenuAfterIntro = function()
+  if Main and Main.Parent then
+    Main.Visible = true
+    Main.Size = FULL_MAIN_SIZE
+  end
+  if MiniFrame and MiniFrame.Parent then
+    MiniFrame.Visible = false
+  end
+  local mobileGui = HubGui and HubGui:FindFirstChild("AmbitiousHubMobileButtons")
+  if mobileGui then mobileGui.Enabled = true end
+  if _G.AmbitiousApplyMobileButtonsHidden then
+    pcall(_G.AmbitiousApplyMobileButtonsHidden)
+  end
+end
+if _G._YEP3SSIntroDone == true then
+  _G._YEP3SSShowMenuAfterIntro()
 end
