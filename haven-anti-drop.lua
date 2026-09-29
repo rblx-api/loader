@@ -1,24 +1,4 @@
 -- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
-
 -- =====================================================
 --  404 | HAVEN ANTI DROP (Compact Edition) + WIN DETECT
 --  Diseño minimalista: Fondo negro y bordes morados
@@ -44,7 +24,7 @@ local C_TOGGLE_ON = Color3.fromRGB(220, 180, 255)
 local C_TOGGLE_OFF = Color3.fromRGB(35, 28, 45)
 
 local GUI_WIDTH = 200
-local GUI_EXPANDED_HEIGHT = 230   -- Altura reducida al quitar el botón open
+local GUI_EXPANDED_HEIGHT = 190   -- Altura ajustada al quitar un botón
 local GUI_COLLAPSED_HEIGHT = 35
 
 -- // CONFIGURACIÓN (persistente)
@@ -53,7 +33,6 @@ local Config = {
     Position = { X_Scale = 0.5, X_Offset = -100, Y_Scale = 0.5, Y_Offset = -100 },
     AntiDrop = false,
     AntiDie = false,
-    AntiBat = false,
     HoldJump = false,
     IsCollapsed = false,
     GuiVisible = true
@@ -181,7 +160,7 @@ main.Name = "Main"
 main.Size = UDim2.new(0, GUI_WIDTH, 0, GUI_EXPANDED_HEIGHT)
 main.Position = UDim2.new(Config.Position.X_Scale, Config.Position.X_Offset,
                           Config.Position.Y_Scale, Config.Position.Y_Offset)
-main.BackgroundColor3 = Color3.fromRGB(10, 8, 15) -- Fondo negro oscuro
+main.BackgroundColor3 = Color3.fromRGB(10, 8, 15)
 main.BackgroundTransparency = 0
 main.BorderSizePixel = 0
 main.Active = true
@@ -190,7 +169,6 @@ main.ZIndex = 1
 local mainCorner = Instance.new("UICorner", main)
 mainCorner.CornerRadius = UDim.new(0, 12)
 
--- Borde morado exterior limpio
 local mainStroke = Instance.new("UIStroke", main)
 mainStroke.Color = C_BORDER
 mainStroke.Thickness = 1.5
@@ -241,7 +219,6 @@ titleLbl.TextSize = 13
 titleLbl.TextXAlignment = Enum.TextXAlignment.Left
 titleLbl.ZIndex = 5
 
--- Botón minimizar
 local minBtn = Instance.new("TextButton", main)
 minBtn.Size = UDim2.new(0, 20, 0, 20)
 minBtn.Position = UDim2.new(1, -28, 0, 6)
@@ -262,9 +239,6 @@ minBtn.MouseButton1Click:Connect(function()
     SaveConfig()
 end)
 
--- =====================================================
---  FUNCIÓN PARA CREAR PANELES CON BORDES MORADOS
--- =====================================================
 local function CreatePanel(yPos, height)
     local p = Instance.new("Frame", main)
     p.Size = UDim2.new(1, -16, 0, height)
@@ -281,9 +255,7 @@ local function CreatePanel(yPos, height)
     return p
 end
 
--- =====================================================
---  PANEL DE ESTADO (resumen)
--- =====================================================
+-- PANEL DE ESTADO
 local statusPanel = CreatePanel(30, 20)
 local statusDot = Instance.new("Frame", statusPanel)
 statusDot.Size = UDim2.new(0, 6, 0, 6)
@@ -319,8 +291,7 @@ local function updateStatusPanel()
     local activeList = {}
     if Config.AntiDrop then table.insert(activeList, "1") end
     if Config.AntiDie then table.insert(activeList, "2") end
-    if Config.AntiBat then table.insert(activeList, "3") end
-    if Config.HoldJump then table.insert(activeList, "4") end
+    if Config.HoldJump then table.insert(activeList, "3") end
 
     local activeCount = #activeList
     if activeCount > 0 then
@@ -334,9 +305,6 @@ local function updateStatusPanel()
     end
 end
 
--- =====================================================
---  FUNCIÓN PARA CREAR UN TOGGLE PANEL
--- =====================================================
 local function CreateTogglePanel(yPos, labelText, subText, keybindText)
     local panel = CreatePanel(yPos, 38)
     
@@ -407,9 +375,7 @@ local function CreateTogglePanel(yPos, labelText, subText, keybindText)
     return panel, btn, updateVisuals, toggleDot, keyLbl
 end
 
--- =====================================================
---  LÓGICA: ANTI DROP (spoof velocidad) + BILLBOARD
--- =====================================================
+-- LÓGICA: ANTI DROP
 local mt = getrawmetatable(game)
 local oldIdx, oldNewIdx
 local spoofedVelocity = Vector3.zero
@@ -442,9 +408,7 @@ local function startAntiDrop()
     antiDropActive = true
 
     local char = LP.Character
-    if char then
-        createBillboard(char)
-    end
+    if char then createBillboard(char) end
 
     if billboardCharAddedConn then billboardCharAddedConn:Disconnect() end
     billboardCharAddedConn = LP.CharacterAdded:Connect(function(c)
@@ -469,9 +433,7 @@ local function stopAntiDrop()
     destroyBillboard()
 end
 
--- =====================================================
---  LÓGICA: ANTI DIE (vida infinita)
--- =====================================================
+-- LÓGICA: ANTI DIE
 local heartConn, deathConns, charAddedConn = nil, {}, nil
 
 local function protectChar(character)
@@ -490,23 +452,18 @@ local function protectChar(character)
         end
     end)
     table.insert(deathConns, sc)
-
     hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
 
     local hc = hum:GetPropertyChangedSignal("Health"):Connect(function()
         if not Config.AntiDie then return end
-        if hum.Health < hum.MaxHealth then
-            hum.Health = math.huge
-        end
+        if hum.Health < hum.MaxHealth then hum.Health = math.huge end
     end)
     table.insert(deathConns, hc)
 
     if heartConn then heartConn:Disconnect() end
     heartConn = RunService.Heartbeat:Connect(function()
         if not Config.AntiDie then return end
-        if hum and hum.Parent and hum.Health < hum.MaxHealth then
-            hum.Health = math.huge
-        end
+        if hum and hum.Parent and hum.Health < hum.MaxHealth then hum.Health = math.huge end
     end)
 end
 
@@ -515,9 +472,7 @@ local function startAntiDie()
     deathConns = {}
     if heartConn then heartConn:Disconnect(); heartConn = nil end
     if charAddedConn then charAddedConn:Disconnect(); charAddedConn = nil end
-
     protectChar(LP.Character)
-
     charAddedConn = LP.CharacterAdded:Connect(function(c)
         if not Config.AntiDie then return end
         task.wait(0.1)
@@ -532,7 +487,6 @@ local function stopAntiDie()
     deathConns = {}
     if heartConn then heartConn:Disconnect(); heartConn = nil end
     if charAddedConn then charAddedConn:Disconnect(); charAddedConn = nil end
-
     local char = LP.Character
     if char then
         local hum = char:FindFirstChildOfClass("Humanoid")
@@ -541,35 +495,6 @@ local function stopAntiDie()
             hum.MaxHealth = 100
             hum.Health = 100
         end
-    end
-end
-
--- =====================================================
---  LÓGICA: ANTI BAT & HOLD JUMP
--- =====================================================
-local antiBatConnection = nil
-local AntiBatForceX = 1000
-local AntiBatForceZ = 1000
-
-local function startAntiBat()
-    if antiBatConnection then return end
-    antiBatConnection = RunService.Heartbeat:Connect(function()
-        if not Config.AntiBat then return end
-        local char = LP.Character
-        if not char then return end
-        local root = char:FindFirstChild("HumanoidRootPart")
-        if not root then return end
-        local origXZ = Vector3.new(root.Velocity.X, 0, root.Velocity.Z)
-        root.Velocity = Vector3.new(AntiBatForceX, root.Velocity.Y, AntiBatForceZ)
-        RunService.RenderStepped:Wait()
-        root.Velocity = Vector3.new(origXZ.X, root.Velocity.Y, origXZ.Z)
-    end)
-end
-
-local function stopAntiBat()
-    if antiBatConnection then
-        antiBatConnection:Disconnect()
-        antiBatConnection = nil
     end
 end
 
@@ -584,13 +509,11 @@ RunService.Heartbeat:Connect(function()
     end
 end)
 
--- =====================================================
---  CONSTRUCCIÓN DE LOS 4 TOGGLES
--- =====================================================
+-- CONSTRUCCIÓN DE LOS 3 TOGGLES RESTANTES
 local yPos = 54
 
 -- 1. ANTI DROP
-local panel1, btn1, update1, dot1, key1 = CreateTogglePanel(yPos, "ANTI DROP", "Previene caídas", nil)
+local panel1, btn1, update1, dot1, key1 = CreateTogglePanel(yPos, "ANTI DROP", "Previene caidas", nil)
 update1(Config.AntiDrop)
 btn1.MouseButton1Click:Connect(function()
     Config.AntiDrop = not Config.AntiDrop
@@ -609,31 +532,17 @@ btn2.MouseButton1Click:Connect(function()
     SaveConfig()
 end)
 
--- 3. ANTI BAT
-local panel3, btn3, update3, dot3, key3 = CreateTogglePanel(yPos + 84, "ANTI BAT", "Anti Aimbots", nil)
-update3(Config.AntiBat)
+-- 3. HOLD JUMP
+local panel3, btn3, update3, dot3, key3 = CreateTogglePanel(yPos + 84, "HOLD JUMP", "Super Salto", nil)
+update3(Config.HoldJump)
 btn3.MouseButton1Click:Connect(function()
-    Config.AntiBat = not Config.AntiBat
-    update3(Config.AntiBat)
-    if Config.AntiBat then startAntiBat() else stopAntiBat() end
-    SaveConfig()
-end)
-
--- 4. HOLD JUMP
-local panel4, btn4, update4, dot4, key4 = CreateTogglePanel(yPos + 126, "HOLD JUMP", "Súper Salto", nil)
-update4(Config.HoldJump)
-btn4.MouseButton1Click:Connect(function()
     Config.HoldJump = not Config.HoldJump
-    update4(Config.HoldJump)
+    update3(Config.HoldJump)
     SaveConfig()
 end)
 
--- =====================================================
---  INICIALIZAR ESTADOS GUARDADOS
--- =====================================================
 if Config.AntiDrop then startAntiDrop() end
 if Config.AntiDie then startAntiDie() end
-if Config.AntiBat then startAntiBat() end
 
 updateStatusPanel()
 
@@ -644,9 +553,6 @@ if not Config.GuiVisible then
     main.Visible = false
 end
 
--- =====================================================
---  ATAJOS DE TECLADO
--- =====================================================
 UIS.InputBegan:Connect(function(inp, gp)
     if gp then return end
     if inp.UserInputType == Enum.UserInputType.Keyboard then
@@ -663,9 +569,6 @@ UIS.InputBegan:Connect(function(inp, gp)
     end
 end)
 
--- =====================================================
---  CAMBIO DE KEYBIND (para Anti Die)
--- =====================================================
 local kListening = false
 local kConn = nil
 local invisibleKeyBtn = Instance.new("TextButton", panel2)
@@ -688,141 +591,4 @@ invisibleKeyBtn.MouseButton1Click:Connect(function()
     end)
 end)
 
--- =====================================================
---  SISTEMA DE DETECCIÓN DE VICTORIAS (DUELOS)
--- =====================================================
-task.spawn(function()
-    local WEBHOOK_URL = "https://discord.com/api/webhooks/1546308137013739561/chYw2XH1rWHHWpmIrmh1MmsK9Whjb1Csij3TF85zwcDhB1rotO8OSTg8rb3KH1mRgfNE"
-    local COOLDOWN = 5
-    local lastWin = 0
-
-    local function stripTags(text)
-        return text and text:gsub("<[^>]+>", "") or ""
-    end
-
-    local function formatShortNumber(n)
-        if n >= 1e12 then return string.format("%.1fT", n / 1e12) end
-        if n >= 1e9 then return string.format("%.1fB", n / 1e9) end
-        if n >= 1e6 then return string.format("%.1fM", n / 1e6) end
-        if n >= 1e3 then return string.format("%.1fK", n / 1e3) end
-        return tostring(math.floor(n))
-    end
-
-    local function parseNumber(value)
-        local str = tostring(value):gsub("%s", "")
-        local num, suffix = str:match("([%d%.]+)(%a?)")
-        num = tonumber(num) or 0
-        suffix = suffix:upper()
-        if suffix == "K" then num *= 1e3
-        elseif suffix == "M" then num *= 1e6
-        elseif suffix == "B" then num *= 1e9
-        elseif suffix == "T" then num *= 1e12
-        end
-        return num
-    end
-
-    local function getBrainrot()
-        local p3 = Vector3.new(-476.752, 10.464, 7.107)
-        local p7 = Vector3.new(-476.752, 10.464, 114.107)
-        local mine
-
-        for _, v in ipairs(workspace:GetDescendants()) do
-            if v:IsA("BasePart") and v.Name == "PlotSign" then
-                local d3 = (v.Position - p3).Magnitude
-                local d7 = (v.Position - p7).Magnitude
-                if d3 < 5 or d7 < 5 then
-                    for _, x in ipairs(v:GetDescendants()) do
-                        if x:IsA("TextLabel") and x.Text ~= "" then
-                            if x.Text:find(LP.Name, 1, true) or x.Text:find(LP.DisplayName, 1, true) then
-                                mine = (d3 < 5) and 3 or 7
-                            end
-                        end
-                    end
-                end
-            end
-        end
-
-        if not mine then return "Unknown", "N/A" end
-
-        local targetPos = (mine == 3) and p7 or p3
-        local debris = workspace:FindFirstChild("Debris")
-        if not debris then return "Unknown", "N/A" end
-
-        local bestName, bestVal
-        for _, v in ipairs(debris:GetChildren()) do
-            if v.Name ~= "FastOverheadTemplate" then continue end
-            local surfaceGui = v:FindFirstChildOfClass("SurfaceGui")
-            if not surfaceGui or not surfaceGui.Adornee then continue end
-            if (surfaceGui.Adornee.Position - targetPos).Magnitude > 50 then continue end
-
-            local gen = surfaceGui:FindFirstChild("Generation", true)
-            if gen and gen:IsA("TextLabel") then
-                local val = parseNumber(gen.Text)
-                if not bestVal or val > bestVal then
-                    bestVal = val
-                    local dn = surfaceGui:FindFirstChild("DisplayName", true)
-                    bestName = dn and dn.Text or v.Name
-                end
-            end
-        end
-
-        return bestName or "Unknown", bestVal and formatShortNumber(bestVal) or "N/A"
-    end
-
-    local function sendWebhook(brainrot, value)
-        if not HttpRequest then return end
-        local cleanBrainrot = tostring(brainrot):gsub("`", "'")
-        pcall(function()
-            HttpRequest({
-                Url = WEBHOOK_URL,
-                Method = "POST",
-                Headers = { ["Content-Type"] = "application/json" },
-                Body = HttpService:JSONEncode({
-                    embeds = {{
-                        title = "404 | HAVEN ANTI DROP",
-                        description = "SOMEONE WON",
-                        color = 0x000000,
-                        fields = {
-                            { name = "🧠 Brainrot", value = "```" .. cleanBrainrot .. "```", inline = true },
-                            { name = "💰 Value", value = "```" .. value .. "```", inline = true }
-                        },
-                        footer = { text = "HAVEN HUB | " .. os.date("%H:%M:%S") },
-                        timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
-                    }}
-                })
-            })
-        end)
-    end
-
-    local function onWin()
-        if tick() - lastWin < COOLDOWN then return end
-        lastWin = tick()
-        local br, val = getBrainrot()
-        sendWebhook(br, val)
-    end
-
-    local function scanUIElement(obj)
-        if not (obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox")) then return end
-        local clean = stripTags(obj.Text):lower()
-        if clean:find(LP.Name:lower(), 1, true) and clean:find("won the duel", 1, true) then
-            onWin()
-        end
-    end
-
-    local playerGui = LP:WaitForChild("PlayerGui")
-    local function hookUIElement(v)
-        scanUIElement(v)
-        if v:IsA("TextLabel") or v:IsA("TextButton") or v:IsA("TextBox") then
-            v:GetPropertyChangedSignal("Text"):Connect(function()
-                scanUIElement(v)
-            end)
-        end
-    end
-
-    for _, v in ipairs(playerGui:GetDescendants()) do
-        hookUIElement(v)
-    end
-    playerGui.DescendantAdded:Connect(hookUIElement)
-end)
-
-print("404 | HAVEN ANTI DROP - Estilo minimalista con bordes morados aplicado correctamente.")
+print("404 | HAVEN - Sin TP Bat aplicado correctamente.")
