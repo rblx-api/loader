@@ -1,4 +1,4 @@
--- FLUX PING LAGGER 180x240 | Compact + Sliding Auto Activate
+-- JESUS 👑🙏 180x240 | Compact + Sliding Auto Activate
 local Players          = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local HttpService      = game:GetService("HttpService")
@@ -11,7 +11,7 @@ local playerGui = plr:WaitForChild("PlayerGui")
 -------------------------------------------------
 -- CONFIG & SAVE
 -------------------------------------------------
-local CONFIG_FILE = "FluxPingLagger_Config.json"
+local CONFIG_FILE = "Jesus_Config.json"
 
 local DEFAULT_CFG = {
 	power        = 100000,
@@ -173,7 +173,7 @@ end)
 -- GUI
 -------------------------------------------------
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "FluxPingLagger"
+screenGui.Name = "Jesus"
 screenGui.ResetOnSpawn = false
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screenGui.Parent = playerGui
@@ -182,7 +182,7 @@ local frame = Instance.new("Frame")
 frame.Name = "Main"
 frame.Size = UDim2.new(0, 180, 0, 240)
 frame.Position = UDim2.new(0.5, -90, 0.5, -120)
-frame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 frame.BorderSizePixel = 0
 frame.Visible = true
 frame.Parent = screenGui
@@ -210,7 +210,7 @@ imageCorner.Parent = bgImage
 
 local overlay = Instance.new("Frame")
 overlay.Size = UDim2.new(1, 0, 1, 0)
-overlay.BackgroundColor3 = Color3.fromRGB(10, 10, 18)
+overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 overlay.BackgroundTransparency = 0.38
 overlay.BorderSizePixel = 0
 overlay.ZIndex = 2
@@ -237,7 +237,7 @@ local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, -70, 1, 0)
 title.Position = UDim2.new(0, 8, 0, 0)
 title.BackgroundTransparency = 1
-title.Text = "FLUX PING LAGGER"
+title.Text = "JESUS 👑🙏"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.TextSize = 11
 title.Font = Enum.Font.GothamBold
@@ -286,7 +286,7 @@ local function createLabel(text, y)
 	lbl.Position = UDim2.new(0, 10, 0, y)
 	lbl.BackgroundTransparency = 1
 	lbl.Text = text
-	lbl.TextColor3 = Color3.fromRGB(220, 220, 230)
+	lbl.TextColor3 = Color3.fromRGB(230, 230, 230)
 	lbl.TextSize = 10
 	lbl.Font = Enum.Font.Gotham
 	lbl.TextXAlignment = Enum.TextXAlignment.Left
@@ -331,7 +331,7 @@ createLabel("Auto Activate", 92)
 local toggleTrack = Instance.new("Frame")
 toggleTrack.Size = UDim2.new(0, 34, 0, 16)          -- smaller
 toggleTrack.Position = UDim2.new(0, 136, 0, 90)
-toggleTrack.BackgroundColor3 = cfg.autoBrainrot and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(40, 40, 50)
+toggleTrack.BackgroundColor3 = cfg.autoBrainrot and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(35, 35, 35)
 toggleTrack.BorderSizePixel = 0
 toggleTrack.ZIndex = 5
 toggleTrack.Parent = frame
@@ -343,7 +343,7 @@ trackCorner.Parent = toggleTrack
 local toggleKnob = Instance.new("Frame")
 toggleKnob.Size = UDim2.new(0, 12, 0, 12)           -- smaller
 toggleKnob.Position = cfg.autoBrainrot and UDim2.new(1, -14, 0.5, -6) or UDim2.new(0, 2, 0.5, -6)
-toggleKnob.BackgroundColor3 = cfg.autoBrainrot and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(200, 200, 210)
+toggleKnob.BackgroundColor3 = cfg.autoBrainrot and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(220, 220, 220)
 toggleKnob.BorderSizePixel = 0
 toggleKnob.ZIndex = 6
 toggleKnob.Parent = toggleTrack
@@ -382,7 +382,7 @@ local toggle = Instance.new("TextButton")
 toggle.Name = "Toggle"
 toggle.Size = UDim2.new(0, 64, 0, 26)
 toggle.Position = UDim2.new(0, 12, 0.5, -13)   -- left side of screen
-toggle.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+toggle.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 toggle.Text = ""
 toggle.Visible = false
 toggle.ZIndex = 20
@@ -448,8 +448,8 @@ makeDraggable(toggle, toggle)
 -------------------------------------------------
 local function updateToggleVisual()
 	local goalPos = cfg.autoBrainrot and UDim2.new(1, -14, 0.5, -6) or UDim2.new(0, 2, 0.5, -6)
-	local goalColor = cfg.autoBrainrot and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(40, 40, 50)
-	local knobColor = cfg.autoBrainrot and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(200, 200, 210)
+	local goalColor = cfg.autoBrainrot and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(35, 35, 35)
+	local knobColor = cfg.autoBrainrot and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(220, 220, 220)
 
 	TweenService:Create(toggleKnob, TweenInfo.new(0.18, Enum.EasingStyle.Quad), {Position = goalPos}):Play()
 	TweenService:Create(toggleTrack, TweenInfo.new(0.18, Enum.EasingStyle.Quad), {BackgroundColor3 = goalColor}):Play()
