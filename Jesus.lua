@@ -4664,9 +4664,9 @@ do
 						for _, v86 in ipairs({
 							"PhantomLoader",
 							"VanityLoadingScreen",
-							"NineDuelsLoadingScreen",
+							"JesusLoadingScreen",
 							"VanityDeviceSelect",
-							"NineDuelsDeviceSelect",
+							"JesusDeviceSelect",
 							"PhantomHub",
 							"PhantomStealBar",
 						}) do
@@ -4692,18 +4692,18 @@ do
 					skipLoadingScreen = false
 					introEnabled = true
 
-					NINEDUELS_INTRO_TRACKS = {
+					JESUS_INTRO_TRACKS = {
 						["Main"] = {
 							url = "https://cdn.imageurlgenerator.com/uploads/95917463-1685-4722-aa99-4d6d7b065d53.mp3",
-							file = "nineduels_clean_intro.mp3",
+							file = "jesus_clean_intro.mp3",
 						},
 						["Song 2"] = {
 							url = "https://cdn.imageurlgenerator.com/uploads/63c0949b-d95f-44c0-8aee-1531873398c2.mp3",
-							file = "nineduels_song_2_intro.mp3",
+							file = "jesus_song_2_intro.mp3",
 						},
 						["Song 3"] = {
 							url = "https://cdn.imageurlgenerator.com/uploads/a68037de-fc9c-46c9-8d12-96c83a4703ea.mp3",
-							file = "nineduels_song_3_intro.mp3",
+							file = "jesus_song_3_intro.mp3",
 						},
 					}
 
@@ -4711,7 +4711,7 @@ do
 					introSoundInstance = nil
 					introMusicRequest = 0
 
-					stopNineDuelsIntroMusic = function()
+					stopJesusIntroMusic = function()
 						introMusicRequest = (introMusicRequest or 0) + 1
 
 						if introSoundInstance then
@@ -4727,13 +4727,13 @@ do
 						end
 					end
 
-					playNineDuelsIntroMusic = function()
+					playJesusIntroMusic = function()
 						if not introSoundEnabled then
 							return
 						end
 						introMusicRequest = (introMusicRequest or 0) + 1
 						local v86 = introMusicRequest
-						local main = NINEDUELS_INTRO_TRACKS[introSongChoice] or NINEDUELS_INTRO_TRACKS.Main
+						local main = JESUS_INTRO_TRACKS[introSongChoice] or JESUS_INTRO_TRACKS.Main
 
 						local function fn37()
 							if introMusicRequest ~= v86 or not introSoundEnabled then
@@ -4802,16 +4802,16 @@ do
 					end
 
 					task.spawn(function()
-						if makefolder and isfolder and not isfolder("NineDuelsV1configLOL1") then
-							pcall(makefolder, "NineDuelsV1configLOL1")
+						if makefolder and isfolder and not isfolder("JesusV1configLOL1") then
+							pcall(makefolder, "JesusV1configLOL1")
 						end
 
 						introSoundEnabled = true
 						introSongChoice = "Main"
 
-						if isfile and isfile("NineDuelsV1configLOL1/Config.json") then
+						if isfile and isfile("JesusV1configLOL1/Config.json") then
 							local ok, result = pcall(function()
-								return HS:JSONDecode(readfile("NineDuelsV1configLOL1/Config.json"))
+								return HS:JSONDecode(readfile("JesusV1configLOL1/Config.json"))
 							end)
 
 							if ok and type(result) == "table" then
@@ -4827,7 +4827,7 @@ do
 
 								if
 									type(result.introSongChoice) == v86
-									and NINEDUELS_INTRO_TRACKS[result.introSongChoice]
+									and JESUS_INTRO_TRACKS[result.introSongChoice]
 								then
 									introSongChoice = result.introSongChoice
 								end
@@ -4835,12 +4835,12 @@ do
 						end
 
 						if not introEnabled then
-							stopNineDuelsIntroMusic()
+							stopJesusIntroMusic()
 							loaderFinished = true
 							return
 						end
 
-						playNineDuelsIntroMusic()
+						playJesusIntroMusic()
 						local playerGui = player:WaitForChild("PlayerGui")
 
 						pcall(function()
@@ -4851,14 +4851,14 @@ do
 							end
 						end)
 
-						local nineDuelsLoadingScreen = playerGui:FindFirstChild("NineDuelsLoadingScreen")
+						local jesusLoadingScreen = playerGui:FindFirstChild("JesusLoadingScreen")
 
-						if nineDuelsLoadingScreen then
-							nineDuelsLoadingScreen:Destroy()
+						if jesusLoadingScreen then
+							jesusLoadingScreen:Destroy()
 						end
 
 						local instance = Instance.new("ScreenGui")
-						instance.Name = "NineDuelsLoadingScreen"
+						instance.Name = "JesusLoadingScreen"
 						instance.ResetOnSpawn = false
 						instance.IgnoreGuiInset = true
 						instance.DisplayOrder = 999
@@ -4920,7 +4920,7 @@ do
 						uiListLayout2.VerticalAlignment = Enum.VerticalAlignment.Center
 						uiListLayout2.SortOrder = Enum.SortOrder.LayoutOrder
 						local instance2 = Instance.new("TextLabel", frame3)
-						instance2.Name = "NineDuels"
+						instance2.Name = "Jesus"
 						instance2.Size = UDim2.fromOffset(520, 110)
 						instance2.BackgroundTransparency = 1
 						instance2.Text = "JESUS"
@@ -5071,12 +5071,12 @@ do
 					_savedGuiScale = nil
 
 					do
-						local json = isfile and isfile("NineDuelsV1configLOL1/Config.json")
+						local json = isfile and isfile("JesusV1configLOL1/Config.json")
 						local deviceMode = nil
 
 						if json then
 							local ok, result = pcall(function()
-								return HS:JSONDecode(readfile("NineDuelsV1configLOL1/Config.json"))
+								return HS:JSONDecode(readfile("JesusV1configLOL1/Config.json"))
 							end)
 
 							if ok then
@@ -5102,15 +5102,15 @@ do
 							_phantomSavedDeviceMode = _phantomModeIsMobile and "mobile" or "pc"
 
 							pcall(function()
-								if makefolder and isfolder and not isfolder("NineDuelsV1configLOL1") then
-									makefolder("NineDuelsV1configLOL1")
+								if makefolder and isfolder and not isfolder("JesusV1configLOL1") then
+									makefolder("JesusV1configLOL1")
 								end
 
 								local tbl17 = {}
 
-								if isfile and isfile("NineDuelsV1configLOL1/Config.json") then
+								if isfile and isfile("JesusV1configLOL1/Config.json") then
 									local ok, result = pcall(function()
-										return HS:JSONDecode(readfile("NineDuelsV1configLOL1/Config.json"))
+										return HS:JSONDecode(readfile("JesusV1configLOL1/Config.json"))
 									end)
 
 									if ok and type(result) == "table" then
@@ -5121,7 +5121,7 @@ do
 								tbl17.deviceMode = _phantomSavedDeviceMode
 
 								if writefile then
-									writefile("NineDuelsV1configLOL1/Config.json", HS:JSONEncode(tbl17))
+									writefile("JesusV1configLOL1/Config.json", HS:JSONEncode(tbl17))
 								end
 							end)
 						end
@@ -5750,7 +5750,7 @@ do
 									end
 								end
 
-								_G.NineDuelsAntiVoid = {
+								_G.JesusAntiVoid = {
 									setEnabled = function(arg)
 										antiVoidEnabled = arg == true
 
@@ -5771,7 +5771,7 @@ do
 									end,
 									posForPart = function(arg, arg2)
 										local model = arg and arg:FindFirstAncestorOfClass("Model")
-										return _G.NineDuelsAntiVoid.posFor(
+										return _G.JesusAntiVoid.posFor(
 											model and Players:GetPlayerFromCharacter(model),
 											arg2 or arg and arg.Position
 										)
@@ -5907,7 +5907,7 @@ do
 
 								if not colorCorrectionEffect or not colorCorrectionEffect.Parent then
 									colorCorrectionEffect = Instance.new("ColorCorrectionEffect")
-									colorCorrectionEffect.Name = "NineDuelsSaturation"
+									colorCorrectionEffect.Name = "JesusSaturation"
 									colorCorrectionEffect.Parent = Lighting
 								end
 
@@ -6020,7 +6020,7 @@ do
 							return decalCache[num] or arg
 						end
 						pendingImages[num] = true
-						local cacheFile = "NineDuelsV1configLOL1/img_" .. num .. ".txt"
+						local cacheFile = "JesusV1configLOL1/img_" .. num .. ".txt"
 						local cached = nil
 						pcall(function()
 							if isfile and readfile and isfile(cacheFile) then
@@ -6761,7 +6761,7 @@ do
 					local character = LP.Character
 
 					if character then
-						for _, v89 in ipairs({ "NineDuelsSelfESP", "NineDuelsSelfBoxESP" }) do
+						for _, v89 in ipairs({ "JesusSelfESP", "JesusSelfBoxESP" }) do
 							local v90 = character:FindFirstChild(v89)
 
 							if v90 then
@@ -6786,7 +6786,7 @@ do
 
 					if selfEspEnabled then
 						local instance = Instance.new("Highlight")
-						instance.Name = "NineDuelsSelfESP"
+						instance.Name = "JesusSelfESP"
 						instance.Adornee = character
 						instance.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 						instance.FillColor = Color3.fromRGB(220, 220, 220)
@@ -6816,7 +6816,7 @@ do
 							weldConstraint.Part1 = part
 							weldConstraint.Parent = part
 							local selectionBox = Instance.new("SelectionBox")
-							selectionBox.Name = "NineDuelsSelfBoxESP"
+							selectionBox.Name = "JesusSelfBoxESP"
 							selectionBox.Adornee = part
 							selectionBox.Color3 = Color3.fromRGB(220, 220, 220)
 							selectionBox.LineThickness = 0.035
@@ -6881,21 +6881,21 @@ do
 			local function fn35()
 				pcall(function()
 					local currentCamera = workspace.CurrentCamera
-					currentCamera = currentCamera and currentCamera:FindFirstChild("NineDuelsESPVisuals")
+					currentCamera = currentCamera and currentCamera:FindFirstChild("JesusESPVisuals")
 
 					if currentCamera then
 						currentCamera:Destroy()
 					end
 
 					local hui = gethui and gethui() or game:GetService("CoreGui")
-					local nineDuelsESPTracers = hui and hui:FindFirstChild("NineDuelsESPTracers")
+					local jesusESPTracers = hui and hui:FindFirstChild("JesusESPTracers")
 
-					if nineDuelsESPTracers then
-						nineDuelsESPTracers:Destroy()
+					if jesusESPTracers then
+						jesusESPTracers:Destroy()
 					end
 
 					local playerGui = LP:FindFirstChildOfClass("PlayerGui")
-					playerGui = playerGui and playerGui:FindFirstChild("NineDuelsESPTracers")
+					playerGui = playerGui and playerGui:FindFirstChild("JesusESPTracers")
 
 					if playerGui then
 						playerGui:Destroy()
@@ -6903,11 +6903,11 @@ do
 
 					for _, player_ in ipairs(Players:GetPlayers()) do
 						local character = player_.Character
-						local nineDuelsPlayerHighlightMarker = character
-							and character:FindFirstChild("NineDuelsPlayerHighlightMarker")
+						local jesusPlayerHighlightMarker = character
+							and character:FindFirstChild("JesusPlayerHighlightMarker")
 
-						if nineDuelsPlayerHighlightMarker then
-							nineDuelsPlayerHighlightMarker:Destroy()
+						if jesusPlayerHighlightMarker then
+							jesusPlayerHighlightMarker:Destroy()
 						end
 					end
 				end)
@@ -6932,7 +6932,7 @@ do
 					end)
 
 					pcall(function()
-						if v86.marker and v86.marker.Name == "NineDuelsPlayerHighlightMarker" then
+						if v86.marker and v86.marker.Name == "JesusPlayerHighlightMarker" then
 							v86.marker:Destroy()
 						end
 					end)
@@ -6951,7 +6951,7 @@ do
 				end
 				fn31(arg)
 				local part = Instance.new("Part")
-				part.Name = "NineDuelsPlayerHighlightMarker"
+				part.Name = "JesusPlayerHighlightMarker"
 				part.Size = Vector3.new(4.5, 5.35, 2.25)
 				part.CFrame = v86.CFrame
 				part.Transparency = 0.5
@@ -6966,7 +6966,7 @@ do
 				instance.Part1 = part
 				instance.Parent = part
 				local instance2 = Instance.new("Highlight")
-				instance2.Name = "NineDuelsBoxESPCrimson"
+				instance2.Name = "JesusBoxESPCrimson"
 				instance2.Adornee = part
 				instance2.FillTransparency = 1
 				instance2.OutlineColor = color2
@@ -6974,7 +6974,7 @@ do
 				instance2.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 				instance2.Parent = part
 				local highlight = Instance.new("Highlight")
-				highlight.Name = "NineDuelsBoxESPWhiteGlint"
+				highlight.Name = "JesusBoxESPWhiteGlint"
 				highlight.Adornee = part
 				highlight.FillTransparency = 1
 				highlight.OutlineColor = color5
@@ -6982,7 +6982,7 @@ do
 				highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 				highlight.Parent = part
 				local selectionBox = Instance.new("SelectionBox")
-				selectionBox.Name = "NineDuelsBoxESPThickCrimson"
+				selectionBox.Name = "JesusBoxESPThickCrimson"
 				selectionBox.Adornee = part
 				selectionBox.Color3 = color2
 				selectionBox.LineThickness = 0.2
@@ -7025,7 +7025,7 @@ do
 
 				if not espTracerGui then
 					espTracerGui = Instance.new("ScreenGui")
-					espTracerGui.Name = "NineDuelsESPTracers"
+					espTracerGui.Name = "JesusESPTracers"
 					espTracerGui.ResetOnSpawn = false
 					espTracerGui.IgnoreGuiInset = true
 					espTracerGui.DisplayOrder = 49
@@ -7060,7 +7060,7 @@ do
 					return
 				end
 				local instance = Instance.new("BillboardGui")
-				instance.Name = "NineDuelsESP"
+				instance.Name = "JesusESP"
 				instance.AlwaysOnTop = true
 				instance.ResetOnSpawn = false
 				instance.Size = UDim2.new(0, 150, 0, 42)
@@ -7292,7 +7292,7 @@ do
 
 				if espShowTracer and not espTracerGui then
 					espTracerGui = Instance.new("ScreenGui")
-					espTracerGui.Name = "NineDuelsESPTracers"
+					espTracerGui.Name = "JesusESPTracers"
 					espTracerGui.ResetOnSpawn = false
 					espTracerGui.IgnoreGuiInset = true
 					espTracerGui.DisplayOrder = 49
@@ -7371,7 +7371,7 @@ do
 
 				do
 					do
-						MOB_POS_FILE = "NineDuelsV1configLOL1/BtnPos.json"
+						MOB_POS_FILE = "JesusV1configLOL1/BtnPos.json"
 
 						loadBtnPositions = function()
 							local ok, result = pcall(function()
@@ -7394,8 +7394,8 @@ do
 							end
 
 							pcall(function()
-								if makefolder and isfolder and not isfolder("NineDuelsV1configLOL1") then
-									makefolder("NineDuelsV1configLOL1")
+								if makefolder and isfolder and not isfolder("JesusV1configLOL1") then
+									makefolder("JesusV1configLOL1")
 								end
 							end)
 
@@ -7722,7 +7722,7 @@ do
 							local instance = Instance.new("TextLabel", billboardGui)
 							instance.Size = UDim2.new(1, 0, 0.42, 0)
 							instance.BackgroundTransparency = 1
-							instance.Text = ".gg/nineduels"
+							instance.Text = ".gg/jesus"
 							instance.TextColor3 = Color3.fromRGB(190, 190, 190)
 							instance.Font = Enum.Font.GothamBold
 							instance.TextScaled = true
@@ -8082,7 +8082,7 @@ do
 						end
 					end
 
-					local function nineDuelsSpeedStart()
+					local function jesusSpeedStart()
 						stopSpeedBoost()
 
 						_G.__speedBoostConn = RunService.RenderStepped:Connect(function()
@@ -8164,25 +8164,25 @@ do
 					end
 
 					_G.__refreshSpeedBoost = function()
-						nineDuelsSpeedStart()
+						jesusSpeedStart()
 					end
 
 					_G.__stopSpeedBoost = stopSpeedBoost
-					_G.NineDuelsSpeedStart = nineDuelsSpeedStart
-					_G.NineDuelsSpeedStop = stopSpeedBoost
+					_G.JesusSpeedStart = jesusSpeedStart
+					_G.JesusSpeedStop = stopSpeedBoost
 
 					if LP.Character then
 						local v86 = fn36(LP.Character)
 						fn37(v86)
 					end
 
-					if _G._nineduelsSpeedCharConn then
+					if _G._jesusSpeedCharConn then
 						pcall(function()
-							_G._nineduelsSpeedCharConn:Disconnect()
+							_G._jesusSpeedCharConn:Disconnect()
 						end)
 					end
 
-					_G._nineduelsSpeedCharConn = LP.CharacterAdded:Connect(function(character)
+					_G._jesusSpeedCharConn = LP.CharacterAdded:Connect(function(character)
 						task.wait(0.5)
 						fn38()
 						local humanoidRootPart = character:WaitForChild("HumanoidRootPart", 5)
@@ -8192,11 +8192,11 @@ do
 							fn37(humanoidRootPart)
 						end
 
-						nineDuelsSpeedStart()
+						jesusSpeedStart()
 						return
 					end)
 
-					nineDuelsSpeedStart()
+					jesusSpeedStart()
 				end
 			end
 
@@ -11276,17 +11276,17 @@ do
 									end)
 								end
 
-								if _G._nineduelsBatTPConn then
+								if _G._jesusBatTPConn then
 									pcall(function()
-										_G._nineduelsBatTPConn:Disconnect()
+										_G._jesusBatTPConn:Disconnect()
 									end)
 
-									_G._nineduelsBatTPConn = nil
+									_G._jesusBatTPConn = nil
 								end
 
 								_batTpHitCooldown = false
 
-								_G._nineduelsBatTPConn = RunService.Heartbeat:Connect(function()
+								_G._jesusBatTPConn = RunService.Heartbeat:Connect(function()
 									if not (State and State.batV2Toggled) then
 										return
 									end
@@ -11408,12 +11408,12 @@ do
 								State.batV2Toggled = false
 							end
 
-							if _G._nineduelsBatTPConn then
+							if _G._jesusBatTPConn then
 								pcall(function()
-									_G._nineduelsBatTPConn:Disconnect()
+									_G._jesusBatTPConn:Disconnect()
 								end)
 
-								_G._nineduelsBatTPConn = nil
+								_G._jesusBatTPConn = nil
 							end
 
 							_batTpHitCooldown = false
@@ -11424,8 +11424,8 @@ do
 
 						saveConfig = function()
 							pcall(function()
-								if makefolder and isfolder and not isfolder("NineDuelsV1configLOL1") then
-									makefolder("NineDuelsV1configLOL1")
+								if makefolder and isfolder and not isfolder("JesusV1configLOL1") then
+									makefolder("JesusV1configLOL1")
 								end
 							end)
 
@@ -11446,9 +11446,9 @@ do
 								antiVoidEnabled = antiVoidEnabled,
 								instantResetVersion = instantResetVersion,
 								dropBrainrotMode = selectedDropMode,
-								baseXRayEnabled = _G.NineDuelsBaseXRayEnabled,
-								baseXRayTransparency = _G.NineDuelsBaseXRayTransparency,
-								mirrorTPDownEnabled = _G.NineDuelsMirrorTPDownEnabled,
+								baseXRayEnabled = _G.JesusBaseXRayEnabled,
+								baseXRayTransparency = _G.JesusBaseXRayTransparency,
+								mirrorTPDownEnabled = _G.JesusMirrorTPDownEnabled,
 								dropBrainrotKey = fn35(KB.DropBrainrot),
 								autoLeftKey = fn35(KB.AutoLeft),
 								autoRightKey = fn35(KB.AutoRight),
@@ -11599,7 +11599,7 @@ do
 
 							if writefile then
 								pcall(function()
-									writefile("NineDuelsV1configLOL1/Config.json", HS:JSONEncode(tbl17))
+									writefile("JesusV1configLOL1/Config.json", HS:JSONEncode(tbl17))
 								end)
 							end
 						end
@@ -11623,22 +11623,22 @@ do
 							stealBarBgIndex = 1
 							applyStealBarBgImage(1)
 							antiVoidEnabled = false
-							_G.NineDuelsBaseXRayEnabled = false
-							_G.NineDuelsBrainrotXRayEnabled = false
-							_G.NineDuelsMirrorTPDownEnabled = false
+							_G.JesusBaseXRayEnabled = false
+							_G.JesusBrainrotXRayEnabled = false
+							_G.JesusMirrorTPDownEnabled = false
 
-							if _G.NineDuelsSetBaseXRay then
-								_G.NineDuelsSetBaseXRay(false)
+							if _G.JesusSetBaseXRay then
+								_G.JesusSetBaseXRay(false)
 							end
 
-							if _G.NineDuelsSetBrainrotXRay then
-								_G.NineDuelsSetBrainrotXRay(false)
+							if _G.JesusSetBrainrotXRay then
+								_G.JesusSetBrainrotXRay(false)
 							end
 
 							instantResetVersion = 1
 
-							if _G.NineDuelsAntiVoid then
-								_G.NineDuelsAntiVoid.setEnabled(false)
+							if _G.JesusAntiVoid then
+								_G.JesusAntiVoid.setEnabled(false)
 							end
 
 							if State then
@@ -11972,8 +11972,8 @@ do
 							if flag19 then
 								antiVoidEnabled = false
 
-								if _G.NineDuelsAntiVoid then
-									_G.NineDuelsAntiVoid.setEnabled(false)
+								if _G.JesusAntiVoid then
+									_G.JesusAntiVoid.setEnabled(false)
 								end
 							end
 
@@ -12165,8 +12165,8 @@ do
 								if flag19 then
 									antiVoidEnabled = true
 
-									if _G.NineDuelsAntiVoid then
-										_G.NineDuelsAntiVoid.setEnabled(true)
+									if _G.JesusAntiVoid then
+										_G.JesusAntiVoid.setEnabled(true)
 									end
 								end
 
@@ -12932,9 +12932,9 @@ do
 									end)
 								end
 
-								fn35(v86, "NineDuelsHeadlessMesh")
+								fn35(v86, "JesusHeadlessMesh")
 								local specialMesh = Instance.new("SpecialMesh")
-								specialMesh.Name = "NineDuelsHeadlessMesh"
+								specialMesh.Name = "JesusHeadlessMesh"
 								specialMesh.MeshType = Enum.MeshType.FileMesh
 								specialMesh.MeshId = "rbxassetid://1095708"
 								specialMesh.Scale = Vector3.new(0.001, 0.001, 0.001)
@@ -12953,7 +12953,7 @@ do
 									end)
 								end
 
-								fn35(v86, "NineDuelsHeadlessMesh")
+								fn35(v86, "JesusHeadlessMesh")
 							end
 						end
 
@@ -12970,20 +12970,20 @@ do
 								end
 
 								if arg then
-									fn35(rightLeg, "NineDuelsKorbloxMesh")
+									fn35(rightLeg, "JesusKorbloxMesh")
 
 									pcall(function()
 										rightLeg.Color = Color3.fromRGB(64, 64, 64)
 									end)
 
 									local specialMesh = Instance.new("SpecialMesh")
-									specialMesh.Name = "NineDuelsKorbloxMesh"
+									specialMesh.Name = "JesusKorbloxMesh"
 									specialMesh.MeshType = Enum.MeshType.FileMesh
 									specialMesh.MeshId = "rbxassetid://101851696"
 									specialMesh.TextureId = "rbxassetid://101851254"
 									specialMesh.Parent = rightLeg
 								else
-									fn35(rightLeg, "NineDuelsKorbloxMesh")
+									fn35(rightLeg, "JesusKorbloxMesh")
 
 									pcall(function()
 										rightLeg.Color = Color3.fromRGB(255, 255, 255)
@@ -13013,11 +13013,11 @@ do
 										end)
 									end
 
-									fn35(parent, "NineDuelsKorbloxLeg")
+									fn35(parent, "JesusKorbloxLeg")
 
 									if rightUpperLeg then
 										local part = Instance.new("Part")
-										part.Name = "NineDuelsKorbloxLeg"
+										part.Name = "JesusKorbloxLeg"
 										part.Size = Vector3.new(1, 2, 1)
 										part.Anchored = false
 										part.CanCollide = false
@@ -13026,13 +13026,13 @@ do
 										part.Parent = parent
 										part.CFrame = rightUpperLeg.CFrame * CFrame.new(0, -0.8, 0)
 										local specialMesh = Instance.new("SpecialMesh")
-										specialMesh.Name = "NineDuelsKorbloxMesh"
+										specialMesh.Name = "JesusKorbloxMesh"
 										specialMesh.MeshType = Enum.MeshType.FileMesh
 										specialMesh.MeshId = "rbxassetid://101851696"
 										specialMesh.TextureId = "rbxassetid://101851254"
 										specialMesh.Parent = part
 										local weldConstraint = Instance.new("WeldConstraint")
-										weldConstraint.Name = "NineDuelsKorbloxWeld"
+										weldConstraint.Name = "JesusKorbloxWeld"
 										weldConstraint.Part0 = rightUpperLeg
 										weldConstraint.Part1 = part
 										weldConstraint.Parent = part
@@ -13056,7 +13056,7 @@ do
 										end)
 									end
 
-									fn35(parent, "NineDuelsKorbloxLeg")
+									fn35(parent, "JesusKorbloxLeg")
 								end
 							end
 
@@ -13199,7 +13199,7 @@ do
 					end)
 
 					local uiScale = Instance.new("UIScale", frame)
-					uiScale.Name = "NineDuelsProgressBarScale"
+					uiScale.Name = "JesusProgressBarScale"
 					uiScale.Scale = stealBarScaleObj and stealBarScaleObj.Scale or _phantomModeIsMobile and 0.7 or 1
 					stealBarScaleObj = uiScale
 					local frame2 = Instance.new("Frame", frame)
@@ -13519,7 +13519,7 @@ do
 				end
 
 				createStealBar()
-				_G.NineDuelsMirrorTPDownEnabled = _G.NineDuelsMirrorTPDownEnabled == true
+				_G.JesusMirrorTPDownEnabled = _G.JesusMirrorTPDownEnabled == true
 
 				do
 					local tbl17 = {}
@@ -13548,7 +13548,7 @@ do
 					end
 
 					RunService.Heartbeat:Connect(function()
-						if not _G.NineDuelsMirrorTPDownEnabled or not fn35() then
+						if not _G.JesusMirrorTPDownEnabled or not fn35() then
 							table.clear(tbl17)
 							return
 						end
@@ -13573,8 +13573,8 @@ do
 						end
 					end)
 
-					_G.NineDuelsSetMirrorTPDown = function(arg)
-						_G.NineDuelsMirrorTPDownEnabled = arg == true
+					_G.JesusSetMirrorTPDown = function(arg)
+						_G.JesusMirrorTPDownEnabled = arg == true
 
 						if not arg then
 							table.clear(tbl17)
@@ -13584,15 +13584,15 @@ do
 			end
 
 			do
-				_G.NineDuelsBaseXRayEnabled = _G.NineDuelsBaseXRayEnabled == true
-				_G.NineDuelsBaseXRayTransparency = math.clamp(tonumber(_G.NineDuelsBaseXRayTransparency) or 0.5, 0, 1)
-				_G.NineDuelsBrainrotXRayEnabled = false
-				_G.NineDuelsBaseXRayState = _G.NineDuelsBaseXRayState or { saved = {}, conns = {}, run = 0 }
-				_G.NineDuelsBrainrotXRayState = _G.NineDuelsBrainrotXRayState
+				_G.JesusBaseXRayEnabled = _G.JesusBaseXRayEnabled == true
+				_G.JesusBaseXRayTransparency = math.clamp(tonumber(_G.JesusBaseXRayTransparency) or 0.5, 0, 1)
+				_G.JesusBrainrotXRayEnabled = false
+				_G.JesusBaseXRayState = _G.JesusBaseXRayState or { saved = {}, conns = {}, run = 0 }
+				_G.JesusBrainrotXRayState = _G.JesusBrainrotXRayState
 					or { saved = {}, conns = {}, run = 0, names = nil }
 
 				do
-					local nineDuelsBaseXRayState = _G.NineDuelsBaseXRayState
+					local jesusBaseXRayState = _G.JesusBaseXRayState
 
 					local tbl17 = {
 						"Base",
@@ -13607,19 +13607,19 @@ do
 					}
 
 					local function fn35(arg, arg2, arg3)
-						if not arg or arg3 ~= nineDuelsBaseXRayState.run then
+						if not arg or arg3 ~= jesusBaseXRayState.run then
 							return
 						end
 
 						local function fn36(arg4)
 							if arg4:IsA("BasePart") or arg4:IsA("Decal") or arg4:IsA("Texture") then
-								if nineDuelsBaseXRayState.saved[arg4] == nil then
-									nineDuelsBaseXRayState.saved[arg4] = arg4.Transparency
+								if jesusBaseXRayState.saved[arg4] == nil then
+									jesusBaseXRayState.saved[arg4] = arg4.Transparency
 								end
 
-								if nineDuelsBaseXRayState.saved[arg4] < 1 then
-									arg4.Transparency = nineDuelsBaseXRayState.saved[arg4]
-										+ (1 - nineDuelsBaseXRayState.saved[arg4]) * arg2
+								if jesusBaseXRayState.saved[arg4] < 1 then
+									arg4.Transparency = jesusBaseXRayState.saved[arg4]
+										+ (1 - jesusBaseXRayState.saved[arg4]) * arg2
 								end
 							end
 						end
@@ -13632,7 +13632,7 @@ do
 					end
 
 					local function fn36(arg, arg2)
-						if not arg or arg2 ~= nineDuelsBaseXRayState.run then
+						if not arg or arg2 ~= jesusBaseXRayState.run then
 							return
 						end
 
@@ -13640,14 +13640,14 @@ do
 							local v87 = arg:FindFirstChild(v86)
 
 							if v87 then
-								fn35(v87, math.clamp(tonumber(_G.NineDuelsBaseXRayTransparency) or 0.5, 0, 1), arg2)
+								fn35(v87, math.clamp(tonumber(_G.JesusBaseXRayTransparency) or 0.5, 0, 1), arg2)
 
 								table.insert(
-									nineDuelsBaseXRayState.conns,
+									jesusBaseXRayState.conns,
 									v87.DescendantAdded:Connect(function(descendant)
 										fn35(
 											descendant,
-											math.clamp(tonumber(_G.NineDuelsBaseXRayTransparency) or 0.5, 0, 1),
+											math.clamp(tonumber(_G.JesusBaseXRayTransparency) or 0.5, 0, 1),
 											arg2
 										)
 									end)
@@ -13656,9 +13656,9 @@ do
 						end
 
 						table.insert(
-							nineDuelsBaseXRayState.conns,
+							jesusBaseXRayState.conns,
 							arg.ChildAdded:Connect(function(child)
-								if arg2 ~= nineDuelsBaseXRayState.run then
+								if arg2 ~= jesusBaseXRayState.run then
 									return
 								end
 
@@ -13669,21 +13669,21 @@ do
 						)
 					end
 
-					_G.NineDuelsSetBaseXRay = function(arg)
-						_G.NineDuelsBaseXRayEnabled = arg == true
-						nineDuelsBaseXRayState.run = nineDuelsBaseXRayState.run + 1
+					_G.JesusSetBaseXRay = function(arg)
+						_G.JesusBaseXRayEnabled = arg == true
+						jesusBaseXRayState.run = jesusBaseXRayState.run + 1
 
-						for _, conn in ipairs(nineDuelsBaseXRayState.conns) do
+						for _, conn in ipairs(jesusBaseXRayState.conns) do
 							pcall(function()
 								conn:Disconnect()
 							end)
 						end
 
-						nineDuelsBaseXRayState.conns = {}
+						jesusBaseXRayState.conns = {}
 
-						if not _G.NineDuelsBaseXRayEnabled then
-							local saved = nineDuelsBaseXRayState.saved
-							nineDuelsBaseXRayState.saved = {}
+						if not _G.JesusBaseXRayEnabled then
+							local saved = jesusBaseXRayState.saved
+							jesusBaseXRayState.saved = {}
 
 							for k, v86 in pairs(saved) do
 								pcall(function()
@@ -13696,7 +13696,7 @@ do
 							return
 						end
 
-						local run = nineDuelsBaseXRayState.run
+						local run = jesusBaseXRayState.run
 						local v86 = workspace:FindFirstChild("Plots")
 						if not v86 then
 							return
@@ -13707,7 +13707,7 @@ do
 						end
 
 						table.insert(
-							nineDuelsBaseXRayState.conns,
+							jesusBaseXRayState.conns,
 							v86.ChildAdded:Connect(function(child)
 								task.wait(0.15)
 								fn36(child, run)
@@ -13718,11 +13718,11 @@ do
 			end
 
 			do
-				local nineDuelsBrainrotXRayState = _G.NineDuelsBrainrotXRayState
+				local jesusBrainrotXRayState = _G.JesusBrainrotXRayState
 
 				local function fn35()
-					if nineDuelsBrainrotXRayState.names then
-						return nineDuelsBrainrotXRayState.names
+					if jesusBrainrotXRayState.names then
+						return jesusBrainrotXRayState.names
 					end
 					local names = {}
 
@@ -13737,7 +13737,7 @@ do
 						end
 					end)
 
-					nineDuelsBrainrotXRayState.names = names
+					jesusBrainrotXRayState.names = names
 					return names
 				end
 
@@ -13753,17 +13753,17 @@ do
 				end
 
 				local function fn37(arg, arg2)
-					if arg2 ~= nineDuelsBrainrotXRayState.run then
+					if arg2 ~= jesusBrainrotXRayState.run then
 						return
 					end
 
 					local function fn38(arg3)
 						if arg3:IsA("BasePart") or arg3:IsA("Decal") or arg3:IsA("Texture") then
-							if nineDuelsBrainrotXRayState.saved[arg3] == nil then
-								nineDuelsBrainrotXRayState.saved[arg3] = arg3.Transparency
+							if jesusBrainrotXRayState.saved[arg3] == nil then
+								jesusBrainrotXRayState.saved[arg3] = arg3.Transparency
 							end
 
-							if nineDuelsBrainrotXRayState.saved[arg3] < 0.5 then
+							if jesusBrainrotXRayState.saved[arg3] < 0.5 then
 								arg3.Transparency = 0.5
 							end
 						end
@@ -13774,21 +13774,21 @@ do
 					end
 				end
 
-				_G.NineDuelsSetBrainrotXRay = function(arg)
-					_G.NineDuelsBrainrotXRayEnabled = arg == true
-					nineDuelsBrainrotXRayState.run = nineDuelsBrainrotXRayState.run + 1
+				_G.JesusSetBrainrotXRay = function(arg)
+					_G.JesusBrainrotXRayEnabled = arg == true
+					jesusBrainrotXRayState.run = jesusBrainrotXRayState.run + 1
 
-					for _, conn in ipairs(nineDuelsBrainrotXRayState.conns) do
+					for _, conn in ipairs(jesusBrainrotXRayState.conns) do
 						pcall(function()
 							conn:Disconnect()
 						end)
 					end
 
-					nineDuelsBrainrotXRayState.conns = {}
+					jesusBrainrotXRayState.conns = {}
 
-					if not _G.NineDuelsBrainrotXRayEnabled then
-						local saved = nineDuelsBrainrotXRayState.saved
-						nineDuelsBrainrotXRayState.saved = {}
+					if not _G.JesusBrainrotXRayEnabled then
+						local saved = jesusBrainrotXRayState.saved
+						jesusBrainrotXRayState.saved = {}
 
 						for k, v86 in pairs(saved) do
 							pcall(function()
@@ -13801,14 +13801,14 @@ do
 						return
 					end
 
-					local run = nineDuelsBrainrotXRayState.run
+					local run = jesusBrainrotXRayState.run
 					fn35()
 
 					task.spawn(function()
 						local v86 = 0
 
 						for _, descendant in ipairs(workspace:GetDescendants()) do
-							if nineDuelsBrainrotXRayState.run ~= run then
+							if jesusBrainrotXRayState.run ~= run then
 								return
 							end
 
@@ -13825,15 +13825,15 @@ do
 					end)
 
 					table.insert(
-						nineDuelsBrainrotXRayState.conns,
+						jesusBrainrotXRayState.conns,
 						workspace.DescendantAdded:Connect(function(descendant)
-							if nineDuelsBrainrotXRayState.run ~= run then
+							if jesusBrainrotXRayState.run ~= run then
 								return
 							end
 
 							if descendant:IsA("Model") and fn36(descendant) then
 								task.defer(function()
-									if nineDuelsBrainrotXRayState.run == run and descendant.Parent then
+									if jesusBrainrotXRayState.run == run and descendant.Parent then
 										fn37(descendant, run)
 									end
 								end)
@@ -13850,12 +13850,12 @@ do
 			do
 				do
 					pcall(function()
-						if not (isfile and isfile("NineDuelsV1configLOL1/Config.json")) then
+						if not (isfile and isfile("JesusV1configLOL1/Config.json")) then
 							return
 						end
 
 						local ok, result = pcall(function()
-							return HS:JSONDecode(readfile("NineDuelsV1configLOL1/Config.json"))
+							return HS:JSONDecode(readfile("JesusV1configLOL1/Config.json"))
 						end)
 
 						if ok then
@@ -13934,17 +13934,17 @@ do
 						end
 
 						if type(result.baseXRayEnabled) == "boolean" then
-							_G.NineDuelsBaseXRayEnabled = result.baseXRayEnabled
+							_G.JesusBaseXRayEnabled = result.baseXRayEnabled
 						end
 
 						if type(result.baseXRayTransparency) == "number" then
-							_G.NineDuelsBaseXRayTransparency = math.clamp(result.baseXRayTransparency, 0, 1)
+							_G.JesusBaseXRayTransparency = math.clamp(result.baseXRayTransparency, 0, 1)
 						end
 
-						_G.NineDuelsBrainrotXRayEnabled = false
+						_G.JesusBrainrotXRayEnabled = false
 
 						if type(result.mirrorTPDownEnabled) == "boolean" then
-							_G.NineDuelsMirrorTPDownEnabled = result.mirrorTPDownEnabled
+							_G.JesusMirrorTPDownEnabled = result.mirrorTPDownEnabled
 						end
 
 						if type(result.antiRagdollEnabled) == "boolean" then
@@ -14089,12 +14089,12 @@ do
 							end
 						end
 
-						_nineduelsForceCompactSideGrid = false
+						_jesusForceCompactSideGrid = false
 
 						if type(result.mobileButtonsSize) == "number" then
 							if result.mobileButtonsSize == 52 or result.mobileButtonsSize == 50 then
 								mobileButtonsSize = 45
-								_nineduelsForceCompactSideGrid = true
+								_jesusForceCompactSideGrid = true
 								_savedBtnPositions = {}
 								_G._phantomBtnPos = {}
 							else
@@ -14111,7 +14111,7 @@ do
 						end
 
 						if
-							type(result.introSongChoice) == "string" and NINEDUELS_INTRO_TRACKS[result.introSongChoice]
+							type(result.introSongChoice) == "string" and JESUS_INTRO_TRACKS[result.introSongChoice]
 						then
 							introSongChoice = result.introSongChoice
 						end
@@ -14199,7 +14199,7 @@ do
 						end
 
 						if
-							not _nineduelsForceCompactSideGrid
+							not _jesusForceCompactSideGrid
 							and type(result.btnPositions) == "table"
 							and next(result.btnPositions) ~= nil
 						then
@@ -14256,8 +14256,8 @@ do
 							task.spawn(function()
 								task.wait(0.55)
 
-								if _G.NineDuelsAntiVoid then
-									_G.NineDuelsAntiVoid.setEnabled(true)
+								if _G.JesusAntiVoid then
+									_G.JesusAntiVoid.setEnabled(true)
 								end
 							end)
 						end
@@ -14485,12 +14485,12 @@ do
 							DEFAULT_KEYS = {}
 
 							pcall(function()
-								if not (isfile and isfile("NineDuelsV1configLOL1/Config.json")) then
+								if not (isfile and isfile("JesusV1configLOL1/Config.json")) then
 									return
 								end
 
 								local ok, result = pcall(function()
-									return HS:JSONDecode(readfile("NineDuelsV1configLOL1/Config.json"))
+									return HS:JSONDecode(readfile("JesusV1configLOL1/Config.json"))
 								end)
 
 								if ok then
@@ -15187,7 +15187,7 @@ do
 								textLabel3.Position = UDim2.new(0, 60, 0, 26)
 								textLabel3.Size = UDim2.new(0, 154, 0, 26)
 								textLabel3.BackgroundTransparency = 1
-								textLabel3.Text = 'NineDuels<font color="#FFFFFF">.VS</font>'
+								textLabel3.Text = 'Jesus<font color="#FFFFFF">.VS</font>'
 								textLabel3.RichText = true
 								textLabel3.TextColor3 = C.white
 								textLabel3.TextSize = 22
@@ -15248,7 +15248,7 @@ do
 								textLabel4.Position = UDim2.new(0, 32, 0, 57)
 								textLabel4.Size = UDim2.new(0, 154, 0, 15)
 								textLabel4.BackgroundTransparency = 1
-								textLabel4.Text = "discord.gg/nineduels"
+								textLabel4.Text = "discord.gg/jesus"
 								textLabel4.TextColor3 = C.blue
 								textLabel4.TextSize = 11
 								textLabel4.Font = Enum.Font.GothamMedium
@@ -15379,7 +15379,7 @@ do
 								textLabel6.Position = UDim2.new(0, 32, 0, 30)
 								textLabel6.Size = UDim2.new(0, 150, 0, 12)
 								textLabel6.BackgroundTransparency = 1
-								textLabel6.Text = "discord.gg/nineduels"
+								textLabel6.Text = "discord.gg/jesus"
 								textLabel6.TextColor3 = Color3.fromRGB(235, 235, 235)
 								textLabel6.TextSize = 7
 								textLabel6.Font = Enum.Font.GothamMedium
@@ -15722,7 +15722,7 @@ do
 								instance13.Position = UDim2.new(0, 0, 0, 72)
 								instance13.Size = UDim2.new(1, 0, 0, 14)
 								instance13.BackgroundTransparency = 1
-								instance13.Text = "nineduels.vs"
+								instance13.Text = "jesus.vs"
 								instance13.TextColor3 = C.textMuted
 								instance13.TextSize = 9
 								instance13.Font = Enum.Font.GothamMedium
@@ -17255,8 +17255,8 @@ do
 								addToggleRow(combat, "Anti Void", antiVoidEnabled, 5.55, nil, function(arg)
 									antiVoidEnabled = arg == true
 
-									if _G.NineDuelsAntiVoid then
-										_G.NineDuelsAntiVoid.setEnabled(antiVoidEnabled)
+									if _G.JesusAntiVoid then
+										_G.JesusAntiVoid.setEnabled(antiVoidEnabled)
 									end
 
 									svAntiVoid(antiVoidEnabled)
@@ -17879,20 +17879,20 @@ do
 								addToggleRow(
 									movement,
 									"Mirror TP Down",
-									_G.NineDuelsMirrorTPDownEnabled,
+									_G.JesusMirrorTPDownEnabled,
 									15,
 									nil,
 									function(arg)
-										if _G.NineDuelsSetMirrorTPDown then
-											_G.NineDuelsSetMirrorTPDown(arg)
+										if _G.JesusSetMirrorTPDown then
+											_G.JesusSetMirrorTPDown(arg)
 										end
 
 										saveConfig()
 									end
 								)
 
-								if _G.NineDuelsMirrorTPDownEnabled and _G.NineDuelsSetMirrorTPDown then
-									_G.NineDuelsSetMirrorTPDown(true)
+								if _G.JesusMirrorTPDownEnabled and _G.JesusSetMirrorTPDown then
+									_G.JesusSetMirrorTPDown(true)
 								end
 
 								addSectLbl(movement, "CHARACTER OPTIONS", 19)
@@ -18140,20 +18140,20 @@ do
 								local frame3 = Instance.new("Frame", frame2)
 								frame3.Size = UDim2.fromOffset(44, 22)
 								frame3.Position = UDim2.new(1, -54, 0.5, -11)
-								frame3.BackgroundColor3 = _G.NineDuelsBaseXRayEnabled and C.blue or C.blueDim
+								frame3.BackgroundColor3 = _G.JesusBaseXRayEnabled and C.blue or C.blueDim
 								frame3.BorderSizePixel = 0
 								guiCorner(frame3, 11)
 								local frame4 = Instance.new("Frame", frame3)
 								frame4.Size = UDim2.fromOffset(16, 16)
-								frame4.Position = _G.NineDuelsBaseXRayEnabled and UDim2.new(1, -19, 0.5, -8)
+								frame4.Position = _G.JesusBaseXRayEnabled and UDim2.new(1, -19, 0.5, -8)
 									or UDim2.new(0, 3, 0.5, -8)
-								frame4.BackgroundColor3 = _G.NineDuelsBaseXRayEnabled and C.bgDark or C.textDim
+								frame4.BackgroundColor3 = _G.JesusBaseXRayEnabled and C.bgDark or C.textDim
 								frame4.BorderSizePixel = 0
 								guiCorner(frame4, 8)
-								local nineDuelsBaseXRayEnabled = _G.NineDuelsBaseXRayEnabled
+								local jesusBaseXRayEnabled = _G.JesusBaseXRayEnabled
 
 								local function fn43(arg)
-									nineDuelsBaseXRayEnabled = arg
+									jesusBaseXRayEnabled = arg
 									tw(frame3, { BackgroundColor3 = arg and C.blue or C.blueDim })
 
 									tw(frame4, {
@@ -18172,11 +18172,11 @@ do
 								textButton.ZIndex = 5
 
 								textButton.MouseButton1Click:Connect(function()
-									nineDuelsBaseXRayEnabled = not nineDuelsBaseXRayEnabled
-									fn43(nineDuelsBaseXRayEnabled)
+									jesusBaseXRayEnabled = not jesusBaseXRayEnabled
+									fn43(jesusBaseXRayEnabled)
 
-									if _G.NineDuelsSetBaseXRay then
-										_G.NineDuelsSetBaseXRay(nineDuelsBaseXRayEnabled)
+									if _G.JesusSetBaseXRay then
+										_G.JesusSetBaseXRay(jesusBaseXRayEnabled)
 									end
 
 									saveConfig()
@@ -18217,7 +18217,7 @@ do
 								textLabel3.Position = UDim2.new(1, -64, 0, 6)
 								textLabel3.BackgroundTransparency = 1
 								textLabel3.Text = tostring(
-									math.floor((_G.NineDuelsBaseXRayTransparency or 0.5) * 100 + 0.5)
+									math.floor((_G.JesusBaseXRayTransparency or 0.5) * 100 + 0.5)
 								) .. "%"
 								textLabel3.TextColor3 = C.textDim
 								textLabel3.TextSize = 10
@@ -18229,16 +18229,16 @@ do
 								instance3.BackgroundColor3 = Color3.fromRGB(50, 55, 65)
 								instance3.BorderSizePixel = 0
 								guiCorner(instance3, 3)
-								local nineDuelsBaseXRayTransparency =
-									math.clamp(_G.NineDuelsBaseXRayTransparency or 0.5, 0, 1)
+								local jesusBaseXRayTransparency =
+									math.clamp(_G.JesusBaseXRayTransparency or 0.5, 0, 1)
 								local instance4 = Instance.new("Frame", instance3)
-								instance4.Size = UDim2.new(nineDuelsBaseXRayTransparency, 0, 1, 0)
+								instance4.Size = UDim2.new(jesusBaseXRayTransparency, 0, 1, 0)
 								instance4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 								instance4.BorderSizePixel = 0
 								guiCorner(instance4, 3)
 								local frame6 = Instance.new("Frame", instance3)
 								frame6.Size = UDim2.fromOffset(14, 14)
-								frame6.Position = UDim2.new(nineDuelsBaseXRayTransparency, -7, 0.5, -7)
+								frame6.Position = UDim2.new(jesusBaseXRayTransparency, -7, 0.5, -7)
 								frame6.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 								frame6.BorderSizePixel = 0
 								guiCorner(frame6, 7)
@@ -18291,13 +18291,13 @@ do
 									if x <= 0 then
 										return
 									end
-									nineDuelsBaseXRayTransparency = math.floor(
+									jesusBaseXRayTransparency = math.floor(
 										math.clamp((arg.Position.X - instance3.AbsolutePosition.X) / x, 0, 1) * 100
 											+ 0.5
 									) / 100
-									instance4.Size = UDim2.new(nineDuelsBaseXRayTransparency, 0, 1, 0)
-									frame6.Position = UDim2.new(nineDuelsBaseXRayTransparency, -7, 0.5, -7)
-									textLabel3.Text = tostring(math.floor(nineDuelsBaseXRayTransparency * 100 + 0.5))
+									instance4.Size = UDim2.new(jesusBaseXRayTransparency, 0, 1, 0)
+									frame6.Position = UDim2.new(jesusBaseXRayTransparency, -7, 0.5, -7)
+									textLabel3.Text = tostring(math.floor(jesusBaseXRayTransparency * 100 + 0.5))
 										.. "%"
 								end
 
@@ -18339,11 +18339,11 @@ do
 										or input.UserInputType == Enum.UserInputType.Touch
 									then
 										if flag19 then
-											_G.NineDuelsBaseXRayTransparency = nineDuelsBaseXRayTransparency
+											_G.JesusBaseXRayTransparency = jesusBaseXRayTransparency
 
-											if _G.NineDuelsBaseXRayEnabled and _G.NineDuelsSetBaseXRay then
-												_G.NineDuelsSetBaseXRay(false)
-												_G.NineDuelsSetBaseXRay(true)
+											if _G.JesusBaseXRayEnabled and _G.JesusSetBaseXRay then
+												_G.JesusSetBaseXRay(false)
+												_G.JesusSetBaseXRay(true)
 											end
 
 											saveConfig()
@@ -18357,8 +18357,8 @@ do
 									fn44(not flag18)
 								end)
 
-								if _G.NineDuelsBaseXRayEnabled then
-									pcall(_G.NineDuelsSetBaseXRay, true)
+								if _G.JesusBaseXRayEnabled then
+									pcall(_G.JesusSetBaseXRay, true)
 								end
 
 								addSectLbl(visuals, "MOVEMENT VISUALS", 4.5)
@@ -19424,7 +19424,7 @@ do
 									introEnabled = arg
 
 									if not arg then
-										stopNineDuelsIntroMusic()
+										stopJesusIntroMusic()
 									end
 
 									saveConfig()
@@ -19501,9 +19501,9 @@ do
 									fn47(flag18)
 
 									if flag18 then
-										playNineDuelsIntroMusic()
+										playJesusIntroMusic()
 									else
-										stopNineDuelsIntroMusic()
+										stopJesusIntroMusic()
 									end
 
 									saveConfig()
@@ -19521,7 +19521,7 @@ do
 									textButton4.Text = introSongChoice
 
 									if introSoundEnabled then
-										playNineDuelsIntroMusic()
+										playJesusIntroMusic()
 									end
 
 									saveConfig()
@@ -21122,7 +21122,7 @@ do
 
 		if not next(phantomBtnPos) then
 			pcall(function()
-				local data = HS:JSONDecode(readfile("NineDuelsV1configLOL1/Config.json"))
+				local data = HS:JSONDecode(readfile("JesusV1configLOL1/Config.json"))
 
 				if type(data) == "table" and type(data.btnPositions) == "table" then
 					phantomBtnPos = data.btnPositions
@@ -22905,7 +22905,7 @@ do
 	reopenBtn.Position = UDim2.new(0, 10, 0, 10)
 	reopenBtn.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
 	reopenBtn.BorderSizePixel = 0
-	reopenBtn.Text = "Nine Duels"
+	reopenBtn.Text = "JESUS"
 	reopenBtn.TextColor3 = Color3.fromRGB(180, 180, 180)
 	reopenBtn.Font = Enum.Font.GothamBold
 	reopenBtn.TextSize = 10
@@ -22928,7 +22928,7 @@ reopenBtn.MouseButton1Click:Connect(function()
 		Panel.Visible = true
 		PanelShadow.Visible = true
 		tween(PanelScale, { Scale = 1 }, 0.22)
-		reopenBtn.Text = "Nine Duels"
+		reopenBtn.Text = "JESUS"
 		tween(
 			reopenBtn,
 			{ BackgroundColor3 = Color3.fromRGB(24, 24, 24), TextColor3 = Color3.fromRGB(180, 180, 180) },
