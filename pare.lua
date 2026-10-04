@@ -1290,7 +1290,7 @@ do
                   equipTeleportTool()
                   local character2 = localPlayer2.Character
                   if character2 then
-                    character2 = character2:FindFirstChild(_G.TPSpeedItem or "Flying Carpet")
+                    character2 = character2:FindFirstChild(_G.TPSpeedItem or "Grappin")
                   end
                   if not character2 then
                     routeRunService.Heartbeat:Wait()
