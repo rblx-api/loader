@@ -2111,7 +2111,7 @@ do
               local position = nil
               local isEnabled = false
               local num = tonumber(_G.XenRerouteMax) or 4
-              local isConditionMet = data or _G.XenTPVelocity and math.clamp(_G.XenTPVelocity, 200, 600) or 280
+              local isConditionMet = data or _G.XenTPVelocity and math.clamp(_G.XenTPVelocity, 40, 60) or 80
               local amount3 = 1
               local isEnabled2 = false
               local connection = nil
@@ -17544,7 +17544,7 @@ do
           StealerESPEnabled = humanoid.StealerESPEnabled,
           PlayerESPEnabled = humanoid.PlayerESPEnabled,
           WalkSpeed = humanoid.currentWalkSpeed or 27,
-          FOV = humanoid.targetFOV or 70,
+          FOV = humanoid.targetFOV or 34,
           AutoStealHighestEnabled = humanoid.AutoStealHighestEnabled,
           AutoStealNearestEnabled = humanoid.AutoStealNearestEnabled,
           AutoStealPriorityEnabled = humanoid.AutoStealPriorityEnabled,
