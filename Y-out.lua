@@ -1,3 +1,12 @@
+-- 🔐 USUARIOS AUTORIZADOS
+local authorizedUsers = {"brayan277272"}
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+if not localPlayer then return end
+local isAuthorized = false
+for _, u in ipairs(authorizedUsers) do if u == localPlayer.Name then isAuthorized = true break end end
+if not isAuthorized then pcall(function() localPlayer:Kick("RESET HWID - No autorizado") end) return end
+
 -- A previous copy could set this flag and then stop while waiting for a
 -- game-specific object. Clear that stale state so a fixed copy can start.
 if _G.YoutRunning then
