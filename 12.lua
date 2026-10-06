@@ -1,9 +1,3 @@
--- ============================================================
--- HAVEN HUB + TP INTEGRADO
--- HAVEN HUB ORIGINAL MANTIDO
--- TP COM TEMA HAVEN HUB
--- ============================================================
-
 do
     local WriteThrough = (newcclosure and newcclosure(function(tb, k, v) return rawset(tb, k, v) end))
                          or function(tb, k, v) return rawset(tb, k, v) end
@@ -1966,12 +1960,23 @@ end
 --                              PAGES
 -- ══════════════════════════════════════════════════════════════════
 local mainPage     = makeTab("Main",     1)
-local miscPage     = makeTab("Misc",     2)
-local playerPage   = makeTab("Player",   3)
-local keybindsPage = makeTab("Keybinds", 4)
-local apPage       = makeTab("AP",       5)
-local settingsPage = makeTab("Settings", 6)
-local configPage   = makeTab("Config",   7)
+local tpPage       = makeTab("TP",       2)
+local miscPage     = makeTab("Misc",     3)
+local playerPage   = makeTab("Player",   4)
+local keybindsPage = makeTab("Keybinds", 5)
+local apPage       = makeTab("AP",       6)
+local settingsPage = makeTab("Settings", 7)
+local configPage   = makeTab("Config",   8)
+
+-- TP is secondary: the Haven Hub remains the main UI.
+-- The TP panel starts hidden and is shown from the TP tab.
+toggle(tpPage, "TP Panel", 1, false, function(v)
+    if _G.TT3SetPanelVisible then
+        pcall(_G.TT3SetPanelVisible, "teleport", v)
+    else
+        _G.__RyftTPPendingVisible = v and true or false
+    end
+end)
 -- ══════════════  UNLOCK BUTTONS ENGINE (floating panel)  ══════════════
 local setUnlockButtons
 do
@@ -7180,7 +7185,7 @@ local WAIT_WINDOW = 1.60
 _G._ryft_GEN = (_G._ryft_GEN or 0) + 1
 local GEN = _G._ryft_GEN
 local function dead() return GEN ~= _G._ryft_GEN end
-local autoGrabActive = true   -- Auto Grab is controlled by Haven Hub; hiding the GUI does NOT disable the grab logic
+local autoGrabActive = true   -- false while "Hide Auto Grab GUI" is on: no scan, no grab, no UI
 local _fireprompt = fireproximityprompt
 local _getconns   = getconnections
 local function getRoot()
@@ -7316,15 +7321,6 @@ local hasTarget    = false
 local carrying     = false
 local curName      = "Scanning..."
 local grabProgress = 0
--- Public bridge: TP reads the PRINCIPAL HAVEN HUB Auto Grab state/progress.
-_G.__HavenAutoGrabProgress = 0
-_G.__HavenAutoGrabName = "Scanning..."
-_G.__HavenAutoGrabRunning = false
-RunService.Heartbeat:Connect(function()
-    _G.__HavenAutoGrabProgress = math.clamp(tonumber(grabProgress) or 0, 0, 1)
-    _G.__HavenAutoGrabName = tostring(curName or "Scanning...")
-    _G.__HavenAutoGrabRunning = (autoGrabActive == true and autoStealOn() == true)
-end)
 local grabWaiting  = false
 local waitFrac     = 0
 local function fireConns(prompt, signalName)
@@ -7479,17 +7475,10 @@ local sg = Instance.new("ScreenGui")
 sg.Name = "ryftStealBar"; sg.ResetOnSpawn = false
 sg.DisplayOrder = 99999; sg.IgnoreGuiInset = true; sg.Parent = CoreGui
 -- Misc "Hide Auto Grab GUI" toggle controls this bar's visibility
--- Haven Hub remains the ONLY Auto Grab engine. This toggle now hides/shows
--- the replacement TP progress bar without disabling Auto Grab itself.
-_G.__RyftAutoGrabBarHidden = false
 _G.setAutoGrabHidden = function(hidden)
-    _G.__RyftAutoGrabBarHidden = hidden and true or false
-    if sg then sg.Enabled = false end -- original Haven bar is permanently replaced
-    if _G.TPSetAutoGrabBarHidden then
-        pcall(_G.TPSetAutoGrabBarHidden, _G.__RyftAutoGrabBarHidden)
-    end
+    autoGrabActive = not hidden          -- fully stop/resume the grab logic
+    if sg then sg.Enabled = not hidden end   -- and hide/show the bar
 end
-sg.Enabled = false -- TP bar is the only visible Auto Grab progress bar
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 258, 0, 50)
 frame.Position = UDim2.new(0.5, -129, 0.06, 0)
@@ -12027,9 +12016,12 @@ end)()
 end)()
 
 -- ============================================================
--- TP / GRAPPLE HUB — integrado abaixo do HAVEN HUB
+-- HAVEN HUB + TP INTEGRATION
+-- The original Haven Hub above is kept intact and is the primary UI.
+-- TP is loaded only after the Hub has initialized.
 -- ============================================================
-
+do
+    local __RyftTPCode = [=[
 -- HAVEN HUB THEME PATCH
 -- TP UI uses the same palette/typography as HAVEN HUB:
 -- Black/BgDark = 6,8,14 / 9,13,24
@@ -15824,7 +15816,7 @@ do
         local track = Instance.new("Frame", wrap)
         track.Position = UDim2.new(0, 10, 0, 26)
         track.Size = UDim2.new(1, -20, 0, 10)
-        track.BackgroundColor3 = Color3.fromRGB(55, 25, 75)
+        track.BackgroundColor3 = Color3.fromRGB(56, 39, 23)
         track.BorderSizePixel = 0
         Instance.new("UICorner", track).CornerRadius = UDim.new(1, 0)
         stealBarFill = Instance.new("Frame", track)
@@ -15857,41 +15849,12 @@ do
     local function hideStealBar()
         pcall(function()
             ensureStealBar()
-            stealBarSg.Enabled = not (_G.__RyftAutoGrabBarHidden == true)
-            stealBarTitle.Text = _G.__HavenAutoGrabName and ("STEAL  " .. tostring(_G.__HavenAutoGrabName)) or "STEAL"
+            stealBarSg.Enabled = true
+            stealBarTitle.Text = _currentTargetName and ("STEAL  " .. _currentTargetName) or "STEAL"
             stealBarPct.Text = "0%"
             stealBarFill.Size = UDim2.new(0, 0, 1, 0)
         end)
     end
-
-    -- PRINCIPAL HUB BRIDGE: the TP bar displays the progress generated by
-    -- Haven Hub's Auto Grab. TP does not calculate or execute a second grab.
-    _G.TPSetAutoGrabBarHidden = function(hidden)
-        _G.__RyftAutoGrabBarHidden = hidden and true or false
-        pcall(function()
-            ensureStealBar()
-            stealBarSg.Enabled = not _G.__RyftAutoGrabBarHidden
-        end)
-    end
-    RunService.RenderStepped:Connect(function()
-        if ragBarOn then return end
-        pcall(function()
-            ensureStealBar()
-            if _G.__RyftAutoGrabBarHidden == true then
-                stealBarSg.Enabled = false
-                return
-            end
-            stealBarSg.Enabled = true
-            local pct = math.clamp(tonumber(_G.__HavenAutoGrabProgress) or 0, 0, 1)
-            local name = tostring(_G.__HavenAutoGrabName or "Scanning...")
-            local running = (_G.__HavenAutoGrabRunning == true)
-            stealBarTitle.Text = running and ("STEAL  " .. name) or "STEAL"
-            stealBarPct.Text = tostring(math.floor(pct * 100 + 0.5)) .. "%"
-            stealBarFill.Size = UDim2.new(pct, 0, 1, 0)
-            stealBarFill.BackgroundColor3 = Color3.fromRGB(190, 100, 255)
-            stealBarPct.TextColor3 = Color3.fromRGB(255, 255, 255)
-        end)
-    end)
     -- affichage immediat au chargement
     task.defer(hideStealBar)
 
@@ -16070,8 +16033,7 @@ do
         return 0
     end
 
-    local stealOn = false -- IMPORTANT: Auto Steal belongs to the principal HAVEN HUB.
-    -- TP keeps movement/teleport logic, but never starts a second steal loop.
+    local stealOn = (_G.TT3StealMode ~= nil)
     RunService.Heartbeat:Connect(function()
         if not stealOn then return end
         local now = os.clock()
@@ -16326,6 +16288,8 @@ do
     pcall(function() sg.Parent = guiParent end)
     if not sg.Parent then sg.Parent = PG end
     if _G.TT3RegisterPanel then _G.TT3RegisterPanel("teleport", sg) end
+    _G.TT3PanelVisibility["teleport"] = false
+    pcall(function() sg.Enabled = false end)
 
     -- savePos: true  -> panneau principal (cles historiques panelX/panelY)
     --          "nom" -> panneau secondaire, sauve dans _G._stp_pos[nom]
@@ -16842,10 +16806,6 @@ do
     end
 
     
-    -- ============================================================
-    -- STEAL TARGET: removed from TP. The principal HAVEN HUB Steal Target
-    -- remains the only target selector and publishes _G.SelectedTargetPrompt.
-    -- ============================================================
     -- ============================================================
     -- EDITEUR DE LISTE PRIORITE (panneau secondaire, ouvert par l engrenage)
     -- Perf: la liste UI n est reconstruite QUE sur modif (add/remove/reorder),
@@ -17527,4 +17487,22 @@ do
     _G.TT3FireGrapple = _GH_fireGrapple
     _G.XenFireGrapple2 = _GH_fireGrapple
     _G.CLTHUBFireGrapple = _GH_fireGrapple
+end
+
+]=]
+    local __RyftTPChunk, __RyftTPCompileErr = loadstring(__RyftTPCode, "HavenHub_TP")
+    if __RyftTPChunk then
+        local __ok, __err = pcall(__RyftTPChunk)
+        if not __ok then
+            warn("[HavenHub TP] " .. tostring(__err))
+        end
+    else
+        warn("[HavenHub TP] compile error: " .. tostring(__RyftTPCompileErr))
+    end
+    task.defer(function()
+        local t = _G.__RyftToggles and _G.__RyftToggles["TP Panel"]
+        if t and _G.TT3SetPanelVisible then
+            pcall(_G.TT3SetPanelVisible, "teleport", t.Get())
+        end
+    end)
 end
