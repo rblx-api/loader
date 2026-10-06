@@ -836,20 +836,7 @@ grad.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(1, THEME.BgDark),
 })
 grad.Parent = window
--- ── animated moving outline (dark purple <-> light purple, rotating around the border) ──
-local outline = Instance.new("UIStroke")
-outline.Thickness = 2.5
-outline.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-outline.Parent = window
-local outlineGrad = Instance.new("UIGradient")
-outlineGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.0, THEME.DarkBlue),
-    ColorSequenceKeypoint.new(0.5, THEME.LightBlue),
-    ColorSequenceKeypoint.new(1.0, THEME.DarkBlue),
-})
-outlineGrad.Parent = outline
--- spin the gradient continuously so the light-purple sweep travels around the edge
-_G.__RyftSpin(outlineGrad, 90)
+-- no purple outline around the main window; the accent is kept on the buttons instead.
 -- ─────────────────────────────  Sidebar  ────────────────────────────
 local sidebar = Instance.new("Frame")
 sidebar.Name = "Sidebar"
@@ -883,7 +870,6 @@ iconHolder.BorderSizePixel = 0
 iconHolder.ZIndex = 4
 iconHolder.Parent = sidebar
 corner(iconHolder, 10)
-stroke(iconHolder, THEME.LightBlue, 1)
 -- logo image in the top-left square, to the left of the HAVEN HUB text
 local rMark = Instance.new("ImageLabel")
 rMark.Name = "RMark"
@@ -928,7 +914,6 @@ tabPanel.BackgroundTransparency = 0.35
 tabPanel.BorderSizePixel = 0
 tabPanel.Parent = sidebar
 corner(tabPanel, 10)
-stroke(tabPanel, THEME.Stroke, 1)
 -- little "MENU" caption at the top of the panel
 local menuCaption = Instance.new("TextLabel")
 menuCaption.Size = UDim2.new(1, -20, 0, 14)
@@ -962,7 +947,6 @@ userCard.BorderSizePixel = 0
 userCard.ZIndex = 4
 userCard.Parent = sidebar
 corner(userCard, 10)
-stroke(userCard, THEME.Stroke, 1)
 -- rounded-square avatar picture
 local avatarHolder = Instance.new("Frame")
 avatarHolder.Size = UDim2.fromOffset(38, 38)
@@ -972,7 +956,6 @@ avatarHolder.BorderSizePixel = 0
 avatarHolder.ZIndex = 5
 avatarHolder.Parent = userCard
 corner(avatarHolder, 8)
-stroke(avatarHolder, THEME.LightBlue, 1)
 local avatar = Instance.new("ImageLabel")
 avatar.Size = UDim2.new(1, -4, 1, -4)
 avatar.Position = UDim2.fromOffset(2, 2)
@@ -1254,6 +1237,8 @@ local function makeTab(name, order)
     btn.LayoutOrder = order
     btn.Parent = tabList
     corner(btn, 8)
+    local btnStroke = stroke(btn, THEME.Stroke, 1)
+    btnStroke.Transparency = 0.15
     -- little left accent bar shown when active
     local indicator = Instance.new("Frame")
     indicator.Size = UDim2.new(0, 3, 0.6, 0)
@@ -1968,9 +1953,8 @@ local apPage       = makeTab("AP",       6)
 local settingsPage = makeTab("Settings", 7)
 local configPage   = makeTab("Config",   8)
 
--- TP is secondary: the Haven Hub remains the main UI.
--- The TP panel starts hidden and is shown from the TP tab.
-toggle(tpPage, "TP Panel", 1, false, function(v)
+-- TP is always ON at startup: the TP panel is shown as soon as the script loads.
+toggle(tpPage, "TP Panel", 1, true, function(v)
     if _G.TT3SetPanelVisible then
         pcall(_G.TT3SetPanelVisible, "teleport", v)
     else
@@ -16288,8 +16272,8 @@ do
     pcall(function() sg.Parent = guiParent end)
     if not sg.Parent then sg.Parent = PG end
     if _G.TT3RegisterPanel then _G.TT3RegisterPanel("teleport", sg) end
-    _G.TT3PanelVisibility["teleport"] = false
-    pcall(function() sg.Enabled = false end)
+    _G.TT3PanelVisibility["teleport"] = true
+    pcall(function() sg.Enabled = true end)
 
     -- savePos: true  -> panneau principal (cles historiques panelX/panelY)
     --          "nom" -> panneau secondaire, sauve dans _G._stp_pos[nom]
@@ -17501,8 +17485,11 @@ end
     end
     task.defer(function()
         local t = _G.__RyftToggles and _G.__RyftToggles["TP Panel"]
-        if t and _G.TT3SetPanelVisible then
-            pcall(_G.TT3SetPanelVisible, "teleport", t.Get())
+        if t then pcall(t.Set, true) end
+        if _G.TT3SetPanelVisible then
+            pcall(_G.TT3SetPanelVisible, "teleport", true)
+        else
+            _G.__RyftTPPendingVisible = true
         end
     end)
 end
