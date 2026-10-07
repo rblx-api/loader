@@ -1,4 +1,4 @@
--- [[ Made by HAVEN HUB ]]
+-- [[ CREATED BY: HAVEN HUB ]]
 -- [[ DISCORD: https://discord.gg/KwFQqgmZJ ]]
 
 --[[fmwm.1.ZmZhLTFiMTAzNzkzLThlNGUtNGE5MS1hYTEwLTc4NzUxMTNlYjNkNS1iNDAwM2FjN3wxYjEwMzc5My04ZTRlLTRhOTEtYWExMC03ODc1MTEzZWIzZDV8MjcwZjFmNWU4NWY1ZjNhNWFhZDA0YjBhNDU3ZmNiNWF8MTc5MTM3NDM2Mw.01941f355025]]
@@ -242,6 +242,7 @@ _G._VantaIntroActive = true
 										frame2.Size = flag19 and UDim2.fromOffset(340, 105) or UDim2.fromOffset(820, 230)
 										frame2.ClipsDescendants = false
 										frame2.ZIndex = 1003
+										frame2.Visible = false -- ocultar wordmark antiguo VISION
 										frame2.Parent = instance
 										local uiScale = Instance.new("UIScale")
 										uiScale.Scale = 0.86
@@ -328,6 +329,22 @@ _G._VantaIntroActive = true
 											tbl31[i] = { slot = frame3, image = imageLabel, spec = v94 }
 										end
 
+										local havenTitle = Instance.new("TextLabel")
+										havenTitle.Name = "HavenDuelsTitle"
+										havenTitle.BackgroundTransparency = 1
+										havenTitle.Text = "HAVEN DUELS"
+										havenTitle.TextColor3 = Color3.fromRGB(185, 125, 255)
+										havenTitle.TextStrokeColor3 = Color3.fromRGB(80, 20, 140)
+										havenTitle.TextStrokeTransparency = 0.35
+										havenTitle.TextTransparency = 0.05
+										havenTitle.TextScaled = true
+										havenTitle.Font = Enum.Font.GothamBlack
+										havenTitle.AnchorPoint = Vector2.new(0.5, 0.5)
+										havenTitle.Position = UDim2.new(0.5, 0, 0.43, 0)
+										havenTitle.Size = UDim2.new(0.72, 0, 0, flag19 and 72 or 120)
+										havenTitle.ZIndex = 1010
+										havenTitle.Parent = instance
+
 										local textLabel = Instance.new("TextLabel")
 										textLabel.BackgroundTransparency = v76[168]
 										textLabel.Text = "TAP ANYWHERE TO SKIP"
@@ -352,7 +369,21 @@ _G._VantaIntroActive = true
 										textLabel2.Size = UDim2.new(0.8, 0, 0, 22)
 										textLabel2.ZIndex = 1010
 										textLabel2.Parent = instance
-										local instance2 = Instance.new(v76[150])
+
+										local havenCredit = Instance.new("TextLabel")
+										havenCredit.Name = "HavenHubCredit"
+										havenCredit.BackgroundTransparency = 1
+										havenCredit.Text = "Made by HAVEN HUB"
+										havenCredit.TextColor3 = Color3.fromRGB(145, 145, 155)
+										havenCredit.TextTransparency = 1
+										havenCredit.TextSize = flag19 and 8 or 11
+										havenCredit.Font = Enum.Font.GothamMedium
+										havenCredit.AnchorPoint = Vector2.new(0.5, v76[164])
+										havenCredit.Position = flag19 and UDim2.new(0.5, 0, 0.43, 122) or UDim2.new(0.5, 0, 0.43, 207)
+										havenCredit.Size = UDim2.new(0.8, 0, 0, 18)
+										havenCredit.ZIndex = 1010
+										havenCredit.Parent = instance
+local instance2 = Instance.new(v76[150])
 										instance2.BackgroundTransparency = 1
 										instance2.Text = ""
 										instance2.AutoButtonColor = false
@@ -390,7 +421,9 @@ _G._VantaIntroActive = true
 											TS_G:Create(uiScale, tweenInfo, { Scale = 0.72 }):Play()
 											TS_G:Create(blurEffect, tweenInfo, { Size = 0 }):Play()
 											TS_G:Create(textLabel, tweenInfo, { TextTransparency = v76[168] }):Play()
+												TS_G:Create(havenTitle, tweenInfo, { TextTransparency = 1 }):Play()
 											TS_G:Create(textLabel2, tweenInfo, { TextTransparency = 1 }):Play()
+																		TS_G:Create(havenCredit, tweenInfo, { TextTransparency = 1 }):Play()
 
 											for _, v94 in ipairs(tbl24) do
 												TS_G:Create(v94.frame, tweenInfo, { BackgroundTransparency = 1 }):Play()
@@ -437,6 +470,7 @@ _G._VantaIntroActive = true
 										TS_G:Create(blurEffect, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { Size = 10 }):Play()
 										TS_G:Create(textLabel, TweenInfo.new(0.25), { TextTransparency = 0.22 }):Play()
 										TS_G:Create(textLabel2, TweenInfo.new(0.25), { TextTransparency = 0.18 }):Play()
+																	TS_G:Create(havenCredit, TweenInfo.new(0.25), { TextTransparency = 0.15 }):Play()
 
 										task.spawn(function()
 											local now2 = os.clock()
@@ -472,7 +506,7 @@ _G._VantaIntroActive = true
 													v96.image.Position = UDim2.new(0.5, 0, 0.5, v99 * 1.35)
 													v96.image.Size = UDim2.fromScale(1 + v98 * 0.026, 1 - v98 * 0.038)
 													v96.image.Rotation = v99 * 0.9
-													v96.image.ImageTransparency = 1 - fn33((n38 - 0.02) / 0.18)
+													v96.image.ImageTransparency = 1
 												end
 
 												RunService.RenderStepped:Wait()
@@ -628,6 +662,8 @@ S = {
     mobileButtonPositions = {},
     mobileButtonRefs = {},
     floatingFreeButtonPositions = {},
+    floatingButtonPositions = {},
+    floatingButtonsMoveMode = false,
     CONFIG_FILE = CONFIG_FILE,
     _floatingButtons = {},
     BAT_HIT_RANGE = 16,
@@ -3328,6 +3364,8 @@ saveConfig = function()
             mobileButtonPositions = S.mobileButtonPositions,
             lockMobileButtons = S.lockMobileButtons,
             floatingFreeButtonPositions = S.floatingFreeButtonPositions,
+            floatingButtonPositions = S.floatingButtonPositions,
+            floatingButtonsMoveMode = false,
             floatingPanelPos = S.floatingPanelFrame and {
                 XS = S.floatingPanelFrame.Position.X.Scale, X = S.floatingPanelFrame.Position.X.Offset,
                 YS = S.floatingPanelFrame.Position.Y.Scale, Y = S.floatingPanelFrame.Position.Y.Offset,
@@ -3373,11 +3411,13 @@ end)
 local function resetFloatingPanel()
     S.mobileButtonPositions = {}
     S.floatingFreeButtonPositions = {}
+    S.floatingButtonPositions = {}
+    S.floatingButtonsMoveMode = false
     if S.floatingPanelFrame then
-        S.floatingPanelFrame.Position = UDim2.new(0.79, 0, 0, 0)
+        S.floatingPanelFrame.Position = UDim2.new(1, -24, 0, 0)
     end
     if S._floatingFreeButtonLayer then
-        S._floatingFreeButtonLayer.Position = UDim2.new(0.79, 0, 0, 0)
+        S._floatingFreeButtonLayer.Position = UDim2.new(1, -24, 0, 0)
     end
     if S.stealHudCard then
         S.stealHudCard.Position = UDim2.new(0.5, -150, 1, -75)
@@ -4780,7 +4820,7 @@ end
 
 local function setUILock(enabled)
     S.lockUIEnabled = enabled == true
-    if S.lockUIEnabled then S._floatingPanelDragging = false end
+    if S.lockUIEnabled then S._floatingPanelDragging = false; S.floatingButtonsMoveMode = false end
     -- Lock bloquea únicamente el arrastre; las acciones siguen funcionando.
     if S.mainMenuFrame then S.mainMenuFrame.Active = true end
     if S.miniToggleButton then S.miniToggleButton.Active = true end
@@ -5255,7 +5295,7 @@ end
 
 -- ── Kroblox (ported from Ace Duels) ────────────────────────────────────────
 _G._VisionKrobloxMode = _G._VisionKrobloxMode or "Off"
-HAVEN DUELS_KROBLOX_ASSETS = {
+VISION_KROBLOX_ASSETS = {
     ["Left Leg"] = {
         id = "rbxassetid://139607673", targetBodyPart = "LeftUpperLeg",
         partsToHide = {"LeftUpperLeg", "LeftLowerLeg", "LeftFoot"},
@@ -5286,7 +5326,7 @@ local function clearVisionKroblox()
 end
 
 local function attachVisionKroblox(whichLeg)
-    local data = HAVEN DUELS_KROBLOX_ASSETS[whichLeg]
+    local data = VISION_KROBLOX_ASSETS[whichLeg]
     local character = LP.Character
     if not data or not character then return false end
     local target = character:FindFirstChild(data.targetBodyPart)
@@ -5376,11 +5416,11 @@ local function buildSpeedTab(pages)
     end)
 end
 
--- ==================== HAVEN DUELS BAT SKINS ====================
+-- ==================== VISION BAT SKINS ====================
 do
 -- Ported from Zurich: Epic Katana and Bloody Katana, including their slash sounds.
 VisionBatSkin = {}
-HAVEN DUELS_BAT_SKINS = {
+VISION_BAT_SKINS = {
     {name = "Off"},
     {
         name = "Epic Katana",
@@ -5541,7 +5581,7 @@ function VisionBatSkin.visionApplyBatSkin(tool)
         return
     end
     local entry
-    for _, candidate in ipairs(HAVEN DUELS_BAT_SKINS) do
+    for _, candidate in ipairs(VISION_BAT_SKINS) do
         if candidate.name == S.batSkinMode then entry = candidate; break end
     end
     if entry then VisionBatSkin.visionPrepareBatSkin(tool, entry) end
@@ -5579,7 +5619,7 @@ end
 
 function VisionBatSkin.visionSetBatSkin(mode, shouldSave)
     local valid = false
-    for _, entry in ipairs(HAVEN DUELS_BAT_SKINS) do
+    for _, entry in ipairs(VISION_BAT_SKINS) do
         if entry.name == mode then valid = true; break end
     end
     S.batSkinMode = valid and mode or "Off"
@@ -5591,13 +5631,13 @@ end
 
 function VisionBatSkin.visionCycleBatSkin(direction)
     local index = 1
-    for i, entry in ipairs(HAVEN DUELS_BAT_SKINS) do
+    for i, entry in ipairs(VISION_BAT_SKINS) do
         if entry.name == S.batSkinMode then index = i; break end
     end
     index = index + (direction or 1)
-    if index < 1 then index = #HAVEN DUELS_BAT_SKINS end
-    if index > #HAVEN DUELS_BAT_SKINS then index = 1 end
-    VisionBatSkin.visionSetBatSkin(HAVEN DUELS_BAT_SKINS[index].name, true)
+    if index < 1 then index = #VISION_BAT_SKINS end
+    if index > #VISION_BAT_SKINS then index = 1 end
+    VisionBatSkin.visionSetBatSkin(VISION_BAT_SKINS[index].name, true)
 end
 
 S.setBatSkin = VisionBatSkin.visionSetBatSkin
@@ -5613,11 +5653,11 @@ end)
 VisionBatSkin.visionWatchBatSkinCharacter(LP.Character)
 end
 
--- ==================== HAVEN DUELS DISPLAY MODE / COMPLETE SKINS ====================
+-- ==================== VISION DISPLAY MODE / COMPLETE SKINS ====================
 do
 VisionDisplaySkin = {}
-HAVEN DUELS_SKIN_ORDER = {"Off", "PURPLE", "BLUE", "RED", "BLACK", "GREEN", "WHITE"}
-HAVEN DUELS_SKIN_SETS = {
+VISION_SKIN_ORDER = {"Off", "PURPLE", "BLUE", "RED", "BLACK", "GREEN", "WHITE"}
+VISION_SKIN_SETS = {
     PURPLE = {hats="1744060292,439945661,1125510,1029025", hair="", headless=true, korblox="Right", accessories={1744060292,439945661,1125510,1029025,11748356,8465506143,11444217173}, clothing={7424637509,7689651773}, color=Color3.fromRGB(145,88,255)},
     BLUE = {hats="74891470", hair="16630147,6346833550,6594911228,6594919952,6823338112,7097747842", headless=true, korblox="Right", accessories={74891470,16630147,6346833550,6594911228,6594919952,6823338112,7097747842}, clothing={18423061209,18423154566}, color=Color3.fromRGB(55,145,255)},
     RED = {hats="215718515,439945661", hair="7183785281", headless=true, korblox="Right", accessories={215718515,439945661,7183785281}, clothing={15998365201,7689651773}, color=Color3.fromRGB(235,62,72)},
@@ -5625,7 +5665,7 @@ HAVEN DUELS_SKIN_SETS = {
     GREEN = {hats="553970961,1744060292", hair="93268856876777", headless=true, korblox="Right", accessories={553970961,1744060292,93268856876777}, clothing={9478068776,6348682339}, color=Color3.fromRGB(62,210,112)},
     WHITE = {hats="74891470,215718515,439945661,1016143686,1744060292,10159600649,89012651581593,88365652378427", hair="126447390530523", headless=true, korblox="Right", accessories={74891470,215718515,439945661,1016143686,1744060292,10159600649,89012651581593,126447390530523}, clothing={88032876921227,108259950755140}, color=Color3.fromRGB(238,238,244)},
 }
-HAVEN DUELS_ASSET_PROPERTIES = {
+VISION_ASSET_PROPERTIES = {
     [1744060292]="HatAccessory", [439945661]="HatAccessory", [1125510]="HatAccessory", [1029025]="HatAccessory", [8465506143]="HatAccessory", [74891470]="HatAccessory", [215718515]="HatAccessory", [10159600649]="HatAccessory", [439946249]="HatAccessory", [17798262442]="HatAccessory", [92482095662016]="HatAccessory", [553970961]="HatAccessory", [1016143686]="HatAccessory", [89012651581593]="HatAccessory", [88365652378427]="HatAccessory",
     [16630147]="HairAccessory", [6346833550]="HairAccessory", [6594911228]="HairAccessory", [6594919952]="HairAccessory", [6823338112]="HairAccessory", [7097747842]="HairAccessory", [7183785281]="HairAccessory", [139101716417676]="HairAccessory", [93268856876777]="HairAccessory", [126447390530523]="HairAccessory",
     [11748356]="FaceAccessory", [12490213797]="FaceAccessory", [11444217173]="NeckAccessory",
@@ -5642,14 +5682,14 @@ function VisionDisplaySkin.assetInSet(id, setData)
     return false
 end
 function VisionDisplaySkin.appendDescriptionAsset(description, id)
-    local property=HAVEN DUELS_ASSET_PROPERTIES[tonumber(id)]
+    local property=VISION_ASSET_PROPERTIES[tonumber(id)]
     if not property then return end
     if property=="Shirt" or property=="Pants" then description[property]=tonumber(id); return end
     local old=tostring(description[property] or "")
     if not old:find(tostring(id),1,true) then description[property]=(old=="" and tostring(id) or old..","..tostring(id)) end
 end
 function VisionDisplaySkin.buildDescription(setName, character)
-    local setData=HAVEN DUELS_SKIN_SETS[setName]; if not setData then return nil end
+    local setData=VISION_SKIN_SETS[setName]; if not setData then return nil end
     local humanoid=character and character:FindFirstChildOfClass("Humanoid"); if not humanoid then return nil end
     local description
     pcall(function() description=humanoid:GetAppliedDescription():Clone() end)
@@ -5810,7 +5850,7 @@ function VisionDisplaySkin.apply(token)
     token=token or S._skinApplyToken
     local character=LP.Character; local setName=S.displaySkin
     if token~=S._skinApplyToken or not character or setName=="Off" or not S.customSkinEnabled then return end
-    local humanoid=character:FindFirstChildOfClass("Humanoid"); local setData=HAVEN DUELS_SKIN_SETS[setName]
+    local humanoid=character:FindFirstChildOfClass("Humanoid"); local setData=VISION_SKIN_SETS[setName]
     if not humanoid or not setData then return end
     if not VisionOriginalDescriptions[character] then pcall(function() VisionOriginalDescriptions[character]=humanoid:GetAppliedDescription():Clone() end) end
     VisionDisplaySkin.captureOriginalOutfit(character)
@@ -5853,7 +5893,7 @@ end
 function VisionDisplaySkin.setSkin(name,save)
     S._skinApplyToken=S._skinApplyToken+1
     local myToken=S._skinApplyToken
-    local valid=false; for _,v in ipairs(HAVEN DUELS_SKIN_ORDER) do if v==name then valid=true end end
+    local valid=false; for _,v in ipairs(VISION_SKIN_ORDER) do if v==name then valid=true end end
     S.displaySkin=valid and name or "Off"
     if S.displaySkin=="Off" then S.customSkinEnabled=false; VisionDisplaySkin.off() else S.customSkinEnabled=true; task.spawn(function() pcall(VisionDisplaySkin.apply,myToken) end) end
     if S.displaySkinSelectorLabel then S.displaySkinSelectorLabel.Text=S.displaySkin end
@@ -5861,9 +5901,9 @@ function VisionDisplaySkin.setSkin(name,save)
     if save then saveConfig() end
 end
 function VisionDisplaySkin.cycleSkin(direction)
-    local index=1; for i,v in ipairs(HAVEN DUELS_SKIN_ORDER) do if v==S.displaySkin then index=i end end
-    index=index+(direction or 1); if index<1 then index=#HAVEN DUELS_SKIN_ORDER end; if index>#HAVEN DUELS_SKIN_ORDER then index=1 end
-    VisionDisplaySkin.setSkin(HAVEN DUELS_SKIN_ORDER[index],true)
+    local index=1; for i,v in ipairs(VISION_SKIN_ORDER) do if v==S.displaySkin then index=i end end
+    index=index+(direction or 1); if index<1 then index=#VISION_SKIN_ORDER end; if index>#VISION_SKIN_ORDER then index=1 end
+    VisionDisplaySkin.setSkin(VISION_SKIN_ORDER[index],true)
 end
 function VisionDisplaySkin.setCustom(on)
     S._skinApplyToken=S._skinApplyToken+1
@@ -6328,6 +6368,15 @@ local function resetConfigToDefaults()
     S.backgroundAssetId = DEFAULT_BACKGROUND_ID
     S.mobileButtonPositions = {}
     S.floatingFreeButtonPositions = {}
+    S.floatingButtonPositions = {}
+    S.floatingButtonsMoveMode = false
+    if S.floatingMoveToggle then
+        pcall(function()
+            S.floatingMoveToggle.Text = "MOVE BUTTONS: OFF"
+            S.floatingMoveToggle.BackgroundColor3 = Color3.fromRGB(10, 10, 14)
+            S.floatingMoveToggle.TextColor3 = Color3.fromRGB(210, 210, 220)
+        end)
+    end
 
     pcall(applyCustomSky, "Off")
     pcall(_G._VisionApplyKroblox, "Off")
@@ -7062,7 +7111,7 @@ local function createFloatingButtonPanel()
     local layoutFrame = Instance.new("Frame")
     layoutFrame.Name = "ButtonLayout"
     layoutFrame.AnchorPoint = Vector2.new(1, 0)
-    layoutFrame.Position = UDim2.new(0.79, 0, 0, 0)
+    layoutFrame.Position = UDim2.new(1, -24, 0, 0)
     layoutFrame.Size = UDim2.fromOffset(0, 0)
     layoutFrame.BackgroundTransparency = 1
     layoutFrame.BorderSizePixel = 0
@@ -7082,12 +7131,12 @@ local function createFloatingButtonPanel()
     dragHandle.BorderSizePixel = 0
     dragHandle.Active = true
     dragHandle.Parent = layoutFrame
-    makeDraggable(dragHandle, true, layoutFrame)
+    -- Los botones se mueven individualmente cuando MOVE BUTTONS está en ON.
 
     local freeButtonLayer = Instance.new("Frame")
     freeButtonLayer.Name = "IndependentButtonLayer"
     freeButtonLayer.AnchorPoint = Vector2.new(1, 0)
-    freeButtonLayer.Position = UDim2.new(0.79, 0, 0, 0)
+    freeButtonLayer.Position = UDim2.new(1, -24, 0, 0)
     freeButtonLayer.Size = UDim2.fromOffset(0, 0)
     freeButtonLayer.BackgroundTransparency = 1
     freeButtonLayer.BorderSizePixel = 0
@@ -7180,23 +7229,63 @@ local function createFloatingButtonPanel()
         })
         gradient.Parent = button
 
-        local isFreeButton = definition.name == "TP BAT" or definition.name == "Reset"
-        local info = {button = button, gradient = gradient, name = definition.name, column = definition.column, row = definition.row, independent = isFreeButton, userMoved = false}
+        local info = {button = button, gradient = gradient, name = definition.name, column = definition.column, row = definition.row, independent = false, userMoved = false, _dragged = false}
         table.insert(buttons, info)
-        if isFreeButton then
-            button.Parent = freeButtonLayer
-            local saved = S.floatingFreeButtonPositions[definition.name]
-            if type(saved) == "table" and type(saved.X) == "number" and type(saved.Y) == "number" then
-                button.Position = UDim2.fromOffset(saved.X, saved.Y)
-                info.userMoved = true
-            end
-            makeDraggable(button, true, button, function(target)
-                info.userMoved = true
-                S.floatingFreeButtonPositions[definition.name] = {X = target.Position.X.Offset, Y = target.Position.Y.Offset}
-            end)
+
+        -- Todos los botones pueden moverse individualmente con MOVE BUTTONS ON.
+        local saved = S.floatingButtonPositions[definition.name]
+        if type(saved) ~= "table" and (definition.name == "TP BAT" or definition.name == "Reset") then
+            saved = S.floatingFreeButtonPositions[definition.name]
+        end
+        if type(saved) == "table" and type(saved.X) == "number" and type(saved.Y) == "number" then
+            button.Position = UDim2.fromOffset(saved.X, saved.Y)
+            info.userMoved = true
         end
 
+        local dragging = false
+        local dragStart, startPos, activeInput
+        button.InputBegan:Connect(function(input)
+            if not S.floatingButtonsMoveMode then return end
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                dragging = true
+                info._dragged = false
+                activeInput = input
+                dragStart = input.Position
+                startPos = button.Position
+            end
+        end)
+        UIS.InputChanged:Connect(function(input)
+            if not dragging or not S.floatingButtonsMoveMode then return end
+            if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+                if activeInput and activeInput.UserInputType == Enum.UserInputType.Touch and input ~= activeInput and input.UserInputType ~= Enum.UserInputType.Touch then return end
+                local delta = input.Position - dragStart
+                if delta.Magnitude > 4 then info._dragged = true end
+                if not info._dragged then return end
+                local maxX = math.max(0, layoutFrame.AbsoluteSize.X - button.AbsoluteSize.X)
+                local maxY = math.max(0, layoutFrame.AbsoluteSize.Y - button.AbsoluteSize.Y)
+                local nx = math.clamp(startPos.X.Offset + delta.X, 0, maxX)
+                local ny = math.clamp(startPos.Y.Offset + delta.Y, 0, maxY)
+                button.Position = UDim2.fromOffset(nx, ny)
+            end
+        end)
+        UIS.InputEnded:Connect(function(input)
+            if not dragging then return end
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                dragging = false
+                activeInput = nil
+                if info._dragged then
+                    info.userMoved = true
+                    S.floatingButtonPositions[info.name] = {X = button.Position.X.Offset, Y = button.Position.Y.Offset}
+                    saveConfig()
+                    task.delay(0.05, function()
+                        if info.button and info.button.Parent then info._dragged = false end
+                    end)
+                end
+            end
+        end)
+
         button.Activated:Connect(function()
+            if info._dragged then info._dragged = false; return end
             if info.name == "TP DOWN" then return end
             -- Los botones de velocidad controlan su propia luz después de cambiar
             -- el modo. No aplicar aquí el estilo genérico, porque este evento
@@ -7246,6 +7335,7 @@ local function createFloatingButtonPanel()
 
     local function connectAction(info, action)
         info.button.Activated:Connect(function()
+            if info._dragged then info._dragged = false; return end
             if canPress() then action() end
         end)
     end
@@ -7391,16 +7481,16 @@ local function createFloatingButtonPanel()
         local pitch = buttonSize + gap
         -- No reposicionar aquí: el usuario puede haber guardado o movido el panel.
         local firstRowY = math.floor(viewport.Y * (isLandscape and 0.18 or 0.205))
-        -- Las capas solo cubren el rectángulo de los botones; no toda la pantalla.
-        local groupHeight = firstRowY + buttonSize * 4 + gap * 3 + gap
-        local groupWidth = buttonSize * 4 + gap * 3
+        -- Grid de 3 columnas x 4 filas, pegado a la derecha con margen.
+        local groupHeight = firstRowY + buttonSize * 4 + gap * 3 + 12
+        local groupWidth = buttonSize * 3 + gap * 2
         layoutFrame.Size = UDim2.fromOffset(groupWidth, groupHeight)
         freeButtonLayer.Size = UDim2.fromOffset(groupWidth, groupHeight)
         dragHandle.Size = UDim2.fromOffset(groupWidth, math.max(48, firstRowY))
         for _, info in ipairs(buttons) do
             info.button.Size = UDim2.fromOffset(buttonSize, buttonSize)
-            if not info.independent or not info.userMoved then
-                info.button.Position = UDim2.fromOffset(info.column * pitch, firstRowY + info.row * pitch)
+            if not info.userMoved then
+                info.button.Position = UDim2.fromOffset((info.column - 1) * pitch, firstRowY + info.row * pitch)
             end
         end
     end
@@ -7420,8 +7510,47 @@ local function createFloatingButtonPanel()
     S._floatingUpdateLayout = updateLayout
     if S._savedFloatingPanelPos then
         local pos = S._savedFloatingPanelPos
-        layoutFrame.Position = UDim2.new(pos.XS or 0.79, pos.X or 0, pos.YS or 0, pos.Y or 0)
+        layoutFrame.Position = UDim2.new(pos.XS or 1, pos.X or -24, pos.YS or 0, pos.Y or 0)
     end
+    freeButtonLayer.Position = layoutFrame.Position
+
+    local moveToggle = Instance.new("TextButton")
+    moveToggle.Name = "MoveButtonsToggle"
+    moveToggle.AnchorPoint = Vector2.new(1, 0)
+    moveToggle.Position = UDim2.new(1, -8, 0, 8)
+    moveToggle.Size = UDim2.fromOffset(132, 34)
+    moveToggle.BackgroundColor3 = Color3.fromRGB(10, 10, 14)
+    moveToggle.BackgroundTransparency = 0.04
+    moveToggle.BorderSizePixel = 0
+    moveToggle.Text = "MOVE BUTTONS: OFF"
+    moveToggle.TextColor3 = Color3.fromRGB(210, 210, 220)
+    moveToggle.Font = Enum.Font.GothamBold
+    moveToggle.TextSize = 11
+    moveToggle.ZIndex = 20
+    moveToggle.Parent = layoutFrame
+    Instance.new("UICorner", moveToggle).CornerRadius = UDim.new(0, 10)
+    local moveStroke = Instance.new("UIStroke", moveToggle)
+    moveStroke.Color = C_HIGHLIGHT
+    moveStroke.Transparency = 0.35
+    moveStroke.Thickness = 1
+    local function updateMoveToggle()
+        if S.floatingButtonsMoveMode then
+            moveToggle.Text = "MOVE BUTTONS: ON"
+            moveToggle.BackgroundColor3 = Color3.fromRGB(45, 20, 65)
+            moveToggle.TextColor3 = C_HIGHLIGHT_BRIGHT
+        else
+            moveToggle.Text = "MOVE BUTTONS: OFF"
+            moveToggle.BackgroundColor3 = Color3.fromRGB(10, 10, 14)
+            moveToggle.TextColor3 = Color3.fromRGB(210, 210, 220)
+        end
+    end
+    moveToggle.Activated:Connect(function()
+        S.floatingButtonsMoveMode = not S.floatingButtonsMoveMode
+        updateMoveToggle()
+        saveConfig()
+    end)
+    S.floatingMoveToggle = moveToggle
+    updateMoveToggle()
     for _, info in ipairs(buttons) do applyButtonStyle(info, false) end
     applyButtonStyle(carry, S.speedMode and S.laggerMode == 0)
     applyButtonStyle(normalLagger, S.laggerMode == 1 and not S.speedMode)
@@ -7433,7 +7562,7 @@ local function createFloatingButtonPanel()
 end
 
 -- ===========================
--- FLOATING BUTTON PANEL (HAVEN DUELS layout, fully wired)
+-- FLOATING BUTTON PANEL (Vision Hub layout, fully wired)
 -- ===========================
 createFloatingButtonPanel = function()
     local gui = Instance.new("ScreenGui")
@@ -7685,6 +7814,7 @@ pcall(function()
             end
             if type(cfg.mobileButtonPositions)=="table" then S.mobileButtonPositions=cfg.mobileButtonPositions end
             if type(cfg.floatingFreeButtonPositions)=="table" then S.floatingFreeButtonPositions=cfg.floatingFreeButtonPositions end
+            if type(cfg.floatingButtonPositions)=="table" then S.floatingButtonPositions=cfg.floatingButtonPositions end
             if type(cfg.lockMobileButtons)=="boolean" then S.lockMobileButtons=cfg.lockMobileButtons end
             local function rl(e,s) if type(s)=="table" then if s.kb then e.kb=Enum.KeyCode[s.kb] end; if s.gp then e.gp=Enum.KeyCode[s.gp] end end end
             -- Solo restaurar keybinds de configs ya migradas; las antiguas usaban teclas previas.
