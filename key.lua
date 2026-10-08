@@ -1,7 +1,7 @@
--- [NEW WORLD] +1 Pickaxe Swing Escape - gamer owns yall (v9.2 PREMIUM)
+-- [NEW WORLD] +1 Pickaxe Swing Escape - gamer owns yall (v9.4 PREMIUM)
 -- Place ID: 82554996468034
 -- Teleport system is UNCHANGED from v9.
--- Themes recolor in place. Persistent ping/FPS pill when GUI closed.
+-- v9.4: added "⭐ BEST WORLD" default location (2074.9, 18.9, 7562.0)
 
 
 local Players          = game:GetService("Players")
@@ -15,7 +15,7 @@ local VirtualUser      = game:GetService("VirtualUser")
 local Stats            = game:GetService("Stats")
 
 
--- ==================== THEME DEFINITIONS ====================
+-- ==================== COLORS ====================
 local BLACK   = Color3.fromRGB(10, 10, 12)
 local BLACK_2 = Color3.fromRGB(18, 18, 20)
 local BLACK_3 = Color3.fromRGB(28, 28, 32)
@@ -28,6 +28,7 @@ local DISCORD = "discord.gg/4TueRJmzDh"
 local LOGO_ID = "rbxassetid://138472956105442"
 
 
+-- ==================== THEMES ====================
 local THEMES = {
     Gold    = {name="GOLD",    primary=Color3.fromRGB(212,175,55), dark=Color3.fromRGB(160,130,35),  light=Color3.fromRGB(255,215,90),  neon=Color3.fromRGB(255,235,120)},
     Cyan    = {name="CYAN",    primary=Color3.fromRGB(80,200,255), dark=Color3.fromRGB(40,120,180),  light=Color3.fromRGB(150,220,255), neon=Color3.fromRGB(200,240,255)},
@@ -43,14 +44,9 @@ local themeOrder = {"Gold","Cyan","Emerald","Crimson","Purple","Pink","Mono","Bl
 
 local GOLD, GOLD_DARK, GOLD_LIGHT, GOLD_NEON
 local currentThemeName = "Gold"
-
-
 local function applyThemeVars(name)
     local t = THEMES[name] or THEMES.Gold
-    GOLD       = t.primary
-    GOLD_DARK  = t.dark
-    GOLD_LIGHT = t.light
-    GOLD_NEON  = t.neon
+    GOLD, GOLD_DARK, GOLD_LIGHT, GOLD_NEON = t.primary, t.dark, t.light, t.neon
     currentThemeName = name
 end
 applyThemeVars(currentThemeName)
@@ -126,8 +122,6 @@ enableAntiAfk()
 
 -- ==================== OVERHEAD ====================
 local overheadGui = nil
-
-
 local function createOverheadGui(character)
     if overheadGui then pcall(function() overheadGui:Destroy() end); overheadGui = nil end
     if not character then return end
@@ -179,7 +173,7 @@ local function createOverheadGui(character)
     subLabel.Size = UDim2.new(1, -10, 0, 14)
     subLabel.Position = UDim2.new(0, 5, 0, 26)
     subLabel.BackgroundTransparency = 1
-    subLabel.Text = "v9.2 PREMIUM • " .. DISCORD
+    subLabel.Text = "v9.4 PREMIUM • " .. DISCORD
     subLabel.TextColor3 = GOLD_LIGHT
     subLabel.TextScaled = true
     subLabel.Font = Enum.Font.GothamMedium
@@ -196,8 +190,6 @@ local function createOverheadGui(character)
         end
     end)
 end
-
-
 local function setupOverhead()
     createOverheadGui(player.Character)
     player.CharacterAdded:Connect(function(newChar)
@@ -212,11 +204,7 @@ pcall(function() playerGui:FindFirstChild("GamerOwnsYall"):Destroy() end)
 
 
 -- ==================== THEME REGISTRY ====================
--- Elements register themselves here. applyTheme() recolors them in place,
--- so no GUI is ever destroyed and no state is ever lost.
 local themedRegistry = {}
-
-
 local function registerThemed(obj, prop, role)
     table.insert(themedRegistry, {obj=obj, prop=prop, role=role, kind="color"})
     return obj
@@ -225,13 +213,9 @@ local function registerGradient(grad)
     table.insert(themedRegistry, {obj=grad, prop="Color", role=nil, kind="gradient"})
     return grad
 end
-local function registerTextStroke(obj)
-    table.insert(themedRegistry, {obj=obj, prop="Color", role="primary", kind="color"})
-    return obj
-end
 
 
--- ==================== PING / FPS SHARED STATE ====================
+-- ==================== PING / FPS ====================
 local currentFps  = 60
 local currentPing = 0
 local colorForFps, colorForPing
@@ -294,14 +278,30 @@ screenGui.Parent = playerGui
 
 
 -- ==================== DIMENSIONS ====================
-local FRAME_W  = isMobile and 300 or 340
-local FRAME_H  = isMobile and 545 or 565
-local HEADER_H = isMobile and 56 or 62
+local FRAME_W  = isMobile and 260 or 330
+local FRAME_H  = isMobile and 500 or 555
+local HEADER_H = isMobile and 48 or 58
+
+
 local FULL_SIZE   = UDim2.new(0, FRAME_W, 0, FRAME_H)
 local FULL_POS    = UDim2.new(0.5, -FRAME_W/2, 0.5, -FRAME_H/2)
 local MINI_SIZE   = UDim2.new(0, FRAME_W, 0, HEADER_H)
-local SHADOW_SIZE = UDim2.new(0, FRAME_W + 10, 0, FRAME_H + 10)
-local SHADOW_POS  = UDim2.new(0.5, -(FRAME_W + 10)/2, 0.5, -(FRAME_H + 10)/2)
+local SHADOW_SIZE = UDim2.new(0, FRAME_W + 8, 0, FRAME_H + 8)
+local SHADOW_POS  = UDim2.new(0.5, -(FRAME_W + 8)/2, 0.5, -(FRAME_H + 8)/2)
+
+
+local Y_STATS      = 4
+local Y_SECTION_1  = isMobile and 28  or 32
+local Y_SCROLL     = isMobile and 46  or 52
+local SCROLL_H     = isMobile and 148 or 175
+local Y_SECTION_2  = isMobile and 198 or 232
+local Y_NAMEBOX    = isMobile and 216 or 254
+local Y_CLEAR      = isMobile and 252 or 292
+local Y_SECTION_3  = isMobile and 280 or 322
+local Y_AUTO       = isMobile and 298 or 344
+local Y_SECTION_4  = isMobile and 340 or 396
+local Y_SWATCH     = isMobile and 358 or 418
+local Y_CURPOS     = isMobile and 396 or 460
 
 
 -- ==================== SHADOW ====================
@@ -324,7 +324,7 @@ mainFrame.BorderSizePixel = 0
 mainFrame.Active = true
 mainFrame.ClipsDescendants = true
 mainFrame.Parent = screenGui
-Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 18)
+Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 16)
 
 
 local mainStroke = Instance.new("UIStroke")
@@ -346,7 +346,6 @@ strokeGrad.Parent = mainStroke
 registerGradient(strokeGrad)
 
 
--- Background layers
 local bgImage = Instance.new("ImageLabel")
 bgImage.Size = UDim2.new(1,0,1,0)
 bgImage.BackgroundTransparency = 1
@@ -363,7 +362,7 @@ bgBase.BackgroundColor3 = BLACK
 bgBase.BorderSizePixel = 0
 bgBase.ZIndex = 1
 bgBase.Parent = mainFrame
-Instance.new("UICorner", bgBase).CornerRadius = UDim.new(0,18)
+Instance.new("UICorner", bgBase).CornerRadius = UDim.new(0,16)
 local bgGrad = Instance.new("UIGradient")
 bgGrad.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0, Color3.fromRGB(22,20,12)),
@@ -379,7 +378,7 @@ bgGrad.Parent = bgBase
 
 
 local aurora1 = Instance.new("Frame")
-aurora1.Size = UDim2.new(0, 200, 0, 200)
+aurora1.Size = UDim2.new(0, 180, 0, 180)
 aurora1.Position = UDim2.new(0, -40, 0, -40)
 aurora1.BackgroundColor3 = GOLD
 aurora1.BackgroundTransparency = 0.85
@@ -399,8 +398,8 @@ registerThemed(blur1, "Color", "primary")
 
 
 local aurora2 = Instance.new("Frame")
-aurora2.Size = UDim2.new(0, 250, 0, 250)
-aurora2.Position = UDim2.new(1, -150, 1, -150)
+aurora2.Size = UDim2.new(0, 220, 0, 220)
+aurora2.Position = UDim2.new(1, -140, 1, -140)
 aurora2.BackgroundColor3 = GOLD_DARK
 aurora2.BackgroundTransparency = 0.88
 aurora2.BorderSizePixel = 0
@@ -416,7 +415,7 @@ vignette.BackgroundColor3 = Color3.new(0,0,0)
 vignette.BorderSizePixel = 0
 vignette.ZIndex = 3
 vignette.Parent = mainFrame
-Instance.new("UICorner", vignette).CornerRadius = UDim.new(0,18)
+Instance.new("UICorner", vignette).CornerRadius = UDim.new(0,16)
 local vigGrad = Instance.new("UIGradient")
 vigGrad.Transparency = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 1),
@@ -436,9 +435,9 @@ particleHolder.Parent = mainFrame
 
 
 local particleList = {}
-for i=1,12 do
+for i=1,10 do
     local p = Instance.new("Frame")
-    p.Size = UDim2.new(0, math.random(2,5), 0, math.random(2,5))
+    p.Size = UDim2.new(0, math.random(2,4), 0, math.random(2,4))
     p.Position = UDim2.new(math.random(),0, math.random(),0)
     p.BackgroundColor3 = (i%2==0) and GOLD_LIGHT or GOLD
     p.BackgroundTransparency = math.random(30,70)/100
@@ -471,7 +470,7 @@ task.spawn(function()
         t += dt
         strokeGrad.Rotation = (t*20) % 360
         aurora1.Position = UDim2.new(0, -40 + math.sin(t*0.5)*20, 0, -40 + math.cos(t*0.4)*20)
-        aurora2.Position = UDim2.new(1, -180 + math.sin(t*0.3)*25, 1, -180 + math.cos(t*0.6)*25)
+        aurora2.Position = UDim2.new(1, -160 + math.sin(t*0.3)*25, 1, -160 + math.cos(t*0.6)*25)
         bgGrad.Rotation = 125 + math.sin(t*0.2)*15
     end)
 end)
@@ -484,7 +483,7 @@ header.BackgroundColor3 = BLACK_3
 header.BorderSizePixel = 0
 header.ZIndex = 10
 header.Parent = mainFrame
-Instance.new("UICorner", header).CornerRadius = UDim.new(0, 18)
+Instance.new("UICorner", header).CornerRadius = UDim.new(0, 16)
 
 
 local headerFix = Instance.new("Frame")
@@ -528,8 +527,8 @@ registerGradient(neonGrad)
 
 
 local headerLogo = Instance.new("ImageLabel")
-headerLogo.Size = UDim2.new(0, 36, 0, 36)
-headerLogo.Position = UDim2.new(0, 10, 0, (HEADER_H-36)/2)
+headerLogo.Size = UDim2.new(0, isMobile and 28 or 32, 0, isMobile and 28 or 32)
+headerLogo.Position = UDim2.new(0, 8, 0, (HEADER_H - (isMobile and 28 or 32))/2)
 headerLogo.BackgroundTransparency = 1
 headerLogo.Image = LOGO_ID
 headerLogo.ScaleType = Enum.ScaleType.Fit
@@ -538,8 +537,8 @@ headerLogo.Parent = header
 
 
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, -174, 0, 28)
-title.Position = UDim2.new(0, 54, 0, 8)
+title.Size = UDim2.new(1, -140, 0, isMobile and 20 or 24)
+title.Position = UDim2.new(0, isMobile and 42 or 46, 0, isMobile and 4 or 6)
 title.BackgroundTransparency = 1
 title.Text = "⚡ GAMER OWNS YALL"
 title.TextColor3 = WHITE
@@ -555,10 +554,10 @@ registerThemed(titleGlow, "Color", "primary")
 
 
 local subtitle = Instance.new("TextLabel")
-subtitle.Size = UDim2.new(1, -174, 0, 14)
-subtitle.Position = UDim2.new(0, 54, 0, 36)
+subtitle.Size = UDim2.new(1, -140, 0, 12)
+subtitle.Position = UDim2.new(0, isMobile and 42 or 46, 0, isMobile and 26 or 32)
 subtitle.BackgroundTransparency = 1
-subtitle.Text = "✦ " .. THEMES[currentThemeName].name .. " • v9.2 • " .. DISCORD
+subtitle.Text = "✦ " .. THEMES[currentThemeName].name .. " • v9.4 • " .. DISCORD
 subtitle.TextColor3 = GOLD_LIGHT
 subtitle.TextScaled = true
 subtitle.Font = Enum.Font.GothamMedium
@@ -570,7 +569,7 @@ registerThemed(subtitle, "TextColor3", "light")
 
 local function makeHeaderBtn(pos, text, color)
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0, 24, 0, 24)
+    btn.Size = UDim2.new(0, isMobile and 20 or 22, 0, isMobile and 20 or 22)
     btn.Position = pos
     btn.BackgroundColor3 = BLACK_4
     btn.Text = text
@@ -579,7 +578,7 @@ local function makeHeaderBtn(pos, text, color)
     btn.Font = Enum.Font.GothamBold
     btn.ZIndex = 12
     btn.Parent = header
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
     local s = Instance.new("UIStroke")
     s.Color = color or GOLD_DARK
     s.Thickness = 1; s.Transparency = 0.5
@@ -594,8 +593,8 @@ local function makeHeaderBtn(pos, text, color)
 end
 
 
-local minimizeBtn = makeHeaderBtn(UDim2.new(1, -80, 0, 6), "−", GOLD_DARK)
-local closeBtn, closeStroke = makeHeaderBtn(UDim2.new(1, -30, 0, 6), "✕", RED)
+local minimizeBtn = makeHeaderBtn(UDim2.new(1, isMobile and -50 or -54, 0, isMobile and 4 or 5), "−", GOLD_DARK)
+local closeBtn, closeStroke = makeHeaderBtn(UDim2.new(1, isMobile and -26 or -28, 0, isMobile and 4 or 5), "✕", RED)
 
 
 closeBtn.MouseButton1Click:Connect(function()
@@ -612,35 +611,6 @@ closeBtn.MouseButton1Click:Connect(function()
 end)
 
 
-local discordBtn = Instance.new("TextButton")
-discordBtn.Size = UDim2.new(0, 68, 0, 22)
-discordBtn.Position = UDim2.new(1, -104, 0, 32)
-discordBtn.BackgroundColor3 = BLACK_4
-discordBtn.Text = "📋 COPY DISCORD"
-discordBtn.TextColor3 = GOLD_LIGHT
-discordBtn.TextScaled = true
-discordBtn.Font = Enum.Font.GothamBold
-discordBtn.ZIndex = 12
-discordBtn.Parent = header
-Instance.new("UICorner", discordBtn).CornerRadius = UDim.new(0, 8)
-local dbStroke = Instance.new("UIStroke")
-dbStroke.Color = GOLD; dbStroke.Thickness = 1; dbStroke.Transparency = 0.6
-dbStroke.Parent = discordBtn
-registerThemed(dbStroke, "Color", "primary")
-registerThemed(discordBtn, "TextColor3", "light")
-
-
-discordBtn.MouseButton1Click:Connect(function()
-    safeSetClipboard(DISCORD)
-    discordBtn.Text = "✔ COPIED"
-    TweenService:Create(discordBtn, TweenInfo.new(0.15), {BackgroundColor3 = GOLD}):Play()
-    task.wait(1.2)
-    discordBtn.Text = "📋 COPY DISCORD"
-    TweenService:Create(discordBtn, TweenInfo.new(0.15), {BackgroundColor3 = BLACK_4}):Play()
-end)
-
-
--- Header drag
 do
     local dragging, dragStart, startPos = false, nil, nil
     local function beginDrag(input)
@@ -662,8 +632,8 @@ do
                 startPos.X.Scale, startPos.X.Offset + delta.X,
                 startPos.Y.Scale, startPos.Y.Offset + delta.Y)
             shadow.Position = UDim2.new(
-                mainFrame.Position.X.Scale, mainFrame.Position.X.Offset - 5,
-                mainFrame.Position.Y.Scale, mainFrame.Position.Y.Offset - 5)
+                mainFrame.Position.X.Scale, mainFrame.Position.X.Offset - 4,
+                mainFrame.Position.Y.Scale, mainFrame.Position.Y.Offset - 4)
         end
     end)
     UserInputService.InputEnded:Connect(function(input)
@@ -684,7 +654,6 @@ content.ZIndex = 5
 content.Parent = mainFrame
 
 
--- Minimize
 local isMinimized = false
 local function setMinimized(state)
     isMinimized = state
@@ -700,16 +669,16 @@ minimizeBtn.MouseButton1Click:Connect(function()
 end)
 
 
--- ==================== STATS BAR (in-panel) ====================
+-- ==================== STATS BAR ====================
 local statsBar = Instance.new("Frame")
-statsBar.Size = UDim2.new(1, -24, 0, 22)
-statsBar.Position = UDim2.new(0, 12, 0, 4)
+statsBar.Size = UDim2.new(1, -16, 0, 20)
+statsBar.Position = UDim2.new(0, 8, 0, Y_STATS)
 statsBar.BackgroundColor3 = BLACK_2
 statsBar.BackgroundTransparency = 0.3
 statsBar.BorderSizePixel = 0
 statsBar.ZIndex = 6
 statsBar.Parent = content
-Instance.new("UICorner", statsBar).CornerRadius = UDim.new(0, 8)
+Instance.new("UICorner", statsBar).CornerRadius = UDim.new(0, 6)
 local stStroke = Instance.new("UIStroke")
 stStroke.Color = GOLD_DARK; stStroke.Thickness = 1; stStroke.Transparency = 0.65
 stStroke.Parent = statsBar
@@ -717,7 +686,7 @@ registerThemed(stStroke, "Color", "dark")
 
 
 local fpsLabel = Instance.new("TextLabel")
-fpsLabel.Size = UDim2.new(0.5, -8, 1, 0)
+fpsLabel.Size = UDim2.new(0.5, -6, 1, 0)
 fpsLabel.Position = UDim2.new(0, 6, 0, 0)
 fpsLabel.BackgroundTransparency = 1
 fpsLabel.Text = "FPS: --"
@@ -730,7 +699,7 @@ fpsLabel.Parent = statsBar
 
 
 local pingLabel = Instance.new("TextLabel")
-pingLabel.Size = UDim2.new(0.5, -8, 1, 0)
+pingLabel.Size = UDim2.new(0.5, -6, 1, 0)
 pingLabel.Position = UDim2.new(0.5, 2, 0, 0)
 pingLabel.BackgroundTransparency = 1
 pingLabel.Text = "PING: --ms"
@@ -742,11 +711,10 @@ pingLabel.ZIndex = 7
 pingLabel.Parent = statsBar
 
 
--- ==================== SECTION LABEL HELPER ====================
 local function makeSectionLabel(text, yPos, parent)
     local lbl = Instance.new("TextLabel")
-    lbl.Size = UDim2.new(1, -24, 0, 20)
-    lbl.Position = UDim2.new(0, 12, 0, yPos)
+    lbl.Size = UDim2.new(1, -16, 0, 14)
+    lbl.Position = UDim2.new(0, 8, 0, yPos)
     lbl.BackgroundTransparency = 1
     lbl.Text = text
     lbl.TextColor3 = GOLD_LIGHT
@@ -757,8 +725,8 @@ local function makeSectionLabel(text, yPos, parent)
     lbl.Parent = parent
     registerThemed(lbl, "TextColor3", "light")
     local line = Instance.new("Frame")
-    line.Size = UDim2.new(0, 3, 0, 14)
-    line.Position = UDim2.new(0, -6, 0.5, -7)
+    line.Size = UDim2.new(0, 3, 0, 11)
+    line.Position = UDim2.new(0, -5, 0.5, -5.5)
     line.BackgroundColor3 = GOLD
     line.BorderSizePixel = 0
     line.Parent = lbl
@@ -792,8 +760,9 @@ end
 
 -- ==================== SAVED LOCATIONS ====================
 local DEFAULT_LOCATIONS = {
-    {name = "🏆 W4 Win Pad", pos = Vector3.new(1770, 5.24, 1220)},
-    {name = "⛏️ W4 Blocks",  pos = Vector3.new(1678.07, 5.24, 1247.45)},
+    {name = "⭐ BEST WORLD",   pos = Vector3.new(2074.9, 18.9, 7562.0)},
+    {name = "🏆 W4 Win Pad",   pos = Vector3.new(1770, 5.24, 1220)},
+    {name = "⛏️ W4 Blocks",    pos = Vector3.new(1678.07, 5.24, 1247.45)},
 }
 
 
@@ -838,22 +807,22 @@ local stopAuto
 local startAuto
 
 
-makeSectionLabel("📍 SAVED LOCATIONS", 32, content)
+makeSectionLabel("📍 SAVED LOCATIONS", Y_SECTION_1, content)
 
 
 local scrollFrame = Instance.new("ScrollingFrame")
-scrollFrame.Size = UDim2.new(1, -24, 0, 160)
-scrollFrame.Position = UDim2.new(0, 12, 0, 56)
+scrollFrame.Size = UDim2.new(1, -16, 0, SCROLL_H)
+scrollFrame.Position = UDim2.new(0, 8, 0, Y_SCROLL)
 scrollFrame.BackgroundColor3 = BLACK_2
 scrollFrame.BackgroundTransparency = 0.2
 scrollFrame.BorderSizePixel = 0
-scrollFrame.CanvasSize = UDim2.new(0, 0, 0, #savedLocations * 44 + 10)
-scrollFrame.ScrollBarThickness = isMobile and 6 or 3
+scrollFrame.CanvasSize = UDim2.new(0, 0, 0, #savedLocations * 52 + 8)
+scrollFrame.ScrollBarThickness = isMobile and 5 or 3
 scrollFrame.ScrollBarImageColor3 = GOLD
 scrollFrame.ZIndex = 6
 scrollFrame.Parent = content
 registerThemed(scrollFrame, "ScrollBarImageColor3", "primary")
-Instance.new("UICorner", scrollFrame).CornerRadius = UDim.new(0, 12)
+Instance.new("UICorner", scrollFrame).CornerRadius = UDim.new(0, 8)
 
 
 local sfStroke = Instance.new("UIStroke")
@@ -863,16 +832,16 @@ registerThemed(sfStroke, "Color", "dark")
 
 
 local layout = Instance.new("UIListLayout")
-layout.Padding = UDim.new(0, 6)
+layout.Padding = UDim.new(0, 5)
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 layout.Parent = scrollFrame
 
 
 local sfPad = Instance.new("UIPadding")
-sfPad.PaddingTop    = UDim.new(0, 6)
-sfPad.PaddingLeft   = UDim.new(0, 6)
-sfPad.PaddingRight  = UDim.new(0, 6)
-sfPad.PaddingBottom = UDim.new(0, 6)
+sfPad.PaddingTop    = UDim.new(0, 5)
+sfPad.PaddingLeft   = UDim.new(0, 5)
+sfPad.PaddingRight  = UDim.new(0, 5)
+sfPad.PaddingBottom = UDim.new(0, 5)
 sfPad.Parent = scrollFrame
 
 
@@ -880,10 +849,15 @@ local selectedIndex = nil
 local rowButtons = {}
 
 
+local function formatCoords(pos)
+    return string.format("X %.1f  Y %.1f  Z %.1f", pos.X, pos.Y, pos.Z)
+end
+
+
 local function refreshList()
     for _, btn in ipairs(rowButtons) do btn:Destroy() end
     rowButtons = {}
-    scrollFrame.CanvasSize = UDim2.new(0, 0, 0, #savedLocations * 44 + 10)
+    scrollFrame.CanvasSize = UDim2.new(0, 0, 0, #savedLocations * 52 + 8)
 
 
     if selectedIndex and selectedIndex > #savedLocations then
@@ -893,10 +867,11 @@ local function refreshList()
 
     for i, loc in ipairs(savedLocations) do
         local isSelected = (selectedIndex == i)
+        local ROW_H = 46
 
 
         local row = Instance.new("Frame")
-        row.Size = UDim2.new(1, -6, 0, 40)
+        row.Size = UDim2.new(1, -4, 0, ROW_H)
         row.BackgroundColor3 = isSelected and Color3.fromRGB(45, 38, 18) or BLACK_3
         row.BackgroundTransparency = isSelected and 0.1 or 0.3
         row.LayoutOrder = i
@@ -905,7 +880,7 @@ local function refreshList()
 
 
         local rc = Instance.new("UICorner")
-        rc.CornerRadius = UDim.new(0, 10)
+        rc.CornerRadius = UDim.new(0, 8)
         rc.Parent = row
 
 
@@ -916,9 +891,16 @@ local function refreshList()
         rStroke.Parent = row
 
 
-        local nameWidth = isMobile and 0.45 or 0.5
+        local leftCol = Instance.new("Frame")
+        leftCol.Size = UDim2.new(0.56, 0, 1, 0)
+        leftCol.BackgroundTransparency = 1
+        leftCol.ZIndex = 8
+        leftCol.Parent = row
+
+
         local nameBtn = Instance.new("TextButton")
-        nameBtn.Size = UDim2.new(nameWidth, 0, 1, 0)
+        nameBtn.Size = UDim2.new(1, -6, 0.5, 0)
+        nameBtn.Position = UDim2.new(0, 6, 0, 2)
         nameBtn.BackgroundTransparency = 1
         nameBtn.Text = loc.name
         nameBtn.TextColor3 = isSelected and GOLD_LIGHT or WHITE
@@ -926,31 +908,41 @@ local function refreshList()
         nameBtn.Font = Enum.Font.GothamBold
         nameBtn.TextXAlignment = Enum.TextXAlignment.Left
         nameBtn.ZIndex = 8
-        nameBtn.Parent = row
-        local pad = Instance.new("UIPadding")
-        pad.PaddingLeft = UDim.new(0, 12)
-        pad.Parent = nameBtn
+        nameBtn.Parent = leftCol
 
 
-        local selW = isMobile and 0.27 or 0.24
-        local selH = isMobile and 30 or 26
+        local coordsLbl = Instance.new("TextLabel")
+        coordsLbl.Size = UDim2.new(1, -6, 0.5, 0)
+        coordsLbl.Position = UDim2.new(0, 6, 0.5, -2)
+        coordsLbl.BackgroundTransparency = 1
+        coordsLbl.Text = formatCoords(loc.pos)
+        coordsLbl.TextColor3 = isSelected and GOLD_NEON or GOLD_DARK
+        coordsLbl.TextScaled = true
+        coordsLbl.Font = Enum.Font.Code
+        coordsLbl.TextXAlignment = Enum.TextXAlignment.Left
+        coordsLbl.ZIndex = 8
+        coordsLbl.Parent = leftCol
+
+
+        local selW = isMobile and 0.22 or 0.2
+        local selH = isMobile and 22 or 24
         local selectBtn = Instance.new("TextButton")
         selectBtn.Size = UDim2.new(selW, 0, 0, selH)
-        selectBtn.Position = UDim2.new(1 - selW - (isMobile and 0.14 or 0.19), 0, 0, (40-selH)/2)
+        selectBtn.Position = UDim2.new(1 - selW - (isMobile and 0.16 or 0.15), 0, 0, (ROW_H - selH)/2)
         selectBtn.BackgroundColor3 = isSelected and GOLD or BLACK_4
-        selectBtn.Text = isSelected and "✔" or "SELECT"
+        selectBtn.Text = isSelected and "✔" or "GO"
         selectBtn.TextColor3 = isSelected and BLACK or WHITE
         selectBtn.TextScaled = true
         selectBtn.Font = Enum.Font.GothamBold
         selectBtn.ZIndex = 8
         selectBtn.Parent = row
-        Instance.new("UICorner", selectBtn).CornerRadius = UDim.new(0, 7)
+        Instance.new("UICorner", selectBtn).CornerRadius = UDim.new(0, 6)
 
 
-        local delSize = isMobile and 30 or 26
+        local delSize = isMobile and 22 or 24
         local deleteBtn = Instance.new("TextButton")
         deleteBtn.Size = UDim2.new(0, delSize, 0, delSize)
-        deleteBtn.Position = UDim2.new(1, -(delSize+4), 0, (40-delSize)/2)
+        deleteBtn.Position = UDim2.new(1, -(delSize+4), 0, (ROW_H-delSize)/2)
         deleteBtn.BackgroundColor3 = BLACK_4
         deleteBtn.Text = "✕"
         deleteBtn.TextColor3 = WHITE
@@ -958,7 +950,7 @@ local function refreshList()
         deleteBtn.Font = Enum.Font.GothamBold
         deleteBtn.ZIndex = 8
         deleteBtn.Parent = row
-        Instance.new("UICorner", deleteBtn).CornerRadius = UDim.new(0, 7)
+        Instance.new("UICorner", deleteBtn).CornerRadius = UDim.new(0, 6)
         local dStroke = Instance.new("UIStroke")
         dStroke.Color = RED; dStroke.Thickness = 1; dStroke.Transparency = 0.6
         dStroke.Parent = deleteBtn
@@ -1005,12 +997,12 @@ end
 
 
 -- ==================== SAVE CURRENT ====================
-makeSectionLabel("💾 SAVE CURRENT POSITION", 224, content)
+makeSectionLabel("💾 SAVE CURRENT POSITION", Y_SECTION_2, content)
 
 
 local nameBox = Instance.new("TextBox")
-nameBox.Size = UDim2.new(0.58, 0, 0, 36)
-nameBox.Position = UDim2.new(0, 12, 0, 248)
+nameBox.Size = UDim2.new(0.60, 0, 0, 30)
+nameBox.Position = UDim2.new(0, 8, 0, Y_NAMEBOX)
 nameBox.BackgroundColor3 = BLACK_3
 nameBox.PlaceholderText = "Name this spot..."
 nameBox.PlaceholderColor3 = Color3.fromRGB(130,130,130)
@@ -1020,7 +1012,7 @@ nameBox.TextScaled = true
 nameBox.Font = Enum.Font.GothamMedium
 nameBox.ZIndex = 6
 nameBox.Parent = content
-Instance.new("UICorner", nameBox).CornerRadius = UDim.new(0, 10)
+Instance.new("UICorner", nameBox).CornerRadius = UDim.new(0, 8)
 local nbStroke = Instance.new("UIStroke")
 nbStroke.Color = GOLD_DARK; nbStroke.Thickness = 1; nbStroke.Transparency = 0.5
 nbStroke.Parent = nameBox
@@ -1036,8 +1028,8 @@ end)
 
 
 local saveBtn = Instance.new("TextButton")
-saveBtn.Size = UDim2.new(0.32, 0, 0, 36)
-saveBtn.Position = UDim2.new(0.64, 0, 0, 248)
+saveBtn.Size = UDim2.new(0.32, 0, 0, 30)
+saveBtn.Position = UDim2.new(0.66, 0, 0, Y_NAMEBOX)
 saveBtn.BackgroundColor3 = GOLD
 saveBtn.Text = "➕ SAVE"
 saveBtn.TextColor3 = BLACK
@@ -1045,7 +1037,7 @@ saveBtn.TextScaled = true
 saveBtn.Font = Enum.Font.GothamBlack
 saveBtn.ZIndex = 6
 saveBtn.Parent = content
-Instance.new("UICorner", saveBtn).CornerRadius = UDim.new(0, 10)
+Instance.new("UICorner", saveBtn).CornerRadius = UDim.new(0, 8)
 registerThemed(saveBtn, "BackgroundColor3", "primary")
 
 
@@ -1071,8 +1063,8 @@ end)
 
 -- ==================== CLEAR ALL ====================
 local clearAllBtn = Instance.new("TextButton")
-clearAllBtn.Size = UDim2.new(1, -24, 0, 26)
-clearAllBtn.Position = UDim2.new(0, 12, 0, 290)
+clearAllBtn.Size = UDim2.new(1, -16, 0, 22)
+clearAllBtn.Position = UDim2.new(0, 8, 0, Y_CLEAR)
 clearAllBtn.BackgroundColor3 = BLACK_3
 clearAllBtn.BackgroundTransparency = 0.3
 clearAllBtn.Text = "🗑️ CLEAR ALL SAVED CONFIGS"
@@ -1081,7 +1073,7 @@ clearAllBtn.TextScaled = true
 clearAllBtn.Font = Enum.Font.GothamBold
 clearAllBtn.ZIndex = 6
 clearAllBtn.Parent = content
-Instance.new("UICorner", clearAllBtn).CornerRadius = UDim.new(0, 8)
+Instance.new("UICorner", clearAllBtn).CornerRadius = UDim.new(0, 6)
 local caStroke = Instance.new("UIStroke")
 caStroke.Color = RED; caStroke.Thickness = 1; caStroke.Transparency = 0.6
 caStroke.Parent = clearAllBtn
@@ -1117,12 +1109,12 @@ end)
 
 
 -- ==================== AUTO-TELEPORT (UNTOUCHED FROM v9) ====================
-makeSectionLabel("🔁 AUTO-TELEPORT", 324, content)
+makeSectionLabel("🔁 AUTO-TELEPORT", Y_SECTION_3, content)
 
 
 local autoBtn = Instance.new("TextButton")
-autoBtn.Size = UDim2.new(0.60, 0, 0, 42)
-autoBtn.Position = UDim2.new(0, 12, 0, 348)
+autoBtn.Size = UDim2.new(0.60, 0, 0, 34)
+autoBtn.Position = UDim2.new(0, 8, 0, Y_AUTO)
 autoBtn.BackgroundColor3 = BLACK_3
 autoBtn.Text = "AUTO TP: OFF"
 autoBtn.TextColor3 = WHITE
@@ -1130,7 +1122,7 @@ autoBtn.TextScaled = true
 autoBtn.Font = Enum.Font.GothamBlack
 autoBtn.ZIndex = 6
 autoBtn.Parent = content
-Instance.new("UICorner", autoBtn).CornerRadius = UDim.new(0, 10)
+Instance.new("UICorner", autoBtn).CornerRadius = UDim.new(0, 8)
 
 
 local abStroke = Instance.new("UIStroke")
@@ -1141,8 +1133,8 @@ abStroke.Parent = autoBtn
 
 
 local intervalBox = Instance.new("TextBox")
-intervalBox.Size = UDim2.new(0.30, 0, 0, 42)
-intervalBox.Position = UDim2.new(0.66, 0, 0, 348)
+intervalBox.Size = UDim2.new(0.30, 0, 0, 34)
+intervalBox.Position = UDim2.new(0.66, 0, 0, Y_AUTO)
 intervalBox.BackgroundColor3 = BLACK_3
 intervalBox.Text = "1s"
 intervalBox.TextColor3 = WHITE
@@ -1152,7 +1144,7 @@ intervalBox.PlaceholderText = "1s"
 intervalBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
 intervalBox.ZIndex = 6
 intervalBox.Parent = content
-Instance.new("UICorner", intervalBox).CornerRadius = UDim.new(0, 10)
+Instance.new("UICorner", intervalBox).CornerRadius = UDim.new(0, 8)
 
 
 local ibStroke = Instance.new("UIStroke")
@@ -1188,7 +1180,7 @@ function startAuto()
     autoEnabled = true
     autoBtn.Text = "AUTO TP: ON • " .. savedLocations[selectedIndex].name
     autoBtn.TextScaled = false
-    autoBtn.TextSize = 12
+    autoBtn.TextSize = 11
     autoBtn.BackgroundColor3 = GOLD
     autoBtn.TextColor3 = BLACK
     abStroke.Color = GOLD_LIGHT
@@ -1215,18 +1207,18 @@ end)
 
 
 -- ==================== THEME PICKER ====================
-makeSectionLabel("🎨 THEME", 400, content)
+makeSectionLabel("🎨 THEME", Y_SECTION_4, content)
 
 
 local swatchRow = Instance.new("Frame")
-swatchRow.Size = UDim2.new(1, -24, 0, 40)
-swatchRow.Position = UDim2.new(0, 12, 0, 424)
+swatchRow.Size = UDim2.new(1, -16, 0, isMobile and 32 or 36)
+swatchRow.Position = UDim2.new(0, 8, 0, Y_SWATCH)
 swatchRow.BackgroundColor3 = BLACK_2
 swatchRow.BackgroundTransparency = 0.3
 swatchRow.BorderSizePixel = 0
 swatchRow.ZIndex = 6
 swatchRow.Parent = content
-Instance.new("UICorner", swatchRow).CornerRadius = UDim.new(0, 10)
+Instance.new("UICorner", swatchRow).CornerRadius = UDim.new(0, 8)
 local swStroke = Instance.new("UIStroke")
 swStroke.Color = GOLD_DARK; swStroke.Thickness = 1; swStroke.Transparency = 0.65
 swStroke.Parent = swatchRow
@@ -1237,11 +1229,12 @@ local swLayout = Instance.new("UIListLayout")
 swLayout.FillDirection = Enum.FillDirection.Horizontal
 swLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 swLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-swLayout.Padding = UDim.new(0, 5)
+swLayout.Padding = UDim.new(0, isMobile and 4 or 5)
 swLayout.Parent = swatchRow
 
 
 local swatches = {}
+local swatchSize = isMobile and 24 or 28
 
 
 local function refreshSwatches()
@@ -1261,7 +1254,7 @@ for _, key in ipairs(themeOrder) do
 
 
     local swatch = Instance.new("TextButton")
-    swatch.Size = UDim2.new(0, isMobile and 28 or 32, 0, isMobile and 28 or 32)
+    swatch.Size = UDim2.new(0, swatchSize, 0, swatchSize)
     swatch.BackgroundColor3 = themeDef.primary
     swatch.Text = isActive and "✓" or ""
     swatch.TextColor3 = BLACK
@@ -1285,7 +1278,6 @@ for _, key in ipairs(themeOrder) do
     swatch.MouseButton1Click:Connect(function()
         if currentThemeName == key then return end
         applyThemeVars(key)
-        -- Recolor everything in place
         for _, entry in ipairs(themedRegistry) do
             if entry.kind == "gradient" then
                 entry.obj.Color = ColorSequence.new({
@@ -1303,50 +1295,64 @@ for _, key in ipairs(themeOrder) do
                 entry.obj[entry.prop] = c
             end
         end
-        -- Recolor particles
         for _, p in ipairs(particleList) do
             p.frame.BackgroundColor3 = (p.role == "light") and GOLD_LIGHT or GOLD
         end
-        -- Recolor rows to match new theme
         refreshList()
-        -- Rebuild overhead billboard with new theme
         if player.Character then createOverheadGui(player.Character) end
-        -- Update subtitle text
-        subtitle.Text = "✦ " .. THEMES[currentThemeName].name .. " • v9.2 • " .. DISCORD
-        -- Update swatch active indicator
+        subtitle.Text = "✦ " .. THEMES[currentThemeName].name .. " • v9.4 • " .. DISCORD
         refreshSwatches()
     end)
 
 
     swatch.MouseEnter:Connect(function()
         if currentThemeName ~= key then
-            TweenService:Create(swatch, TweenInfo.new(0.12), {Size = UDim2.new(0, isMobile and 32 or 36, 0, isMobile and 32 or 36)}):Play()
+            TweenService:Create(swatch, TweenInfo.new(0.12), {Size = UDim2.new(0, swatchSize+3, 0, swatchSize+3)}):Play()
         end
     end)
     swatch.MouseLeave:Connect(function()
-        TweenService:Create(swatch, TweenInfo.new(0.12), {Size = UDim2.new(0, isMobile and 28 or 32, 0, isMobile and 28 or 32)}):Play()
+        TweenService:Create(swatch, TweenInfo.new(0.12), {Size = UDim2.new(0, swatchSize, 0, swatchSize)}):Play()
     end)
 end
 
 
+-- ==================== LIVE CURRENT POSITION ====================
+local currentPosBar = Instance.new("Frame")
+currentPosBar.Size = UDim2.new(1, -16, 0, 20)
+currentPosBar.Position = UDim2.new(0, 8, 0, Y_CURPOS)
+currentPosBar.BackgroundColor3 = BLACK_2
+currentPosBar.BackgroundTransparency = 0.25
+currentPosBar.BorderSizePixel = 0
+currentPosBar.ZIndex = 6
+currentPosBar.Parent = content
+Instance.new("UICorner", currentPosBar).CornerRadius = UDim.new(0, 6)
+local cpStroke = Instance.new("UIStroke")
+cpStroke.Color = GOLD_DARK; cpStroke.Thickness = 1; cpStroke.Transparency = 0.65
+cpStroke.Parent = currentPosBar
+registerThemed(cpStroke, "Color", "dark")
+
+
+local currentPosLbl = Instance.new("TextLabel")
+currentPosLbl.Size = UDim2.new(1, -10, 1, 0)
+currentPosLbl.Position = UDim2.new(0, 5, 0, 0)
+currentPosLbl.BackgroundTransparency = 1
+currentPosLbl.Text = "YOU  X 0.0   Y 0.0   Z 0.0"
+currentPosLbl.TextColor3 = GOLD_LIGHT
+currentPosLbl.TextScaled = true
+currentPosLbl.Font = Enum.Font.Code
+currentPosLbl.TextXAlignment = Enum.TextXAlignment.Center
+currentPosLbl.ZIndex = 7
+currentPosLbl.Parent = currentPosBar
+registerThemed(currentPosLbl, "TextColor3", "light")
+
+
 -- ==================== FOOTER ====================
-local footerLine = Instance.new("Frame")
-footerLine.Size = UDim2.new(1, -24, 0, 1)
-footerLine.Position = UDim2.new(0, 12, 1, -28)
-footerLine.BackgroundColor3 = GOLD_DARK
-footerLine.BackgroundTransparency = 0.6
-footerLine.BorderSizePixel = 0
-footerLine.ZIndex = 6
-footerLine.Parent = content
-registerThemed(footerLine, "BackgroundColor3", "dark")
-
-
 local footer = Instance.new("TextLabel")
-footer.Size = UDim2.new(1, -24, 0, 16)
-footer.Position = UDim2.new(0, 12, 1, -22)
+footer.Size = UDim2.new(1, -16, 0, 12)
+footer.Position = UDim2.new(0, 8, 1, -14)
 footer.BackgroundTransparency = 1
-footer.Text = "made by gamer owns yall • " .. DISCORD .. " • v9.2"
-footer.TextColor3 = Color3.fromRGB(120,120,120)
+footer.Text = "made by gamer owns yall • v9.4"
+footer.TextColor3 = Color3.fromRGB(110,110,110)
 footer.TextScaled = true
 footer.Font = Enum.Font.Gotham
 footer.ZIndex = 6
@@ -1355,8 +1361,8 @@ footer.Parent = content
 
 -- ==================== TOGGLE BUTTON ====================
 local toggleBtn = Instance.new("TextButton")
-toggleBtn.Size = UDim2.new(0, 56, 0, 56)
-toggleBtn.Position = UDim2.new(0, 15, 0.5, -28)
+toggleBtn.Size = UDim2.new(0, 48, 0, 48)
+toggleBtn.Position = UDim2.new(0, 12, 0.5, -24)
 toggleBtn.BackgroundColor3 = BLACK
 toggleBtn.Text = "⚡"
 toggleBtn.TextColor3 = GOLD_LIGHT
@@ -1364,7 +1370,7 @@ toggleBtn.TextScaled = true
 toggleBtn.Font = Enum.Font.GothamBlack
 toggleBtn.ZIndex = 15
 toggleBtn.Parent = screenGui
-Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0, 28)
+Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0, 24)
 local tbStroke = Instance.new("UIStroke")
 tbStroke.Color = GOLD; tbStroke.Thickness = 2; tbStroke.Transparency = 0.1
 tbStroke.Parent = toggleBtn
@@ -1439,15 +1445,15 @@ end
 -- ==================== PERSISTENT MINI HUD ====================
 local miniStats = Instance.new("Frame")
 miniStats.Name = "MiniStats"
-miniStats.Size = UDim2.new(0, 170, 0, 30)
-miniStats.Position = UDim2.new(0.5, -85, 0, 10)
+miniStats.Size = UDim2.new(0, 150, 0, 26)
+miniStats.Position = UDim2.new(0.5, -75, 0, 8)
 miniStats.BackgroundColor3 = BLACK
 miniStats.BackgroundTransparency = 0.15
 miniStats.BorderSizePixel = 0
 miniStats.ZIndex = 20
 miniStats.Visible = false
 miniStats.Parent = screenGui
-Instance.new("UICorner", miniStats).CornerRadius = UDim.new(0, 15)
+Instance.new("UICorner", miniStats).CornerRadius = UDim.new(0, 13)
 
 
 local msStroke = Instance.new("UIStroke")
@@ -1465,7 +1471,7 @@ registerGradient(msGrad)
 
 
 local miniFps = Instance.new("TextLabel")
-miniFps.Size = UDim2.new(0.5, -6, 1, 0)
+miniFps.Size = UDim2.new(0.5, -4, 1, 0)
 miniFps.Position = UDim2.new(0, 8, 0, 0)
 miniFps.BackgroundTransparency = 1
 miniFps.Text = "60 FPS"
@@ -1478,8 +1484,8 @@ miniFps.Parent = miniStats
 
 
 local miniPing = Instance.new("TextLabel")
-miniPing.Size = UDim2.new(0.5, -6, 1, 0)
-miniPing.Position = UDim2.new(0.5, -2, 0, 0)
+miniPing.Size = UDim2.new(0.5, -4, 1, 0)
+miniPing.Position = UDim2.new(0.5, -4, 0, 0)
 miniPing.BackgroundTransparency = 1
 miniPing.Text = "0 ms"
 miniPing.TextColor3 = GREEN
@@ -1491,11 +1497,11 @@ miniPing.Parent = miniStats
 
 
 do
-    local mdragging, mdragMoved, mdragStart, mstartPos = false, false, nil, nil
+    local mdragging, mdragStart, mstartPos = false, nil, nil
     miniStats.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1
         or input.UserInputType == Enum.UserInputType.Touch then
-            mdragging, mdragMoved = true, false
+            mdragging = true
             mdragStart = input.Position
             mstartPos = miniStats.Position
         end
@@ -1505,7 +1511,6 @@ do
         if input.UserInputType == Enum.UserInputType.MouseMovement
         or input.UserInputType == Enum.UserInputType.Touch then
             local delta = input.Position - mdragStart
-            if math.abs(delta.X) + math.abs(delta.Y) > 6 then mdragMoved = true end
             miniStats.Position = UDim2.new(
                 mstartPos.X.Scale, mstartPos.X.Offset + delta.X,
                 mstartPos.Y.Scale, mstartPos.Y.Offset + delta.Y)
@@ -1520,7 +1525,7 @@ do
 end
 
 
--- ==================== UI REFRESH LOOP (stats) ====================
+-- ==================== UI REFRESH LOOP ====================
 task.spawn(function()
     while true do
         task.wait(0.5)
@@ -1539,6 +1544,15 @@ task.spawn(function()
         if miniPing and miniPing.Parent then
             miniPing.Text = currentPing .. " ms"
             miniPing.TextColor3 = colorForPing(currentPing)
+        end
+        if currentPosLbl and currentPosLbl.Parent then
+            local hrp = getHRP()
+            if hrp then
+                local p = hrp.Position
+                currentPosLbl.Text = string.format("YOU  X %.1f   Y %.1f   Z %.1f", p.X, p.Y, p.Z)
+            else
+                currentPosLbl.Text = "YOU  --"
+            end
         end
     end
 end)
@@ -1576,4 +1590,4 @@ task.delay(0.5, function()
 end)
 
 
-print("[gamer owns yall v9.2 PREMIUM] Loaded • Theme: " .. THEMES[currentThemeName].name .. " • " .. DISCORD)
+print("[gamer owns yall v9.4 PREMIUM] Loaded • Theme: " .. THEMES[currentThemeName].name .. " • " .. DISCORD)
