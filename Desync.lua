@@ -122,6 +122,7 @@ end
 local function hardSet(r, pos)
     if not r then return end
     r.CFrame = CFrame.new(pos)
+    zeroVel(r)
 end
 
 local function assertReal()
@@ -158,6 +159,14 @@ local function getDir()
     return Vector3.zero
 end
 
+local function rebaseGhost()
+    if not root then return end
+    local p = root.Position
+    basePos = Vector3.new(p.X, p.Y, p.Z)
+    offset = Vector3.zero
+    updateGhost()
+end
+
 local function bind(char)
     if not char then return end
     root = char:FindFirstChild("HumanoidRootPart")
@@ -166,8 +175,10 @@ local function bind(char)
     savedWS = (hum.WalkSpeed > 1 and hum.WalkSpeed) or 16
     basePos = root.Position
     offset = Vector3.zero
+    hum.WalkSpeed = 0
     hum.AutoRotate = false
     preferClient(root)
+    zeroVel(root)
     updateGhost()
 end
 
@@ -176,6 +187,7 @@ local function startDesync()
     desyncOn = true
     bind(LP.Character)
     preferClient(root)
+    print("prince")
 
     if hb then hb:Disconnect() end
     if rs then rs:Disconnect() end
@@ -202,6 +214,7 @@ local function startDesync()
         if st == Enum.HumanoidStateType.Ragdoll or st == Enum.HumanoidStateType.FallingDown then
             pcall(function() hum:ChangeState(Enum.HumanoidStateType.Running) end)
         end
+        hum.WalkSpeed = 0
     end)
 
     rs = RunService.RenderStepped:Connect(function()
@@ -211,7 +224,9 @@ local function startDesync()
 
     step = RunService.Stepped:Connect(function()
         if not desyncOn or syncing or not root then return end
+        zeroVel(root)
         assertReal()
+        if hum then hum.WalkSpeed = 0 end
     end)
 end
 
@@ -241,6 +256,7 @@ local function stopDesync()
     end
     offset = Vector3.zero
     clearGhost()
+    print("prince")
 end
 
 LP.CharacterAdded:Connect(function(c)
@@ -306,6 +322,8 @@ local function startAntiDie()
         deathConns = {}
         protectChar(c)
     end)
+
+    print("prince")
 end
 
 local function stopAntiDie()
@@ -326,6 +344,7 @@ local function stopAntiDie()
             h.Health = 100
         end
     end
+    print("prince")
 end
 
 local antiResetOn = false
@@ -402,6 +421,7 @@ local function startAntiReset()
             pcall(function() h:ChangeState(Enum.HumanoidStateType.Running) end)
         end
     end)
+    print("prince")
 end
 
 local function stopAntiReset()
@@ -412,6 +432,7 @@ local function stopAntiReset()
     arDescConns = {}
     if arHeartConn then arHeartConn:Disconnect(); arHeartConn = nil end
     if arCharAddedConn then arCharAddedConn:Disconnect(); arCharAddedConn = nil end
+    print("prince")
 end
 
 -- Colores
@@ -437,7 +458,9 @@ local gui = new("ScreenGui", {
 
 local mainScale = new("UIScale", { Scale = 1 }, gui)
 
+-- ============================================================
 -- MAIN FRAME
+-- ============================================================
 local main = new("Frame", {
     Name                   = "Main",
     Active                 = true,
@@ -477,6 +500,19 @@ local mainBGOverlay = new("Frame", {
     Visible                = false,
 }, main)
 new("UICorner", { CornerRadius = UDim.new(0, 12) }, mainBGOverlay)
+new("UIGradient", {
+    Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0,   Color3.fromRGB(0, 0, 0)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(30, 10, 50)),
+        ColorSequenceKeypoint.new(1,   Color3.fromRGB(0, 0, 0)),
+    }),
+    Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0,   0.2),
+        NumberSequenceKeypoint.new(0.5, 0.05),
+        NumberSequenceKeypoint.new(1,   0.2),
+    }),
+    Rotation = 90,
+}, mainBGOverlay)
 
 local stroke = new("UIStroke", {
     Thickness       = 1.8,
@@ -493,10 +529,15 @@ local grad = new("UIGradient", {
         ColorSequenceKeypoint.new(0.65, Color3.fromRGB(255, 255, 255)),
         ColorSequenceKeypoint.new(1,    Color3.fromRGB(255, 255, 255)),
     }),
+    Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0,   0.3),
+        NumberSequenceKeypoint.new(0.5, 0.7),
+        NumberSequenceKeypoint.new(1,   0.3),
+    }),
     Rotation = 0,
 }, stroke)
 
--- Settings Button
+-- Botón Settings (engranaje)
 local settingsBtn = new("TextButton", {
     Name                   = "SettingsButton",
     Text                   = "",
@@ -604,7 +645,9 @@ settingsBtn.MouseLeave:Connect(function()
     }):Play()
 end)
 
--- Background Button
+-- ============================================================
+-- BOTÓN BACKGROUND (icono paisaje)
+-- ============================================================
 local bgBtn = new("TextButton", {
     Name                   = "BackgroundButton",
     Text                   = "",
@@ -624,6 +667,53 @@ local bgBtnStroke = new("UIStroke", {
     Transparency = 1,
     Thickness    = 0,
 }, bgBtn)
+
+local bgIcon = new("Frame", {
+    BackgroundTransparency = 1,
+    AnchorPoint            = Vector2.new(0.5, 0.5),
+    Position               = UDim2.new(0.5, 0, 0.5, 0),
+    Size                   = UDim2.new(0, 18, 0, 16),
+    ZIndex                 = 21,
+}, bgBtn)
+
+new("Frame", {
+    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+    BorderSizePixel  = 0,
+    Size             = UDim2.new(1, 0, 1, 0),
+    ZIndex           = 21,
+    Name             = "FrameOutline",
+}, bgIcon)
+new("UICorner", { CornerRadius = UDim.new(0, 2) }, bgIcon.FrameOutline)
+
+new("Frame", {
+    BackgroundColor3 = Color3.fromRGB(30, 30, 45),
+    BorderSizePixel  = 0,
+    Size             = UDim2.new(1, -3, 1, -3),
+    Position         = UDim2.new(0, 1.5, 0, 1.5),
+    ZIndex           = 22,
+    Name             = "FrameInner",
+}, bgIcon)
+new("UICorner", { CornerRadius = UDim.new(0, 2) }, bgIcon.FrameInner)
+
+new("Frame", {
+    BackgroundColor3 = Color3.fromRGB(255, 230, 120),
+    BorderSizePixel  = 0,
+    Size             = UDim2.new(0, 5, 0, 5),
+    Position         = UDim2.new(0, 3, 0, 3),
+    ZIndex           = 23,
+    Name             = "Sun",
+}, bgIcon)
+new("UICorner", { CornerRadius = UDim.new(1, 0) }, bgIcon.Sun)
+
+new("Frame", {
+    BackgroundColor3 = Color3.fromRGB(140, 220, 255),
+    BorderSizePixel  = 0,
+    Rotation         = 45,
+    Size             = UDim2.new(0, 11, 0, 11),
+    Position         = UDim2.new(0, 4, 0, 6),
+    ZIndex           = 23,
+    Name             = "Mountain",
+}, bgIcon)
 
 bgBtn.MouseEnter:Connect(function()
     TweenService:Create(bgBtn, TweenInfo.new(0.2), {
@@ -648,8 +738,11 @@ bgBtn.MouseLeave:Connect(function()
     }):Play()
 end)
 
--- Lock Button
+-- ============================================================
+-- LOCK BUTTON
+-- ============================================================
 local isLocked = false
+
 local lockBtn = new("TextButton", {
     Name                   = "LockButton",
     Text                   = "",
@@ -672,6 +765,8 @@ local lockText = new("TextLabel", {
     TextSize               = 18,
     BackgroundTransparency = 1,
     Size                   = UDim2.new(1, 0, 1, 0),
+    TextStrokeTransparency = 0.5,
+    TextStrokeColor3       = Color3.fromRGB(120, 90, 20),
     ZIndex                 = 22,
 }, lockBtn)
 
@@ -681,13 +776,53 @@ local lockBtnStroke = new("UIStroke", {
     Thickness    = 0,
 }, lockBtn)
 
-lockBtn.MouseButton1Click:Connect(function()
-    isLocked = not isLocked
-    lockText.Text = isLocked and "🔒" or "🔓"
-    lockText.TextColor3 = isLocked and Color3.fromRGB(255, 220, 120) or Color3.fromRGB(255, 255, 255)
+lockBtn.MouseEnter:Connect(function()
+    TweenService:Create(lockBtn, TweenInfo.new(0.2), {
+        Size = UDim2.new(0, 34, 0, 34),
+        Position = UDim2.new(1, -48, 0, 7),
+    }):Play()
+    TweenService:Create(lockBtnStroke, TweenInfo.new(0.2), {
+        Color = Color3.fromRGB(255, 255, 255),
+        Transparency = 0,
+        Thickness = 1.8,
+    }):Play()
+end)
+lockBtn.MouseLeave:Connect(function()
+    TweenService:Create(lockBtn, TweenInfo.new(0.2), {
+        Size = UDim2.new(0, 30, 0, 30),
+        Position = UDim2.new(1, -46, 0, 9),
+    }):Play()
+    TweenService:Create(lockBtnStroke, TweenInfo.new(0.2), {
+        Color = Color3.fromRGB(255, 235, 170),
+        Transparency = 1,
+        Thickness = 0,
+    }):Play()
 end)
 
--- Close Button
+lockBtn.MouseButton1Click:Connect(function()
+    isLocked = not isLocked
+    if isLocked then
+        lockText.Text = "🔒"
+        lockText.TextColor3 = Color3.fromRGB(255, 220, 120)
+        TweenService:Create(lockBtnStroke, TweenInfo.new(0.3), {
+            Color = Color3.fromRGB(255, 245, 200),
+            Transparency = 0,
+            Thickness = 1.8,
+        }):Play()
+    else
+        lockText.Text = "🔓"
+        lockText.TextColor3 = Color3.fromRGB(255, 255, 255)
+        TweenService:Create(lockBtnStroke, TweenInfo.new(0.3), {
+            Color = Color3.fromRGB(255, 235, 170),
+            Transparency = 1,
+            Thickness = 0,
+        }):Play()
+    end
+end)
+
+-- ============================================================
+-- CLOSE BUTTON
+-- ============================================================
 local closeBtn = new("TextButton", {
     Name                   = "CloseButton",
     Text                   = "",
@@ -702,6 +837,69 @@ local closeBtn = new("TextButton", {
     ClipsDescendants       = true,
 }, main)
 new("UICorner", { CornerRadius = UDim.new(1, 0) }, closeBtn)
+
+local closeStroke = new("UIStroke", {
+    Color        = Color3.fromRGB(255, 160, 160),
+    Transparency = 1,
+    Thickness    = 0,
+}, closeBtn)
+
+local closeBar1 = new("Frame", {
+    BackgroundColor3 = Color3.fromRGB(255, 90, 90),
+    BorderSizePixel  = 0,
+    AnchorPoint      = Vector2.new(0.5, 0.5),
+    Position         = UDim2.new(0.5, 0, 0.5, 0),
+    Size             = UDim2.new(0, 18, 0, 3),
+    Rotation         = 45,
+    ZIndex           = 21,
+}, closeBtn)
+new("UICorner", { CornerRadius = UDim.new(1, 0) }, closeBar1)
+
+local closeBar2 = new("Frame", {
+    BackgroundColor3 = Color3.fromRGB(255, 90, 90),
+    BorderSizePixel  = 0,
+    AnchorPoint      = Vector2.new(0.5, 0.5),
+    Position         = UDim2.new(0.5, 0, 0.5, 0),
+    Size             = UDim2.new(0, 18, 0, 3),
+    Rotation         = -45,
+    ZIndex           = 21,
+}, closeBtn)
+new("UICorner", { CornerRadius = UDim.new(1, 0) }, closeBar2)
+
+closeBtn.MouseEnter:Connect(function()
+    TweenService:Create(closeBtn, TweenInfo.new(0.2), {
+        Size = UDim2.new(0, 34, 0, 34),
+        Position = UDim2.new(1, -12, 0, 7),
+    }):Play()
+    TweenService:Create(closeStroke, TweenInfo.new(0.2), {
+        Color = Color3.fromRGB(255, 255, 255),
+        Transparency = 0,
+        Thickness = 1.8,
+    }):Play()
+    TweenService:Create(closeBar1, TweenInfo.new(0.25, Enum.EasingStyle.Back), {
+        Rotation = 135, BackgroundColor3 = Color3.fromRGB(255, 60, 60),
+    }):Play()
+    TweenService:Create(closeBar2, TweenInfo.new(0.25, Enum.EasingStyle.Back), {
+        Rotation = 45, BackgroundColor3 = Color3.fromRGB(255, 60, 60),
+    }):Play()
+end)
+closeBtn.MouseLeave:Connect(function()
+    TweenService:Create(closeBtn, TweenInfo.new(0.2), {
+        Size = UDim2.new(0, 30, 0, 30),
+        Position = UDim2.new(1, -10, 0, 9),
+    }):Play()
+    TweenService:Create(closeStroke, TweenInfo.new(0.2), {
+        Color = Color3.fromRGB(255, 160, 160),
+        Transparency = 1,
+        Thickness = 0,
+    }):Play()
+    TweenService:Create(closeBar1, TweenInfo.new(0.25, Enum.EasingStyle.Back), {
+        Rotation = 45, BackgroundColor3 = Color3.fromRGB(255, 90, 90),
+    }):Play()
+    TweenService:Create(closeBar2, TweenInfo.new(0.25, Enum.EasingStyle.Back), {
+        Rotation = -45, BackgroundColor3 = Color3.fromRGB(255, 90, 90),
+    }):Play()
+end)
 
 closeBtn.MouseButton1Click:Connect(function()
     pcall(stopDesync)
@@ -732,7 +930,7 @@ new("Frame", {
     ZIndex                 = 10,
 }, main)
 
--- Desync UI
+-- Desync
 new("TextLabel", {
     Text                   = "Desync",
     TextColor3             = Color3.fromRGB(255, 255, 255),
@@ -766,6 +964,7 @@ local dsTrack = new("Frame", {
     BorderSizePixel  = 0,
 }, main)
 new("UICorner", { CornerRadius = UDim.new(1, 0) }, dsTrack)
+new("UIStroke", { Color = Color3.fromRGB(255, 255, 255), Transparency = 0.3, Thickness = 1.2 }, dsTrack)
 
 local dsKnob = new("Frame", {
     Size             = UDim2.new(0, 18, 0, 18),
@@ -783,7 +982,7 @@ local dsHit = new("TextButton", {
     ZIndex                 = 12,
 }, dsTrack)
 
--- Anti Die UI
+-- Anti Die
 new("TextLabel", {
     Text                   = "Anti Die",
     TextColor3             = Color3.fromRGB(255, 255, 255),
@@ -817,6 +1016,7 @@ local adTrack = new("Frame", {
     BorderSizePixel  = 0,
 }, main)
 new("UICorner", { CornerRadius = UDim.new(1, 0) }, adTrack)
+new("UIStroke", { Color = Color3.fromRGB(255, 255, 255), Transparency = 0.3, Thickness = 1.2 }, adTrack)
 
 local adKnob = new("Frame", {
     Size             = UDim2.new(0, 18, 0, 18),
@@ -834,7 +1034,85 @@ local adHit = new("TextButton", {
     ZIndex                 = 12,
 }, adTrack)
 
--- Settings Frame
+-- Slider
+local sliderRow = new("Frame", {
+    BackgroundTransparency = 1,
+    Position               = UDim2.new(0, 0, 0, 156),
+    Size                   = UDim2.new(1, 0, 0, 30),
+    ZIndex                 = 6,
+}, main)
+
+new("TextLabel", {
+    BackgroundTransparency = 1,
+    Text                   = "Menu Size",
+    TextColor3             = Color3.fromRGB(255, 255, 255),
+    Font                   = Enum.Font.GothamBold,
+    Position               = UDim2.new(0, 16, 0, 0),
+    TextXAlignment         = Enum.TextXAlignment.Left,
+    ZIndex                 = 6,
+    TextSize               = 12,
+    Size                   = UDim2.new(1, -94, 1, 0),
+}, sliderRow)
+
+local sliderValue = new("TextLabel", {
+    BackgroundTransparency = 1,
+    Text                   = "100%",
+    TextColor3             = Color3.fromRGB(200, 200, 200),
+    Font                   = Enum.Font.GothamBold,
+    AnchorPoint            = Vector2.new(1, 0.5),
+    Position               = UDim2.new(1, -12, 0.5, 0),
+    TextSize               = 11,
+    ZIndex                 = 7,
+    Size                   = UDim2.new(0, 50, 0, 30),
+}, sliderRow)
+
+local sliderTrackContainer = new("Frame", {
+    BackgroundTransparency = 1,
+    Position               = UDim2.new(0, 16, 0.5, 0),
+    Size                   = UDim2.new(0.55, -10, 1, -10),
+    ZIndex                 = 7,
+}, sliderRow)
+
+local sliderTrack = new("Frame", {
+    BackgroundColor3       = Color3.fromRGB(60, 60, 60),
+    BackgroundTransparency = 0.4,
+    BorderSizePixel        = 0,
+    Position               = UDim2.new(0, 0, 0.5, -2),
+    Size                   = UDim2.new(1, 0, 0, 4),
+    ZIndex                 = 7,
+}, sliderTrackContainer)
+new("UICorner", { CornerRadius = UDim.new(1, 0) }, sliderTrack)
+
+local sliderFill = new("Frame", {
+    BackgroundColor3 = GREEN_ENABLED,
+    BorderSizePixel  = 0,
+    Size             = UDim2.new(1, 0, 1, 0),
+    ZIndex           = 8,
+}, sliderTrack)
+new("UICorner", { CornerRadius = UDim.new(1, 0) }, sliderFill)
+
+local sliderKnob = new("Frame", {
+    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+    BorderSizePixel  = 0,
+    Size             = UDim2.new(0, 14, 0, 14),
+    Position         = UDim2.new(1, -7, 0.5, -7),
+    ZIndex           = 9,
+}, sliderTrack)
+new("UICorner", { CornerRadius = UDim.new(1, 0) }, sliderKnob)
+new("UIStroke", { Color = GREEN_ENABLED, Transparency = 0.4, Thickness = 1.5 }, sliderKnob)
+
+local sliderHit = new("TextButton", {
+    BackgroundTransparency = 1,
+    BorderSizePixel        = 0,
+    Text                   = "",
+    AutoButtonColor        = false,
+    ZIndex                 = 10,
+    Size                   = UDim2.new(1, 0, 1, 0),
+}, sliderTrackContainer)
+
+-- ============================================================
+-- SETTINGS FRAME (con fondo igual que main)
+-- ============================================================
 local settingsFrame = new("Frame", {
     Name                   = "Settings",
     Active                 = true,
@@ -847,6 +1125,70 @@ local settingsFrame = new("Frame", {
     Visible                = false,
 }, gui)
 new("UICorner", { CornerRadius = UDim.new(0, 12) }, settingsFrame)
+
+-- 🔥 Fondo con imagen para settings (RESTAURADO)
+local settingsBG = new("ImageLabel", {
+    Name                   = "BackgroundImage",
+    BackgroundTransparency = 1,
+    BorderSizePixel        = 0,
+    Size                   = UDim2.new(1, 0, 1, 0),
+    Position               = UDim2.new(0, 0, 0, 0),
+    Image                  = "",
+    ImageTransparency      = BG_IMAGE_TRANSPARENCY,
+    ResampleMode           = BG_RESAMPLE,
+    ScaleType              = Enum.ScaleType.Crop,
+    ZIndex                 = 1,
+    Visible                = false,
+}, settingsFrame)
+new("UICorner", { CornerRadius = UDim.new(0, 12) }, settingsBG)
+
+local settingsBGOverlay = new("Frame", {
+    Name                   = "BackgroundOverlay",
+    BackgroundColor3       = Color3.fromRGB(0, 0, 0),
+    BackgroundTransparency = BG_OVERLAY_TRANSPARENCY,
+    BorderSizePixel        = 0,
+    Size                   = UDim2.new(1, 0, 1, 0),
+    Position               = UDim2.new(0, 0, 0, 0),
+    ZIndex                 = 2,
+    Visible                = false,
+}, settingsFrame)
+new("UICorner", { CornerRadius = UDim.new(0, 12) }, settingsBGOverlay)
+new("UIGradient", {
+    Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0,   Color3.fromRGB(0, 0, 0)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(30, 10, 50)),
+        ColorSequenceKeypoint.new(1,   Color3.fromRGB(0, 0, 0)),
+    }),
+    Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0,   0.2),
+        NumberSequenceKeypoint.new(0.5, 0.05),
+        NumberSequenceKeypoint.new(1,   0.2),
+    }),
+    Rotation = 90,
+}, settingsBGOverlay)
+
+local sStroke = new("UIStroke", {
+    Thickness       = 1.8,
+    Transparency    = 0.15,
+    Color           = Color3.fromRGB(255, 255, 255),
+    ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+}, settingsFrame)
+
+local sGrad = new("UIGradient", {
+    Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0,    Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(0.35, Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(0.5,  Color3.fromRGB(200, 200, 200)),
+        ColorSequenceKeypoint.new(0.65, Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(1,    Color3.fromRGB(255, 255, 255)),
+    }),
+    Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0,   0.3),
+        NumberSequenceKeypoint.new(0.5, 0.7),
+        NumberSequenceKeypoint.new(1,   0.3),
+    }),
+    Rotation = 0,
+}, sStroke)
 
 local backBtn = new("TextButton", {
     Text                   = "←",
@@ -862,8 +1204,159 @@ local backBtn = new("TextButton", {
     ZIndex                 = 20,
 }, settingsFrame)
 new("UICorner", { CornerRadius = UDim.new(1, 0) }, backBtn)
+new("UIStroke", {
+    Color = Color3.fromRGB(255, 255, 255),
+    Transparency = 0.4,
+    Thickness = 1.2,
+}, backBtn)
 
--- Background Changer Frame
+backBtn.MouseEnter:Connect(function()
+    TweenService:Create(backBtn, TweenInfo.new(0.15), { BackgroundTransparency = 0 }):Play()
+end)
+backBtn.MouseLeave:Connect(function()
+    TweenService:Create(backBtn, TweenInfo.new(0.15), { BackgroundTransparency = 0.25 }):Play()
+end)
+
+new("TextLabel", {
+    Text                   = "Settings",
+    TextColor3             = Color3.new(1, 1, 1),
+    Font                   = Enum.Font.GothamBlack,
+    BackgroundTransparency = 1,
+    Position               = UDim2.new(0, 0, 0, 12),
+    TextXAlignment         = Enum.TextXAlignment.Center,
+    ZIndex                 = 10,
+    TextSize               = 22,
+    Size                   = UDim2.new(1, 0, 0, 26),
+}, settingsFrame)
+
+new("Frame", {
+    BackgroundColor3       = Color3.fromRGB(255, 255, 255),
+    BackgroundTransparency = 0.7,
+    BorderSizePixel        = 0,
+    Position               = UDim2.new(0, 20, 0, 44),
+    Size                   = UDim2.new(1, -40, 0, 1),
+    ZIndex                 = 10,
+}, settingsFrame)
+
+-- Stealth
+new("TextLabel", {
+    Text                   = "Stealth",
+    TextColor3             = Color3.fromRGB(255, 255, 255),
+    Font                   = Enum.Font.GothamBold,
+    BackgroundTransparency = 1,
+    Position               = UDim2.new(0, 16, 0, 60),
+    TextXAlignment         = Enum.TextXAlignment.Left,
+    ZIndex                 = 10,
+    TextSize               = 13,
+    Size                   = UDim2.new(1, -80, 0, 20),
+}, settingsFrame)
+
+local stealthSubLbl = new("TextLabel", {
+    Text                   = "NORMAL",
+    TextColor3             = Color3.fromRGB(200, 200, 200),
+    Font                   = Enum.Font.GothamBold,
+    BackgroundTransparency = 1,
+    Position               = UDim2.new(0, 16, 0, 80),
+    TextSize               = 10,
+    TextXAlignment         = Enum.TextXAlignment.Left,
+    ZIndex                 = 10,
+    Size                   = UDim2.new(1, -80, 0, 16),
+}, settingsFrame)
+
+local stealthTrack = new("Frame", {
+    AnchorPoint      = Vector2.new(1, 0.5),
+    BackgroundColor3 = OFF_COLOR,
+    Position         = UDim2.new(1, -14, 0, 74),
+    ZIndex           = 10,
+    Size             = UDim2.new(0, 48, 0, 26),
+    BorderSizePixel  = 0,
+}, settingsFrame)
+new("UICorner", { CornerRadius = UDim.new(1, 0) }, stealthTrack)
+new("UIStroke", { Color = Color3.fromRGB(255, 255, 255), Transparency = 0.3, Thickness = 1.2 }, stealthTrack)
+
+local stealthKnob = new("Frame", {
+    Size             = UDim2.new(0, 18, 0, 18),
+    Position         = UDim2.new(0, 4, 0.5, -9),
+    ZIndex           = 11,
+    BackgroundColor3 = Color3.new(1, 1, 1),
+    BorderSizePixel  = 0,
+}, stealthTrack)
+new("UICorner", { CornerRadius = UDim.new(1, 0) }, stealthKnob)
+
+local stealthHit = new("TextButton", {
+    Size                   = UDim2.new(1, 0, 1, 0),
+    BackgroundTransparency = 1,
+    Text                   = "",
+    ZIndex                 = 12,
+}, stealthTrack)
+
+-- Anti Reset
+new("TextLabel", {
+    Text                   = "Anti Reset",
+    TextColor3             = Color3.fromRGB(255, 255, 255),
+    Font                   = Enum.Font.GothamBold,
+    BackgroundTransparency = 1,
+    Position               = UDim2.new(0, 16, 0, 108),
+    TextXAlignment         = Enum.TextXAlignment.Left,
+    ZIndex                 = 10,
+    TextSize               = 13,
+    Size                   = UDim2.new(1, -80, 0, 20),
+}, settingsFrame)
+
+local arSubLbl = new("TextLabel", {
+    Text                   = "OFF",
+    TextColor3             = Color3.fromRGB(255, 255, 255),
+    Font                   = Enum.Font.GothamBold,
+    BackgroundTransparency = 1,
+    Position               = UDim2.new(0, 16, 0, 128),
+    TextSize               = 10,
+    TextXAlignment         = Enum.TextXAlignment.Left,
+    ZIndex                 = 10,
+    Size                   = UDim2.new(1, -80, 0, 16),
+}, settingsFrame)
+
+local arTrack = new("Frame", {
+    AnchorPoint      = Vector2.new(1, 0.5),
+    BackgroundColor3 = OFF_COLOR,
+    Position         = UDim2.new(1, -14, 0, 122),
+    ZIndex           = 10,
+    Size             = UDim2.new(0, 48, 0, 26),
+    BorderSizePixel  = 0,
+}, settingsFrame)
+new("UICorner", { CornerRadius = UDim.new(1, 0) }, arTrack)
+new("UIStroke", { Color = Color3.fromRGB(255, 255, 255), Transparency = 0.3, Thickness = 1.2 }, arTrack)
+
+local arKnob = new("Frame", {
+    Size             = UDim2.new(0, 18, 0, 18),
+    Position         = UDim2.new(0, 4, 0.5, -9),
+    ZIndex           = 11,
+    BackgroundColor3 = Color3.new(1, 1, 1),
+    BorderSizePixel  = 0,
+}, arTrack)
+new("UICorner", { CornerRadius = UDim.new(1, 0) }, arKnob)
+
+local arHit = new("TextButton", {
+    Size                   = UDim2.new(1, 0, 1, 0),
+    BackgroundTransparency = 1,
+    Text                   = "",
+    ZIndex                 = 12,
+}, arTrack)
+
+new("TextLabel", {
+    Text                   = "More settings coming soon...",
+    TextColor3             = Color3.fromRGB(200, 200, 200),
+    Font                   = Enum.Font.GothamBold,
+    BackgroundTransparency = 1,
+    Position               = UDim2.new(0, 0, 1, -30),
+    TextXAlignment         = Enum.TextXAlignment.Center,
+    ZIndex                 = 10,
+    TextSize               = 12,
+    Size                   = UDim2.new(1, 0, 0, 20),
+}, settingsFrame)
+
+-- ============================================================
+-- BACKGROUND CHANGER FRAME (con su propio fondo también)
+-- ============================================================
 local bgFrame = new("Frame", {
     Name                   = "BackgroundChanger",
     Active                 = true,
@@ -875,6 +1368,56 @@ local bgFrame = new("Frame", {
     Visible                = false,
 }, gui)
 new("UICorner", { CornerRadius = UDim.new(0, 12) }, bgFrame)
+
+local bgFrameBG = new("ImageLabel", {
+    Name                   = "BackgroundImage",
+    BackgroundTransparency = 1,
+    BorderSizePixel        = 0,
+    Size                   = UDim2.new(1, 0, 1, 0),
+    Position               = UDim2.new(0, 0, 0, 0),
+    Image                  = "",
+    ImageTransparency      = BG_IMAGE_TRANSPARENCY,
+    ResampleMode           = BG_RESAMPLE,
+    ScaleType              = Enum.ScaleType.Crop,
+    ZIndex                 = 1,
+    Visible                = false,
+}, bgFrame)
+new("UICorner", { CornerRadius = UDim.new(0, 12) }, bgFrameBG)
+
+local bgFrameOverlay = new("Frame", {
+    Name                   = "BackgroundOverlay",
+    BackgroundColor3       = Color3.fromRGB(0, 0, 0),
+    BackgroundTransparency = BG_OVERLAY_TRANSPARENCY,
+    BorderSizePixel        = 0,
+    Size                   = UDim2.new(1, 0, 1, 0),
+    Position               = UDim2.new(0, 0, 0, 0),
+    ZIndex                 = 2,
+    Visible                = false,
+}, bgFrame)
+new("UICorner", { CornerRadius = UDim.new(0, 12) }, bgFrameOverlay)
+
+local bgStroke = new("UIStroke", {
+    Thickness       = 1.8,
+    Transparency    = 0.15,
+    Color           = Color3.fromRGB(255, 255, 255),
+    ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+}, bgFrame)
+
+local bgGrad = new("UIGradient", {
+    Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0,    Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(0.35, Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(0.5,  Color3.fromRGB(200, 200, 200)),
+        ColorSequenceKeypoint.new(0.65, Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(1,    Color3.fromRGB(255, 255, 255)),
+    }),
+    Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0,   0.3),
+        NumberSequenceKeypoint.new(0.5, 0.7),
+        NumberSequenceKeypoint.new(1,   0.3),
+    }),
+    Rotation = 0,
+}, bgStroke)
 
 local bgBackBtn = new("TextButton", {
     Text                   = "←",
@@ -890,6 +1433,301 @@ local bgBackBtn = new("TextButton", {
     ZIndex                 = 20,
 }, bgFrame)
 new("UICorner", { CornerRadius = UDim.new(1, 0) }, bgBackBtn)
+new("UIStroke", {
+    Color = Color3.fromRGB(255, 255, 255),
+    Transparency = 0.4,
+    Thickness = 1.2,
+}, bgBackBtn)
+
+bgBackBtn.MouseEnter:Connect(function()
+    TweenService:Create(bgBackBtn, TweenInfo.new(0.15), { BackgroundTransparency = 0 }):Play()
+end)
+bgBackBtn.MouseLeave:Connect(function()
+    TweenService:Create(bgBackBtn, TweenInfo.new(0.15), { BackgroundTransparency = 0.25 }):Play()
+end)
+
+new("TextLabel", {
+    Text                   = "Background",
+    TextColor3             = Color3.new(1, 1, 1),
+    Font                   = Enum.Font.GothamBlack,
+    BackgroundTransparency = 1,
+    Position               = UDim2.new(0, 0, 0, 12),
+    TextXAlignment         = Enum.TextXAlignment.Center,
+    ZIndex                 = 10,
+    TextSize               = 22,
+    Size                   = UDim2.new(1, 0, 0, 26),
+}, bgFrame)
+
+new("Frame", {
+    BackgroundColor3       = Color3.fromRGB(255, 255, 255),
+    BackgroundTransparency = 0.7,
+    BorderSizePixel        = 0,
+    Position               = UDim2.new(0, 20, 0, 44),
+    Size                   = UDim2.new(1, -40, 0, 1),
+    ZIndex                 = 10,
+}, bgFrame)
+
+local bgScroll = new("ScrollingFrame", {
+    BackgroundTransparency = 1,
+    BorderSizePixel        = 0,
+    Position               = UDim2.new(0, 8, 0, 52),
+    Size                   = UDim2.new(1, -16, 1, -60),
+    CanvasSize             = UDim2.new(0, 0, 0, 0),
+    ScrollBarThickness     = 4,
+    ScrollBarImageColor3   = Color3.fromRGB(120, 120, 140),
+    ZIndex                 = 10,
+}, bgFrame)
+
+-- ============================================================
+-- APLICAR FONDO A TODOS LOS FRAMES
+-- ============================================================
+local function applyBackground(assetId)
+    if not assetId then
+        main.BackgroundColor3 = Color3.fromRGB(10, 4, 16)
+        settingsFrame.BackgroundColor3 = Color3.fromRGB(10, 4, 16)
+        bgFrame.BackgroundColor3 = Color3.fromRGB(10, 4, 16)
+
+        mainBG.Visible = false
+        mainBGOverlay.Visible = false
+        settingsBG.Visible = false
+        settingsBGOverlay.Visible = false
+        bgFrameBG.Visible = false
+        bgFrameOverlay.Visible = false
+        return
+    end
+
+    main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    settingsFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    bgFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+
+    -- Main
+    mainBG.Image = assetId
+    mainBG.Visible = true
+    mainBGOverlay.Visible = true
+
+    -- Settings
+    settingsBG.Image = assetId
+    settingsBG.Visible = true
+    settingsBGOverlay.Visible = true
+
+    -- Background changer
+    bgFrameBG.Image = assetId
+    bgFrameBG.Visible = true
+    bgFrameOverlay.Visible = true
+end
+
+local function selectBG(assetId)
+    currentBG = assetId
+
+    for _, child in ipairs(bgScroll:GetChildren()) do
+        if child:IsA("TextButton") then
+            local isSelected = (child:GetAttribute("AssetId") == assetId)
+            local st = child:FindFirstChildOfClass("UIStroke")
+            if st then
+                TweenService:Create(st, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
+                    Color        = Color3.fromRGB(255, 255, 255),
+                    Transparency = isSelected and 0 or 1,
+                    Thickness    = isSelected and 3 or 1,
+                }):Play()
+            end
+
+            local inner = child:FindFirstChild("ThumbImage")
+            if inner then
+                TweenService:Create(inner, TweenInfo.new(0.2, Enum.EasingStyle.Back), {
+                    Size = isSelected and UDim2.new(1, -2, 1, -2) or UDim2.new(1, -4, 1, -4),
+                }):Play()
+            end
+        end
+    end
+
+    applyBackground(assetId)
+end
+
+-- Crear thumbs
+local thumbSize = 70
+local thumbPadding = 8
+local thumbsPerRow = 3
+local totalRows = math.ceil(#BG_IMAGES / thumbsPerRow)
+bgScroll.CanvasSize = UDim2.new(0, 0, 0, totalRows * (thumbSize + thumbPadding) + thumbPadding)
+
+for i, assetId in ipairs(BG_IMAGES) do
+    local row = math.floor((i - 1) / thumbsPerRow)
+    local col = (i - 1) % thumbsPerRow
+
+    local thumb = new("TextButton", {
+        Name             = "Thumb_" .. i,
+        Size             = UDim2.new(0, thumbSize, 0, thumbSize),
+        Position         = UDim2.new(0, thumbPadding + col * (thumbSize + thumbPadding),
+                                         0, thumbPadding + row * (thumbSize + thumbPadding)),
+        BackgroundColor3 = Color3.fromRGB(30, 20, 40),
+        BorderSizePixel  = 0,
+        Text             = "",
+        AutoButtonColor  = false,
+        ClipsDescendants = false,
+        ZIndex           = 11,
+    }, bgScroll)
+    new("UICorner", { CornerRadius = UDim.new(0, 8) }, thumb)
+
+    new("UIStroke", {
+        Color           = Color3.fromRGB(255, 255, 255),
+        Transparency    = 1,
+        Thickness       = 1,
+        ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+    }, thumb)
+
+    local tImg = new("ImageLabel", {
+        Name                   = "ThumbImage",
+        Size                   = UDim2.new(1, -4, 1, -4),
+        Position               = UDim2.new(0, 2, 0, 2),
+        BackgroundTransparency = 1,
+        Image                  = assetId,
+        ResampleMode           = Enum.ResamplerMode.Default,
+        ScaleType              = Enum.ScaleType.Crop,
+        ZIndex                 = 12,
+    }, thumb)
+    new("UICorner", { CornerRadius = UDim.new(0, 6) }, tImg)
+
+    thumb:SetAttribute("AssetId", assetId)
+
+    thumb.MouseEnter:Connect(function()
+        TweenService:Create(thumb, TweenInfo.new(0.18, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(0, thumbSize + 6, 0, thumbSize + 6),
+            Position = UDim2.new(0, thumbPadding + col * (thumbSize + thumbPadding) - 3,
+                                    0, thumbPadding + row * (thumbSize + thumbPadding) - 3),
+        }):Play()
+    end)
+    thumb.MouseLeave:Connect(function()
+        TweenService:Create(thumb, TweenInfo.new(0.18, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(0, thumbSize, 0, thumbSize),
+            Position = UDim2.new(0, thumbPadding + col * (thumbSize + thumbPadding),
+                                    0, thumbPadding + row * (thumbSize + thumbPadding)),
+        }):Play()
+    end)
+
+    thumb.MouseButton1Click:Connect(function()
+        selectBG(assetId)
+    end)
+end
+
+if currentBG then
+    selectBG(currentBG)
+end
+
+-- ============================================================
+-- Stealth UI
+-- ============================================================
+local function refreshStealthUI()
+    local strong = (stealthMode == "STRONG")
+    stealthSubLbl.Text       = strong and "STRONG" or "NORMAL"
+    stealthSubLbl.TextColor3 = strong and Color3.fromRGB(255, 150, 150) or Color3.fromRGB(200, 200, 200)
+    TweenService:Create(stealthKnob, TweenInfo.new(0.25), {
+        Position = strong and UDim2.new(1, -22, 0.5, -9) or UDim2.new(0, 4, 0.5, -9),
+    }):Play()
+    TweenService:Create(stealthTrack, TweenInfo.new(0.35), {
+        BackgroundColor3 = strong and STRONG_COLOR or OFF_COLOR,
+    }):Play()
+    cfg = STEALTH[stealthMode]
+end
+
+stealthHit.MouseButton1Click:Connect(function()
+    stealthMode = (stealthMode == "NORMAL") and "STRONG" or "NORMAL"
+    refreshStealthUI()
+end)
+
+refreshStealthUI()
+
+-- Anti Reset handler
+arHit.MouseButton1Click:Connect(function()
+    local newState = not antiResetOn
+    local targetPos = newState and UDim2.new(1, -22, 0.5, -9) or UDim2.new(0, 4, 0.5, -9)
+    TweenService:Create(arKnob, TweenInfo.new(0.25), { Position = targetPos }):Play()
+    TweenService:Create(arTrack, TweenInfo.new(0.35), {
+        BackgroundColor3 = newState and GREEN_ENABLED or OFF_COLOR,
+    }):Play()
+    arSubLbl.Text       = newState and "ACTIVE" or "OFF"
+    arSubLbl.TextColor3 = newState and GREEN_GLOW or Color3.fromRGB(255, 255, 255)
+    if newState then
+        task.spawn(function()
+            local ok = pcall(startAntiReset)
+            if not ok then print("prince") end
+        end)
+    else
+        task.spawn(function() pcall(stopAntiReset) end)
+    end
+end)
+
+-- Slider
+local isSliding = false
+local sliderConnection = nil
+
+local function updateMenuScale(scale)
+    local menuScale = math.clamp(scale, 0.5, 1.5)
+    mainScale.Scale = menuScale
+    local percent = math.round(menuScale * 100)
+    sliderValue.Text = tostring(percent) .. "%"
+    local fillPercent = (menuScale - 0.5) / 1.0
+    sliderFill.Size = UDim2.new(fillPercent, 0, 1, 0)
+    sliderKnob.Position = UDim2.new(fillPercent, -7, 0.5, -7)
+end
+
+local function getSliderPosition(input)
+    if not sliderTrack or not sliderTrack.AbsoluteSize then return 0.5 end
+    local trackSize = sliderTrack.AbsoluteSize.X
+    if trackSize <= 0 then return 0.5 end
+    local relativeX = input.Position.X - sliderTrack.AbsolutePosition.X
+    return math.clamp(relativeX / trackSize, 0, 1)
+end
+
+local function handleSliderInput(input)
+    if not sliderTrack or not sliderTrack.AbsoluteSize then return end
+    local pos = getSliderPosition(input)
+    updateMenuScale(0.5 + (pos * 1.0))
+end
+
+sliderHit.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or
+       input.UserInputType == Enum.UserInputType.Touch then
+        isSliding = true
+        handleSliderInput(input)
+        if sliderConnection then sliderConnection:Disconnect() end
+        sliderConnection = UIS.InputChanged:Connect(function(inputChanged)
+            if isSliding and (inputChanged.UserInputType == Enum.UserInputType.MouseMovement or
+                              inputChanged.UserInputType == Enum.UserInputType.Touch) then
+                handleSliderInput(inputChanged)
+            end
+        end)
+    end
+end)
+
+sliderHit.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or
+       input.UserInputType == Enum.UserInputType.Touch then
+        isSliding = false
+        if sliderConnection then sliderConnection:Disconnect(); sliderConnection = nil end
+    end
+end)
+
+UIS.InputEnded:Connect(function(input)
+    if isSliding and (input.UserInputType == Enum.UserInputType.MouseButton1 or
+                       input.UserInputType == Enum.UserInputType.Touch) then
+        isSliding = false
+        if sliderConnection then sliderConnection:Disconnect(); sliderConnection = nil end
+    end
+end)
+
+updateMenuScale(1.0)
+
+-- Gradiente animado
+task.spawn(function()
+    local r = 0
+    while gui and gui.Parent do
+        local dt = task.wait()
+        r = (r + 120 * dt) % 360
+        if grad then grad.Rotation = r end
+        if sGrad then sGrad.Rotation = r end
+        if bgGrad then bgGrad.Rotation = r end
+    end
+end)
 
 -- Navegación
 settingsBtn.MouseButton1Click:Connect(function()
@@ -916,7 +1754,7 @@ bgBackBtn.MouseButton1Click:Connect(function()
     main.Visible = true
 end)
 
--- Handlers
+-- Desync handler
 dsHit.MouseButton1Click:Connect(function()
     local newState = not desyncOn
     local targetPos = newState and UDim2.new(1, -22, 0.5, -9) or UDim2.new(0, 4, 0.5, -9)
@@ -927,12 +1765,16 @@ dsHit.MouseButton1Click:Connect(function()
     dsSubLbl.Text       = newState and "ACTIVE" or "OFF"
     dsSubLbl.TextColor3 = newState and GREEN_GLOW or Color3.fromRGB(255, 255, 255)
     if newState then
-        task.spawn(function() pcall(startDesync) end)
+        task.spawn(function()
+            local ok = pcall(startDesync)
+            if not ok then print("prince") end
+        end)
     else
         task.spawn(function() pcall(stopDesync) end)
     end
 end)
 
+-- Anti Die handler
 adHit.MouseButton1Click:Connect(function()
     local newState = not antiDieOn
     local targetPos = newState and UDim2.new(1, -22, 0.5, -9) or UDim2.new(0, 4, 0.5, -9)
@@ -943,13 +1785,16 @@ adHit.MouseButton1Click:Connect(function()
     adSubLbl.Text       = newState and "ACTIVE" or "OFF"
     adSubLbl.TextColor3 = newState and GREEN_GLOW or Color3.fromRGB(255, 255, 255)
     if newState then
-        task.spawn(function() pcall(startAntiDie) end)
+        task.spawn(function()
+            local ok = pcall(startAntiDie)
+            if not ok then print("prince") end
+        end)
     else
         task.spawn(function() pcall(stopAntiDie) end)
     end
 end)
 
--- Sistema de Arrastre Draggable Limpio
+-- Drag genérico
 local function makeDraggable(frame, checkLock)
     local dragging, dragStart, startPos = false, nil, nil
 
@@ -986,4 +1831,52 @@ makeDraggable(main, function() return isLocked end)
 makeDraggable(settingsFrame, nil)
 makeDraggable(bgFrame, nil)
 
-print("[Levithon Hub] Cargado exitosamente.")
+print("[Levithon Hub] Loaded successfully.") nil, nil
+
+settingsFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+    or input.UserInputType == Enum.UserInputType.Touch then
+        sDragging  = true
+        sDragStart = input.Position
+        sStartPos  = settingsFrame.Position
+    end
+end)
+
+UIS.InputChanged:Connect(function(input)
+    if sDragging and (input.UserInputType == Enum.UserInputType.MouseMovement
+    or input.UserInputType == Enum.UserInputType.Touch) then
+        settingsFrame.Position = UDim2.new(
+    end
+end)
+
+UIS.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+    or input.UserInputType == Enum.UserInputType.Touch then
+        sDragging = false
+    end
+end)
+
+local bDragging, bDragStart, bStartPos = false, nil, nil
+
+bgFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+    or input.UserInputType == Enum.UserInputType.Touch then
+        bDragging  = true
+        bDragStart = input.Position
+        bStartPos  = bgFrame.Position
+    end
+end)
+
+UIS.InputChanged:Connect(function(input)
+    if bDragging and (input.UserInputType == Enum.UserInputType.MouseMovement
+    or input.UserInputType == Enum.UserInputType.Touch) then
+        bgFrame.Position = UDim2.new(
+    end
+end)
+
+UIS.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+    or input.UserInputType == Enum.UserInputType.Touch then
+        bDragging = false
+    end
+end)
