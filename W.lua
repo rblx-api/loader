@@ -1583,7 +1583,7 @@ M.bypassAimbotEnabled = false
 M.batTPEnabled = true
 M.batTPConn = nil
 M.batTPSpeed = M.batTPSpeed or 58
-M.batTPVersion = M.batTPVersion or "V1"
+M.batTPVersion = M.batTPVersion or "V2"
 M.batAimbotVersion = M.batAimbotVersion or "V1"
 M.antiDieFlingEnabled = M.antiDieFlingEnabled or false
 M.antiDieEnabled = false
@@ -1738,7 +1738,7 @@ M.KB = {
     LaggerToggle={kb=nil,gp=nil},
     LaggerCarry={kb=nil,gp=nil},
     BypassAimbot={kb=nil,gp=nil},
-    BatTP={kb=nil,gp=nil},
+    BatTP={kb=Enum.KeyCode.B,gp=nil},
 }
 M.AP_L1 = Vector3.new(-476.47,-6.28,92.73)
 M.AP_L2 = Vector3.new(-483.12,-4.95,94.81)
