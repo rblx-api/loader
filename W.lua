@@ -21,7 +21,7 @@ if type(gethui) == "function" and type(readfile) == "function" then
 end
 
 if not hasValidExecutor then
-    warn("[JESÚS DUEL] This script requires a paid executor (Xeno, Solara, Delta, Medium, SkibX, Volt, Wave, or Real)")
+    warn("[JESÚS] This script requires a paid executor (Xeno, Solara, Delta, Medium, SkibX, Volt, Wave, or Real)")
     return
 end
 
@@ -62,7 +62,7 @@ local function VYNX_emergencyToast(msg)
         local t = Instance.new("TextLabel", f)
         t.Size = UDim2.fromScale(1, 1)
         t.BackgroundTransparency = 1
-        t.Text = tostring(msg or "JESÚS DUEL loading...")
+        t.Text = tostring(msg or "JESÚS loading...")
         t.TextColor3 = Color3.fromRGB(255, 255, 255)
         t.Font = Enum.Font.GothamBold
         t.TextSize = 14
@@ -2721,7 +2721,7 @@ function M.setupHeadIndicator(char)
     discordLbl.Size = UDim2.new(1, 0, 0, 28)
     discordLbl.Position = UDim2.new(0, 0, 0, 0)
     discordLbl.BackgroundTransparency = 1
-    discordLbl.Text = "Jesús Duel"
+    discordLbl.Text = "Jesús"
     discordLbl.TextColor3 = Color3.fromRGB(230, 195, 115)
     discordLbl.Font = Enum.Font.GothamBold
     discordLbl.TextSize = 18
@@ -2946,6 +2946,7 @@ function M.buildNewStatusUI()
     -- VH logo left (large, own blue outline; V blue + H white)
     local logoWrap = Instance.new("Frame", frame)
     logoWrap.Name = "LogoWrap"
+    logoWrap.Visible = false
     logoWrap.Size = UDim2.new(0, 40, 0, 40)
     logoWrap.Position = UDim2.new(0, 8, 0.5, -20)
     logoWrap.BackgroundColor3 = Color3.fromRGB(4, 12, 20)
@@ -2987,10 +2988,10 @@ function M.buildNewStatusUI()
     -- content starts AFTER logo (x = 56)
     local title = Instance.new("TextLabel", frame)
     title.Name = "BrandTitle"
-    title.Size = UDim2.new(1, -120, 0, 14)
-    title.Position = UDim2.new(0, 56, 0, 6)
+    title.Size = UDim2.new(1, -70, 0, 14)
+    title.Position = UDim2.new(0, 10, 0, 6)
     title.BackgroundTransparency = 1
-    title.Text = "JESÚS DUEL V2"
+    title.Text = "JESÚS"
     title.TextColor3 = JESUS_DUEL_ACCENT
     title.Font = Enum.Font.GothamBlack
     title.TextSize = 12
@@ -2999,10 +3000,10 @@ function M.buildNewStatusUI()
 
     local sub = Instance.new("TextLabel", frame)
     sub.Name = "BrandSub"
-    sub.Size = UDim2.new(1, -120, 0, 11)
-    sub.Position = UDim2.new(0, 56, 0, 20)
+    sub.Size = UDim2.new(1, -70, 0, 11)
+    sub.Position = UDim2.new(0, 10, 0, 20)
     sub.BackgroundTransparency = 1
-    sub.Text = "JESÚS DUEL"
+    sub.Text = ""
     sub.TextColor3 = Color3.fromRGB(230, 195, 115)
     sub.Font = Enum.Font.GothamBold
     sub.TextSize = 9
@@ -11647,7 +11648,7 @@ function M.buildKillLaggerUI()
 
     local title = Instance.new("TextLabel", main)
     title.Size = UDim2.new(1,-120,0,16); title.Position = UDim2.new(0,14,0,8)
-    title.BackgroundTransparency = 1; title.Text = "JESÚS DUEL LAGGER"; title.TextColor3 = WHITE
+    title.BackgroundTransparency = 1; title.Text = "JESÚS"; title.TextColor3 = WHITE
     title.Font = Enum.Font.GothamBold; title.TextSize = 13; title.TextXAlignment = Enum.TextXAlignment.Left; title.ZIndex = 5
 
     local discordTag = Instance.new("TextLabel", main)
@@ -12816,7 +12817,7 @@ end
     discordLbl.Position = UDim2.new(0, 58, 0, 34)
     discordLbl.Size = UDim2.new(1, -110, 0, 20)
     discordLbl.BackgroundTransparency = 1
-    discordLbl.Text = "JESÚS DUEL OWNS ALL"
+    discordLbl.Text = "JESÚS"
     discordLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
     discordLbl.TextTransparency = 0
     discordLbl.TextStrokeTransparency = 1
@@ -17253,5 +17254,5 @@ function M.applyOceanSky()
     end
 end
 
-print("Jesús Duel loaded successfully!")
+print("Jesús loaded successfully!")
 return M
