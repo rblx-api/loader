@@ -1583,7 +1583,7 @@ M.bypassAimbotEnabled = false
 M.batTPEnabled = true
 M.batTPConn = nil
 M.batTPSpeed = M.batTPSpeed or 58
-M.batTPVersion = M.batTPVersion or "V2"
+M.batTPVersion = M.batTPVersion or "V1"
 M.batAimbotVersion = M.batAimbotVersion or "V1"
 M.antiDieFlingEnabled = M.antiDieFlingEnabled or false
 M.antiDieEnabled = false
@@ -1738,7 +1738,8 @@ M.KB = {
     LaggerToggle={kb=nil,gp=nil},
     LaggerCarry={kb=nil,gp=nil},
     BypassAimbot={kb=nil,gp=nil},
-    BatTP={kb=Enum.KeyCode.B,gp=nil},
+    BatTP={kb=nil,gp=nil},
+    BatV2={kb=Enum.KeyCode.B,gp=nil},
 }
 M.AP_L1 = Vector3.new(-476.47,-6.28,92.73)
 M.AP_L2 = Vector3.new(-483.12,-4.95,94.81)
@@ -13879,6 +13880,9 @@ end
             saveCherryConfig()
         elseif kbMatch(M.KB.BatTP, kc) then
             if M.toggleBatTPAimbot then M.toggleBatTPAimbot() end
+        elseif kbMatch(M.KB.BatV2, kc) then
+            if M.toggleBypassBatV2 then pcall(M.toggleBypassBatV2) end
+            pcall(saveCherryConfig)
         elseif kbMatch(M.KB.BypassAimbot, kc) then
             M.toggleBypassAimbot()
             if M.setBypassVisual then M.setBypassVisual(M.bypassAimbotEnabled) end
@@ -14839,6 +14843,7 @@ M.bypassKeybindName = M.bypassKeybindName or "G"
     uiKeybindRow(PKB, "Lagger Carry", M.KB.LaggerCarry, "LaggerCarry")
     uiKeybindRow(PKB, "Bat Aimbot", M.KB.AutoBat, "AutoBat")
     uiKeybindRow(PKB, "Bat TP", M.KB.BatTP, "BatTP")
+    uiKeybindRow(PKB, "Bat V2", M.KB.BatV2, "BatV2")
     uiKeybindRow(PKB, "Auto Left", M.KB.AutoLeft, "AutoLeft")
     uiKeybindRow(PKB, "Auto Right", M.KB.AutoRight, "AutoRight")
     uiKeybindRow(PKB, "Drop Brainrot", M.KB.DropBrainrot, "DropBrainrot")
