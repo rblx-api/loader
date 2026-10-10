@@ -5280,6 +5280,175 @@ function M.stopBatTPAimbot()
     if M.mobBtnRefs and M.mobBtnRefs.batTP then pcall(function() M.mobBtnRefs.batTP(false) end) end
 end
 
+
+-- ==================== BAT V2 REPLACED LOGIC (FROM EXTERNAL SOURCE) ====================
+M._batV2_bypassToggled = M._batV2_bypassToggled or false
+M._batV2_bypassConn = M._batV2_bypassConn or nil
+M._batV2_prevAutoRotate = nil
+M._batV2_hitCD = false
+M._batV2_SWING_CD = 0.35
+M._batV2_HIT_DIST = 8
+
+M._BAT_SLAP_LIST_V2 = {
+    "Bat", "Slap", "Iron Slap", "Gold Slap", "Diamond Slap",
+    "Emerald Slap", "Ruby Slap", "Dark Matter Slap", "Flame Slap",
+    "Nuclear Slap", "Galaxy Slap", "Glitched Slap"
+}
+
+function M._batV2_findBat()
+    local char = player.Character
+    if not char then return nil end
+    for _, name in ipairs(M._BAT_SLAP_LIST_V2) do
+        local t = char:FindFirstChild(name)
+        if t and t:IsA("Tool") then return t end
+    end
+    local bp = player:FindFirstChildOfClass("Backpack")
+    if bp then
+        for _, name in ipairs(M._BAT_SLAP_LIST_V2) do
+            local t = bp:FindFirstChild(name)
+            if t and t:IsA("Tool") then
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum then pcall(function() hum:EquipTool(t) end) end
+                return t
+            end
+        end
+    end
+    for _, ch in ipairs(char:GetChildren()) do
+        if ch:IsA("Tool") and (ch.Name:lower():find("bat") or ch.Name:lower():find("slap")) then
+            return ch
+        end
+    end
+    return nil
+end
+
+function M._batV2_trySwing()
+    if M._batV2_hitCD then return end
+    M._batV2_hitCD = true
+    pcall(function()
+        local char = player.Character
+        if char then
+            local bat = M._batV2_findBat()
+            if bat then
+                if bat.Parent ~= char then
+                    local hum = char:FindFirstChildOfClass("Humanoid")
+                    if hum then pcall(function() hum:EquipTool(bat) end) end
+                end
+                pcall(function() bat:Activate() end)
+            end
+        end
+    end)
+    task.delay(M._batV2_SWING_CD, function() M._batV2_hitCD = false end)
+end
+
+function M._batV2_getClosestTarget()
+    local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    if not root then return nil, math.huge end
+    local closest, minDist = nil, math.huge
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= player and plr.Character then
+            local tRoot = plr.Character:FindFirstChild("HumanoidRootPart")
+            local hum = plr.Character:FindFirstChildOfClass("Humanoid")
+            if tRoot and hum and hum.Health > 0 then
+                local dist = (tRoot.Position - root.Position).Magnitude
+                if dist < minDist then
+                    minDist = dist
+                    closest = tRoot
+                end
+            end
+        end
+    end
+    return closest, minDist
+end
+
+function M._batV2_start()
+    if M._batV2_bypassConn then M._batV2_bypassConn:Disconnect() end
+    local hum = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+    if hum then
+        if M._batV2_prevAutoRotate == nil then M._batV2_prevAutoRotate = hum.AutoRotate end
+        hum.AutoRotate = false
+    end
+    M._batV2_bypassConn = RunService.RenderStepped:Connect(function()
+        if not M._batV2_bypassToggled then return end
+        local char = player.Character
+        if not char then return end
+        local root = char:FindFirstChild("HumanoidRootPart")
+        if not root then return end
+        local hum2 = char:FindFirstChildOfClass("Humanoid")
+        if not hum2 then return end
+        if not char:FindFirstChildOfClass("Tool") then
+            local bat = M._batV2_findBat()
+            if bat then pcall(function() hum2:EquipTool(bat) end) end
+        end
+        local target, targetDist = M._batV2_getClosestTarget()
+        if not target then return end
+        local myPos = root.Position
+        local targetPos = target.Position
+        local direction = targetPos - myPos
+        local flatDir = Vector3.new(direction.X, 0, direction.Z)
+        if flatDir.Magnitude > 0 then flatDir = flatDir.Unit else flatDir = Vector3.zero end
+        local chaseSpeed = 58
+        local desiredHeight = targetPos.Y + 3.7
+        local yVel = (desiredHeight - myPos.Y) * 19.5
+        if hum2.FloorMaterial ~= Enum.Material.Air then yVel = math.max(yVel, 13) end
+        yVel = math.clamp(yVel, -70, 110)
+        local desiredVel = Vector3.new(flatDir.X * chaseSpeed, yVel, flatDir.Z * chaseSpeed)
+        root.AssemblyLinearVelocity = root.AssemblyLinearVelocity:Lerp(desiredVel, 0.8)
+        local toTarget = targetPos - myPos
+        if toTarget.Magnitude > 0.1 then
+            local goalCF = CFrame.lookAt(myPos, targetPos)
+            local diffCF = root.CFrame:Inverse() * goalCF
+            local rx, ry, rz = diffCF:ToEulerAnglesXYZ()
+            rx = math.clamp(rx, -2.5, 2.5)
+            ry = math.clamp(ry, -2.5, 2.5)
+            rz = math.clamp(rz, -2.5, 2.5)
+            root.AssemblyAngularVelocity = root.CFrame:VectorToWorldSpace(Vector3.new(rx * 42, ry * 42, rz * 42))
+        end
+        if targetDist <= M._batV2_HIT_DIST then M._batV2_trySwing() end
+    end)
+end
+
+function M._batV2_stop()
+    if M._batV2_bypassConn then
+        M._batV2_bypassConn:Disconnect()
+        M._batV2_bypassConn = nil
+    end
+    local hum = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+    if hum and M._batV2_prevAutoRotate ~= nil then
+        hum.AutoRotate = M._batV2_prevAutoRotate
+        M._batV2_prevAutoRotate = nil
+    end
+    local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    if root then
+        root.AssemblyLinearVelocity = Vector3.zero
+        root.AssemblyAngularVelocity = Vector3.zero
+    end
+end
+
+function M.toggleBypassBatV2()
+    M._batV2_bypassToggled = not M._batV2_bypassToggled
+    if M._batV2_bypassToggled then
+        M._batV2_start()
+    else
+        M._batV2_stop()
+    end
+    -- update button color if possible
+    pcall(function()
+        if M._refreshBatV2Button then M._refreshBatV2Button(M._batV2_bypassToggled) end
+    end)
+    return M._batV2_bypassToggled
+end
+
+player.CharacterAdded:Connect(function()
+    if M._batV2_bypassToggled then
+        task.wait(0.5)
+        M._batV2_start()
+    end
+end)
+
+print("[BAT V2] Bypass aimbot logic injected")
+-- ==================== END BAT V2 REPLACED LOGIC ====================
+
+
 function M.toggleBatTPAimbot()
     if M.batTPEnabled then M.stopBatTPAimbot() else M.startBatTPAimbot() end
     if M.setBatTPVisual then pcall(function() M.setBatTPVisual(M.batTPEnabled) end) end
@@ -8754,6 +8923,7 @@ function M.buildMobileButtons()
         {key = "laggerCarry", label = "LAGGER\nCARRY",  toggle = true,  gcol = 1, grow = 3},
         {key = "lagger",      label = "LAGGER\nNORMAL", toggle = true,  gcol = 0, grow = 4},
         {key = "carrySpeed",  label = "CARRY\nMODE",    toggle = true,  gcol = 1, grow = 4},
+        {key = "batV2",       label = "BAT V2",           toggle = false, gcol = 0, grow = 5},
     }
     if type(M.mobileBtnVisible) ~= "table" then
         M.mobileBtnVisible = {}
@@ -8852,7 +9022,7 @@ function M.buildMobileButtons()
     local function getClassicButtonPos(def)
         -- 2 columns on the right, slightly above bottom (poco piu su)
         local COLS = 2
-        local ROWS = 5
+        local ROWS = 6
         local gridW = COLS * BTN_W + (COLS - 1) * GAP_X
         local gridH = ROWS * BTN_H + (ROWS - 1) * GAP_Y
         local margin = 14
@@ -9095,6 +9265,14 @@ function M.buildMobileButtons()
                 if M._applyCarryBtnColor then pcall(M._applyCarryBtnColor, M.carrySpeedActive == true) end
                 if M._applyLCBtnColor then pcall(M._applyLCBtnColor, M.laggerCarryActive == true) end
                 if M._applyLagBtnColor then pcall(M._applyLagBtnColor, M.laggerModeEnabled == true) end
+            elseif key == "batV2" then
+                -- BAT V2 REPLACED: bypass aimbot logic from external source
+                flashButton(0.4)
+                if M.toggleBypassBatV2 then
+                    pcall(M.toggleBypassBatV2)
+                else
+                    warn("[BAT V2] toggle not ready")
+                end
             end
 
             refreshAll()
