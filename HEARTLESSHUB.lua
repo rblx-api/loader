@@ -1,10 +1,10 @@
----- leaked by .gg/source
+---- HEARTLESS HUB
 
-if _G.RivalHubRunning then
+if _G.HeartlessRunning then
     warn("[HEARTLESS] Instancia previa detectada. Se recomienda rejoin si hay comportamiento errático.")
 end
-_G.RivalHubRunning = false
-_G.__RivalHubMainOriginalPos = nil
+_G.HeartlessRunning = false
+_G.__HeartlessMainOriginalPos = nil
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -137,9 +137,9 @@ local function stopHEARTLESSFullRedrum()
 end
 
 
-_G.RivalHubRunning = true
-_G.RivalHubSession = (_G.RivalHubSession or 0) + 1
-local _mySession = _G.RivalHubSession
+_G.HeartlessRunning = true
+_G.HeartlessSession = (_G.HeartlessSession or 0) + 1
+local _mySession = _G.HeartlessSession
 
 do
     local screen, connections, closed = nil, {}, false
@@ -379,36 +379,36 @@ do
         end
         connect(RunService.RenderStepped, render)
         render()
-        while not closed and _mySession == _G.RivalHubSession do task.wait(0.05) end
+        while not closed and _mySession == _G.HeartlessSession do task.wait(0.05) end
     end)
     clean()
     if not ok then warn("[HEARTLESS] Intro: " .. tostring(err)) end
 end
 
-local RIVALHUB_LANGUAGE = "en"
+local HEARTLESS_LANGUAGE = "en"
 
-local RIVALHUB_TRANSLATIONS = {
+local HEARTLESS_TRANSLATIONS = {
     es = { ["RESET ALL SETTINGS"]="RESTABLECER TODO", ["SETTINGS RESET"]="AJUSTES RESTABLECIDOS", ["CONFIRM?"]="¿CONFIRMAR?", ["ERROR"]="ERROR", ["RESET"]="RESTABLECER", ["Keybinds"]="TECLAS", ["Carry Mode"]="MODO CARGAR", ["Lagger Mode"]="MODO LAG", ["Auto Left"]="AUTO IZQUIERDA", ["Auto Right"]="AUTO DERECHA", ["Auto Bat"]="AUTO BATE", ["TP Down"]="TP ABAJO", ["Drop Brainrot"]="SOLTAR BRAINROT", ["Hide GUI"]="OCULTAR MENÚ", ["Normal Speed"]="VELOCIDAD NORMAL", ["Carry Speed"]="VELOCIDAD CARGAR", ["Current Mode"]="MODO ACTUAL", ["ACTIVATE"]="ACTIVAR" },
     pt = { ["RESET ALL SETTINGS"]="REDEFINIR TUDO", ["SETTINGS RESET"]="CONFIGURAÇÕES REDEFINIDAS", ["CONFIRM?"]="CONFIRMAR?", ["ERROR"]="ERRO", ["RESET"]="REDEFINIR", ["Keybinds"]="TECLAS", ["Carry Mode"]="MODO CARREGAR", ["Auto Left"]="AUTO ESQUERDA", ["Auto Right"]="AUTO DIREITA", ["Hide GUI"]="OCULTAR MENU", ["Normal Speed"]="VELOCIDADE NORMAL", ["Carry Speed"]="VELOCIDADE CARREGAR", ["ACTIVATE"]="ATIVAR" },
     fr = { ["RESET ALL SETTINGS"]="RÉINITIALISER", ["SETTINGS RESET"]="PARAMÈTRES RÉINITIALISÉS", ["CONFIRM?"]="CONFIRMER ?", ["ERROR"]="ERREUR", ["RESET"]="RÉINITIALISER", ["Keybinds"]="RACCOURCIS", ["Carry Mode"]="MODE PORTER", ["Auto Left"]="AUTO GAUCHE", ["Auto Right"]="AUTO DROITE", ["Hide GUI"]="MASQUER LE MENU", ["Normal Speed"]="VITESSE NORMALE", ["Carry Speed"]="VITESSE PORTER", ["ACTIVATE"]="ACTIVER" },
     de = { ["RESET ALL SETTINGS"]="ALLES ZURÜCKSETZEN", ["SETTINGS RESET"]="EINSTELLUNGEN ZURÜCKGESETZT", ["CONFIRM?"]="BESTÄTIGEN?", ["ERROR"]="FEHLER", ["RESET"]="ZURÜCKSETZEN", ["Keybinds"]="TASTEN", ["Carry Mode"]="TRAGEMODUS", ["Auto Left"]="AUTO LINKS", ["Auto Right"]="AUTO RECHTS", ["Hide GUI"]="MENÜ AUSBLENDEN", ["Normal Speed"]="NORMALE GESCHWINDIGKEIT", ["Carry Speed"]="TRAGEGESCHWINDIGKEIT", ["ACTIVATE"]="AKTIVIEREN" },
 }
 
-local function localizeRivalHubInterface(root)
-    local dictionary = RIVALHUB_TRANSLATIONS[RIVALHUB_LANGUAGE]
+local function localizeHeartlessInterface(root)
+    local dictionary = HEARTLESS_TRANSLATIONS[HEARTLESS_LANGUAGE]
     if not dictionary or not root then return end
     for _, object in ipairs(root:GetDescendants()) do
         if object:IsA("TextLabel") or object:IsA("TextButton") then
-            local source = object:GetAttribute("RivalHubSourceText") or object.Text
-            object:SetAttribute("RivalHubSourceText", source)
+            local source = object:GetAttribute("HeartlessSourceText") or object.Text
+            object:SetAttribute("HeartlessSourceText", source)
             local translated = dictionary[source]
             if translated then object.Text = translated end
         end
     end
 end
 
-local function rivalHubTranslate(source)
-    local dictionary = RIVALHUB_TRANSLATIONS[RIVALHUB_LANGUAGE]
+local function heartlessTranslate(source)
+    local dictionary = HEARTLESS_TRANSLATIONS[HEARTLESS_LANGUAGE]
     return (dictionary and dictionary[source]) or source
 end
 
@@ -547,7 +547,7 @@ local COLOR_THEMES = {
     ["Gray"] = Color3.fromRGB(170, 170, 170),
 }
 
-RIVAL_TITLE_THEMES = {
+HEARTLESS_TITLE_THEMES = {
     ["Orange"] = { top = Color3.fromRGB(255, 245, 227), bottom = Color3.fromRGB(229, 181, 118) },
     ["Blue"]  = { top = Color3.fromRGB(60, 130, 255),  bottom = Color3.fromRGB(210, 220, 235) },
     ["Red"]   = { top = Color3.fromRGB(255, 70, 70),   bottom = Color3.fromRGB(215, 215, 215) },
@@ -555,14 +555,14 @@ RIVAL_TITLE_THEMES = {
     ["Black"] = { top = Color3.fromRGB(35, 35, 40),    bottom = Color3.fromRGB(115, 115, 125) },
     ["Gray"]  = { top = Color3.fromRGB(200, 200, 200), bottom = Color3.fromRGB(120, 120, 130) },
 }
-currentRivalTitleTheme = "Orange"
+currentHeartlessTitleTheme = "Orange"
 scriptLogoRef = nil
-rivalTitleSelectorLabel = nil
+heartlessTitleSelectorLabel = nil
 
-function applyRivalTitleTheme(themeName)
-    local t = RIVAL_TITLE_THEMES[themeName]
+function applyHeartlessTitleTheme(themeName)
+    local t = HEARTLESS_TITLE_THEMES[themeName]
     if not t then return end
-    currentRivalTitleTheme = themeName
+    currentHeartlessTitleTheme = themeName
     if scriptLogoRef then
         local grad = scriptLogoRef:FindFirstChildOfClass("UIGradient")
         if grad then
@@ -572,8 +572,8 @@ function applyRivalTitleTheme(themeName)
             })
         end
     end
-    if rivalTitleSelectorLabel then
-        rivalTitleSelectorLabel.Text = themeName
+    if heartlessTitleSelectorLabel then
+        heartlessTitleSelectorLabel.Text = themeName
     end
     if saveAllSettings then pcall(saveAllSettings) end
 end
@@ -583,7 +583,7 @@ selectedColor = COLOR_THEMES["Orange"]
 
 function getThemeColor() return selectedColor end
 
-function rivalHubGradient(c)
+function heartlessGradient(c)
     return ColorSequence.new({
         ColorSequenceKeypoint.new(0.00, c:Lerp(Color3.new(1,1,1), 0.55)),
         ColorSequenceKeypoint.new(0.45, c),
@@ -591,7 +591,7 @@ function rivalHubGradient(c)
     })
 end
 
-function rivalHubGradientSoft(c)
+function heartlessGradientSoft(c)
     return ColorSequence.new({
         ColorSequenceKeypoint.new(0.00, c:Lerp(Color3.new(1,1,1), 0.75)),
         ColorSequenceKeypoint.new(0.50, c:Lerp(Color3.new(1,1,1), 0.25)),
@@ -599,7 +599,7 @@ function rivalHubGradientSoft(c)
     })
 end
 
-function rivalHubGradientDark(c)
+function heartlessGradientDark(c)
     return ColorSequence.new({
         ColorSequenceKeypoint.new(0.00, c:Lerp(Color3.fromRGB(0,0,0), 0.35)),
         ColorSequenceKeypoint.new(0.55, c:Lerp(Color3.fromRGB(0,0,0), 0.65)),
@@ -607,14 +607,14 @@ function rivalHubGradientDark(c)
     })
 end
 
-function applyRivalHubGradientToLabel(label, c)
+function applyHeartlessGradientToLabel(label, c)
     if not label then return end
     local grad = label:FindFirstChildOfClass("UIGradient")
     if not grad then
         grad = Instance.new("UIGradient", label)
     end
     grad.Rotation = 0
-    grad.Color = rivalHubGradient(c)
+    grad.Color = heartlessGradient(c)
 end
 
 local _lastThemeUpdate = 0
@@ -644,7 +644,7 @@ function updateAllUIThemeColors(color)
         progressFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         local grad = progressFill:FindFirstChildOfClass("UIGradient")
         if grad then
-            grad.Color = rivalHubGradient(color)
+            grad.Color = heartlessGradient(color)
             grad.Rotation = 0
         end
     end
@@ -717,7 +717,7 @@ function updateAllUIThemeColors(color)
         if caption then caption.TextColor3 = active and Color3.fromRGB(249, 242, 229) or Color3.fromRGB(155, 157, 156) end
         if MVPUI.colorSectionIcon then MVPUI.colorSectionIcon(tab:FindFirstChild("SectionIcon"), active and color or Color3.fromRGB(144, 147, 150)) end
     end
-    if _G.__RivalHubRefreshESPTheme then pcall(_G.__RivalHubRefreshESPTheme, color) end
+    if _G.__HeartlessRefreshESPTheme then pcall(_G.__HeartlessRefreshESPTheme, color) end
     if main then
         local titleFrame = main:FindFirstChild("Frame")
         if titleFrame then
@@ -733,11 +733,11 @@ function updateAllUIThemeColors(color)
         colorSelectorLabel.TextColor3 = color
     end
 
-    if _G._rivalHubStealSlide then
-        _G._rivalHubStealSlide.BackgroundColor3 = color
-        local sg = _G._rivalHubStealSlide:FindFirstChildOfClass("UIGradient")
-        if sg then sg.Color = rivalHubGradient(color) end
-        local ss = _G._rivalHubStealSlide:FindFirstChildOfClass("UIStroke")
+    if _G._heartlessStealSlide then
+        _G._heartlessStealSlide.BackgroundColor3 = color
+        local sg = _G._heartlessStealSlide:FindFirstChildOfClass("UIGradient")
+        if sg then sg.Color = heartlessGradient(color) end
+        local ss = _G._heartlessStealSlide:FindFirstChildOfClass("UIStroke")
         if ss then ss.Color = color end
     end
 
@@ -823,8 +823,8 @@ local function applyBody(char)
                     w.Part0 = orig
                     w.Part1 = c
                     w.Parent = c
-                    if orig:GetAttribute("RivalHubOutfitOriginalTransparency") == nil then
-                        orig:SetAttribute("RivalHubOutfitOriginalTransparency", orig.Transparency)
+                    if orig:GetAttribute("HeartlessOutfitOriginalTransparency") == nil then
+                        orig:SetAttribute("HeartlessOutfitOriginalTransparency", orig.Transparency)
                     end
                     orig.Transparency = 1
                     total = total + 1
@@ -989,15 +989,15 @@ local function clearPreviousOutfitAssets(char)
     end
     for _, part in ipairs(char:GetDescendants()) do
         if part:IsA("BasePart") then
-            local originalTransparency = part:GetAttribute("RivalHubOutfitOriginalTransparency")
+            local originalTransparency = part:GetAttribute("HeartlessOutfitOriginalTransparency")
             if originalTransparency ~= nil then
                 part.Transparency = originalTransparency
-                part:SetAttribute("RivalHubOutfitOriginalTransparency", nil)
+                part:SetAttribute("HeartlessOutfitOriginalTransparency", nil)
             end
-            local originalLocalTransparency = part:GetAttribute("RivalHubOutfitOriginalLocalTransparency")
+            local originalLocalTransparency = part:GetAttribute("HeartlessOutfitOriginalLocalTransparency")
             if originalLocalTransparency ~= nil then
                 part.LocalTransparencyModifier = originalLocalTransparency
-                part:SetAttribute("RivalHubOutfitOriginalLocalTransparency", nil)
+                part:SetAttribute("HeartlessOutfitOriginalLocalTransparency", nil)
             end
         end
     end
@@ -1010,24 +1010,24 @@ local function clearPreviousOutfitAssets(char)
         bc.Parent = char
     end
     local head = char:FindFirstChild("Head")
-    if head and head:IsA("MeshPart") and head:GetAttribute("RivalHubOutfitModifiedMeshPart") then
+    if head and head:IsA("MeshPart") and head:GetAttribute("HeartlessOutfitModifiedMeshPart") then
         pcall(function()
-            head.MeshId = head:GetAttribute("RivalHubOutfitOriginalMeshId") or ""
-            head.TextureID = head:GetAttribute("RivalHubOutfitOriginalTextureId") or ""
+            head.MeshId = head:GetAttribute("HeartlessOutfitOriginalMeshId") or ""
+            head.TextureID = head:GetAttribute("HeartlessOutfitOriginalTextureId") or ""
         end)
-        head:SetAttribute("RivalHubOutfitModifiedMeshPart", nil)
-        head:SetAttribute("RivalHubOutfitOriginalMeshId", nil)
-        head:SetAttribute("RivalHubOutfitOriginalTextureId", nil)
+        head:SetAttribute("HeartlessOutfitModifiedMeshPart", nil)
+        head:SetAttribute("HeartlessOutfitOriginalMeshId", nil)
+        head:SetAttribute("HeartlessOutfitOriginalTextureId", nil)
     elseif head then
         local specialMesh = head:FindFirstChildWhichIsA("SpecialMesh")
-        if specialMesh and specialMesh:GetAttribute("RivalHubOutfitCreatedMesh") then
+        if specialMesh and specialMesh:GetAttribute("HeartlessOutfitCreatedMesh") then
             specialMesh:Destroy()
-        elseif specialMesh and specialMesh:GetAttribute("RivalHubOutfitModifiedMesh") then
-            specialMesh.MeshId = specialMesh:GetAttribute("RivalHubOutfitOriginalMeshId") or ""
-            specialMesh.TextureId = specialMesh:GetAttribute("RivalHubOutfitOriginalTextureId") or ""
-            specialMesh:SetAttribute("RivalHubOutfitModifiedMesh", nil)
-            specialMesh:SetAttribute("RivalHubOutfitOriginalMeshId", nil)
-            specialMesh:SetAttribute("RivalHubOutfitOriginalTextureId", nil)
+        elseif specialMesh and specialMesh:GetAttribute("HeartlessOutfitModifiedMesh") then
+            specialMesh.MeshId = specialMesh:GetAttribute("HeartlessOutfitOriginalMeshId") or ""
+            specialMesh.TextureId = specialMesh:GetAttribute("HeartlessOutfitOriginalTextureId") or ""
+            specialMesh:SetAttribute("HeartlessOutfitModifiedMesh", nil)
+            specialMesh:SetAttribute("HeartlessOutfitOriginalMeshId", nil)
+            specialMesh:SetAttribute("HeartlessOutfitOriginalTextureId", nil)
         end
     end
 end
@@ -1103,21 +1103,21 @@ local function applyNoOutfit(char)
         if item:IsA("Accessory") then
             for _, part in ipairs(item:GetDescendants()) do
                 if part:IsA("BasePart") then
-                    local original = part:GetAttribute("RivalHubOriginalTransparency")
-                    if original ~= nil then part.Transparency = original; part:SetAttribute("RivalHubOriginalTransparency", nil) end
-                    local originalLocal = part:GetAttribute("RivalHubOriginalLocalTransparency")
-                    if originalLocal ~= nil then part.LocalTransparencyModifier = originalLocal; part:SetAttribute("RivalHubOriginalLocalTransparency", nil) end
+                    local original = part:GetAttribute("HeartlessOriginalTransparency")
+                    if original ~= nil then part.Transparency = original; part:SetAttribute("HeartlessOriginalTransparency", nil) end
+                    local originalLocal = part:GetAttribute("HeartlessOriginalLocalTransparency")
+                    if originalLocal ~= nil then part.LocalTransparencyModifier = originalLocal; part:SetAttribute("HeartlessOriginalLocalTransparency", nil) end
                 end
             end
         elseif item:IsA("Shirt") then
-            local original = item:GetAttribute("RivalHubOriginalTemplate")
-            if original ~= nil then item.ShirtTemplate = original; item:SetAttribute("RivalHubOriginalTemplate", nil) end
+            local original = item:GetAttribute("HeartlessOriginalTemplate")
+            if original ~= nil then item.ShirtTemplate = original; item:SetAttribute("HeartlessOriginalTemplate", nil) end
         elseif item:IsA("Pants") then
-            local original = item:GetAttribute("RivalHubOriginalTemplate")
-            if original ~= nil then item.PantsTemplate = original; item:SetAttribute("RivalHubOriginalTemplate", nil) end
+            local original = item:GetAttribute("HeartlessOriginalTemplate")
+            if original ~= nil then item.PantsTemplate = original; item:SetAttribute("HeartlessOriginalTemplate", nil) end
         elseif item:IsA("ShirtGraphic") then
-            local original = item:GetAttribute("RivalHubOriginalGraphic")
-            if original ~= nil then item.Graphic = original; item:SetAttribute("RivalHubOriginalGraphic", nil) end
+            local original = item:GetAttribute("HeartlessOriginalGraphic")
+            if original ~= nil then item.Graphic = original; item:SetAttribute("HeartlessOriginalGraphic", nil) end
         end
     end
 end
@@ -1771,7 +1771,7 @@ table.insert(state.visuals, holder)
 return added
 end
 local assetInfoCache = {}
-local ASSET_INFO_CACHE_FILE="RivalHubAvatarAssets.json"
+local ASSET_INFO_CACHE_FILE="HeartlessAvatarAssets.json"
 pcall(function()
 if isfile and readfile and isfile(ASSET_INFO_CACHE_FILE) then
 local decoded=HttpService:JSONDecode(readfile(ASSET_INFO_CACHE_FILE))
@@ -2288,9 +2288,9 @@ end
 
 pcall(function()
     LP.CharacterAdded:Connect(function()
-        if _G.RivalHubSession ~= _mySession or VX7A.index == 0 then return end
+        if _G.HeartlessSession ~= _mySession or VX7A.index == 0 then return end
         task.delay(1.5, function()
-            if _G.RivalHubSession == _mySession and VX7A.index ~= 0 then VX7A.apply(VX7A.index) end
+            if _G.HeartlessSession == _mySession and VX7A.index ~= 0 then VX7A.apply(VX7A.index) end
         end)
     end)
 end)
@@ -2340,9 +2340,9 @@ local function applyHeadlessKorblox(char)
     pcall(function() LP.CharacterAvatarType = Enum.AvatarType.R6 end)
     local head = char:FindFirstChild("Head")
     if head then
-        if head:GetAttribute("RivalHubOutfitOriginalTransparency") == nil then
-            head:SetAttribute("RivalHubOutfitOriginalTransparency", head.Transparency)
-            head:SetAttribute("RivalHubOutfitOriginalLocalTransparency", head.LocalTransparencyModifier)
+        if head:GetAttribute("HeartlessOutfitOriginalTransparency") == nil then
+            head:SetAttribute("HeartlessOutfitOriginalTransparency", head.Transparency)
+            head:SetAttribute("HeartlessOutfitOriginalLocalTransparency", head.LocalTransparencyModifier)
         end
         head.Transparency = 1
         head.CanCollide = false
@@ -2362,9 +2362,9 @@ local function applyHeadlessKorblox(char)
                 if (p0 and p0.Name == "Head") or (p1 and p1.Name == "Head") then
                     for _, part in ipairs(v:GetDescendants()) do
                         if part:IsA("BasePart") then
-                            if part:GetAttribute("RivalHubOutfitOriginalTransparency") == nil then
-                                part:SetAttribute("RivalHubOutfitOriginalTransparency", part.Transparency)
-                                part:SetAttribute("RivalHubOutfitOriginalLocalTransparency", part.LocalTransparencyModifier)
+                            if part:GetAttribute("HeartlessOutfitOriginalTransparency") == nil then
+                                part:SetAttribute("HeartlessOutfitOriginalTransparency", part.Transparency)
+                                part:SetAttribute("HeartlessOutfitOriginalLocalTransparency", part.LocalTransparencyModifier)
                             end
                             part.Transparency = 1
                             part.LocalTransparencyModifier = 1
@@ -2382,8 +2382,8 @@ local function applyHeadlessKorblox(char)
         for _, partName in ipairs(rightLegConfig.partsToHide) do
             local limb = char:FindFirstChild(partName)
             if limb and limb:IsA("BasePart") then
-                if limb:GetAttribute("RivalHubOutfitOriginalTransparency") == nil then
-                    limb:SetAttribute("RivalHubOutfitOriginalTransparency", limb.Transparency)
+                if limb:GetAttribute("HeartlessOutfitOriginalTransparency") == nil then
+                    limb:SetAttribute("HeartlessOutfitOriginalTransparency", limb.Transparency)
                 end
                 limb.Transparency = 1
             end
@@ -2417,22 +2417,22 @@ function applyOutfitByIndex(index)
         if item:IsA("Accessory") and item.Name:sub(1, #TAG) ~= TAG then
             for _, part in ipairs(item:GetDescendants()) do
                 if part:IsA("BasePart") then
-                    if part:GetAttribute("RivalHubOriginalTransparency") == nil then
-                        part:SetAttribute("RivalHubOriginalTransparency", part.Transparency)
-                        part:SetAttribute("RivalHubOriginalLocalTransparency", part.LocalTransparencyModifier)
+                    if part:GetAttribute("HeartlessOriginalTransparency") == nil then
+                        part:SetAttribute("HeartlessOriginalTransparency", part.Transparency)
+                        part:SetAttribute("HeartlessOriginalLocalTransparency", part.LocalTransparencyModifier)
                     end
                     part.Transparency = 1
                     part.LocalTransparencyModifier = 1
                 end
             end
         elseif item:IsA("Shirt") then
-            if item:GetAttribute("RivalHubOriginalTemplate") == nil then item:SetAttribute("RivalHubOriginalTemplate", item.ShirtTemplate) end
+            if item:GetAttribute("HeartlessOriginalTemplate") == nil then item:SetAttribute("HeartlessOriginalTemplate", item.ShirtTemplate) end
             item.ShirtTemplate = ""
         elseif item:IsA("Pants") then
-            if item:GetAttribute("RivalHubOriginalTemplate") == nil then item:SetAttribute("RivalHubOriginalTemplate", item.PantsTemplate) end
+            if item:GetAttribute("HeartlessOriginalTemplate") == nil then item:SetAttribute("HeartlessOriginalTemplate", item.PantsTemplate) end
             item.PantsTemplate = ""
         elseif item:IsA("ShirtGraphic") then
-            if item:GetAttribute("RivalHubOriginalGraphic") == nil then item:SetAttribute("RivalHubOriginalGraphic", item.Graphic) end
+            if item:GetAttribute("HeartlessOriginalGraphic") == nil then item:SetAttribute("HeartlessOriginalGraphic", item.Graphic) end
             item.Graphic = ""
         end
     end
@@ -2466,10 +2466,10 @@ function applyOutfitByIndex(index)
     local done = false
     if head:IsA("MeshPart") then
         done = pcall(function()
-            if not head:GetAttribute("RivalHubOutfitModifiedMeshPart") then
-                head:SetAttribute("RivalHubOutfitOriginalMeshId", head.MeshId)
-                head:SetAttribute("RivalHubOutfitOriginalTextureId", head.TextureID)
-                head:SetAttribute("RivalHubOutfitModifiedMeshPart", true)
+            if not head:GetAttribute("HeartlessOutfitModifiedMeshPart") then
+                head:SetAttribute("HeartlessOutfitOriginalMeshId", head.MeshId)
+                head:SetAttribute("HeartlessOutfitOriginalTextureId", head.TextureID)
+                head:SetAttribute("HeartlessOutfitModifiedMeshPart", true)
             end
             head.MeshId = cfg.headMesh
             head.TextureID = cfg.headTexture or ""
@@ -2479,11 +2479,11 @@ function applyOutfitByIndex(index)
         local sm = head:FindFirstChildWhichIsA("SpecialMesh")
         if not sm then
             sm = Instance.new("SpecialMesh")
-            sm:SetAttribute("RivalHubOutfitCreatedMesh", true)
-        elseif not sm:GetAttribute("RivalHubOutfitModifiedMesh") then
-            sm:SetAttribute("RivalHubOutfitOriginalMeshId", sm.MeshId)
-            sm:SetAttribute("RivalHubOutfitOriginalTextureId", sm.TextureId)
-            sm:SetAttribute("RivalHubOutfitModifiedMesh", true)
+            sm:SetAttribute("HeartlessOutfitCreatedMesh", true)
+        elseif not sm:GetAttribute("HeartlessOutfitModifiedMesh") then
+            sm:SetAttribute("HeartlessOutfitOriginalMeshId", sm.MeshId)
+            sm:SetAttribute("HeartlessOutfitOriginalTextureId", sm.TextureId)
+            sm:SetAttribute("HeartlessOutfitModifiedMesh", true)
         end
         sm.Parent = head
         sm.MeshType = Enum.MeshType.FileMesh
@@ -2779,7 +2779,7 @@ local function _isRagdollState(hum)
 end
 local function _applyVelocitySpeed(direction, speed, root)
     if not root or not root.Parent then return end
-    if autoBatEnabled or TPBatState.enabled or (_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2()) then return end
+    if autoBatEnabled or TPBatState.enabled or (_G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2()) then return end
     if type(speed) ~= "number" or speed ~= speed or speed <= 0 or speed == math.huge then return end
     local y = root.AssemblyLinearVelocity.Y
     if direction and direction.Magnitude > 0.05 then
@@ -2789,7 +2789,7 @@ local function _applyVelocitySpeed(direction, speed, root)
     else
         root.AssemblyLinearVelocity = _V3new(0, y, 0)
     end
-    _G.__RivalHubLiveSpeed = {t = os.clock(), v = speed}
+    _G.__HeartlessLiveSpeed = {t = os.clock(), v = speed}
 end
 function getAutoPathSpeed()
     if laggerCarryToggled or laggerToggled then return LAGGER_SPEED end
@@ -3209,7 +3209,7 @@ end
                     return
                 end
                 deltaTime236._heartbeatConn = RunService.Heartbeat:Connect(function(deltaTime)
-                    if _mySession ~= _G.RivalHubSession then deltaTime236:stop(); return end
+                    if _mySession ~= _G.HeartlessSession then deltaTime236:stop(); return end
                     deltaTime236.normalSpeed = NS
                     deltaTime236.carrySpeed = CS
                     deltaTime236.laggerSpeed = LAGGER_SPEED
@@ -3219,7 +3219,7 @@ end
                     deltaTime236._state = {autoLeftEnabled = autoLeftEnabled, autoRightEnabled = autoRightEnabled}
                     deltaTime236._dropInProgress = dropActive or _G.IsDropping or autoLeftEnabled or autoRightEnabled
                     deltaTime236._batAimbotToggled = autoBatEnabled or TPBatState.enabled
-                        or (_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2())
+                        or (_G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2())
                     deltaTime236:updateMovement(deltaTime)
                 end)
                 if deltaTime236.softStealEnabled then
@@ -3573,7 +3573,7 @@ local function executeSteal(prompt, podName)
     autoStealLastActivity = autoStealStartedAt
     local function active()
         return generation == autoStealGeneration and isStealing and Steal.AutoStealEnabled
-            and _mySession == _G.RivalHubSession
+            and _mySession == _G.HeartlessSession
     end
     local function distance()
         if not prompt.Parent or not prompt.Parent.Parent then return nil end
@@ -3654,7 +3654,7 @@ function startAutoSteal()
     if stealConnection then return true end
 
     stealConnection = RunService.Heartbeat:Connect(function()
-        if _mySession ~= _G.RivalHubSession then
+        if _mySession ~= _G.HeartlessSession then
             stopAutoSteal()
             return
         end
@@ -3707,7 +3707,7 @@ end
 autoStealSupervisorElapsed = 0
 do
     autoStealSupervisorConn = RunService.Heartbeat:Connect(function(dt)
-        if _mySession ~= _G.RivalHubSession then
+        if _mySession ~= _G.HeartlessSession then
             if autoStealSupervisorConn then
                 pcall(function() autoStealSupervisorConn:Disconnect() end)
                 autoStealSupervisorConn = nil
@@ -4390,7 +4390,7 @@ local _antiFlingState = {
 local _ANTI_FLING_DRIVE_GRACE = 0.3
 
 local function _afHubSpeedLive()
-    local live = _G.__RivalHubLiveSpeed
+    local live = _G.__HeartlessLiveSpeed
     if type(live) ~= "table" then return false end
     local stamp, speed = tonumber(live.t), tonumber(live.v)
     if not stamp or not speed or speed <= 0 then return false end
@@ -4474,7 +4474,7 @@ local function createESP()
         esp.Tracer.ZIndex = 2
     end
 
-    esp.Highlight.Name = "RivalHubESP_Highlight"
+    esp.Highlight.Name = "HeartlessESP_Highlight"
     esp.Highlight.FillColor = currentFill
     esp.Highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
     esp.Highlight.FillTransparency = 0.12
@@ -4488,7 +4488,7 @@ local function createESP()
     pcall(function() esp.Highlight.Parent = parentGui end)
 
     local nameBillboard = Instance.new("BillboardGui")
-    nameBillboard.Name = "RivalHubESP_Name"
+    nameBillboard.Name = "HeartlessESP_Name"
     nameBillboard.Size = UDim2.new(0, 170, 0, 28)
     nameBillboard.StudsOffset = Vector3.new(0, 1.3, 0)
     nameBillboard.AlwaysOnTop = true
@@ -4533,7 +4533,7 @@ local function createESP()
     return esp
 end
 
-_G.__RivalHubRefreshESPTheme = function(accent, outlineColor)
+_G.__HeartlessRefreshESPTheme = function(accent, outlineColor)
     local fillColor, lineColor = getESPThemeColors(accent)
     for _, data in pairs(espActivePlayers) do
         if type(data) == "table" and data.esp then
@@ -4672,7 +4672,7 @@ local _espLineState = { scanElapsed = math.huge, targetRoot = nil }
 local function ensureESPLineGui()
     if _espLineGui and _espLineGui.Parent then return end
     _espLineGui = Instance.new("ScreenGui")
-    _espLineGui.Name = "RivalHubESPLine"
+    _espLineGui.Name = "HeartlessESPLine"
     _espLineGui.IgnoreGuiInset = true
     _espLineGui.ResetOnSpawn = false
     _espLineGui.DisplayOrder = 1000
@@ -5002,7 +5002,7 @@ end
 function setupSpeedIndicator(char)
     local head = char:WaitForChild("Head", 5)
     if not head then return end
-    for _, name in ipairs({"HEARTLESSSpeedIndicator", "DiscordText", "RivalHubDiscordTag"}) do
+    for _, name in ipairs({"HEARTLESSSpeedIndicator", "DiscordText", "HeartlessDiscordTag"}) do
         local old = head:FindFirstChild(name)
         if old then old:Destroy() end
     end
@@ -5041,7 +5041,7 @@ function setupSpeedIndicator(char)
     speedLabel.TextXAlignment = Enum.TextXAlignment.Center
     speedLabel.ZIndex = 3
     local tag = Instance.new("BillboardGui", head)
-    tag.Name = "RivalHubDiscordTag"
+    tag.Name = "HeartlessDiscordTag"
     tag.Size = UDim2.fromOffset(210, 24)
     tag.StudsOffset = Vector3.new(0, 5.1, 0)
     tag.AlwaysOnTop = true
@@ -5119,20 +5119,20 @@ function toggleCarryMode()
         laggerToggled = false; laggerCarryToggled = false; speedMode = true
     else speedMode = not speedMode end
     resetMovementState()
-    if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+    if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end
 end
 
 function toggleLaggerMode()
     if laggerCarryToggled then laggerCarryToggled = false end
     speedMode = false; laggerToggled = not laggerToggled
     resetMovementState()
-    if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+    if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end
 end
 function toggleLaggerCarryMode()
     if laggerToggled then laggerToggled = false end
     speedMode = false; laggerCarryToggled = not laggerCarryToggled
     resetMovementState()
-    if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+    if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end
 end
 
 function toggleLaggerCycle()
@@ -5150,7 +5150,7 @@ function toggleLaggerCycle()
         laggerCarryToggled = false
     end
     resetMovementState()
-    if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+    if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end
 end
 
 function stopAutoLeft()
@@ -5666,7 +5666,7 @@ local function startAimbot()
     STATE.lastActivationTime = 0
     
     STATE.conn = RunService.RenderStepped:Connect(function(dt)
-        if _mySession ~= _G.RivalHubSession then stopAimbotAdapt(); return end
+        if _mySession ~= _G.HeartlessSession then stopAimbotAdapt(); return end
         pcall(aimbotLoop, dt)
     end)
     
@@ -5734,8 +5734,8 @@ end
         if saveAllSettings then pcall(saveAllSettings) end
     end
     enableAutoBat = function()
-        if _G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() then
-            _G.__RivalHubStopBatV2()
+        if _G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2() then
+            _G.__HeartlessStopBatV2()
             if mobSetBatV2 then mobSetBatV2(false) end
         end
         if autoLeftEnabled then autoLeftEnabled = false; stopAutoLeft() end
@@ -6262,7 +6262,7 @@ local function _alIsProtectedVisual(object)
         end
         local name = parent.Name or ""
         if name:match("^Crystal") or name:match("^Eclipse") or name:match("^ESP_")
-            or name:match("^BloodHounds") or name:match("^RivalHub") then
+            or name:match("^BloodHounds") or name:match("^Heartless") then
             return true
         end
         parent = parent.Parent
@@ -6897,7 +6897,7 @@ function MVPUI.effectsLoop(root)
     local accumulator, elapsed = 0, 0
     local connection
     connection = RunService.Heartbeat:Connect(function(dt)
-        if not root.Parent or _mySession ~= _G.RivalHubSession then
+        if not root.Parent or _mySession ~= _G.HeartlessSession then
             connection:Disconnect()
             if state.effectConn == connection then state.effectConn = nil end
             return
@@ -7018,12 +7018,12 @@ local function drag(f, dragZoneHeight)
     end)
 end
 
-_G.__RivalHubSpeedEngine = _G.__RivalHubSpeedEngine or {}
+_G.__HeartlessSpeedEngine = _G.__HeartlessSpeedEngine or {}
 do
     local function blocked(hum)
         return not hum or hum.Health <= 0 or _isRagdollState(hum) or autoBatEnabled
             or autoLeftEnabled or autoRightEnabled or dropActive or _G.IsDropping
-            or TPBatState.enabled or (_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2())
+            or TPBatState.enabled or (_G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2())
     end
     local function applyNow()
         local char = LP.Character
@@ -7045,26 +7045,26 @@ do
         _applyVelocitySpeed(direction, getActiveMoveSpeed(), root)
     end
     local function stop()
-        if _G.__RivalHubSpeedEngine.conn then _G.__RivalHubSpeedEngine.conn:Disconnect(); _G.__RivalHubSpeedEngine.conn = nil end
+        if _G.__HeartlessSpeedEngine.conn then _G.__HeartlessSpeedEngine.conn:Disconnect(); _G.__HeartlessSpeedEngine.conn = nil end
         MVPVenixCarry:stop()
         lastMoveDir = _V3zero
     end
     local function start()
         stop()
         if useVenixCarryEngine then MVPVenixCarry:start() end
-        _G.__RivalHubSpeedEngine.conn = RunService.RenderStepped:Connect(function()
-            if _mySession ~= _G.RivalHubSession then stop(); return end
+        _G.__HeartlessSpeedEngine.conn = RunService.RenderStepped:Connect(function()
+            if _mySession ~= _G.HeartlessSession then stop(); return end
             applyNow()
         end)
     end
-    _G.__RivalHubRefreshSpeedEngine = start
-    _G.__RivalHubStopSpeedEngine = stop
-    _G.__RivalHubApplySpeedNow = applyNow
+    _G.__HeartlessRefreshSpeedEngine = start
+    _G.__HeartlessStopSpeedEngine = stop
+    _G.__HeartlessApplySpeedNow = applyNow
     pcall(start)
     LP.CharacterRemoving:Connect(function() stop(); _s2VelState.root = nil end)
     LP.CharacterAdded:Connect(function(char)
         task.wait(0.5)
-        if _mySession ~= _G.RivalHubSession then return end
+        if _mySession ~= _G.HeartlessSession then return end
         _hookVelHRP(_setupVelChecked(char))
         start()
     end)
@@ -7170,7 +7170,7 @@ function stopAllBackgroundTasks()
     disableAutoBat()
     stopAutoLeft()
     stopAutoRight()
-    if _G.__RivalHubStopBatV2 then pcall(_G.__RivalHubStopBatV2) end
+    if _G.__HeartlessStopBatV2 then pcall(_G.__HeartlessStopBatV2) end
     if TPBatState and TPBatState.enabled and tpBatSetEnabled then pcall(tpBatSetEnabled, false) end
     if unwalkEnabled then stopUnwalk() end
     if antiLagEnabled then disableAntiLag() end
@@ -7193,10 +7193,10 @@ function stopAllBackgroundTasks()
     lastDropTime = 0
     medusaDebounce = false
     medusaLastUsed = 0
-    if _G.__RivalHubStopSpeedEngine then pcall(_G.__RivalHubStopSpeedEngine) end
+    if _G.__HeartlessStopSpeedEngine then pcall(_G.__HeartlessStopSpeedEngine) end
 end
 
-local _rivalHubSaveState = {
+local _heartlessSaveState = {
     lastAt = 0,
     queued = false,
     writing = false,
@@ -7204,7 +7204,7 @@ local _rivalHubSaveState = {
     revision = 0,
     retryCount = 0,
 }
-local function resolveRivalHubFileApi()
+local function resolveHeartlessFileApi()
     local env = (type(getgenv) == "function" and getgenv()) or _G
     local synApi = rawget(env, "syn") or rawget(_G, "syn")
     local readCandidates = {rawget(env, "readfile"), synApi and synApi.readfile, rawget(_G, "readfile")}
@@ -7215,8 +7215,8 @@ local function resolveRivalHubFileApi()
     return readFn, writeFn
 end
 
-local function rivalHubFileExists(path)
-    local readFn = resolveRivalHubFileApi()
+local function heartlessFileExists(path)
+    local readFn = resolveHeartlessFileApi()
     if not readFn then return false end
     local ok, data = pcall(readFn, path)
     return ok and type(data) == "string"
@@ -7260,7 +7260,7 @@ function buildConfigTable()
         backgroundImageTransparency = backgroundImageTransparency,
         backgroundMode = backgroundMode, floatingButtonScale = floatingButtonScale,
         outfitIndex = currentOutfitIndex, vx7AvatarIndex = VX7A.index, themeColor = currentColorTheme,
-        rivalTitleTheme = currentRivalTitleTheme,
+        heartlessTitleTheme = currentHeartlessTitleTheme,
         infiniteJumpEnabled = InfiniteJump.enabled == true,
         infiniteJumpMode = InfiniteJump.mode == "manual" and "manual" or "hold",
         autoStealMode = autoStealMode,
@@ -7270,10 +7270,10 @@ function buildConfigTable()
         softCarryRadius = MVPVenixCarry.softStealRadius,
         uiEffects = MVPUI.effects,
         mobileButtonsLocked = mobileButtonsLocked,
-        batV2 = _G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() or false,
+        batV2 = _G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2() or false,
     }
     if main then
-        local basePos = _G.__RivalHubMainOriginalPos or main.Position
+        local basePos = _G.__HeartlessMainOriginalPos or main.Position
         config.mainPosition = {
             XScale = basePos.X.Scale,
             XOffset = basePos.X.Offset,
@@ -7296,12 +7296,12 @@ function buildConfigTable()
     return config
 end
 
-local function scheduleRivalHubSave(delaySeconds)
-    if _rivalHubSaveState.queued then return end
-    _rivalHubSaveState.queued = true
+local function scheduleHeartlessSave(delaySeconds)
+    if _heartlessSaveState.queued then return end
+    _heartlessSaveState.queued = true
     task.delay(delaySeconds or 0.25, function()
-        _rivalHubSaveState.queued = false
-        if _G.RivalHubRunning and not _isResetting and not _isLoading then
+        _heartlessSaveState.queued = false
+        if _G.HeartlessRunning and not _isResetting and not _isLoading then
             pcall(saveAllSettings, true)
         end
     end)
@@ -7318,38 +7318,38 @@ function saveAllSettings(force)
         warn("[HEARTLESS Save] Could not encode settings.")
         return false
     end
-    if not force and canonicalJSON == _lastSavedJSON and not _rivalHubSaveState.dirty then
+    if not force and canonicalJSON == _lastSavedJSON and not _heartlessSaveState.dirty then
         return true
     end
-    _rivalHubSaveState.dirty = true
+    _heartlessSaveState.dirty = true
 
-    if _rivalHubSaveState.writing then
-        scheduleRivalHubSave(0.25)
+    if _heartlessSaveState.writing then
+        scheduleHeartlessSave(0.25)
         return true
     end
-    if not force and _tick() - _rivalHubSaveState.lastAt < 0.25 then
-        scheduleRivalHubSave(0.25)
+    if not force and _tick() - _heartlessSaveState.lastAt < 0.25 then
+        scheduleHeartlessSave(0.25)
         return true
     end
 
-    local readFn, writeFn = resolveRivalHubFileApi()
+    local readFn, writeFn = resolveHeartlessFileApi()
     if not readFn or not writeFn then
         warn("[HEARTLESS Save] Executor file API is unavailable.")
-        scheduleRivalHubSave(1)
+        scheduleHeartlessSave(1)
         return false
     end
 
-    _rivalHubSaveState.writing = true
-    _rivalHubSaveState.revision = _rivalHubSaveState.revision + 1
+    _heartlessSaveState.writing = true
+    _heartlessSaveState.revision = _heartlessSaveState.revision + 1
     local writeConfig = config
-    writeConfig.revision = _rivalHubSaveState.revision
+    writeConfig.revision = _heartlessSaveState.revision
     writeConfig.savedAt = os.time()
     local json = HS:JSONEncode(writeConfig)
     local ok = false
 
     for attempt = 1, 3 do
         local attemptOk = pcall(function()
-            if rivalHubFileExists(CONFIG_FILE) then
+            if heartlessFileExists(CONFIG_FILE) then
                 local previous = readFn(CONFIG_FILE)
                 if type(previous) == "string" then writeFn(CONFIG_FILE .. ".backup", previous) end
             end
@@ -7365,12 +7365,12 @@ function saveAllSettings(force)
         if attempt < 3 then task.wait(0.1 * attempt) end
     end
 
-    _rivalHubSaveState.writing = false
+    _heartlessSaveState.writing = false
     if ok then
-        _rivalHubSaveState.lastAt = _tick()
-        _rivalHubSaveState.retryCount = 0
+        _heartlessSaveState.lastAt = _tick()
+        _heartlessSaveState.retryCount = 0
         _lastSavedJSON = canonicalJSON
-        _rivalHubSaveState.dirty = false
+        _heartlessSaveState.dirty = false
         local latestOk, latest = pcall(function()
             local latestConfig = buildConfigTable()
             latestConfig.configVersion = 2
@@ -7378,20 +7378,20 @@ function saveAllSettings(force)
             return HS:JSONEncode(latestConfig)
         end)
         if not latestOk or latest ~= _lastSavedJSON then
-            _rivalHubSaveState.dirty = true
-            scheduleRivalHubSave(0.25)
+            _heartlessSaveState.dirty = true
+            scheduleHeartlessSave(0.25)
         end
     else
-        _rivalHubSaveState.retryCount = _rivalHubSaveState.retryCount + 1
+        _heartlessSaveState.retryCount = _heartlessSaveState.retryCount + 1
         warn("[HEARTLESS Save] Write or verification failed; will retry.")
-        scheduleRivalHubSave(math.min(2, 0.5 * _rivalHubSaveState.retryCount))
+        scheduleHeartlessSave(math.min(2, 0.5 * _heartlessSaveState.retryCount))
     end
     return ok
 end
 
 task.spawn(function()
     task.wait(5)
-    while _G.RivalHubRunning do
+    while _G.HeartlessRunning do
         task.wait(2)
         if gui and main and not _isLoading then pcall(saveAllSettings) end
     end
@@ -7403,7 +7403,7 @@ pcall(function()
 end)
 
 do
-    local readFn, writeFn = resolveRivalHubFileApi()
+    local readFn, writeFn = resolveHeartlessFileApi()
     if readFn and writeFn then
         local legacyPaths = {"HEARTLESS.json"}
 
@@ -7422,8 +7422,8 @@ do
 end
 
 function loadAllSettings()
-    local readFn = resolveRivalHubFileApi()
-    if not readFn or not rivalHubFileExists(CONFIG_FILE) then return false end
+    local readFn = resolveHeartlessFileApi()
+    if not readFn or not heartlessFileExists(CONFIG_FILE) then return false end
     local success, data = pcall(function() return HS:JSONDecode(readFn(CONFIG_FILE)) end)
     if not success or type(data) ~= "table" then return false end
     _isLoading = true
@@ -7479,7 +7479,7 @@ function loadAllSettings()
     MVPVenixCarry:setSoftStealEnabled(boolOr(data.softCarry, false))
     MVPUI.effects = boolOr(data.uiEffects, true)
     mobileButtonsLocked = boolOr(data.mobileButtonsLocked, false)
-    if _G.__RivalHubRefreshSpeedEngine then pcall(_G.__RivalHubRefreshSpeedEngine) end
+    if _G.__HeartlessRefreshSpeedEngine then pcall(_G.__HeartlessRefreshSpeedEngine) end
     InfiniteJump.mode = data.infiniteJumpMode == "manual" and "manual" or "hold"
     InfiniteJump.enabled = boolOr(data.infiniteJumpEnabled, false)
     medusaCounterEnabled = boolOr(data.medusaCounter, false)
@@ -7506,8 +7506,8 @@ function loadAllSettings()
     selectedColor = COLOR_THEMES[currentColorTheme]
     task.defer(function() updateAllUIThemeColors(selectedColor) end)
 
-    if data.rivalTitleTheme and RIVAL_TITLE_THEMES[data.rivalTitleTheme] then
-        task.defer(function() applyRivalTitleTheme(data.rivalTitleTheme) end)
+    if data.heartlessTitleTheme and HEARTLESS_TITLE_THEMES[data.heartlessTitleTheme] then
+        task.defer(function() applyHeartlessTitleTheme(data.heartlessTitleTheme) end)
     end
 
     skyTheme = data.skyTheme or "Off"
@@ -7618,9 +7618,9 @@ function loadAllSettings()
     _lastSavedJSON = HS:JSONEncode(buildConfigTable())
     _isLoading = false
 
-    if data.batV2 == true and _G.__RivalHubStartBatV2 then
+    if data.batV2 == true and _G.__HeartlessStartBatV2 then
         task.defer(function()
-            pcall(_G.__RivalHubStartBatV2)
+            pcall(_G.__HeartlessStartBatV2)
             if mobSetBatV2 then mobSetBatV2(true) end
         end)
     end
@@ -7665,9 +7665,9 @@ function forceResetUI()
     if MVPUI.effectsSetter then MVPUI.effectsSetter(MVPUI.effects) end
     if MVPUI.lockButtonsSetter then MVPUI.lockButtonsSetter(false) end
     applyBackgroundMode(backgroundMode)
-    if _G.__RivalHubRefreshSpeedEngine then pcall(_G.__RivalHubRefreshSpeedEngine) end
+    if _G.__HeartlessRefreshSpeedEngine then pcall(_G.__HeartlessRefreshSpeedEngine) end
     safeSet(mobSetBatV2, false)
-    if _G.__RivalHubStopBatV2 then pcall(_G.__RivalHubStopBatV2) end
+    if _G.__HeartlessStopBatV2 then pcall(_G.__HeartlessStopBatV2) end
     disableVividGraphics()
     applyHideButtons(false)
     if _G.stretchToggleSetter then _G.stretchToggleSetter(false) end
@@ -7747,7 +7747,7 @@ function resetToFactoryDefaults()
         if antiDieEnabled then AntiDieModule.stop() end
         if antiBatEnabled and stopAntiBat then stopAntiBat() end
         if antiFlingEnabled and stopAntiFling then stopAntiFling() end
-        if _G.__RivalHubStopBatV2 then pcall(_G.__RivalHubStopBatV2) end
+        if _G.__HeartlessStopBatV2 then pcall(_G.__HeartlessStopBatV2) end
         stopUnwalk()
         InfiniteJump.stop()
         InfiniteJump.setMode("hold")
@@ -7787,7 +7787,7 @@ function resetToFactoryDefaults()
         MVPVenixCarry.softStealSpeed = 30
         MVPVenixCarry.softStealRadius = 10
         MVPUI.effects = true
-        if _G._rivalHubStealModeSetter then pcall(_G._rivalHubStealModeSetter, "V1") end
+        if _G._heartlessStealModeSetter then pcall(_G._heartlessStealModeSetter, "V1") end
         BAT_AIMBOT_SPEED = 55
         BYPASS_AIMBOT_SPEED = BAT_AIMBOT_SPEED
         if State then State.bypassBatSpeed = BYPASS_AIMBOT_SPEED end
@@ -7803,9 +7803,9 @@ function resetToFactoryDefaults()
         currentOutfitIndex = 1
         pcall(VX7A.stop)
         currentColorTheme = "Orange"; selectedColor = COLOR_THEMES["Orange"]
-        currentRivalTitleTheme = "Orange"
-        applyRivalTitleTheme("Orange")
-        if main then main.Position = UDim2.new(0, 20, 0, 2); _G.__RivalHubMainOriginalPos = main.Position end
+        currentHeartlessTitleTheme = "Orange"
+        applyHeartlessTitleTheme("Orange")
+        if main then main.Position = UDim2.new(0, 20, 0, 2); _G.__HeartlessMainOriginalPos = main.Position end
         for key, val in pairs(DEFAULT_KB) do
             if KB[key] then KB[key].kb = val.kb; KB[key].gp = val.gp end
         end
@@ -9094,7 +9094,7 @@ function buildGui()
     local INP = Color3.fromRGB(12, 15, 19)
     local GUI_W, GUI_H = 350, 570
     for _, parent in ipairs({CoreGui, pgui}) do
-        for _, name in ipairs({"HEARTLESS", "HEARTLESSMobilePanel", "HEARTLESSSpeedIndicator", "RivalHubBootErrors"}) do
+        for _, name in ipairs({"HEARTLESS", "HEARTLESSMobilePanel", "HEARTLESSSpeedIndicator", "HeartlessBootErrors"}) do
             pcall(function() local old = parent:FindFirstChild(name); if old then old:Destroy() end end)
         end
     end
@@ -9213,9 +9213,9 @@ function buildGui()
     hideGui = function() animate(false) end
     close.Activated:Connect(hideGui)
     miniBtn.Activated:Connect(showGui)
-    _G.__RivalHubMainOriginalPos = main.Position
+    _G.__HeartlessMainOriginalPos = main.Position
     main:GetPropertyChangedSignal("Position"):Connect(function()
-        if not animating then _G.__RivalHubMainOriginalPos = main.Position end
+        if not animating then _G.__HeartlessMainOriginalPos = main.Position end
     end)
     drag(main, 80)
     local tabBar = MVPUI.new("Frame", main, {Name = "Navigation", Size = UDim2.new(1, -28, 0, 60),
@@ -9469,10 +9469,10 @@ function buildGui()
     local speedPage = contentPages["Speed"]
 
     mkSect(speedPage, "Movement Speeds")
-    do local row = mkRow(speedPage, 42); mkLabel(row, "Normal Speed"); normalBox = mkBox(row, NS, 50, 56, function(v) if v == v and v > 0 and v < math.huge then NS = v; if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end end end) end
-    do local row = mkRow(speedPage, 42); mkLabel(row, "Carry Speed"); carryBox = mkBox(row, CS, 50, 56, function(v) if v == v and v > 0 and v < math.huge then CS = v; if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end end end) end
-    do local row = mkRow(speedPage, 42); mkLabel(row, "Lagger Normal Speed"); laggerBox = mkBox(row, LAGGER_SPEED, 50, 56, function(v) if v == v and v > 0 and v < math.huge then LAGGER_SPEED = v; if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end end end) end
-    do local row = mkRow(speedPage, 42); mkLabel(row, "Lagger Carry Speed"); lagger2Box = mkBox(row, LAGGER_CARRY_SPEED, 50, 56, function(v) if v == v and v > 0 and v < math.huge then LAGGER_CARRY_SPEED = v; if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end end end) end
+    do local row = mkRow(speedPage, 42); mkLabel(row, "Normal Speed"); normalBox = mkBox(row, NS, 50, 56, function(v) if v == v and v > 0 and v < math.huge then NS = v; if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end end end) end
+    do local row = mkRow(speedPage, 42); mkLabel(row, "Carry Speed"); carryBox = mkBox(row, CS, 50, 56, function(v) if v == v and v > 0 and v < math.huge then CS = v; if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end end end) end
+    do local row = mkRow(speedPage, 42); mkLabel(row, "Lagger Normal Speed"); laggerBox = mkBox(row, LAGGER_SPEED, 50, 56, function(v) if v == v and v > 0 and v < math.huge then LAGGER_SPEED = v; if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end end end) end
+    do local row = mkRow(speedPage, 42); mkLabel(row, "Lagger Carry Speed"); lagger2Box = mkBox(row, LAGGER_CARRY_SPEED, 50, 56, function(v) if v == v and v > 0 and v < math.huge then LAGGER_CARRY_SPEED = v; if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end end end) end
 
     mkSect(speedPage, "Speed Engine")
     do
@@ -9481,14 +9481,14 @@ function buildGui()
         MVPUI.motorLabel = mkSelector(row, useVenixCarryEngine and "Carry Boost" or "Direct", {"Direct", "Carry Boost"}, function(direction, update)
             useVenixCarryEngine = not useVenixCarryEngine
             update(useVenixCarryEngine and "Carry Boost" or "Direct")
-            if _G.__RivalHubRefreshSpeedEngine then _G.__RivalHubRefreshSpeedEngine() end
+            if _G.__HeartlessRefreshSpeedEngine then _G.__HeartlessRefreshSpeedEngine() end
         end)
     end
     MVPUI.carrySetter = mkToggle(speedPage, "Auto Carry", function(on)
         MVPVenixCarry:setSoftStealEnabled(on)
         if on then useVenixCarryEngine = true end
         if MVPUI.motorLabel then MVPUI.motorLabel.Text = useVenixCarryEngine and "Carry Boost" or "Direct" end
-        if _G.__RivalHubRefreshSpeedEngine then _G.__RivalHubRefreshSpeedEngine() end
+        if _G.__HeartlessRefreshSpeedEngine then _G.__HeartlessRefreshSpeedEngine() end
     end)
     do
         local row = mkRow(speedPage, 46); mkLabel(row, "Auto Carry Speed")
@@ -9953,16 +9953,16 @@ function buildGui()
         leftBtn.AutoButtonColor = false
         leftBtn.ZIndex = 9
         Instance.new("UICorner", leftBtn).CornerRadius = UDim.new(0, 6)
-        rivalTitleSelectorLabel = Instance.new("TextLabel", container)
-        rivalTitleSelectorLabel.Size = UDim2.new(0, 80, 0, 26)
-        rivalTitleSelectorLabel.Position = UDim2.new(0.5, -40, 0.5, -13)
-        rivalTitleSelectorLabel.BackgroundTransparency = 1
-        rivalTitleSelectorLabel.Text = currentRivalTitleTheme
-        rivalTitleSelectorLabel.TextColor3 = WHITE
-        rivalTitleSelectorLabel.Font = Enum.Font.GothamBold
-        rivalTitleSelectorLabel.TextSize = 12
-        rivalTitleSelectorLabel.TextXAlignment = Enum.TextXAlignment.Center
-        rivalTitleSelectorLabel.ZIndex = 9
+        heartlessTitleSelectorLabel = Instance.new("TextLabel", container)
+        heartlessTitleSelectorLabel.Size = UDim2.new(0, 80, 0, 26)
+        heartlessTitleSelectorLabel.Position = UDim2.new(0.5, -40, 0.5, -13)
+        heartlessTitleSelectorLabel.BackgroundTransparency = 1
+        heartlessTitleSelectorLabel.Text = currentHeartlessTitleTheme
+        heartlessTitleSelectorLabel.TextColor3 = WHITE
+        heartlessTitleSelectorLabel.Font = Enum.Font.GothamBold
+        heartlessTitleSelectorLabel.TextSize = 12
+        heartlessTitleSelectorLabel.TextXAlignment = Enum.TextXAlignment.Center
+        heartlessTitleSelectorLabel.ZIndex = 9
         local rightBtn = Instance.new("TextButton", container)
         rightBtn.Size = UDim2.new(0, 28, 0, 26)
         rightBtn.Position = UDim2.new(1, -28, 0.5, -13)
@@ -9977,19 +9977,19 @@ function buildGui()
         rightBtn.ZIndex = 9
         Instance.new("UICorner", rightBtn).CornerRadius = UDim.new(0, 6)
 
-        local RIVAL_THEME_LIST = { "Orange", "Blue", "Red", "Green", "Black", "Gray" }
-        local function cycleRivalTitle(dir)
+        local HEARTLESS_THEME_LIST = { "Orange", "Blue", "Red", "Green", "Black", "Gray" }
+        local function cycleHeartlessTitle(dir)
             local idx = 1
-            for i, name in ipairs(RIVAL_THEME_LIST) do
-                if name == currentRivalTitleTheme then idx = i; break end
+            for i, name in ipairs(HEARTLESS_THEME_LIST) do
+                if name == currentHeartlessTitleTheme then idx = i; break end
             end
             local newIdx = idx + dir
-            if newIdx < 1 then newIdx = #RIVAL_THEME_LIST end
-            if newIdx > #RIVAL_THEME_LIST then newIdx = 1 end
-            applyRivalTitleTheme(RIVAL_THEME_LIST[newIdx])
+            if newIdx < 1 then newIdx = #HEARTLESS_THEME_LIST end
+            if newIdx > #HEARTLESS_THEME_LIST then newIdx = 1 end
+            applyHeartlessTitleTheme(HEARTLESS_THEME_LIST[newIdx])
         end
-        leftBtn.MouseButton1Click:Connect(function() cycleRivalTitle(-1) end)
-        rightBtn.MouseButton1Click:Connect(function() cycleRivalTitle(1) end)
+        leftBtn.MouseButton1Click:Connect(function() cycleHeartlessTitle(-1) end)
+        rightBtn.MouseButton1Click:Connect(function() cycleHeartlessTitle(1) end)
     end
     setVividVisual = mkToggle(visualPage, "Vivid Graphics", function(on)
         toggleVividGraphics(on)
@@ -10476,7 +10476,7 @@ function buildGui()
     spacer.LayoutOrder = getNextOrder(keyPage)
     spacer.ZIndex = 7
 
-    pbFrame = MVPUI.new("Frame", gui, {Name = "RivalHubAutoStealHud", Size = UDim2.fromOffset(264, 86),
+    pbFrame = MVPUI.new("Frame", gui, {Name = "HeartlessAutoStealHud", Size = UDim2.fromOffset(264, 86),
         Position = UDim2.new(1, -282, 0, 18), BackgroundColor3 = Color3.fromRGB(255, 255, 255),
         BorderSizePixel = 0, Active = true, ZIndex = 50})
     MVPUI.hudScale = MVPUI.new("UIScale", pbFrame, {Scale = 1})
@@ -10518,7 +10518,7 @@ function buildGui()
     progressFill = MVPUI.new("Frame", track, {Name = "StealProgressFill", Size = UDim2.new(stealHud.value, 0, 1, 0),
         BackgroundColor3 = Color3.fromRGB(255, 255, 255), BorderSizePixel = 0, ZIndex = 52})
     MVPUI.round(progressFill, 8)
-    MVPUI.new("UIGradient", progressFill, {Color = rivalHubGradient(getThemeColor())})
+    MVPUI.new("UIGradient", progressFill, {Color = heartlessGradient(getThemeColor())})
     for i = 1, 5 do
         MVPUI.new("Frame", track, {Name = "ProgressMark", Position = UDim2.new(i / 6, 0, 0, 5),
             Size = UDim2.new(0, 1, 1, -10), BackgroundColor3 = Color3.fromRGB(48, 28, 17),
@@ -10733,10 +10733,10 @@ do
         end)
     end
 
-    _G.__RivalHubStartBatV2 = startBatV2
-    _G.__RivalHubStopBatV2  = stopBatV2
-    _G.__RivalHubIsBatV2    = function() return TP.enabled == true end
-    _G.__RivalHubBatV2      = TP
+    _G.__HeartlessStartBatV2 = startBatV2
+    _G.__HeartlessStopBatV2  = stopBatV2
+    _G.__HeartlessIsBatV2    = function() return TP.enabled == true end
+    _G.__HeartlessBatV2      = TP
 
     LP.CharacterAdded:Connect(function(newChar)
         task.wait(0.5)
@@ -10901,7 +10901,7 @@ function createMobilePanel()
                     speedMode = false; setActive(false)
                 end
                 refreshSpeedModeLabel()
-                if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+                if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end
             end
         elseif name == "Lagger1" then
             callback = function(setActive)
@@ -10913,7 +10913,7 @@ function createMobilePanel()
                     laggerToggled = false; setActive(false)
                 end
                 refreshSpeedModeLabel()
-                if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+                if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end
             end
         elseif name == "Lagger2" then
             callback = function(setActive)
@@ -10925,15 +10925,15 @@ function createMobilePanel()
                     laggerCarryToggled = false; setActive(false)
                 end
                 refreshSpeedModeLabel()
-                if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+                if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end
             end
         elseif name == "BatV2" then
             callback = function(setActive)
-                if not _G.__RivalHubIsBatV2() then
-                    _G.__RivalHubStartBatV2()
+                if not _G.__HeartlessIsBatV2() then
+                    _G.__HeartlessStartBatV2()
                     setActive(true)
                 else
-                    _G.__RivalHubStopBatV2()
+                    _G.__HeartlessStopBatV2()
                     setActive(false)
                 end
             end
@@ -10957,7 +10957,7 @@ function createMobilePanel()
     if buttons.Lagger1 and buttons.Lagger1.setActive then buttons.Lagger1.setActive(laggerToggled) end
     if buttons.Lagger2 and buttons.Lagger2.setActive then buttons.Lagger2.setActive(laggerCarryToggled) end
     if buttons.BatV2 and buttons.BatV2.setActive then
-        buttons.BatV2.setActive(_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() or false)
+        buttons.BatV2.setActive(_G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2() or false)
     end
 
     local viewportConn
@@ -11282,7 +11282,7 @@ function updateUIFromLoaded()
     if mobSetCarry then mobSetCarry(speedMode) end
     if mobSetLagger1 then mobSetLagger1(laggerToggled) end
     if mobSetLagger2 then mobSetLagger2(laggerCarryToggled) end
-    if mobSetBatV2 then mobSetBatV2(_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() or false) end
+    if mobSetBatV2 then mobSetBatV2(_G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2() or false) end
 
     if bodyLockEnabled and bodyLockSetVisual then
         if _blSuppressCount == 0 then
@@ -11341,9 +11341,9 @@ if gui and main then
         end)
     end
 
-    _bootSection("localizeRivalHubInterface", function()
-        if gui then localizeRivalHubInterface(gui) end
-        if MobilePanel then localizeRivalHubInterface(MobilePanel) end
+    _bootSection("localizeHeartlessInterface", function()
+        if gui then localizeHeartlessInterface(gui) end
+        if MobilePanel then localizeHeartlessInterface(MobilePanel) end
     end)
 
     if LP.Character then
@@ -11379,7 +11379,7 @@ if gui and main then
         task.defer(function()
             pcall(function()
                 local errGui = Instance.new("ScreenGui")
-                errGui.Name = "RivalHubBootErrors"
+                errGui.Name = "HeartlessBootErrors"
                 errGui.ResetOnSpawn = false
                 errGui.DisplayOrder = 999
                 local okCg, cg = pcall(function() return game:GetService("CoreGui") end)
@@ -11597,11 +11597,11 @@ UIS.InputBegan:Connect(function(input, gpe)
         return
     end
     if kbMatch(KB.BatV2, kc) then
-        if _G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() then
-            if _G.__RivalHubStopBatV2 then pcall(_G.__RivalHubStopBatV2) end
+        if _G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2() then
+            if _G.__HeartlessStopBatV2 then pcall(_G.__HeartlessStopBatV2) end
             if mobSetBatV2 then mobSetBatV2(false) end
         else
-            if _G.__RivalHubStartBatV2 then pcall(_G.__RivalHubStartBatV2) end
+            if _G.__HeartlessStartBatV2 then pcall(_G.__HeartlessStartBatV2) end
             if mobSetBatV2 then mobSetBatV2(true) end
         end
         return
