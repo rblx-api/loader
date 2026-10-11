@@ -1610,7 +1610,7 @@ M.Steal = {
     StealDuration = 1.3,
     StopTime = 0.96,
 }
-M.autoGrabPausePct = 0.73
+M.autoGrabPausePct = 0.80
 M.autoGrabSetDelayRadius = 9
 M.autoGrabStopEnabled = true
 M.autoGrabSetDelayRadius = 9
@@ -9756,8 +9756,8 @@ M.stealBarSize = tonumber(M.stealBarSize) or 420
         end
         if type(d.grabRadius)=="number" then M.Steal.StealRadius=d.grabRadius end
         if type(d.stealDuration)=="number" then M.Steal.StealDuration=d.stealDuration end
-        M.Steal.StopTime = (tonumber(M.Steal.StealDuration) or 1.3) * 0.73
-        M.autoGrabPausePct = 0.73
+        M.Steal.StopTime = (tonumber(M.Steal.StealDuration) or 1.3) * 0.80
+        M.autoGrabPausePct = 0.80
         if type(d.stealMode)=="string" then
 
             if d.stealMode == "Semi" or d.stealMode == "V2" or d.stealMode == "V1" or d.stealMode == "V3" or d.stealMode == "Normal" then
