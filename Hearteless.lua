@@ -1,10 +1,10 @@
----- HEARTLESS HUB
+---- leaked by .gg/source
 
-if _G.HeartlessRunning then
-    warn("[HEARTLESS] Instancia previa detectada. Se recomienda rejoin si hay comportamiento errático.")
+if _G.RivalHubRunning then
+    warn("[Rival Hub] Instancia previa detectada. Se recomienda rejoin si hay comportamiento errático.")
 end
-_G.HeartlessRunning = false
-_G.__HeartlessMainOriginalPos = nil
+_G.RivalHubRunning = false
+_G.__RivalHubMainOriginalPos = nil
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -24,13 +24,13 @@ if not LP then
     if _lpConn then _lpConn:Disconnect() end
 end
 if not LP then
-    warn("[HEARTLESS] LocalPlayer no disponible en 15s. Abortando.")
+    warn("[Rival Hub] LocalPlayer no disponible en 15s. Abortando.")
     return
 end
 
 local pgui = LP:WaitForChild("PlayerGui", 20)
 if not pgui then
-    warn("[HEARTLESS] PlayerGui no cargó en 20s. Abortando.")
+    warn("[Rival Hub] PlayerGui no cargó en 20s. Abortando.")
     return
 end
 
@@ -38,26 +38,15 @@ local camera = Workspace.CurrentCamera
 
 local SoundService = game:GetService("SoundService")
 
-local HEARTLESS_LOGO_FILE = "watermarked_img_14325875775565171502.jpg"
-local function getHeartlessLogoAsset()
-    local assetLoader = getcustomasset or getsynasset
-    if type(assetLoader) ~= "function" then return nil end
-    if type(isfile) == "function" and isfile(HEARTLESS_LOGO_FILE) then
-        local ok, asset = pcall(assetLoader, HEARTLESS_LOGO_FILE)
-        if ok and type(asset) == "string" then return asset end
-    end
-    return nil
-end
-
 local HEARTLESS_REDRUM_URL = "https://file.garden/algLafWA1jk8WMfK/redrum_spotdown.org%202.mp3"
 local HEARTLESS_REDRUM_FILE = "heartless_redrum.mp3"
-local mvpRedrumAsset = nil
-local mvpFullRedrumSound = nil
-local mvpMusicRequest = 0
-local mvpMusicRefreshers = {}
+local heartlessRedrumAsset = nil
+local heartlessFullRedrumSound = nil
+local heartlessMusicRequest = 0
+local heartlessMusicRefreshers = {}
 
 local function getHEARTLESSRedrumAsset()
-    if mvpRedrumAsset then return mvpRedrumAsset end
+    if heartlessRedrumAsset then return heartlessRedrumAsset end
 
     local assetLoader = getcustomasset or getsynasset
     if type(assetLoader) ~= "function" or type(writefile) ~= "function" then
@@ -89,7 +78,7 @@ local function getHEARTLESSRedrumAsset()
         return nil, "could not create redrum asset"
     end
 
-    mvpRedrumAsset = asset
+    heartlessRedrumAsset = asset
     return asset
 end
 
@@ -128,18 +117,18 @@ local function makeHEARTLESSRedrumSound(startAt, name)
 end
 
 local function stopHEARTLESSFullRedrum()
-    mvpMusicRequest = mvpMusicRequest + 1
-    if mvpFullRedrumSound then
-        pcall(function() mvpFullRedrumSound:Stop() end)
-        pcall(function() mvpFullRedrumSound:Destroy() end)
-        mvpFullRedrumSound = nil
+    heartlessMusicRequest = heartlessMusicRequest + 1
+    if heartlessFullRedrumSound then
+        pcall(function() heartlessFullRedrumSound:Stop() end)
+        pcall(function() heartlessFullRedrumSound:Destroy() end)
+        heartlessFullRedrumSound = nil
     end
 end
 
 
-_G.HeartlessRunning = true
-_G.HeartlessSession = (_G.HeartlessSession or 0) + 1
-local _mySession = _G.HeartlessSession
+_G.RivalHubRunning = true
+_G.RivalHubSession = (_G.RivalHubSession or 0) + 1
+local _mySession = _G.RivalHubSession
 
 do
     local screen, connections, closed = nil, {}, false
@@ -164,7 +153,7 @@ do
         for _, parent in ipairs(core and {core, pgui} or {pgui}) do
             local previous = parent:FindFirstChild("HEARTLESSIntro")
             if previous then previous:Destroy() end
-            for _, name in ipairs({"HEARTLESS", "HEARTLESSMobilePanel", "HEARTLESSSpeedIndicator"}) do
+            for _, name in ipairs({"RivalHub", "RivalHubMobilePanel", "RivalHubSpeedIndicator"}) do
                 local old = parent:FindFirstChild(name)
                 if old then old.Enabled = false end
             end
@@ -379,36 +368,36 @@ do
         end
         connect(RunService.RenderStepped, render)
         render()
-        while not closed and _mySession == _G.HeartlessSession do task.wait(0.05) end
+        while not closed and _mySession == _G.RivalHubSession do task.wait(0.05) end
     end)
     clean()
     if not ok then warn("[HEARTLESS] Intro: " .. tostring(err)) end
 end
 
-local HEARTLESS_LANGUAGE = "en"
+local RIVALHUB_LANGUAGE = "en"
 
-local HEARTLESS_TRANSLATIONS = {
+local RIVALHUB_TRANSLATIONS = {
     es = { ["RESET ALL SETTINGS"]="RESTABLECER TODO", ["SETTINGS RESET"]="AJUSTES RESTABLECIDOS", ["CONFIRM?"]="¿CONFIRMAR?", ["ERROR"]="ERROR", ["RESET"]="RESTABLECER", ["Keybinds"]="TECLAS", ["Carry Mode"]="MODO CARGAR", ["Lagger Mode"]="MODO LAG", ["Auto Left"]="AUTO IZQUIERDA", ["Auto Right"]="AUTO DERECHA", ["Auto Bat"]="AUTO BATE", ["TP Down"]="TP ABAJO", ["Drop Brainrot"]="SOLTAR BRAINROT", ["Hide GUI"]="OCULTAR MENÚ", ["Normal Speed"]="VELOCIDAD NORMAL", ["Carry Speed"]="VELOCIDAD CARGAR", ["Current Mode"]="MODO ACTUAL", ["ACTIVATE"]="ACTIVAR" },
     pt = { ["RESET ALL SETTINGS"]="REDEFINIR TUDO", ["SETTINGS RESET"]="CONFIGURAÇÕES REDEFINIDAS", ["CONFIRM?"]="CONFIRMAR?", ["ERROR"]="ERRO", ["RESET"]="REDEFINIR", ["Keybinds"]="TECLAS", ["Carry Mode"]="MODO CARREGAR", ["Auto Left"]="AUTO ESQUERDA", ["Auto Right"]="AUTO DIREITA", ["Hide GUI"]="OCULTAR MENU", ["Normal Speed"]="VELOCIDADE NORMAL", ["Carry Speed"]="VELOCIDADE CARREGAR", ["ACTIVATE"]="ATIVAR" },
     fr = { ["RESET ALL SETTINGS"]="RÉINITIALISER", ["SETTINGS RESET"]="PARAMÈTRES RÉINITIALISÉS", ["CONFIRM?"]="CONFIRMER ?", ["ERROR"]="ERREUR", ["RESET"]="RÉINITIALISER", ["Keybinds"]="RACCOURCIS", ["Carry Mode"]="MODE PORTER", ["Auto Left"]="AUTO GAUCHE", ["Auto Right"]="AUTO DROITE", ["Hide GUI"]="MASQUER LE MENU", ["Normal Speed"]="VITESSE NORMALE", ["Carry Speed"]="VITESSE PORTER", ["ACTIVATE"]="ACTIVER" },
     de = { ["RESET ALL SETTINGS"]="ALLES ZURÜCKSETZEN", ["SETTINGS RESET"]="EINSTELLUNGEN ZURÜCKGESETZT", ["CONFIRM?"]="BESTÄTIGEN?", ["ERROR"]="FEHLER", ["RESET"]="ZURÜCKSETZEN", ["Keybinds"]="TASTEN", ["Carry Mode"]="TRAGEMODUS", ["Auto Left"]="AUTO LINKS", ["Auto Right"]="AUTO RECHTS", ["Hide GUI"]="MENÜ AUSBLENDEN", ["Normal Speed"]="NORMALE GESCHWINDIGKEIT", ["Carry Speed"]="TRAGEGESCHWINDIGKEIT", ["ACTIVATE"]="AKTIVIEREN" },
 }
 
-local function localizeHeartlessInterface(root)
-    local dictionary = HEARTLESS_TRANSLATIONS[HEARTLESS_LANGUAGE]
+local function localizeRivalHubInterface(root)
+    local dictionary = RIVALHUB_TRANSLATIONS[RIVALHUB_LANGUAGE]
     if not dictionary or not root then return end
     for _, object in ipairs(root:GetDescendants()) do
         if object:IsA("TextLabel") or object:IsA("TextButton") then
-            local source = object:GetAttribute("HeartlessSourceText") or object.Text
-            object:SetAttribute("HeartlessSourceText", source)
+            local source = object:GetAttribute("RivalHubSourceText") or object.Text
+            object:SetAttribute("RivalHubSourceText", source)
             local translated = dictionary[source]
             if translated then object.Text = translated end
         end
     end
 end
 
-local function heartlessTranslate(source)
-    local dictionary = HEARTLESS_TRANSLATIONS[HEARTLESS_LANGUAGE]
+local function rivalHubTranslate(source)
+    local dictionary = RIVALHUB_TRANSLATIONS[RIVALHUB_LANGUAGE]
     return (dictionary and dictionary[source]) or source
 end
 
@@ -465,7 +454,7 @@ _isDraggingButton = false
 
 backgroundIndex = 1
 backgroundImages = {"73963271683049", "87425565124554", "93776108213038"}
-MVPUI = {effects = true, animated = {}, cards = {}, tweens = {}, backgroundRevision = 0}
+HEARTLESSUI = {effects = true, animated = {}, cards = {}, tweens = {}, backgroundRevision = 0}
 useVenixCarryEngine = false
 
 backgroundImageTransparency = 0
@@ -491,19 +480,19 @@ function applyBackgroundMode(mode)
         backgroundIndex = _clamp(_floor(n), 1, #backgroundImages)
         backgroundMode = "Background " .. backgroundIndex
     end
-    MVPUI.backgroundRevision = MVPUI.backgroundRevision + 1
-    local revision = MVPUI.backgroundRevision
+    HEARTLESSUI.backgroundRevision = HEARTLESSUI.backgroundRevision + 1
+    local revision = HEARTLESSUI.backgroundRevision
     if main then
         main.BackgroundColor3 = Color3.fromRGB(9, 12, 16)
         main.BackgroundTransparency = 0
         local bg = main:FindFirstChild("BackgroundImage")
         local overlay = main:FindFirstChild("BackgroundIncoming")
         if overlay then overlay:Destroy() end
-        if MVPUI.backgroundTween then MVPUI.backgroundTween:Cancel() end
+        if HEARTLESSUI.backgroundTween then HEARTLESSUI.backgroundTween:Cancel() end
         if bg then
             local asset = "rbxassetid://" .. backgroundImages[backgroundIndex]
             local opacity = backgroundMode == "None" and 1 or backgroundImageTransparency
-            if backgroundMode == "None" or not MVPUI.effects or bg.Image == asset then
+            if backgroundMode == "None" or not HEARTLESSUI.effects or bg.Image == asset then
                 bg.Image = asset
                 bg.ImageTransparency = opacity
             else
@@ -513,26 +502,26 @@ function applyBackgroundMode(mode)
                 incoming.ImageTransparency = 1
                 incoming.ZIndex = 1
                 incoming.Parent = main
-                MVPUI.backgroundTween = TS:Create(incoming, TweenInfo.new(0.28, Enum.EasingStyle.Quad), {ImageTransparency = opacity})
-                MVPUI.backgroundTween.Completed:Connect(function()
-                    if revision == MVPUI.backgroundRevision and bg.Parent then
+                HEARTLESSUI.backgroundTween = TS:Create(incoming, TweenInfo.new(0.28, Enum.EasingStyle.Quad), {ImageTransparency = opacity})
+                HEARTLESSUI.backgroundTween.Completed:Connect(function()
+                    if revision == HEARTLESSUI.backgroundRevision and bg.Parent then
                         bg.Image = asset
                         bg.ImageTransparency = opacity
                     end
                     if incoming.Parent then incoming:Destroy() end
                 end)
-                MVPUI.backgroundTween:Play()
+                HEARTLESSUI.backgroundTween:Play()
             end
         end
     end
-    if MVPUI.art and MVPUI.art.Parent then
-        MVPUI.art.Image = "rbxassetid://" .. backgroundImages[backgroundIndex]
-        MVPUI.art.Visible = backgroundMode ~= "None"
+    if HEARTLESSUI.art and HEARTLESSUI.art.Parent then
+        HEARTLESSUI.art.Image = "rbxassetid://" .. backgroundImages[backgroundIndex]
+        HEARTLESSUI.art.Visible = backgroundMode ~= "None"
     end
     if miniBackgroundImage then miniBackgroundImage.Visible = false end
     if backgroundSelectorLabel then backgroundSelectorLabel.Text = backgroundMode end
-    if _G.__MVPPingLaggerRefreshBackground then pcall(_G.__MVPPingLaggerRefreshBackground) end
-    for i, card in ipairs(MVPUI.cards) do
+    if _G.__HEARTLESSPingLaggerRefreshBackground then pcall(_G.__HEARTLESSPingLaggerRefreshBackground) end
+    for i, card in ipairs(HEARTLESSUI.cards) do
         if card.Parent then
             local stroke = card:FindFirstChildOfClass("UIStroke")
             if stroke then stroke.Transparency = backgroundMode ~= "None" and i == backgroundIndex and 0 or 0.72 end
@@ -547,7 +536,7 @@ local COLOR_THEMES = {
     ["Gray"] = Color3.fromRGB(170, 170, 170),
 }
 
-HEARTLESS_TITLE_THEMES = {
+RIVAL_TITLE_THEMES = {
     ["Orange"] = { top = Color3.fromRGB(255, 245, 227), bottom = Color3.fromRGB(229, 181, 118) },
     ["Blue"]  = { top = Color3.fromRGB(60, 130, 255),  bottom = Color3.fromRGB(210, 220, 235) },
     ["Red"]   = { top = Color3.fromRGB(255, 70, 70),   bottom = Color3.fromRGB(215, 215, 215) },
@@ -555,14 +544,14 @@ HEARTLESS_TITLE_THEMES = {
     ["Black"] = { top = Color3.fromRGB(35, 35, 40),    bottom = Color3.fromRGB(115, 115, 125) },
     ["Gray"]  = { top = Color3.fromRGB(200, 200, 200), bottom = Color3.fromRGB(120, 120, 130) },
 }
-currentHeartlessTitleTheme = "Orange"
+currentRivalTitleTheme = "Orange"
 scriptLogoRef = nil
-heartlessTitleSelectorLabel = nil
+rivalTitleSelectorLabel = nil
 
-function applyHeartlessTitleTheme(themeName)
-    local t = HEARTLESS_TITLE_THEMES[themeName]
+function applyRivalTitleTheme(themeName)
+    local t = RIVAL_TITLE_THEMES[themeName]
     if not t then return end
-    currentHeartlessTitleTheme = themeName
+    currentRivalTitleTheme = themeName
     if scriptLogoRef then
         local grad = scriptLogoRef:FindFirstChildOfClass("UIGradient")
         if grad then
@@ -572,8 +561,8 @@ function applyHeartlessTitleTheme(themeName)
             })
         end
     end
-    if heartlessTitleSelectorLabel then
-        heartlessTitleSelectorLabel.Text = themeName
+    if rivalTitleSelectorLabel then
+        rivalTitleSelectorLabel.Text = themeName
     end
     if saveAllSettings then pcall(saveAllSettings) end
 end
@@ -583,7 +572,7 @@ selectedColor = COLOR_THEMES["Orange"]
 
 function getThemeColor() return selectedColor end
 
-function heartlessGradient(c)
+function rivalHubGradient(c)
     return ColorSequence.new({
         ColorSequenceKeypoint.new(0.00, c:Lerp(Color3.new(1,1,1), 0.55)),
         ColorSequenceKeypoint.new(0.45, c),
@@ -591,7 +580,7 @@ function heartlessGradient(c)
     })
 end
 
-function heartlessGradientSoft(c)
+function rivalHubGradientSoft(c)
     return ColorSequence.new({
         ColorSequenceKeypoint.new(0.00, c:Lerp(Color3.new(1,1,1), 0.75)),
         ColorSequenceKeypoint.new(0.50, c:Lerp(Color3.new(1,1,1), 0.25)),
@@ -599,7 +588,7 @@ function heartlessGradientSoft(c)
     })
 end
 
-function heartlessGradientDark(c)
+function rivalHubGradientDark(c)
     return ColorSequence.new({
         ColorSequenceKeypoint.new(0.00, c:Lerp(Color3.fromRGB(0,0,0), 0.35)),
         ColorSequenceKeypoint.new(0.55, c:Lerp(Color3.fromRGB(0,0,0), 0.65)),
@@ -607,14 +596,14 @@ function heartlessGradientDark(c)
     })
 end
 
-function applyHeartlessGradientToLabel(label, c)
+function applyRivalHubGradientToLabel(label, c)
     if not label then return end
     local grad = label:FindFirstChildOfClass("UIGradient")
     if not grad then
         grad = Instance.new("UIGradient", label)
     end
     grad.Rotation = 0
-    grad.Color = heartlessGradient(c)
+    grad.Color = rivalHubGradient(c)
 end
 
 local _lastThemeUpdate = 0
@@ -644,7 +633,7 @@ function updateAllUIThemeColors(color)
         progressFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         local grad = progressFill:FindFirstChildOfClass("UIGradient")
         if grad then
-            grad.Color = heartlessGradient(color)
+            grad.Color = rivalHubGradient(color)
             grad.Rotation = 0
         end
     end
@@ -661,8 +650,8 @@ function updateAllUIThemeColors(color)
         pbFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     end
 
-    if MVPUI.speedStroke and MVPUI.speedStroke.Parent then MVPUI.speedStroke.Color = color end
-    if MVPUI.discordLabel and MVPUI.discordLabel.Parent then MVPUI.discordLabel.TextColor3 = color end
+    if HEARTLESSUI.speedStroke and HEARTLESSUI.speedStroke.Parent then HEARTLESSUI.speedStroke.Color = color end
+    if HEARTLESSUI.discordLabel and HEARTLESSUI.discordLabel.Parent then HEARTLESSUI.discordLabel.TextColor3 = color end
 
     if _uicStroke then _uicStroke.Color = color end
     if _uicAvatarStroke then _uicAvatarStroke.Color = color end
@@ -715,9 +704,9 @@ function updateAllUIThemeColors(color)
         tab.BackgroundTransparency = active and 0.05 or 1
         local caption = tab:FindFirstChild("Caption")
         if caption then caption.TextColor3 = active and Color3.fromRGB(249, 242, 229) or Color3.fromRGB(155, 157, 156) end
-        if MVPUI.colorSectionIcon then MVPUI.colorSectionIcon(tab:FindFirstChild("SectionIcon"), active and color or Color3.fromRGB(144, 147, 150)) end
+        if HEARTLESSUI.colorSectionIcon then HEARTLESSUI.colorSectionIcon(tab:FindFirstChild("SectionIcon"), active and color or Color3.fromRGB(144, 147, 150)) end
     end
-    if _G.__HeartlessRefreshESPTheme then pcall(_G.__HeartlessRefreshESPTheme, color) end
+    if _G.__RivalHubRefreshESPTheme then pcall(_G.__RivalHubRefreshESPTheme, color) end
     if main then
         local titleFrame = main:FindFirstChild("Frame")
         if titleFrame then
@@ -733,11 +722,11 @@ function updateAllUIThemeColors(color)
         colorSelectorLabel.TextColor3 = color
     end
 
-    if _G._heartlessStealSlide then
-        _G._heartlessStealSlide.BackgroundColor3 = color
-        local sg = _G._heartlessStealSlide:FindFirstChildOfClass("UIGradient")
-        if sg then sg.Color = heartlessGradient(color) end
-        local ss = _G._heartlessStealSlide:FindFirstChildOfClass("UIStroke")
+    if _G._rivalHubStealSlide then
+        _G._rivalHubStealSlide.BackgroundColor3 = color
+        local sg = _G._rivalHubStealSlide:FindFirstChildOfClass("UIGradient")
+        if sg then sg.Color = rivalHubGradient(color) end
+        local ss = _G._rivalHubStealSlide:FindFirstChildOfClass("UIStroke")
         if ss then ss.Color = color end
     end
 
@@ -823,8 +812,8 @@ local function applyBody(char)
                     w.Part0 = orig
                     w.Part1 = c
                     w.Parent = c
-                    if orig:GetAttribute("HeartlessOutfitOriginalTransparency") == nil then
-                        orig:SetAttribute("HeartlessOutfitOriginalTransparency", orig.Transparency)
+                    if orig:GetAttribute("RivalHubOutfitOriginalTransparency") == nil then
+                        orig:SetAttribute("RivalHubOutfitOriginalTransparency", orig.Transparency)
                     end
                     orig.Transparency = 1
                     total = total + 1
@@ -989,15 +978,15 @@ local function clearPreviousOutfitAssets(char)
     end
     for _, part in ipairs(char:GetDescendants()) do
         if part:IsA("BasePart") then
-            local originalTransparency = part:GetAttribute("HeartlessOutfitOriginalTransparency")
+            local originalTransparency = part:GetAttribute("RivalHubOutfitOriginalTransparency")
             if originalTransparency ~= nil then
                 part.Transparency = originalTransparency
-                part:SetAttribute("HeartlessOutfitOriginalTransparency", nil)
+                part:SetAttribute("RivalHubOutfitOriginalTransparency", nil)
             end
-            local originalLocalTransparency = part:GetAttribute("HeartlessOutfitOriginalLocalTransparency")
+            local originalLocalTransparency = part:GetAttribute("RivalHubOutfitOriginalLocalTransparency")
             if originalLocalTransparency ~= nil then
                 part.LocalTransparencyModifier = originalLocalTransparency
-                part:SetAttribute("HeartlessOutfitOriginalLocalTransparency", nil)
+                part:SetAttribute("RivalHubOutfitOriginalLocalTransparency", nil)
             end
         end
     end
@@ -1010,24 +999,24 @@ local function clearPreviousOutfitAssets(char)
         bc.Parent = char
     end
     local head = char:FindFirstChild("Head")
-    if head and head:IsA("MeshPart") and head:GetAttribute("HeartlessOutfitModifiedMeshPart") then
+    if head and head:IsA("MeshPart") and head:GetAttribute("RivalHubOutfitModifiedMeshPart") then
         pcall(function()
-            head.MeshId = head:GetAttribute("HeartlessOutfitOriginalMeshId") or ""
-            head.TextureID = head:GetAttribute("HeartlessOutfitOriginalTextureId") or ""
+            head.MeshId = head:GetAttribute("RivalHubOutfitOriginalMeshId") or ""
+            head.TextureID = head:GetAttribute("RivalHubOutfitOriginalTextureId") or ""
         end)
-        head:SetAttribute("HeartlessOutfitModifiedMeshPart", nil)
-        head:SetAttribute("HeartlessOutfitOriginalMeshId", nil)
-        head:SetAttribute("HeartlessOutfitOriginalTextureId", nil)
+        head:SetAttribute("RivalHubOutfitModifiedMeshPart", nil)
+        head:SetAttribute("RivalHubOutfitOriginalMeshId", nil)
+        head:SetAttribute("RivalHubOutfitOriginalTextureId", nil)
     elseif head then
         local specialMesh = head:FindFirstChildWhichIsA("SpecialMesh")
-        if specialMesh and specialMesh:GetAttribute("HeartlessOutfitCreatedMesh") then
+        if specialMesh and specialMesh:GetAttribute("RivalHubOutfitCreatedMesh") then
             specialMesh:Destroy()
-        elseif specialMesh and specialMesh:GetAttribute("HeartlessOutfitModifiedMesh") then
-            specialMesh.MeshId = specialMesh:GetAttribute("HeartlessOutfitOriginalMeshId") or ""
-            specialMesh.TextureId = specialMesh:GetAttribute("HeartlessOutfitOriginalTextureId") or ""
-            specialMesh:SetAttribute("HeartlessOutfitModifiedMesh", nil)
-            specialMesh:SetAttribute("HeartlessOutfitOriginalMeshId", nil)
-            specialMesh:SetAttribute("HeartlessOutfitOriginalTextureId", nil)
+        elseif specialMesh and specialMesh:GetAttribute("RivalHubOutfitModifiedMesh") then
+            specialMesh.MeshId = specialMesh:GetAttribute("RivalHubOutfitOriginalMeshId") or ""
+            specialMesh.TextureId = specialMesh:GetAttribute("RivalHubOutfitOriginalTextureId") or ""
+            specialMesh:SetAttribute("RivalHubOutfitModifiedMesh", nil)
+            specialMesh:SetAttribute("RivalHubOutfitOriginalMeshId", nil)
+            specialMesh:SetAttribute("RivalHubOutfitOriginalTextureId", nil)
         end
     end
 end
@@ -1103,21 +1092,21 @@ local function applyNoOutfit(char)
         if item:IsA("Accessory") then
             for _, part in ipairs(item:GetDescendants()) do
                 if part:IsA("BasePart") then
-                    local original = part:GetAttribute("HeartlessOriginalTransparency")
-                    if original ~= nil then part.Transparency = original; part:SetAttribute("HeartlessOriginalTransparency", nil) end
-                    local originalLocal = part:GetAttribute("HeartlessOriginalLocalTransparency")
-                    if originalLocal ~= nil then part.LocalTransparencyModifier = originalLocal; part:SetAttribute("HeartlessOriginalLocalTransparency", nil) end
+                    local original = part:GetAttribute("RivalHubOriginalTransparency")
+                    if original ~= nil then part.Transparency = original; part:SetAttribute("RivalHubOriginalTransparency", nil) end
+                    local originalLocal = part:GetAttribute("RivalHubOriginalLocalTransparency")
+                    if originalLocal ~= nil then part.LocalTransparencyModifier = originalLocal; part:SetAttribute("RivalHubOriginalLocalTransparency", nil) end
                 end
             end
         elseif item:IsA("Shirt") then
-            local original = item:GetAttribute("HeartlessOriginalTemplate")
-            if original ~= nil then item.ShirtTemplate = original; item:SetAttribute("HeartlessOriginalTemplate", nil) end
+            local original = item:GetAttribute("RivalHubOriginalTemplate")
+            if original ~= nil then item.ShirtTemplate = original; item:SetAttribute("RivalHubOriginalTemplate", nil) end
         elseif item:IsA("Pants") then
-            local original = item:GetAttribute("HeartlessOriginalTemplate")
-            if original ~= nil then item.PantsTemplate = original; item:SetAttribute("HeartlessOriginalTemplate", nil) end
+            local original = item:GetAttribute("RivalHubOriginalTemplate")
+            if original ~= nil then item.PantsTemplate = original; item:SetAttribute("RivalHubOriginalTemplate", nil) end
         elseif item:IsA("ShirtGraphic") then
-            local original = item:GetAttribute("HeartlessOriginalGraphic")
-            if original ~= nil then item.Graphic = original; item:SetAttribute("HeartlessOriginalGraphic", nil) end
+            local original = item:GetAttribute("RivalHubOriginalGraphic")
+            if original ~= nil then item.Graphic = original; item:SetAttribute("RivalHubOriginalGraphic", nil) end
         end
     end
 end
@@ -1771,7 +1760,7 @@ table.insert(state.visuals, holder)
 return added
 end
 local assetInfoCache = {}
-local ASSET_INFO_CACHE_FILE="HeartlessAvatarAssets.json"
+local ASSET_INFO_CACHE_FILE="RivalHubAvatarAssets.json"
 pcall(function()
 if isfile and readfile and isfile(ASSET_INFO_CACHE_FILE) then
 local decoded=HttpService:JSONDecode(readfile(ASSET_INFO_CACHE_FILE))
@@ -2264,7 +2253,7 @@ function VX7A.apply(index)
     if index == 0 then VX7A.stop() return end
     local m = VX7A.load()
     if not m or type(m.apply) ~= "function" then
-        warn("[HEARTLESS] No se pudo cargar el modulo de avatares VX7 (loadstring no disponible).")
+        warn("[Rival Hub] No se pudo cargar el modulo de avatares VX7 (loadstring no disponible).")
         VX7A.setLabel()
         return
     end
@@ -2288,9 +2277,9 @@ end
 
 pcall(function()
     LP.CharacterAdded:Connect(function()
-        if _G.HeartlessSession ~= _mySession or VX7A.index == 0 then return end
+        if _G.RivalHubSession ~= _mySession or VX7A.index == 0 then return end
         task.delay(1.5, function()
-            if _G.HeartlessSession == _mySession and VX7A.index ~= 0 then VX7A.apply(VX7A.index) end
+            if _G.RivalHubSession == _mySession and VX7A.index ~= 0 then VX7A.apply(VX7A.index) end
         end)
     end)
 end)
@@ -2340,9 +2329,9 @@ local function applyHeadlessKorblox(char)
     pcall(function() LP.CharacterAvatarType = Enum.AvatarType.R6 end)
     local head = char:FindFirstChild("Head")
     if head then
-        if head:GetAttribute("HeartlessOutfitOriginalTransparency") == nil then
-            head:SetAttribute("HeartlessOutfitOriginalTransparency", head.Transparency)
-            head:SetAttribute("HeartlessOutfitOriginalLocalTransparency", head.LocalTransparencyModifier)
+        if head:GetAttribute("RivalHubOutfitOriginalTransparency") == nil then
+            head:SetAttribute("RivalHubOutfitOriginalTransparency", head.Transparency)
+            head:SetAttribute("RivalHubOutfitOriginalLocalTransparency", head.LocalTransparencyModifier)
         end
         head.Transparency = 1
         head.CanCollide = false
@@ -2362,9 +2351,9 @@ local function applyHeadlessKorblox(char)
                 if (p0 and p0.Name == "Head") or (p1 and p1.Name == "Head") then
                     for _, part in ipairs(v:GetDescendants()) do
                         if part:IsA("BasePart") then
-                            if part:GetAttribute("HeartlessOutfitOriginalTransparency") == nil then
-                                part:SetAttribute("HeartlessOutfitOriginalTransparency", part.Transparency)
-                                part:SetAttribute("HeartlessOutfitOriginalLocalTransparency", part.LocalTransparencyModifier)
+                            if part:GetAttribute("RivalHubOutfitOriginalTransparency") == nil then
+                                part:SetAttribute("RivalHubOutfitOriginalTransparency", part.Transparency)
+                                part:SetAttribute("RivalHubOutfitOriginalLocalTransparency", part.LocalTransparencyModifier)
                             end
                             part.Transparency = 1
                             part.LocalTransparencyModifier = 1
@@ -2382,8 +2371,8 @@ local function applyHeadlessKorblox(char)
         for _, partName in ipairs(rightLegConfig.partsToHide) do
             local limb = char:FindFirstChild(partName)
             if limb and limb:IsA("BasePart") then
-                if limb:GetAttribute("HeartlessOutfitOriginalTransparency") == nil then
-                    limb:SetAttribute("HeartlessOutfitOriginalTransparency", limb.Transparency)
+                if limb:GetAttribute("RivalHubOutfitOriginalTransparency") == nil then
+                    limb:SetAttribute("RivalHubOutfitOriginalTransparency", limb.Transparency)
                 end
                 limb.Transparency = 1
             end
@@ -2417,22 +2406,22 @@ function applyOutfitByIndex(index)
         if item:IsA("Accessory") and item.Name:sub(1, #TAG) ~= TAG then
             for _, part in ipairs(item:GetDescendants()) do
                 if part:IsA("BasePart") then
-                    if part:GetAttribute("HeartlessOriginalTransparency") == nil then
-                        part:SetAttribute("HeartlessOriginalTransparency", part.Transparency)
-                        part:SetAttribute("HeartlessOriginalLocalTransparency", part.LocalTransparencyModifier)
+                    if part:GetAttribute("RivalHubOriginalTransparency") == nil then
+                        part:SetAttribute("RivalHubOriginalTransparency", part.Transparency)
+                        part:SetAttribute("RivalHubOriginalLocalTransparency", part.LocalTransparencyModifier)
                     end
                     part.Transparency = 1
                     part.LocalTransparencyModifier = 1
                 end
             end
         elseif item:IsA("Shirt") then
-            if item:GetAttribute("HeartlessOriginalTemplate") == nil then item:SetAttribute("HeartlessOriginalTemplate", item.ShirtTemplate) end
+            if item:GetAttribute("RivalHubOriginalTemplate") == nil then item:SetAttribute("RivalHubOriginalTemplate", item.ShirtTemplate) end
             item.ShirtTemplate = ""
         elseif item:IsA("Pants") then
-            if item:GetAttribute("HeartlessOriginalTemplate") == nil then item:SetAttribute("HeartlessOriginalTemplate", item.PantsTemplate) end
+            if item:GetAttribute("RivalHubOriginalTemplate") == nil then item:SetAttribute("RivalHubOriginalTemplate", item.PantsTemplate) end
             item.PantsTemplate = ""
         elseif item:IsA("ShirtGraphic") then
-            if item:GetAttribute("HeartlessOriginalGraphic") == nil then item:SetAttribute("HeartlessOriginalGraphic", item.Graphic) end
+            if item:GetAttribute("RivalHubOriginalGraphic") == nil then item:SetAttribute("RivalHubOriginalGraphic", item.Graphic) end
             item.Graphic = ""
         end
     end
@@ -2466,10 +2455,10 @@ function applyOutfitByIndex(index)
     local done = false
     if head:IsA("MeshPart") then
         done = pcall(function()
-            if not head:GetAttribute("HeartlessOutfitModifiedMeshPart") then
-                head:SetAttribute("HeartlessOutfitOriginalMeshId", head.MeshId)
-                head:SetAttribute("HeartlessOutfitOriginalTextureId", head.TextureID)
-                head:SetAttribute("HeartlessOutfitModifiedMeshPart", true)
+            if not head:GetAttribute("RivalHubOutfitModifiedMeshPart") then
+                head:SetAttribute("RivalHubOutfitOriginalMeshId", head.MeshId)
+                head:SetAttribute("RivalHubOutfitOriginalTextureId", head.TextureID)
+                head:SetAttribute("RivalHubOutfitModifiedMeshPart", true)
             end
             head.MeshId = cfg.headMesh
             head.TextureID = cfg.headTexture or ""
@@ -2479,11 +2468,11 @@ function applyOutfitByIndex(index)
         local sm = head:FindFirstChildWhichIsA("SpecialMesh")
         if not sm then
             sm = Instance.new("SpecialMesh")
-            sm:SetAttribute("HeartlessOutfitCreatedMesh", true)
-        elseif not sm:GetAttribute("HeartlessOutfitModifiedMesh") then
-            sm:SetAttribute("HeartlessOutfitOriginalMeshId", sm.MeshId)
-            sm:SetAttribute("HeartlessOutfitOriginalTextureId", sm.TextureId)
-            sm:SetAttribute("HeartlessOutfitModifiedMesh", true)
+            sm:SetAttribute("RivalHubOutfitCreatedMesh", true)
+        elseif not sm:GetAttribute("RivalHubOutfitModifiedMesh") then
+            sm:SetAttribute("RivalHubOutfitOriginalMeshId", sm.MeshId)
+            sm:SetAttribute("RivalHubOutfitOriginalTextureId", sm.TextureId)
+            sm:SetAttribute("RivalHubOutfitModifiedMesh", true)
         end
         sm.Parent = head
         sm.MeshType = Enum.MeshType.FileMesh
@@ -2712,7 +2701,7 @@ function InfiniteJump.isRunning() return InfiniteJump.enabled == true end
 InfiniteJump.stop()
 
 function getActiveMoveSpeed()
-    if useVenixCarryEngine and MVPVenixCarry and MVPVenixCarry:isRunning() then return MVPVenixCarry:getActiveSpeed() end
+    if useVenixCarryEngine and HEARTLESSVenixCarry and HEARTLESSVenixCarry:isRunning() then return HEARTLESSVenixCarry:getActiveSpeed() end
     if laggerCarryToggled then return LAGGER_CARRY_SPEED
     elseif laggerToggled then return LAGGER_SPEED
     elseif speedMode then return CS
@@ -2720,7 +2709,7 @@ function getActiveMoveSpeed()
 end
 
 function getSpeedModeName()
-    if useVenixCarryEngine and MVPVenixCarry and MVPVenixCarry.softStealEnabled and MVPVenixCarry.softStealLatched then return "AUTO CARRY" end
+    if useVenixCarryEngine and HEARTLESSVenixCarry and HEARTLESSVenixCarry.softStealEnabled and HEARTLESSVenixCarry.softStealLatched then return "AUTO CARRY" end
     if laggerToggled or laggerCarryToggled then return "LAGGER"
     elseif speedMode then return "CARRY"
     else return "NORMAL" end
@@ -2729,8 +2718,8 @@ end
 local _s2VelState = {root = nil, v = _V3zero}
 local _velChecked = setmetatable({}, {__mode = "k"})
 local _hookedVelParts = {}
-local _velocityHook = _G.__MVPVelocityHook or {hooked = false, roots = setmetatable({}, {__mode = "k"})}
-_G.__MVPVelocityHook = _velocityHook
+local _velocityHook = _G.__HEARTLESSVelocityHook or {hooked = false, roots = setmetatable({}, {__mode = "k"})}
+_G.__HEARTLESSVelocityHook = _velocityHook
 local function _hookVelHRP(root)
     if not root then return end
     _s2VelState.root = root
@@ -2779,7 +2768,7 @@ local function _isRagdollState(hum)
 end
 local function _applyVelocitySpeed(direction, speed, root)
     if not root or not root.Parent then return end
-    if autoBatEnabled or TPBatState.enabled or (_G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2()) then return end
+    if autoBatEnabled or TPBatState.enabled or (_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2()) then return end
     if type(speed) ~= "number" or speed ~= speed or speed <= 0 or speed == math.huge then return end
     local y = root.AssemblyLinearVelocity.Y
     if direction and direction.Magnitude > 0.05 then
@@ -2789,14 +2778,14 @@ local function _applyVelocitySpeed(direction, speed, root)
     else
         root.AssemblyLinearVelocity = _V3new(0, y, 0)
     end
-    _G.__HeartlessLiveSpeed = {t = os.clock(), v = speed}
+    _G.__RivalHubLiveSpeed = {t = os.clock(), v = speed}
 end
 function getAutoPathSpeed()
     if laggerCarryToggled or laggerToggled then return LAGGER_SPEED end
     return NS
 end
 
-        MVPVenixCarry = {
+        HEARTLESSVenixCarry = {
             normalSpeed = NS,
             carrySpeed = CS,
             laggerSpeed = LAGGER_SPEED,
@@ -2930,21 +2919,21 @@ end
         }
         do
             local function destroyLV()
-                if MVPVenixCarry._lvBoost and MVPVenixCarry._lvBoost.Parent then
+                if HEARTLESSVenixCarry._lvBoost and HEARTLESSVenixCarry._lvBoost.Parent then
                     pcall(function()
-                        MVPVenixCarry._lvBoost:Destroy()
+                        HEARTLESSVenixCarry._lvBoost:Destroy()
                     end)
                 end
-                if MVPVenixCarry._lvAtt and MVPVenixCarry._lvAtt.Parent then
+                if HEARTLESSVenixCarry._lvAtt and HEARTLESSVenixCarry._lvAtt.Parent then
                     pcall(function()
-                        MVPVenixCarry._lvAtt:Destroy()
+                        HEARTLESSVenixCarry._lvAtt:Destroy()
                     end)
                 end
-                MVPVenixCarry._lvBoost = nil
-                MVPVenixCarry._lvAtt = nil
+                HEARTLESSVenixCarry._lvBoost = nil
+                HEARTLESSVenixCarry._lvAtt = nil
             end
             local function setupLV(parent)
-                if MVPVenixCarry._lvBoost and MVPVenixCarry._lvBoost.Parent == parent then
+                if HEARTLESSVenixCarry._lvBoost and HEARTLESSVenixCarry._lvBoost.Parent == parent then
                     return
                 end
                 destroyLV()
@@ -2957,17 +2946,17 @@ end
                 linearVelocity.VelocityConstraintMode = Enum.VelocityConstraintMode.Plane
                 linearVelocity.PrimaryTangentAxis = _V3new(1, 0, 0)
                 linearVelocity.SecondaryTangentAxis = _V3new(0, 0, 1)
-                linearVelocity.MaxForce = MVPVenixCarry._maxForce
+                linearVelocity.MaxForce = HEARTLESSVenixCarry._maxForce
                 linearVelocity.PlaneVelocity = Vector2.zero
                 linearVelocity.RelativeTo = Enum.ActuatorRelativeTo.World
                 linearVelocity.Parent = parent
-                MVPVenixCarry._lvAtt = attachment
-                MVPVenixCarry._lvBoost = linearVelocity
+                HEARTLESSVenixCarry._lvAtt = attachment
+                HEARTLESSVenixCarry._lvBoost = linearVelocity
                 pcall(function()
                     parent:SetNetworkOwner(LP)
                 end)
             end
-            MVPVenixCarry.scanSoftStealAnimals = function(self)
+            HEARTLESSVenixCarry.scanSoftStealAnimals = function(self)
                 self._softStealAnimals = {}
                 local plots = Workspace:FindFirstChild("Plots")
                 if not plots then
@@ -2995,7 +2984,7 @@ end
                     end
                 end
             end
-            MVPVenixCarry.startSoftStealScanner = function(callback)
+            HEARTLESSVenixCarry.startSoftStealScanner = function(callback)
                 if callback._softStealScanner then
                     return
                 end
@@ -3012,14 +3001,14 @@ end
                     callback:scanSoftStealAnimals()
                 end)
             end
-            MVPVenixCarry.stopSoftStealScanner = function(self)
+            HEARTLESSVenixCarry.stopSoftStealScanner = function(self)
                 self._softStealScanning = false
                 if self._softStealScanner then
                     self._softStealScanner:Disconnect()
                     self._softStealScanner = nil
                 end
             end
-            MVPVenixCarry.getNearestSoftStealAnimal = function(self, radius)
+            HEARTLESSVenixCarry.getNearestSoftStealAnimal = function(self, radius)
                 local character = LP.Character
                 if character then
                     character = character:FindFirstChild("HumanoidRootPart") or character:FindFirstChild("UpperTorso")
@@ -3049,7 +3038,7 @@ end
                 end
                 return animals, bestDistance
             end
-            MVPVenixCarry.updateMovement = function(self, deltaTime)
+            HEARTLESSVenixCarry.updateMovement = function(self, deltaTime)
                 local character = LP.Character
                 if not character then
                     return
@@ -3160,10 +3149,10 @@ end
                         or self._batAimbotToggled
                     )
                 then
-                    if not MVPVenixCarry._lvBoost or MVPVenixCarry._lvBoost.Parent ~= humanoidRootPart then
+                    if not HEARTLESSVenixCarry._lvBoost or HEARTLESSVenixCarry._lvBoost.Parent ~= humanoidRootPart then
                         setupLV(humanoidRootPart)
                     end
-                    local lvBoost = MVPVenixCarry._lvBoost
+                    local lvBoost = HEARTLESSVenixCarry._lvBoost
                     if lvBoost then
                         if not lvBoost.Enabled then
                             lvBoost.Enabled = true
@@ -3197,19 +3186,19 @@ end
                             lvBoost.MaxForce = self._maxForce
                         end
                     end
-                elseif MVPVenixCarry._lvBoost then
-                    MVPVenixCarry._lvBoost.PlaneVelocity = Vector2.zero
-                    if MVPVenixCarry._lvBoost.Enabled then
-                        MVPVenixCarry._lvBoost.Enabled = false
+                elseif HEARTLESSVenixCarry._lvBoost then
+                    HEARTLESSVenixCarry._lvBoost.PlaneVelocity = Vector2.zero
+                    if HEARTLESSVenixCarry._lvBoost.Enabled then
+                        HEARTLESSVenixCarry._lvBoost.Enabled = false
                     end
                 end
             end
-            MVPVenixCarry.start = function(deltaTime236)
+            HEARTLESSVenixCarry.start = function(deltaTime236)
                 if deltaTime236._heartbeatConn then
                     return
                 end
                 deltaTime236._heartbeatConn = RunService.Heartbeat:Connect(function(deltaTime)
-                    if _mySession ~= _G.HeartlessSession then deltaTime236:stop(); return end
+                    if _mySession ~= _G.RivalHubSession then deltaTime236:stop(); return end
                     deltaTime236.normalSpeed = NS
                     deltaTime236.carrySpeed = CS
                     deltaTime236.laggerSpeed = LAGGER_SPEED
@@ -3219,7 +3208,7 @@ end
                     deltaTime236._state = {autoLeftEnabled = autoLeftEnabled, autoRightEnabled = autoRightEnabled}
                     deltaTime236._dropInProgress = dropActive or _G.IsDropping or autoLeftEnabled or autoRightEnabled
                     deltaTime236._batAimbotToggled = autoBatEnabled or TPBatState.enabled
-                        or (_G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2())
+                        or (_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2())
                     deltaTime236:updateMovement(deltaTime)
                 end)
                 if deltaTime236.softStealEnabled then
@@ -3227,7 +3216,7 @@ end
                 end
                 print("[CarrySystem] Activado")
             end
-            MVPVenixCarry.stop = function(self)
+            HEARTLESSVenixCarry.stop = function(self)
                 if self._heartbeatConn then
                     self._heartbeatConn:Disconnect()
                     self._heartbeatConn = nil
@@ -3238,28 +3227,28 @@ end
                 print("[CarrySystem] Desactivado")
             end
         end
-    MVPVenixCarry.setNormalSpeed = function(self, value)
+    HEARTLESSVenixCarry.setNormalSpeed = function(self, value)
         self.normalSpeed = _clamp(value, 1, 500)
     end
-    MVPVenixCarry.setCarrySpeed = function(self, value)
+    HEARTLESSVenixCarry.setCarrySpeed = function(self, value)
         self.carrySpeed = _clamp(value, 1, 500)
     end
-    MVPVenixCarry.setLaggerSpeed = function(self, value)
+    HEARTLESSVenixCarry.setLaggerSpeed = function(self, value)
         self.laggerSpeed = _clamp(value, 0.1, 500)
     end
-    MVPVenixCarry.setLaggerCarrySpeed = function(self, value)
+    HEARTLESSVenixCarry.setLaggerCarrySpeed = function(self, value)
         self.laggerCarrySpeed = _clamp(value, 0.1, 500)
     end
-    MVPVenixCarry.setSoftStealSpeed = function(self, value)
+    HEARTLESSVenixCarry.setSoftStealSpeed = function(self, value)
         self.softStealSpeed = _clamp(value, 1, 500)
     end
-    MVPVenixCarry.setSoftStealRadius = function(self, value)
+    HEARTLESSVenixCarry.setSoftStealRadius = function(self, value)
         self.softStealRadius = _clamp(value, 1, 200)
     end
-    MVPVenixCarry.toggleCarryMode = function(self)
+    HEARTLESSVenixCarry.toggleCarryMode = function(self)
         self.speedToggled = not self.speedToggled
     end
-    MVPVenixCarry.setLaggerMode = function(self, mode)
+    HEARTLESSVenixCarry.setLaggerMode = function(self, mode)
         if mode == 0 then
             self.laggerMode = 0
         elseif mode == 1 then
@@ -3268,7 +3257,7 @@ end
             self.laggerMode = 2
         end
     end
-    MVPVenixCarry.toggleLaggerMode = function(self)
+    HEARTLESSVenixCarry.toggleLaggerMode = function(self)
         if self.laggerMode == 0 then
             self.laggerMode = 1
         elseif self.laggerMode == 1 then
@@ -3277,7 +3266,7 @@ end
             self.laggerMode = 0
         end
     end
-    MVPVenixCarry.setSoftStealEnabled = function(self, softStealEnabled)
+    HEARTLESSVenixCarry.setSoftStealEnabled = function(self, softStealEnabled)
         self.softStealEnabled = softStealEnabled
         if softStealEnabled then
             self:startSoftStealScanner()
@@ -3286,13 +3275,13 @@ end
             self.softStealLatched = false
         end
     end
-    MVPVenixCarry.toggleSoftSteal = function(self)
+    HEARTLESSVenixCarry.toggleSoftSteal = function(self)
         self:setSoftStealEnabled(not self.softStealEnabled)
     end
-    MVPVenixCarry.isRunning = function(self)
+    HEARTLESSVenixCarry.isRunning = function(self)
         return self._heartbeatConn ~= nil
     end
-    MVPVenixCarry.getCurrentSpeed = function(self)
+    HEARTLESSVenixCarry.getCurrentSpeed = function(self)
         return self:getActiveSpeed()
     end
 
@@ -3573,7 +3562,7 @@ local function executeSteal(prompt, podName)
     autoStealLastActivity = autoStealStartedAt
     local function active()
         return generation == autoStealGeneration and isStealing and Steal.AutoStealEnabled
-            and _mySession == _G.HeartlessSession
+            and _mySession == _G.RivalHubSession
     end
     local function distance()
         if not prompt.Parent or not prompt.Parent.Parent then return nil end
@@ -3654,7 +3643,7 @@ function startAutoSteal()
     if stealConnection then return true end
 
     stealConnection = RunService.Heartbeat:Connect(function()
-        if _mySession ~= _G.HeartlessSession then
+        if _mySession ~= _G.RivalHubSession then
             stopAutoSteal()
             return
         end
@@ -3707,7 +3696,7 @@ end
 autoStealSupervisorElapsed = 0
 do
     autoStealSupervisorConn = RunService.Heartbeat:Connect(function(dt)
-        if _mySession ~= _G.HeartlessSession then
+        if _mySession ~= _G.RivalHubSession then
             if autoStealSupervisorConn then
                 pcall(function() autoStealSupervisorConn:Disconnect() end)
                 autoStealSupervisorConn = nil
@@ -4390,7 +4379,7 @@ local _antiFlingState = {
 local _ANTI_FLING_DRIVE_GRACE = 0.3
 
 local function _afHubSpeedLive()
-    local live = _G.__HeartlessLiveSpeed
+    local live = _G.__RivalHubLiveSpeed
     if type(live) ~= "table" then return false end
     local stamp, speed = tonumber(live.t), tonumber(live.v)
     if not stamp or not speed or speed <= 0 then return false end
@@ -4474,7 +4463,7 @@ local function createESP()
         esp.Tracer.ZIndex = 2
     end
 
-    esp.Highlight.Name = "HeartlessESP_Highlight"
+    esp.Highlight.Name = "RivalHubESP_Highlight"
     esp.Highlight.FillColor = currentFill
     esp.Highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
     esp.Highlight.FillTransparency = 0.12
@@ -4488,7 +4477,7 @@ local function createESP()
     pcall(function() esp.Highlight.Parent = parentGui end)
 
     local nameBillboard = Instance.new("BillboardGui")
-    nameBillboard.Name = "HeartlessESP_Name"
+    nameBillboard.Name = "RivalHubESP_Name"
     nameBillboard.Size = UDim2.new(0, 170, 0, 28)
     nameBillboard.StudsOffset = Vector3.new(0, 1.3, 0)
     nameBillboard.AlwaysOnTop = true
@@ -4533,7 +4522,7 @@ local function createESP()
     return esp
 end
 
-_G.__HeartlessRefreshESPTheme = function(accent, outlineColor)
+_G.__RivalHubRefreshESPTheme = function(accent, outlineColor)
     local fillColor, lineColor = getESPThemeColors(accent)
     for _, data in pairs(espActivePlayers) do
         if type(data) == "table" and data.esp then
@@ -4672,7 +4661,7 @@ local _espLineState = { scanElapsed = math.huge, targetRoot = nil }
 local function ensureESPLineGui()
     if _espLineGui and _espLineGui.Parent then return end
     _espLineGui = Instance.new("ScreenGui")
-    _espLineGui.Name = "HeartlessESPLine"
+    _espLineGui.Name = "RivalHubESPLine"
     _espLineGui.IgnoreGuiInset = true
     _espLineGui.ResetOnSpawn = false
     _espLineGui.DisplayOrder = 1000
@@ -5002,13 +4991,13 @@ end
 function setupSpeedIndicator(char)
     local head = char:WaitForChild("Head", 5)
     if not head then return end
-    for _, name in ipairs({"HEARTLESSSpeedIndicator", "DiscordText", "HeartlessDiscordTag"}) do
+    for _, name in ipairs({"RivalHubSpeedIndicator", "DiscordText", "RivalHubDiscordTag"}) do
         local old = head:FindFirstChild(name)
         if old then old:Destroy() end
     end
     speedLabel = nil
     local bb = Instance.new("BillboardGui", head)
-    bb.Name = "HEARTLESSSpeedIndicator"
+    bb.Name = "RivalHubSpeedIndicator"
     bb.Size = UDim2.fromOffset(136, 28)
     bb.StudsOffset = Vector3.new(0, 3.5, 0)
     bb.AlwaysOnTop = true
@@ -5026,7 +5015,7 @@ function setupSpeedIndicator(char)
     border.Color = getThemeColor()
     border.Transparency = 0.62
     border.Thickness = 1
-    MVPUI.speedStroke = border
+    HEARTLESSUI.speedStroke = border
     speedLabel = Instance.new("TextLabel", card)
     speedLabel.Name = "SpeedLabel"
     speedLabel.Size = UDim2.new(1, -12, 1, 0)
@@ -5041,7 +5030,7 @@ function setupSpeedIndicator(char)
     speedLabel.TextXAlignment = Enum.TextXAlignment.Center
     speedLabel.ZIndex = 3
     local tag = Instance.new("BillboardGui", head)
-    tag.Name = "HeartlessDiscordTag"
+    tag.Name = "RivalHubDiscordTag"
     tag.Size = UDim2.fromOffset(210, 24)
     tag.StudsOffset = Vector3.new(0, 5.1, 0)
     tag.AlwaysOnTop = true
@@ -5050,13 +5039,13 @@ function setupSpeedIndicator(char)
     local text = Instance.new("TextLabel", tag)
     text.Size = UDim2.fromScale(1, 1)
     text.BackgroundTransparency = 1
-    text.Text = "discord.gg/heartless"
+    text.Text = "discord.gg/heartlesshub"
     text.TextColor3 = getThemeColor()
     text.TextStrokeColor3 = Color3.fromRGB(5, 7, 10)
     text.TextStrokeTransparency = 0.2
     text.Font = Enum.Font.GothamBold
     text.TextSize = 15
-    MVPUI.discordLabel = text
+    HEARTLESSUI.discordLabel = text
 
 end
 
@@ -5119,20 +5108,20 @@ function toggleCarryMode()
         laggerToggled = false; laggerCarryToggled = false; speedMode = true
     else speedMode = not speedMode end
     resetMovementState()
-    if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end
+    if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
 end
 
 function toggleLaggerMode()
     if laggerCarryToggled then laggerCarryToggled = false end
     speedMode = false; laggerToggled = not laggerToggled
     resetMovementState()
-    if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end
+    if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
 end
 function toggleLaggerCarryMode()
     if laggerToggled then laggerToggled = false end
     speedMode = false; laggerCarryToggled = not laggerCarryToggled
     resetMovementState()
-    if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end
+    if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
 end
 
 function toggleLaggerCycle()
@@ -5150,7 +5139,7 @@ function toggleLaggerCycle()
         laggerCarryToggled = false
     end
     resetMovementState()
-    if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end
+    if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
 end
 
 function stopAutoLeft()
@@ -5666,7 +5655,7 @@ local function startAimbot()
     STATE.lastActivationTime = 0
     
     STATE.conn = RunService.RenderStepped:Connect(function(dt)
-        if _mySession ~= _G.HeartlessSession then stopAimbotAdapt(); return end
+        if _mySession ~= _G.RivalHubSession then stopAimbotAdapt(); return end
         pcall(aimbotLoop, dt)
     end)
     
@@ -5734,8 +5723,8 @@ end
         if saveAllSettings then pcall(saveAllSettings) end
     end
     enableAutoBat = function()
-        if _G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2() then
-            _G.__HeartlessStopBatV2()
+        if _G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() then
+            _G.__RivalHubStopBatV2()
             if mobSetBatV2 then mobSetBatV2(false) end
         end
         if autoLeftEnabled then autoLeftEnabled = false; stopAutoLeft() end
@@ -5746,7 +5735,7 @@ end
         if mobSetAutoBat then mobSetAutoBat(true) end
         if saveAllSettings then pcall(saveAllSettings) end
     end
-    _G.__MVPBatBypassState = STATE
+    _G.__HEARTLESSBatBypassState = STATE
 end
 
 function findBat()
@@ -6262,7 +6251,7 @@ local function _alIsProtectedVisual(object)
         end
         local name = parent.Name or ""
         if name:match("^Crystal") or name:match("^Eclipse") or name:match("^ESP_")
-            or name:match("^BloodHounds") or name:match("^Heartless") then
+            or name:match("^BloodHounds") or name:match("^RivalHub") then
             return true
         end
         parent = parent.Parent
@@ -6733,34 +6722,34 @@ function toggleHideButtons(on)
     saveAllSettings(true)
 end
 
-function MVPUI.new(class, parent, props)
+function HEARTLESSUI.new(class, parent, props)
     local object = Instance.new(class)
     for key, value in pairs(props or {}) do object[key] = value end
     object.Parent = parent
     return object
 end
-function MVPUI.round(object, radius)
+function HEARTLESSUI.round(object, radius)
     local corner = object:FindFirstChildOfClass("UICorner") or Instance.new("UICorner", object)
     corner.CornerRadius = UDim.new(0, radius or 12)
     return corner
 end
-function MVPUI.stroke(object, color, transparency, thickness)
-    return MVPUI.new("UIStroke", object, {Color = color, Transparency = transparency or 0,
+function HEARTLESSUI.stroke(object, color, transparency, thickness)
+    return HEARTLESSUI.new("UIStroke", object, {Color = color, Transparency = transparency or 0,
         Thickness = thickness or 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border})
 end
-function MVPUI.text(parent, text, position, size, fontSize, color, z)
-    return MVPUI.new("TextLabel", parent, {Text = text, Position = position, Size = size,
+function HEARTLESSUI.text(parent, text, position, size, fontSize, color, z)
+    return HEARTLESSUI.new("TextLabel", parent, {Text = text, Position = position, Size = size,
         BackgroundTransparency = 1, TextColor3 = color or Color3.fromRGB(245, 241, 235),
         Font = Enum.Font.GothamMedium, TextSize = fontSize or 12, ZIndex = z or 8,
         TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd})
 end
-function MVPUI.pumpkin(parent, position, size, z)
-    local root = MVPUI.new("Frame", parent, {Name = "Pumpkin", Size = UDim2.fromOffset(size, size),
+function HEARTLESSUI.pumpkin(parent, position, size, z)
+    local root = HEARTLESSUI.new("Frame", parent, {Name = "Pumpkin", Size = UDim2.fromOffset(size, size),
         Position = position, BackgroundTransparency = 1, ZIndex = z, Active = false})
     local function part(x, y, w, h, color, radius, rotation)
-        local object = MVPUI.new("Frame", root, {Size = UDim2.fromScale(w, h), Position = UDim2.fromScale(x, y),
+        local object = HEARTLESSUI.new("Frame", root, {Size = UDim2.fromScale(w, h), Position = UDim2.fromScale(x, y),
             BackgroundColor3 = color, BorderSizePixel = 0, Rotation = rotation or 0, ZIndex = z + 1})
-        MVPUI.round(object, radius)
+        HEARTLESSUI.round(object, radius)
         return object
     end
     part(0.42, 0.02, 0.12, 0.23, Color3.fromRGB(112, 125, 65), 3, 16)
@@ -6768,7 +6757,7 @@ function MVPUI.pumpkin(parent, position, size, z)
     part(0.09, 0.20, 0.52, 0.70, Color3.fromRGB(246, 115, 37), size)
     part(0.40, 0.20, 0.51, 0.70, Color3.fromRGB(222, 88, 27), size)
     local lobe = part(0.29, 0.17, 0.43, 0.75, Color3.fromRGB(255, 156, 63), size)
-    MVPUI.new("UIGradient", lobe, {Rotation = 90, Color = ColorSequence.new(
+    HEARTLESSUI.new("UIGradient", lobe, {Rotation = 90, Color = ColorSequence.new(
         Color3.fromRGB(255, 212, 130), Color3.fromRGB(218, 96, 32))})
     part(0.24, 0.38, 0.16, 0.12, Color3.fromRGB(33, 20, 17), 2, -20)
     part(0.61, 0.38, 0.16, 0.12, Color3.fromRGB(33, 20, 17), 2, 20)
@@ -6777,12 +6766,12 @@ function MVPUI.pumpkin(parent, position, size, z)
     part(0.55, 0.68, 0.06, 0.08, Color3.fromRGB(255, 173, 80), 1)
     return root
 end
-function MVPUI.web(parent, position, size, z)
-    local root = MVPUI.new("Frame", parent, {Name = "Web", Position = position,
+function HEARTLESSUI.web(parent, position, size, z)
+    local root = HEARTLESSUI.new("Frame", parent, {Name = "Web", Position = position,
         Size = UDim2.fromOffset(size, size), BackgroundTransparency = 1, ZIndex = z})
     local function line(x1, y1, x2, y2)
         local dx, dy = x2 - x1, y2 - y1
-        MVPUI.new("Frame", root, {Size = UDim2.fromOffset(math.sqrt(dx * dx + dy * dy), 1),
+        HEARTLESSUI.new("Frame", root, {Size = UDim2.fromOffset(math.sqrt(dx * dx + dy * dy), 1),
             Position = UDim2.fromOffset((x1 + x2) / 2, (y1 + y2) / 2), AnchorPoint = Vector2.new(0.5, 0.5),
             Rotation = math.deg(math.atan2(dy, dx)), BackgroundColor3 = Color3.fromRGB(220, 174, 128),
             BackgroundTransparency = 0.84, BorderSizePixel = 0, ZIndex = z})
@@ -6800,23 +6789,23 @@ function MVPUI.web(parent, position, size, z)
     end
     return root
 end
-function MVPUI.sectionIcon(parent, name, position, size, color, z)
-    local root = MVPUI.new("Frame", parent, {Name = "SectionIcon", Position = position,
+function HEARTLESSUI.sectionIcon(parent, name, position, size, color, z)
+    local root = HEARTLESSUI.new("Frame", parent, {Name = "SectionIcon", Position = position,
         Size = UDim2.fromOffset(size, size), BackgroundTransparency = 1, ZIndex = z})
     local function line(x1, y1, x2, y2, thickness)
         local dx, dy = x2 - x1, y2 - y1
-        local ink = MVPUI.new("Frame", root, {Name = "IconInk", AnchorPoint = Vector2.new(0.5, 0.5),
+        local ink = HEARTLESSUI.new("Frame", root, {Name = "IconInk", AnchorPoint = Vector2.new(0.5, 0.5),
             Position = UDim2.fromScale((x1 + x2) / 2, (y1 + y2) / 2),
             Size = UDim2.fromOffset(math.sqrt(dx * dx + dy * dy) * size, thickness or 1.6),
             BackgroundColor3 = color, BorderSizePixel = 0, Rotation = math.deg(math.atan2(dy, dx)), ZIndex = z})
-        MVPUI.round(ink, 2)
+        HEARTLESSUI.round(ink, 2)
     end
     local function box(x, y, w, h, radius, solid)
-        local object = MVPUI.new("Frame", root, {Name = "IconInk", Position = UDim2.fromScale(x, y),
+        local object = HEARTLESSUI.new("Frame", root, {Name = "IconInk", Position = UDim2.fromScale(x, y),
             Size = UDim2.fromScale(w, h), BackgroundColor3 = color, BackgroundTransparency = solid and 0 or 1,
             BorderSizePixel = 0, ZIndex = z})
-        MVPUI.round(object, radius)
-        if not solid then MVPUI.stroke(object, color, 0, 1.4) end
+        HEARTLESSUI.round(object, radius)
+        if not solid then HEARTLESSUI.stroke(object, color, 0, 1.4) end
         return object
     end
     if name == "Speed" then
@@ -6846,7 +6835,7 @@ function MVPUI.sectionIcon(parent, name, position, size, color, z)
     end
     return root
 end
-function MVPUI.colorSectionIcon(root, color)
+function HEARTLESSUI.colorSectionIcon(root, color)
     if not root then return end
     for _, object in ipairs(root:GetDescendants()) do
         if object:IsA("Frame") and object.Name == "IconInk" then object.BackgroundColor3 = color end
@@ -6854,7 +6843,7 @@ function MVPUI.colorSectionIcon(root, color)
     end
 end
 
-function MVPUI.fit()
+function HEARTLESSUI.fit()
     if not mainUIScale or not main or not main.Parent then return end
     local cam = Workspace.CurrentCamera
     if not cam then return end
@@ -6863,18 +6852,18 @@ function MVPUI.fit()
     local scale = math.max(0.25, math.min(uiScaleValue / 100, (viewport.X - 24) / width, (viewport.Y - 24) / 460))
     local height = math.min(570, math.floor((viewport.Y - 24) / scale))
     mainUIScale.Scale = scale
-    MVPUI.width, MVPUI.height = width, height
+    HEARTLESSUI.width, HEARTLESSUI.height = width, height
     main.Size = UDim2.fromOffset(width, height)
     local size = Vector2.new(width * mainUIScale.Scale, height * mainUIScale.Scale)
     local point = main.AbsolutePosition
     main.Position = UDim2.fromOffset(_clamp(point.X, 8, math.max(8, viewport.X - size.X - 8)),
         _clamp(point.Y, 8, math.max(8, viewport.Y - size.Y - 8)))
-    if pbFrame and pbFrame.Parent and MVPUI.hudScale then
+    if pbFrame and pbFrame.Parent and HEARTLESSUI.hudScale then
         local compact = viewport.X < 600 or viewport.X < viewport.Y * 1.18
         local right = main.Position.X.Offset + size.X + 14
         local room = viewport.X - right - 12
         local hudScale = compact and math.min(1, (viewport.X - 24) / 264) or math.clamp(room / 264, 0.65, 1)
-        MVPUI.hudScale.Scale = hudScale
+        HEARTLESSUI.hudScale.Scale = hudScale
         local hudWidth, hudHeight = 264 * hudScale, 86 * hudScale
         if not savedProgressBarPos then
             if compact then
@@ -6891,13 +6880,13 @@ function MVPUI.fit()
     end
 
 end
-function MVPUI.effectsLoop(root)
-    local state = MVPUI
+function HEARTLESSUI.effectsLoop(root)
+    local state = HEARTLESSUI
     if state.effectConn then state.effectConn:Disconnect() end
     local accumulator, elapsed = 0, 0
     local connection
     connection = RunService.Heartbeat:Connect(function(dt)
-        if not root.Parent or _mySession ~= _G.HeartlessSession then
+        if not root.Parent or _mySession ~= _G.RivalHubSession then
             connection:Disconnect()
             if state.effectConn == connection then state.effectConn = nil end
             return
@@ -7018,12 +7007,12 @@ local function drag(f, dragZoneHeight)
     end)
 end
 
-_G.__HeartlessSpeedEngine = _G.__HeartlessSpeedEngine or {}
+_G.__RivalHubSpeedEngine = _G.__RivalHubSpeedEngine or {}
 do
     local function blocked(hum)
         return not hum or hum.Health <= 0 or _isRagdollState(hum) or autoBatEnabled
             or autoLeftEnabled or autoRightEnabled or dropActive or _G.IsDropping
-            or TPBatState.enabled or (_G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2())
+            or TPBatState.enabled or (_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2())
     end
     local function applyNow()
         local char = LP.Character
@@ -7045,26 +7034,26 @@ do
         _applyVelocitySpeed(direction, getActiveMoveSpeed(), root)
     end
     local function stop()
-        if _G.__HeartlessSpeedEngine.conn then _G.__HeartlessSpeedEngine.conn:Disconnect(); _G.__HeartlessSpeedEngine.conn = nil end
-        MVPVenixCarry:stop()
+        if _G.__RivalHubSpeedEngine.conn then _G.__RivalHubSpeedEngine.conn:Disconnect(); _G.__RivalHubSpeedEngine.conn = nil end
+        HEARTLESSVenixCarry:stop()
         lastMoveDir = _V3zero
     end
     local function start()
         stop()
-        if useVenixCarryEngine then MVPVenixCarry:start() end
-        _G.__HeartlessSpeedEngine.conn = RunService.RenderStepped:Connect(function()
-            if _mySession ~= _G.HeartlessSession then stop(); return end
+        if useVenixCarryEngine then HEARTLESSVenixCarry:start() end
+        _G.__RivalHubSpeedEngine.conn = RunService.RenderStepped:Connect(function()
+            if _mySession ~= _G.RivalHubSession then stop(); return end
             applyNow()
         end)
     end
-    _G.__HeartlessRefreshSpeedEngine = start
-    _G.__HeartlessStopSpeedEngine = stop
-    _G.__HeartlessApplySpeedNow = applyNow
+    _G.__RivalHubRefreshSpeedEngine = start
+    _G.__RivalHubStopSpeedEngine = stop
+    _G.__RivalHubApplySpeedNow = applyNow
     pcall(start)
     LP.CharacterRemoving:Connect(function() stop(); _s2VelState.root = nil end)
     LP.CharacterAdded:Connect(function(char)
         task.wait(0.5)
-        if _mySession ~= _G.HeartlessSession then return end
+        if _mySession ~= _G.RivalHubSession then return end
         _hookVelHRP(_setupVelChecked(char))
         start()
     end)
@@ -7112,7 +7101,7 @@ function setupMovementAndIndicators(char)
             stealHud.statsText = tostring(fps) .. " FPS  ·  PING: " .. pingText .. " MS"
             if stealHud.stats and stealHud.stats.Parent then stealHud.stats.Text = stealHud.statsText end
             if stealHud.mode and stealHud.mode.Parent then stealHud.mode.Text = autoStealMode end
-            if MVPUI.footerStats and MVPUI.footerStats.Parent then MVPUI.footerStats.Text = stealHud.statsText end
+            if HEARTLESSUI.footerStats and HEARTLESSUI.footerStats.Parent then HEARTLESSUI.footerStats.Text = stealHud.statsText end
         end
         local char2 = LP.Character
         if not char2 then return end
@@ -7170,7 +7159,7 @@ function stopAllBackgroundTasks()
     disableAutoBat()
     stopAutoLeft()
     stopAutoRight()
-    if _G.__HeartlessStopBatV2 then pcall(_G.__HeartlessStopBatV2) end
+    if _G.__RivalHubStopBatV2 then pcall(_G.__RivalHubStopBatV2) end
     if TPBatState and TPBatState.enabled and tpBatSetEnabled then pcall(tpBatSetEnabled, false) end
     if unwalkEnabled then stopUnwalk() end
     if antiLagEnabled then disableAntiLag() end
@@ -7193,10 +7182,10 @@ function stopAllBackgroundTasks()
     lastDropTime = 0
     medusaDebounce = false
     medusaLastUsed = 0
-    if _G.__HeartlessStopSpeedEngine then pcall(_G.__HeartlessStopSpeedEngine) end
+    if _G.__RivalHubStopSpeedEngine then pcall(_G.__RivalHubStopSpeedEngine) end
 end
 
-local _heartlessSaveState = {
+local _rivalHubSaveState = {
     lastAt = 0,
     queued = false,
     writing = false,
@@ -7204,7 +7193,7 @@ local _heartlessSaveState = {
     revision = 0,
     retryCount = 0,
 }
-local function resolveHeartlessFileApi()
+local function resolveRivalHubFileApi()
     local env = (type(getgenv) == "function" and getgenv()) or _G
     local synApi = rawget(env, "syn") or rawget(_G, "syn")
     local readCandidates = {rawget(env, "readfile"), synApi and synApi.readfile, rawget(_G, "readfile")}
@@ -7215,8 +7204,8 @@ local function resolveHeartlessFileApi()
     return readFn, writeFn
 end
 
-local function heartlessFileExists(path)
-    local readFn = resolveHeartlessFileApi()
+local function rivalHubFileExists(path)
+    local readFn = resolveRivalHubFileApi()
     if not readFn then return false end
     local ok, data = pcall(readFn, path)
     return ok and type(data) == "string"
@@ -7260,20 +7249,20 @@ function buildConfigTable()
         backgroundImageTransparency = backgroundImageTransparency,
         backgroundMode = backgroundMode, floatingButtonScale = floatingButtonScale,
         outfitIndex = currentOutfitIndex, vx7AvatarIndex = VX7A.index, themeColor = currentColorTheme,
-        heartlessTitleTheme = currentHeartlessTitleTheme,
+        rivalTitleTheme = currentRivalTitleTheme,
         infiniteJumpEnabled = InfiniteJump.enabled == true,
         infiniteJumpMode = InfiniteJump.mode == "manual" and "manual" or "hold",
         autoStealMode = autoStealMode,
         useVenixCarryEngine = useVenixCarryEngine,
-        softCarry = MVPVenixCarry.softStealEnabled,
-        softCarrySpeed = MVPVenixCarry.softStealSpeed,
-        softCarryRadius = MVPVenixCarry.softStealRadius,
-        uiEffects = MVPUI.effects,
+        softCarry = HEARTLESSVenixCarry.softStealEnabled,
+        softCarrySpeed = HEARTLESSVenixCarry.softStealSpeed,
+        softCarryRadius = HEARTLESSVenixCarry.softStealRadius,
+        uiEffects = HEARTLESSUI.effects,
         mobileButtonsLocked = mobileButtonsLocked,
-        batV2 = _G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2() or false,
+        batV2 = _G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() or false,
     }
     if main then
-        local basePos = _G.__HeartlessMainOriginalPos or main.Position
+        local basePos = _G.__RivalHubMainOriginalPos or main.Position
         config.mainPosition = {
             XScale = basePos.X.Scale,
             XOffset = basePos.X.Offset,
@@ -7296,12 +7285,12 @@ function buildConfigTable()
     return config
 end
 
-local function scheduleHeartlessSave(delaySeconds)
-    if _heartlessSaveState.queued then return end
-    _heartlessSaveState.queued = true
+local function scheduleRivalHubSave(delaySeconds)
+    if _rivalHubSaveState.queued then return end
+    _rivalHubSaveState.queued = true
     task.delay(delaySeconds or 0.25, function()
-        _heartlessSaveState.queued = false
-        if _G.HeartlessRunning and not _isResetting and not _isLoading then
+        _rivalHubSaveState.queued = false
+        if _G.RivalHubRunning and not _isResetting and not _isLoading then
             pcall(saveAllSettings, true)
         end
     end)
@@ -7315,41 +7304,41 @@ function saveAllSettings(force)
     config.userId = LP.UserId
     local encodedOk, canonicalJSON = pcall(function() return HS:JSONEncode(config) end)
     if not encodedOk then
-        warn("[HEARTLESS Save] Could not encode settings.")
+        warn("[Rival Hub Save] Could not encode settings.")
         return false
     end
-    if not force and canonicalJSON == _lastSavedJSON and not _heartlessSaveState.dirty then
+    if not force and canonicalJSON == _lastSavedJSON and not _rivalHubSaveState.dirty then
         return true
     end
-    _heartlessSaveState.dirty = true
+    _rivalHubSaveState.dirty = true
 
-    if _heartlessSaveState.writing then
-        scheduleHeartlessSave(0.25)
+    if _rivalHubSaveState.writing then
+        scheduleRivalHubSave(0.25)
         return true
     end
-    if not force and _tick() - _heartlessSaveState.lastAt < 0.25 then
-        scheduleHeartlessSave(0.25)
+    if not force and _tick() - _rivalHubSaveState.lastAt < 0.25 then
+        scheduleRivalHubSave(0.25)
         return true
     end
 
-    local readFn, writeFn = resolveHeartlessFileApi()
+    local readFn, writeFn = resolveRivalHubFileApi()
     if not readFn or not writeFn then
-        warn("[HEARTLESS Save] Executor file API is unavailable.")
-        scheduleHeartlessSave(1)
+        warn("[Rival Hub Save] Executor file API is unavailable.")
+        scheduleRivalHubSave(1)
         return false
     end
 
-    _heartlessSaveState.writing = true
-    _heartlessSaveState.revision = _heartlessSaveState.revision + 1
+    _rivalHubSaveState.writing = true
+    _rivalHubSaveState.revision = _rivalHubSaveState.revision + 1
     local writeConfig = config
-    writeConfig.revision = _heartlessSaveState.revision
+    writeConfig.revision = _rivalHubSaveState.revision
     writeConfig.savedAt = os.time()
     local json = HS:JSONEncode(writeConfig)
     local ok = false
 
     for attempt = 1, 3 do
         local attemptOk = pcall(function()
-            if heartlessFileExists(CONFIG_FILE) then
+            if rivalHubFileExists(CONFIG_FILE) then
                 local previous = readFn(CONFIG_FILE)
                 if type(previous) == "string" then writeFn(CONFIG_FILE .. ".backup", previous) end
             end
@@ -7365,12 +7354,12 @@ function saveAllSettings(force)
         if attempt < 3 then task.wait(0.1 * attempt) end
     end
 
-    _heartlessSaveState.writing = false
+    _rivalHubSaveState.writing = false
     if ok then
-        _heartlessSaveState.lastAt = _tick()
-        _heartlessSaveState.retryCount = 0
+        _rivalHubSaveState.lastAt = _tick()
+        _rivalHubSaveState.retryCount = 0
         _lastSavedJSON = canonicalJSON
-        _heartlessSaveState.dirty = false
+        _rivalHubSaveState.dirty = false
         local latestOk, latest = pcall(function()
             local latestConfig = buildConfigTable()
             latestConfig.configVersion = 2
@@ -7378,20 +7367,20 @@ function saveAllSettings(force)
             return HS:JSONEncode(latestConfig)
         end)
         if not latestOk or latest ~= _lastSavedJSON then
-            _heartlessSaveState.dirty = true
-            scheduleHeartlessSave(0.25)
+            _rivalHubSaveState.dirty = true
+            scheduleRivalHubSave(0.25)
         end
     else
-        _heartlessSaveState.retryCount = _heartlessSaveState.retryCount + 1
-        warn("[HEARTLESS Save] Write or verification failed; will retry.")
-        scheduleHeartlessSave(math.min(2, 0.5 * _heartlessSaveState.retryCount))
+        _rivalHubSaveState.retryCount = _rivalHubSaveState.retryCount + 1
+        warn("[Rival Hub Save] Write or verification failed; will retry.")
+        scheduleRivalHubSave(math.min(2, 0.5 * _rivalHubSaveState.retryCount))
     end
     return ok
 end
 
 task.spawn(function()
     task.wait(5)
-    while _G.HeartlessRunning do
+    while _G.RivalHubRunning do
         task.wait(2)
         if gui and main and not _isLoading then pcall(saveAllSettings) end
     end
@@ -7403,7 +7392,7 @@ pcall(function()
 end)
 
 do
-    local readFn, writeFn = resolveHeartlessFileApi()
+    local readFn, writeFn = resolveRivalHubFileApi()
     if readFn and writeFn then
         local legacyPaths = {"HEARTLESS.json"}
 
@@ -7413,7 +7402,7 @@ do
                 local okOld, old = pcall(readFn, oldPath)
                 if okOld and type(old) == "string" and #old > 0 then
                     pcall(writeFn, CONFIG_FILE, old)
-                    warn("[HEARTLESS] Config migrada de " .. oldPath .. " a " .. CONFIG_FILE)
+                    warn("[Rival Hub] Config migrada de " .. oldPath .. " a " .. CONFIG_FILE)
                     break
                 end
             end
@@ -7422,8 +7411,8 @@ do
 end
 
 function loadAllSettings()
-    local readFn = resolveHeartlessFileApi()
-    if not readFn or not heartlessFileExists(CONFIG_FILE) then return false end
+    local readFn = resolveRivalHubFileApi()
+    if not readFn or not rivalHubFileExists(CONFIG_FILE) then return false end
     local success, data = pcall(function() return HS:JSONDecode(readFn(CONFIG_FILE)) end)
     if not success or type(data) ~= "table" then return false end
     _isLoading = true
@@ -7474,12 +7463,12 @@ function loadAllSettings()
     autoRightEnabled = boolOr(data.autoRight, false)
     setAutoStealMode(data.autoStealMode or "75")
     useVenixCarryEngine = boolOr(data.useVenixCarryEngine, false)
-    MVPVenixCarry.softStealSpeed = _clamp(num(data.softCarrySpeed, 30), 1, 500)
-    MVPVenixCarry.softStealRadius = _clamp(num(data.softCarryRadius, 10), 1, 200)
-    MVPVenixCarry:setSoftStealEnabled(boolOr(data.softCarry, false))
-    MVPUI.effects = boolOr(data.uiEffects, true)
+    HEARTLESSVenixCarry.softStealSpeed = _clamp(num(data.softCarrySpeed, 30), 1, 500)
+    HEARTLESSVenixCarry.softStealRadius = _clamp(num(data.softCarryRadius, 10), 1, 200)
+    HEARTLESSVenixCarry:setSoftStealEnabled(boolOr(data.softCarry, false))
+    HEARTLESSUI.effects = boolOr(data.uiEffects, true)
     mobileButtonsLocked = boolOr(data.mobileButtonsLocked, false)
-    if _G.__HeartlessRefreshSpeedEngine then pcall(_G.__HeartlessRefreshSpeedEngine) end
+    if _G.__RivalHubRefreshSpeedEngine then pcall(_G.__RivalHubRefreshSpeedEngine) end
     InfiniteJump.mode = data.infiniteJumpMode == "manual" and "manual" or "hold"
     InfiniteJump.enabled = boolOr(data.infiniteJumpEnabled, false)
     medusaCounterEnabled = boolOr(data.medusaCounter, false)
@@ -7506,8 +7495,8 @@ function loadAllSettings()
     selectedColor = COLOR_THEMES[currentColorTheme]
     task.defer(function() updateAllUIThemeColors(selectedColor) end)
 
-    if data.heartlessTitleTheme and HEARTLESS_TITLE_THEMES[data.heartlessTitleTheme] then
-        task.defer(function() applyHeartlessTitleTheme(data.heartlessTitleTheme) end)
+    if data.rivalTitleTheme and RIVAL_TITLE_THEMES[data.rivalTitleTheme] then
+        task.defer(function() applyRivalTitleTheme(data.rivalTitleTheme) end)
     end
 
     skyTheme = data.skyTheme or "Off"
@@ -7618,9 +7607,9 @@ function loadAllSettings()
     _lastSavedJSON = HS:JSONEncode(buildConfigTable())
     _isLoading = false
 
-    if data.batV2 == true and _G.__HeartlessStartBatV2 then
+    if data.batV2 == true and _G.__RivalHubStartBatV2 then
         task.defer(function()
-            pcall(_G.__HeartlessStartBatV2)
+            pcall(_G.__RivalHubStartBatV2)
             if mobSetBatV2 then mobSetBatV2(true) end
         end)
     end
@@ -7660,14 +7649,14 @@ function forceResetUI()
     safeSet(setAntiRagVisual, false)
     safeSet(infJumpSetVisual, false)
     if autoStealModeBtn then autoStealModeBtn.Text = autoStealMode end
-    if MVPUI.motorLabel then MVPUI.motorLabel.Text = "Direct" end
-    if MVPUI.carrySetter then MVPUI.carrySetter(false) end
-    if MVPUI.effectsSetter then MVPUI.effectsSetter(MVPUI.effects) end
-    if MVPUI.lockButtonsSetter then MVPUI.lockButtonsSetter(false) end
+    if HEARTLESSUI.motorLabel then HEARTLESSUI.motorLabel.Text = "Direct" end
+    if HEARTLESSUI.carrySetter then HEARTLESSUI.carrySetter(false) end
+    if HEARTLESSUI.effectsSetter then HEARTLESSUI.effectsSetter(HEARTLESSUI.effects) end
+    if HEARTLESSUI.lockButtonsSetter then HEARTLESSUI.lockButtonsSetter(false) end
     applyBackgroundMode(backgroundMode)
-    if _G.__HeartlessRefreshSpeedEngine then pcall(_G.__HeartlessRefreshSpeedEngine) end
+    if _G.__RivalHubRefreshSpeedEngine then pcall(_G.__RivalHubRefreshSpeedEngine) end
     safeSet(mobSetBatV2, false)
-    if _G.__HeartlessStopBatV2 then pcall(_G.__HeartlessStopBatV2) end
+    if _G.__RivalHubStopBatV2 then pcall(_G.__RivalHubStopBatV2) end
     disableVividGraphics()
     applyHideButtons(false)
     if _G.stretchToggleSetter then _G.stretchToggleSetter(false) end
@@ -7733,7 +7722,7 @@ function resetFloatingPositions()
         savedProgressBarPos = nil
     end
     savedMobilePanelPos = nil
-    if MVPUI.fit then MVPUI.fit() end
+    if HEARTLESSUI.fit then HEARTLESSUI.fit() end
 end
 
 function resetToFactoryDefaults()
@@ -7747,7 +7736,7 @@ function resetToFactoryDefaults()
         if antiDieEnabled then AntiDieModule.stop() end
         if antiBatEnabled and stopAntiBat then stopAntiBat() end
         if antiFlingEnabled and stopAntiFling then stopAntiFling() end
-        if _G.__HeartlessStopBatV2 then pcall(_G.__HeartlessStopBatV2) end
+        if _G.__RivalHubStopBatV2 then pcall(_G.__RivalHubStopBatV2) end
         stopUnwalk()
         InfiniteJump.stop()
         InfiniteJump.setMode("hold")
@@ -7782,18 +7771,18 @@ function resetToFactoryDefaults()
         CONFIG.AUTO_STEAL_ENABLED = false
         setAutoStealMode("75")
         useVenixCarryEngine = false
-        MVPVenixCarry:stop()
-        MVPVenixCarry.softStealEnabled = false
-        MVPVenixCarry.softStealSpeed = 30
-        MVPVenixCarry.softStealRadius = 10
-        MVPUI.effects = true
-        if _G._heartlessStealModeSetter then pcall(_G._heartlessStealModeSetter, "V1") end
+        HEARTLESSVenixCarry:stop()
+        HEARTLESSVenixCarry.softStealEnabled = false
+        HEARTLESSVenixCarry.softStealSpeed = 30
+        HEARTLESSVenixCarry.softStealRadius = 10
+        HEARTLESSUI.effects = true
+        if _G._rivalHubStealModeSetter then pcall(_G._rivalHubStealModeSetter, "V1") end
         BAT_AIMBOT_SPEED = 55
         BYPASS_AIMBOT_SPEED = BAT_AIMBOT_SPEED
         if State then State.bypassBatSpeed = BYPASS_AIMBOT_SPEED end
         dropMode = 1; stretchEnabled = false; stretchFOV = 120
         uiScaleValue = 90
-        if MVPUI.fit then MVPUI.fit() end
+        if HEARTLESSUI.fit then HEARTLESSUI.fit() end
         if pbScale then pbScale.Scale = 1 end
         espEnabled = false; espLineEnabled = false; vividGraphicsEnabled = false; hideButtonsEnabled = false
         bodyLockEnabled = false; bodyLockRange = 20
@@ -7803,9 +7792,9 @@ function resetToFactoryDefaults()
         currentOutfitIndex = 1
         pcall(VX7A.stop)
         currentColorTheme = "Orange"; selectedColor = COLOR_THEMES["Orange"]
-        currentHeartlessTitleTheme = "Orange"
-        applyHeartlessTitleTheme("Orange")
-        if main then main.Position = UDim2.new(0, 20, 0, 2); _G.__HeartlessMainOriginalPos = main.Position end
+        currentRivalTitleTheme = "Orange"
+        applyRivalTitleTheme("Orange")
+        if main then main.Position = UDim2.new(0, 20, 0, 2); _G.__RivalHubMainOriginalPos = main.Position end
         for key, val in pairs(DEFAULT_KB) do
             if KB[key] then KB[key].kb = val.kb; KB[key].gp = val.gp end
         end
@@ -8026,14 +8015,14 @@ LP.CharacterAdded:Connect(function(character)
 end)
 
 
-local _MVPPingLaggerScreen = nil
-function openMVPPingLagger()
-    if _MVPPingLaggerScreen and _MVPPingLaggerScreen.Parent then
-        local existingMain = _MVPPingLaggerScreen:FindFirstChild("MainFrame")
+local _HEARTLESSPingLaggerScreen = nil
+function openHEARTLESSPingLagger()
+    if _HEARTLESSPingLaggerScreen and _HEARTLESSPingLaggerScreen.Parent then
+        local existingMain = _HEARTLESSPingLaggerScreen:FindFirstChild("MainFrame")
         if existingMain then existingMain.Visible = true end
-        return _MVPPingLaggerScreen
+        return _HEARTLESSPingLaggerScreen
     end
-    -- Galaxy Ping Lagger integrado en MVP
+    -- Galaxy Ping Lagger integrado en HEARTLESS
     -- PC + Controller keybind | Customizable | Auto-save | Auto Brainrot Detection | Modos LOW/MED/HIGH
 
     local UserInputService = game:GetService("UserInputService")
@@ -8116,7 +8105,7 @@ function openMVPPingLagger()
     local manualOverride    = false
 
     -- ══════════════════════════════════════════════════════════════════════
-    -- COLOURS (transparente, igual que el MVP)
+    -- COLOURS (transparente, igual que el HEARTLESS)
     -- ══════════════════════════════════════════════════════════════════════
     local C = {
         bg      = Color3.fromRGB(5,   5,   5),
@@ -8405,7 +8394,7 @@ function openMVPPingLagger()
     discordLbl.Size             = UDim2.new(1,-16,0,18)
     discordLbl.Position         = UDim2.new(0,8,0,100)
     discordLbl.BackgroundTransparency = 1
-    discordLbl.Text             = "discord.gg/heartless"
+    discordLbl.Text             = "discord.gg/heartlesshub"
     discordLbl.TextColor3       = C.discord
     discordLbl.Font             = Enum.Font.GothamBold
     discordLbl.TextSize         = 9
@@ -9075,15 +9064,15 @@ function openMVPPingLagger()
         end
     end)
 
-    -- Hook para que el MVP pueda refrescar el fondo si lo necesita
-    _G.__MVPPingLaggerRefreshBackground = function()
+    -- Hook para que el HEARTLESS pueda refrescar el fondo si lo necesita
+    _G.__HEARTLESSPingLaggerRefreshBackground = function()
         if mainFrame and mainFrame.Parent then
             mainFrame.BackgroundTransparency = T.bg
         end
     end
 
     updateKbLabels()
-    _MVPPingLaggerScreen = screen
+    _HEARTLESSPingLaggerScreen = screen
     return screen
 end
 
@@ -9094,99 +9083,98 @@ function buildGui()
     local INP = Color3.fromRGB(12, 15, 19)
     local GUI_W, GUI_H = 350, 570
     for _, parent in ipairs({CoreGui, pgui}) do
-        for _, name in ipairs({"HEARTLESS", "HEARTLESSMobilePanel", "HEARTLESSSpeedIndicator", "HeartlessBootErrors"}) do
+        for _, name in ipairs({"RivalHub", "RivalHubMobilePanel", "RivalHubSpeedIndicator", "RivalHubBootErrors"}) do
             pcall(function() local old = parent:FindFirstChild(name); if old then old:Destroy() end end)
         end
     end
-    gui = MVPUI.new("ScreenGui", nil, {Name = "HEARTLESS", ResetOnSpawn = false,
+    gui = HEARTLESSUI.new("ScreenGui", nil, {Name = "RivalHub", ResetOnSpawn = false,
         IgnoreGuiInset = true, DisplayOrder = 30, ZIndexBehavior = Enum.ZIndexBehavior.Sibling})
     pcall(function() if syn and syn.protect_gui then syn.protect_gui(gui) end end)
     local ok = pcall(function() gui.Parent = CoreGui end)
     if not ok then gui.Parent = pgui end
-    main = MVPUI.new("Frame", gui, {Name = "Main", Size = UDim2.fromOffset(GUI_W, GUI_H),
+    main = HEARTLESSUI.new("Frame", gui, {Name = "Main", Size = UDim2.fromOffset(GUI_W, GUI_H),
         Position = UDim2.fromOffset(18, 16), BackgroundColor3 = Color3.fromRGB(9, 12, 16),
         BorderSizePixel = 0, ClipsDescendants = true, Active = true})
-    MVPUI.round(main, 18)
-    local border = MVPUI.stroke(main, Color3.fromRGB(210, 151, 83), 0.35, 1.2)
+    HEARTLESSUI.round(main, 18)
+    local border = HEARTLESSUI.stroke(main, Color3.fromRGB(210, 151, 83), 0.35, 1.2)
     border.Name = "MainBorder"
-    mainUIScale = MVPUI.new("UIScale", main, {Scale = uiScaleValue / 100})
-    local bg = MVPUI.new("ImageLabel", main, {Name = "BackgroundImage", Size = UDim2.fromScale(1, 1),
+    mainUIScale = HEARTLESSUI.new("UIScale", main, {Scale = uiScaleValue / 100})
+    local bg = HEARTLESSUI.new("ImageLabel", main, {Name = "BackgroundImage", Size = UDim2.fromScale(1, 1),
         Image = "rbxassetid://" .. backgroundImages[backgroundIndex], ImageTransparency = backgroundImageTransparency,
         BackgroundTransparency = 1, ScaleType = Enum.ScaleType.Crop, ZIndex = 0})
-    MVPUI.round(bg, 18)
-    local veil = MVPUI.new("Frame", main, {Name = "BackgroundVeil", Size = UDim2.fromScale(1, 1),
+    HEARTLESSUI.round(bg, 18)
+    local veil = HEARTLESSUI.new("Frame", main, {Name = "BackgroundVeil", Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Color3.fromRGB(7, 11, 16), BackgroundTransparency = 0.20, BorderSizePixel = 0, ZIndex = 2})
-    MVPUI.new("UIGradient", veil, {Rotation = 35, Transparency = NumberSequence.new({
+    HEARTLESSUI.new("UIGradient", veil, {Rotation = 35, Transparency = NumberSequence.new({
         NumberSequenceKeypoint.new(0, 0.04), NumberSequenceKeypoint.new(0.6, 0.22), NumberSequenceKeypoint.new(1, 0.10)})})
-    MVPUI.round(veil, 18)
-    local innerBorder = MVPUI.new("Frame", main, {Name = "PanelInset", Position = UDim2.fromOffset(3, 3),
+    HEARTLESSUI.round(veil, 18)
+    local innerBorder = HEARTLESSUI.new("Frame", main, {Name = "PanelInset", Position = UDim2.fromOffset(3, 3),
         Size = UDim2.new(1, -6, 1, -6), BackgroundTransparency = 1, BorderSizePixel = 0, ZIndex = 3})
-    MVPUI.round(innerBorder, 15)
-    MVPUI.stroke(innerBorder, Color3.fromRGB(239, 206, 157), 0.93, 1)
-    local topLight = MVPUI.new("Frame", main, {Name = "TopLight", Position = UDim2.fromOffset(28, 1),
+    HEARTLESSUI.round(innerBorder, 15)
+    HEARTLESSUI.stroke(innerBorder, Color3.fromRGB(239, 206, 157), 0.93, 1)
+    local topLight = HEARTLESSUI.new("Frame", main, {Name = "TopLight", Position = UDim2.fromOffset(28, 1),
         Size = UDim2.new(1, -56, 0, 1), BackgroundColor3 = Color3.fromRGB(255, 202, 126), BorderSizePixel = 0, ZIndex = 4})
-    MVPUI.new("UIGradient", topLight, {Transparency = NumberSequence.new({
+    HEARTLESSUI.new("UIGradient", topLight, {Transparency = NumberSequence.new({
         NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5, 0.25), NumberSequenceKeypoint.new(1, 1)})})
-    local header = MVPUI.new("Frame", main, {Name = "ScriptHeader", Position = UDim2.fromOffset(14, 6),
+    local header = HEARTLESSUI.new("Frame", main, {Name = "ScriptHeader", Position = UDim2.fromOffset(14, 6),
         Size = UDim2.new(1, -28, 0, 72), BackgroundColor3 = Color3.fromRGB(18, 20, 25),
         BorderSizePixel = 0, ClipsDescendants = true, ZIndex = 5})
-    MVPUI.round(header, 15)
-    MVPUI.stroke(header, Color3.fromRGB(152, 111, 68), 0.65, 1)
-    local logoAsset = getHeartlessLogoAsset()
-    MVPUI.art = MVPUI.new("ImageLabel", header, {Name = "Scene", Size = UDim2.fromScale(1, 1),
-        Image = logoAsset or bg.Image, ImageTransparency = 0.22, BackgroundTransparency = 1, ScaleType = Enum.ScaleType.Crop, ZIndex = 5})
-    local shade = MVPUI.new("Frame", header, {Name = "ArtworkShade", Size = UDim2.fromScale(1, 1), BorderSizePixel = 0,
+    HEARTLESSUI.round(header, 15)
+    HEARTLESSUI.stroke(header, Color3.fromRGB(152, 111, 68), 0.65, 1)
+    HEARTLESSUI.art = HEARTLESSUI.new("ImageLabel", header, {Name = "Scene", Size = UDim2.fromScale(1, 1),
+        Image = bg.Image, ImageTransparency = 0.22, BackgroundTransparency = 1, ScaleType = Enum.ScaleType.Crop, ZIndex = 5})
+    local shade = HEARTLESSUI.new("Frame", header, {Name = "ArtworkShade", Size = UDim2.fromScale(1, 1), BorderSizePixel = 0,
         BackgroundColor3 = Color3.fromRGB(6, 10, 15), BackgroundTransparency = 0.1, ZIndex = 6})
-    MVPUI.new("UIGradient", shade, {Rotation = 0, Transparency = NumberSequence.new({
+    HEARTLESSUI.new("UIGradient", shade, {Rotation = 0, Transparency = NumberSequence.new({
         NumberSequenceKeypoint.new(0, 0.02), NumberSequenceKeypoint.new(0.52, 0.2), NumberSequenceKeypoint.new(1, 0.7)})})
-    local badge = MVPUI.new("Frame", header, {Name = "Edition", Position = UDim2.fromOffset(13, 5),
+    local badge = HEARTLESSUI.new("Frame", header, {Name = "Edition", Position = UDim2.fromOffset(13, 5),
         Size = UDim2.fromOffset(97, 17), BackgroundColor3 = Color3.fromRGB(60, 39, 24),
         BackgroundTransparency = 0.12, BorderSizePixel = 0, ZIndex = 7})
-    MVPUI.round(badge, 5)
-    local edition = MVPUI.text(badge, "HEARTLESS", UDim2.fromOffset(7, 0), UDim2.new(1, -14, 1, 0), 8,
+    HEARTLESSUI.round(badge, 5)
+    local edition = HEARTLESSUI.text(badge, "HALLOWEEN '26", UDim2.fromOffset(7, 0), UDim2.new(1, -14, 1, 0), 8,
         Color3.fromRGB(253, 194, 117), 8)
     edition.Font = Enum.Font.GothamBold
-    scriptLogoRef = MVPUI.text(header, "HEARTLESS", UDim2.fromOffset(11, 17), UDim2.fromOffset(155, 39), 36, WHITE, 8)
+    scriptLogoRef = HEARTLESSUI.text(header, "HEARTLESS", UDim2.fromOffset(11, 17), UDim2.fromOffset(155, 39), 36, WHITE, 8)
     scriptLogoRef.Font = Enum.Font.GothamBlack
-    MVPUI.titleGradient = MVPUI.new("UIGradient", scriptLogoRef, {Rotation = 90,
+    HEARTLESSUI.titleGradient = HEARTLESSUI.new("UIGradient", scriptLogoRef, {Rotation = 90,
         Color = ColorSequence.new(WHITE, Color3.fromRGB(247, 192, 120))})
-    MVPUI.text(header, "H E A R T L E S S", UDim2.fromOffset(14, 56), UDim2.fromOffset(162, 14), 8,
+    HEARTLESSUI.text(header, "H E A R T L E S S", UDim2.fromOffset(14, 56), UDim2.fromOffset(162, 14), 8,
         Color3.fromRGB(205, 189, 164), 8)
-    local glow = MVPUI.new("Frame", header, {Name = "PumpkinGlow", AnchorPoint = Vector2.new(0.5, 0.5),
+    local glow = HEARTLESSUI.new("Frame", header, {Name = "PumpkinGlow", AnchorPoint = Vector2.new(0.5, 0.5),
         Position = UDim2.new(1, -56, 0.54, 0), Size = UDim2.fromOffset(64, 64),
         BackgroundColor3 = getThemeColor(), BackgroundTransparency = 0.91, BorderSizePixel = 0, ZIndex = 7})
-    MVPUI.round(glow, 50)
-    local ring = MVPUI.new("Frame", header, {Name = "PumpkinRing", AnchorPoint = Vector2.new(0.5, 0.5),
+    HEARTLESSUI.round(glow, 50)
+    local ring = HEARTLESSUI.new("Frame", header, {Name = "PumpkinRing", AnchorPoint = Vector2.new(0.5, 0.5),
         Position = glow.Position, Size = UDim2.fromOffset(58, 58), BackgroundTransparency = 1, ZIndex = 7})
-    MVPUI.round(ring, 50)
-    MVPUI.stroke(ring, Color3.fromRGB(255, 202, 127), 0.63, 1)
-    local pumpkin = MVPUI.pumpkin(header, UDim2.new(1, -82, 0.54, -26), 52, 8)
-    table.insert(MVPUI.animated, {object = pumpkin, position = pumpkin.Position, y = 2.5, rotate = 2})
+    HEARTLESSUI.round(ring, 50)
+    HEARTLESSUI.stroke(ring, Color3.fromRGB(255, 202, 127), 0.63, 1)
+    local pumpkin = HEARTLESSUI.pumpkin(header, UDim2.new(1, -82, 0.54, -26), 52, 8)
+    table.insert(HEARTLESSUI.animated, {object = pumpkin, position = pumpkin.Position, y = 2.5, rotate = 2})
     for i = 1, 4 do
-        local ember = MVPUI.new("Frame", header, {Name = "Ember", Size = UDim2.fromOffset(2, 2),
+        local ember = HEARTLESSUI.new("Frame", header, {Name = "Ember", Size = UDim2.fromOffset(2, 2),
             Position = UDim2.new(0.58 + i * 0.07, 0, 0.14 + (i % 3) * 0.25, 0),
             BackgroundColor3 = Color3.fromRGB(255, 199, 120), BackgroundTransparency = 0.5,
             BorderSizePixel = 0, ZIndex = 8})
-        table.insert(MVPUI.animated, {object = ember, position = ember.Position, x = 2, y = 4})
+        table.insert(HEARTLESSUI.animated, {object = ember, position = ember.Position, x = 2, y = 4})
     end
 
-    local close = MVPUI.new("TextButton", main, {Name = "Close", Size = UDim2.fromOffset(26, 26),
+    local close = HEARTLESSUI.new("TextButton", main, {Name = "Close", Size = UDim2.fromOffset(26, 26),
         Position = UDim2.new(1, -39, 0, 15), Text = "−", TextSize = 20, Font = Enum.Font.GothamMedium,
         TextColor3 = WHITE, BackgroundColor3 = INP, BackgroundTransparency = 0.06,
         BorderSizePixel = 0, AutoButtonColor = false, ZIndex = 18})
-    MVPUI.round(close, 8)
-    MVPUI.stroke(close, ROW_BORDER, 0.6, 1)
-    miniBtn = MVPUI.new("TextButton", gui, {Name = "MinimizedFrame", Size = UDim2.fromOffset(146, 46),
+    HEARTLESSUI.round(close, 8)
+    HEARTLESSUI.stroke(close, ROW_BORDER, 0.6, 1)
+    miniBtn = HEARTLESSUI.new("TextButton", gui, {Name = "MinimizedFrame", Size = UDim2.fromOffset(146, 46),
         Position = UDim2.fromOffset(16, 58), Text = "", BackgroundColor3 = Color3.fromRGB(10, 14, 19),
         BorderSizePixel = 0, AutoButtonColor = false, Visible = false, ZIndex = 25})
-    MVPUI.round(miniBtn, 11)
-    MVPUI.stroke(miniBtn, getThemeColor(), 0.35, 1.2)
-    MVPUI.new("UIGradient", miniBtn, {Rotation = 0, Color = ColorSequence.new(Color3.fromRGB(34, 28, 24), Color3.fromRGB(11, 15, 20))})
-    MVPUI.pumpkin(miniBtn, UDim2.fromOffset(9, 7), 32, 26)
-    local miniTitle = MVPUI.text(miniBtn, "HEARTLESS", UDim2.fromOffset(50, 7), UDim2.fromOffset(62, 18), 15, WHITE, 28)
+    HEARTLESSUI.round(miniBtn, 11)
+    HEARTLESSUI.stroke(miniBtn, getThemeColor(), 0.35, 1.2)
+    HEARTLESSUI.new("UIGradient", miniBtn, {Rotation = 0, Color = ColorSequence.new(Color3.fromRGB(34, 28, 24), Color3.fromRGB(11, 15, 20))})
+    HEARTLESSUI.pumpkin(miniBtn, UDim2.fromOffset(9, 7), 32, 26)
+    local miniTitle = HEARTLESSUI.text(miniBtn, "HEARTLESS", UDim2.fromOffset(50, 7), UDim2.fromOffset(62, 18), 15, WHITE, 28)
     miniTitle.Font = Enum.Font.GothamBlack
-    MVPUI.text(miniBtn, "HEARTLESS", UDim2.fromOffset(50, 26), UDim2.fromOffset(68, 12), 7, getThemeColor(), 28)
-    MVPUI.text(miniBtn, "›", UDim2.new(1, -22, 0, 8), UDim2.fromOffset(17, 30), 22, WHITE, 28)
+    HEARTLESSUI.text(miniBtn, "NIGHTFALL", UDim2.fromOffset(50, 26), UDim2.fromOffset(68, 12), 7, getThemeColor(), 28)
+    HEARTLESSUI.text(miniBtn, "›", UDim2.new(1, -22, 0, 8), UDim2.fromOffset(17, 30), 22, WHITE, 28)
     miniBackgroundImage = nil
     local animating, animationId, tween = false, 0, nil
     local function animate(open)
@@ -9196,9 +9184,9 @@ function buildGui()
         animating = true
         main.Visible = true
         miniBtn.Visible = false
-        local width, height = MVPUI.width or GUI_W, MVPUI.height or GUI_H
+        local width, height = HEARTLESSUI.width or GUI_W, HEARTLESSUI.height or GUI_H
         if open then main.Size = UDim2.fromOffset(width - 10, height - 8) end
-        tween = TS:Create(main, TweenInfo.new(MVPUI.effects and 0.23 or 0.01, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
+        tween = TS:Create(main, TweenInfo.new(HEARTLESSUI.effects and 0.23 or 0.01, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
             {Size = UDim2.fromOffset(open and width or width - 10, open and height or height - 8)})
         tween.Completed:Connect(function()
             if thisId ~= animationId or not main.Parent then return end
@@ -9213,71 +9201,71 @@ function buildGui()
     hideGui = function() animate(false) end
     close.Activated:Connect(hideGui)
     miniBtn.Activated:Connect(showGui)
-    _G.__HeartlessMainOriginalPos = main.Position
+    _G.__RivalHubMainOriginalPos = main.Position
     main:GetPropertyChangedSignal("Position"):Connect(function()
-        if not animating then _G.__HeartlessMainOriginalPos = main.Position end
+        if not animating then _G.__RivalHubMainOriginalPos = main.Position end
     end)
     drag(main, 80)
-    local tabBar = MVPUI.new("Frame", main, {Name = "Navigation", Size = UDim2.new(1, -28, 0, 60),
+    local tabBar = HEARTLESSUI.new("Frame", main, {Name = "Navigation", Size = UDim2.new(1, -28, 0, 60),
         Position = UDim2.new(0, 14, 1, -100), BackgroundColor3 = Color3.fromRGB(10, 14, 19),
         BackgroundTransparency = 0.06, BorderSizePixel = 0, ZIndex = 14})
-    MVPUI.round(tabBar, 16)
-    MVPUI.stroke(tabBar, Color3.fromRGB(127, 97, 62), 0.62, 1)
-    MVPUI.new("UIListLayout", tabBar, {FillDirection = Enum.FillDirection.Horizontal,
+    HEARTLESSUI.round(tabBar, 16)
+    HEARTLESSUI.stroke(tabBar, Color3.fromRGB(127, 97, 62), 0.62, 1)
+    HEARTLESSUI.new("UIListLayout", tabBar, {FillDirection = Enum.FillDirection.Horizontal,
         HorizontalAlignment = Enum.HorizontalAlignment.Center, VerticalAlignment = Enum.VerticalAlignment.Center,
         Padding = UDim.new(0, 5), SortOrder = Enum.SortOrder.LayoutOrder})
-    local headingPanel = MVPUI.new("Frame", main, {Name = "SectionPanel", Position = UDim2.fromOffset(14, 85),
+    local headingPanel = HEARTLESSUI.new("Frame", main, {Name = "SectionPanel", Position = UDim2.fromOffset(14, 85),
         Size = UDim2.new(1, -28, 0, 27), BackgroundColor3 = Color3.fromRGB(21, 24, 29),
         BackgroundTransparency = 0.12, BorderSizePixel = 0, ZIndex = 6})
-    MVPUI.round(headingPanel, 8)
-    MVPUI.stroke(headingPanel, Color3.fromRGB(128, 103, 72), 0.82, 1)
-    local pageHeading = MVPUI.text(main, "01   /   MOVEMENT", UDim2.fromOffset(25, 87), UDim2.new(1, -50, 0, 23), 11, WHITE, 8)
+    HEARTLESSUI.round(headingPanel, 8)
+    HEARTLESSUI.stroke(headingPanel, Color3.fromRGB(128, 103, 72), 0.82, 1)
+    local pageHeading = HEARTLESSUI.text(main, "01   /   MOVEMENT", UDim2.fromOffset(25, 87), UDim2.new(1, -50, 0, 23), 11, WHITE, 8)
     pageHeading.Name = "SectionHeading"
     pageHeading.Font = Enum.Font.GothamBold
-    local headingRule = MVPUI.new("Frame", main, {Position = UDim2.fromOffset(20, 114),
+    local headingRule = HEARTLESSUI.new("Frame", main, {Position = UDim2.fromOffset(20, 114),
         Size = UDim2.new(1, -44, 0, 1), BackgroundColor3 = ROW_BORDER, BackgroundTransparency = 0.48, BorderSizePixel = 0, ZIndex = 7})
-    local tabContent = MVPUI.new("Frame", main, {Name = "Content", Size = UDim2.new(1, -16, 1, -230),
+    local tabContent = HEARTLESSUI.new("Frame", main, {Name = "Content", Size = UDim2.new(1, -16, 1, -230),
         Position = UDim2.fromOffset(8, 120), BackgroundTransparency = 1, ClipsDescendants = true, ZIndex = 6})
-    local footer = MVPUI.new("Frame", main, {Name = "Footer", Position = UDim2.new(0, 14, 1, -34),
+    local footer = HEARTLESSUI.new("Frame", main, {Name = "Footer", Position = UDim2.new(0, 14, 1, -34),
         Size = UDim2.new(1, -28, 0, 25), BackgroundTransparency = 1, ZIndex = 8})
-    MVPUI.new("Frame", footer, {Size = UDim2.new(1, 0, 0, 1), BackgroundColor3 = ROW_BORDER,
+    HEARTLESSUI.new("Frame", footer, {Size = UDim2.new(1, 0, 0, 1), BackgroundColor3 = ROW_BORDER,
         BackgroundTransparency = 0.62, BorderSizePixel = 0, ZIndex = 8})
-    local avatar = MVPUI.new("ImageLabel", footer, {Position = UDim2.fromOffset(2, 6), Size = UDim2.fromOffset(17, 17),
+    local avatar = HEARTLESSUI.new("ImageLabel", footer, {Position = UDim2.fromOffset(2, 6), Size = UDim2.fromOffset(17, 17),
         Image = "rbxthumb://type=AvatarHeadShot&id=" .. LP.UserId .. "&w=150&h=150", BackgroundColor3 = INP, BorderSizePixel = 0, ZIndex = 8})
-    MVPUI.round(avatar, 5)
-    MVPUI.text(footer, "@" .. LP.Name, UDim2.fromOffset(27, 5), UDim2.new(0.5, -32, 0, 18), 9, Color3.fromRGB(179, 177, 169), 9)
-    MVPUI.footerStats = MVPUI.text(footer, "HEARTLESS", UDim2.new(0.5, 0, 0, 5), UDim2.new(0.5, -3, 0, 18), 8,
+    HEARTLESSUI.round(avatar, 5)
+    HEARTLESSUI.text(footer, "@" .. LP.Name, UDim2.fromOffset(27, 5), UDim2.new(0.5, -32, 0, 18), 9, Color3.fromRGB(179, 177, 169), 9)
+    HEARTLESSUI.footerStats = HEARTLESSUI.text(footer, "HEARTLESS  /  NIGHTFALL", UDim2.new(0.5, 0, 0, 5), UDim2.new(0.5, -3, 0, 18), 8,
         Color3.fromRGB(211, 167, 108), 9)
-    MVPUI.footerStats.TextXAlignment = Enum.TextXAlignment.Right
+    HEARTLESSUI.footerStats.TextXAlignment = Enum.TextXAlignment.Right
     local tabs = {"Speed", "Custom", "Visual", "Settings", "Keybinds"}
     local titles = {"MOVE", "COMBAT", "LOOK", "STEAL", "BINDS"}
     local headings = {"MOVEMENT", "COMBAT", "APPEARANCE", "AUTO STEAL", "KEYBINDS"}
     tabButtons = {}
     local contentPages = {}
     for i, name in ipairs(tabs) do
-        local button = MVPUI.new("TextButton", tabBar, {Name = name, Text = "", Size = UDim2.fromOffset(56, 48),
+        local button = HEARTLESSUI.new("TextButton", tabBar, {Name = name, Text = "", Size = UDim2.fromOffset(56, 48),
             BackgroundColor3 = Color3.fromRGB(25, 25, 24), BackgroundTransparency = 1, BorderSizePixel = 0,
             Font = Enum.Font.GothamBold, TextSize = 9, TextColor3 = WHITE,
             AutoButtonColor = false, ZIndex = 15, LayoutOrder = i})
-        MVPUI.round(button, 8)
-        local stroke = MVPUI.stroke(button, getThemeColor(), 1, 1)
+        HEARTLESSUI.round(button, 8)
+        local stroke = HEARTLESSUI.stroke(button, getThemeColor(), 1, 1)
         stroke.Name = "TabStroke"
-        MVPUI.new("UIGradient", button, {Name = "TabBgGrad", Enabled = false,
+        HEARTLESSUI.new("UIGradient", button, {Name = "TabBgGrad", Enabled = false,
             Color = ColorSequence.new(Color3.fromRGB(55, 40, 25), Color3.fromRGB(24, 24, 25)), Rotation = 90})
-        MVPUI.sectionIcon(button, name, UDim2.fromOffset(18, 6), 20, getThemeColor(), 16)
-        local caption = MVPUI.text(button, titles[i], UDim2.fromOffset(0, 30), UDim2.fromOffset(56, 11), 7, WHITE, 16)
+        HEARTLESSUI.sectionIcon(button, name, UDim2.fromOffset(18, 6), 20, getThemeColor(), 16)
+        local caption = HEARTLESSUI.text(button, titles[i], UDim2.fromOffset(0, 30), UDim2.fromOffset(56, 11), 7, WHITE, 16)
         caption.Name = "Caption"
         caption.TextXAlignment = Enum.TextXAlignment.Center
-        local underline = MVPUI.new("Frame", button, {Name = "Underline", Size = UDim2.fromOffset(18, 2),
+        local underline = HEARTLESSUI.new("Frame", button, {Name = "Underline", Size = UDim2.fromOffset(18, 2),
             Position = UDim2.fromOffset(19, 44), BackgroundColor3 = getThemeColor(), BorderSizePixel = 0, Visible = i == 1, ZIndex = 16})
-        MVPUI.round(underline, 2)
-        local page = MVPUI.new("ScrollingFrame", tabContent, {Name = name, Size = UDim2.fromScale(1, 1),
+        HEARTLESSUI.round(underline, 2)
+        local page = HEARTLESSUI.new("ScrollingFrame", tabContent, {Name = name, Size = UDim2.fromScale(1, 1),
             BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 2, ScrollBarImageColor3 = getThemeColor(),
             ScrollBarImageTransparency = 0.36, AutomaticCanvasSize = Enum.AutomaticSize.Y, CanvasSize = UDim2.new(),
             ScrollingDirection = Enum.ScrollingDirection.Y, ClipsDescendants = true, Visible = i == 1, ZIndex = 6})
-        MVPUI.new("UIListLayout", page, {Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder,
+        HEARTLESSUI.new("UIListLayout", page, {Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder,
             HorizontalAlignment = Enum.HorizontalAlignment.Center})
-        MVPUI.new("UIPadding", page, {PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12),
+        HEARTLESSUI.new("UIPadding", page, {PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12),
             PaddingTop = UDim.new(0, 3), PaddingBottom = UDim.new(0, 18)})
         contentPages[name] = page
         table.insert(tabButtons, button)
@@ -9285,7 +9273,7 @@ function buildGui()
             pageHeading.Text = string.format("%02d   /   %s", i, headings[i])
             for _, p in pairs(contentPages) do p.Visible = false end
             page.Visible = true
-            page.Position = UDim2.fromOffset(MVPUI.effects and 8 or 0, 0)
+            page.Position = UDim2.fromOffset(HEARTLESSUI.effects and 8 or 0, 0)
             TS:Create(page, TweenInfo.new(0.18), {Position = UDim2.fromOffset(0, 0)}):Play()
             for _, b in ipairs(tabButtons) do
                 local on = b == button
@@ -9293,7 +9281,7 @@ function buildGui()
                 b.TabBgGrad.Enabled = false
                 b.TabStroke.Transparency = on and 0.42 or 1
                 b.Caption.TextColor3 = on and WHITE or Color3.fromRGB(155, 157, 156)
-                MVPUI.colorSectionIcon(b:FindFirstChild("SectionIcon"), on and getThemeColor() or Color3.fromRGB(144, 147, 150))
+                HEARTLESSUI.colorSectionIcon(b:FindFirstChild("SectionIcon"), on and getThemeColor() or Color3.fromRGB(144, 147, 150))
                 TS:Create(b, TweenInfo.new(0.16), {BackgroundTransparency = on and 0.05 or 1,
                     BackgroundColor3 = on and Color3.fromRGB(53, 37, 24) or Color3.fromRGB(15, 18, 23)}):Play()
             end
@@ -9307,43 +9295,43 @@ function buildGui()
         return pageCounters[page]
     end
     local function mkSect(page, text)
-        local row = MVPUI.new("Frame", page, {Name = "Section", Size = UDim2.new(1, -4, 0, 24), BackgroundTransparency = 1,
+        local row = HEARTLESSUI.new("Frame", page, {Name = "Section", Size = UDim2.new(1, -4, 0, 24), BackgroundTransparency = 1,
             LayoutOrder = getNextOrder(page), ZIndex = 7})
-        local line = MVPUI.new("Frame", row, {Position = UDim2.fromOffset(1, 12), Size = UDim2.fromOffset(10, 2),
+        local line = HEARTLESSUI.new("Frame", row, {Position = UDim2.fromOffset(1, 12), Size = UDim2.fromOffset(10, 2),
             BackgroundColor3 = getThemeColor(), BorderSizePixel = 0, ZIndex = 8})
-        local label = MVPUI.text(row, text:upper(), UDim2.fromOffset(21, 0), UDim2.new(1, -24, 1, 0),
+        local label = HEARTLESSUI.text(row, text:upper(), UDim2.fromOffset(21, 0), UDim2.new(1, -24, 1, 0),
             9, Color3.fromRGB(203, 173, 127), 8)
         label.Font = Enum.Font.GothamBold
         return row
     end
     local function mkRow(page, height)
-        local row = MVPUI.new("Frame", page, {Name = "Control", Size = UDim2.new(1, -4, 0, math.max(height or 40, 40)),
+        local row = HEARTLESSUI.new("Frame", page, {Name = "Control", Size = UDim2.new(1, -4, 0, math.max(height or 40, 40)),
             BackgroundColor3 = ROW_BG, BackgroundTransparency = 0.06, BorderSizePixel = 0,
             LayoutOrder = getNextOrder(page), ZIndex = 7})
-        MVPUI.round(row, 10)
-        MVPUI.new("UIGradient", row, {Rotation = 0, Color = ColorSequence.new(Color3.fromRGB(30, 28, 27), Color3.fromRGB(16, 21, 28))})
-        local stroke = MVPUI.stroke(row, ROW_BORDER, 0.73, 1)
+        HEARTLESSUI.round(row, 10)
+        HEARTLESSUI.new("UIGradient", row, {Rotation = 0, Color = ColorSequence.new(Color3.fromRGB(30, 28, 27), Color3.fromRGB(16, 21, 28))})
+        local stroke = HEARTLESSUI.stroke(row, ROW_BORDER, 0.73, 1)
         row.MouseEnter:Connect(function() TS:Create(stroke, TweenInfo.new(0.12), {Transparency = 0.34}):Play() end)
         row.MouseLeave:Connect(function() TS:Create(stroke, TweenInfo.new(0.12), {Transparency = 0.73}):Play() end)
         return row
     end
     local function mkLabel(row, text)
-        return MVPUI.text(row, text, UDim2.fromOffset(14, 0), UDim2.new(0.48, -8, 1, 0), 12, WHITE, 8)
+        return HEARTLESSUI.text(row, text, UDim2.fromOffset(14, 0), UDim2.new(0.48, -8, 1, 0), 12, WHITE, 8)
     end
     local function mkPill(row)
-        local pill = MVPUI.new("Frame", row, {Name = "Track", Size = UDim2.fromOffset(56, 27),
+        local pill = HEARTLESSUI.new("Frame", row, {Name = "Track", Size = UDim2.fromOffset(56, 27),
             AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -13, 0.5, 0),
             BackgroundColor3 = Color3.fromRGB(11, 15, 20), BorderSizePixel = 0, ZIndex = 8})
-        MVPUI.round(pill, 12)
-        MVPUI.stroke(pill, ROW_BORDER, 0.57, 1)
-        local state = MVPUI.text(pill, "OFF", UDim2.fromOffset(19, 0), UDim2.fromOffset(34, 27), 8,
+        HEARTLESSUI.round(pill, 12)
+        HEARTLESSUI.stroke(pill, ROW_BORDER, 0.57, 1)
+        local state = HEARTLESSUI.text(pill, "OFF", UDim2.fromOffset(19, 0), UDim2.fromOffset(34, 27), 8,
             Color3.fromRGB(140, 147, 156), 9)
         state.Name = "State"
         state.TextXAlignment = Enum.TextXAlignment.Center
-        local dot = MVPUI.new("Frame", pill, {Name = "Knob", AnchorPoint = Vector2.new(0.5, 0.5),
+        local dot = HEARTLESSUI.new("Frame", pill, {Name = "Knob", AnchorPoint = Vector2.new(0.5, 0.5),
             Size = UDim2.fromOffset(8, 8), Position = UDim2.new(0, 12, 0.5, 0),
             BackgroundColor3 = Color3.fromRGB(74, 83, 94), BorderSizePixel = 0, ZIndex = 9})
-        MVPUI.round(dot, 3)
+        HEARTLESSUI.round(dot, 3)
         return pill, dot
     end
     local function animPill(pill, dot, on)
@@ -9362,11 +9350,11 @@ function buildGui()
         local on = false
         local function set(value)
             on = value == true
-            row:SetAttribute("MVPActive", on)
+            row:SetAttribute("HEARTLESSActive", on)
             animPill(pill, dot, on)
             row:FindFirstChildOfClass("UIStroke").Transparency = on and 0.4 or 0.73
         end
-        local hit = MVPUI.new("TextButton", row, {Name = "ToggleHit", Size = UDim2.fromScale(1, 1), Text = "",
+        local hit = HEARTLESSUI.new("TextButton", row, {Name = "ToggleHit", Size = UDim2.fromScale(1, 1), Text = "",
             BackgroundTransparency = 1, AutoButtonColor = false, ZIndex = 10})
         hit.Activated:Connect(function()
             local previous = on
@@ -9378,19 +9366,19 @@ function buildGui()
         return set
     end
     local function mkSelector(row, default, options, callback)
-        local frame = MVPUI.new("Frame", row, {Name = "Selector", Size = UDim2.fromOffset(146, 32),
+        local frame = HEARTLESSUI.new("Frame", row, {Name = "Selector", Size = UDim2.fromOffset(146, 32),
             Position = UDim2.new(1, -156, 0.5, -16), BackgroundColor3 = INP, BorderSizePixel = 0, ZIndex = 8})
-        MVPUI.round(frame, 6)
-        MVPUI.stroke(frame, ROW_BORDER, 0.68, 1)
-        local label = MVPUI.text(frame, default, UDim2.fromOffset(30, 0), UDim2.fromOffset(86, 32), 10, WHITE, 9)
+        HEARTLESSUI.round(frame, 6)
+        HEARTLESSUI.stroke(frame, ROW_BORDER, 0.68, 1)
+        local label = HEARTLESSUI.text(frame, default, UDim2.fromOffset(30, 0), UDim2.fromOffset(86, 32), 10, WHITE, 9)
         label.Font = Enum.Font.GothamBold
         label.TextXAlignment = Enum.TextXAlignment.Center
         for i, direction in ipairs({-1, 1}) do
-            local button = MVPUI.new("TextButton", frame, {Size = UDim2.fromOffset(29, 32),
+            local button = HEARTLESSUI.new("TextButton", frame, {Size = UDim2.fromOffset(29, 32),
                 Position = UDim2.fromOffset(i == 1 and 0 or 117, 0), BackgroundColor3 = INP,
                 BorderSizePixel = 0, Text = direction == -1 and "‹" or "›", TextSize = 21,
                 Font = Enum.Font.GothamMedium, TextColor3 = getThemeColor(), AutoButtonColor = false, ZIndex = 9})
-            MVPUI.round(button, 6)
+            HEARTLESSUI.round(button, 6)
             button.Activated:Connect(function()
                 callback(direction, function(text) label.Text = text end)
                 task.defer(function() pcall(saveAllSettings) end)
@@ -9400,12 +9388,12 @@ function buildGui()
     end
     local function mkBox(row, default, width, xoff, callback)
         local w = math.max(width or 56, 64)
-        local box = MVPUI.new("TextBox", row, {Size = UDim2.fromOffset(w, 32),
+        local box = HEARTLESSUI.new("TextBox", row, {Size = UDim2.fromOffset(w, 32),
             Position = UDim2.new(1, -math.max(xoff or 76, w + 12), 0.5, -16), Text = tostring(default),
             BackgroundColor3 = INP, BorderSizePixel = 0, Font = Enum.Font.GothamBold, TextSize = 13,
             TextColor3 = Color3.fromRGB(250, 202, 129), ClearTextOnFocus = false, ZIndex = 9})
-        MVPUI.round(box, 9)
-        local border = MVPUI.stroke(box, ROW_BORDER, 0.58, 1)
+        HEARTLESSUI.round(box, 9)
+        local border = HEARTLESSUI.stroke(box, ROW_BORDER, 0.58, 1)
         local lastValid = tostring(default)
         box.Focused:Connect(function() border.Color = getThemeColor(); border.Transparency = 0.10 end)
         box.FocusLost:Connect(function()
@@ -9421,12 +9409,12 @@ function buildGui()
     end
     local function mkKeyButton(row, entry)
         local function name() return (entry.gp and entry.gp.Name) or (entry.kb and entry.kb.Name) or "None" end
-        local button = MVPUI.new("TextButton", row, {Size = UDim2.fromOffset(116, 32),
+        local button = HEARTLESSUI.new("TextButton", row, {Size = UDim2.fromOffset(116, 32),
             Position = UDim2.new(1, -128, 0.5, -16), Text = name(), BackgroundColor3 = INP,
             TextSize = 11, Font = Enum.Font.GothamBold, TextColor3 = WHITE, BorderSizePixel = 0,
             AutoButtonColor = false, ZIndex = 9})
-        MVPUI.round(button, 9)
-        MVPUI.stroke(button, ROW_BORDER, 0.42, 1)
+        HEARTLESSUI.round(button, 9)
+        HEARTLESSUI.stroke(button, ROW_BORDER, 0.42, 1)
         local connection, axisConnection, timeout, listening = nil, nil, nil, false
         local function stop()
             listening = false; _anyKeyListening = false
@@ -9469,37 +9457,37 @@ function buildGui()
     local speedPage = contentPages["Speed"]
 
     mkSect(speedPage, "Movement Speeds")
-    do local row = mkRow(speedPage, 42); mkLabel(row, "Normal Speed"); normalBox = mkBox(row, NS, 50, 56, function(v) if v == v and v > 0 and v < math.huge then NS = v; if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end end end) end
-    do local row = mkRow(speedPage, 42); mkLabel(row, "Carry Speed"); carryBox = mkBox(row, CS, 50, 56, function(v) if v == v and v > 0 and v < math.huge then CS = v; if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end end end) end
-    do local row = mkRow(speedPage, 42); mkLabel(row, "Lagger Normal Speed"); laggerBox = mkBox(row, LAGGER_SPEED, 50, 56, function(v) if v == v and v > 0 and v < math.huge then LAGGER_SPEED = v; if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end end end) end
-    do local row = mkRow(speedPage, 42); mkLabel(row, "Lagger Carry Speed"); lagger2Box = mkBox(row, LAGGER_CARRY_SPEED, 50, 56, function(v) if v == v and v > 0 and v < math.huge then LAGGER_CARRY_SPEED = v; if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end end end) end
+    do local row = mkRow(speedPage, 42); mkLabel(row, "Normal Speed"); normalBox = mkBox(row, NS, 50, 56, function(v) if v == v and v > 0 and v < math.huge then NS = v; if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end end end) end
+    do local row = mkRow(speedPage, 42); mkLabel(row, "Carry Speed"); carryBox = mkBox(row, CS, 50, 56, function(v) if v == v and v > 0 and v < math.huge then CS = v; if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end end end) end
+    do local row = mkRow(speedPage, 42); mkLabel(row, "Lagger Normal Speed"); laggerBox = mkBox(row, LAGGER_SPEED, 50, 56, function(v) if v == v and v > 0 and v < math.huge then LAGGER_SPEED = v; if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end end end) end
+    do local row = mkRow(speedPage, 42); mkLabel(row, "Lagger Carry Speed"); lagger2Box = mkBox(row, LAGGER_CARRY_SPEED, 50, 56, function(v) if v == v and v > 0 and v < math.huge then LAGGER_CARRY_SPEED = v; if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end end end) end
 
     mkSect(speedPage, "Speed Engine")
     do
         local row = mkRow(speedPage, 46)
         mkLabel(row, "Speed Motor")
-        MVPUI.motorLabel = mkSelector(row, useVenixCarryEngine and "Carry Boost" or "Direct", {"Direct", "Carry Boost"}, function(direction, update)
+        HEARTLESSUI.motorLabel = mkSelector(row, useVenixCarryEngine and "Carry Boost" or "Direct", {"Direct", "Carry Boost"}, function(direction, update)
             useVenixCarryEngine = not useVenixCarryEngine
             update(useVenixCarryEngine and "Carry Boost" or "Direct")
-            if _G.__HeartlessRefreshSpeedEngine then _G.__HeartlessRefreshSpeedEngine() end
+            if _G.__RivalHubRefreshSpeedEngine then _G.__RivalHubRefreshSpeedEngine() end
         end)
     end
-    MVPUI.carrySetter = mkToggle(speedPage, "Auto Carry", function(on)
-        MVPVenixCarry:setSoftStealEnabled(on)
+    HEARTLESSUI.carrySetter = mkToggle(speedPage, "Auto Carry", function(on)
+        HEARTLESSVenixCarry:setSoftStealEnabled(on)
         if on then useVenixCarryEngine = true end
-        if MVPUI.motorLabel then MVPUI.motorLabel.Text = useVenixCarryEngine and "Carry Boost" or "Direct" end
-        if _G.__HeartlessRefreshSpeedEngine then _G.__HeartlessRefreshSpeedEngine() end
+        if HEARTLESSUI.motorLabel then HEARTLESSUI.motorLabel.Text = useVenixCarryEngine and "Carry Boost" or "Direct" end
+        if _G.__RivalHubRefreshSpeedEngine then _G.__RivalHubRefreshSpeedEngine() end
     end)
     do
         local row = mkRow(speedPage, 46); mkLabel(row, "Auto Carry Speed")
-        MVPUI.carrySpeedBox = mkBox(row, MVPVenixCarry.softStealSpeed, 60, 72, function(v)
-            MVPVenixCarry:setSoftStealSpeed(v); MVPUI.carrySpeedBox.Text = tostring(MVPVenixCarry.softStealSpeed)
+        HEARTLESSUI.carrySpeedBox = mkBox(row, HEARTLESSVenixCarry.softStealSpeed, 60, 72, function(v)
+            HEARTLESSVenixCarry:setSoftStealSpeed(v); HEARTLESSUI.carrySpeedBox.Text = tostring(HEARTLESSVenixCarry.softStealSpeed)
         end)
     end
     do
         local row = mkRow(speedPage, 46); mkLabel(row, "Auto Carry Radius")
-        MVPUI.carryRadiusBox = mkBox(row, MVPVenixCarry.softStealRadius, 60, 72, function(v)
-            MVPVenixCarry:setSoftStealRadius(v); MVPUI.carryRadiusBox.Text = tostring(MVPVenixCarry.softStealRadius)
+        HEARTLESSUI.carryRadiusBox = mkBox(row, HEARTLESSVenixCarry.softStealRadius, 60, 72, function(v)
+            HEARTLESSVenixCarry:setSoftStealRadius(v); HEARTLESSUI.carryRadiusBox.Text = tostring(HEARTLESSVenixCarry.softStealRadius)
         end)
     end
     mkSect(speedPage, "Active Mode")
@@ -9704,26 +9692,26 @@ function buildGui()
         row.BackgroundTransparency = 1
         local border = row:FindFirstChildOfClass("UIStroke"); if border then border:Destroy() end
         for i, asset in ipairs(backgroundImages) do
-            local card = MVPUI.new("ImageButton", row, {Size = UDim2.new(1 / 3, -6, 1, 0),
+            local card = HEARTLESSUI.new("ImageButton", row, {Size = UDim2.new(1 / 3, -6, 1, 0),
                 Position = UDim2.new((i - 1) / 3, (i - 1) * 3, 0, 0), Image = "rbxassetid://" .. asset,
                 ScaleType = Enum.ScaleType.Crop, BackgroundColor3 = Color3.fromRGB(12, 16, 21),
                 BorderSizePixel = 0, AutoButtonColor = false, ClipsDescendants = true, ZIndex = 8})
-            MVPUI.round(card, 12)
-            MVPUI.stroke(card, getThemeColor(), 0.72, 1.7)
-            local scrim = MVPUI.new("Frame", card, {Size = UDim2.fromScale(1, 1), BackgroundColor3 = Color3.fromRGB(8, 12, 17),
+            HEARTLESSUI.round(card, 12)
+            HEARTLESSUI.stroke(card, getThemeColor(), 0.72, 1.7)
+            local scrim = HEARTLESSUI.new("Frame", card, {Size = UDim2.fromScale(1, 1), BackgroundColor3 = Color3.fromRGB(8, 12, 17),
                 BackgroundTransparency = 0.6, BorderSizePixel = 0, ZIndex = 9})
-            MVPUI.round(scrim, 12)
-            local badge = MVPUI.new("Frame", card, {Name = "Selected", Size = UDim2.fromOffset(16, 16),
+            HEARTLESSUI.round(scrim, 12)
+            local badge = HEARTLESSUI.new("Frame", card, {Name = "Selected", Size = UDim2.fromOffset(16, 16),
                 Position = UDim2.new(1, -22, 0, 6), BackgroundColor3 = getThemeColor(), BorderSizePixel = 0,
                 Visible = false, ZIndex = 10})
-            MVPUI.round(badge, 6)
-            local check = MVPUI.text(badge, "✓", UDim2.fromOffset(0, 0), UDim2.fromScale(1, 1), 11, WHITE, 11)
+            HEARTLESSUI.round(badge, 6)
+            local check = HEARTLESSUI.text(badge, "✓", UDim2.fromOffset(0, 0), UDim2.fromScale(1, 1), 11, WHITE, 11)
             check.TextXAlignment = Enum.TextXAlignment.Center
-            local label = MVPUI.text(card, "SCENE 0" .. i,
+            local label = HEARTLESSUI.text(card, "SCENE 0" .. i,
                 UDim2.new(0, 8, 1, -25), UDim2.new(1, -12, 0, 19), 9, WHITE, 10)
             label.Font = Enum.Font.GothamBold
             card.Activated:Connect(function() applyBackgroundMode("Background " .. i); pcall(saveAllSettings, true) end)
-            MVPUI.cards[i] = card
+            HEARTLESSUI.cards[i] = card
         end
         applyBackgroundMode(backgroundMode)
     end
@@ -9731,8 +9719,8 @@ function buildGui()
     setHideButtonsVisual = mkToggle(visualPage, "Hide Button", function(on) toggleHideButtons(on) end)
     if setHideButtonsVisual then setHideButtonsVisual(hideButtonsEnabled) end
 
-    MVPUI.lockButtonsSetter = mkToggle(visualPage, "Lock Mobile Buttons", function(on) mobileButtonsLocked = on end)
-    MVPUI.effectsSetter = mkToggle(visualPage, "Halloween Effects", function(on) MVPUI.effects = on end)
+    HEARTLESSUI.lockButtonsSetter = mkToggle(visualPage, "Lock Mobile Buttons", function(on) mobileButtonsLocked = on end)
+    HEARTLESSUI.effectsSetter = mkToggle(visualPage, "Halloween Effects", function(on) HEARTLESSUI.effects = on end)
     mkSect(visualPage, "Display")
     do
         local row = mkRow(visualPage, 42)
@@ -9740,7 +9728,7 @@ function buildGui()
         uiScaleBox = mkBox(row, uiScaleValue, 50, 56, function(v)
             local n = _clamp(_floor(v+0.5), 50, 150)
             uiScaleValue = n
-            if MVPUI.fit then MVPUI.fit() end
+            if HEARTLESSUI.fit then HEARTLESSUI.fit() end
             if pbScale then pbScale.Scale = n/100 end
         end)
     end
@@ -9953,16 +9941,16 @@ function buildGui()
         leftBtn.AutoButtonColor = false
         leftBtn.ZIndex = 9
         Instance.new("UICorner", leftBtn).CornerRadius = UDim.new(0, 6)
-        heartlessTitleSelectorLabel = Instance.new("TextLabel", container)
-        heartlessTitleSelectorLabel.Size = UDim2.new(0, 80, 0, 26)
-        heartlessTitleSelectorLabel.Position = UDim2.new(0.5, -40, 0.5, -13)
-        heartlessTitleSelectorLabel.BackgroundTransparency = 1
-        heartlessTitleSelectorLabel.Text = currentHeartlessTitleTheme
-        heartlessTitleSelectorLabel.TextColor3 = WHITE
-        heartlessTitleSelectorLabel.Font = Enum.Font.GothamBold
-        heartlessTitleSelectorLabel.TextSize = 12
-        heartlessTitleSelectorLabel.TextXAlignment = Enum.TextXAlignment.Center
-        heartlessTitleSelectorLabel.ZIndex = 9
+        rivalTitleSelectorLabel = Instance.new("TextLabel", container)
+        rivalTitleSelectorLabel.Size = UDim2.new(0, 80, 0, 26)
+        rivalTitleSelectorLabel.Position = UDim2.new(0.5, -40, 0.5, -13)
+        rivalTitleSelectorLabel.BackgroundTransparency = 1
+        rivalTitleSelectorLabel.Text = currentRivalTitleTheme
+        rivalTitleSelectorLabel.TextColor3 = WHITE
+        rivalTitleSelectorLabel.Font = Enum.Font.GothamBold
+        rivalTitleSelectorLabel.TextSize = 12
+        rivalTitleSelectorLabel.TextXAlignment = Enum.TextXAlignment.Center
+        rivalTitleSelectorLabel.ZIndex = 9
         local rightBtn = Instance.new("TextButton", container)
         rightBtn.Size = UDim2.new(0, 28, 0, 26)
         rightBtn.Position = UDim2.new(1, -28, 0.5, -13)
@@ -9977,19 +9965,19 @@ function buildGui()
         rightBtn.ZIndex = 9
         Instance.new("UICorner", rightBtn).CornerRadius = UDim.new(0, 6)
 
-        local HEARTLESS_THEME_LIST = { "Orange", "Blue", "Red", "Green", "Black", "Gray" }
-        local function cycleHeartlessTitle(dir)
+        local RIVAL_THEME_LIST = { "Orange", "Blue", "Red", "Green", "Black", "Gray" }
+        local function cycleRivalTitle(dir)
             local idx = 1
-            for i, name in ipairs(HEARTLESS_THEME_LIST) do
-                if name == currentHeartlessTitleTheme then idx = i; break end
+            for i, name in ipairs(RIVAL_THEME_LIST) do
+                if name == currentRivalTitleTheme then idx = i; break end
             end
             local newIdx = idx + dir
-            if newIdx < 1 then newIdx = #HEARTLESS_THEME_LIST end
-            if newIdx > #HEARTLESS_THEME_LIST then newIdx = 1 end
-            applyHeartlessTitleTheme(HEARTLESS_THEME_LIST[newIdx])
+            if newIdx < 1 then newIdx = #RIVAL_THEME_LIST end
+            if newIdx > #RIVAL_THEME_LIST then newIdx = 1 end
+            applyRivalTitleTheme(RIVAL_THEME_LIST[newIdx])
         end
-        leftBtn.MouseButton1Click:Connect(function() cycleHeartlessTitle(-1) end)
-        rightBtn.MouseButton1Click:Connect(function() cycleHeartlessTitle(1) end)
+        leftBtn.MouseButton1Click:Connect(function() cycleRivalTitle(-1) end)
+        rightBtn.MouseButton1Click:Connect(function() cycleRivalTitle(1) end)
     end
     setVividVisual = mkToggle(visualPage, "Vivid Graphics", function(on)
         toggleVividGraphics(on)
@@ -10156,7 +10144,7 @@ function buildGui()
             TS:Create(pingBtn, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(240, 214, 175)}):Play()
         end)
         pingBtn.MouseButton1Click:Connect(function()
-            local okPing, errPing = pcall(openMVPPingLagger)
+            local okPing, errPing = pcall(openHEARTLESSPingLagger)
             if not okPing then warn("[HEARTLESS Ping Lagger] " .. tostring(errPing)) end
         end)
     end
@@ -10184,11 +10172,11 @@ function buildGui()
         musicStroke.Transparency = 0.4
 
         local function refreshMusicButton()
-            local playing = mvpFullRedrumSound and mvpFullRedrumSound.Parent and mvpFullRedrumSound.Playing
-            musicBtn.Text = playing and mvpFullRedrumSound.Name == "HEARTLESSRedrumFull" and "STOP REDRUM" or "REDRUM 0:00"
+            local playing = heartlessFullRedrumSound and heartlessFullRedrumSound.Parent and heartlessFullRedrumSound.Playing
+            musicBtn.Text = playing and heartlessFullRedrumSound.Name == "HEARTLESSRedrumFull" and "STOP REDRUM" or "REDRUM 0:00"
         end
 
-        table.insert(mvpMusicRefreshers, refreshMusicButton)
+        table.insert(heartlessMusicRefreshers, refreshMusicButton)
 
         musicBtn.MouseEnter:Connect(function()
             TS:Create(musicBtn, TweenInfo.new(0.15), {BackgroundColor3 = getThemeColor()}):Play()
@@ -10200,9 +10188,9 @@ function buildGui()
         end)
 
         musicBtn.MouseButton1Click:Connect(function()
-            local same = mvpFullRedrumSound and mvpFullRedrumSound.Name == "HEARTLESSRedrumFull"
+            local same = heartlessFullRedrumSound and heartlessFullRedrumSound.Name == "HEARTLESSRedrumFull"
             stopHEARTLESSFullRedrum()
-            for _, refresh in ipairs(mvpMusicRefreshers) do refresh() end
+            for _, refresh in ipairs(heartlessMusicRefreshers) do refresh() end
             if same then return end
 
             local sound = makeHEARTLESSRedrumSound(0, "HEARTLESSRedrumFull")
@@ -10210,12 +10198,12 @@ function buildGui()
                 pcall(function()
                     sound.TimePosition = 0
                 end)
-                mvpFullRedrumSound = sound
+                heartlessFullRedrumSound = sound
                 refreshMusicButton()
                 sound.Ended:Connect(function()
-                    if mvpFullRedrumSound == sound then
+                    if heartlessFullRedrumSound == sound then
                         pcall(function() sound:Destroy() end)
-                        mvpFullRedrumSound = nil
+                        heartlessFullRedrumSound = nil
                         refreshMusicButton()
                     end
                 end)
@@ -10235,20 +10223,20 @@ function buildGui()
             {name="Gassed Up",file="HEARTLESS_GassedUp.mp3",url="https://file.garden/algLafWA1jk8WMfK/Gassed%20Up_spotdown.org.mp3"},
         }
         local function refreshAll()
-            for _,refresh in ipairs(mvpMusicRefreshers) do refresh() end
+            for _,refresh in ipairs(heartlessMusicRefreshers) do refresh() end
         end
         for _,entry in ipairs(songs) do
             local song=entry
             local row=mkRow(configPage,44)
-            local button=MVPUI.new("TextButton",row,{Size=UDim2.new(1,-12,1,-8),Position=UDim2.fromOffset(6,4),
+            local button=HEARTLESSUI.new("TextButton",row,{Size=UDim2.new(1,-12,1,-8),Position=UDim2.fromOffset(6,4),
                 Text=song.name.." 0:00",TextSize=13,Font=Enum.Font.GothamBold,TextColor3=WHITE,
                 BackgroundColor3=INP,BorderSizePixel=0,AutoButtonColor=false,ZIndex=8})
             if song.coverUrl then
                 button.Position=UDim2.fromOffset(44,4)
                 button.Size=UDim2.new(1,-50,1,-8)
-                local cover=MVPUI.new("ImageLabel",row,{Name="SongCover",Position=UDim2.fromOffset(6,6),
+                local cover=HEARTLESSUI.new("ImageLabel",row,{Name="SongCover",Position=UDim2.fromOffset(6,6),
                     Size=UDim2.fromOffset(32,32),BackgroundTransparency=1,Image="",ScaleType=Enum.ScaleType.Fit,ZIndex=8})
-                MVPUI.round(cover,5)
+                HEARTLESSUI.round(cover,5)
                 task.spawn(function()
                     pcall(function()
                         local loader=getcustomasset or getsynasset
@@ -10264,23 +10252,23 @@ function buildGui()
                     end)
                 end)
             end
-            MVPUI.round(button,6)
-            MVPUI.stroke(button,getThemeColor(),.4,1)
+            HEARTLESSUI.round(button,6)
+            HEARTLESSUI.stroke(button,getThemeColor(),.4,1)
             local loading=false
             local function refresh()
-                local current=mvpFullRedrumSound
+                local current=heartlessFullRedrumSound
                 local playing=current and current.Parent and current.Playing and current.Name==song.file
                 button.Text=loading and ("CARGANDO "..song.name) or (playing and "STOP " or "")..song.name..(playing and "" or " 0:00")
             end
-            table.insert(mvpMusicRefreshers,refresh)
+            table.insert(heartlessMusicRefreshers,refresh)
             button.Activated:Connect(function()
                 if loading then return end
-                local current=mvpFullRedrumSound
+                local current=heartlessFullRedrumSound
                 local same=current and current.Name==song.file
                 stopHEARTLESSFullRedrum()
                 refreshAll()
                 if same then return end
-                local token=mvpMusicRequest
+                local token=heartlessMusicRequest
                 loading=true;refresh()
                 task.spawn(function()
                     local ok,err=pcall(function()
@@ -10293,13 +10281,13 @@ function buildGui()
                             writefile(song.file,data)
                         end
                         local asset=loader(song.file)
-                        if token~=mvpMusicRequest then return end
+                        if token~=heartlessMusicRequest then return end
                         local sound=Instance.new("Sound")
                         sound.Name=song.file;sound.SoundId=asset;sound.Volume=.85;sound.Looped=false
                         sound.Parent=SoundService;sound.TimePosition=0
-                        mvpFullRedrumSound=sound
+                        heartlessFullRedrumSound=sound
                         sound.Ended:Connect(function()
-                            if mvpFullRedrumSound==sound then mvpFullRedrumSound=nil;refreshAll() end
+                            if heartlessFullRedrumSound==sound then heartlessFullRedrumSound=nil;refreshAll() end
                             sound:Destroy()
                         end)
                         sound:Play()
@@ -10476,55 +10464,55 @@ function buildGui()
     spacer.LayoutOrder = getNextOrder(keyPage)
     spacer.ZIndex = 7
 
-    pbFrame = MVPUI.new("Frame", gui, {Name = "HeartlessAutoStealHud", Size = UDim2.fromOffset(264, 86),
+    pbFrame = HEARTLESSUI.new("Frame", gui, {Name = "RivalHubAutoStealHud", Size = UDim2.fromOffset(264, 86),
         Position = UDim2.new(1, -282, 0, 18), BackgroundColor3 = Color3.fromRGB(255, 255, 255),
         BorderSizePixel = 0, Active = true, ZIndex = 50})
-    MVPUI.hudScale = MVPUI.new("UIScale", pbFrame, {Scale = 1})
-    MVPUI.round(pbFrame, 15)
-    MVPUI.new("UIGradient", pbFrame, {Rotation = 80, Color = ColorSequence.new(
+    HEARTLESSUI.hudScale = HEARTLESSUI.new("UIScale", pbFrame, {Scale = 1})
+    HEARTLESSUI.round(pbFrame, 15)
+    HEARTLESSUI.new("UIGradient", pbFrame, {Rotation = 80, Color = ColorSequence.new(
         Color3.fromRGB(42, 31, 25), Color3.fromRGB(11, 16, 24))})
-    local hudStroke = MVPUI.stroke(pbFrame, getThemeColor(), 0.4, 1.2)
+    local hudStroke = HEARTLESSUI.stroke(pbFrame, getThemeColor(), 0.4, 1.2)
     hudStroke.Name = "OuterStroke"
-    local inset = MVPUI.new("Frame", pbFrame, {Name = "Inset", Position = UDim2.fromOffset(3, 3),
+    local inset = HEARTLESSUI.new("Frame", pbFrame, {Name = "Inset", Position = UDim2.fromOffset(3, 3),
         Size = UDim2.new(1, -6, 1, -6), BackgroundTransparency = 1, BorderSizePixel = 0, ZIndex = 51})
-    MVPUI.round(inset, 12)
-    MVPUI.stroke(inset, Color3.fromRGB(245, 209, 155), 0.91, 1)
-    MVPUI.pumpkin(pbFrame, UDim2.fromOffset(10, 7), 32, 51)
-    local title = MVPUI.text(pbFrame, "discord.gg/heartless", UDim2.fromOffset(50, 7), UDim2.fromOffset(150, 19), 10, WHITE, 53)
+    HEARTLESSUI.round(inset, 12)
+    HEARTLESSUI.stroke(inset, Color3.fromRGB(245, 209, 155), 0.91, 1)
+    HEARTLESSUI.pumpkin(pbFrame, UDim2.fromOffset(10, 7), 32, 51)
+    local title = HEARTLESSUI.text(pbFrame, "discord.gg/heartlesshub", UDim2.fromOffset(50, 7), UDim2.fromOffset(150, 19), 10, WHITE, 53)
     title.Font = Enum.Font.GothamBlack
-    local modePill = MVPUI.new("Frame", pbFrame, {Name = "ModeBadge", Size = UDim2.fromOffset(41, 19),
+    local modePill = HEARTLESSUI.new("Frame", pbFrame, {Name = "ModeBadge", Size = UDim2.fromOffset(41, 19),
         Position = UDim2.new(1, -53, 0, 8), BackgroundColor3 = Color3.fromRGB(58, 40, 27),
         BackgroundTransparency = 0.12, BorderSizePixel = 0, ZIndex = 52})
-    MVPUI.round(modePill, 6)
-    MVPUI.stroke(modePill, Color3.fromRGB(204, 140, 72), 0.8, 1)
-    stealHud.mode = MVPUI.text(modePill, autoStealMode, UDim2.fromScale(0, 0), UDim2.fromScale(1, 1), 9, getThemeColor(), 53)
+    HEARTLESSUI.round(modePill, 6)
+    HEARTLESSUI.stroke(modePill, Color3.fromRGB(204, 140, 72), 0.8, 1)
+    stealHud.mode = HEARTLESSUI.text(modePill, autoStealMode, UDim2.fromScale(0, 0), UDim2.fromScale(1, 1), 9, getThemeColor(), 53)
     stealHud.mode.Name = "StealMode"
     stealHud.mode.TextXAlignment = Enum.TextXAlignment.Center
     stealHud.mode.Font = Enum.Font.GothamBold
-    progressStatus = MVPUI.text(pbFrame, stealHud.state, UDim2.fromOffset(50, 28), UDim2.fromOffset(88, 14), 8,
+    progressStatus = HEARTLESSUI.text(pbFrame, stealHud.state, UDim2.fromOffset(50, 28), UDim2.fromOffset(88, 14), 8,
         Color3.fromRGB(183, 179, 169), 53)
     progressStatus.Name = "StealProgressStatus"
-    stealHud.stats = MVPUI.text(pbFrame, stealHud.statsText, UDim2.new(1, -137, 0, 29), UDim2.fromOffset(125, 14), 8,
+    stealHud.stats = HEARTLESSUI.text(pbFrame, stealHud.statsText, UDim2.new(1, -137, 0, 29), UDim2.fromOffset(125, 14), 8,
         Color3.fromRGB(195, 188, 172), 53)
     stealHud.stats.Name = "PerformanceStats"
     stealHud.stats.TextXAlignment = Enum.TextXAlignment.Right
-    local track = MVPUI.new("Frame", pbFrame, {Name = "StealProgressTrack", Size = UDim2.new(1, -22, 0, 26),
+    local track = HEARTLESSUI.new("Frame", pbFrame, {Name = "StealProgressTrack", Size = UDim2.new(1, -22, 0, 26),
         Position = UDim2.new(0, 11, 1, -37), BackgroundColor3 = Color3.fromRGB(255, 255, 255),
         BorderSizePixel = 0, ClipsDescendants = true, ZIndex = 51})
-    MVPUI.round(track, 8)
-    MVPUI.stroke(track, Color3.fromRGB(126, 88, 49), 0.55, 1)
-    MVPUI.new("UIGradient", track, {Rotation = 90, Color = ColorSequence.new(
+    HEARTLESSUI.round(track, 8)
+    HEARTLESSUI.stroke(track, Color3.fromRGB(126, 88, 49), 0.55, 1)
+    HEARTLESSUI.new("UIGradient", track, {Rotation = 90, Color = ColorSequence.new(
         Color3.fromRGB(43, 35, 29), Color3.fromRGB(17, 22, 30))})
-    progressFill = MVPUI.new("Frame", track, {Name = "StealProgressFill", Size = UDim2.new(stealHud.value, 0, 1, 0),
+    progressFill = HEARTLESSUI.new("Frame", track, {Name = "StealProgressFill", Size = UDim2.new(stealHud.value, 0, 1, 0),
         BackgroundColor3 = Color3.fromRGB(255, 255, 255), BorderSizePixel = 0, ZIndex = 52})
-    MVPUI.round(progressFill, 8)
-    MVPUI.new("UIGradient", progressFill, {Color = heartlessGradient(getThemeColor())})
+    HEARTLESSUI.round(progressFill, 8)
+    HEARTLESSUI.new("UIGradient", progressFill, {Color = rivalHubGradient(getThemeColor())})
     for i = 1, 5 do
-        MVPUI.new("Frame", track, {Name = "ProgressMark", Position = UDim2.new(i / 6, 0, 0, 5),
+        HEARTLESSUI.new("Frame", track, {Name = "ProgressMark", Position = UDim2.new(i / 6, 0, 0, 5),
             Size = UDim2.new(0, 1, 1, -10), BackgroundColor3 = Color3.fromRGB(48, 28, 17),
             BackgroundTransparency = 0.88, BorderSizePixel = 0, ZIndex = 53})
     end
-    progressPct = MVPUI.text(track, "0%", UDim2.fromScale(0, 0), UDim2.fromScale(1, 1), 11, WHITE, 54)
+    progressPct = HEARTLESSUI.text(track, "0%", UDim2.fromScale(0, 0), UDim2.fromScale(1, 1), 11, WHITE, 54)
     progressPct.Name = "StealProgressPercent"
     progressPct.Font = Enum.Font.GothamBold
     progressPct.TextXAlignment = Enum.TextXAlignment.Center
@@ -10532,14 +10520,14 @@ function buildGui()
     progressPct.TextStrokeTransparency = 0.18
     updateStealProgress(stealHud.value, stealHud.state)
     drag(pbFrame)
-    MVPUI.fit()
+    HEARTLESSUI.fit()
     do
         local viewConnection
         local function followCamera()
             if viewConnection then viewConnection:Disconnect() end
             local cam = Workspace.CurrentCamera
-            if cam then viewConnection = cam:GetPropertyChangedSignal("ViewportSize"):Connect(MVPUI.fit) end
-            MVPUI.fit()
+            if cam then viewConnection = cam:GetPropertyChangedSignal("ViewportSize"):Connect(HEARTLESSUI.fit) end
+            HEARTLESSUI.fit()
         end
         local cameraConnection = Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(followCamera)
         followCamera()
@@ -10548,7 +10536,7 @@ function buildGui()
             if viewConnection then viewConnection:Disconnect() end
         end)
     end
-    MVPUI.effectsLoop(gui)
+    HEARTLESSUI.effectsLoop(gui)
     task.spawn(function() pcall(function() game:GetService("ContentProvider"):PreloadAsync({bg}) end) end)
 end
 
@@ -10733,10 +10721,10 @@ do
         end)
     end
 
-    _G.__HeartlessStartBatV2 = startBatV2
-    _G.__HeartlessStopBatV2  = stopBatV2
-    _G.__HeartlessIsBatV2    = function() return TP.enabled == true end
-    _G.__HeartlessBatV2      = TP
+    _G.__RivalHubStartBatV2 = startBatV2
+    _G.__RivalHubStopBatV2  = stopBatV2
+    _G.__RivalHubIsBatV2    = function() return TP.enabled == true end
+    _G.__RivalHubBatV2      = TP
 
     LP.CharacterAdded:Connect(function(newChar)
         task.wait(0.5)
@@ -10750,7 +10738,7 @@ end
 
 function createMobilePanel()
     local panel = Instance.new("ScreenGui")
-    panel.Name = "HEARTLESSMobilePanel"
+    panel.Name = "RivalHubMobilePanel"
     panel.ResetOnSpawn = false
     panel.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     panel.IgnoreGuiInset = true
@@ -10765,31 +10753,31 @@ function createMobilePanel()
     local buttonTexts = {"DROP\nBR", "AUTO\nLEFT", "BAT\nBYPASS", "AUTO\nRIGHT", "TP\nDOWN", "CARRY\nSPD", "LAGGER\nNORMAL", "LAGGER\nCARRY", "TP\nBATE"}
 
     local function createButton(name, text, order, isToggle, callback)
-        local btn = MVPUI.new("TextButton", panel, {Name = name, Size = UDim2.fromOffset(BTN_W, BTN_H),
+        local btn = HEARTLESSUI.new("TextButton", panel, {Name = name, Size = UDim2.fromOffset(BTN_W, BTN_H),
             BackgroundColor3 = Color3.fromRGB(255, 255, 255), BorderSizePixel = 0, Text = "",
             AutoButtonColor = false, Active = true, ZIndex = 10})
         local saved = savedButtonPositions[name]
         local x, y = getDefaultButtonPosition(name)
         btn.Position = UDim2.fromOffset(saved and tonumber(saved.X) or x, saved and tonumber(saved.Y) or y)
-        MVPUI.round(btn, 11)
-        MVPUI.new("UIGradient", btn, {Name = "BtnGrad", Rotation = 90,
+        HEARTLESSUI.round(btn, 11)
+        HEARTLESSUI.new("UIGradient", btn, {Name = "BtnGrad", Rotation = 90,
             Color = ColorSequence.new(Color3.fromRGB(30, 34, 40), Color3.fromRGB(10, 14, 19))})
-        MVPUI.stroke(btn, Color3.fromRGB(110, 94, 74), 0.54, 1)
-        local dot = MVPUI.new("Frame", btn, {Name = "StatusDot", Size = UDim2.fromOffset(4, 4),
+        HEARTLESSUI.stroke(btn, Color3.fromRGB(110, 94, 74), 0.54, 1)
+        local dot = HEARTLESSUI.new("Frame", btn, {Name = "StatusDot", Size = UDim2.fromOffset(4, 4),
             Position = UDim2.new(1, -10, 0, 10), BackgroundColor3 = Color3.fromRGB(65, 72, 81), BorderSizePixel = 0, ZIndex = 11})
-        MVPUI.round(dot, 2)
-        local label = MVPUI.text(btn, text, UDim2.fromOffset(6, 10), UDim2.new(1, -12, 0, 37), 10,
+        HEARTLESSUI.round(dot, 2)
+        local label = HEARTLESSUI.text(btn, text, UDim2.fromOffset(6, 10), UDim2.new(1, -12, 0, 37), 10,
             Color3.fromRGB(231, 228, 220), 11)
         label.Name = "TextLabel"
         label.Font = Enum.Font.GothamBold
         label.TextXAlignment = Enum.TextXAlignment.Center
         label.TextWrapped = true
         label.TextTruncate = Enum.TextTruncate.None
-        local status = MVPUI.text(btn, "OFF", UDim2.fromOffset(6, 52), UDim2.new(1, -12, 0, 8), 6,
+        local status = HEARTLESSUI.text(btn, "OFF", UDim2.fromOffset(6, 52), UDim2.new(1, -12, 0, 8), 6,
             Color3.fromRGB(126, 132, 139), 11)
         status.Name = "Status"
         status.TextXAlignment = Enum.TextXAlignment.Center
-        local scale = MVPUI.new("UIScale", btn, {Scale = floatingButtonScale})
+        local scale = HEARTLESSUI.new("UIScale", btn, {Scale = floatingButtonScale})
         table.insert(_floatingUIScales, scale)
         local active = false
         local function setActive(value)
@@ -10811,12 +10799,12 @@ function createMobilePanel()
             if pointer.UserInputType == Enum.UserInputType.Touch and input ~= pointer then return end
             if pointer.UserInputType == Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
             pointer = nil
-            MVPUI.activeInput = nil
+            HEARTLESSUI.activeInput = nil
             _isDraggingButton = false
             TS:Create(scale, TweenInfo.new(0.12), {Scale = floatingButtonScale}):Play()
             if moved < 8 then
                 local ok, err = pcall(callback, setActive, active)
-                if not ok then warn("[MVP Button] " .. name .. ": " .. tostring(err)) end
+                if not ok then warn("[HEARTLESS Button] " .. name .. ": " .. tostring(err)) end
             elseif not uiLocked and not mobileButtonsLocked then
                 savedButtonPositions[name] = {X = btn.Position.X.Offset, Y = btn.Position.Y.Offset}
             end
@@ -10824,10 +10812,10 @@ function createMobilePanel()
             pcall(saveAllSettings)
         end
         btn.InputBegan:Connect(function(input)
-            if MVPUI.activeInput then return end
+            if HEARTLESSUI.activeInput then return end
             if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then return end
             pointer, dragStart, origin, moved = input, input.Position, btn.Position, 0
-            MVPUI.activeInput = input
+            HEARTLESSUI.activeInput = input
             _isDraggingButton = true
             TS:Create(scale, TweenInfo.new(0.09), {Scale = floatingButtonScale * 0.95}):Play()
         end)
@@ -10846,7 +10834,7 @@ function createMobilePanel()
         btn.InputEnded:Connect(finish)
         btn.Destroying:Connect(function()
             moveConn:Disconnect(); endConn:Disconnect()
-            if pointer then MVPUI.activeInput = nil; _isDraggingButton = false end
+            if pointer then HEARTLESSUI.activeInput = nil; _isDraggingButton = false end
         end)
         btn.Position = clampPosition(btn.Position)
         buttons[name] = {btn = btn, setActive = setActive, label = label, clampPosition = clampPosition}
@@ -10901,7 +10889,7 @@ function createMobilePanel()
                     speedMode = false; setActive(false)
                 end
                 refreshSpeedModeLabel()
-                if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end
+                if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
             end
         elseif name == "Lagger1" then
             callback = function(setActive)
@@ -10913,7 +10901,7 @@ function createMobilePanel()
                     laggerToggled = false; setActive(false)
                 end
                 refreshSpeedModeLabel()
-                if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end
+                if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
             end
         elseif name == "Lagger2" then
             callback = function(setActive)
@@ -10925,15 +10913,15 @@ function createMobilePanel()
                     laggerCarryToggled = false; setActive(false)
                 end
                 refreshSpeedModeLabel()
-                if _G.__HeartlessApplySpeedNow then pcall(_G.__HeartlessApplySpeedNow) end
+                if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
             end
         elseif name == "BatV2" then
             callback = function(setActive)
-                if not _G.__HeartlessIsBatV2() then
-                    _G.__HeartlessStartBatV2()
+                if not _G.__RivalHubIsBatV2() then
+                    _G.__RivalHubStartBatV2()
                     setActive(true)
                 else
-                    _G.__HeartlessStopBatV2()
+                    _G.__RivalHubStopBatV2()
                     setActive(false)
                 end
             end
@@ -10957,7 +10945,7 @@ function createMobilePanel()
     if buttons.Lagger1 and buttons.Lagger1.setActive then buttons.Lagger1.setActive(laggerToggled) end
     if buttons.Lagger2 and buttons.Lagger2.setActive then buttons.Lagger2.setActive(laggerCarryToggled) end
     if buttons.BatV2 and buttons.BatV2.setActive then
-        buttons.BatV2.setActive(_G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2() or false)
+        buttons.BatV2.setActive(_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() or false)
     end
 
     local viewportConn
@@ -11177,13 +11165,13 @@ function updateUIFromLoaded()
 
     applyBackgroundMode(backgroundMode)
     applyFloatingButtonScale()
-    if MVPUI.fit then MVPUI.fit() end
-    if MVPUI.motorLabel then MVPUI.motorLabel.Text = useVenixCarryEngine and "Carry Boost" or "Direct" end
-    if MVPUI.carrySetter then MVPUI.carrySetter(MVPVenixCarry.softStealEnabled) end
-    if MVPUI.carrySpeedBox then MVPUI.carrySpeedBox.Text = tostring(MVPVenixCarry.softStealSpeed) end
-    if MVPUI.carryRadiusBox then MVPUI.carryRadiusBox.Text = tostring(MVPVenixCarry.softStealRadius) end
-    if MVPUI.effectsSetter then MVPUI.effectsSetter(MVPUI.effects) end
-    if MVPUI.lockButtonsSetter then MVPUI.lockButtonsSetter(mobileButtonsLocked) end
+    if HEARTLESSUI.fit then HEARTLESSUI.fit() end
+    if HEARTLESSUI.motorLabel then HEARTLESSUI.motorLabel.Text = useVenixCarryEngine and "Carry Boost" or "Direct" end
+    if HEARTLESSUI.carrySetter then HEARTLESSUI.carrySetter(HEARTLESSVenixCarry.softStealEnabled) end
+    if HEARTLESSUI.carrySpeedBox then HEARTLESSUI.carrySpeedBox.Text = tostring(HEARTLESSVenixCarry.softStealSpeed) end
+    if HEARTLESSUI.carryRadiusBox then HEARTLESSUI.carryRadiusBox.Text = tostring(HEARTLESSVenixCarry.softStealRadius) end
+    if HEARTLESSUI.effectsSetter then HEARTLESSUI.effectsSetter(HEARTLESSUI.effects) end
+    if HEARTLESSUI.lockButtonsSetter then HEARTLESSUI.lockButtonsSetter(mobileButtonsLocked) end
 
     if uiLocked and setLockUIVisual then setLockUIVisual(true) end
 
@@ -11282,7 +11270,7 @@ function updateUIFromLoaded()
     if mobSetCarry then mobSetCarry(speedMode) end
     if mobSetLagger1 then mobSetLagger1(laggerToggled) end
     if mobSetLagger2 then mobSetLagger2(laggerCarryToggled) end
-    if mobSetBatV2 then mobSetBatV2(_G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2() or false) end
+    if mobSetBatV2 then mobSetBatV2(_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() or false) end
 
     if bodyLockEnabled and bodyLockSetVisual then
         if _blSuppressCount == 0 then
@@ -11307,14 +11295,14 @@ end
 local _bootErrors = {}
 
 local function _bootSection(name, fn)
-    print("[HEARTLESS Boot] Iniciando:", name)
+    print("[Rival Hub Boot] Iniciando:", name)
     local ok, err = pcall(fn)
     if not ok then
-        print("[HEARTLESS Boot] FALLÓ:", name, tostring(err))
+        print("[Rival Hub Boot] FALLÓ:", name, tostring(err))
         table.insert(_bootErrors, {name = name, err = tostring(err)})
-        warn("[HEARTLESS Boot] Error en '" .. name .. "': " .. tostring(err))
+        warn("[Rival Hub Boot] Error en '" .. name .. "': " .. tostring(err))
     else
-        print("[HEARTLESS Boot] OK:", name)
+        print("[Rival Hub Boot] OK:", name)
     end
     return ok
 end
@@ -11341,9 +11329,9 @@ if gui and main then
         end)
     end
 
-    _bootSection("localizeHeartlessInterface", function()
-        if gui then localizeHeartlessInterface(gui) end
-        if MobilePanel then localizeHeartlessInterface(MobilePanel) end
+    _bootSection("localizeRivalHubInterface", function()
+        if gui then localizeRivalHubInterface(gui) end
+        if MobilePanel then localizeRivalHubInterface(MobilePanel) end
     end)
 
     if LP.Character then
@@ -11366,12 +11354,12 @@ if gui and main then
                 local env = (getgenv and getgenv()) or _G
                 local writeFn = env.writefile or (syn and syn.writefile)
                 if type(writeFn) == "function" then
-                    local log = "[HEARTLESS Boot Errors] " .. os.date("%Y-%m-%d %H:%M:%S") .. "\n"
+                    local log = "[Rival Hub Boot Errors] " .. os.date("%Y-%m-%d %H:%M:%S") .. "\n"
                     for _, e in ipairs(_bootErrors) do
                         log = log .. e.name .. ": " .. e.err .. "\n"
                     end
-                    pcall(writeFn, "HEARTLESS_boot_errors.txt", log)
-                    warn("[HEARTLESS] Errores escritos a HEARTLESS_boot_errors.txt")
+                    pcall(writeFn, "RivalHub_boot_errors.txt", log)
+                    warn("[Rival Hub] Errores escritos a RivalHub_boot_errors.txt")
                 end
             end)
         end)
@@ -11379,7 +11367,7 @@ if gui and main then
         task.defer(function()
             pcall(function()
                 local errGui = Instance.new("ScreenGui")
-                errGui.Name = "HeartlessBootErrors"
+                errGui.Name = "RivalHubBootErrors"
                 errGui.ResetOnSpawn = false
                 errGui.DisplayOrder = 999
                 local okCg, cg = pcall(function() return game:GetService("CoreGui") end)
@@ -11402,7 +11390,7 @@ if gui and main then
                 title.Size = UDim2.new(1, -20, 0, 24)
                 title.Position = UDim2.new(0, 10, 0, 8)
                 title.BackgroundTransparency = 1
-                title.Text = "⚠ MVP: " .. #_bootErrors .. " sección(es) fallaron"
+                title.Text = "⚠ HEARTLESS: " .. #_bootErrors .. " sección(es) fallaron"
                 title.TextColor3 = Color3.fromRGB(255, 100, 110)
                 title.Font = Enum.Font.GothamBold
                 title.TextSize = 13
@@ -11464,7 +11452,7 @@ if gui and main then
         end)
     end
 else
-    warn("[HEARTLESS Boot] Fatal: buildGui falló. El script no puede continuar.")
+    warn("[Rival Hub Boot] Fatal: buildGui falló. El script no puede continuar.")
 end
 
 if LP and LP.CharacterAdded then
@@ -11597,11 +11585,11 @@ UIS.InputBegan:Connect(function(input, gpe)
         return
     end
     if kbMatch(KB.BatV2, kc) then
-        if _G.__HeartlessIsBatV2 and _G.__HeartlessIsBatV2() then
-            if _G.__HeartlessStopBatV2 then pcall(_G.__HeartlessStopBatV2) end
+        if _G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() then
+            if _G.__RivalHubStopBatV2 then pcall(_G.__RivalHubStopBatV2) end
             if mobSetBatV2 then mobSetBatV2(false) end
         else
-            if _G.__HeartlessStartBatV2 then pcall(_G.__HeartlessStartBatV2) end
+            if _G.__RivalHubStartBatV2 then pcall(_G.__RivalHubStartBatV2) end
             if mobSetBatV2 then mobSetBatV2(true) end
         end
         return
