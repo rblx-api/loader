@@ -1,5 +1,5 @@
 -- 🔐 USUARIOS AUTORIZADOS
-local authorizedUsers = {"PLATANITOOOOO79", "yazidXiter", "eliezer_blockspin991"}
+local authorizedUsers = {"keiner_2034", "PLATANITOOOOO79", "yazidXiter"}
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 if not localPlayer then return end
