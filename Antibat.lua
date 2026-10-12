@@ -1,778 +1,679 @@
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-
 repeat task.wait() until game:IsLoaded()
 
-local Players          = game:GetService("Players")
-local RunService       = game:GetService("RunService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
-local TweenService     = game:GetService("TweenService")
-local HttpService      = game:GetService("HttpService")
-local LocalPlayer      = Players.LocalPlayer
-local PlayerGui        = LocalPlayer:WaitForChild("PlayerGui")
 
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+local env = (type(getgenv) == "function" and getgenv()) or _G
 
+-- ============ CLEANUP ANCIENNE INSTANCE ============
 pcall(function()
-    for _, n in ipairs({"Space X Hook Anti Bat", "Space X Hook anti bat", "Space_X_Hook_Anti_Bat"}) do
-        local old = PlayerGui:FindFirstChild(n)
-        if old then old:Destroy() end
-    end
+	local old = PlayerGui:FindFirstChild("WaveAntiBatUI")
+	if old then old:Destroy() end
+end)
+pcall(function()
+	local prev = env.__WAVE_ANTIBAT_RUNTIME
+	if type(prev) == "table" and type(prev.destroy) == "function" then prev.destroy() end
 end)
 
-local CONFIG_FILE = "SpaceX_AntiBat_Config.json"
-
-local AntiBatEnabled        = false
-local InfiniteJumpEnabled   = false
-local InfiniteJumpHoldEnabled = false
-local IsJumpingHold         = false
-local CurrentKeybind        = Enum.KeyCode.N
-local WaitingForKeybind     = false
-local CurrentBG             = "rbxassetid://114138477258742"
-local minimized             = false
-
-local AntiBatConn    = nil
-local AntiRagdollConn = nil
-local JumpHoldConn   = nil
-
-local function saveConfig()
-    local data = {
-        Keybind    = CurrentKeybind.Name,
-        Background = CurrentBG,
-        AntiBat    = AntiBatEnabled,
-        InfJump    = InfiniteJumpEnabled,
-    }
-    pcall(function()
-        writefile(CONFIG_FILE, HttpService:JSONEncode(data))
-    end)
+local runtime = { alive = true }
+env.__WAVE_ANTIBAT_RUNTIME = runtime
+local conns = {}
+local function track(c)
+	table.insert(conns, c)
+	return c
 end
 
-local function loadConfig()
-    local ok, result = pcall(function()
-        if isfile and isfile(CONFIG_FILE) then
-            return HttpService:JSONDecode(readfile(CONFIG_FILE))
-        end
-    end)
-    if ok and type(result) == "table" then
-        if result.Keybind and Enum.KeyCode[result.Keybind] then
-            CurrentKeybind = Enum.KeyCode[result.Keybind]
-        end
-        if result.Background then
-            CurrentBG = result.Background
-        end
-        if result.AntiBat ~= nil then AntiBatEnabled = result.AntiBat == true end
-        if result.InfJump ~= nil then
-            InfiniteJumpEnabled = result.InfJump == true
-            InfiniteJumpHoldEnabled = InfiniteJumpEnabled
-        end
-    end
-end
-pcall(loadConfig)
+-- ============ CONFIG ============
+local ANTI_BAT_POWER = 7000
+local INF_JUMP_SPEED = 50
+local SLIDER_MIN, SLIDER_MAX = 50, 120
 
-local function startAntiBat()
-    local char = LocalPlayer.Character
-    if not char then return end
-    local root = char:FindFirstChild("HumanoidRootPart")
-    if not root then return end
-    if AntiBatConn then AntiBatConn:Disconnect() end
-    AntiBatConn = RunService.Heartbeat:Connect(function()
-        if not root or not root.Parent then return end
-        local origXZ = Vector3.new(root.Velocity.X, 0, root.Velocity.Z)
-        root.Velocity = Vector3.new(1000, root.Velocity.Y, 1000)
-        RunService.RenderStepped:Wait()
-        if root and root.Parent then
-            root.Velocity = Vector3.new(origXZ.X, root.Velocity.Y, origXZ.Z)
-        end
-    end)
-end
-
-local function stopAntiBat()
-    if AntiBatConn then
-        AntiBatConn:Disconnect()
-        AntiBatConn = nil
-    end
-end
-
-
-local function startJumpHoldLoop()
-    if JumpHoldConn then JumpHoldConn:Disconnect() end
-    JumpHoldConn = RunService.Heartbeat:Connect(function()
-        if not InfiniteJumpHoldEnabled or not IsJumpingHold then return end
-        local char = LocalPlayer.Character
-        if not char then return end
-        local root = char:FindFirstChild("HumanoidRootPart")
-        if root then
-            root.Velocity = Vector3.new(root.Velocity.X, 55, root.Velocity.Z)
-        end
-    end)
-end
-
-UserInputService.InputBegan:Connect(function(input, gp)
-    if gp then return end
-    if input.KeyCode == Enum.KeyCode.Space or input.UserInputType == Enum.UserInputType.Touch then
-        IsJumpingHold = true
-    end
-end)
-
-UserInputService.InputEnded:Connect(function(input)
-    if input.KeyCode == Enum.KeyCode.Space or input.UserInputType == Enum.UserInputType.Touch then
-        IsJumpingHold = false
-    end
-end)
-
-UserInputService.JumpRequest:Connect(function()
-    if not InfiniteJumpEnabled then return end
-    local char = LocalPlayer.Character
-    if not char then return end
-    local root = char:FindFirstChild("HumanoidRootPart")
-    if root then
-        root.Velocity = Vector3.new(root.Velocity.X, 55, root.Velocity.Z)
-    end
-end)
-
-
-local function startAntiRagdoll()
-    if AntiRagdollConn then return end
-    AntiRagdollConn = RunService.Heartbeat:Connect(function()
-        local char = LocalPlayer.Character
-        if not char then return end
-        local hum2 = char:FindFirstChildOfClass("Humanoid")
-        local root = char:FindFirstChild("HumanoidRootPart")
-        if hum2 then
-            local st = hum2:GetState()
-            if st == Enum.HumanoidStateType.Physics
-                or st == Enum.HumanoidStateType.Ragdoll
-                or st == Enum.HumanoidStateType.FallingDown then
-                hum2:ChangeState(Enum.HumanoidStateType.Running)
-                workspace.CurrentCamera.CameraSubject = hum2
-                pcall(function()
-                    local pm = LocalPlayer.PlayerScripts:FindFirstChild("PlayerModule")
-                    if pm then
-                        local cm = pm:FindFirstChild("ControlModule")
-                        if cm then require(cm):Enable() end
-                    end
-                end)
-                if root then
-                    root.Velocity = Vector3.new(0, 0, 0)
-                    root.RotVelocity = Vector3.new(0, 0, 0)
-                end
-            end
-        end
-        for _, obj in ipairs(char:GetDescendants()) do
-            if obj:IsA("Motor6D") and not obj.Enabled then
-                obj.Enabled = true
-            end
-        end
-    end)
-end
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Argian-dotcom/Jdkffkfo/refs/heads/main/Coding"))()
-LocalPlayer.CharacterAdded:Connect(function()
-    task.wait(0.3)
-    if AntiBatEnabled then startAntiBat() end
-    task.wait(0.5)
-    startAntiRagdoll()
-end)
-
-local Space_X_Hook_Anti_Bat = Instance.new("ScreenGui")
-Space_X_Hook_Anti_Bat.Name = "Space X Hook Anti Bat"
-Space_X_Hook_Anti_Bat.IgnoreGuiInset = true
-Space_X_Hook_Anti_Bat.ResetOnSpawn = false
-Space_X_Hook_Anti_Bat.DisplayOrder = 10
-Space_X_Hook_Anti_Bat.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-Space_X_Hook_Anti_Bat.Parent = PlayerGui
-
-local Main = Instance.new("Frame")
-Main.Name = "Main"
-Main.Active = true
-Main.ClipsDescendants = true
-Main.Position = UDim2.new(0.5, -135, 0.5, -130)
-Main.Size = UDim2.new(0, 270, 0, 260)
-Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-Main.BorderSizePixel = 0
-Main.Parent = Space_X_Hook_Anti_Bat
-
-local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0, 16)
-UICorner.Parent = Main
-
-local SpaceBackground = Instance.new("ImageLabel")
-SpaceBackground.Name = "SpaceBackground"
-SpaceBackground.ZIndex = 0
-SpaceBackground.Size = UDim2.new(1, 0, 1, 0)
-SpaceBackground.BackgroundTransparency = 1
-SpaceBackground.Image = CurrentBG
-SpaceBackground.ScaleType = Enum.ScaleType.Crop
-SpaceBackground.Parent = Main
-
-local UICorner2 = Instance.new("UICorner")
-UICorner2.CornerRadius = UDim.new(0, 16)
-UICorner2.Parent = SpaceBackground
-
-local Header = Instance.new("Frame")
-Header.Name = "Header"
-Header.Active = true
-Header.ZIndex = 2
-Header.Size = UDim2.new(1, 0, 0, 48)
-Header.BackgroundTransparency = 1
-Header.Parent = Main
-
-local HeaderIcon = Instance.new("Frame")
-HeaderIcon.Name = "HeaderIcon"
-HeaderIcon.ZIndex = 5
-HeaderIcon.Position = UDim2.new(0, 16, 0.5, -5)
-HeaderIcon.Size = UDim2.new(0, 10, 0, 10)
-HeaderIcon.BackgroundColor3 = Color3.fromRGB(120, 120, 130)
-HeaderIcon.BorderSizePixel = 0
-HeaderIcon.Parent = Header
-Instance.new("UICorner", HeaderIcon).CornerRadius = UDim.new(1, 0)
-
-local Title = Instance.new("TextLabel")
-Title.Name = "Title"
-Title.ZIndex = 5
-Title.Position = UDim2.new(0, 36, 0, 6)
-Title.Size = UDim2.new(1, -130, 0, 18)
-Title.BackgroundTransparency = 1
-Title.Text = "ANTI BAT"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextSize = 15
-Title.Font = Enum.Font.GothamBlack
-Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.Parent = Header
-
-local SubTitle = Instance.new("TextLabel")
-SubTitle.Name = "SubTitle"
-SubTitle.ZIndex = 5
-SubTitle.Position = UDim2.new(0, 36, 0, 26)
-SubTitle.Size = UDim2.new(1, -130, 0, 14)
-SubTitle.BackgroundTransparency = 1
-SubTitle.Text = "Space X Hook Anti Bat"
-SubTitle.TextColor3 = Color3.fromRGB(200, 200, 200)
-SubTitle.TextSize = 10
-SubTitle.Font = Enum.Font.Gotham
-SubTitle.TextXAlignment = Enum.TextXAlignment.Left
-SubTitle.Parent = Header
-
-local BgBtn = Instance.new("TextButton")
-BgBtn.Name = "BgBtn"
-BgBtn.ZIndex = 5
-BgBtn.AnchorPoint = Vector2.new(1, 0.5)
-BgBtn.Position = UDim2.new(1, -60, 0.5, 0)
-BgBtn.Size = UDim2.new(0, 42, 0, 22)
-BgBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-BgBtn.BackgroundTransparency = 0.15
-BgBtn.Text = "BG"
-BgBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-BgBtn.TextSize = 10
-BgBtn.Font = Enum.Font.GothamBlack
-BgBtn.AutoButtonColor = false
-BgBtn.Parent = Header
-Instance.new("UICorner", BgBtn).CornerRadius = UDim.new(0, 6)
-local BgStroke = Instance.new("UIStroke")
-BgStroke.Color = Color3.fromRGB(120, 120, 130)
-BgStroke.Transparency = 0.15
-BgStroke.Parent = BgBtn
-
-local MinBtn = Instance.new("TextButton")
-MinBtn.Name = "MinBtn"
-MinBtn.ZIndex = 5
-MinBtn.AnchorPoint = Vector2.new(1, 0.5)
-MinBtn.Position = UDim2.new(1, -12, 0.5, 0)
-MinBtn.Size = UDim2.new(0, 24, 0, 24)
-MinBtn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-MinBtn.BackgroundTransparency = 0.5
-MinBtn.Text = "-"
-MinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-MinBtn.TextSize = 16
-MinBtn.Font = Enum.Font.GothamBlack
-MinBtn.AutoButtonColor = false
-MinBtn.Parent = Header
-Instance.new("UICorner", MinBtn).CornerRadius = UDim.new(0, 6)
-
-local ContentHolder = Instance.new("Frame")
-ContentHolder.Name = "ContentHolder"
-ContentHolder.ZIndex = 2
-ContentHolder.ClipsDescendants = true
-ContentHolder.Position = UDim2.new(0, 0, 0, 48)
-ContentHolder.Size = UDim2.new(1, 0, 1, -48)
-ContentHolder.BackgroundTransparency = 1
-ContentHolder.Parent = Main
-
-local Content = Instance.new("Frame")
-Content.Name = "Content"
-Content.ZIndex = 2
-Content.Size = UDim2.new(1, 0, 1, 0)
-Content.BackgroundTransparency = 1
-Content.Parent = ContentHolder
-
-local StatusRow = Instance.new("Frame")
-StatusRow.Name = "StatusRow"
-StatusRow.ZIndex = 4
-StatusRow.Position = UDim2.new(0, 12, 0, 6)
-StatusRow.Size = UDim2.new(1, -24, 0, 32)
-StatusRow.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-StatusRow.BackgroundTransparency = 0.5
-StatusRow.Parent = Content
-Instance.new("UICorner", StatusRow).CornerRadius = UDim.new(0, 12)
-
-local StatusDot = Instance.new("Frame")
-StatusDot.Name = "StatusDot"
-StatusDot.ZIndex = 6
-StatusDot.Position = UDim2.new(0, 14, 0.5, -4)
-StatusDot.Size = UDim2.new(0, 8, 0, 8)
-StatusDot.BackgroundColor3 = Color3.fromRGB(255, 70, 90)
-StatusDot.BorderSizePixel = 0
-StatusDot.Parent = StatusRow
-Instance.new("UICorner", StatusDot).CornerRadius = UDim.new(1, 0)
-
-local StatusLabel = Instance.new("TextLabel")
-StatusLabel.Name = "StatusLabel"
-StatusLabel.ZIndex = 6
-StatusLabel.Position = UDim2.new(0, 30, 0, 0)
-StatusLabel.Size = UDim2.new(0, 100, 1, 0)
-StatusLabel.BackgroundTransparency = 1
-StatusLabel.Text = "Status"
-StatusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-StatusLabel.TextSize = 13
-StatusLabel.Font = Enum.Font.GothamBlack
-StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
-StatusLabel.Parent = StatusRow
-
-local StatusValue = Instance.new("TextLabel")
-StatusValue.Name = "StatusValue"
-StatusValue.ZIndex = 6
-StatusValue.Position = UDim2.new(1, -114, 0, 0)
-StatusValue.Size = UDim2.new(0, 100, 1, 0)
-StatusValue.BackgroundTransparency = 1
-StatusValue.Text = "INACTIVE"
-StatusValue.TextColor3 = Color3.fromRGB(255, 70, 90)
-StatusValue.TextSize = 14
-StatusValue.Font = Enum.Font.GothamBlack
-StatusValue.TextXAlignment = Enum.TextXAlignment.Right
-StatusValue.Parent = StatusRow
-
-
-local AntiBatRow = Instance.new("Frame")
-AntiBatRow.Name = "AntiBatRow"
-AntiBatRow.ZIndex = 4
-AntiBatRow.Position = UDim2.new(0, 12, 0, 46)
-AntiBatRow.Size = UDim2.new(1, -24, 0, 50)
-AntiBatRow.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-AntiBatRow.BackgroundTransparency = 0.5
-AntiBatRow.Parent = Content
-Instance.new("UICorner", AntiBatRow).CornerRadius = UDim.new(0, 12)
-
-local AntiBatLabel = Instance.new("TextLabel")
-AntiBatLabel.Name = "AntiBatLabel"
-AntiBatLabel.ZIndex = 6
-AntiBatLabel.Position = UDim2.new(0, 14, 0.5, -8)
-AntiBatLabel.Size = UDim2.new(0, 150, 0, 18)
-AntiBatLabel.BackgroundTransparency = 1
-AntiBatLabel.Text = "Anti Bat"
-AntiBatLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-AntiBatLabel.TextSize = 14
-AntiBatLabel.Font = Enum.Font.GothamBlack
-AntiBatLabel.TextXAlignment = Enum.TextXAlignment.Left
-AntiBatLabel.Parent = AntiBatRow
-
-local ToggleBg = Instance.new("Frame")
-ToggleBg.Name = "ToggleBg"
-ToggleBg.ZIndex = 6
-ToggleBg.Position = UDim2.new(1, -58, 0.5, -11)
-ToggleBg.Size = UDim2.new(0, 44, 0, 22)
-ToggleBg.BackgroundColor3 = Color3.fromRGB(52, 52, 58)
-ToggleBg.BorderSizePixel = 0
-ToggleBg.Parent = AntiBatRow
-Instance.new("UICorner", ToggleBg).CornerRadius = UDim.new(1, 0)
-
-local ToggleDot = Instance.new("Frame")
-ToggleDot.Name = "ToggleDot"
-ToggleDot.ZIndex = 7
-ToggleDot.Position = UDim2.new(0, 3, 0.5, -8)
-ToggleDot.Size = UDim2.new(0, 16, 0, 16)
-ToggleDot.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-ToggleDot.BorderSizePixel = 0
-ToggleDot.Parent = ToggleBg
-Instance.new("UICorner", ToggleDot).CornerRadius = UDim.new(1, 0)
-
-local AntiBatClick = Instance.new("TextButton")
-AntiBatClick.Name = "AntiBatClick"
-AntiBatClick.ZIndex = 10
-AntiBatClick.Position = UDim2.new(1, -65, 0, 0)
-AntiBatClick.Size = UDim2.new(0, 50, 0, 50)
-AntiBatClick.BackgroundTransparency = 1
-AntiBatClick.Text = ""
-AntiBatClick.Parent = AntiBatRow
-
-local InfJumpRow = Instance.new("Frame")
-InfJumpRow.Name = "InfJumpRow"
-InfJumpRow.ZIndex = 4
-InfJumpRow.Position = UDim2.new(0, 12, 0, 104)
-InfJumpRow.Size = UDim2.new(1, -24, 0, 50)
-InfJumpRow.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-InfJumpRow.BackgroundTransparency = 0.5
-InfJumpRow.Parent = Content
-Instance.new("UICorner", InfJumpRow).CornerRadius = UDim.new(0, 12)
-
-local InfJumpLabel = Instance.new("TextLabel")
-InfJumpLabel.Name = "InfJumpLabel"
-InfJumpLabel.ZIndex = 6
-InfJumpLabel.Position = UDim2.new(0, 14, 0.5, -8)
-InfJumpLabel.Size = UDim2.new(0, 150, 0, 18)
-InfJumpLabel.BackgroundTransparency = 1
-InfJumpLabel.Text = "Inf Jump"
-InfJumpLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-InfJumpLabel.TextSize = 14
-InfJumpLabel.Font = Enum.Font.GothamBlack
-InfJumpLabel.TextXAlignment = Enum.TextXAlignment.Left
-InfJumpLabel.Parent = InfJumpRow
-
-local InfToggleBg = Instance.new("Frame")
-InfToggleBg.Name = "InfToggleBg"
-InfToggleBg.ZIndex = 6
-InfToggleBg.Position = UDim2.new(1, -58, 0.5, -11)
-InfToggleBg.Size = UDim2.new(0, 44, 0, 22)
-InfToggleBg.BackgroundColor3 = Color3.fromRGB(52, 52, 58)
-InfToggleBg.BorderSizePixel = 0
-InfToggleBg.Parent = InfJumpRow
-Instance.new("UICorner", InfToggleBg).CornerRadius = UDim.new(1, 0)
-
-local InfToggleDot = Instance.new("Frame")
-InfToggleDot.Name = "InfToggleDot"
-InfToggleDot.ZIndex = 7
-InfToggleDot.Position = UDim2.new(0, 3, 0.5, -8)
-InfToggleDot.Size = UDim2.new(0, 16, 0, 16)
-InfToggleDot.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-InfToggleDot.BorderSizePixel = 0
-InfToggleDot.Parent = InfToggleBg
-Instance.new("UICorner", InfToggleDot).CornerRadius = UDim.new(1, 0)
-
-local InfJumpClick = Instance.new("TextButton")
-InfJumpClick.Name = "InfJumpClick"
-InfJumpClick.ZIndex = 10
-InfJumpClick.Position = UDim2.new(1, -65, 0, 0)
-InfJumpClick.Size = UDim2.new(0, 50, 0, 50)
-InfJumpClick.BackgroundTransparency = 1
-InfJumpClick.Text = ""
-InfJumpClick.Parent = InfJumpRow
-
-local KeybindRow = Instance.new("Frame")
-KeybindRow.Name = "KeybindRow"
-KeybindRow.ZIndex = 4
-KeybindRow.Position = UDim2.new(0, 12, 0, 162)
-KeybindRow.Size = UDim2.new(1, -24, 0, 32)
-KeybindRow.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-KeybindRow.BackgroundTransparency = 0.5
-KeybindRow.Parent = Content
-Instance.new("UICorner", KeybindRow).CornerRadius = UDim.new(0, 12)
-
-local KeybindLabel = Instance.new("TextLabel")
-KeybindLabel.Name = "KeybindLabel"
-KeybindLabel.ZIndex = 6
-KeybindLabel.Position = UDim2.new(0, 14, 0, 0)
-KeybindLabel.Size = UDim2.new(0, 80, 1, 0)
-KeybindLabel.BackgroundTransparency = 1
-KeybindLabel.Text = "Keybind"
-KeybindLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-KeybindLabel.TextSize = 12
-KeybindLabel.Font = Enum.Font.GothamBlack
-KeybindLabel.TextXAlignment = Enum.TextXAlignment.Left
-KeybindLabel.Parent = KeybindRow
-
-local KeybindBtn = Instance.new("TextButton")
-KeybindBtn.Name = "KeybindBtn"
-KeybindBtn.ZIndex = 10
-KeybindBtn.AnchorPoint = Vector2.new(1, 0.5)
-KeybindBtn.Position = UDim2.new(1, -14, 0.5, 0)
-KeybindBtn.Size = UDim2.new(0, 50, 0, 20)
-KeybindBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-KeybindBtn.BackgroundTransparency = 0.5
-KeybindBtn.Text = CurrentKeybind.Name
-KeybindBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-KeybindBtn.TextSize = 12
-KeybindBtn.Font = Enum.Font.GothamBlack
-KeybindBtn.AutoButtonColor = false
-KeybindBtn.Parent = KeybindRow
-Instance.new("UICorner", KeybindBtn).CornerRadius = UDim.new(0, 6)
-
-local BackgroundPicker = Instance.new("Frame")
-BackgroundPicker.Name = "BackgroundPicker"
-BackgroundPicker.Visible = false
-BackgroundPicker.ZIndex = 20
-BackgroundPicker.AnchorPoint = Vector2.new(0.5, 0.5)
-BackgroundPicker.Position = UDim2.new(0.5, 0, 0.5, 0)
-BackgroundPicker.Size = UDim2.new(0, 260, 0, 180)
-BackgroundPicker.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-BackgroundPicker.BorderSizePixel = 0
-BackgroundPicker.Parent = Space_X_Hook_Anti_Bat
-Instance.new("UICorner", BackgroundPicker).CornerRadius = UDim.new(0, 12)
-local BPStroke = Instance.new("UIStroke")
-BPStroke.Color = Color3.fromRGB(110, 110, 120)
-BPStroke.Thickness = 1.5
-BPStroke.Transparency = 0.15
-BPStroke.Parent = BackgroundPicker
-
-local Header2 = Instance.new("Frame")
-Header2.Name = "Header"
-Header2.ZIndex = 21
-Header2.Size = UDim2.new(1, 0, 0, 38)
-Header2.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-Header2.BackgroundTransparency = 0.15
-Header2.BorderSizePixel = 0
-Header2.Parent = BackgroundPicker
-Instance.new("UICorner", Header2).CornerRadius = UDim.new(0, 12)
-
-local BPTitle = Instance.new("TextLabel")
-BPTitle.ZIndex = 22
-BPTitle.Position = UDim2.new(0, 12, 0, 0)
-BPTitle.Size = UDim2.new(1, -54, 1, 0)
-BPTitle.BackgroundTransparency = 1
-BPTitle.Text = "Change Background"
-BPTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-BPTitle.TextSize = 16
-BPTitle.Font = Enum.Font.GothamBlack
-BPTitle.TextXAlignment = Enum.TextXAlignment.Left
-BPTitle.Parent = Header2
-
-local Close = Instance.new("TextButton")
-Close.Name = "Close"
-Close.ZIndex = 22
-Close.AnchorPoint = Vector2.new(1, 0.5)
-Close.Position = UDim2.new(1, -9, 0.5, 0)
-Close.Size = UDim2.new(0, 28, 0, 25)
-Close.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-Close.BackgroundTransparency = 0.1
-Close.Text = "×"
-Close.TextColor3 = Color3.fromRGB(255, 255, 255)
-Close.TextSize = 18
-Close.Font = Enum.Font.GothamBlack
-Close.AutoButtonColor = false
-Close.Parent = Header2
-Instance.new("UICorner", Close).CornerRadius = UDim.new(0, 7)
-
-local BackgroundGrid = Instance.new("Frame")
-BackgroundGrid.Name = "BackgroundGrid"
-BackgroundGrid.ZIndex = 21
-BackgroundGrid.Position = UDim2.new(0, 12, 0, 48)
-BackgroundGrid.Size = UDim2.new(1, -24, 1, -60)
-BackgroundGrid.BackgroundTransparency = 1
-BackgroundGrid.Parent = BackgroundPicker
-
-local UIGridLayout = Instance.new("UIGridLayout")
-UIGridLayout.CellPadding = UDim2.new(0, 8, 0, 8)
-UIGridLayout.CellSize = UDim2.new(0, 72, 0, 72)
-UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIGridLayout.FillDirectionMaxCells = 3
-UIGridLayout.Parent = BackgroundGrid
-
-local bgIds = {
-    "rbxassetid://118100574986629",
-    "rbxassetid://76835310118322",
-    "rbxassetid://114138477258742",
+local state = {
+	AntiBat = false,
+	InfJump = false,
+	Scale = 81,
 }
+local antiTpKey = Enum.KeyCode.Five
+local bindingKey = false
 
-for i, id in ipairs(bgIds) do
-    local btn = Instance.new("ImageButton")
-    btn.ZIndex = 22
-    btn.LayoutOrder = i
-    btn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-    btn.BackgroundTransparency = 0.1
-    btn.Image = id
-    btn.ScaleType = Enum.ScaleType.Crop
-    btn.AutoButtonColor = false
-    btn.Parent = BackgroundGrid
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 10)
-    local s = Instance.new("UIStroke")
-    s.Color = Color3.fromRGB(120, 120, 130)
-    s.Transparency = 0.1
-    s.Parent = btn
-    btn.MouseButton1Click:Connect(function()
-        CurrentBG = id
-        SpaceBackground.Image = id
-        BackgroundPicker.Visible = false
-        saveConfig()
-    end)
+local THEMES = {
+	{ name = "Weather", image = "rbxasset://textures/OLeebFt7dopXKY.png" },
+	{ name = "Ember",   image = "rbxasset://textures/DPcYZGy0M2ksSoR.png" },
+	{ name = "Kira",    image = "rbxasset://textures/G7bSihbekl.png" },
+	{ name = "Jolyne",  image = "rbxasset://textures/7SpXAZD.png" },
+}
+local DEFAULT_BG = "rbxasset://textures/67vQDF3.png"
+
+-- ============ LOGIQUE ANTI BAT (Gotham) ============
+local function antiBatStep()
+	if not state.AntiBat then return end
+	local char = LocalPlayer.Character
+	local root = char and char:FindFirstChild("HumanoidRootPart")
+	if not root then return end
+	local vel = root.AssemblyLinearVelocity
+	local y = vel.Y
+	local origXZ = Vector3.new(vel.X, 0, vel.Z)
+	root.AssemblyLinearVelocity = Vector3.new(ANTI_BAT_POWER, y, ANTI_BAT_POWER)
+	RunService.RenderStepped:Wait()
+	if root.Parent then
+		root.AssemblyLinearVelocity = Vector3.new(origXZ.X, root.AssemblyLinearVelocity.Y, origXZ.Z)
+	end
 end
 
-local function setToggle(knob, bg, enabled)
-    TweenService:Create(knob, TweenInfo.new(0.15), {
-        Position = enabled and UDim2.new(1, -19, 0.5, -8) or UDim2.new(0, 3, 0.5, -8),
-        BackgroundColor3 = enabled and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255),
-    }):Play()
-    TweenService:Create(bg, TweenInfo.new(0.15), {
-        BackgroundColor3 = enabled and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(52, 52, 58),
-    }):Play()
+local function antiRagdollStep()
+	if not state.AntiBat then return end
+	local char = LocalPlayer.Character
+	if not char then return end
+	local hum = char:FindFirstChildOfClass("Humanoid")
+	local root = char:FindFirstChild("HumanoidRootPart")
+	if hum then
+		local st = hum:GetState()
+		if st == Enum.HumanoidStateType.Physics
+			or st == Enum.HumanoidStateType.Ragdoll
+			or st == Enum.HumanoidStateType.FallingDown then
+			hum:ChangeState(Enum.HumanoidStateType.Running)
+			workspace.CurrentCamera.CameraSubject = hum
+			pcall(function()
+				local pm = LocalPlayer.PlayerScripts:FindFirstChild("PlayerModule")
+				if pm then require(pm:FindFirstChild("ControlModule")):Enable() end
+			end)
+			if root then
+				root.AssemblyLinearVelocity = Vector3.zero
+				root.AssemblyAngularVelocity = Vector3.zero
+			end
+		end
+	end
+	for _, obj in ipairs(char:GetDescendants()) do
+		if obj:IsA("Motor6D") and not obj.Enabled then
+			obj.Enabled = true
+		end
+	end
 end
 
-local function updateStatus()
-   
-    local anyOn = AntiBatEnabled or InfiniteJumpEnabled
-    if anyOn then
-        StatusValue.Text = "ACTIVE"
-        StatusValue.TextColor3 = Color3.fromRGB(80, 255, 100)
-        StatusDot.BackgroundColor3 = Color3.fromRGB(80, 255, 100)
-    else
-        StatusValue.Text = "INACTIVE"
-        StatusValue.TextColor3 = Color3.fromRGB(255, 70, 90)
-        StatusDot.BackgroundColor3 = Color3.fromRGB(255, 70, 90)
-    end
+-- ============ LOGIQUE INF JUMP (Gotham) ============
+local OFF_POS = Vector3.new(0, -1000, 0)
+local ijPlatform = Instance.new("Part")
+ijPlatform.Name = "InfJumpPlatform"
+ijPlatform.Size = Vector3.new(8, 0.5, 8)
+ijPlatform.Anchored = true
+ijPlatform.CanCollide = true
+ijPlatform.Transparency = 1
+ijPlatform.Material = Enum.Material.ForceField
+ijPlatform.Position = OFF_POS
+ijPlatform.Parent = workspace
+
+local function infJumpStep()
+	local char = LocalPlayer.Character
+	local root = char and char:FindFirstChild("HumanoidRootPart")
+	local hum = char and char:FindFirstChildOfClass("Humanoid")
+	if not (state.InfJump and root and hum) then
+		ijPlatform.Position = OFF_POS
+		return
+	end
+	local jumping = UserInputService:IsKeyDown(Enum.KeyCode.Space)
+		or hum:GetState() == Enum.HumanoidStateType.Jumping
+		or hum.Jump
+	if jumping then
+		ijPlatform.Position = root.Position - Vector3.new(0, 3.5, 0)
+		local v = root.AssemblyLinearVelocity
+		if v.Y < INF_JUMP_SPEED then
+			root.AssemblyLinearVelocity = Vector3.new(v.X, INF_JUMP_SPEED, v.Z)
+		end
+	else
+		ijPlatform.Position = OFF_POS
+	end
 end
 
-local function setAntiBat(on)
-    AntiBatEnabled = on == true
-    if AntiBatEnabled then
-        startAntiBat()
-    else
-        stopAntiBat()
-    end
-    setToggle(ToggleDot, ToggleBg, AntiBatEnabled)
-    updateStatus()
-    saveConfig()
+track(RunService.Heartbeat:Connect(antiBatStep))
+track(RunService.Heartbeat:Connect(antiRagdollStep))
+track(RunService.Heartbeat:Connect(infJumpStep))
+
+-- ============ HELPERS UI ============
+local BLUE = Color3.fromRGB(45, 130, 230)
+local DARK_BLUE = Color3.fromRGB(25, 90, 185)
+local NAVY = Color3.fromRGB(8, 18, 48)
+local HEADER_BG = Color3.fromRGB(5, 12, 35)
+local BTN = Color3.fromRGB(10, 22, 55)
+local BTN_ON = Color3.fromRGB(20, 45, 100)
+local WHITE = Color3.fromRGB(240, 245, 255)
+local FONT_HEAVY = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Heavy, Enum.FontStyle.Normal)
+
+local function new(class, props, parent)
+	local o = Instance.new(class)
+	for k, v in pairs(props) do
+		o[k] = v
+	end
+	if parent then o.Parent = parent end
+	return o
 end
 
-local function setInfJump(on)
-    InfiniteJumpEnabled = on == true
-    InfiniteJumpHoldEnabled = InfiniteJumpEnabled
-    if not InfiniteJumpHoldEnabled then IsJumpingHold = false end
-    setToggle(InfToggleDot, InfToggleBg, InfiniteJumpEnabled)
-    updateStatus()
-    saveConfig()
+local function corner(parent, r)
+	return new("UICorner", { CornerRadius = UDim.new(0, r or 8) }, parent)
 end
 
-AntiBatClick.MouseButton1Click:Connect(function()
-    setAntiBat(not AntiBatEnabled)
+local function stroke(parent, color, thick)
+	return new("UIStroke", {
+		ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+		Color = color or DARK_BLUE,
+		Thickness = thick or 1.5,
+	}, parent)
+end
+
+local function makeButton(parent, text, pos, size)
+	local b = new("TextButton", {
+		BackgroundColor3 = BTN,
+		BackgroundTransparency = 0.42,
+		BorderSizePixel = 0,
+		Position = pos,
+		Size = size,
+		ZIndex = 4,
+		AutoButtonColor = false,
+		FontFace = FONT_HEAVY,
+		Text = text,
+		TextColor3 = WHITE,
+		TextSize = 12,
+	}, parent)
+	corner(b, 8)
+	stroke(b, DARK_BLUE, 1)
+	return b
+end
+
+-- ============ GUI ============
+local Gui = new("ScreenGui", {
+	Name = "WaveAntiBatUI",
+	ResetOnSpawn = false,
+	DisplayOrder = 2147483647,
+	IgnoreGuiInset = true,
+	ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+}, PlayerGui)
+
+-- Panneau principal
+local Panel = new("Frame", {
+	Name = "AntiBatPanel",
+	Active = true,
+	BackgroundColor3 = NAVY,
+	BorderSizePixel = 0,
+	ClipsDescendants = true,
+	Position = UDim2.new(0, 772, 0, 339),
+	Size = UDim2.new(0, 230, 0, 186),
+}, Gui)
+corner(Panel, 14)
+stroke(Panel, DARK_BLUE, 1.5)
+local PanelScale = new("UIScale", { Scale = state.Scale / 100 }, Panel)
+
+local BgImage = new("ImageLabel", {
+	Name = "BackgroundImage",
+	BackgroundTransparency = 1,
+	Size = UDim2.new(1, 0, 1, 0),
+	ZIndex = 0,
+	Image = DEFAULT_BG,
+	ImageTransparency = 0.18,
+	ScaleType = Enum.ScaleType.Crop,
+}, Panel)
+corner(BgImage, 14)
+
+local Shade = new("Frame", {
+	Name = "BackgroundShade",
+	BackgroundColor3 = NAVY,
+	BackgroundTransparency = 0.28,
+	BorderSizePixel = 0,
+	Size = UDim2.new(1, 0, 1, 0),
+}, Panel)
+corner(Shade, 14)
+
+-- Header (zone de drag + engrenage)
+local Header = new("Frame", {
+	Name = "Header",
+	Active = true,
+	BackgroundColor3 = HEADER_BG,
+	BackgroundTransparency = 0.42,
+	BorderSizePixel = 0,
+	Size = UDim2.new(1, 0, 0, 28),
+	ZIndex = 3,
+}, Panel)
+corner(Header, 14)
+
+local HeaderLine = new("Frame", {
+	BackgroundColor3 = BLUE,
+	BackgroundTransparency = 0.18,
+	BorderSizePixel = 0,
+	Position = UDim2.new(0, 12, 1, -3),
+	Size = UDim2.new(1, -24, 0, 2),
+	ZIndex = 4,
+}, Header)
+corner(HeaderLine, 1)
+
+new("TextLabel", {
+	BackgroundTransparency = 1,
+	Position = UDim2.new(0, 12, 0, 1),
+	Size = UDim2.new(1, -50, 0, 24),
+	ZIndex = 4,
+	FontFace = FONT_HEAVY,
+	Text = "WAVE ANTI BAT",
+	TextColor3 = BLUE,
+	TextSize = 13,
+	TextXAlignment = Enum.TextXAlignment.Left,
+}, Header)
+
+local GearBtn = new("TextButton", {
+	Name = "SizeSettingsButton",
+	BackgroundTransparency = 1,
+	BorderSizePixel = 0,
+	Position = UDim2.new(1, -34, 0, 2),
+	Size = UDim2.new(0, 28, 0, 24),
+	ZIndex = 6,
+	AutoButtonColor = false,
+	Text = "",
+}, Header)
+
+local GearIcon = new("ImageLabel", {
+	AnchorPoint = Vector2.new(0.5, 0.5),
+	BackgroundTransparency = 1,
+	Position = UDim2.new(0.5, 0, 0.5, 0),
+	Size = UDim2.new(0, 19, 0, 19),
+	ZIndex = 7,
+	Image = "rbxasset://textures/ui/Settings/MenuBarIcons/GameSettingsTab.png",
+	ImageColor3 = BLUE,
+	ScaleType = Enum.ScaleType.Fit,
+}, GearBtn)
+
+-- Page principale (toggles)
+local MainPage = new("Frame", {
+	Name = "MainPage",
+	BackgroundTransparency = 1,
+	BorderSizePixel = 0,
+	Position = UDim2.new(0, 0, 0, 28),
+	Size = UDim2.new(1, 0, 1, -28),
+	ZIndex = 3,
+}, Panel)
+
+new("TextLabel", {
+	BackgroundTransparency = 1,
+	Position = UDim2.new(0, 18, 0, 12),
+	Size = UDim2.new(0, 74, 0, 24),
+	ZIndex = 4,
+	FontFace = FONT_HEAVY,
+	Text = "KEYBIND",
+	TextColor3 = BLUE,
+	TextSize = 10,
+	TextXAlignment = Enum.TextXAlignment.Left,
+}, MainPage)
+
+local KeyBtn = new("TextButton", {
+	BackgroundColor3 = BTN,
+	BackgroundTransparency = 0.42,
+	BorderSizePixel = 0,
+	AnchorPoint = Vector2.new(1, 0),
+	Position = UDim2.new(1, -12, 0, 12),
+	Size = UDim2.new(0, 74, 0, 24),
+	ZIndex = 4,
+	AutoButtonColor = false,
+	FontFace = FONT_HEAVY,
+	Text = antiTpKey.Name,
+	TextColor3 = WHITE,
+	TextSize = 10,
+}, MainPage)
+corner(KeyBtn, 6)
+stroke(KeyBtn, DARK_BLUE, 1)
+
+local AntiBatBtn = makeButton(MainPage, "ANTI BAT", UDim2.new(0, 12, 0, 42), UDim2.new(1, -24, 0, 32))
+local InfJumpBtn = makeButton(MainPage, "INFINITE JUMP", UDim2.new(0, 12, 0, 80), UDim2.new(1, -24, 0, 32))
+
+-- Page réglages (UI SIZE + CHANGE THEME)
+local SettingsPage = new("Frame", {
+	Name = "SizeSliderPage",
+	BackgroundTransparency = 1,
+	BorderSizePixel = 0,
+	Position = UDim2.new(0, 12, 0, 46),
+	Size = UDim2.new(1, -24, 0, 112),
+	Visible = false,
+	ZIndex = 5,
+}, Panel)
+
+new("TextLabel", {
+	Name = "Title",
+	BackgroundTransparency = 1,
+	Size = UDim2.new(1, 0, 0, 22),
+	ZIndex = 6,
+	FontFace = FONT_HEAVY,
+	Text = "UI SIZE",
+	TextColor3 = BLUE,
+	TextSize = 12,
+}, SettingsPage)
+
+local Track = new("Frame", {
+	Name = "Track",
+	BackgroundColor3 = DARK_BLUE,
+	BackgroundTransparency = 0.08,
+	BorderSizePixel = 0,
+	Position = UDim2.new(0, 17, 0, 42),
+	Size = UDim2.new(1, -34, 0, 7),
+	ZIndex = 7,
+}, SettingsPage)
+corner(Track, 4)
+
+local Fill = new("Frame", {
+	Name = "Fill",
+	BackgroundColor3 = BLUE,
+	BorderSizePixel = 0,
+	Size = UDim2.new(0, 0, 1, 0),
+	ZIndex = 8,
+}, Track)
+corner(Fill, 3)
+
+local Knob = new("Frame", {
+	Name = "Knob",
+	BackgroundColor3 = BLUE,
+	BorderSizePixel = 0,
+	Size = UDim2.new(0, 14, 0, 14),
+	ZIndex = 9,
+}, Track)
+corner(Knob, 999)
+stroke(Knob, WHITE, 1)
+
+local ValueLabel = new("TextLabel", {
+	Name = "Value",
+	BackgroundTransparency = 1,
+	Position = UDim2.new(0, 0, 0, 56),
+	Size = UDim2.new(1, 0, 0, 24),
+	ZIndex = 8,
+	FontFace = FONT_HEAVY,
+	Text = "",
+	TextColor3 = WHITE,
+	TextSize = 12,
+}, SettingsPage)
+
+local ChangeThemeBtn = new("TextButton", {
+	Name = "ChangeThemeButton",
+	BackgroundColor3 = BTN,
+	BackgroundTransparency = 0.42,
+	BorderSizePixel = 0,
+	Position = UDim2.new(0, 0, 0, 82),
+	Size = UDim2.new(1, 0, 0, 28),
+	ZIndex = 7,
+	AutoButtonColor = false,
+	FontFace = FONT_HEAVY,
+	Text = "CHANGE THEME",
+	TextColor3 = WHITE,
+	TextSize = 11,
+}, SettingsPage)
+corner(ChangeThemeBtn, 8)
+stroke(ChangeThemeBtn, DARK_BLUE, 1)
+
+-- Discord (toujours visible)
+new("TextLabel", {
+	BackgroundTransparency = 1,
+	Position = UDim2.new(0, 12, 1, -24),
+	Size = UDim2.new(1, -24, 0, 18),
+	ZIndex = 4,
+	FontFace = FONT_HEAVY,
+	Text = "discord.gg/waveduels",
+	TextColor3 = BLUE,
+	TextSize = 10,
+}, Panel)
+
+-- Overlay de choix de thème
+local ThemeOverlay = new("Frame", {
+	Name = "ThemePickerOverlay",
+	BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+	BackgroundTransparency = 0.45,
+	BorderSizePixel = 0,
+	Size = UDim2.new(1, 0, 1, 0),
+	Visible = false,
+	ZIndex = 50,
+}, Gui)
+
+local ThemePicker = new("Frame", {
+	Name = "ThemePicker",
+	AnchorPoint = Vector2.new(0.5, 0.5),
+	BackgroundColor3 = NAVY,
+	BorderSizePixel = 0,
+	Position = UDim2.new(0.5, 0, 0.5, 0),
+	Size = UDim2.new(0, 360, 0, 230),
+	ZIndex = 51,
+}, ThemeOverlay)
+corner(ThemePicker, 14)
+stroke(ThemePicker, DARK_BLUE, 1.5)
+
+new("TextLabel", {
+	BackgroundTransparency = 1,
+	Position = UDim2.new(0, 16, 0, 6),
+	Size = UDim2.new(1, -52, 0, 34),
+	ZIndex = 52,
+	FontFace = FONT_HEAVY,
+	Text = "CHANGE THEME",
+	TextColor3 = BLUE,
+	TextSize = 14,
+	TextXAlignment = Enum.TextXAlignment.Left,
+}, ThemePicker)
+
+local CloseBtn = new("TextButton", {
+	BackgroundTransparency = 1,
+	BorderSizePixel = 0,
+	Position = UDim2.new(1, -38, 0, 8),
+	Size = UDim2.new(0, 30, 0, 30),
+	ZIndex = 52,
+	AutoButtonColor = false,
+	FontFace = FONT_HEAVY,
+	Text = "X",
+	TextColor3 = BLUE,
+	TextSize = 14,
+}, ThemePicker)
+
+local ThemeScroll = new("ScrollingFrame", {
+	BackgroundTransparency = 1,
+	BorderSizePixel = 0,
+	Position = UDim2.new(0, 14, 0, 46),
+	Size = UDim2.new(1, -16, 1, -56),
+	ZIndex = 52,
+	AutomaticCanvasSize = Enum.AutomaticSize.Y,
+	CanvasSize = UDim2.new(0, 0, 0, 0),
+	ScrollBarImageColor3 = BLUE,
+	ScrollBarThickness = 4,
+}, ThemePicker)
+new("UIPadding", { PaddingTop = UDim.new(0, 2), PaddingLeft = UDim.new(0, 2), PaddingBottom = UDim.new(0, 4) }, ThemeScroll)
+new("UIGridLayout", {
+	CellPadding = UDim2.new(0, 14, 0, 10),
+	CellSize = UDim2.new(0, 158, 0, 150),
+	SortOrder = Enum.SortOrder.LayoutOrder,
+}, ThemeScroll)
+
+-- ============ LOGIQUE UI ============
+local SLIDER_RANGE = SLIDER_MAX - SLIDER_MIN
+
+local function setScale(pct)
+	pct = math.clamp(math.round(pct), SLIDER_MIN, SLIDER_MAX)
+	state.Scale = pct
+	PanelScale.Scale = pct / 100
+	local frac = (pct - SLIDER_MIN) / SLIDER_RANGE
+	Fill.Size = UDim2.new(frac, 0, 1, 0)
+	Knob.Position = UDim2.new(frac, -7, 0.5, -7)
+	ValueLabel.Text = pct .. "%"
+end
+
+local function setTheme(t)
+	BgImage.Image = t.image
+	ThemeOverlay.Visible = false
+end
+
+for i, t in ipairs(THEMES) do
+	local card = new("TextButton", {
+		Name = t.name .. "ThemeCard",
+		BackgroundColor3 = BTN,
+		BackgroundTransparency = 0.42,
+		BorderSizePixel = 0,
+		LayoutOrder = i,
+		ZIndex = 53,
+		AutoButtonColor = false,
+		Text = "",
+	}, ThemeScroll)
+	corner(card, 10)
+	stroke(card, DARK_BLUE, 1.5)
+
+	local img = new("ImageLabel", {
+		BackgroundColor3 = HEADER_BG,
+		BorderSizePixel = 0,
+		Position = UDim2.new(0, 8, 0, 8),
+		Size = UDim2.new(1, -16, 0, 102),
+		ZIndex = 54,
+		Image = t.image,
+		ScaleType = Enum.ScaleType.Crop,
+	}, card)
+	corner(img, 8)
+
+	new("TextLabel", {
+		BackgroundTransparency = 1,
+		Position = UDim2.new(0, 6, 1, -34),
+		Size = UDim2.new(1, -12, 0, 28),
+		ZIndex = 54,
+		FontFace = FONT_HEAVY,
+		Text = t.name,
+		TextColor3 = WHITE,
+		TextSize = 12,
+	}, card)
+
+	card.MouseButton1Click:Connect(function()
+		setTheme(t)
+	end)
+end
+
+-- Pages : principal / réglages
+local showingSettings = false
+local function refreshPages()
+	MainPage.Visible = not showingSettings
+	SettingsPage.Visible = showingSettings
+	GearIcon.ImageColor3 = showingSettings and WHITE or BLUE
+end
+
+GearBtn.MouseButton1Click:Connect(function()
+	showingSettings = not showingSettings
+	refreshPages()
 end)
 
-InfJumpClick.MouseButton1Click:Connect(function()
-    setInfJump(not InfiniteJumpEnabled)
+ChangeThemeBtn.MouseButton1Click:Connect(function()
+	ThemeOverlay.Visible = true
+end)
+CloseBtn.MouseButton1Click:Connect(function()
+	ThemeOverlay.Visible = false
 end)
 
-KeybindBtn.MouseButton1Click:Connect(function()
-    if WaitingForKeybind then return end
-    WaitingForKeybind = true
-    KeybindBtn.Text = "..."
-    KeybindBtn.TextColor3 = Color3.fromRGB(255, 200, 100)
+-- Toggles
+local function refreshToggle(btn, label, on)
+	btn.Text = label .. " : " .. (on and "ON" or "OFF")
+	btn.TextColor3 = on and BLUE or WHITE
+	btn.BackgroundColor3 = on and BTN_ON or BTN
+end
+
+local function refreshToggles()
+	refreshToggle(AntiBatBtn, "ANTI BAT", state.AntiBat)
+	refreshToggle(InfJumpBtn, "INF JUMP", state.InfJump)
+	KeyBtn.Text = bindingKey and "..." or antiTpKey.Name
+end
+
+AntiBatBtn.MouseButton1Click:Connect(function()
+	state.AntiBat = not state.AntiBat
+	refreshToggles()
+end)
+InfJumpBtn.MouseButton1Click:Connect(function()
+	state.InfJump = not state.InfJump
+	refreshToggles()
 end)
 
-UserInputService.InputBegan:Connect(function(input, gp)
-    if gp then return end
-    if WaitingForKeybind then
-        if input.UserInputType == Enum.UserInputType.Keyboard then
-            CurrentKeybind = input.KeyCode
-            WaitingForKeybind = false
-            KeybindBtn.Text = CurrentKeybind.Name
-            KeybindBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-            saveConfig()
-        end
-        return
-    end
-    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == CurrentKeybind then
-        setAntiBat(not AntiBatEnabled)
-    end
+-- Keybind : clic puis touche (Espace interdit), la touche active/désactive Anti Bat
+KeyBtn.MouseButton1Click:Connect(function()
+	if bindingKey then return end
+	bindingKey = true
+	refreshToggles()
 end)
 
-BgBtn.MouseButton1Click:Connect(function()
-    BackgroundPicker.Visible = not BackgroundPicker.Visible
-end)
+track(UserInputService.InputBegan:Connect(function(input, gp)
+	if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
+	if bindingKey then
+		if input.KeyCode ~= Enum.KeyCode.Unknown and input.KeyCode ~= Enum.KeyCode.Space then
+			antiTpKey = input.KeyCode
+		end
+		bindingKey = false
+		refreshToggles()
+		return
+	end
+	if not gp and input.KeyCode == antiTpKey then
+		state.AntiBat = not state.AntiBat
+		refreshToggles()
+	end
+end))
 
-Close.MouseButton1Click:Connect(function()
-    BackgroundPicker.Visible = false
-end)
+-- ============ SLIDER UI SIZE ============
+local sliding = false
 
-MinBtn.MouseButton1Click:Connect(function()
-    minimized = not minimized
-    if minimized then
-        ContentHolder.Visible = false
-        BgBtn.Visible = false
-        BackgroundPicker.Visible = false
-        Main.Size = UDim2.new(0, 270, 0, 48)
-        MinBtn.Text = "+"
-    else
-        ContentHolder.Visible = true
-        BgBtn.Visible = true
-        Main.Size = UDim2.new(0, 270, 0, 260)
-        MinBtn.Text = "-"
-    end
-end)
+local function updateSlider(input)
+	-- ratio calculé à chaque événement : reste correct même si le panneau est mis à l'échelle
+	local rel = (input.Position.X - Track.AbsolutePosition.X) / Track.AbsoluteSize.X
+	setScale(SLIDER_MIN + math.clamp(rel, 0, 1) * SLIDER_RANGE)
+end
 
-local dragging, dragStart, startPos
+for _, obj in ipairs({ Track, Knob }) do
+	obj.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			sliding = true
+			updateSlider(input)
+		end
+	end)
+end
+
+-- ============ DRAG DU PANNEAU ============
+local dragging = false
+local dragStart, startPos
+
 Header.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1
-        or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = Main.Position
-    end
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = Panel.Position
+	end
 end)
 
-UserInputService.InputChanged:Connect(function(input)
-    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement
-        or input.UserInputType == Enum.UserInputType.Touch) then
-        local delta = input.Position - dragStart
-        Main.Position = UDim2.new(
-            startPos.X.Scale, startPos.X.Offset + delta.X,
-            startPos.Y.Scale, startPos.Y.Offset + delta.Y
-        )
-    end
-end)
+track(UserInputService.InputChanged:Connect(function(input)
+	if input.UserInputType ~= Enum.UserInputType.MouseMovement and input.UserInputType ~= Enum.UserInputType.Touch then
+		return
+	end
+	if sliding then
+		updateSlider(input)
+	elseif dragging then
+		local d = input.Position - dragStart
+		local vp = workspace.CurrentCamera.ViewportSize
+		local nx = math.clamp(startPos.X.Offset + d.X, 0, math.max(0, vp.X - Panel.AbsoluteSize.X))
+		local ny = math.clamp(startPos.Y.Offset + d.Y, 0, math.max(0, vp.Y - Panel.AbsoluteSize.Y))
+		Panel.Position = UDim2.new(0, nx, 0, ny)
+	end
+end))
 
-UserInputService.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1
-        or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = false
-    end
-end)
+track(UserInputService.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = false
+		sliding = false
+	end
+end))
 
+-- ============ INIT ============
+setScale(state.Scale)
+refreshPages()
+refreshToggles()
 
-startAntiRagdoll()
-startJumpHoldLoop()
-setToggle(ToggleDot, ToggleBg, AntiBatEnabled)
-setToggle(InfToggleDot, InfToggleBg, InfiniteJumpEnabled)
-updateStatus()
-if AntiBatEnabled then startAntiBat() end
-KeybindBtn.Text = CurrentKeybind.Name
+-- ============ DESTROY ============
+runtime.destroy = function()
+	runtime.alive = false
+	for _, c in ipairs(conns) do
+		pcall(function() c:Disconnect() end)
+	end
+	table.clear(conns)
+	pcall(function() ijPlatform:Destroy() end)
+	pcall(function() Gui:Destroy() end)
+	if env.__WAVE_ANTIBAT_RUNTIME == runtime then
+		env.__WAVE_ANTIBAT_RUNTIME = nil
+	end
+end
 
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
-print("[NOXA DUELS DEOBFS Space X Hook] Anti Bat ")
+return Gui
