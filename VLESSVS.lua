@@ -21,6 +21,53 @@ if not LP then
     LP = Players.LocalPlayer
 end
 
+-- Floating Discord invite above the local character.
+local function addVlessDiscordTag(character)
+    if not character then return end
+    local head = character:FindFirstChild("Head") or character:WaitForChild("Head", 8)
+    if not head then return end
+    local playerGui = LP:FindFirstChildOfClass("PlayerGui") or LP:WaitForChild("PlayerGui", 5)
+    if not playerGui then return end
+    local old = playerGui:FindFirstChild("VLESSDiscordTag")
+    if old then old:Destroy() end
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "VLESSDiscordTag"
+    billboard.Adornee = head
+    billboard.Size = UDim2.new(0, 300, 0, 42)
+    billboard.StudsOffset = Vector3.new(0, 3.2, 0)
+    billboard.AlwaysOnTop = true
+    billboard.MaxDistance = 250
+    billboard.Parent = playerGui
+    local label = Instance.new("TextLabel")
+    label.Name = "InviteText"
+    label.Size = UDim2.new(1, 0, 1, 0)
+    label.BackgroundTransparency = 1
+    label.Text = "https://discord.gg/xjfRaEXVR"
+    label.TextColor3 = Color3.fromRGB(255, 45, 55)
+    label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    label.TextStrokeTransparency = 0
+    label.Font = Enum.Font.GothamBlack
+    label.TextScaled = true
+    label.TextWrapped = false
+    label.Parent = billboard
+    local outline = Instance.new("UIStroke")
+    outline.Color = Color3.fromRGB(110, 110, 115)
+    outline.Thickness = 1
+    outline.Transparency = 0.2
+    outline.Parent = label
+    task.spawn(function()
+        local t0 = tick()
+        while billboard.Parent and label.Parent do
+            local t = tick() - t0
+            label.TextColor3 = Color3.fromRGB(210 + math.floor(45 * (0.5 + 0.5 * math.sin(t * 3))), 30, 40)
+            billboard.StudsOffset = Vector3.new(0, 3.2 + math.sin(t * 2.2) * 0.12, 0)
+            task.wait(0.04)
+        end
+    end)
+end
+if LP and LP.Character then task.spawn(addVlessDiscordTag, LP.Character) end
+if LP then LP.CharacterAdded:Connect(function(character) task.wait(0.5); addVlessDiscordTag(character) end) end
+
 local function getSafeGuiParent()
     if gethui then
         local ok, h = pcall(gethui)
@@ -306,7 +353,7 @@ do
     logo.Size = UDim2.new(0, 190, 0, 40)
     logo.BackgroundTransparency = 1
     logo.Text = "VLESS.VS"
-    logo.TextColor3 = Color3.fromRGB(245, 45, 55)
+    logo.TextColor3 = Color3.fromRGB(245, 35, 45)
     logo.Font = Enum.Font.GothamBlack
     logo.TextSize = 25
     logo.ZIndex = 6
@@ -1279,15 +1326,36 @@ local INTRO = {
             end)
 
             local duels = Instance.new("TextLabel", stage)
-            duels.Size = UDim2.new(1, 0, 0, 36)
-            duels.Position = UDim2.new(0, 0, 0, 122)
+            duels.Size = UDim2.new(1, 0, 0, 72)
+            duels.Position = UDim2.new(0, 0, 0, 112)
             duels.BackgroundTransparency = 1
-            duels.Text = "VLESS.VS"
-            duels.TextColor3 = Color3.fromRGB(245, 45, 55)
-            duels.Font = Enum.Font.GothamBold
-            duels.TextSize = 22
+            duels.Text = "VLESS HUB"
+            duels.TextColor3 = Color3.fromRGB(245, 35, 45)
+            duels.Font = Enum.Font.GothamBlack
+            duels.TextSize = 52
+            duels.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+            duels.TextStrokeTransparency = 0.12
             duels.TextTransparency = 1
             duels.ZIndex = 44
+            local hubWave = Instance.new("UIGradient", duels)
+            hubWave.Rotation = 0
+            hubWave.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(105, 105, 110)),
+                ColorSequenceKeypoint.new(0.35, Color3.fromRGB(245, 35, 45)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
+                ColorSequenceKeypoint.new(0.65, Color3.fromRGB(245, 35, 45)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(105, 105, 110)),
+            })
+            task.spawn(function()
+                local t0 = tick()
+                while duels.Parent and introActive do
+                    local t = tick() - t0
+                    hubWave.Offset = Vector2.new(math.sin(t * 1.7) * 0.8, 0)
+                    duels.Position = UDim2.new(0, math.sin(t * 2.2) * 5, 0, 112 + math.sin(t * 2.8) * 5)
+                    duels.Rotation = math.sin(t * 2.0) * 1.4
+                    task.wait(0.025)
+                end
+            end)
 
             local line = Instance.new("Frame", stage)
             line.AnchorPoint = Vector2.new(0.5, 0.5)
