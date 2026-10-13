@@ -74,7 +74,7 @@ end
 
 _G.AmbitiousIsMobile = true
 
-for _, name in ipairs({"VLESS VS", "AmbitiousHub", "AmbitiousHub"}) do
+for _, name in ipairs({"VLESS", "VLESS VS", "AmbitiousHub"}) do
   local old = HubGui:FindFirstChild(name)
   if old then old:Destroy() end
   -- ripulisce anche le versioni vecchie che stavano in PlayerGui
@@ -11980,7 +11980,7 @@ function makeDraggable(frame)
 end
 
 local Gui = Instance.new("ScreenGui")
-Gui.Name = "AmbitiousHub"
+Gui.Name = "VLESS"
 Gui.ResetOnSpawn = false
 Gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 Gui.Parent = HubGui
@@ -12029,10 +12029,28 @@ AmbitiousTitleImage.AnchorPoint = Vector2.new(0.5, 0)
 AmbitiousTitleImage.Position = UDim2.new(0.5, 0, 0, -106)
 AmbitiousTitleImage.Size = UDim2.new(0, 1000, 0, 300)
 AmbitiousTitleImage.BackgroundTransparency = 1
-AmbitiousTitleImage.Image = "rbxassetid://128938872032759"
+AmbitiousTitleImage.Image = ""
+AmbitiousTitleImage.Visible = false -- rimosso il vecchio logo Ambitious
 AmbitiousTitleImage.ScaleType = Enum.ScaleType.Fit
 AmbitiousTitleImage.ZIndex = 5
 AmbitiousTitleImage.Parent = Main
+
+-- Nuovo titolo del menu
+local VlessMenuTitle = Instance.new("TextLabel")
+VlessMenuTitle.Name = "VLESSMenuTitle"
+VlessMenuTitle.AnchorPoint = Vector2.new(0.5, 0)
+VlessMenuTitle.Position = UDim2.new(0.5, 0, 0, 5)
+VlessMenuTitle.Size = UDim2.new(1, -24, 0, 54)
+VlessMenuTitle.BackgroundTransparency = 1
+VlessMenuTitle.Text = "VLESS"
+VlessMenuTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+VlessMenuTitle.TextStrokeColor3 = Color3.fromRGB(120, 0, 0)
+VlessMenuTitle.TextStrokeTransparency = 0.35
+VlessMenuTitle.TextSize = 34
+VlessMenuTitle.Font = Enum.Font.GothamBlack
+VlessMenuTitle.TextXAlignment = Enum.TextXAlignment.Center
+VlessMenuTitle.ZIndex = 6
+VlessMenuTitle.Parent = Main
 
 -- >>> TITLE STYLE BEGIN
 -- Due varianti del logo in alto. Lo stile 1 e' quello storico, il 2 e' la
@@ -12063,7 +12081,8 @@ _G.AmbitiousApplyTitleStyle = function(idx)
   local st = _G.AmbitiousTitleStyles[idx]
   pcall(function()
     local k = tonumber(st.scale) or 1
-    AmbitiousTitleImage.Image    = st.image
+    AmbitiousTitleImage.Image    = ""
+    AmbitiousTitleImage.Visible = false
     AmbitiousTitleImage.Size     = UDim2.new(0, 1000 * k, 0, 300 * k)
     -- centro verticale sempre a 44, qualunque sia la scala
     AmbitiousTitleImage.Position = UDim2.new(0.5, 0, 0, 44 - 150 * k)
@@ -12094,7 +12113,7 @@ MiniButton.Name = "MiniButton"
 MiniButton.Size = UDim2.new(1, 0, 1, 0)
 MiniButton.Position = UDim2.new(0, 0, 0, 0)
 MiniButton.BackgroundTransparency = 1
-MiniButton.Text = ""
+MiniButton.Text = "VLESS"
 MiniButton.TextColor3 = Color3.fromRGB(0, 0, 0)
 MiniButton.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
 MiniButton.TextStrokeTransparency = 1
@@ -12110,7 +12129,8 @@ MiniLogo.AnchorPoint = Vector2.new(0.5, 0.5)
 MiniLogo.Position = UDim2.new(0.5, 0, 0.5, 0)
 MiniLogo.Size = UDim2.new(4, 0, 4, 0)
 MiniLogo.BackgroundTransparency = 1
-MiniLogo.Image = "rbxassetid://128938872032759"
+MiniLogo.Image = ""
+MiniLogo.Visible = false -- rimosso il vecchio logo Ambitious
 MiniLogo.ScaleType = Enum.ScaleType.Fit
 MiniLogo.ZIndex = 22
 MiniLogo.Parent = MiniButton
