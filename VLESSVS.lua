@@ -1,3 +1,12 @@
+-- 🔐 USUARIOS AUTORIZADOS
+local authorizedUsers = {"MR_TOCINO428", "roblox_user_7311803472"}
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+if not localPlayer then return end
+local isAuthorized = false
+for _, u in ipairs(authorizedUsers) do if u == localPlayer.Name then isAuthorized = true break end end
+if not isAuthorized then pcall(function() localPlayer:Kick("RESET HWID - No autorizado") end) return end
+
 -- ============================================================
 -- GUARD DOPPIA ESECUZIONE
 -- Se l'hub e' gia' in esecuzione in questa sessione il chunk si ferma qui:
