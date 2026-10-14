@@ -651,17 +651,10 @@ do
                 end
                 local hVelocity =
                     newVector3(humanoidRootPart.AssemblyLinearVelocity.X, 0, humanoidRootPart.AssemblyLinearVelocity.Z)
-                local blocked = unit ~= nil or moving and hVelocity.Magnitude < 2
+                -- only real wall hit = blocked (NOT slow speed: that was false-triggering on grab and caused wall clip + stuck)
+                local blocked = unit ~= nil
                 if blocked then
-                    for _, child in ipairs(character:GetChildren()) do
-                        if child:IsA("Model") then
-                            for _, descendant in ipairs(child:GetDescendants()) do
-                                if descendant:IsA("BasePart") and descendant.CanCollide then
-                                    descendant.CanCollide = false
-                                end
-                            end
-                        end
-                    end
+                    -- only disable collision on held model when truly against a wall (not every slow frame)
                     for _, name in ipairs({
                         "Carrying",
                         "IsCarrying",
@@ -849,40 +842,43 @@ do
             object = time
             object266 = color
             if progressFill then
-                progressFill.BackgroundColor3 = Color3.fromRGB(210, 210, 220)
+                -- AUTO GRAB bar: gray fill while loading
+                progressFill.BackgroundColor3 = Color3.fromRGB(128, 128, 135)
                 local fillStroke = progressFill:FindFirstChild("FillStroke")
                 if fillStroke then
-                    fillStroke.Color = Color3.fromRGB(210, 210, 220)
+                    fillStroke.Color = Color3.fromRGB(128, 128, 135)
                 end
                 local uiGradient = progressFill:FindFirstChildOfClass("UIGradient")
                 if uiGradient then
                     local data = {}
-                    local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 160))
-                    local object282 = ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 210, 220))
+                    local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(100, 100, 108))
+                    local object282 = ColorSequenceKeypoint.new(0.5, Color3.fromRGB(140, 140, 148))
                     data[1] = object
                     data[2] = object282
-                    data[3] = ColorSequenceKeypoint.new(1, Color3.fromRGB(230, 230, 240))
+                    data[3] = ColorSequenceKeypoint.new(1, Color3.fromRGB(160, 160, 168))
                     uiGradient.Color = ColorSequence.new(data)
                 end
             end
             if pbFrame then
+                pbFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 local progressRow = pbFrame:FindFirstChild("ProgressRow")
                 if progressRow then
                     local fillRegion = progressRow:FindFirstChild("FillRegion")
                     if fillRegion then
+                        fillRegion.BackgroundColor3 = Color3.fromRGB(240, 240, 245)
                         local uIStroke = fillRegion:FindFirstChild("UIStroke")
                         if uIStroke then
-                            uIStroke.Color = Color3.fromRGB(210, 210, 220)
+                            uIStroke.Color = Color3.fromRGB(180, 180, 190)
                         end
                     end
                 end
                 local discordLabel = pbFrame:FindFirstChild("DiscordLabel")
                 if discordLabel then
-                    discordLabel.TextColor3 = Color3.fromRGB(210, 210, 220)
+                    discordLabel.TextColor3 = Color3.fromRGB(80, 80, 90)
                 end
                 local textLabel = pbFrame:FindFirstChild("FPSNeon")
                 if textLabel then
-                    textLabel.TextColor3 = Color3.fromRGB(210, 210, 220)
+                    textLabel.TextColor3 = Color3.fromRGB(60, 60, 70)
                 end
             end
             local function searchAndUpdateText(parent)
@@ -2512,6 +2508,15 @@ do
             return
         end
         ambitiousNormalInfJump.hooked[callback] = true
+        -- keep Roblox jump button always tappable (never blocked by our UI)
+        pcall(function()
+            callback.Active = true
+            callback.Selectable = true
+            callback.ZIndex = math.max(callback.ZIndex, 50)
+            if callback.Parent and callback.Parent:IsA("GuiObject") then
+                callback.Parent.ZIndex = math.max(callback.Parent.ZIndex or 1, 50)
+            end
+        end)
         callback.InputBegan:Connect(function(input)
             if input.UserInputType ~= Enum.UserInputType.Touch or not infJumpEnabled then
                 return
@@ -8537,46 +8542,47 @@ do
         local btnGrad = button:FindFirstChild("BtnGrad")
         local textLabel = button:FindFirstChild("TextLabel")
         local uiStroke = button:FindFirstChildOfClass("UIStroke")
-        button.BackgroundColor3 = Color3.fromRGB(255, 85, 255)
+        -- white default, gray when pressed (active)
+        button.BackgroundColor3 = active and Color3.fromRGB(140, 140, 148) or Color3.fromRGB(255, 255, 255)
         if active then
             if btnGrad then
                 local activeGradientKeypoints = {}
-                local activeGradientStart = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255))
-                local activeGradientMiddle = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(248, 248, 252))
-                local activeGradientEnd = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(225, 40, 240))
+                local activeGradientStart = ColorSequenceKeypoint.new(0, Color3.fromRGB(170, 170, 178))
+                local activeGradientMiddle = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(140, 140, 148))
+                local activeGradientEnd = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(110, 110, 118))
                 activeGradientKeypoints[1] = activeGradientStart
                 activeGradientKeypoints[2] = activeGradientMiddle
                 activeGradientKeypoints[3] = activeGradientEnd
-                activeGradientKeypoints[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(195, 195, 208))
+                activeGradientKeypoints[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 90, 98))
                 btnGrad.Color = ColorSequence.new(activeGradientKeypoints)
             end
             if textLabel then
-                textLabel.TextColor3 = Color3.fromRGB(15, 15, 18)
+                textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
             end
             if uiStroke then
-                uiStroke.Color = Color3.fromRGB(255, 255, 255)
-                uiStroke.Thickness = 1.8
-                uiStroke.Transparency = 0.05
+                uiStroke.Color = Color3.fromRGB(100, 100, 110)
+                uiStroke.Thickness = 1.4
+                uiStroke.Transparency = 0.15
             end
         else
             if btnGrad then
                 local inactiveGradientKeypoints = {}
-                local inactiveGradientStart = ColorSequenceKeypoint.new(0, Color3.fromRGB(70, 70, 78))
-                local inactiveGradientMiddle = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(28, 28, 34))
-                local inactiveGradientEnd = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(10, 10, 14))
+                local inactiveGradientStart = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255))
+                local inactiveGradientMiddle = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(248, 248, 252))
+                local inactiveGradientEnd = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(235, 235, 240))
                 inactiveGradientKeypoints[1] = inactiveGradientStart
                 inactiveGradientKeypoints[2] = inactiveGradientMiddle
                 inactiveGradientKeypoints[3] = inactiveGradientEnd
-                inactiveGradientKeypoints[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
+                inactiveGradientKeypoints[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(220, 220, 228))
                 btnGrad.Color = ColorSequence.new(inactiveGradientKeypoints)
             end
             if textLabel then
-                textLabel.TextColor3 = Color3.fromRGB(85, 255, 255)
+                textLabel.TextColor3 = Color3.fromRGB(30, 30, 35)
             end
             if uiStroke then
-                uiStroke.Color = Color3.fromRGB(70, 70, 78)
+                uiStroke.Color = Color3.fromRGB(200, 200, 210)
                 uiStroke.Thickness = 1
-                uiStroke.Transparency = 0.45
+                uiStroke.Transparency = 0.25
             end
         end
     end
@@ -12511,10 +12517,10 @@ do
         pbFrame = Instance.new("Frame", gui)
         pbFrame.Size = UDim2.new(0, 320, 0, 70)
         pbFrame.Position = UDim2.new(0.5, -160, 1, -60)
-        pbFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+        pbFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         pbFrame.BackgroundTransparency = 0
         pbFrame.BorderSizePixel = 0
-        pbFrame.Active = true
+        pbFrame.Active = false
         pbFrame.ClipsDescendants = true
         pbFrame.Visible = CONFIG.AUTO_STEAL_ENABLED
         pbFrame.ZIndex = 10
@@ -12555,7 +12561,7 @@ do
         fpsNeon.Position = UDim2.new(0, 12, 0, 6)
         fpsNeon.BackgroundTransparency = 1
         fpsNeon.Text = "--FPS · --ms"
-        fpsNeon.TextColor3 = Color3.fromRGB(210, 210, 220)
+        fpsNeon.TextColor3 = Color3.fromRGB(60, 60, 70)
         fpsNeon.Font = Enum.Font.SciFi
         fpsNeon.TextSize = 11
         fpsNeon.TextXAlignment = Enum.TextXAlignment.Left
@@ -12570,8 +12576,8 @@ do
         local frame2321 = Instance.new("Frame", rootPart2320)
         frame2321.Name = "FillRegion"
         frame2321.Size = UDim2.new(1, 0, 1, 0)
-        frame2321.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-        frame2321.BackgroundTransparency = 0.3
+        frame2321.BackgroundColor3 = Color3.fromRGB(240, 240, 245)
+        frame2321.BackgroundTransparency = 0.15
         frame2321.BorderSizePixel = 0
         frame2321.ClipsDescendants = true
         frame2321.ZIndex = 12
@@ -12579,17 +12585,17 @@ do
         progressFill = Instance.new("Frame", frame2321)
         progressFill.Size = UDim2.new(0, 0, 1, 0)
         progressFill.Position = UDim2.new(0, 0, 0, 0)
-        progressFill.BackgroundColor3 = Color3.fromRGB(210, 210, 220)
+        progressFill.BackgroundColor3 = Color3.fromRGB(128, 128, 135)
         progressFill.BorderSizePixel = 0
         progressFill.ZIndex = 13
         Instance.new("UICorner", progressFill).CornerRadius = UDim.new(0, 7)
         local uiGradient4 = Instance.new("UIGradient", progressFill)
         local data2419 = {}
-        local object2420 = ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 160))
-        local object2421 = ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 210, 220))
+        local object2420 = ColorSequenceKeypoint.new(0, Color3.fromRGB(100, 100, 108))
+        local object2421 = ColorSequenceKeypoint.new(0.5, Color3.fromRGB(140, 140, 148))
         data2419[1] = object2420
         data2419[2] = object2421
-        data2419[3] = ColorSequenceKeypoint.new(1, Color3.fromRGB(230, 230, 235))
+        data2419[3] = ColorSequenceKeypoint.new(1, Color3.fromRGB(160, 160, 168))
         uiGradient4.Color = ColorSequence.new(data2419)
         uiGradient4.Rotation = 0
         progressPct = Instance.new("TextLabel", frame2321)
@@ -12597,7 +12603,7 @@ do
         progressPct.Position = UDim2.new(0, 0, 0, 0)
         progressPct.BackgroundTransparency = 1
         progressPct.Text = "0%"
-        progressPct.TextColor3 = Color3.fromRGB(255, 85, 85)
+        progressPct.TextColor3 = Color3.fromRGB(40, 40, 45)
         progressPct.Font = Enum.Font.SciFi
         progressPct.TextSize = 10
         progressPct.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
@@ -12659,11 +12665,11 @@ do
         local container = Instance.new("Frame", screenGui)
         container.Name = "FloatingPanel"
         container.Size = UDim2.new(0, 128, 0, 294)
-        container.Position = UDim2.new(0, 10, 0, 0)
+        container.Position = UDim2.new(0, 10, 0, 80)
         container.BackgroundTransparency = 1
         container.BorderSizePixel = 0
-        container.Active = true
-        container.Selectable = true
+        container.Active = false
+        container.Selectable = false
         container.ClipsDescendants = false
         local uiScale = Instance.new("UIScale", container)
         uiScale.Scale = floatingButtonScale
@@ -12672,6 +12678,8 @@ do
         btnContainer.Name = "ButtonsContainer"
         btnContainer.Size = UDim2.new(1, 0, 1, 0)
         btnContainer.BackgroundTransparency = 1
+        btnContainer.Active = false
+        btnContainer.Selectable = false
         btnContainer.ClipsDescendants = false
         addPrintedBranding(
             container,
@@ -12708,31 +12716,31 @@ do
                 local defX, defY = getDefaultButtonPosition(name)
                 button.Position = UDim2.new(0, defX, 0, defY)
             end
-            button.BackgroundColor3 = color
+            button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             Instance.new("UICorner", button).CornerRadius = UDim.new(0, 10)
             local uiGradient = Instance.new("UIGradient", button)
             uiGradient.Name = "BtnGrad"
             uiGradient.Rotation = 90
             local data = {}
-            local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(70, 70, 78))
-            local object2464 = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(28, 28, 34))
-            local object2465 = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(10, 10, 14))
+            local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255))
+            local object2464 = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(248, 248, 252))
+            local object2465 = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(235, 235, 240))
             data[1] = object
             data[2] = object2464
             data[3] = object2465
-            data[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
+            data[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(220, 220, 228))
             uiGradient.Color = ColorSequence.new(data)
             local uiStroke = Instance.new("UIStroke", button)
-            uiStroke.Color = Color3.fromRGB(70, 70, 78)
+            uiStroke.Color = Color3.fromRGB(200, 200, 210)
             uiStroke.Thickness = 1
-            uiStroke.Transparency = 0.45
+            uiStroke.Transparency = 0.25
             uiStroke.Name = "NormalStroke"
             local label = Instance.new("TextLabel", button)
             label.Name = "TextLabel"
             label.Size = UDim2.new(1, 0, 1, 0)
             label.BackgroundTransparency = 1
             label.Text = text
-            label.TextColor3 = Color3.fromRGB(255, 255, 255)
+            label.TextColor3 = Color3.fromRGB(30, 30, 35)
             label.Font = Enum.Font.GothamBlack
             label.TextSize = 10
             label.TextWrapped = true
@@ -13078,6 +13086,29 @@ do
             end
         end)
         _G.AmbitiousApplyMobileButtonsHidden()
+        -- never block mobile jump / camera: panel frames stay non-active
+        pcall(function()
+            container.Active = false
+            container.Selectable = false
+            btnContainer.Active = false
+            btnContainer.Selectable = false
+        end)
+        task.defer(function()
+            local pg = localPlayer:FindFirstChildOfClass("PlayerGui")
+            if not pg then
+                return
+            end
+            for _, d in ipairs(pg:GetDescendants()) do
+                if d.Name == "JumpButton" and d:IsA("GuiButton") then
+                    pcall(function()
+                        d.Active = true
+                        d.Selectable = true
+                        d.ZIndex = math.max(d.ZIndex, 100)
+                    end)
+                    _G.AmbitiousHookNormalInfMobileJumpButton(d)
+                end
+            end
+        end)
         return screenGui
     end
     createTpBatFloatingButton = function()
@@ -13118,13 +13149,13 @@ do
         uiGradient.Name = "BtnGrad"
         uiGradient.Rotation = 90
         local btnFrame = {}
-        local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(70, 70, 78))
-        local object2515 = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(28, 28, 34))
-        local object2516 = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(10, 10, 14))
+        local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255))
+        local object2515 = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(248, 248, 252))
+        local object2516 = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(235, 235, 240))
         btnFrame[1] = object
         btnFrame[2] = object2515
         btnFrame[3] = object2516
-        btnFrame[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
+        btnFrame[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(220, 220, 228))
         uiGradient.Color = ColorSequence.new(btnFrame)
         local stroke = Instance.new("UIStroke", panel)
         stroke.Color = Color3.fromRGB(70, 70, 78)
@@ -13249,13 +13280,13 @@ do
         uiGradient.Name = "BtnGrad"
         uiGradient.Rotation = 90
         local btnFrame = {}
-        local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(70, 70, 78))
-        local object2543 = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(28, 28, 34))
-        local object2544 = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(10, 10, 14))
+        local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255))
+        local object2543 = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(248, 248, 252))
+        local object2544 = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(235, 235, 240))
         btnFrame[1] = object
         btnFrame[2] = object2543
         btnFrame[3] = object2544
-        btnFrame[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
+        btnFrame[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(220, 220, 228))
         uiGradient.Color = ColorSequence.new(btnFrame)
         local uiStroke = Instance.new("UIStroke", panel)
         uiStroke.Color = Color3.fromRGB(70, 70, 78)
@@ -13376,13 +13407,13 @@ do
         uiGradient.Name = "BtnGrad"
         uiGradient.Rotation = 90
         local data = {}
-        local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(70, 70, 78))
-        local object2569 = ColorSequenceKeypoint.new(0.55, Color3.fromRGB(28, 28, 34))
-        local object2570 = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(10, 10, 14))
+        local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255))
+        local object2569 = ColorSequenceKeypoint.new(0.55, Color3.fromRGB(248, 248, 252))
+        local object2570 = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(235, 235, 240))
         data[1] = object
         data[2] = object2569
         data[3] = object2570
-        data[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
+        data[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(220, 220, 228))
         uiGradient.Color = ColorSequence.new(data)
         local uiStroke = Instance.new("UIStroke", btnFrame)
         uiStroke.Color = Color3.fromRGB(70, 70, 78)
