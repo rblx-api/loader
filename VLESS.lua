@@ -4,131 +4,7 @@ _G.BloodHoundsRunning = true
 repeat task.wait() until game:IsLoaded()
 
 -- ============================================================
--- INTRO (Made By Fajaco For Clean)
--- ============================================================
--- Made By Fajaco For Clean
-
-local CleanHubPlayers=game:GetService("Players")
-local CleanHubTweenService=game:GetService("TweenService")
-local CleanHubRunService=game:GetService("RunService")
-local CleanHubPlayer=CleanHubPlayers.LocalPlayer
-local CleanHubGuiName="VLESSLettersIntro"
-local CleanHubSongs={"https://files.catbox.moe/vbyghu.mp3","https://files.catbox.moe/5g2wg1.mp3","https://files.catbox.moe/r29x0i.mp3","https://files.catbox.moe/n53amf.mp3","https://files.catbox.moe/o4di3j.mp3","https://files.catbox.moe/um4hgp.mp3","https://files.catbox.moe/fiiu4a.mp3","https://files.catbox.moe/mdjmee.mp3","https://files.catbox.moe/2eysnf.mp3","https://files.catbox.moe/d4uky5.mp3","https://files.catbox.moe/8v5xra.mp3","https://files.catbox.moe/aneanv.mp3","https://files.catbox.moe/pm6lne.mp3","https://files.catbox.moe/y4q5y3.mp3","https://files.catbox.moe/pcdvty.mp3"}
-local CleanHubSongIndex=1
-pcall(function()
-    if isfile and readfile and isfile("FictionHub.json") then
-        local CleanHubSaved=game:GetService("HttpService"):JSONDecode(readfile("FictionHub.json"))
-        if type(CleanHubSaved.cleanHubSongIndex)=="number" then CleanHubSongIndex=math.clamp(math.floor(CleanHubSaved.cleanHubSongIndex),1,#CleanHubSongs) end
-    end
-end)
-local CleanHubSongUrl=CleanHubSongs[CleanHubSongIndex]
-local CleanHubSongFile="cleanhub_intro_song_"..CleanHubSongIndex..".mp3"
-local CleanHubIntroSound=nil
-local CleanHubSoundEndedConnection=nil
-
-for _,CleanHubParent in ipairs({game:GetService("CoreGui"),CleanHubPlayer and CleanHubPlayer:FindFirstChildOfClass("PlayerGui")}) do
-    local CleanHubOld=CleanHubParent and CleanHubParent:FindFirstChild(CleanHubGuiName)
-    if CleanHubOld then CleanHubOld:Destroy() end
-end
-
-local CleanHubGui=Instance.new("ScreenGui")
-CleanHubGui.Name=CleanHubGuiName; CleanHubGui.IgnoreGuiInset=true; CleanHubGui.ResetOnSpawn=false; CleanHubGui.DisplayOrder=100000
-CleanHubGui.ZIndexBehavior=Enum.ZIndexBehavior.Global
-pcall(function() if syn and syn.protect_gui then syn.protect_gui(CleanHubGui) end end)
-if not pcall(function() CleanHubGui.Parent=game:GetService("CoreGui") end) then CleanHubGui.Parent=CleanHubPlayer:WaitForChild("PlayerGui") end
-
-local CleanHubLetters={}
-local CleanHubStarted=os.clock()
-local CleanHubFloatConnection
-local CleanHubFinished=false
-
--- Intro de texto: VLESS, con movimiento ondulado y brillo rojo.
-local CleanHubTitle=Instance.new("TextLabel",CleanHubGui)
-CleanHubTitle.Name="VLESSIntroTitle"
-CleanHubTitle.AnchorPoint=Vector2.new(0.5,0.5)
-CleanHubTitle.Position=UDim2.fromScale(0.5,0.48)
-CleanHubTitle.Size=UDim2.new(0.9,0,0,150)
-CleanHubTitle.BackgroundTransparency=1
-CleanHubTitle.Text="VLESS"
-CleanHubTitle.TextColor3=Color3.fromRGB(255,35,45)
-CleanHubTitle.TextStrokeColor3=Color3.fromRGB(35,0,0)
-CleanHubTitle.TextStrokeTransparency=0.05
-CleanHubTitle.Font=Enum.Font.GothamBlack
-CleanHubTitle.TextScaled=true
-CleanHubTitle.ZIndex=3
-local CleanHubTitleGradient=Instance.new("UIGradient",CleanHubTitle)
-CleanHubTitleGradient.Color=ColorSequence.new({
-    ColorSequenceKeypoint.new(0,Color3.fromRGB(255,90,90)),
-    ColorSequenceKeypoint.new(0.5,Color3.fromRGB(255,15,25)),
-    ColorSequenceKeypoint.new(1,Color3.fromRGB(150,0,10)),
-})
-
-local function CleanHubFinish()
-    if CleanHubFinished then return end
-    CleanHubFinished=true
-    if CleanHubFloatConnection then CleanHubFloatConnection:Disconnect() end
-    if CleanHubSoundEndedConnection then CleanHubSoundEndedConnection:Disconnect(); CleanHubSoundEndedConnection=nil end
-    if CleanHubIntroSound then pcall(function() CleanHubIntroSound:Stop(); CleanHubIntroSound:Destroy() end) end
-    if CleanHubTitle and CleanHubTitle.Parent then
-        CleanHubTweenService:Create(CleanHubTitle,TweenInfo.new(.3),{TextTransparency=1,TextStrokeTransparency=1}):Play()
-    end
-    task.delay(.34,function() if CleanHubGui then CleanHubGui:Destroy() end end)
-end
-
-CleanHubFloatConnection=CleanHubRunService.RenderStepped:Connect(function()
-    local CleanHubTime=os.clock()-CleanHubStarted
-    if CleanHubTitle and CleanHubTitle.Parent then
-        CleanHubTitle.Position=UDim2.new(0.5,0,0.48,math.sin(CleanHubTime*2.4)*14)
-        CleanHubTitle.Rotation=math.sin(CleanHubTime*1.7)*3
-        CleanHubTitle.TextStrokeTransparency=0.12+0.08*(0.5+0.5*math.sin(CleanHubTime*3))
-    end
-end)
-
-task.spawn(function()
-    local function CleanHubCustomAsset(CleanHubFile)
-        for _,CleanHubAssetFunction in ipairs({getcustomasset,getsynasset,getasset}) do
-            if typeof(CleanHubAssetFunction)=="function" then
-                local CleanHubOk,CleanHubAsset=pcall(function() return CleanHubAssetFunction(CleanHubFile) end)
-                if CleanHubOk and type(CleanHubAsset)=="string" and CleanHubAsset~="" then return CleanHubAsset end
-            end
-        end
-        return nil
-    end
-    local CleanHubAsset=CleanHubCustomAsset(CleanHubSongFile)
-    if not CleanHubAsset and isfile and isfile(CleanHubSongFile) then CleanHubAsset=CleanHubCustomAsset(CleanHubSongFile) end
-    if not CleanHubAsset and writefile then
-        local CleanHubOk,CleanHubData=pcall(function() return game:HttpGet(CleanHubSongUrl) end)
-        if CleanHubOk and type(CleanHubData)=="string" and #CleanHubData>100 and pcall(function() writefile(CleanHubSongFile,CleanHubData) end) then
-            CleanHubAsset=CleanHubCustomAsset(CleanHubSongFile)
-        end
-    end
-    if CleanHubFinished or not CleanHubAsset then return end
-    CleanHubIntroSound=Instance.new("Sound")
-    CleanHubIntroSound.Name="CleanIntroSong"; CleanHubIntroSound.SoundId=CleanHubAsset; CleanHubIntroSound.Volume=1; CleanHubIntroSound.Looped=false
-    CleanHubIntroSound.Parent=game:GetService("SoundService")
-    CleanHubSoundEndedConnection=CleanHubIntroSound.Ended:Connect(CleanHubFinish)
-    pcall(function() CleanHubIntroSound:Play() end)
-end)
-
-local CleanHubSkip=Instance.new("TextButton",CleanHubGui)
-CleanHubSkip.Size=UDim2.fromScale(1,1)
-CleanHubSkip.BackgroundTransparency=1
-CleanHubSkip.Text=""
-CleanHubSkip.BorderSizePixel=0
-CleanHubSkip.AutoButtonColor=false
-CleanHubSkip.ZIndex=10
-CleanHubSkip.Activated:Connect(CleanHubFinish)
-
-task.delay(10, CleanHubFinish)
-
-while not CleanHubFinished do
-    task.wait(0.05)
-end
-
-task.wait(0.4)
-
--- ============================================================
--- FIN INTRO
+-- VLESS (Tema visual rojo/negro; intro original no incluida en este archivo)
 -- ============================================================
 
 local Players = game:GetService("Players")
@@ -555,12 +431,11 @@ function CarrySystem:isRunning() return self._heartbeatConn ~= nil end
 function CarrySystem:getCurrentSpeed() return self:getActiveSpeed() end
 
 local COLOR_THEMES = {
-    ["Rojo VLESS"] = Color3.fromRGB(190, 0, 18),
-    ["Gris"] = Color3.fromRGB(30, 30, 35),
+    ["Gris"] = Color3.fromRGB(30, 8, 12),
 }
 
-currentColorTheme = "Rojo VLESS"
-selectedColor = COLOR_THEMES["Rojo VLESS"]
+currentColorTheme = "Gris"
+selectedColor = COLOR_THEMES["Gris"]
 
 function getThemeColor() return selectedColor end
 
@@ -583,7 +458,7 @@ function updateAllUIThemeColors(color)
     _lastThemeColor = color
 
     if progressFill then
-        progressFill.BackgroundColor3 = Color3.fromRGB(255, 0, 20)
+        progressFill.BackgroundColor3 = Color3.fromRGB(255, 25, 40)
         local fs = progressFill:FindFirstChild("FillStroke")
         if fs then fs.Color = Color3.fromRGB(210, 210, 220) end
         local grad = progressFill:FindFirstChildOfClass("UIGradient")
@@ -3732,14 +3607,14 @@ function setupSpeedIndicator(char)
 
     local bb = Instance.new("BillboardGui", head)
     bb.Name = "FictionHubSpeedIndicator"
-    bb.Size = UDim2.new(0, 340, 0, 66)
+    bb.Size = UDim2.new(0, 300, 0, 48)
     bb.StudsOffset = _V3new(0, 2.35, 0)
     bb.AlwaysOnTop = true
     bb.LightInfluence = 0
 
     speedLabel = Instance.new("TextLabel", bb)
     speedLabel.Name = "Speed"
-    speedLabel.Size = UDim2.new(1, 0, 0, 24)
+    speedLabel.Size = UDim2.new(1, 0, 0, 22)
     speedLabel.Position = UDim2.new(0, 0, 0, 0)
     speedLabel.BackgroundTransparency = 1
     speedLabel.Text = "0 speed"
@@ -3753,11 +3628,11 @@ function setupSpeedIndicator(char)
 
     local discordLabel = Instance.new("TextLabel", bb)
     discordLabel.Name = "DiscordText"
-    discordLabel.Size = UDim2.new(1, 0, 0, 28)
-    discordLabel.Position = UDim2.new(0, 0, 0, 27)
+    discordLabel.Size = UDim2.new(1, 0, 0, 20)
+    discordLabel.Position = UDim2.new(0, 0, 0, 22)
     discordLabel.BackgroundTransparency = 1
     discordLabel.Text = "https://discord.gg/xjfRaEXVR"
-    discordLabel.TextColor3 = Color3.fromRGB(255, 35, 45)
+    discordLabel.TextColor3 = Color3.fromRGB(255, 35, 48)
     discordLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
     discordLabel.TextStrokeTransparency = 0.05
     discordLabel.Font = Enum.Font.GothamBlack
@@ -5825,14 +5700,14 @@ function paintFloatingBtn(btnFrame, active)
         if bg then
             bg.Color = ColorSequence.new({
                 ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 45, 55)),
-                ColorSequenceKeypoint.new(0.35, Color3.fromRGB(210, 0, 18)),
-                ColorSequenceKeypoint.new(0.70, Color3.fromRGB(135, 0, 10)),
-                ColorSequenceKeypoint.new(1.00, Color3.fromRGB(65, 0, 5)),
+                ColorSequenceKeypoint.new(0.35, Color3.fromRGB(210, 10, 25)),
+                ColorSequenceKeypoint.new(0.70, Color3.fromRGB(120, 0, 12)),
+                ColorSequenceKeypoint.new(1.00, Color3.fromRGB(45, 0, 5)),
             })
         end
         if label then label.TextColor3 = Color3.fromRGB(255, 255, 255) end
         if stroke then
-            stroke.Color = Color3.fromRGB(255, 35, 45)
+            stroke.Color = Color3.fromRGB(255, 35, 48)
             stroke.Thickness = 1.8
             stroke.Transparency = 0.05
         end
@@ -6389,7 +6264,6 @@ function buildConfigTable()
         katanaSkinEnabled = katanaSkinEnabled,
         minecraftBatSkinEnabled = minecraftBatSkinEnabled,
         minecraftBatSkinColorMode = minecraftBatSkinColorMode,
-        cleanHubSongIndex = CleanHubSongIndex,
         cleanHubAutoTPDown = CleanHubAutoTPDown,
         cleanHubAutoTPDownHeight = CleanHubAutoTPDownHeight,
         cleanHubShowE01Warning = CleanHubShowE01Warning,
@@ -6502,8 +6376,8 @@ function loadAllSettings()
     if pbScale then pbScale.Scale = progressBarScale end
     espEnabled = data.espEnabled or false
     if espEnabled then toggleESP(true) else toggleESP(false) end
-    currentColorTheme = "Rojo VLESS"
-    selectedColor = COLOR_THEMES["Rojo VLESS"]
+    currentColorTheme = "Gris"
+    selectedColor = COLOR_THEMES["Gris"]
 
     _G.AceAntiBypassLoadFromConfig(data)
     autoBatV2Enabled = _G.AceAntiBypassAimbotOn == true
@@ -6529,8 +6403,7 @@ function loadAllSettings()
         MinecraftBatSkin.State.enabled = false
         task.defer(function() pcall(MinecraftBatSkin.Remove) end)
     end
-    if type(data.cleanHubSongIndex)=="number" then CleanHubSongIndex=math.clamp(math.floor(data.cleanHubSongIndex),1,#CleanHubSongs) end
-    CleanHubAutoTPDown = data.cleanHubAutoTPDown == true
+CleanHubAutoTPDown = data.cleanHubAutoTPDown == true
     CleanHubAutoTPDownHeight = math.clamp(tonumber(data.cleanHubAutoTPDownHeight) or CleanHubAutoTPDownHeight, 0, 500)
     CleanHubShowE01Warning = data.cleanHubShowE01Warning == true
     if CleanHubAutoTPDownSetVisual then CleanHubAutoTPDownSetVisual(CleanHubAutoTPDown) end
@@ -6783,8 +6656,8 @@ function forceResetUI()
         local label = (entry.gp and entry.gp.Name) or (entry.kb and entry.kb.Name) or "None"
         ref.btn.Text = label
     end
-    currentColorTheme = "Rojo VLESS"
-    selectedColor = COLOR_THEMES["Rojo VLESS"]
+    currentColorTheme = "Gris"
+    selectedColor = COLOR_THEMES["Gris"]
     updateAllUIThemeColors(selectedColor)
     backgroundIndex = 1
     if backgroundImage then
@@ -6860,7 +6733,7 @@ function resetFloatingPositions()
         instaResetFloatingPos = nil
     end
     if pbFrame then
-        pbFrame.Position = UDim2.new(0.5, -160, 1, -60)
+        pbFrame.Position = UDim2.new(0.5, -160, 1, -48)
         savedProgressBarPos = nil
     end
     savedMobilePanelPos = nil
@@ -7323,24 +7196,21 @@ function buildGui()
     titleFrame.Position = UDim2.new(0, 12, 0, 6)
     titleFrame.BackgroundTransparency = 1
     titleFrame.ZIndex = 20
-    titleFrame.Active = true
 
     local titleImage = Instance.new("TextLabel", titleFrame)
     titleImage.Name = "TitleImage"
-    titleImage.Active = true
     titleImage.AnchorPoint = Vector2.new(0.5, 0.5)
     titleImage.Size = UDim2.new(1, 0, 1, 0)
     titleImage.Position = UDim2.new(0.5, 0, 0.5, 0)
-    titleImage.BackgroundTransparency = 1
+    titleImage.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    titleImage.BackgroundTransparency = 0
+    titleImage.BorderSizePixel = 0
     titleImage.Text = "VLESS"
-    titleImage.TextColor3 = Color3.fromRGB(255, 30, 40)
-    titleImage.TextStrokeColor3 = Color3.fromRGB(45, 0, 0)
-    titleImage.TextStrokeTransparency = 0.08
+    titleImage.TextColor3 = Color3.fromRGB(255, 35, 48)
     titleImage.Font = Enum.Font.GothamBlack
     titleImage.TextScaled = true
     titleImage.ZIndex = 21
-    local titleGradient = Instance.new("UIGradient", titleImage)
-    titleGradient.Color = ColorSequence.new(Color3.fromRGB(255, 95, 95), Color3.fromRGB(190, 0, 15))
+    Instance.new("UICorner", titleImage).CornerRadius = UDim.new(0, 28)
 
     local closeBtn = Instance.new("TextButton", main)
     closeBtn.Size = UDim2.new(0, 32, 0, 32)
@@ -7378,18 +7248,14 @@ function buildGui()
     miniBtn.Visible = false
     Instance.new("UICorner", miniBtn).CornerRadius = UDim.new(1, 0)
 
-    local miniTitleImage = Instance.new("TextLabel", miniBtn)
+    local miniTitleImage = Instance.new("ImageLabel", miniBtn)
     miniTitleImage.Name = "MiniTitleImage"
     miniTitleImage.AnchorPoint = Vector2.new(0.5, 0.5)
     miniTitleImage.Size = UDim2.new(0.88, 0, 0.88, 0)
     miniTitleImage.Position = UDim2.new(0.5, 0, 0.5, 0)
     miniTitleImage.BackgroundTransparency = 1
-    miniTitleImage.Text = "VLESS"
-    miniTitleImage.TextColor3 = Color3.fromRGB(255, 30, 40)
-    miniTitleImage.TextStrokeColor3 = Color3.fromRGB(45, 0, 0)
-    miniTitleImage.TextStrokeTransparency = 0.08
-    miniTitleImage.Font = Enum.Font.GothamBlack
-    miniTitleImage.TextScaled = true
+    miniTitleImage.Image = "rbxassetid://129749560759368"
+    miniTitleImage.ScaleType = Enum.ScaleType.Crop
     miniTitleImage.ZIndex = 21
 
     local slideTween = nil
@@ -8569,19 +8435,7 @@ function buildGui()
 
     local configPage = contentPages["Settings"]
 
-    mkSect(configPage, "Intro")
-    do
-        local row=mkRow(configPage,38)
-        mkLabel(row,"Intro Song")
-        local choices={}
-        for i=1,#CleanHubSongs do choices[i]="Song "..i end
-        mkNeoSelector(row,"Song "..CleanHubSongIndex,choices,function(selected)
-            CleanHubSongIndex=math.clamp(tonumber(selected:match("%d+")) or 1,1,#CleanHubSongs)
-            saveAllSettings()
-        end)
-    end
-
-    mkSect(configPage, "Auto Steal")
+mkSect(configPage, "Auto Steal")
     setInstaGrab = mkToggle(configPage, "Auto Steal", function(on)
         CONFIG.AUTO_STEAL_ENABLED = on
         if on then pcall(startAutoSteal) else stopAutoSteal() end
@@ -9030,7 +8884,7 @@ function buildGui()
 
     pbFrame = Instance.new("Frame", gui)
     pbFrame.Size = UDim2.new(0, 320, 0, 38)
-    pbFrame.Position = UDim2.new(0.5, -160, 1, -60)
+    pbFrame.Position = UDim2.new(0.5, -160, 1, -48)
     pbFrame.BackgroundColor3 = Color3.fromRGB(10,10,10)
     pbFrame.BackgroundTransparency = 0
     pbFrame.BorderSizePixel = 0
@@ -9059,7 +8913,7 @@ function buildGui()
             savedProgressBarPos.XScale or 0.5,
             savedProgressBarPos.XOffset or -160,
             savedProgressBarPos.YScale or 1,
-            savedProgressBarPos.YOffset or -60
+            savedProgressBarPos.YOffset or -48
         )
     end
 
@@ -9068,11 +8922,11 @@ function buildGui()
 
     fpsNeon = Instance.new("TextLabel", pbFrame)
     fpsNeon.Name = "FPSNeon"
-    fpsNeon.Visible = false
     fpsNeon.Size = UDim2.new(1, -20, 0, 14)
     fpsNeon.Position = UDim2.new(0, 12, 0, 6)
     fpsNeon.BackgroundTransparency = 1
-    fpsNeon.Text = "--FPS · --ms"
+    fpsNeon.Text = ""
+    fpsNeon.Visible = false
     fpsNeon.TextColor3 = Color3.fromRGB(210, 210, 220)
     fpsNeon.Font = Enum.Font.SciFi
     fpsNeon.TextSize = 11
@@ -9100,16 +8954,16 @@ function buildGui()
     progressFill = Instance.new("Frame", fillRegion)
     progressFill.Size = UDim2.new(0, 0, 1, 0)
     progressFill.Position = UDim2.new(0, 0, 0, 0)
-    progressFill.BackgroundColor3 = Color3.fromRGB(255, 0, 20)
+    progressFill.BackgroundColor3 = Color3.fromRGB(255, 25, 40)
     progressFill.BorderSizePixel = 0
     progressFill.ZIndex = 13
     Instance.new("UICorner", progressFill).CornerRadius = UDim.new(0, 7)
 
     local fillGrad = Instance.new("UIGradient", progressFill)
     fillGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(150, 0, 8)),
-        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 0, 20)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 65, 75)),
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(150, 0, 12)),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 25, 40)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 70, 80)),
     })
     fillGrad.Rotation = 0
 
@@ -10069,7 +9923,7 @@ function updateUIFromLoaded()
             savedProgressBarPos.XScale or 0.5,
             savedProgressBarPos.XOffset or -160,
             savedProgressBarPos.YScale or 1,
-            savedProgressBarPos.YOffset or -60
+            savedProgressBarPos.YOffset or -48
         )
     end
 
