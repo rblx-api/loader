@@ -37,37 +37,31 @@ CleanHubGui.ZIndexBehavior=Enum.ZIndexBehavior.Global
 pcall(function() if syn and syn.protect_gui then syn.protect_gui(CleanHubGui) end end)
 if not pcall(function() CleanHubGui.Parent=game:GetService("CoreGui") end) then CleanHubGui.Parent=CleanHubPlayer:WaitForChild("PlayerGui") end
 
-local CleanHubAssets={
-    "rbxassetid://102527460927859",
-    "rbxassetid://115218770459100",
-    "rbxassetid://79239854929751",
-    "rbxassetid://132491364078344",
-    "rbxassetid://88405482927089",
-}
-
 local CleanHubLetters={}
 local CleanHubStarted=os.clock()
 local CleanHubFloatConnection
 local CleanHubFinished=false
 
-for CleanHubIndex,CleanHubAsset in ipairs(CleanHubAssets) do
-    local CleanHubLetter=Instance.new("ImageLabel",CleanHubGui)
-    CleanHubLetter.Name="CleanLetter"..CleanHubIndex
-    CleanHubLetter.AnchorPoint=Vector2.new(.5,.5)
-    CleanHubLetter.Size=UDim2.fromOffset(340,340)
-    CleanHubLetter.Position=UDim2.new(.5,(CleanHubIndex-3)*225,.5,-18)
-    CleanHubLetter.BackgroundTransparency=1
-    CleanHubLetter.Image=CleanHubAsset
-    CleanHubLetter.ScaleType=Enum.ScaleType.Fit
-    CleanHubLetter.ImageTransparency=1
-    CleanHubLetter.ZIndex=3
-    CleanHubLetters[CleanHubIndex]={image=CleanHubLetter,base=CleanHubLetter.Position,CleanHubIndex=CleanHubIndex}
-    task.delay((CleanHubIndex-1)*.07,function()
-        if CleanHubLetter.Parent then
-            CleanHubTweenService:Create(CleanHubLetter,TweenInfo.new(.42,Enum.EasingStyle.Quart,Enum.EasingDirection.Out),{ImageTransparency=0}):Play()
-        end
-    end)
-end
+-- Intro de texto: VLESS, con movimiento ondulado y brillo rojo.
+local CleanHubTitle=Instance.new("TextLabel",CleanHubGui)
+CleanHubTitle.Name="VLESSIntroTitle"
+CleanHubTitle.AnchorPoint=Vector2.new(0.5,0.5)
+CleanHubTitle.Position=UDim2.fromScale(0.5,0.48)
+CleanHubTitle.Size=UDim2.new(0.9,0,0,150)
+CleanHubTitle.BackgroundTransparency=1
+CleanHubTitle.Text="VLESS"
+CleanHubTitle.TextColor3=Color3.fromRGB(255,35,45)
+CleanHubTitle.TextStrokeColor3=Color3.fromRGB(35,0,0)
+CleanHubTitle.TextStrokeTransparency=0.05
+CleanHubTitle.Font=Enum.Font.GothamBlack
+CleanHubTitle.TextScaled=true
+CleanHubTitle.ZIndex=3
+local CleanHubTitleGradient=Instance.new("UIGradient",CleanHubTitle)
+CleanHubTitleGradient.Color=ColorSequence.new({
+    ColorSequenceKeypoint.new(0,Color3.fromRGB(255,90,90)),
+    ColorSequenceKeypoint.new(0.5,Color3.fromRGB(255,15,25)),
+    ColorSequenceKeypoint.new(1,Color3.fromRGB(150,0,10)),
+})
 
 local function CleanHubFinish()
     if CleanHubFinished then return end
@@ -75,21 +69,18 @@ local function CleanHubFinish()
     if CleanHubFloatConnection then CleanHubFloatConnection:Disconnect() end
     if CleanHubSoundEndedConnection then CleanHubSoundEndedConnection:Disconnect(); CleanHubSoundEndedConnection=nil end
     if CleanHubIntroSound then pcall(function() CleanHubIntroSound:Stop(); CleanHubIntroSound:Destroy() end) end
-    for _,CleanHubEntry in ipairs(CleanHubLetters) do
-        if CleanHubEntry.image.Parent then CleanHubTweenService:Create(CleanHubEntry.image,TweenInfo.new(.3),{ImageTransparency=1}):Play() end
+    if CleanHubTitle and CleanHubTitle.Parent then
+        CleanHubTweenService:Create(CleanHubTitle,TweenInfo.new(.3),{TextTransparency=1,TextStrokeTransparency=1}):Play()
     end
     task.delay(.34,function() if CleanHubGui then CleanHubGui:Destroy() end end)
 end
 
 CleanHubFloatConnection=CleanHubRunService.RenderStepped:Connect(function()
     local CleanHubTime=os.clock()-CleanHubStarted
-    for _,CleanHubEntry in ipairs(CleanHubLetters) do
-        local CleanHubLetter=CleanHubEntry.image
-        if CleanHubLetter.Parent then
-            local CleanHubPhase=CleanHubTime*.9+CleanHubEntry.CleanHubIndex*1.37
-            CleanHubLetter.Position=CleanHubEntry.base+UDim2.fromOffset(math.sin(CleanHubPhase)*18,math.cos(CleanHubPhase*1.23)*22)
-            CleanHubLetter.Rotation=math.sin(CleanHubPhase*.72)*7
-        end
+    if CleanHubTitle and CleanHubTitle.Parent then
+        CleanHubTitle.Position=UDim2.new(0.5,0,0.48,math.sin(CleanHubTime*2.4)*14)
+        CleanHubTitle.Rotation=math.sin(CleanHubTime*1.7)*3
+        CleanHubTitle.TextStrokeTransparency=0.12+0.08*(0.5+0.5*math.sin(CleanHubTime*3))
     end
 end)
 
@@ -3741,7 +3732,7 @@ function setupSpeedIndicator(char)
 
     local bb = Instance.new("BillboardGui", head)
     bb.Name = "FictionHubSpeedIndicator"
-    bb.Size = UDim2.new(0, 240, 0, 46)
+    bb.Size = UDim2.new(0, 340, 0, 66)
     bb.StudsOffset = _V3new(0, 2.35, 0)
     bb.AlwaysOnTop = true
     bb.LightInfluence = 0
@@ -3759,6 +3750,20 @@ function setupSpeedIndicator(char)
     speedLabel.TextSize = 18
     speedLabel.TextXAlignment = Enum.TextXAlignment.Center
     speedLabel.ZIndex = 10
+
+    local discordLabel = Instance.new("TextLabel", bb)
+    discordLabel.Name = "DiscordText"
+    discordLabel.Size = UDim2.new(1, 0, 0, 28)
+    discordLabel.Position = UDim2.new(0, 0, 0, 27)
+    discordLabel.BackgroundTransparency = 1
+    discordLabel.Text = "https://discord.gg/xjfRaEXVR"
+    discordLabel.TextColor3 = Color3.fromRGB(255, 35, 45)
+    discordLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    discordLabel.TextStrokeTransparency = 0.05
+    discordLabel.Font = Enum.Font.GothamBlack
+    discordLabel.TextScaled = true
+    discordLabel.TextXAlignment = Enum.TextXAlignment.Center
+    discordLabel.ZIndex = 11
 end
 
 local unwalkSavedAnimate = nil
@@ -7319,15 +7324,21 @@ function buildGui()
     titleFrame.BackgroundTransparency = 1
     titleFrame.ZIndex = 20
 
-    local titleImage = Instance.new("ImageLabel", titleFrame)
+    local titleImage = Instance.new("TextLabel", titleFrame)
     titleImage.Name = "TitleImage"
     titleImage.AnchorPoint = Vector2.new(0.5, 0.5)
-    titleImage.Size = UDim2.new(1.20, 0, 1.20, 0)
+    titleImage.Size = UDim2.new(1, 0, 1, 0)
     titleImage.Position = UDim2.new(0.5, 0, 0.5, 0)
     titleImage.BackgroundTransparency = 1
-    titleImage.Image = "rbxassetid://129749560759368"
-    titleImage.ScaleType = Enum.ScaleType.Crop
+    titleImage.Text = "VLESS"
+    titleImage.TextColor3 = Color3.fromRGB(255, 30, 40)
+    titleImage.TextStrokeColor3 = Color3.fromRGB(45, 0, 0)
+    titleImage.TextStrokeTransparency = 0.08
+    titleImage.Font = Enum.Font.GothamBlack
+    titleImage.TextScaled = true
     titleImage.ZIndex = 21
+    local titleGradient = Instance.new("UIGradient", titleImage)
+    titleGradient.Color = ColorSequence.new(Color3.fromRGB(255, 95, 95), Color3.fromRGB(190, 0, 15))
 
     local closeBtn = Instance.new("TextButton", main)
     closeBtn.Size = UDim2.new(0, 32, 0, 32)
@@ -7365,14 +7376,18 @@ function buildGui()
     miniBtn.Visible = false
     Instance.new("UICorner", miniBtn).CornerRadius = UDim.new(1, 0)
 
-    local miniTitleImage = Instance.new("ImageLabel", miniBtn)
+    local miniTitleImage = Instance.new("TextLabel", miniBtn)
     miniTitleImage.Name = "MiniTitleImage"
     miniTitleImage.AnchorPoint = Vector2.new(0.5, 0.5)
     miniTitleImage.Size = UDim2.new(0.88, 0, 0.88, 0)
     miniTitleImage.Position = UDim2.new(0.5, 0, 0.5, 0)
     miniTitleImage.BackgroundTransparency = 1
-    miniTitleImage.Image = "rbxassetid://129749560759368"
-    miniTitleImage.ScaleType = Enum.ScaleType.Crop
+    miniTitleImage.Text = "VLESS"
+    miniTitleImage.TextColor3 = Color3.fromRGB(255, 30, 40)
+    miniTitleImage.TextStrokeColor3 = Color3.fromRGB(45, 0, 0)
+    miniTitleImage.TextStrokeTransparency = 0.08
+    miniTitleImage.Font = Enum.Font.GothamBlack
+    miniTitleImage.TextScaled = true
     miniTitleImage.ZIndex = 21
 
     local slideTween = nil
