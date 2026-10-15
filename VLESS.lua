@@ -583,7 +583,7 @@ function updateAllUIThemeColors(color)
     _lastThemeColor = color
 
     if progressFill then
-        progressFill.BackgroundColor3 = Color3.fromRGB(210, 210, 220)
+        progressFill.BackgroundColor3 = Color3.fromRGB(255, 0, 20)
         local fs = progressFill:FindFirstChild("FillStroke")
         if fs then fs.Color = Color3.fromRGB(210, 210, 220) end
         local grad = progressFill:FindFirstChildOfClass("UIGradient")
@@ -5824,15 +5824,15 @@ function paintFloatingBtn(btnFrame, active)
     if active then
         if bg then
             bg.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-                ColorSequenceKeypoint.new(0.35, Color3.fromRGB(248, 248, 252)),
-                ColorSequenceKeypoint.new(0.70, Color3.fromRGB(225, 225, 235)),
-                ColorSequenceKeypoint.new(1.00, Color3.fromRGB(195, 195, 208)),
+                ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 45, 55)),
+                ColorSequenceKeypoint.new(0.35, Color3.fromRGB(210, 0, 18)),
+                ColorSequenceKeypoint.new(0.70, Color3.fromRGB(135, 0, 10)),
+                ColorSequenceKeypoint.new(1.00, Color3.fromRGB(65, 0, 5)),
             })
         end
-        if label then label.TextColor3 = Color3.fromRGB(15, 15, 18) end
+        if label then label.TextColor3 = Color3.fromRGB(255, 255, 255) end
         if stroke then
-            stroke.Color = Color3.fromRGB(255, 255, 255)
+            stroke.Color = Color3.fromRGB(255, 35, 45)
             stroke.Thickness = 1.8
             stroke.Transparency = 0.05
         end
@@ -7323,9 +7323,11 @@ function buildGui()
     titleFrame.Position = UDim2.new(0, 12, 0, 6)
     titleFrame.BackgroundTransparency = 1
     titleFrame.ZIndex = 20
+    titleFrame.Active = true
 
     local titleImage = Instance.new("TextLabel", titleFrame)
     titleImage.Name = "TitleImage"
+    titleImage.Active = true
     titleImage.AnchorPoint = Vector2.new(0.5, 0.5)
     titleImage.Size = UDim2.new(1, 0, 1, 0)
     titleImage.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -9027,7 +9029,7 @@ function buildGui()
     spacer.ZIndex = 7
 
     pbFrame = Instance.new("Frame", gui)
-    pbFrame.Size = UDim2.new(0, 320, 0, 70)
+    pbFrame.Size = UDim2.new(0, 320, 0, 38)
     pbFrame.Position = UDim2.new(0.5, -160, 1, -60)
     pbFrame.BackgroundColor3 = Color3.fromRGB(10,10,10)
     pbFrame.BackgroundTransparency = 0
@@ -9066,6 +9068,7 @@ function buildGui()
 
     fpsNeon = Instance.new("TextLabel", pbFrame)
     fpsNeon.Name = "FPSNeon"
+    fpsNeon.Visible = false
     fpsNeon.Size = UDim2.new(1, -20, 0, 14)
     fpsNeon.Position = UDim2.new(0, 12, 0, 6)
     fpsNeon.BackgroundTransparency = 1
@@ -9080,15 +9083,15 @@ function buildGui()
     local progressRow = Instance.new("Frame", pbFrame)
     progressRow.Name = "ProgressRow"
     progressRow.Size = UDim2.new(1, -24, 0, 14)
-    progressRow.Position = UDim2.new(0, 12, 0, 28)
+    progressRow.Position = UDim2.new(0, 12, 0, 12)
     progressRow.BackgroundTransparency = 1
     progressRow.ZIndex = 11
 
     local fillRegion = Instance.new("Frame", progressRow)
     fillRegion.Name = "FillRegion"
     fillRegion.Size = UDim2.new(1, 0, 1, 0)
-    fillRegion.BackgroundColor3 = Color3.fromRGB(20,20,25)
-    fillRegion.BackgroundTransparency = 0.25
+    fillRegion.BackgroundColor3 = Color3.fromRGB(0,0,0)
+    fillRegion.BackgroundTransparency = 0
     fillRegion.BorderSizePixel = 0
     fillRegion.ClipsDescendants = true
     fillRegion.ZIndex = 12
@@ -9097,16 +9100,16 @@ function buildGui()
     progressFill = Instance.new("Frame", fillRegion)
     progressFill.Size = UDim2.new(0, 0, 1, 0)
     progressFill.Position = UDim2.new(0, 0, 0, 0)
-    progressFill.BackgroundColor3 = Color3.fromRGB(210, 210, 220)
+    progressFill.BackgroundColor3 = Color3.fromRGB(255, 0, 20)
     progressFill.BorderSizePixel = 0
     progressFill.ZIndex = 13
     Instance.new("UICorner", progressFill).CornerRadius = UDim.new(0, 7)
 
     local fillGrad = Instance.new("UIGradient", progressFill)
     fillGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(150, 150, 160)),
-        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(210, 210, 220)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(230, 230, 235)),
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(150, 0, 8)),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 0, 20)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 65, 75)),
     })
     fillGrad.Rotation = 0
 
