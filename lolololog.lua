@@ -1915,7 +1915,7 @@ do
     end
 
     if type(merged.invisAuto) == "boolean" then _G.StickyInvisAuto = merged.invisAuto end
-    if type(merged.invisDepth) == "number" then _G.StickyInvisDepth = math.clamp(merged.invisDepth, 0, 10) end
+    if type(merged.invisDepth) == "number" then _G.StickyInvisDepth = math.clamp(merged.invisDepth, 0, 20) end
     if type(merged.invisAngle) == "number" then _G.StickyInvisAngle = math.clamp(merged.invisAngle, 0, 360) end
     if type(merged.autoTp) == "boolean" then _G.StickyAutoTP = merged.autoTp end
     if type(merged.autoBuy) == "boolean" then _G.StickyAutoBuy = merged.autoBuy end
