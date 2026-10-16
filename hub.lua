@@ -1431,9 +1431,9 @@ do
     if type(fileData) == "table" then for k, v in pairs(fileData) do merged[k] = v end end
 
     if type(merged.tpDelay) == "number" then _G._stp_tpDelay = merged.tpDelay end
-    if type(merged.tpVelocity) == "number" then _G.TPVelocity = math.clamp(merged.tpVelocity, 55, 750) end
-    if type(merged.climbSpeed) == "number" then _G.StickyClimb = math.clamp(merged.climbSpeed, 55, 250) end
-    if type(merged.cframeSpeed) == "number" then _G.StickyCFrameSpeed = math.clamp(merged.cframeSpeed, 55, 900) end
+    if type(merged.tpVelocity) == "number" then _G.TPVelocity = math.clamp(merged.tpVelocity, 200, 750) end
+    if type(merged.climbSpeed) == "number" then _G.StickyClimb = math.clamp(merged.climbSpeed, 100, 250) end
+    if type(merged.cframeSpeed) == "number" then _G.StickyCFrameSpeed = math.clamp(merged.cframeSpeed, 100, 900) end
     if type(merged.walkSpeed) == "number" then _G.StickyWalkSpeed = math.clamp(merged.walkSpeed, 16, 29) end
     if type(merged.carpetTool) == "string" then _G.StickyCarpetTool = merged.carpetTool end
     if type(merged.landingDelay) == "number" then _G.LandingDelay = math.clamp(merged.landingDelay, 0.01, 1.0) end
