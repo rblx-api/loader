@@ -5148,10 +5148,11 @@ do
                 BackgroundColor3 = UIC.line, BorderSizePixel = 0, ZIndex = 51,
             })
         end
-        seg(12, 165, "leaked at discord.gg/Z7vPrxecnJ", UIC.acc, UIFB)
-        div(180)
-        local fpsLbl = seg(192, 60, "FPS: --", UIC.txt, UIF)
-        local pingLbl = seg(258, 80, "PING: --", UIC.txt, UIF)
+        seg(16, 96, "MEERKO TP", UIC.acc, UIFB)
+        div(120)
+        local fpsLbl = seg(132, 84, "FPS: --", UIC.txt, UIF)
+        div(224)
+        local pingLbl = seg(236, 88, "PING: --", UIC.txt, UIF)
 
         local frames, since, pingItem = 0, 0, nil
         RunService.RenderStepped:Connect(function(dt)
