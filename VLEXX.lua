@@ -44,16 +44,16 @@ introSongIds = {
 }
 currentIntroSongIndex = 1
 pcall(function()
-if isfile and readfile and isfile("VLEXStealBarRoxo_Shelvc.json") then
-local settingsData = game:GetService("HttpService"):JSONDecode(readfile("VLEXStealBarRoxo_Shelvc.json"))
-if type(settingsData.VLEXHubSongIndex) == "number" then
+if isfile and readfile and isfile("GrokStealBarRoxo_Shelvc.json") then
+local settingsData = game:GetService("HttpService"):JSONDecode(readfile("GrokStealBarRoxo_Shelvc.json"))
+if type(settingsData.grokHubSongIndex) == "number" then
 local songCount = #introSongIds
-currentIntroSongIndex = math.clamp(math.floor(settingsData.VLEXHubSongIndex), 1, songCount)
+currentIntroSongIndex = math.clamp(math.floor(settingsData.grokHubSongIndex), 1, songCount)
 end
 end
 end)
 introTrack = introSongIds[currentIntroSongIndex]
-introSongFileName = "VLEXhub_intro_song_" .. currentIntroSongIndex .. ".mp3"
+introSongFileName = "grokhub_intro_song_" .. currentIntroSongIndex .. ".mp3"
 introSound = nil
 introHeartbeatConnection = nil
 do
@@ -63,7 +63,7 @@ local playerGui = introPlayer and introPlayer:FindFirstChildOfClass("PlayerGui")
 introGuiParents[1] = CoreGui
 introGuiParents[2] = playerGui
 for _, guiParent in ipairs(introGuiParents) do
-guiParent = guiParent and guiParent:FindFirstChild("VLEXLettersIntro")
+guiParent = guiParent and guiParent:FindFirstChild("GrokLettersIntro")
 if guiParent then
 guiParent:Destroy()
 end
@@ -72,7 +72,7 @@ end
 do
 local introGui, introClosed, closeIntro
 introGui = Instance.new("ScreenGui")
-introGui.Name = "VLEXLettersIntro"
+introGui.Name = "GrokLettersIntro"
 introGui.IgnoreGuiInset = true
 introGui.ResetOnSpawn = false
 introGui.DisplayOrder = 100000
@@ -134,12 +134,12 @@ ring.ZIndex = 3
 local ringStroke = Instance.new("UIStroke", ring)
 ringStroke.Thickness = 2.4
 ringStroke.Transparency = 1
-ringStroke.Color = Color3.fromRGB(255, 50, 55)
+ringStroke.Color = Color3.fromRGB(200, 120, 255)
 Instance.new("UICorner", ring).CornerRadius = UDim.new(1, 0)
 local ringGrad = Instance.new("UIGradient", ringStroke)
 ringGrad.Color = ColorSequence.new({
 	ColorSequenceKeypoint.new(0.00, Color3.fromRGB(80, 20, 140)),
-	ColorSequenceKeypoint.new(0.30, Color3.fromRGB(255, 60, 60)),
+	ColorSequenceKeypoint.new(0.30, Color3.fromRGB(220, 140, 255)),
 	ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 255, 255)),
 	ColorSequenceKeypoint.new(0.70, Color3.fromRGB(180, 80, 255)),
 	ColorSequenceKeypoint.new(1.00, Color3.fromRGB(80, 20, 140)),
@@ -189,11 +189,11 @@ for i = 1, 14 do
 	}
 end
 
--- VLEX letters
-local VLEXChars = {"V", "L", "E", "X"}
-for i, char in ipairs(VLEXChars) do
+-- GROK letters
+local grokChars = {"V", "L", "E", "X"}
+for i, char in ipairs(grokChars) do
 	local letterLabel = Instance.new("TextLabel", introGui)
-	letterLabel.Name = "VLEXLetter_" .. i
+	letterLabel.Name = "GrokLetter_" .. i
 	letterLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 	letterLabel.Size = UDim2.fromOffset(8, 8)
 	letterLabel.Position = UDim2.new(0.5, (i - 2.5) * 58, 0.5, -28)
@@ -201,21 +201,21 @@ for i, char in ipairs(VLEXChars) do
 	letterLabel.Text = char
 	letterLabel.Font = Enum.Font.GothamBlack
 	letterLabel.TextScaled = true
-	letterLabel.TextColor3 = Color3.fromRGB(255, 45, 45)
+	letterLabel.TextColor3 = Color3.fromRGB(255, 250, 255)
 	letterLabel.TextTransparency = 1
 	letterLabel.ZIndex = 6
 
 	local stroke = Instance.new("UIStroke", letterLabel)
 	stroke.Thickness = 2.5
-	stroke.Color = Color3.fromRGB(255, 25, 35)
+	stroke.Color = Color3.fromRGB(255, 35, 35)
 	stroke.Transparency = 0.35
 
 	local grad = Instance.new("UIGradient", letterLabel)
 	grad.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
-		ColorSequenceKeypoint.new(0.35, Color3.fromRGB(255, 35, 45)),
-		ColorSequenceKeypoint.new(0.7, Color3.fromRGB(220, 0, 15)),
-		ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 0, 8)),
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 220, 220)),
+		ColorSequenceKeypoint.new(0.35, Color3.fromRGB(255, 100, 100)),
+		ColorSequenceKeypoint.new(0.7, Color3.fromRGB(255, 40, 40)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 0, 0)),
 	})
 	grad.Rotation = 90
 
@@ -228,7 +228,7 @@ for i, char in ipairs(VLEXChars) do
 	halo.Text = char
 	halo.Font = Enum.Font.GothamBlack
 	halo.TextScaled = true
-	halo.TextColor3 = Color3.fromRGB(180, 0, 15)
+	halo.TextColor3 = Color3.fromRGB(255, 35, 35)
 	halo.TextTransparency = 1
 	halo.ZIndex = 5
 
@@ -238,7 +238,7 @@ for i, char in ipairs(VLEXChars) do
 		grad = grad,
 		stroke = stroke,
 		base = letterLabel.Position,
-		VLEXHubIndex = i,
+		GrokHubIndex = i,
 	}
 
 	task.delay(0.15 + (i - 1) * 0.09, function()
@@ -370,7 +370,7 @@ introRenderConnection = introRunService.RenderStepped:Connect(function()
 	for _, letterEntry in ipairs(introLetters) do
 		local image = letterEntry.image
 		if image and image.Parent then
-			local animationPhase = elapsedTime * 2.4 + letterEntry.VLEXHubIndex * 1.37
+			local animationPhase = elapsedTime * 2.4 + letterEntry.GrokHubIndex * 1.37
 			local offset = UDim2.fromOffset(math.sin(animationPhase) * 10, math.cos(animationPhase * 1.35) * 14)
 			image.Position = letterEntry.base + offset
 			image.Rotation = math.sin(animationPhase * 0.7) * 5
@@ -379,10 +379,10 @@ introRenderConnection = introRunService.RenderStepped:Connect(function()
 				letterEntry.halo.Rotation = image.Rotation
 			end
 			if letterEntry.grad then
-				letterEntry.grad.Rotation = 90 + math.sin(elapsedTime * 1.8 + letterEntry.VLEXHubIndex) * 25
+				letterEntry.grad.Rotation = 90 + math.sin(elapsedTime * 1.8 + letterEntry.GrokHubIndex) * 25
 			end
 			if letterEntry.stroke then
-				letterEntry.stroke.Transparency = 0.08 + math.sin(elapsedTime * 3 + letterEntry.VLEXHubIndex) * 0.12
+				letterEntry.stroke.Transparency = 0.08 + math.sin(elapsedTime * 3 + letterEntry.GrokHubIndex) * 0.12
 			end
 		end
 	end
@@ -438,7 +438,7 @@ task.spawn(function()
 		return
 	end
 	introSound = Instance.new("Sound")
-	introSound.Name = "VLEXIntroSong"
+	introSound.Name = "GrokIntroSong"
 	introSound.SoundId = soundAssetId
 	introSound.Volume = 1
 	introSound.Looped = false
@@ -525,7 +525,7 @@ BAT_AIMBOT_SPEED = 58
 BYPASS_AIMBOT_SPEED = 60
 MOBILE_PANEL_WIDTH = 128
 MOBILE_PANEL_HEIGHT = 294
-CONFIG_FILE = "VLEXStealBarRoxo_Shelvc.json"
+CONFIG_FILE = "GrokStealBarRoxo_Shelvc.json"
 BAT_V2_HIT_DIST = 4.5
 _isDraggingButton = false
 backgroundIndex = 4
@@ -1069,7 +1069,7 @@ end
 if pbFrame then
 local pbStroke = pbFrame:FindFirstChild("PBStroke")
 if pbStroke then
-pbStroke.Color = Color3.fromRGB(255, 25, 35)
+pbStroke.Color = color
 end
 local progressRow = pbFrame:FindFirstChild("ProgressRow")
 if progressRow then
@@ -1769,7 +1769,7 @@ animSelectorLabel = nil
 autoBatV2Enabled = false
 autoBatV2SetVisual = nil
 selectedAimbotMode = "Normal"
-aimbotVersion = "VLEX"
+aimbotVersion = "Grok"
 aimbotVersionLabel = nil
 shelVsLastBypassSwing = 0
 autoSwingEnabled = false
@@ -2633,7 +2633,7 @@ minecraftBatSkinController = createMinecraftBatController()
 end
 
 -- ===== AMBITIOUS-STYLE TOOL SKINS (ported) =====
-_G.VLEXToolSkinAssets = {
+_G.GrokToolSkinAssets = {
 	DiamondSword = {
 		cat = "Bat", label = "Diamond Sword",
 		mesh = "rbxassetid://8827558932", tex = "rbxassetid://8827558969",
@@ -2659,11 +2659,11 @@ _G.VLEXToolSkinAssets = {
 		c0 = CFrame.new(0, 0, -0.8) * CFrame.Angles(math.rad(330), math.rad(180), 0),
 	},
 }
-_G.VLEXSelectedBatSkin = _G.VLEXSelectedBatSkin or "Default"
-_G.VLEXSelectedMedusaSkin = _G.VLEXSelectedMedusaSkin or "Default"
-_G.VLEXCustomToolsEnabled = _G.VLEXCustomToolsEnabled == true
+_G.GrokSelectedBatSkin = _G.GrokSelectedBatSkin or "Default"
+_G.GrokSelectedMedusaSkin = _G.GrokSelectedMedusaSkin or "Default"
+_G.GrokCustomToolsEnabled = _G.GrokCustomToolsEnabled == true
 
-local function _VLEXHideToolVisuals(tool)
+local function _grokHideToolVisuals(tool)
 	for _, d in ipairs(tool:GetDescendants()) do
 		if d:IsA("BasePart") or d:IsA("Decal") or d:IsA("Texture") or d:IsA("MeshPart") then
 			if not (d.Name == "LocalReplica" or d:FindFirstAncestor("LocalReplica")) then
@@ -2676,20 +2676,20 @@ local function _VLEXHideToolVisuals(tool)
 	end
 end
 
-local function _VLEXClearReplica(tool)
+local function _grokClearReplica(tool)
 	local handle = tool and tool:FindFirstChild("Handle")
 	if not handle then return end
 	local rep = handle:FindFirstChild("LocalReplica")
 	if rep then pcall(function() rep:Destroy() end) end
 end
 
-local function _VLEXBuildReplica(tool, assetKey)
-	local data = _G.VLEXToolSkinAssets[assetKey]
+local function _grokBuildReplica(tool, assetKey)
+	local data = _G.GrokToolSkinAssets[assetKey]
 	if not data then return end
 	local handle = tool:FindFirstChild("Handle")
 	if not handle then return end
-	_VLEXClearReplica(tool)
-	_VLEXHideToolVisuals(tool)
+	_grokClearReplica(tool)
+	_grokHideToolVisuals(tool)
 	local m = Instance.new("Model")
 	m.Name = "LocalReplica"
 	local p = Instance.new("Part")
@@ -2716,20 +2716,20 @@ local function _VLEXBuildReplica(tool, assetKey)
 	m.Parent = handle
 end
 
-local function _VLEXIsBatTool(tool)
+local function _grokIsBatTool(tool)
 	if not tool or not tool:IsA("Tool") then return false end
 	local n = tool.Name:lower()
 	return n:find("bat") or n:find("slap") or n == "bat"
 end
 
-local function _VLEXIsMedusaTool(tool)
+local function _grokIsMedusaTool(tool)
 	if not tool or not tool:IsA("Tool") then return false end
 	local n = tool.Name:lower()
 	return n:find("medusa") or n:find("stone") or n:find("head")
 end
 
-function _G.VLEXApplySelectedToolSkins()
-	if not _G.VLEXCustomToolsEnabled then return end
+function _G.GrokApplySelectedToolSkins()
+	if not _G.GrokCustomToolsEnabled then return end
 	local containers = {}
 	local char = localPlayer.Character
 	if char then table.insert(containers, char) end
@@ -2738,23 +2738,23 @@ function _G.VLEXApplySelectedToolSkins()
 	for _, container in ipairs(containers) do
 		for _, tool in ipairs(container:GetChildren()) do
 			if tool:IsA("Tool") then
-				if _VLEXIsBatTool(tool) then
-					local sk = _G.VLEXSelectedBatSkin
+				if _grokIsBatTool(tool) then
+					local sk = _G.GrokSelectedBatSkin
 					if sk == "Default" or sk == "Minecraft" then
-						_VLEXClearReplica(tool)
+						_grokClearReplica(tool)
 					elseif sk == "Katana" then
-						_VLEXBuildReplica(tool, "Katana")
+						_grokBuildReplica(tool, "Katana")
 					elseif sk == "DiamondSword" then
-						_VLEXBuildReplica(tool, "DiamondSword")
+						_grokBuildReplica(tool, "DiamondSword")
 					end
-				elseif _VLEXIsMedusaTool(tool) then
-					local sk = _G.VLEXSelectedMedusaSkin
+				elseif _grokIsMedusaTool(tool) then
+					local sk = _G.GrokSelectedMedusaSkin
 					if sk == "Default" then
-						_VLEXClearReplica(tool)
+						_grokClearReplica(tool)
 					elseif sk == "Skull" then
-						_VLEXBuildReplica(tool, "Skull")
+						_grokBuildReplica(tool, "Skull")
 					elseif sk == "GoldenDesertEagle" then
-						_VLEXBuildReplica(tool, "GoldenDesertEagle")
+						_grokBuildReplica(tool, "GoldenDesertEagle")
 					end
 				end
 			end
@@ -2762,7 +2762,7 @@ function _G.VLEXApplySelectedToolSkins()
 	end
 end
 
-function _G.VLEXClearAllToolReplicas()
+function _G.GrokClearAllToolReplicas()
 	local containers = {}
 	local char = localPlayer.Character
 	if char then table.insert(containers, char) end
@@ -2771,7 +2771,7 @@ function _G.VLEXClearAllToolReplicas()
 	for _, container in ipairs(containers) do
 		for _, tool in ipairs(container:GetChildren()) do
 			if tool:IsA("Tool") then
-				_VLEXClearReplica(tool)
+				_grokClearReplica(tool)
 			end
 		end
 	end
@@ -2779,8 +2779,8 @@ end
 
 task.spawn(function()
 	while true do
-		if _G.VLEXCustomToolsEnabled then
-			pcall(_G.VLEXApplySelectedToolSkins)
+		if _G.GrokCustomToolsEnabled then
+			pcall(_G.GrokApplySelectedToolSkins)
 		end
 		task.wait(0.6)
 	end
@@ -2788,14 +2788,14 @@ end)
 
 localPlayer.CharacterAdded:Connect(function()
 	task.wait(0.8)
-	if _G.VLEXCustomToolsEnabled then
-		pcall(_G.VLEXApplySelectedToolSkins)
+	if _G.GrokCustomToolsEnabled then
+		pcall(_G.GrokApplySelectedToolSkins)
 	end
 end)
 -- ===== END AMBITIOUS-STYLE TOOL SKINS =====
 
--- ========== VLEX AVATAR CHANGER (Ambitious-style) ==========
-_G._VLEXAvatarChanger = _G._VLEXAvatarChanger or {
+-- ========== GROK AVATAR CHANGER (Ambitious-style) ==========
+_G._GrokAvatarChanger = _G._GrokAvatarChanger or {
 	Hair={enabled=false,savedId=nil,savedName=""},
 	Hats={enabled=false,savedId=nil,savedName=""},
 	Face={enabled=false,savedId=nil,savedName=""},
@@ -2811,7 +2811,7 @@ _G._VLEXAvatarChanger = _G._VLEXAvatarChanger or {
 	Sweaters={enabled=false,savedId=nil,savedName=""},
 	Bottoms={enabled=false,savedId=nil,savedName=""},
 }
-local VLEX_AC_CATEGORIES = {
+local GROK_AC_CATEGORIES = {
 	{ Name="Hair", AssetTypes={Enum.AvatarAssetType.HairAccessory} },
 	{ Name="Hats", AssetTypes={Enum.AvatarAssetType.Hat} },
 	{ Name="Face", AssetTypes={Enum.AvatarAssetType.FaceAccessory} },
@@ -2890,7 +2890,7 @@ local function _gAcRemoveByType(assetType, itemName)
 				if c:IsA("Accessory") then
 					local match = false
 					local nm = tostring(itemName or "")
-					if nm ~= "" and (c.Name == nm or c.Name == "AC"..nm or c.Name == "VLEXAC"..nm) then match = true end
+					if nm ~= "" and (c.Name == nm or c.Name == "AC"..nm or c.Name == "GrokAC"..nm) then match = true end
 					local handle = c:FindFirstChild("Handle")
 					if assetType == Enum.AvatarAssetType.HairAccessory then
 						if c.Name:lower():find("hair") or (handle and handle:FindFirstChild("HairAttachment")) then match = true end
@@ -2910,7 +2910,7 @@ local function _gAcRemoveByType(assetType, itemName)
 						if handle and handle:FindFirstChild("WaistAttachment") then match = true end
 					elseif assetType == Enum.AvatarAssetType.JacketAccessory or assetType == Enum.AvatarAssetType.SweaterAccessory or assetType == Enum.AvatarAssetType.ShortsAccessory then
 						match = true -- clothing accessories: replace any of same class name pattern
-						if c.Name:find("VLEXAC") or c.Name:find("^AC") then match = true end
+						if c.Name:find("GrokAC") or c.Name:find("^AC") then match = true end
 					end
 					if match then c:Destroy() end
 				end
@@ -2938,7 +2938,7 @@ local function _gAcEquipItem(itemId, itemType, itemName, gen)
 		if not _gAcWaitReady(character, 8) then return false end
 		if gen ~= _gAcGen then return false end
 		if not objects or #objects == 0 then
-			warn("[VLEXAC] Failed to load asset", itemId)
+			warn("[GrokAC] Failed to load asset", itemId)
 			return false
 		end
 
@@ -2968,17 +2968,17 @@ local function _gAcEquipItem(itemId, itemType, itemName, gen)
 
 		if item:IsA("Shirt") then
 			for _,c in pairs(character:GetChildren()) do if c:IsA("Shirt") then c:Destroy() end end
-			item.Name = "VLEXACShirt"
+			item.Name = "GrokACShirt"
 			item.Parent = character
 			return true
 		elseif item:IsA("Pants") then
 			for _,c in pairs(character:GetChildren()) do if c:IsA("Pants") then c:Destroy() end end
-			item.Name = "VLEXACPants"
+			item.Name = "GrokACPants"
 			item.Parent = character
 			return true
 		elseif item:IsA("ShirtGraphic") then
 			for _,c in pairs(character:GetChildren()) do if c:IsA("ShirtGraphic") then c:Destroy() end end
-			item.Name = "VLEXACTShirt"
+			item.Name = "GrokACTShirt"
 			item.Parent = character
 			return true
 		end
@@ -2990,7 +2990,7 @@ local function _gAcEquipItem(itemId, itemType, itemName, gen)
 				handle = item:FindFirstChildWhichIsA("BasePart", true)
 			end
 			if not handle then
-				warn("[VLEXAC] Accessory has no Handle", itemId)
+				warn("[GrokAC] Accessory has no Handle", itemId)
 				return false
 			end
 
@@ -2999,14 +2999,14 @@ local function _gAcEquipItem(itemId, itemType, itemName, gen)
 				for _,c in pairs(character:GetChildren()) do
 					if c:IsA("Accessory") then
 						local h = c:FindFirstChild("Handle")
-						if c.Name:lower():find("hair") or (h and h:FindFirstChild("HairAttachment")) or c.Name:find("VLEXAC") then
+						if c.Name:lower():find("hair") or (h and h:FindFirstChild("HairAttachment")) or c.Name:find("GrokAC") then
 							c:Destroy()
 						end
 					end
 				end
 			else
 				for _,c in pairs(character:GetChildren()) do
-					if c:IsA("Accessory") and (c.Name == safeName or c.Name == "AC"..safeName or c.Name == "VLEXAC"..safeName) then
+					if c:IsA("Accessory") and (c.Name == safeName or c.Name == "AC"..safeName or c.Name == "GrokAC"..safeName) then
 						c:Destroy()
 					end
 				end
@@ -3034,7 +3034,7 @@ local function _gAcEquipItem(itemId, itemType, itemName, gen)
 			end
 			if not targetPart then return false end
 
-			item.Name = "VLEXAC"..safeName
+			item.Name = "GrokAC"..safeName
 			item.Parent = character
 			handle.CFrame = targetPart.CFrame
 
@@ -3045,7 +3045,7 @@ local function _gAcEquipItem(itemId, itemType, itemName, gen)
 			end
 
 			local w = Instance.new("Weld")
-			w.Name = "VLEXACManualWeld"
+			w.Name = "GrokACManualWeld"
 			w.Part0 = handle
 			w.Part1 = targetPart
 			if attachment and targetAttachment then
@@ -3058,11 +3058,11 @@ local function _gAcEquipItem(itemId, itemType, itemName, gen)
 			return true
 		end
 
-		warn("[VLEXAC] Unknown item class", item.ClassName, itemId)
+		warn("[GrokAC] Unknown item class", item.ClassName, itemId)
 		return false
 	end)
 	if not ok then
-		warn("[VLEXAC] equip error:", applied)
+		warn("[GrokAC] equip error:", applied)
 		return false
 	end
 	return applied == true
@@ -3074,9 +3074,9 @@ local function _gAcApplyAll(gen)
 	if not character then return end
 	if not _gAcWaitReady(character, 10) then return end
 	if gen ~= _gAcGen then return end
-	for _, cat in ipairs(VLEX_AC_CATEGORIES) do
+	for _, cat in ipairs(GROK_AC_CATEGORIES) do
 		if gen ~= _gAcGen then return end
-		local entry = _G._VLEXAvatarChanger[cat.Name]
+		local entry = _G._GrokAvatarChanger[cat.Name]
 		if entry and entry.enabled and entry.savedId then
 			for attempt = 1, 3 do
 				if gen ~= _gAcGen then return end
@@ -3108,7 +3108,7 @@ local function _gAcOpenPicker(catName, assetTypes)
 
 	local parentGui = gui or localPlayer:FindFirstChild("PlayerGui")
 	_gAcPickerGui = Instance.new("ScreenGui")
-	_gAcPickerGui.Name = "VLEXAvatarChangerPicker"
+	_gAcPickerGui.Name = "GrokAvatarChangerPicker"
 	_gAcPickerGui.ResetOnSpawn = false
 	_gAcPickerGui.IgnoreGuiInset = true
 	_gAcPickerGui.DisplayOrder = 9998
@@ -3226,7 +3226,7 @@ local function _gAcOpenPicker(catName, assetTypes)
 	end
 
 	local function selectItem(itemId, itemName)
-		local entry = _G._VLEXAvatarChanger[catName]
+		local entry = _G._GrokAvatarChanger[catName]
 		if not entry then return end
 		entry.savedId = tonumber(itemId)
 		entry.savedName = tostring(itemName or "")
@@ -3239,11 +3239,11 @@ local function _gAcOpenPicker(catName, assetTypes)
 				task.wait(0.3 * attempt)
 			end
 			if not ok then
-				warn("[VLEXAC] Could not equip", itemId, itemName)
+				warn("[GrokAC] Could not equip", itemId, itemName)
 			end
 		end)
-		if _G._VLEXAcSetVisual and _G._VLEXAcSetVisual[catName] then
-			_G._VLEXAcSetVisual[catName](true)
+		if _G._GrokAcSetVisual and _G._GrokAcSetVisual[catName] then
+			_G._GrokAcSetVisual[catName](true)
 		end
 		pcall(saveAllSettings)
 		_gAcClosePicker()
@@ -3291,10 +3291,10 @@ local function _gAcOpenPicker(catName, assetTypes)
 		nameLabel.TextWrapped = true
 		nameLabel.ZIndex = 5
 
-		local entry = _G._VLEXAvatarChanger[catName]
+		local entry = _G._GrokAvatarChanger[catName]
 		if entry and entry.savedId == item.Id then
 			card.BackgroundColor3 = Color3.fromRGB(40, 20, 60)
-			st.Color = Color3.fromRGB(255, 30, 40)
+			st.Color = Color3.fromRGB(180, 100, 255)
 		end
 
 		card.MouseButton1Click:Connect(function()
@@ -3359,13 +3359,13 @@ localPlayer.CharacterAdded:Connect(function()
 	end)
 end)
 
-_G.VLEXAvatarChangerApplyAll = _gAcApplyAll
-_G.VLEXAvatarChangerOpenPicker = _gAcOpenPicker
-_G.VLEXAvatarChangerEquip = _gAcEquipItem
-_G.VLEXAvatarChangerRemove = _gAcRemoveByType
-_G.VLEXAvatarChangerCategories = VLEX_AC_CATEGORIES
-_G._VLEXAcSetVisual = {}
--- ========== END VLEX AVATAR CHANGER ==========
+_G.GrokAvatarChangerApplyAll = _gAcApplyAll
+_G.GrokAvatarChangerOpenPicker = _gAcOpenPicker
+_G.GrokAvatarChangerEquip = _gAcEquipItem
+_G.GrokAvatarChangerRemove = _gAcRemoveByType
+_G.GrokAvatarChangerCategories = GROK_AC_CATEGORIES
+_G._GrokAcSetVisual = {}
+-- ========== END GROK AVATAR CHANGER ==========
 
 
 
@@ -9663,8 +9663,8 @@ if setNeonWeatherVisual then
 setNeonWeatherVisual(neonWeatherEnabled)
 end
 end
-_G.VLEXFloatTheme = _G.VLEXFloatTheme or "Roxo"
-_G.VLEXFloatThemes = {
+_G.GrokFloatTheme = _G.GrokFloatTheme or "Roxo"
+_G.GrokFloatThemes = {
 ["Azul"] = {
 base = Color3.fromRGB(30, 130, 255),
 activeText = Color3.fromRGB(255, 255, 255),
@@ -9765,7 +9765,7 @@ paintFloatingBtn = function(button, active)
 if not button then
 return
 end
-local floatTheme = _G.VLEXFloatThemes[_G.VLEXFloatTheme] or _G.VLEXFloatThemes["Roxo"]
+local floatTheme = _G.GrokFloatThemes[_G.GrokFloatTheme] or _G.GrokFloatThemes["Roxo"]
 local btnGrad = button:FindFirstChild("BtnGrad")
 local textLabel = button:FindFirstChild("TextLabel")
 local uiStroke = button:FindFirstChildOfClass("UIStroke")
@@ -10637,10 +10637,10 @@ antiBypassAimbotEnabled = _G.AceAntiBypassAimbotOn == true,
 katanaSkinEnabled = katanaSkinEnabled,
 minecraftBatSkinEnabled = minecraftBatSkinEnabled,
 minecraftBatSkinColorMode = minecraftBatSkinColorMode,
-VLEXHubSongIndex = currentIntroSongIndex,
-VLEXHubAutoTPDown = VLEXHubAutoTPDown,
-VLEXHubAutoTPDownHeight = VLEXHubAutoTPDownHeight,
-VLEXHubShowE01Warning = VLEXHubShowE01Warning,
+grokHubSongIndex = currentIntroSongIndex,
+grokHubAutoTPDown = GrokHubAutoTPDown,
+grokHubAutoTPDownHeight = GrokHubAutoTPDownHeight,
+grokHubShowE01Warning = GrokHubShowE01Warning,
 unwalk = unwalkEnabled,
 holdJumpEnabled = infJumpEnabled,
 holdJumpMode = infJumpMode,
@@ -10701,10 +10701,10 @@ progressBarScale = progressBarScale,
 lockUI = uiLocked,
 editMode = editModeEnabled,
 floatingButtonScale = floatingButtonScale,
-floatingBtnTheme = _G.VLEXFloatTheme,
+floatingBtnTheme = _G.GrokFloatTheme,
 outfitIndex = currentOutfitIndex,
 avatarChanger = (function()
-	local ac = _G._VLEXAvatarChanger
+	local ac = _G._GrokAvatarChanger
 	if not ac then return nil end
 	local t = {}
 	for k, v in pairs(ac) do
@@ -10716,9 +10716,9 @@ avatarChanger = (function()
 	end
 	return t
 end)(),
-VLEXCustomToolsEnabled = _G.VLEXCustomToolsEnabled == true,
-VLEXSelectedBatSkin = _G.VLEXSelectedBatSkin or "Default",
-VLEXSelectedMedusaSkin = _G.VLEXSelectedMedusaSkin or "Default",
+grokCustomToolsEnabled = _G.GrokCustomToolsEnabled == true,
+grokSelectedBatSkin = _G.GrokSelectedBatSkin or "Default",
+grokSelectedMedusaSkin = _G.GrokSelectedMedusaSkin or "Default",
 backgroundIndex = backgroundIndex,
 backgroundImageTransparency = backgroundImageTransparency,
 themeColor = currentColorTheme,
@@ -10888,10 +10888,10 @@ minecraftBatSkinEnabled = result.minecraftBatSkinEnabled or false
 minecraftBatSkinColorMode = result.minecraftBatSkinColorMode or "Default"
 -- Avatar Changer skins
 if type(result.avatarChanger) == "table" then
-	_G._VLEXAvatarChanger = _G._VLEXAvatarChanger or {}
+	_G._GrokAvatarChanger = _G._GrokAvatarChanger or {}
 	for k, v in pairs(result.avatarChanger) do
 		if type(v) == "table" then
-			_G._VLEXAvatarChanger[k] = {
+			_G._GrokAvatarChanger[k] = {
 				enabled = v.enabled == true,
 				savedId = tonumber(v.savedId),
 				savedName = tostring(v.savedName or ""),
@@ -10900,32 +10900,32 @@ if type(result.avatarChanger) == "table" then
 	end
 	task.defer(function()
 		task.wait(1.2)
-		if _G.VLEXAvatarChangerApplyAll then
-			pcall(_G.VLEXAvatarChangerApplyAll)
+		if _G.GrokAvatarChangerApplyAll then
+			pcall(_G.GrokAvatarChangerApplyAll)
 		end
 		-- refresh toggles if UI already built
-		if _G._VLEXAcSetVisual then
-			for name, entry in pairs(_G._VLEXAvatarChanger) do
-				if _G._VLEXAcSetVisual[name] then
-					pcall(_G._VLEXAcSetVisual[name], entry.enabled == true)
+		if _G._GrokAcSetVisual then
+			for name, entry in pairs(_G._GrokAvatarChanger) do
+				if _G._GrokAcSetVisual[name] then
+					pcall(_G._GrokAcSetVisual[name], entry.enabled == true)
 				end
 			end
 		end
 	end)
 end
-if result.VLEXCustomToolsEnabled ~= nil then
-	_G.VLEXCustomToolsEnabled = result.VLEXCustomToolsEnabled == true
+if result.grokCustomToolsEnabled ~= nil then
+	_G.GrokCustomToolsEnabled = result.grokCustomToolsEnabled == true
 end
-if result.VLEXSelectedBatSkin then
-	_G.VLEXSelectedBatSkin = result.VLEXSelectedBatSkin
+if result.grokSelectedBatSkin then
+	_G.GrokSelectedBatSkin = result.grokSelectedBatSkin
 end
-if result.VLEXSelectedMedusaSkin then
-	_G.VLEXSelectedMedusaSkin = result.VLEXSelectedMedusaSkin
+if result.grokSelectedMedusaSkin then
+	_G.GrokSelectedMedusaSkin = result.grokSelectedMedusaSkin
 end
-if _G.VLEXCustomToolsEnabled and _G.VLEXApplySelectedToolSkins then
+if _G.GrokCustomToolsEnabled and _G.GrokApplySelectedToolSkins then
 	task.defer(function()
 		task.wait(1)
-		pcall(_G.VLEXApplySelectedToolSkins)
+		pcall(_G.GrokApplySelectedToolSkins)
 	end)
 end
 if MinecraftBatSetVisual then
@@ -10946,18 +10946,18 @@ task.defer(function()
 pcall(minecraftBatSkinController.Remove)
 end)
 end
-if type(result.VLEXHubSongIndex) == "number" then
+if type(result.grokHubSongIndex) == "number" then
 local value = #introSongIds
-currentIntroSongIndex = math.clamp(math.floor(result.VLEXHubSongIndex), 1, value)
+currentIntroSongIndex = math.clamp(math.floor(result.grokHubSongIndex), 1, value)
 end
-VLEXHubAutoTPDown = result.VLEXHubAutoTPDown == true
-VLEXHubAutoTPDownHeight = math.clamp(tonumber(result.VLEXHubAutoTPDownHeight) or VLEXHubAutoTPDownHeight, 0, 500)
-VLEXHubShowE01Warning = result.VLEXHubShowE01Warning == true
-if VLEXHubAutoTPDownSetVisual then
-VLEXHubAutoTPDownSetVisual(VLEXHubAutoTPDown)
+GrokHubAutoTPDown = result.grokHubAutoTPDown == true
+GrokHubAutoTPDownHeight = math.clamp(tonumber(result.grokHubAutoTPDownHeight) or GrokHubAutoTPDownHeight, 0, 500)
+GrokHubShowE01Warning = result.grokHubShowE01Warning == true
+if GrokHubAutoTPDownSetVisual then
+GrokHubAutoTPDownSetVisual(GrokHubAutoTPDown)
 end
-if VLEXHubShowE01WarningSetVisual then
-VLEXHubShowE01WarningSetVisual(VLEXHubShowE01Warning)
+if GrokHubShowE01WarningSetVisual then
+GrokHubShowE01WarningSetVisual(GrokHubShowE01Warning)
 end
 if katanaSkinEnabled then
 task.defer(function()
@@ -11000,7 +11000,7 @@ end)
 elseif batDesyncTpSetVisual then
 batDesyncTpSetVisual(false)
 end
-aimbotVersion = result.aimbotVersion == "shel.vc" and "shel.vc" or "VLEX"
+aimbotVersion = result.aimbotVersion == "shel.vc" and "shel.vc" or "Grok"
 if aimbotVersionLabel then
 aimbotVersionLabel.Text = aimbotVersion
 end
@@ -11161,8 +11161,8 @@ end
 stretchFOV = result.stretchFOV or 120
 BAT_AIMBOT_SPEED = result.batAimbotSpeed or BAT_AIMBOT_SPEED
 floatingButtonScale = result.floatingButtonScale or 1
-if result.floatingBtnTheme and _G.VLEXFloatThemes and _G.VLEXFloatThemes[result.floatingBtnTheme] then
-_G.VLEXFloatTheme = result.floatingBtnTheme
+if result.floatingBtnTheme and _G.GrokFloatThemes and _G.GrokFloatThemes[result.floatingBtnTheme] then
+_G.GrokFloatTheme = result.floatingBtnTheme
 end
 if result.outfitIndex and result.outfitIndex >= 1 and result.outfitIndex <= #outfits then
 currentOutfitIndex = result.outfitIndex
@@ -12078,7 +12078,7 @@ titleRbxAsset.Image = "rbxassetid://97422699771755"
 titleRbxAsset.ScaleType = Enum.ScaleType.Fit
 titleRbxAsset.ZIndex = 25
 titleRbxAsset.Visible = true
--- texto VLEX removido: so a imagem TitleRbxAsset aparece no title
+-- texto GROK removido: so a imagem TitleRbxAsset aparece no title
 local imageLabel = Instance.new("TextLabel", frame)
 imageLabel.Name = "TitleImage"
 imageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -12119,7 +12119,7 @@ ColorSequenceKeypoint.new(0.75, Color3.fromRGB(150, 70, 250)),
 ColorSequenceKeypoint.new(1, Color3.fromRGB(85, 25, 180))
 })
 titleGradient.Rotation = 80
--- Efeito de brilho pulsante e reflexo animado no logo VLEX
+-- Efeito de brilho pulsante e reflexo animado no logo GROK
 task.spawn(function()
 pcall(function()
 local glowTweenInfo = TweenInfo.new(1.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
@@ -12401,7 +12401,7 @@ st.Transparency = 0.45
 local line = Instance.new("Frame", f)
 line.Size = UDim2.new(1, -24, 0, 2)
 line.Position = UDim2.new(0, 12, 1, -3)
-line.BackgroundColor3 = Color3.fromRGB(255, 30, 40)
+line.BackgroundColor3 = Color3.fromRGB(180, 100, 255)
 line.BackgroundTransparency = 0.35
 line.BorderSizePixel = 0
 line.ZIndex = 8
@@ -12450,7 +12450,7 @@ BackgroundColor3 = Color3.fromRGB(32, 18, 48),
 }):Play()
 if uiStroke then
 	TweenService:Create(uiStroke, TweenInfo.new(0.12), {
-		Color = Color3.fromRGB(255, 50, 55),
+		Color = Color3.fromRGB(200, 120, 255),
 		Transparency = 0.15,
 		Thickness = 1.4,
 	}):Play()
@@ -13187,14 +13187,14 @@ textLabel.Font = Enum.Font.GothamBold
 textLabel.TextSize = 9
 textLabel.TextXAlignment = Enum.TextXAlignment.Right
 textLabel.ZIndex = 8
-VLEXHubAutoTPDownSetVisual = mkToggle(speed, "Auto TP Down", function(VLEXHubAutoTPDown)
-VLEXHubAutoTPDown = VLEXHubAutoTPDown
+GrokHubAutoTPDownSetVisual = mkToggle(speed, "Auto TP Down", function(grokHubAutoTPDown)
+GrokHubAutoTPDown = grokHubAutoTPDown
 saveAllSettings()
 end)
 local frame22146 = createFrame2(speed, 38)
 mkLabel(frame22146, "TP Down Height")
-createTextBox(frame22146, VLEXHubAutoTPDownHeight, 50, 56, function(value)
-VLEXHubAutoTPDownHeight = math.clamp(value, 0, 500)
+createTextBox(frame22146, GrokHubAutoTPDownHeight, 50, 56, function(value)
+GrokHubAutoTPDownHeight = math.clamp(value, 0, 500)
 saveAllSettings()
 end)
 mirrorTPDownSetVisual = mkToggle(speed, "Mirror TP Down", function(value)
@@ -13234,11 +13234,11 @@ end)
 local frameAimbotVersion = createFrame2(custom, 38)
 mkLabel(frameAimbotVersion, "Aimbot Version")
 aimbotVersionLabel = createCarouselSelector(frameAimbotVersion, aimbotVersion, {
-"VLEX",
+"Grok",
 "shel.vc",
 }, function(newVersion)
 if newVersion ~= "shel.vc" then
-newVersion = "VLEX"
+newVersion = "Grok"
 end
 if newVersion ~= aimbotVersion then
 aimbotVersion = newVersion
@@ -13586,8 +13586,8 @@ else
 disableAntiLag()
 end
 end)
-VLEXHubShowE01WarningSetVisual = mkToggle(visual, "Show E01 Warning", function(on)
-VLEXHubShowE01Warning = on
+GrokHubShowE01WarningSetVisual = mkToggle(visual, "Show E01 Warning", function(on)
+GrokHubShowE01Warning = on
 saveAllSettings()
 end)
 createFrame(visual, "Environment")
@@ -13638,7 +13638,7 @@ do
 		acArrow.Text = acExpanded and "▲" or "▼"
 	end)
 
-	local categories = _G.VLEXAvatarChangerCategories or {
+	local categories = _G.GrokAvatarChangerCategories or {
 		{ Name="Hair", AssetTypes={Enum.AvatarAssetType.HairAccessory} },
 		{ Name="Hats", AssetTypes={Enum.AvatarAssetType.Hat} },
 		{ Name="Face", AssetTypes={Enum.AvatarAssetType.FaceAccessory} },
@@ -13649,7 +13649,7 @@ do
 		{ Name="Waist", AssetTypes={Enum.AvatarAssetType.WaistAccessory} },
 	}
 
-	_G._VLEXAcSetVisual = _G._VLEXAcSetVisual or {}
+	_G._GrokAcSetVisual = _G._GrokAcSetVisual or {}
 
 	for i, cat in ipairs(categories) do
 		local catName = cat.Name
@@ -13721,23 +13721,23 @@ do
 				BackgroundColor3 = on and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(200, 200, 210)
 			}):Play()
 		end
-		_G._VLEXAcSetVisual[catName] = setVis
+		_G._GrokAcSetVisual[catName] = setVis
 
-		local entry = _G._VLEXAvatarChanger and _G._VLEXAvatarChanger[catName]
+		local entry = _G._GrokAvatarChanger and _G._GrokAvatarChanger[catName]
 		if entry then setVis(entry.enabled) end
 
 		pickBtn.MouseButton1Click:Connect(function()
-			if _G.VLEXAvatarChangerOpenPicker then
-				_G.VLEXAvatarChangerOpenPicker(catName, cat.AssetTypes)
+			if _G.GrokAvatarChangerOpenPicker then
+				_G.GrokAvatarChangerOpenPicker(catName, cat.AssetTypes)
 			end
 		end)
 
 		toggleHit.MouseButton1Click:Connect(function()
-			local e = _G._VLEXAvatarChanger[catName]
+			local e = _G._GrokAvatarChanger[catName]
 			if not e then return end
 			if not e.savedId then
-				if _G.VLEXAvatarChangerOpenPicker then
-					_G.VLEXAvatarChangerOpenPicker(catName, cat.AssetTypes)
+				if _G.GrokAvatarChangerOpenPicker then
+					_G.GrokAvatarChangerOpenPicker(catName, cat.AssetTypes)
 				end
 				return
 			end
@@ -13746,21 +13746,21 @@ do
 			if e.enabled then
 				task.spawn(function()
 					for attempt = 1, 3 do
-						if _G.VLEXAvatarChangerEquip(e.savedId, cat.AssetTypes[1], e.savedName) then break end
+						if _G.GrokAvatarChangerEquip(e.savedId, cat.AssetTypes[1], e.savedName) then break end
 						task.wait(0.3 * attempt)
 					end
 				end)
 			else
 				-- remove only this category's item
 				pcall(function()
-					_G.VLEXAvatarChangerRemove(cat.AssetTypes[1], e.savedName)
+					_G.GrokAvatarChangerRemove(cat.AssetTypes[1], e.savedName)
 					local character = localPlayer.Character
 					if character then
 						for _, c in pairs(character:GetChildren()) do
-							if c:IsA("Accessory") and (c.Name == "VLEXAC"..tostring(e.savedName):gsub("[^%w]",""):sub(1,40) or c.Name:find("VLEXAC")) then
+							if c:IsA("Accessory") and (c.Name == "GrokAC"..tostring(e.savedName):gsub("[^%w]",""):sub(1,40) or c.Name:find("GrokAC")) then
 								-- only remove if name matches saved
 								local sn = tostring(e.savedName or ""):gsub("[^%w]",""):sub(1,40)
-								if c.Name == "VLEXAC"..sn or c.Name == e.savedName then
+								if c.Name == "GrokAC"..sn or c.Name == e.savedName then
 									c:Destroy()
 								end
 							end
@@ -13776,24 +13776,24 @@ end
 
 -- Custom Tools (Ambitious-style skins)
 local customToolsToggle = mkToggle(visual, "Custom Tools", function(enabled)
-_G.VLEXCustomToolsEnabled = enabled
+_G.GrokCustomToolsEnabled = enabled
 if enabled then
-	pcall(_G.VLEXApplySelectedToolSkins)
+	pcall(_G.GrokApplySelectedToolSkins)
 else
-	pcall(_G.VLEXClearAllToolReplicas)
+	pcall(_G.GrokClearAllToolReplicas)
 	-- restore default katana/minecraft flags off when disabling custom
 end
 saveAllSettings()
 end)
 if customToolsToggle then
-	customToolsToggle(_G.VLEXCustomToolsEnabled == true)
+	customToolsToggle(_G.GrokCustomToolsEnabled == true)
 end
 
 local batSkinRow = createFrame2(visual, 38)
 mkLabel(batSkinRow, "Bat Skin")
 local BAT_SKIN_LIST = { "Default", "Katana", "DiamondSword", "Minecraft" }
 local function _applyBatSkinChoice(choice)
-	_G.VLEXSelectedBatSkin = choice
+	_G.GrokSelectedBatSkin = choice
 	-- exclusive modes
 	katanaSkinEnabled = (choice == "Katana")
 	minecraftBatSkinEnabled = (choice == "Minecraft")
@@ -13813,28 +13813,28 @@ local function _applyBatSkinChoice(choice)
 		end
 	end
 	if choice == "DiamondSword" or choice == "Katana" then
-		_G.VLEXCustomToolsEnabled = true
+		_G.GrokCustomToolsEnabled = true
 		if customToolsToggle then customToolsToggle(true) end
-		pcall(_G.VLEXApplySelectedToolSkins)
+		pcall(_G.GrokApplySelectedToolSkins)
 	elseif choice == "Default" then
-		pcall(_G.VLEXClearAllToolReplicas)
+		pcall(_G.GrokClearAllToolReplicas)
 	end
 	saveAllSettings()
 end
-createCarouselSelector(batSkinRow, _G.VLEXSelectedBatSkin or "Default", BAT_SKIN_LIST, function(choice)
+createCarouselSelector(batSkinRow, _G.GrokSelectedBatSkin or "Default", BAT_SKIN_LIST, function(choice)
 	_applyBatSkinChoice(choice)
 end)
 
 local medusaSkinRow = createFrame2(visual, 38)
 mkLabel(medusaSkinRow, "Medusa Skin")
 local MEDUSA_SKIN_LIST = { "Default", "Skull", "GoldenDesertEagle" }
-createCarouselSelector(medusaSkinRow, _G.VLEXSelectedMedusaSkin or "Default", MEDUSA_SKIN_LIST, function(choice)
-	_G.VLEXSelectedMedusaSkin = choice
+createCarouselSelector(medusaSkinRow, _G.GrokSelectedMedusaSkin or "Default", MEDUSA_SKIN_LIST, function(choice)
+	_G.GrokSelectedMedusaSkin = choice
 	if choice ~= "Default" then
-		_G.VLEXCustomToolsEnabled = true
+		_G.GrokCustomToolsEnabled = true
 		if customToolsToggle then customToolsToggle(true) end
 	end
-	pcall(_G.VLEXApplySelectedToolSkins)
+	pcall(_G.GrokApplySelectedToolSkins)
 	saveAllSettings()
 end)
 
@@ -14001,10 +14001,10 @@ mkLabel(frameFloatTheme, "Btn Flutuantes")
 local floatThemeOrder = { "Azul", "Vermelho", "Verde", "Branco", "Roxo" }
 createCarouselSelector(
 frameFloatTheme,
-_G.VLEXFloatTheme,
+_G.GrokFloatTheme,
 floatThemeOrder,
 function(value)
-_G.VLEXFloatTheme = value
+_G.GrokFloatTheme = value
 if tpBatFloatingButton then
 local f = tpBatFloatingButton:FindFirstChild("Frame")
 if f then
@@ -14486,9 +14486,9 @@ vector2318.LayoutOrder = nextLayoutOrder(keybinds)
 vector2318.ZIndex = 7
 pbFrame = Instance.new("Frame", gui)
 pbFrame.Name = "StealProgressBar"
-pbFrame.Size = UDim2.new(0, 260, 0, 30)
-pbFrame.Position = UDim2.new(0.5, -130, 1, -60)
-pbFrame.BackgroundColor3 = Color3.fromRGB(8, 8, 10)
+pbFrame.Size = UDim2.new(0, 260, 0, 52)
+pbFrame.Position = UDim2.new(0.5, -130, 1, -75)
+pbFrame.BackgroundColor3 = Color3.fromRGB(12, 10, 16)
 pbFrame.BackgroundTransparency = 0.05
 pbFrame.BorderSizePixel = 0
 pbFrame.Active = true
@@ -14540,11 +14540,11 @@ backgroundImagePB.Position = UDim2.new(0, 0, 0, 0)
 backgroundImagePB.BackgroundTransparency = 1
 backgroundImagePB.BorderSizePixel = 0
 backgroundImagePB.ScaleType = Enum.ScaleType.Crop
-backgroundImagePB.ImageTransparency = 1
-backgroundImagePB.ZIndex = 10\nbackgroundImagePB.Visible = false
+backgroundImagePB.ImageTransparency = 0.2
+backgroundImagePB.ZIndex = 10
 
 task.spawn(function()
-local inkFileName = "VLEX_steal_ink_texture.png"
+local inkFileName = "grok_steal_ink_texture.png"
 local assetUrl = nil
 pcall(function()
 if writefile and (not isfile or not isfile(inkFileName)) then
@@ -14597,32 +14597,30 @@ end
 
 progressPct = Instance.new("TextLabel", pbFrame)
 progressPct.Name = "ProgressPct"
-progressPct.Size = UDim2.new(1, -20, 1, -4)
-progressPct.Position = UDim2.new(0, 10, 0, 2)
+progressPct.Size = UDim2.new(1, 0, 1, 0)
+progressPct.Position = UDim2.new(0, 0, 0, 0)
 progressPct.BackgroundTransparency = 1
 progressPct.Text = "0%"
-progressPct.TextColor3 = Color3.fromRGB(255, 40, 45)
+progressPct.TextColor3 = Color3.fromRGB(255, 45, 45)
 progressPct.Font = Enum.Font.GothamBlack
 progressPct.TextSize = 14
 progressPct.TextXAlignment = Enum.TextXAlignment.Center
+progressPct.TextYAlignment = Enum.TextYAlignment.Center
 progressPct.ZIndex = 14
 local pctStroke = Instance.new("UIStroke", progressPct)
 pctStroke.Thickness = 1.4
-pctStroke.Color = Color3.fromRGB(255, 20, 30)
+pctStroke.Color = Color3.fromRGB(255, 25, 25)
 pctStroke.Transparency = 0.35
 local pctGrad = Instance.new("UIGradient", progressPct)
-pctGrad.Color = ColorSequence.new({
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(220, 180, 255)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(170, 90, 255)),
-})
+pctGrad.Color = ColorSequence.new(Color3.fromRGB(255, 45, 45))
 task.spawn(function()
 	local ti = TweenInfo.new(1.1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
-	TweenService:Create(pctStroke, ti, { Transparency = 0.05, Color = Color3.fromRGB(255, 60, 60) }):Play()
+	TweenService:Create(pctStroke, ti, { Transparency = 0.05, Color = Color3.fromRGB(220, 140, 255) }):Play()
 end)
 
 fpsNeon = Instance.new("TextLabel", pbFrame)
-fpsNeon.Name = "FPSNeon"\nfpsNeon.Visible = false
+fpsNeon.Name = "FPSNeon"
+fpsNeon.Visible = false
 fpsNeon.Size = UDim2.new(0, 150, 0, 18)
 fpsNeon.Position = UDim2.new(1, -164, 0, 6)
 fpsNeon.BackgroundTransparency = 1
@@ -14640,7 +14638,7 @@ fpsStroke.Transparency = 0.55
 local rootPart2320 = Instance.new("Frame", pbFrame)
 rootPart2320.Name = "ProgressRow"
 rootPart2320.Size = UDim2.new(1, -28, 0, 12)
-rootPart2320.Position = UDim2.new(0, 14, 0, 9)
+rootPart2320.Position = UDim2.new(0, 14, 0, 30)
 rootPart2320.BackgroundTransparency = 1
 rootPart2320.ZIndex = 11
 
@@ -14655,35 +14653,35 @@ frame2321.ZIndex = 12
 Instance.new("UICorner", frame2321).CornerRadius = UDim.new(1, 0)
 local trackStroke = Instance.new("UIStroke", frame2321)
 trackStroke.Name = "UIStroke"
-trackStroke.Color = Color3.fromRGB(255, 25, 35)
+trackStroke.Color = Color3.fromRGB(255, 35, 35)
 trackStroke.Thickness = 1.3
 trackStroke.Transparency = 0.35
 task.spawn(function()
 	local ti = TweenInfo.new(1.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
-	TweenService:Create(trackStroke, ti, { Transparency = 0.1, Color = Color3.fromRGB(255, 50, 55) }):Play()
+	TweenService:Create(trackStroke, ti, { Transparency = 0.1, Color = Color3.fromRGB(255, 35, 35) }):Play()
 end)
 
 progressFill = Instance.new("Frame", frame2321)
 progressFill.Size = UDim2.new(0, 0, 1, 0)
 progressFill.Position = UDim2.new(0, 0, 0, 0)
-progressFill.BackgroundColor3 = Color3.fromRGB(255, 20, 30)
+progressFill.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 progressFill.BorderSizePixel = 0
 progressFill.ZIndex = 13
 Instance.new("UICorner", progressFill).CornerRadius = UDim.new(1, 0)
 local uiGradient4 = Instance.new("UIGradient", progressFill)
 uiGradient4.Color = ColorSequence.new({
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 0, 10)),
-	ColorSequenceKeypoint.new(0.35, Color3.fromRGB(255, 30, 40)),
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(100, 20, 200)),
+	ColorSequenceKeypoint.new(0.35, Color3.fromRGB(180, 100, 255)),
 	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
-	ColorSequenceKeypoint.new(0.65, Color3.fromRGB(255, 30, 40)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(210, 0, 15)),
+	ColorSequenceKeypoint.new(0.65, Color3.fromRGB(180, 100, 255)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 40, 230)),
 })
 uiGradient4.Rotation = 0
 -- shine stripe overlay on fill
 local fillShine = Instance.new("Frame", progressFill)
 fillShine.Name = "FillShine"
 fillShine.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-fillShine.BackgroundTransparency = 1
+fillShine.BackgroundTransparency = 0.55
 fillShine.BorderSizePixel = 0
 fillShine.Size = UDim2.new(0.25, 0, 1.4, 0)
 fillShine.Position = UDim2.new(-0.3, 0, -0.2, 0)
@@ -16238,14 +16236,14 @@ frame.Position = UDim2.new(
 end
 end
 end
-VLEXHubAutoTPDown = false
-VLEXHubAutoTPDownHeight = 20
-VLEXHubShowE01Warning = false
-VLEXHubAutoTPLastAt = 0
-VLEXHubE01StartedAt = nil
-VLEXHubE01Gui = nil
+GrokHubAutoTPDown = false
+GrokHubAutoTPDownHeight = 20
+GrokHubShowE01Warning = false
+GrokHubAutoTPLastAt = 0
+GrokHubE01StartedAt = nil
+GrokHubE01Gui = nil
 RunService.Heartbeat:Connect(function()
-if not VLEXHubAutoTPDown then
+if not GrokHubAutoTPDown then
 return
 end
 local character = localPlayer.Character
@@ -16254,13 +16252,13 @@ character = character and character:FindFirstChildOfClass("Humanoid")
 local shouldTeleportDown = rootPart
 and character
 and character.FloorMaterial == Enum.Material.Air
-and rootPart.Position.Y >= VLEXHubAutoTPDownHeight
+and rootPart.Position.Y >= GrokHubAutoTPDownHeight
 if shouldTeleportDown then
-local lastTeleportTime = VLEXHubAutoTPLastAt
+local lastTeleportTime = GrokHubAutoTPLastAt
 shouldTeleportDown = tick() - lastTeleportTime >= 0.35
 end
 if shouldTeleportDown then
-VLEXHubAutoTPLastAt = tick()
+GrokHubAutoTPLastAt = tick()
 teleportDown()
 end
 end)
@@ -16285,23 +16283,23 @@ local humanoid = character:FindFirstChildOfClass("Humanoid")
 return humanoid and humanoid.WalkSpeed > 0 and humanoid.WalkSpeed <= 25 and humanoid.WalkSpeed ~= 16
 end
 RunService.Heartbeat:Connect(function()
-if not VLEXHubShowE01Warning or not isCarryingTarget() then
-if VLEXHubE01Gui then
-VLEXHubE01Gui.Enabled = false
+if not GrokHubShowE01Warning or not isCarryingTarget() then
+if GrokHubE01Gui then
+GrokHubE01Gui.Enabled = false
 end
-VLEXHubE01StartedAt = nil
+GrokHubE01StartedAt = nil
 return
 end
-VLEXHubE01StartedAt = VLEXHubE01StartedAt or tick()
-local object = VLEXHubE01StartedAt
+GrokHubE01StartedAt = GrokHubE01StartedAt or tick()
+local object = GrokHubE01StartedAt
 local value = math.clamp((tick() - object) / 2.6, 0, 1)
-if not VLEXHubE01Gui then
-VLEXHubE01Gui = Instance.new("ScreenGui")
-VLEXHubE01Gui.Name = "VLEXHubE01Warning"
-VLEXHubE01Gui.ResetOnSpawn = false
-VLEXHubE01Gui.IgnoreGuiInset = true
-VLEXHubE01Gui.Parent = localPlayer:WaitForChild("PlayerGui")
-local frame = Instance.new("Frame", VLEXHubE01Gui)
+if not GrokHubE01Gui then
+GrokHubE01Gui = Instance.new("ScreenGui")
+GrokHubE01Gui.Name = "GrokHubE01Warning"
+GrokHubE01Gui.ResetOnSpawn = false
+GrokHubE01Gui.IgnoreGuiInset = true
+GrokHubE01Gui.Parent = localPlayer:WaitForChild("PlayerGui")
+local frame = Instance.new("Frame", GrokHubE01Gui)
 frame.Name = "Bar"
 frame.AnchorPoint = Vector2.new(0.5, 0)
 frame.Position = UDim2.new(0.5, 0, 0, 18)
@@ -16338,12 +16336,12 @@ textLabel.TextStrokeTransparency = 0.18
 textLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
 textLabel.ZIndex = 2
 end
-VLEXHubE01Gui.Enabled = true
+GrokHubE01Gui.Enabled = true
 local warningReady = value >= 1
-VLEXHubE01Gui.Bar.Label.Text = warningReady and "STEAL" or "DONT STEAL"
-VLEXHubE01Gui.Bar.Label.TextColor3 = warningReady and Color3.fromRGB(85, 255, 125)
+GrokHubE01Gui.Bar.Label.Text = warningReady and "STEAL" or "DONT STEAL"
+GrokHubE01Gui.Bar.Label.TextColor3 = warningReady and Color3.fromRGB(85, 255, 125)
 or Color3.fromRGB(85, 75, 85)
-VLEXHubE01Gui.Bar.Track.Fill.Size = UDim2.new(value, 0, 1, 0)
+GrokHubE01Gui.Bar.Track.Fill.Size = UDim2.new(value, 0, 1, 0)
 end)
 end
 buildGui()
@@ -16444,7 +16442,7 @@ local cFrame = CFrame.new(rootPart.Position.X, -7, rootPart.Position.Z) * rotati
 local marker = trackerState.marker
 if not marker or not marker.Parent then
 marker = Instance.new("Part")
-marker.Name = "VLEXHubLastPosition"
+marker.Name = "GrokHubLastPosition"
 marker.Shape = Enum.PartType.Ball
 marker.Size = Vector3.new(3, 3, 3)
 marker.Color = color
@@ -16675,9 +16673,9 @@ IsInsideMap = isInsideMapBounds,
 }
 return rootPart
 end
-local VLEXHubLastPosMarker = createLastPositionTracker()
-_G.VLEXHubLastPosMarker = VLEXHubLastPosMarker
-VLEXHubLastPosMarker.Start()
+local grokHubLastPosMarker = createLastPositionTracker()
+_G.GrokHubLastPosMarker = grokHubLastPosMarker
+grokHubLastPosMarker.Start()
 end
 if loadAllSettings() then
 updateUIFromLoaded()
