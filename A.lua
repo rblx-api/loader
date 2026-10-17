@@ -1741,6 +1741,32 @@ task.spawn(function()
         return ok and loaded or false
     end
 
+    -- Keep draggable panels reachable on every screen, including touch devices.
+    local function clampGuiToViewport(guiObject)
+        if not guiObject or not guiObject:IsA("GuiObject") then return end
+        pcall(function()
+            local camera = workspace.CurrentCamera
+            local viewport = camera and camera.ViewportSize or Vector2.new(1920, 1080)
+            local pos = guiObject.AbsolutePosition
+            local size = guiObject.AbsoluteSize
+            local maxX = math.max(0, viewport.X - size.X)
+            local maxY = math.max(0, viewport.Y - size.Y)
+            local x = math.clamp(pos.X, 0, maxX)
+            local y = math.clamp(pos.Y, 0, maxY)
+            local dx, dy = x - pos.X, y - pos.Y
+            if math.abs(dx) > 0.5 or math.abs(dy) > 0.5 then
+                local scaleObj = guiObject:FindFirstChildOfClass("UIScale")
+                local scale = (scaleObj and tonumber(scaleObj.Scale)) or 1
+                if scale < 0.05 then scale = 1 end
+                local old = guiObject.Position
+                guiObject.Position = UDim2.new(
+                    old.X.Scale, old.X.Offset + dx / scale,
+                    old.Y.Scale, old.Y.Offset + dy / scale
+                )
+            end
+        end)
+    end
+
     local function saveGuiSize(key, guiObject)
         if not key or not guiObject then return end
         pcall(function()
@@ -1772,6 +1798,7 @@ task.spawn(function()
     local function makePanelDraggable(handle, target, saveKey)
         if not handle or not target then return end
 
+        task.defer(function() clampGuiToViewport(target) end)
         handle.Active = true
         target.Active = true
         pcall(function() handle.Selectable = true end)
@@ -1944,8 +1971,8 @@ task.spawn(function()
 
             local baseX = (startAbs and startAbs.X) or 0
             local baseY = (startAbs and startAbs.Y) or 0
-            local newAbsX = math.clamp(baseX + d.X, -math.max(40, sz.X - 40), math.max(0, vp.X - 40))
-            local newAbsY = math.clamp(baseY + d.Y, 0, math.max(0, vp.Y - 24))
+            local newAbsX = math.clamp(baseX + d.X, 0, math.max(0, vp.X - sz.X))
+            local newAbsY = math.clamp(baseY + d.Y, 0, math.max(0, vp.Y - sz.Y))
             local adjX = newAbsX - baseX
             local adjY = newAbsY - baseY
 
@@ -2060,6 +2087,7 @@ task.spawn(function()
         pcall(function()
             if saveKey then loadGuiPosition(saveKey, target) end
         end)
+        task.defer(function() clampGuiToViewport(target) end)
         handle.InputBegan:Connect(function(input)
             if _G._FH_GuiLocked then return end
             if input.UserInputType == Enum.UserInputType.MouseButton1
@@ -2094,6 +2122,7 @@ task.spawn(function()
                 target.Position = UDim2.new(
                     startPos.X.Scale, startPos.X.Offset + dx / scale,
                     startPos.Y.Scale, startPos.Y.Offset + dy / scale)
+                clampGuiToViewport(target)
             end
         end)
         UIS.InputEnded:Connect(function(input)
@@ -16033,6 +16062,7 @@ end)()
                 local scale = (sc and tonumber(sc.Scale)) or 1
                 if scale < 0.05 then scale = 1 end
                 target.Position = UDim2.new(p0.X.Scale, p0.X.Offset + d.X / scale, p0.Y.Scale, p0.Y.Offset + d.Y / scale)
+                clampGuiToViewport(target)
             end)
         end
 
