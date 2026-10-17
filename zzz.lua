@@ -74,39 +74,12 @@ do
                     PathfindingService = game:GetService("PathfindingService"),
                     TextService = game:GetService("TextService"),
                   }
-                  -- Patch: silence ReplicatedStorage.Classes.AnimalClient:243 "attempt to index nil with 'Stop'"
-                  -- The game's AnimalClient.UpdateForceIdle calls :Stop() on an animation track that can be nil
-                  -- when the client script interacts with animals before their animator is populated.
-                  pcall(function()
-                    local classes = enumValues.ReplicatedStorage:FindFirstChild("Classes")
-                    local animalClientModule = classes and classes:FindFirstChild("AnimalClient")
-                    if not animalClientModule then return end
-                    local ok, animalClient = pcall(require, animalClientModule)
-                    if not ok or type(animalClient) ~= "table" then return end
-                    local function wrap(tbl, key)
-                      local original = rawget(tbl, key)
-                      if type(original) ~= "function" then return end
-                      rawset(tbl, key, function(...)
-                        local success, err = pcall(original, ...)
-                        if not success then
-                          -- swallow the nil-Stop spam only; re-raise anything else
-                          if type(err) ~= "string" or not err:find("Stop", 1, true) then
-                            -- silent: don't rethrow, this is a cosmetic patch
-                          end
-                        end
-                      end)
-                    end
-                    wrap(animalClient, "UpdateForceIdle")
-                    if type(animalClient.__index) == "table" then
-                      wrap(animalClient.__index, "UpdateForceIdle")
-                    end
-                  end)
                   whiteColor = Color3.fromRGB(255, 255, 255)
-                  indigoAccentColor = Color3.fromRGB(99, 102, 241)
+                  indigoAccentColor = Color3.fromRGB(30, 144, 255)
                   fullCornerRadius = UDim.new(1, 0)
                   blackColor = Color3.fromRGB(0, 0, 0)
                   cornerRadius6 = UDim.new(0, 6)
-                  slateButtonColor = Color3.fromRGB(74, 86, 128)
+                  slateButtonColor = Color3.fromRGB(30, 60, 120)
                   collapsedSize = UDim2.new(1, 0, 0, 0)
                   mutedRedSurfaceColor = Color3.fromRGB(60, 40, 50)
                   cornerRadius7 = UDim.new(0, 7)
@@ -114,11 +87,11 @@ do
                   oliveDisabledColor = Color3.fromRGB(80, 80, 60)
                   fillSize = UDim2.new(1, 0, 1, 0)
                   lightTextColor = Color3.fromRGB(220, 220, 230)
-                  navyColor = Color3.fromRGB(50, 50, 100)
-                  darkBackgroundColor = Color3.fromRGB(12, 12, 18)
+                  navyColor = Color3.fromRGB(20, 40, 90)
+                  darkBackgroundColor = Color3.fromRGB(8, 12, 25)
                   cornerRadius5 = UDim.new(0, 5)
-                  purpleAccentColor = Color3.fromRGB(160, 100, 170)
-                  darkSurfaceColor = Color3.fromRGB(30, 30, 35)
+                  purpleAccentColor = Color3.fromRGB(0, 191, 255)
+                  darkSurfaceColor = Color3.fromRGB(20, 30, 50)
                   redColor = Color3.fromRGB(255, 0, 0)
                   grayColor = Color3.fromRGB(150, 150, 150)
                   sliderFillSize = UDim2.new(0.85, 0, 0, 1)
@@ -126,7 +99,7 @@ do
                   verticalFillSize = UDim2.new(0, 0, 1, 0)
                   cornerRadius8 = UDim.new(0, 8)
                   centerAnchor = Vector2.new(0.5, 0.5)
-                  deepNavyColor = Color3.fromRGB(8, 8, 16)
+                  deepNavyColor = Color3.fromRGB(5, 15, 35)
                   goldColor = Color3.fromRGB(255, 215, 0)
                   standardRowSize = UDim2.new(1, 0, 0, 34)
                   cornerRadius10 = UDim.new(0, 10)
@@ -135,10 +108,10 @@ do
                   greenColor = Color3.fromRGB(100, 255, 100)
                   cornerRadius4 = UDim.new(0, 4)
                   orangeColor = Color3.fromRGB(255, 140, 0)
-                  panelBackgroundColor = Color3.fromRGB(25, 25, 35)
-                  violetColor = Color3.fromRGB(140, 80, 255)
+                  panelBackgroundColor = Color3.fromRGB(15, 25, 45)
+                  violetColor = Color3.fromRGB(65, 105, 225)
                   mediumGrayColor = Color3.fromRGB(120, 120, 120)
-                  _G._xenHUI = _G._xenHUI
+                  _G._velocityHUI = _G._velocityHUI
                     or function()
                       local success, callResult = pcall(function()
                         local isConditionMet = gethui or get_hidden_gui or gethiddenui
@@ -160,7 +133,7 @@ do
                     end
                   do
                     local snapshot = _G
-                    local xenN = _G._xenN
+                    local xenN = _G._velocityN
                     if not xenN then
                       local function getValue()
                         local randomGenerator = Random.new()
@@ -184,7 +157,7 @@ do
                       end
                       xenN = getValue()
                     end
-                    snapshot._xenN = xenN
+                    snapshot._velocityN = xenN
                   end
                 end
                 task.spawn(function()
@@ -217,19 +190,9 @@ do
                   enumValues.Players.LocalPlayer.CharacterAdded:Connect(onCharacterAdded)
                 end)
                 do
-                  -- Fast-wait helper: FindFirstChild short-circuits when already present,
-                  -- otherwise WaitForChild with a timeout so we never hang indefinitely.
-                  local function fastWait(parent, name, timeout)
-                    local existing = parent:FindFirstChild(name)
-                    if existing then return existing end
-                    return parent:WaitForChild(name, timeout or 10)
-                  end
-                  _G._xenFastWait = fastWait
-                  local packages = fastWait(enumValues.ReplicatedStorage, "Packages", 15)
-                  if packages then
-                    fastWait(packages, "Synchronizer", 10)
-                    fastWait(packages, "Net", 10)
-                  end
+                  local packages = enumValues.ReplicatedStorage:WaitForChild("Packages")
+                  packages:WaitForChild("Synchronizer")
+                  packages:WaitForChild("Net")
                 end
                 do
                   local state = nil
@@ -345,16 +308,16 @@ do
                     handleState()
                     return knownSynchronizerChannels
                   end
-                  _G._xenRawCT = function(data)
+                  _G._velocityRawCT = function(data)
                     return getValue2(data)
                   end
-                  _G.XenSyncGet = function(data)
+                  _G.VelocitySyncGet = function(data)
                     return getValue11(data)
                   end
-                  _G.XenSyncBind = function()
+                  _G.VelocitySyncBind = function()
                     return getValue12()
                   end
-                  _G.XenSyncAll = function()
+                  _G.VelocitySyncAll = function()
                     local items = {}
                     for k in pairs(getValue12()) do
                       local state = getValue11(k)
@@ -402,7 +365,7 @@ do
                       return tostring(owner)
                     end,
                     Generation = function(data, data2, data3)
-                      return _G._xenGen and _G._xenGen(data, data2, data3) or 0
+                      return _G._velocityGen and _G._velocityGen(data, data2, data3) or 0
                     end,
                     ChGet = function(data, data2)
                       if not data then
@@ -438,8 +401,8 @@ do
                             )
                           end
                           if index then
-                            local xenGen = _G._xenGen
-                                and _G._xenGen(itemLocal448.Index, itemLocal448.Mutation, itemLocal448.Traits)
+                            local xenGen = _G._velocityGen
+                                and _G._velocityGen(itemLocal448.Index, itemLocal448.Mutation, itemLocal448.Traits)
                               or 0
                             if isConditionMet <= xenGen then
                               local mutation = itemLocal448.Mutation
@@ -467,7 +430,7 @@ do
                     end)
                     return items
                   end
-                  _G.XenSync = xenSync
+                  _G.VelocitySync = xenSync
                   task.spawn(function()
                     pcall(getValue12)
                   end)
@@ -490,7 +453,7 @@ do
                       Traits = require(datas:WaitForChild("Traits"))
                     end) and Animals ~= nil
                   end
-                  _G._xenGen = function(data, data2, collection)
+                  _G._velocityGen = function(data, data2, collection)
                     if not findTarget() then
                       return 0
                     end
@@ -527,9 +490,9 @@ do
                     return math.round(calculatedValue)
                   end
                 end
-                _G._xenAnimShim = {
+                _G._velocityAnimShim = {
                   GetGeneration = function(data, data2, data3, data4)
-                    return _G._xenGen(data2, data3, data4)
+                    return _G._velocityGen(data2, data3, data4)
                   end,
                 }
                 do
@@ -1271,85 +1234,8 @@ do
                 return character and character:FindFirstChild(childName)
                   or backpack and backpack:FindFirstChild(childName)
               end
-              local function grappleSha256(message)
-                local band2, bxor2, bnot2 = bit32.band, bit32.bxor, bit32.bnot
-                local rrotate2, rshift2 = bit32.rrotate, bit32.rshift
-                local U32 = 4294967296
-                local K = {
-                  0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
-                  0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
-                  0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
-                  0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
-                  0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
-                  0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
-                  0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
-                  0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
-                }
-                local h0, h1, h2, h3 = 0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a
-                local h4, h5, h6, h7 = 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
-                local function u32be(n)
-                  return string.char(band2(rshift2(n, 24), 255), band2(rshift2(n, 16), 255), band2(rshift2(n, 8), 255), band2(n, 255))
-                end
-                local bitLen = #message * 8
-                message = message .. "\128"
-                while #message % 64 ~= 56 do
-                  message = message .. "\0"
-                end
-                message = message .. u32be(math.floor(bitLen / U32)) .. u32be(bitLen % U32)
-                local w = {}
-                for chunk = 1, #message, 64 do
-                  for i = 0, 15 do
-                    local a, b, c, d = string.byte(message, chunk + i * 4, chunk + i * 4 + 3)
-                    w[i + 1] = ((a * 256 + b) * 256 + c) * 256 + d
-                  end
-                  for i = 17, 64 do
-                    local x, y = w[i - 15], w[i - 2]
-                    w[i] = (w[i - 16] + bxor2(rrotate2(x, 7), rrotate2(x, 18), rshift2(x, 3)) + w[i - 7] + bxor2(rrotate2(y, 17), rrotate2(y, 19), rshift2(y, 10))) % U32
-                  end
-                  local a, b, c, d, e, f, g, h = h0, h1, h2, h3, h4, h5, h6, h7
-                  for i = 1, 64 do
-                    local t1 = (h + bxor2(rrotate2(e, 6), rrotate2(e, 11), rrotate2(e, 25)) + bxor2(band2(e, f), band2(bnot2(e), g)) + K[i] + w[i]) % U32
-                    local t2 = (bxor2(rrotate2(a, 2), rrotate2(a, 13), rrotate2(a, 22)) + bxor2(band2(a, b), band2(a, c), band2(b, c))) % U32
-                    h, g, f, e = g, f, e, (d + t1) % U32
-                    d, c, b, a = c, b, a, (t1 + t2) % U32
-                  end
-                  h0 = (h0 + a) % U32
-                  h1 = (h1 + b) % U32
-                  h2 = (h2 + c) % U32
-                  h3 = (h3 + d) % U32
-                  h4 = (h4 + e) % U32
-                  h5 = (h5 + f) % U32
-                  h6 = (h6 + g) % U32
-                  h7 = (h7 + h) % U32
-                end
-                return string.format("%08x%08x%08x%08x%08x%08x%08x%08x", h0, h1, h2, h3, h4, h5, h6, h7)
-              end
-              local function cipherRemoteName(name, jobId)
-                local items3, pos = {}, 0
-                for i = 1, #name do
-                  local byte = name:byte(i)
-                  if byte == 47 then
-                    items3[i] = "/"
-                  else
-                    pos += 1
-                    items3[i] = string.char((byte - 32 + jobId:byte((pos - 1) % #jobId + 1)) % 95 + 32)
-                  end
-                end
-                return table.concat(items3)
-              end
-              local function getGrappleRemote()
-                local net = enumValues.ReplicatedStorage:FindFirstChild("Packages")
-                net = net and net:FindFirstChild("Net")
-                if not net then
-                  return nil
-                end
-                local jobId = game.JobId
-                local hash = grappleSha256(
-                  cipherRemoteName("75c9466d-e4c0-4b02-b26a-c3615fcc1e42", jobId) .. "36bc48de-ccc6-4666-af4b-7d3bd46d6aa7" .. jobId
-                )
-                return net:FindFirstChild("RE/" .. hash) or net:FindFirstChild("RF/" .. hash) or net:FindFirstChild("URE/" .. hash)
-              end
               equipRoutingTools = function()
+                local xenNet = _G.XenNet
                 local now2 = os.clock()
                 while not findTarget("Grapple Hook") and os.clock() - now2 < 5 do
                   routeRunService.Heartbeat:Wait()
@@ -1378,16 +1264,16 @@ do
                   break
                 end
                 task.wait(0.015)
-                if localPlayer2.Character and localPlayer2.Character:FindFirstChild("Grapple Hook") then
-                  for _ = 1, 3 do
-                    pcall(function()
-                      local remote = getGrappleRemote()
-                      if remote and remote:IsA("RemoteEvent") then
-                        remote:FireServer(0.8)
-                      end
-                    end)
-                    task.wait(0.05)
-                  end
+                if xenNet and localPlayer2.Character and localPlayer2.Character:FindFirstChild("Grapple Hook") then
+                  pcall(function()
+                    local entry = enumValues.ReplicatedStorage
+                      :WaitForChild("Packages")
+                      :WaitForChild("Net")
+                      :GetChildren()[tonumber(_G.XenUseItemIndex) or 208]
+                    if entry and entry:IsA("RemoteEvent") then
+                      entry:FireServer(0)
+                    end
+                  end)
                 end
                 task.wait(0.06)
                 local humanoid2 = localPlayer2.Character and localPlayer2.Character:FindFirstChildOfClass("Humanoid")
@@ -3999,7 +3885,7 @@ do
             local vector = Vector3.new(vector.X, y2, vector.Z)
             local calculatedValue = vector.Y - 3
             local tuffCurPlate2 = newInstance("Part")
-            tuffCurPlate2.Name = _G._xenN.tpp
+            tuffCurPlate2.Name = _G._velocityN.tpp
             tuffCurPlate2.Size = Vector3.new(8, 2, 8)
             tuffCurPlate2.Position = Vector3.new(vector.X, calculatedValue - 2, vector.Z)
             tuffCurPlate2.Anchored = true
@@ -4522,7 +4408,7 @@ do
               local character2 = localPlayer2.Character and localPlayer2.Character:FindFirstChild("HumanoidRootPart")
               local position2 = character2 and character2.Parent and character2.Position or vector2
               local part = newInstance("Part")
-              part.Name = _G._xenN.tcp
+              part.Name = _G._velocityN.tcp
               part.Size = Vector3.new(16, 1, 16)
               part.Position = Vector3.new(position2.X, position2.Y - 3, position2.Z)
               part.Anchored = true
@@ -4900,13 +4786,13 @@ do
             getValue(descendant)
           end
         end)
-        if _G.XenHubLoaded then
-          if _G.XenHubCleanup then
-            pcall(_G.XenHubCleanup)
+        if _G.VelocityHubLoaded then
+          if _G.VelocityHubCleanup then
+            pcall(_G.VelocityHubCleanup)
           end
           task.wait(0.1)
         end
-        _G.XenHubLoaded = true
+        _G.VelocityHubLoaded = true
         pcall(function()
           local items = {
             Comma = ",",
@@ -4969,7 +4855,7 @@ do
         end
         task.spawn(function()
           pcall(function()
-            if _G._xenConvDataLoaded then
+            if _G._velocityConvDataLoaded then
               return
             end
             local datas = enumValues.ReplicatedStorage:WaitForChild("Datas", 10)
@@ -4977,9 +4863,9 @@ do
             if not datas or not shared then
               return
             end
-            _G._xenAnimalsData = require(datas:WaitForChild("Animals", 5))
-            _G._xenSharedAnim = _G._xenAnimShim
-            _G._xenConvDataLoaded = true
+            _G._velocityAnimalsData = require(datas:WaitForChild("Animals", 5))
+            _G._velocitySharedAnim = _G._velocityAnimShim
+            _G._velocityConvDataLoaded = true
           end)
         end)
         pcall(function()
@@ -5009,7 +4895,7 @@ do
                 end
                 return enumValues.HttpService:JSONDecode(readfile(data))
               end
-              local json = loadData("xendlessKeybinds.json") or loadData("XenHubKeybinds.json")
+              local json = loadData("velocityKeybinds.json") or loadData("VelocityHubKeybinds.json")
               if json and json.HighValueSoundEnabled ~= nil then
                 _G.HighValueSoundEnabled = json.HighValueSoundEnabled
               end
@@ -5185,13 +5071,13 @@ do
               end
             end
             local renderedMovingAnimals = workspace:FindFirstChild("RenderedMovingAnimals")
-            if renderedMovingAnimals and _G._xenAnimalsData and _G._xenSharedAnim then
+            if renderedMovingAnimals and _G._velocityAnimalsData and _G._velocitySharedAnim then
               for _, child in ipairs(renderedMovingAnimals:GetChildren()) do
                 pcall(function()
                   if not child:IsA("Model") then
                     return
                   end
-                  local player = _G._xenAnimalsData[child.Name]
+                  local player = _G._velocityAnimalsData[child.Name]
                   if not player then
                     return
                   end
@@ -5208,7 +5094,7 @@ do
                   if text and not xenMutValid[text] then
                     text = nil
                   end
-                  local generation = _G._xenSharedAnim:GetGeneration(child.Name, attribute, nil, nil) or 0
+                  local generation = _G._velocitySharedAnim:GetGeneration(child.Name, attribute, nil, nil) or 0
                   local displayName = player.DisplayName or child.Name
                   local lowercaseText = displayName:lower()
                   for i, item in ipairs(sharedPriorityItems2) do
@@ -5638,7 +5524,7 @@ do
           end
           _G._xenDoJoinScan = xenDoJoinScan
           task.spawn(function()
-            _G._xenNotifSuppressUntil = os.clock() + 8
+            _G._velocityNotifSuppressUntil = os.clock() + 8
             _G._xenPostScanCallbacks = _G._xenPostScanCallbacks or {}
             local isEnabledLocal548 = false
             local amount = 0
@@ -5700,16 +5586,16 @@ do
                 if isEnabledLocal81 or isEnabledLocal548 or isEnabled then
                   return
                 end
-                if not (child and child:IsA("Model") and _G._xenAnimalsData and _G._xenSharedAnim) then
+                if not (child and child:IsA("Model") and _G._velocityAnimalsData and _G._velocitySharedAnim) then
                   return
                 end
                 pcall(function()
-                  if not _G._xenAnimalsData[child.Name] then
+                  if not _G._velocityAnimalsData[child.Name] then
                     return
                   end
                   if
                     (_G.TPMinValue or 5) * 1000000
-                    <= (_G._xenSharedAnim:GetGeneration(child.Name, child:GetAttribute("Mutation"), nil, nil) or 0)
+                    <= (_G._velocitySharedAnim:GetGeneration(child.Name, child:GetAttribute("Mutation"), nil, nil) or 0)
                   then
                     getValue()
                   end
@@ -6032,7 +5918,7 @@ do
               end)
               return success and callResult or nil
             end
-            local json = loadData("xendlessKeybinds.json") or loadData("XenHubKeybinds.json")
+            local json = loadData("velocityKeybinds.json") or loadData("VelocityHubKeybinds.json")
             if json then
               if json.TPSpeedItem then
                 _G.TPSpeedItem = json.TPSpeedItem
@@ -6202,161 +6088,48 @@ do
         local NumberUtils, getValue37, getValue2
         do
           local xenAnimShim
-          xenAnimShim = _G._xenAnimShim
+          xenAnimShim = _G._velocityAnimShim
           NumberUtils = require(utils:WaitForChild("NumberUtils"))
-          -- Helper: name of the clone model that the server spawns for us.
-          _G._xenGetCloneName = function()
-            local lp = enumValues.Players.LocalPlayer
-            return lp and (tostring(lp.UserId) .. "_Clone") or nil
-          end
-          -- Helper: wait until the server actually replicates our clone into Workspace.
-          -- Returns the model (or nil on timeout). Used by TP-to-pet so the swap
-          -- doesn't fire before the clone exists.
-          _G._xenWaitForClone = function(timeout)
-            local name = _G._xenGetCloneName()
-            if not name then return nil end
-            local existing = workspace:FindFirstChild(name)
-            if existing then return existing end
-            local t0 = tick()
-            local cap = tonumber(timeout) or 0.6
-            while tick() - t0 < cap do
-              local m = workspace:FindFirstChild(name)
-              if m then return m end
-              enumValues.RunService.Heartbeat:Wait()
-            end
-            return workspace:FindFirstChild(name)
-          end
-          -- Rose Hub style clone: use the tool's own Activate path so we match
-          -- whatever remote the game is currently using (adapts if they rename
-          -- UseItem / QuantumCloner/OnTeleport). Falls back to firing the
-          -- Activated signal directly via getconnections if Activate is blocked.
           _G._xenFastClone = function()
-            local lp = enumValues.Players.LocalPlayer
-            if not lp then
+            if not enumValues.Players.LocalPlayer then
               _G._xenCloneRemotesFired = false
               return false
             end
-            local character = lp.Character or lp.CharacterAdded:Wait()
+            local character = enumValues.Players.LocalPlayer.Character
+              or enumValues.Players.LocalPlayer.CharacterAdded:Wait()
             local humanoid = character:FindFirstChildOfClass("Humanoid")
             if not humanoid then
               _G._xenCloneRemotesFired = false
               return false
             end
-            local backpack = lp:FindFirstChildOfClass("Backpack")
-            local quantumCloner = (backpack and backpack:FindFirstChild("Quantum Cloner"))
+            local quantumCloner = enumValues.Players.LocalPlayer:FindFirstChild("Backpack")
+                and enumValues.Players.LocalPlayer.Backpack:FindFirstChild("Quantum Cloner")
               or character:FindFirstChild("Quantum Cloner")
             if not quantumCloner then
               _G._xenCloneRemotesFired = false
               return false
             end
-            -- Equip if it's in the backpack
             if quantumCloner.Parent ~= character then
-              pcall(function()
-                humanoid:EquipTool(quantumCloner)
-              end)
-              local t0 = tick()
-              while tick() - t0 < 0.2 do
-                if quantumCloner.Parent == character then break end
-                enumValues.RunService.Heartbeat:Wait()
-              end
+              humanoid:EquipTool(quantumCloner)
+              task.wait()
             end
-            -- Clear any stale clone first (avoids name collision & dupes)
-            local cloneName = tostring(lp.UserId) .. "_Clone"
-            local stale = workspace:FindFirstChild(cloneName)
-            if stale then
-              pcall(function() stale:Destroy() end)
+            local xenNet = _G.XenNet
+            if not xenNet then
+              _G._xenCloneRemotesFired = false
+              return false
             end
-            -- Primary: let the tool fire its own activation chain (works even
-            -- when the game renames the underlying remote).
-            local placed = false
-            local okAct = pcall(function()
-              quantumCloner:Activate()
+            local success = pcall(function()
+              xenNet:RemoteEvent("UseItem"):FireServer()
             end)
-            if okAct then placed = true end
-            -- Fallback: fire the first bound Activated connection directly.
-            if (not okAct) and getconnections then
-              pcall(function()
-                local conns = getconnections(quantumCloner.Activated)
-                if conns and conns[1] and conns[1].Function then
-                  conns[1].Function()
-                  placed = true
-                end
-              end)
-            end
-            -- Legacy remote fire as a last resort — keeps old servers working.
-            if not placed then
-              local xenNet = _G.XenNet
-              if xenNet then
-                local ok1 = pcall(function()
-                  xenNet:RemoteEvent("UseItem"):FireServer()
-                end)
-                task.wait(0.05)
-                local ok2 = pcall(function()
-                  xenNet:RemoteEvent("QuantumCloner/OnTeleport"):FireServer()
-                end)
-                placed = ok1 and ok2
-              end
-            end
+            task.wait(0.05)
+            local success2 = pcall(function()
+              xenNet:RemoteEvent("QuantumCloner/OnTeleport"):FireServer()
+            end)
             if _G.triggerSafePollBoost then
               pcall(_G.triggerSafePollBoost)
             end
-            -- SWAP TO CLONE — the clone spawn alone doesn't move the player.
-            -- The game ships a "TeleportToClone" button in the QuantumCloner tools
-            -- frame; firing its MouseButton1Up signal is what actually swaps us
-            -- onto the clone. Rose Hub uses the same approach.
-            if placed then
-              task.spawn(function()
-                -- Wait for the clone model to replicate first
-                local cloneModel
-                if _G._xenWaitForClone then
-                  cloneModel = _G._xenWaitForClone(0.6)
-                end
-                if not cloneModel then
-                  return
-                end
-                -- Locate the TeleportToClone button in PlayerGui
-                local playerGui = lp:FindFirstChildOfClass("PlayerGui")
-                if not playerGui then return end
-                local toolsFrames = playerGui:FindFirstChild("ToolsFrames")
-                local qcFrame = toolsFrames and toolsFrames:FindFirstChild("QuantumCloner")
-                local btn = qcFrame and qcFrame:FindFirstChild("TeleportToClone")
-                -- Poll briefly if the UI hasn't appeared yet
-                if not btn then
-                  local t0 = tick()
-                  while tick() - t0 < 0.3 do
-                    enumValues.RunService.Heartbeat:Wait()
-                    toolsFrames = playerGui:FindFirstChild("ToolsFrames")
-                    qcFrame = toolsFrames and toolsFrames:FindFirstChild("QuantumCloner")
-                    btn = qcFrame and qcFrame:FindFirstChild("TeleportToClone")
-                    if btn then break end
-                  end
-                end
-                if not btn then return end
-                -- Fire MouseButton1Up via firesignal (preferred) or getconnections fallback
-                local fired = false
-                pcall(function() btn.Visible = true end)
-                if typeof(firesignal) == "function" then
-                  local ok = pcall(firesignal, btn.MouseButton1Up)
-                  if ok then fired = true end
-                end
-                if not fired and getconnections then
-                  pcall(function()
-                    local conns = getconnections(btn.MouseButton1Up)
-                    if conns and conns[1] and conns[1].Function then
-                      conns[1].Function()
-                      fired = true
-                    end
-                  end)
-                end
-                -- Last-ditch: try MouseButton1Click too
-                if not fired and typeof(firesignal) == "function" then
-                  pcall(firesignal, btn.MouseButton1Click)
-                end
-                _G._xenCloneSwapped = fired
-              end)
-            end
-            _G._xenCloneRemotesFired = placed
-            return placed
+            _G._xenCloneRemotesFired = success and success2
+            return _G._xenCloneRemotesFired
           end
           do
             local isEnabled = false
@@ -6540,7 +6313,7 @@ do
             end
             local function xenScanAndListen()
               local success, callResult = pcall(function()
-                return _G.XenSyncAll()
+                return _G.VelocitySyncAll()
               end)
               if not (success and type(callResult) == "table") then
                 return
@@ -6679,7 +6452,7 @@ do
             end
             local BillboardGui = newInstance("BillboardGui")
             setProperties(BillboardGui, {
-              Name = _G._xenN.is,
+              Name = _G._velocityN.is,
               Size = UDim2.new(0, 220, 0, 110),
               StudsOffset = Vector3.new(0, 11, 0),
               AlwaysOnTop = true,
@@ -6797,7 +6570,7 @@ do
             end
             local state = nil
             pcall(function()
-              state = _G.XenSyncGet(instance.Name)
+              state = _G.VelocitySyncGet(instance.Name)
             end)
             if not state then
               return nil
@@ -6830,7 +6603,7 @@ do
                 continue
               end
               local success, callResult = pcall(function()
-                return _G.XenSyncGet(child.Name)
+                return _G.VelocitySyncGet(child.Name)
               end)
               if success and callResult then
                 local instance = _G.XenChGet(callResult, "Owner")
@@ -6851,7 +6624,7 @@ do
             end
             for _, child in ipairs(plots_2:GetChildren()) do
               local success, callResult = pcall(function()
-                return _G.XenSyncGet(child.Name)
+                return _G.VelocitySyncGet(child.Name)
               end)
               if success and callResult then
                 local collection = _G.XenChGet(callResult, "AnimalList")
@@ -6886,7 +6659,7 @@ do
             local state2 = nil
             for _, child in ipairs(plots:GetChildren()) do
               local success, callResult = pcall(function()
-                return _G.XenSyncGet(child.Name)
+                return _G.VelocitySyncGet(child.Name)
               end)
               if success and callResult then
                 local collection = _G.XenChGet(callResult, "AnimalList")
@@ -6927,7 +6700,7 @@ do
               return nil
             end
             local success, callResult = pcall(function()
-              return _G.XenSyncGet(data)
+              return _G.VelocitySyncGet(data)
             end)
             if not success or not callResult then
               return nil
@@ -7042,7 +6815,7 @@ do
                 local vector2 = Vector3.new(position3.X, position3.Y - 8, position3.Z)
                 local part = newInstance("Part")
                 setProperties(part, {
-                  Name = _G._xenN.tpp,
+                  Name = _G._velocityN.tpp,
                   Size = Vector3.new(3, 1, 3),
                   Position = vector2 - Vector3.new(0, 5, 0),
                   Anchored = true,
@@ -7202,7 +6975,7 @@ do
               return
             end
             local success, callResult = pcall(function()
-              return _G.XenSyncGet(instance2.Name)
+              return _G.VelocitySyncGet(instance2.Name)
             end)
             if not success or not callResult then
               return
@@ -7265,7 +7038,7 @@ do
             while true do
               if not state and amount < 100 then
                 local success, callResult = pcall(function()
-                  return _G.XenSyncGet(instance2.Name)
+                  return _G.VelocitySyncGet(instance2.Name)
                 end)
                 if success and callResult then
                   state = callResult
@@ -7322,7 +7095,7 @@ do
         local vector2 = Vector3.new(vectorLocal476.X, vectorLocal476.Y - 8, vectorLocal476.Z)
         local part = newInstance("Part")
         setProperties(part, {
-          Name = _G._xenN.tpp,
+          Name = _G._velocityN.tpp,
           Size = Vector3.new(3, 1, 3),
           Position = vector2 - Vector3.new(0, 5, 0),
           Anchored = true,
@@ -7442,9 +7215,9 @@ do
             if not playerGui then
               return
             end
-            local xenNotifSuppressUntil = _G._xenNotifSuppressUntil
+            local xenNotifSuppressUntil = _G._velocityNotifSuppressUntil
             if xenNotifSuppressUntil then
-              local xenNotifSuppressUntil2 = _G._xenNotifSuppressUntil
+              local xenNotifSuppressUntil2 = _G._velocityNotifSuppressUntil
               xenNotifSuppressUntil = os.clock() < xenNotifSuppressUntil2
             end
             if xenNotifSuppressUntil then
@@ -7827,7 +7600,7 @@ do
               return true
             end
             local success, callResult = pcall(function()
-              return _G.XenSyncAll()
+              return _G.VelocitySyncAll()
             end)
             local isActive = not success
             local isActive2
@@ -8149,7 +7922,7 @@ do
         end
         return data
       end
-      _G.XenHubCleanup = function()
+      _G.VelocityHubCleanup = function()
         for _, item in ipairs(items) do
           pcall(function()
             if item and typeof(item) == "RBXScriptConnection" then
@@ -8161,7 +7934,7 @@ do
         pcall(function()
           local playerGui = enumValues.Players.LocalPlayer:FindFirstChild("PlayerGui")
           if playerGui then
-            local playerListUI = playerGui:FindFirstChild("PlayerListUI") or _G._xenHUI():FindFirstChild("PlayerListUI")
+            local playerListUI = playerGui:FindFirstChild("PlayerListUI") or _G._velocityHUI():FindFirstChild("PlayerListUI")
             if playerListUI then
               playerListUI:Destroy()
             end
@@ -8172,8 +7945,8 @@ do
           end
         end)
         local vector = _G
-        _G.XenHub_InfJumpActive = nil
-        vector.XenHubLoaded = nil
+        _G.VelocityHub_InfJumpActive = nil
+        vector.VelocityHubLoaded = nil
       end
     end
   end
@@ -8995,7 +8768,7 @@ do
           if name == "ESPCard" then
             return true
           end
-          local xenN = _G._xenN
+          local xenN = _G._velocityN
           if xenN then
             for _, item in pairs(xenN) do
               if name == item then
@@ -9392,8 +9165,8 @@ do
     end)
     earlyUISettings = {}
     pcall(function()
-      if fileSystemAvailable and isfile and isfile("xendlessKeybinds.json") then
-        local decodedData = HttpService:JSONDecode(readfile("xendlessKeybinds.json"))
+      if fileSystemAvailable and isfile and isfile("velocityKeybinds.json") then
+        local decodedData = HttpService:JSONDecode(readfile("velocityKeybinds.json"))
         setProperties(earlyUISettings, {
           ShowPlayerList = decodedData.ShowPlayerList,
           ShowCommandCooldown = decodedData.ShowCommandCooldown,
@@ -9421,10 +9194,10 @@ do
       end
     end)
     pcall(function()
-      local json = fileSystemAvailable and isfile and isfile("xendlessKeybinds.json")
+      local json = fileSystemAvailable and isfile and isfile("velocityKeybinds.json")
       local accessoryRemovalEnabled = true
       if json then
-        local decodedData = HttpService:JSONDecode(readfile("xendlessKeybinds.json"))
+        local decodedData = HttpService:JSONDecode(readfile("velocityKeybinds.json"))
         if decodedData and decodedData.AccessoryRemovalEnabled ~= nil then
           accessoryRemovalEnabled = decodedData.AccessoryRemovalEnabled
         end
@@ -9492,7 +9265,7 @@ do
         end)
       end
     end)
-    _G._xenSetUIScale = function(parent, data)
+    _G._velocitySetUIScale = function(parent, data)
       if not parent then
         return
       end
@@ -9513,7 +9286,7 @@ do
     end
     task.spawn(function()
       task.wait()
-      if not _G.XenHubLoaded then
+      if not _G.VelocityHubLoaded then
         return
       end
       if not enumValues.Players.LocalPlayer then
@@ -9826,7 +9599,7 @@ do
           end
         end
       end)
-      while _G.XenHubLoaded do
+      while _G.VelocityHubLoaded do
         task.wait(0.04)
         if not _G.AutoBuyEnabled then
           if _G._ab_bodyPos then
@@ -9948,9 +9721,9 @@ do
       local stealW = isMobile and 90 or 220
       local stealH = isMobile and 95 or 237
       local stealYOffset = isMobile and 90 or 374
-      local xenhubBarW = isMobile and 295 or 570
-      local xenhubBarH = isMobile and 30 or 60
-      local xenhubBarY = isMobile and 100 or 135
+      local velocityBarW = isMobile and 295 or 570
+      local velocityBarH = isMobile and 30 or 60
+      local velocityBarY = isMobile and 100 or 135
       local unlockBtnW = isMobile and 30 or 60
       local unlockBtnH = isMobile and 25 or 50
       local unlockBtnY = isMobile and 135 or 200
@@ -9968,15 +9741,15 @@ do
       snapshot8.STEAL_W = stealW
       snapshot9.STEAL_H = stealH
       vector5.STEAL_Y_OFFSET = stealYOffset
-      vector6.XENHUB_BAR_W = xenhubBarW
-      vector7.XENHUB_BAR_H = xenhubBarH
-      vector8.XENHUB_BAR_Y = xenhubBarY
+      vector6.VELOCITY_BAR_W = velocityBarW
+      vector7.VELOCITY_BAR_H = velocityBarH
+      vector8.VELOCITY_BAR_Y = velocityBarY
       snapshot10.UNLOCK_BTN_W = unlockBtnW
       snapshot11.UNLOCK_BTN_H = unlockBtnH
       vector9.UNLOCK_BTN_Y = unlockBtnY
     end
     task.spawn(function()
-      local parent = _G._xenHUI()
+      local parent = _G._velocityHUI()
       game.Players.LocalPlayer.PlayerGui.ChildAdded:Connect(function(child)
         local isScreenGui = child:IsA("ScreenGui")
         if isScreenGui then
@@ -10330,7 +10103,7 @@ do
               for _, child in ipairs(plots:GetChildren()) do
                 local isEnabled = false
                 pcall(function()
-                  local state = _G._xenRawCT(child.Name)
+                  local state = _G._velocityRawCT(child.Name)
                   if state then
                     local owner = state.Owner
                     if owner then
@@ -11213,7 +10986,7 @@ do
   placeId = game.PlaceId
   jobId = game.JobId
   do
-    local playerListUI = playerGui:FindFirstChild("PlayerListUI") or _G._xenHUI():FindFirstChild("PlayerListUI")
+    local playerListUI = playerGui:FindFirstChild("PlayerListUI") or _G._velocityHUI():FindFirstChild("PlayerListUI")
     if playerListUI then
       playerListUI:Destroy()
     end
@@ -11241,7 +11014,7 @@ do
               Name = "PlayerListUI",
               ResetOnSpawn = false,
               Enabled = false,
-              Parent = _G._xenHUI(),
+              Parent = _G._velocityHUI(),
             })
             state47 = blackColor
             backgroundColor3 = blackColor
@@ -11563,12 +11336,12 @@ do
                     end
                   end
                 end
-                if not _G._xenConvDataLoaded then
-                  _G._xenConvDataLoaded = true
+                if not _G._velocityConvDataLoaded then
+                  _G._velocityConvDataLoaded = true
                   local snapshot = _G
-                  local xenAnimShim = _G._xenAnimShim
-                  _G._xenAnimalsData = require(enumValues.ReplicatedStorage.Datas.Animals)
-                  snapshot._xenSharedAnim = xenAnimShim
+                  local xenAnimShim = _G._velocityAnimShim
+                  _G._velocityAnimalsData = require(enumValues.ReplicatedStorage.Datas.Animals)
+                  snapshot._velocitySharedAnim = xenAnimShim
                 end
                 local renderedMovingAnimals = WorkspaceRoot:FindFirstChild("RenderedMovingAnimals")
                 if renderedMovingAnimals then
@@ -11577,12 +11350,12 @@ do
                       if not child:IsA("Model") then
                         return
                       end
-                      local player = _G._xenAnimalsData[child.Name]
+                      local player = _G._velocityAnimalsData[child.Name]
                       if not player then
                         return
                       end
                       local attribute = child:GetAttribute("Mutation")
-                      local generation = _G._xenSharedAnim:GetGeneration(child.Name, attribute, nil, nil) or 0
+                      local generation = _G._velocitySharedAnim:GetGeneration(child.Name, attribute, nil, nil) or 0
                       local primaryPart = child.PrimaryPart or child:FindFirstChildWhichIsA("BasePart")
                       local isActive
                       if primaryPart then
@@ -12715,11 +12488,11 @@ do
                   end
                 end
                 local renderedMovingAnimals = WorkspaceRoot:FindFirstChild("RenderedMovingAnimals")
-                if renderedMovingAnimals and _G._xenAnimalsData and _G._xenSharedAnim then
+                if renderedMovingAnimals and _G._velocityAnimalsData and _G._velocitySharedAnim then
                   for _, child in ipairs(renderedMovingAnimals:GetChildren()) do
-                    if child:IsA("Model") and _G._xenAnimalsData[child.Name] then
+                    if child:IsA("Model") and _G._velocityAnimalsData[child.Name] then
                       local success, callResult = pcall(function()
-                        return _G._xenSharedAnim:GetGeneration(child.Name, child:GetAttribute("Mutation"), nil, nil)
+                        return _G._velocitySharedAnim:GetGeneration(child.Name, child:GetAttribute("Mutation"), nil, nil)
                       end)
                       if success then
                         success = (callResult or 0) >= calculatedValue
@@ -12801,12 +12574,12 @@ do
                 end
               end
             end
-            if not _G._xenConvDataLoaded then
-              _G._xenConvDataLoaded = true
+            if not _G._velocityConvDataLoaded then
+              _G._velocityConvDataLoaded = true
               local snapshot = _G
-              local xenAnimShim = _G._xenAnimShim
-              _G._xenAnimalsData = require(enumValues.ReplicatedStorage.Datas.Animals)
-              snapshot._xenSharedAnim = xenAnimShim
+              local xenAnimShim = _G._velocityAnimShim
+              _G._velocityAnimalsData = require(enumValues.ReplicatedStorage.Datas.Animals)
+              snapshot._velocitySharedAnim = xenAnimShim
             end
             local renderedMovingAnimals = WorkspaceRoot:FindFirstChild("RenderedMovingAnimals")
             if renderedMovingAnimals then
@@ -12815,12 +12588,12 @@ do
                   if not child:IsA("Model") then
                     return
                   end
-                  local player = _G._xenAnimalsData[child.Name]
+                  local player = _G._velocityAnimalsData[child.Name]
                   if not player then
                     return
                   end
                   local attribute = child:GetAttribute("Mutation")
-                  local generation = _G._xenSharedAnim:GetGeneration(child.Name, attribute, nil, nil) or 0
+                  local generation = _G._velocitySharedAnim:GetGeneration(child.Name, attribute, nil, nil) or 0
                   local primaryPart = child.PrimaryPart or child:FindFirstChildWhichIsA("BasePart")
                   if primaryPart and generation > 0 then
                     handleState({
@@ -12930,7 +12703,7 @@ do
                 DepthMode = Enum.HighlightDepthMode.AlwaysOnTop,
               })
               Highlight2.Adornee = adornee
-              Highlight2.Parent = _G._xenHUI()
+              Highlight2.Parent = _G._velocityHUI()
               return Highlight2
             end
             local items = {
@@ -13803,7 +13576,7 @@ do
             end
           end
           task.spawn(function()
-            while _G.XenHubLoaded do
+            while _G.VelocityHubLoaded do
               if isEnabled6 and localPlayer.Character then
                 task.defer(function()
                   pcall(updateBrainrotBeam)
@@ -14154,7 +13927,7 @@ do
           end
           _G.makeDraggable = makeDraggable
           task.wait(0.5)
-          _G._earlyPanelGui = _G._xenHUI():FindFirstChild("HudPreload")
+          _G._earlyPanelGui = _G._velocityHUI():FindFirstChild("HudPreload")
           if _G._earlyPanelGui then
             _G._earlyPanelGui:Destroy()
           end
@@ -14164,7 +13937,7 @@ do
             local earlyPanelGui2 = _G._earlyPanelGui
             local earlyPanelGui3 = _G._earlyPanelGui
             local earlyPanelGui4 = _G._earlyPanelGui
-            local parent = _G._xenHUI()
+            local parent = _G._velocityHUI()
             earlyPanelGui.Name = "HudPreload"
             earlyPanelGui2.ResetOnSpawn = false
             earlyPanelGui3.ZIndexBehavior = enumValues.siblingZIndex
@@ -14195,8 +13968,8 @@ do
           end
           _G._xenPlayerListFrame = ScrollingFrame
           pcall(function()
-            if _G._xenSetUIScale then
-              _G._xenSetUIScale(ScrollingFrame, _G._earlyUISettings and _G._earlyUISettings.PlayerListScale or 100)
+            if _G._velocitySetUIScale then
+              _G._velocitySetUIScale(ScrollingFrame, _G._earlyUISettings and _G._earlyUISettings.PlayerListScale or 100)
             end
           end)
           if earlyUISettings.ShowPlayerList == false then
@@ -14263,8 +14036,8 @@ do
           end
           _G._xenCommandFrame = parent2
           pcall(function()
-            if _G._xenSetUIScale then
-              _G._xenSetUIScale(parent2, _G._earlyUISettings and _G._earlyUISettings.CommandCooldownScale or 100)
+            if _G._velocitySetUIScale then
+              _G._velocitySetUIScale(parent2, _G._earlyUISettings and _G._earlyUISettings.CommandCooldownScale or 100)
             end
           end)
           makeDraggable(parent2)
@@ -14281,7 +14054,7 @@ do
                 Size = UDim2.new(1, 0, 0, _G.isMobile and 10 or 14),
                 Position = UDim2.new(0, 0, 0, _G.isMobile and 3 or 5),
                 BackgroundTransparency = 1,
-                Text = "XENHUB PRIVATE",
+                Text = "Velocity V1",
                 TextColor3 = whiteColor,
                 TextSize = _G.isMobile and 8 or 11,
                 Font = enumValues.gothamBlackFont,
@@ -14538,7 +14311,7 @@ do
           setProperties(Highlight, {
             DepthMode = Enum.HighlightDepthMode.AlwaysOnTop,
             Enabled = false,
-            Parent = _G._xenHUI(),
+            Parent = _G._velocityHUI(),
           })
           do
             local isEnabled = false
@@ -14773,7 +14546,7 @@ do
                       }
                       TweenService:Create(
                         parentLocal60,
-                        TweenInfo.new(0.4, enumValues.quadEasing, enumValues.easingOut),
+                        TweenInfo.new(0.4, enumValues.quadEasingU, enumValues.easingOut),
                         tweenProperties
                       ):Play()
                       local corner = newInstance("UICorner")
@@ -14788,7 +14561,7 @@ do
                         Parent = parentLocal60,
                       })
                       table.insert(collection3, stroke8)
-                      TweenService:Create(stroke8, TweenInfo.new(0.4, enumValues.quadEasing, enumValues.easingOut), {
+                      TweenService:Create(stroke8, TweenInfo.new(0.4, enumValues.quadEasingU, enumValues.easingOut), {
                         Transparency = 0.3,
                       }):Play()
                       local imageLabel = newInstance("ImageLabel")
@@ -14808,7 +14581,7 @@ do
                         ImageTransparency = 0,
                       }
                       TweenService
-                        :Create(imageLabel, TweenInfo.new(0.4, enumValues.quadEasing, enumValues.easingOut), items)
+                        :Create(imageLabel, TweenInfo.new(0.4, enumValues.quadEasingU, enumValues.easingOut), items)
                         :Play()
                       task.spawn(function()
                         if
@@ -15136,7 +14909,7 @@ do
                       end)
                       updateLabel()
                       TweenService
-                        :Create(textLabel, TweenInfo.new(0.4, enumValues.quadEasing, enumValues.easingOut), {
+                        :Create(textLabel, TweenInfo.new(0.4, enumValues.quadEasingU, enumValues.easingOut), {
                           TextTransparency = 0,
                         })
                         :Play()
@@ -15145,7 +14918,7 @@ do
                       }
                       TweenService:Create(
                         textLabel2,
-                        TweenInfo.new(0.35, enumValues.quadEasing, enumValues.easingOut),
+                        TweenInfo.new(0.35, enumValues.quadEasingU, enumValues.easingOut),
                         tweenProperties2
                       ):Play()
                       parent2.MouseButton1Click:Connect(function()
@@ -15243,7 +15016,7 @@ do
                         }
                         TweenService:Create(
                           parentLocal61,
-                          TweenInfo.new(0.4, enumValues.quadEasing, enumValues.easingOut),
+                          TweenInfo.new(0.4, enumValues.quadEasingU, enumValues.easingOut),
                           tweenProperties
                         ):Play()
                         local corner = newInstance("UICorner")
@@ -15383,7 +15156,7 @@ do
               end
               local instance = xenPlayerContainer:FindFirstChild("PlayerEntry_" .. player.UserId)
               if instance then
-                local tweenInfo = TweenInfo.new(0.3, enumValues.quadEasing, enumValues.easingIn)
+                local tweenInfo = TweenInfo.new(0.3, enumValues.quadEasingU, enumValues.easingIn)
                 TweenService:Create(instance, tweenInfo, {
                   BackgroundTransparency = 1,
                 }):Play()
@@ -15967,13 +15740,13 @@ do
           end
           _G._xenProximityFrame = proximityFrame
           pcall(function()
-            if _G._xenSetUIScale then
-              _G._xenSetUIScale(proximityFrame, _G._earlyUISettings and _G._earlyUISettings.ProximityScale or 100)
+            if _G._velocitySetUIScale then
+              _G._velocitySetUIScale(proximityFrame, _G._earlyUISettings and _G._earlyUISettings.ProximityScale or 100)
             end
           end)
           makeDraggable(proximityFrame)
           task.spawn(function()
-            local tweenInfo = TweenInfo.new(0.35, enumValues.quadEasing, enumValues.easingOut)
+            local tweenInfo = TweenInfo.new(0.35, enumValues.quadEasingU, enumValues.easingOut)
             if ScrollingFrame.Visible then
               TweenService:Create(ScrollingFrame, tweenInfo, {
                 BackgroundTransparency = 0.5,
@@ -15994,7 +15767,7 @@ do
               Size = UDim2.new(1, 0, 0, _G.isMobile and 10 or 14),
               Position = UDim2.new(0, 0, 0, _G.isMobile and 3 or 5),
               BackgroundTransparency = 1,
-              Text = "XENHUB PRIVATE",
+              Text = "Velocity V1",
               TextColor3 = whiteColor,
               TextSize = _G.isMobile and 8 or 11,
               Font = enumValues.gothamBlackFont,
@@ -16286,7 +16059,7 @@ do
                   Highlight2.FillTransparency = 0.5
                   Highlight2.OutlineTransparency = 0
                   Highlight2.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-                  Highlight2.Parent = _G._xenHUI()
+                  Highlight2.Parent = _G._velocityHUI()
                   featureState.highlights[player] = Highlight2
                 end
               else
@@ -16770,13 +16543,7 @@ do
               end
             end)
             if isEnabled and _G.TPDirectlyToPet then
-              -- Wait for the real clone model to replicate instead of a blind sleep.
-              -- Falls back to a short delay if the poll helper is missing.
-              if _G._xenWaitForClone then
-                _G._xenWaitForClone(0.6)
-              else
-                task.wait(0.35)
-              end
+              task.wait(0.35)
               local position2 = nil
               local y2 = nil
               pcall(function()
@@ -16919,7 +16686,7 @@ do
                     local calculatedValue = position3.Y - 3
                     local part = newInstance("Part")
                     setProperties(part, {
-                      Name = _G._xenN.tpp,
+                      Name = _G._velocityN.tpp,
                       Size = Vector3.new(8, 1, 8),
                       Position = Vector3.new(position3.X, calculatedValue - 1.5, position3.Z),
                       Anchored = true,
@@ -16995,7 +16762,7 @@ do
         end
         return (
           pcall(function()
-            return writefile("xendlessKeybinds.json", HttpService:JSONEncode(payload))
+            return writefile("velocityKeybinds.json", HttpService:JSONEncode(payload))
           end)
         )
       end
@@ -17005,10 +16772,10 @@ do
             return {}
           end
           local success, callResult = pcall(function()
-            if not isfile("xendlessKeybinds.json") then
+            if not isfile("velocityKeybinds.json") then
               return {}
             end
-            return HttpService:JSONDecode(readfile("xendlessKeybinds.json"))
+            return HttpService:JSONDecode(readfile("velocityKeybinds.json"))
           end)
           return success and callResult or {}
         end
@@ -17033,7 +16800,7 @@ do
         keybinds.PSCacheOwner = nil
         if writefile then
           pcall(function()
-            writefile("xendlessKeybinds.json", enumValues.HttpService:JSONEncode(keybinds))
+            writefile("velocityKeybinds.json", enumValues.HttpService:JSONEncode(keybinds))
           end)
         end
       end
@@ -17910,7 +17677,7 @@ do
     handleState2 = function()
       _G.KICK_IN_PROGRESS = true
       task.wait(0.1)
-      localPlayer:Kick("You have successfully been kicked by XENHUB PRIVATE.")
+      localPlayer:Kick("You have successfully been kicked by xendless.")
       if not isMobile then
         game:Shutdown()
       end
@@ -18054,7 +17821,7 @@ do
         rootPart.Size = udim2
         rootPart.Position = udim22
         rootPart.BackgroundTransparency = 1
-        rootPart.Text = "XENHUB PRIVATE"
+        rootPart.Text = "Velocity V1"
         setProperties(rootPart, {
           TextColor3 = label.Text,
           TextSize = 18,
@@ -18810,7 +18577,7 @@ do
           _G._xenLastToggleFrame = parent
           return set, parent
         end
-        _G._xenSetUIScale = function(parent, data)
+        _G._velocitySetUIScale = function(parent, data)
           if not parent then
             return
           end
@@ -19102,7 +18869,7 @@ do
             _G.STEAL_RANGE = 10
             local function createUiElement()
               local stealProgressGui = localPlayer.PlayerGui:FindFirstChild("StealProgressGui")
-                or _G._xenHUI():FindFirstChild("StealProgressGui")
+                or _G._velocityHUI():FindFirstChild("StealProgressGui")
               if stealProgressGui then
                 stealProgressGui:Destroy()
               end
@@ -19112,7 +18879,7 @@ do
                 ResetOnSpawn = false,
                 ZIndexBehavior = enumValues.siblingZIndex,
                 DisplayOrder = -1,
-                Parent = _G._xenHUI(),
+                Parent = _G._velocityHUI(),
               })
               local isConditionMet = _G.isMobile and 140 or 250
               local isConditionMet2 = _G.isMobile and 46 or 72
@@ -19161,8 +18928,8 @@ do
               })
               _G.StealProgressFrame = progressContainer
               pcall(function()
-                if _G._xenSetUIScale then
-                  _G._xenSetUIScale(
+                if _G._velocitySetUIScale then
+                  _G._velocitySetUIScale(
                     progressContainer,
                     _G._earlyUISettings and _G._earlyUISettings.StealProgressScale or 200
                   )
@@ -19550,12 +19317,12 @@ do
                   state2 = nil
                   local state
                   if _G._xenStealSrvEnd and _G._xenStealSrvEnd > game.Workspace:GetServerTimeNow() then
-                    state = 1.3 - (_G._xenStealSrvEnd - game.Workspace:GetServerTimeNow())
+                    state = 1.3 - _G._xenStealSrvEnd - game.Workspace:GetServerTimeNow()
                   else
                     state = tick() - amount
                   end
                   local clampedValue = math.clamp(state / 1.3, 0, 1)
-                  local roundedValue = math.floor(clampedValue * 100)
+                  local roundedValue = math.floor(clampedValue * 200)
                   local stealProgressText = _G.StealProgressText
                   _G.StealProgressFill.Size = UDim2.new(clampedValue, 0, 1, 0)
                   stealProgressText.Text = roundedValue .. "%"
@@ -19683,7 +19450,7 @@ do
             end
             local function loadData()
               local autoStealGui = localPlayer.PlayerGui:FindFirstChild("AutoStealGui")
-                or _G._xenHUI():FindFirstChild("AutoStealGui")
+                or _G._velocityHUI():FindFirstChild("AutoStealGui")
               if autoStealGui then
                 autoStealGui:Destroy()
               end
@@ -19693,7 +19460,7 @@ do
                 ResetOnSpawn = false,
                 ZIndexBehavior = enumValues.siblingZIndex,
                 DisplayOrder = 100,
-                Parent = _G._xenHUI(),
+                Parent = _G._velocityHUI(),
               })
               local mainFrame = newInstance("Frame")
               mainFrame.Name = "MainFrame"
@@ -19720,8 +19487,8 @@ do
               state = mainFrame
               _G.AutoStealMainFrame = mainFrame
               pcall(function()
-                if _G._xenSetUIScale then
-                  _G._xenSetUIScale(mainFrame, _G._earlyUISettings and _G._earlyUISettings.StealPanelScale or 100)
+                if _G._velocitySetUIScale then
+                  _G._velocitySetUIScale(mainFrame, _G._earlyUISettings and _G._earlyUISettings.StealPanelScale or 100)
                 end
               end)
               if earlyUISettings and earlyUISettings.ShowStealPanel == false then
@@ -19809,7 +19576,7 @@ do
               rootPart.Position = udim23
               setProperties(rootPart, {
                 BackgroundTransparency = 1,
-                Text = "XENHUB PRIVATE",
+                Text = "Velocity V1",
                 TextColor3 = whiteColor,
               })
               local textSize = isMobile2 and 8 or 11
@@ -21148,7 +20915,7 @@ do
                   end
                 end)
                 local isConditionMet = _G._xenStealSrvEnd and _G._xenStealSrvEnd - game.Workspace:GetServerTimeNow()
-                  or 1.3 - (tick() - amount)
+                  or 1.3 - tick() - amount
                 if isConditionMet > 0 then
                   task.wait(isConditionMet)
                 end
@@ -21199,7 +20966,7 @@ do
                 return -1
               end
               if now2 then
-                local calculatedValue = 15 - (os.clock() - now2)
+                local calculatedValue = 15 - os.clock() - now2
                 if calculatedValue > 0 then
                   return calculatedValue
                 end
@@ -21215,7 +20982,7 @@ do
               for k, item in pairs(items7) do
                 if enumValues.Players.LocalPlayer:GetAttribute(k) then
                   local entry = items8[k]
-                  entry = entry and item - (os.clock() - entry) or -1
+                  entry = entry and item - os.clock() - entry or -1
                   if entry > 0 then
                     return entry
                   end
@@ -21501,7 +21268,7 @@ do
           task.wait(0.5)
           local movementPanelGui = localPlayer:FindFirstChildOfClass("PlayerGui")
               and localPlayer.PlayerGui:FindFirstChild("MovementPanelGui")
-            or _G._xenHUI():FindFirstChild("MovementPanelGui")
+            or _G._velocityHUI():FindFirstChild("MovementPanelGui")
           if movementPanelGui then
             movementPanelGui:Destroy()
           end
@@ -21510,7 +21277,7 @@ do
             Name = "MovementPanelGui",
             ResetOnSpawn = false,
             ZIndexBehavior = enumValues.siblingZIndex,
-            Parent = _G._xenHUI(),
+            Parent = _G._velocityHUI(),
           })
           local walkspeedEnabled = false
           local currentWalkSpeed = 27
@@ -21554,8 +21321,8 @@ do
           corner.Parent = walkspeedFrame
           _G.walkspeedFrame = walkspeedFrame
           pcall(function()
-            if _G._xenSetUIScale then
-              _G._xenSetUIScale(walkspeedFrame, _G._earlyUISettings and _G._earlyUISettings.MovementPanelScale or 100)
+            if _G._velocitySetUIScale then
+              _G._velocitySetUIScale(walkspeedFrame, _G._earlyUISettings and _G._earlyUISettings.MovementPanelScale or 100)
             end
           end)
           local isEnabled = false
@@ -21579,7 +21346,7 @@ do
             Name = "TitleLabel",
             Size = UDim2.new(1, 0, 0, 14),
             Position = UDim2.new(0, 0, 0, isMobile2 and 3 or 5),
-            Text = "XENHUB PRIVATE",
+            Text = "Velocity V1",
             TextColor3 = whiteColor,
             BackgroundTransparency = 1,
             Font = enumValues.gothamBlackFont,
@@ -22764,7 +22531,7 @@ do
             setProperties(ScreenGui2, {
               Name = "ErrorOrbGui",
               ResetOnSpawn = false,
-              Parent = _G._xenHUI(),
+              Parent = _G._velocityHUI(),
             })
             local parent = newInstance("Frame")
             setProperties(parent, {
@@ -22828,7 +22595,7 @@ do
             setProperties(ScreenGui2, {
               Name = "LagbackNotification",
               ResetOnSpawn = false,
-              Parent = _G._xenHUI(),
+              Parent = _G._velocityHUI(),
             })
             setProperties(newInstance("TextLabel"), {
               Size = UDim2.new(0, 500, 0, 30),
@@ -26858,7 +26625,7 @@ do
   end)
   addInlineScaleSlider(_G._xenLastToggleFrame, keybinds.ActionsScale or 100, function(actionsScale)
     keybinds.ActionsScale = actionsScale
-    _G._xenSetUIScale(_G.PrivateActionsPanel, actionsScale)
+    _G._velocitySetUIScale(_G.PrivateActionsPanel, actionsScale)
     saveKeybinds()
   end)
   createUiElement2("Player List", function()
@@ -26872,7 +26639,7 @@ do
   end)
   addInlineScaleSlider(_G._xenLastToggleFrame, keybinds.PlayerListScale or 100, function(playerListScale)
     keybinds.PlayerListScale = playerListScale
-    _G._xenSetUIScale(ScrollingFrame, playerListScale)
+    _G._velocitySetUIScale(ScrollingFrame, playerListScale)
     if _G._xenResizePlayerList then
       _G._xenResizePlayerList()
     end
@@ -26889,7 +26656,7 @@ do
   end)
   addInlineScaleSlider(_G._xenLastToggleFrame, keybinds.CommandCooldownScale or 100, function(commandCooldownScale)
     keybinds.CommandCooldownScale = commandCooldownScale
-    _G._xenSetUIScale(parent2, commandCooldownScale)
+    _G._velocitySetUIScale(parent2, commandCooldownScale)
     saveKeybinds()
   end)
   _G._setupStealPanelToggle = function()
@@ -27147,7 +26914,7 @@ do
     end)
     addInlineScaleSlider(parent, keybinds.StealPanelScale or 200, function(stealPanelScale)
       keybinds.StealPanelScale = stealPanelScale
-      _G._xenSetUIScale(_G.AutoStealMainFrame, stealPanelScale)
+      _G._velocitySetUIScale(_G.AutoStealMainFrame, stealPanelScale)
       saveKeybinds()
     end)
   end
@@ -27166,7 +26933,7 @@ do
   end)
   addInlineScaleSlider(_G._xenLastToggleFrame, keybinds.SelectTargetScale or 100, function(selectTargetScale)
     keybinds.SelectTargetScale = selectTargetScale
-    _G._xenSetUIScale(_G.SelectTargetFrame, selectTargetScale)
+    _G._velocitySetUIScale(_G.SelectTargetFrame, selectTargetScale)
     saveKeybinds()
   end)
   createUiElement2("Movement Panel", function()
@@ -27180,7 +26947,7 @@ do
   end)
   addInlineScaleSlider(_G._xenLastToggleFrame, keybinds.MovementPanelScale or 100, function(movementPanelScale)
     keybinds.MovementPanelScale = movementPanelScale
-    _G._xenSetUIScale(_G.walkspeedFrame, movementPanelScale)
+    _G._velocitySetUIScale(_G.walkspeedFrame, movementPanelScale)
     saveKeybinds()
   end)
   createUiElement2("Remote Sell", function()
@@ -27204,7 +26971,7 @@ do
   end)
   addInlineScaleSlider(_G._xenLastToggleFrame, keybinds.RemoteSellScale or 200, function(remoteSellScale)
     keybinds.RemoteSellScale = remoteSellScale
-    _G._xenSetUIScale(_G._remoteSellPanel, remoteSellScale)
+    _G._velocitySetUIScale(_G._remoteSellPanel, remoteSellScale)
     saveKeybinds()
   end)
   createUiElement2("Admin Command Panel", function()
@@ -27218,7 +26985,7 @@ do
   end)
   addInlineScaleSlider(_G._xenLastToggleFrame, keybinds.ProximityScale or 100, function(proximityScale)
     keybinds.ProximityScale = proximityScale
-    _G._xenSetUIScale(proximityFrame, proximityScale)
+    _G._velocitySetUIScale(proximityFrame, proximityScale)
     saveKeybinds()
   end)
   createUiElement2("Unlock Doors", function()
@@ -27244,7 +27011,7 @@ do
   end)
   addInlineScaleSlider(_G._xenLastToggleFrame, keybinds.UnlockScale or 100, function(unlockScale)
     keybinds.UnlockScale = unlockScale
-    _G._xenSetUIScale(_G.unlockContainer, unlockScale)
+    _G._velocitySetUIScale(_G.unlockContainer, unlockScale)
     saveKeybinds()
   end)
   do
@@ -27386,7 +27153,7 @@ end, function(stealProgressBarEnabled)
 end)
 addInlineScaleSlider(_G._xenLastToggleFrame, keybinds.StealProgressScale or 200, function(stealProgressScale)
   keybinds.StealProgressScale = stealProgressScale
-  _G._xenSetUIScale(_G.StealProgressFrame, stealProgressScale)
+  _G._velocitySetUIScale(_G.StealProgressFrame, stealProgressScale)
   saveKeybinds()
 end)
 createUiElement2("Clear Error Popups", function()
@@ -27491,8 +27258,8 @@ do
       })
       _G._remoteSellPanel = remoteSellPrivate
       pcall(function()
-        if _G._xenSetUIScale then
-          _G._xenSetUIScale(remoteSellPrivate, keybinds.RemoteSellScale or 100)
+        if _G._velocitySetUIScale then
+          _G._velocitySetUIScale(remoteSellPrivate, keybinds.RemoteSellScale or 100)
         end
       end)
       newInstance("UICorner", remoteSellPrivate).CornerRadius = UDim.new(0, 13)
@@ -27563,7 +27330,7 @@ do
         Size = UDim2.new(1, 0, 0, isMobile and 12 or 16),
         Position = UDim2.new(0, 0, 0, isMobile and 5 or 7),
         BackgroundTransparency = 1,
-        Text = "XENHUB PRIVATE",
+        Text = "Velocity V1",
         TextColor3 = label.Text,
         TextSize = isMobile and 8 or 11,
         Font = enumValues.gothamBlackFont,
@@ -29214,7 +28981,7 @@ do
         end)
         pcall(function()
           if fileSystemAvailable and writefile then
-            writefile("xendlessKeybinds.json", HttpService:JSONEncode(keybinds))
+            writefile("velocityKeybinds.json", HttpService:JSONEncode(keybinds))
           end
         end)
         pcall(function()
@@ -29422,7 +29189,7 @@ do
         pcall(saveKeybinds)
         pcall(function()
           if fileSystemAvailable and writefile then
-            writefile("xendlessKeybinds.json", HttpService:JSONEncode(keybinds))
+            writefile("velocityKeybinds.json", HttpService:JSONEncode(keybinds))
           end
         end)
       end
@@ -29999,8 +29766,8 @@ do
   })
   _G.unlockContainer = parentLocal73
   pcall(function()
-    if _G._xenSetUIScale then
-      _G._xenSetUIScale(parentLocal73, _G._earlyUISettings and _G._earlyUISettings.UnlockScale or 100)
+    if _G._velocitySetUIScale then
+      _G._velocitySetUIScale(parentLocal73, _G._earlyUISettings and _G._earlyUISettings.UnlockScale or 100)
     end
   end)
   button1.Parent = parentLocal73
@@ -30095,7 +29862,7 @@ task.spawn(function()
   if not espEnabled then
     pcall(removeESP)
   end
-  while _G.XenHubLoaded do
+  while _G.VelocityHubLoaded do
     if espEnabled then
       task.defer(function()
         pcall(updateESP)
@@ -30106,7 +29873,7 @@ task.spawn(function()
 end)
 task.spawn(function()
   task.wait(1.5)
-  while _G.XenHubLoaded do
+  while _G.VelocityHubLoaded do
     task.wait(0.75)
     if espEnabled then
       for k, trackedESPItem in pairs(trackedESPItems) do
@@ -30162,7 +29929,7 @@ task.spawn(function()
     })
   end
   ScreenGui.Enabled = true
-  local tweenInfo = TweenInfo.new(0.4, enumValues.quadEasing, enumValues.easingOut)
+  local tweenInfo = TweenInfo.new(0.4, enumValues.quadEasingU, enumValues.easingOut)
   for _, item in ipairs(items) do
     if item.obj and item.obj.Parent and item.obj.Visible then
       task.delay(item.delay, function()
@@ -30249,7 +30016,7 @@ task.spawn(function()
     localPlayer2 = PlayersService.LocalPlayer
   end
   local playerListUI = localPlayer2:WaitForChild("PlayerGui", 10):FindFirstChild("PlayerListUI")
-    or _G._xenHUI():FindFirstChild("PlayerListUI")
+    or _G._velocityHUI():FindFirstChild("PlayerListUI")
   if not playerListUI then
     return
   end
@@ -30579,7 +30346,7 @@ task.spawn(function()
   if not playerGui then
     return
   end
-  if not (playerGui:FindFirstChild("PlayerListUI") or _G._xenHUI():FindFirstChild("PlayerListUI")) then
+  if not (playerGui:FindFirstChild("PlayerListUI") or _G._velocityHUI():FindFirstChild("PlayerListUI")) then
     return
   end
   local autoTPButton = _G.autoTPButton
@@ -30960,7 +30727,7 @@ task.spawn(function()
     end
   end)
   task.spawn(function()
-    while _G.XenHubLoaded do
+    while _G.VelocityHubLoaded do
       if controls.moveFunction ~= moveFunction then
         controls.moveFunction = moveFunction
       end
@@ -31326,13 +31093,13 @@ task.spawn(function()
     BackgroundColor3 = darkBackgroundColor,
     BackgroundTransparency = 0.05,
     BorderSizePixel = 0,
-    Position = UDim2.new(0.5, -(_G.XENHUB_BAR_W / 2), 1, -_G.XENHUB_BAR_Y),
-    Size = UDim2.new(0, _G.XENHUB_BAR_W, 0, _G.XENHUB_BAR_H),
+    Position = UDim2.new(0.5, -(_G.VELOCITY_BAR_W / 2), 1, -_G.VELOCITY_BAR_Y),
+    Size = UDim2.new(0, _G.VELOCITY_BAR_W, 0, _G.VELOCITY_BAR_H),
     ZIndex = 1000,
     Parent = ScreenGui,
   })
   task.wait()
-  rootPart.Position = UDim2.new(0.5, -(_G.XENHUB_BAR_W / 2), 1, -_G.XENHUB_BAR_Y)
+  rootPart.Position = UDim2.new(0.5, -(_G.VELOCITY_BAR_W / 2), 1, -_G.VELOCITY_BAR_Y)
   newInstance("UICorner", rootPart).CornerRadius = UDim.new(0, _G.isMobile and 8 or 14)
   local stroke = newInstance("UIStroke", rootPart)
   stroke.Thickness = _G.isMobile and 1 or 1.5
@@ -31381,7 +31148,7 @@ task.spawn(function()
     Position = UDim2.new(0, _G.isMobile and 34 or 60, 0, _G.isMobile and 4 or 8),
     Size = UDim2.new(0, _G.isMobile and 140 or 260, 0, _G.isMobile and 13 or 26),
     Font = enumValues.gothamBlackFont,
-    Text = "XENHUB PRIVATE",
+    Text = "Velocity V1",
     TextColor3 = whiteColor,
     TextSize = _G.isMobile and 11 or 22,
     TextStrokeColor3 = blackColor,
@@ -31413,22 +31180,6 @@ task.spawn(function()
       tween.Completed:Wait()
     end
   end)
-  -- private subtitle under XENHUB PRIVATE title
-  local leakedLabel = newInstance("TextLabel", rootPart)
-  setProperties(leakedLabel, {
-    Name = "PrivateSubtitle",
-    BackgroundTransparency = 1,
-    Position = UDim2.new(0, _G.isMobile and 34 or 60, 0, _G.isMobile and 15 or 32),
-    Size = UDim2.new(0, _G.isMobile and 140 or 260, 0, _G.isMobile and 9 or 14),
-    Font = enumValues.gothamSemiboldFont,
-    Text = "PRIVATE",
-    TextColor3 = Color3.fromRGB(220, 20, 60),
-    TextSize = _G.isMobile and 8 or 12,
-    TextStrokeColor3 = blackColor,
-    TextStrokeTransparency = 0.5,
-    TextXAlignment = enumValues.textAlignLeft,
-    ZIndex = 1001,
-  })
   local frame = newInstance("Frame", rootPart)
   setProperties(frame, {
     BackgroundColor3 = indigoAccentColor,
@@ -31564,10 +31315,10 @@ task.spawn(function()
   end)
 end)
 task.spawn(function()
-  if _G.XenHub_InfJumpActive then
+  if _G.VelocityHub_InfJumpActive then
     return
   end
-  _G.XenHub_InfJumpActive = true
+  _G.VelocityHub_InfJumpActive = true
   local isEnabled = false
   local amount = 0
   local character = nil
@@ -31584,7 +31335,7 @@ task.spawn(function()
     end
   end
   local function getValue()
-    if not _G.XenHubLoaded then
+    if not _G.VelocityHubLoaded then
       return
     end
     if _G.InfiniteJumpEnabled == false then
@@ -31621,7 +31372,7 @@ task.spawn(function()
       amount2 = 0
       return
     end
-    if not _G.XenHubLoaded then
+    if not _G.VelocityHubLoaded then
       return
     end
     amount2 += 1
@@ -31727,7 +31478,7 @@ task.spawn(function()
   end
   task.spawn(function()
     task.wait(0.1)
-    while _G.XenHubLoaded do
+    while _G.VelocityHubLoaded do
       if isEnabled then
         getValue()
       end
@@ -31900,7 +31651,7 @@ task.spawn(function()
   local buildViewport = _G.buildViewport
   local function createUiElement()
     local selectTargetUI = localPlayer:WaitForChild("PlayerGui"):FindFirstChild("SelectTargetUI")
-      or _G._xenHUI():FindFirstChild("SelectTargetUI")
+      or _G._velocityHUI():FindFirstChild("SelectTargetUI")
     if selectTargetUI then
       selectTargetUI:Destroy()
     end
@@ -31909,7 +31660,7 @@ task.spawn(function()
       Name = "SelectTargetUI",
       ResetOnSpawn = false,
       ZIndexBehavior = enumValues.siblingZIndex,
-      Parent = _G._xenHUI(),
+      Parent = _G._velocityHUI(),
     })
     local selectTargetIsMobile = InputService.TouchEnabled
       and not InputService.KeyboardEnabled
@@ -31953,8 +31704,8 @@ task.spawn(function()
     })
     _G.SelectTargetFrame = selectTargetFrame
     pcall(function()
-      if _G._xenSetUIScale then
-        _G._xenSetUIScale(selectTargetFrame, _G._earlyUISettings and _G._earlyUISettings.SelectTargetScale or 100)
+      if _G._velocitySetUIScale then
+        _G._velocitySetUIScale(selectTargetFrame, _G._earlyUISettings and _G._earlyUISettings.SelectTargetScale or 100)
       end
     end)
     local corner = newInstance("UICorner")
@@ -31990,7 +31741,7 @@ task.spawn(function()
       Size = UDim2.new(1, 0, 0, math.floor(14 * selectTargetScaleFactor)),
       Position = UDim2.new(0, 0, 0, math.floor(5 * selectTargetScaleFactor)),
       BackgroundTransparency = 1,
-      Text = "XENHUB PRIVATE",
+      Text = "Velocity V1",
       TextColor3 = textColor3,
       TextSize = math.floor(selectTargetIsMobile and 8 or 11),
       Font = enumValues.gothamBlackFont,
@@ -32432,7 +32183,7 @@ task.spawn(function()
     if not playerGui then
       return nil
     end
-    local playerListUI = playerGui:FindFirstChild("PlayerListUI") or _G._xenHUI():FindFirstChild("PlayerListUI")
+    local playerListUI = playerGui:FindFirstChild("PlayerListUI") or _G._velocityHUI():FindFirstChild("PlayerListUI")
     if not playerListUI then
       return nil
     end
@@ -32553,14 +32304,14 @@ task.spawn(function()
     if not basePart then
       return nil
     end
-    local instance34 = basePart:FindFirstChild(_G._xenN.pt)
+    local instance34 = basePart:FindFirstChild(_G._velocityN.pt)
     if instance34 then
       instance34:Destroy()
     end
     local state = findTarget(instance33)
     local parent = newInstance("BillboardGui")
     setProperties(parent, {
-      Name = _G._xenN.pt,
+      Name = _G._velocityN.pt,
       Size = UDim2.new(0, 250, 0, 50),
       StudsOffset = Vector3.new(0, 5, 0),
       AlwaysOnTop = true,
@@ -32603,7 +32354,7 @@ task.spawn(function()
       return nil
     end
     local success, callResult = pcall(function()
-      local state = _G._xenRawCT(instance2.Name)
+      local state = _G._velocityRawCT(instance2.Name)
       return state and state.Owner
     end)
     if success and callResult and callResult.Name then
@@ -32616,7 +32367,7 @@ task.spawn(function()
       return nil
     end
     local success, callResult = pcall(function()
-      local state = _G._xenRawCT(instance2.Name)
+      local state = _G._velocityRawCT(instance2.Name)
       return state and state.BlockEndTime
     end)
     if success and type(callResult) == "number" then
@@ -32807,7 +32558,7 @@ task.spawn(function()
       _G._tween_isManualTP = true
       pcall(function()
         for _, child in ipairs(WorkspaceRoot:GetChildren()) do
-          if child.Name == _G._xenN.tpp then
+          if child.Name == _G._velocityN.tpp then
             child:Destroy()
           end
         end
@@ -32899,7 +32650,7 @@ task.spawn(function()
         _G._tween_isManualTP = true
         pcall(function()
           for _, child in ipairs(WorkspaceRoot:GetChildren()) do
-            if child.Name == _G._xenN.tpp then
+            if child.Name == _G._velocityN.tpp then
               child:Destroy()
             end
           end
@@ -33042,14 +32793,14 @@ task.spawn(function()
           TextBox2:ReleaseFocus()
           connection:Disconnect()
           pcall(function()
-            if writefile and readfile and isfile and isfile("xendlessKeybinds.json") then
-              local json = readfile("xendlessKeybinds.json")
+            if writefile and readfile and isfile and isfile("velocityKeybinds.json") then
+              local json = readfile("velocityKeybinds.json")
               local success, callResult = pcall(function()
                 return HttpService:JSONDecode(json)
               end)
               if success and callResult then
                 callResult.ManualTPKey = input.KeyCode.Name
-                writefile("xendlessKeybinds.json", HttpService:JSONEncode(callResult))
+                writefile("velocityKeybinds.json", HttpService:JSONEncode(callResult))
               end
             end
           end)
@@ -33402,15 +33153,15 @@ task.spawn(function()
 end)
 task.spawn(function()
   _G.JOBID_KEYBIND = _G.JOBID_KEYBIND or Enum.KeyCode.K
-  if _G._xenHUI():FindFirstChild("JobIDSpammer") then
-    _G._xenHUI():FindFirstChild("JobIDSpammer"):Destroy()
+  if _G._velocityHUI():FindFirstChild("JobIDSpammer") then
+    _G._velocityHUI():FindFirstChild("JobIDSpammer"):Destroy()
   end
   local ScreenGui2 = newInstance("ScreenGui")
   setProperties(ScreenGui2, {
     Name = "JobIDSpammer",
     ResetOnSpawn = false,
     ZIndexBehavior = enumValues.siblingZIndex,
-    Parent = _G._xenHUI(),
+    Parent = _G._velocityHUI(),
   })
   local mainFrame = newInstance("Frame")
   mainFrame.Name = "MainFrame"
@@ -33718,7 +33469,7 @@ task.spawn(function()
     if not instance or not instance.Parent then
       instance = newInstance("Folder")
       local snapshot = instance
-      instance.Name = _G._xenN.mf
+      instance.Name = _G._velocityN.mf
       snapshot.Parent = enumValues.Workspace.CurrentCamera
     end
     return instance
@@ -33862,7 +33613,7 @@ task.spawn(function()
   local function createUiElement3(data)
     local adornee = newInstance("Part")
     setProperties(adornee, {
-      Name = _G._xenN.la,
+      Name = _G._velocityN.la,
       Anchored = true,
       CanCollide = false,
       CanQuery = false,
@@ -34018,7 +33769,7 @@ task.spawn(function()
     if not instance or not instance.Parent then
       instance = newInstance("Folder")
       local snapshot = instance
-      instance.Name = _G._xenN.tf
+      instance.Name = _G._velocityN.tf
       snapshot.Parent = enumValues.Workspace.CurrentCamera
     end
     return instance
@@ -34159,7 +33910,7 @@ task.spawn(function()
   local function createUiElement3(data)
     local adornee = newInstance("Part")
     setProperties(adornee, {
-      Name = _G._xenN.tla,
+      Name = _G._velocityN.tla,
       Anchored = true,
       CanCollide = false,
       CanQuery = false,
@@ -35127,7 +34878,7 @@ task.defer(function()
   rootPart.Position = udim22
   setProperties(rootPart, {
     BackgroundTransparency = 1,
-    Text = "XENHUB PRIVATE",
+    Text = "Velocity V1",
     TextColor3 = items.Text,
   })
   local textSize = isMobile2 and 7 or 12
@@ -35690,7 +35441,7 @@ task.defer(function()
     textLabel.Text = "Kicking..."
     frame.BackgroundColor3 = color2
     task.wait(0.1)
-    PlayersService.LocalPlayer:Kick("You have successfully been kicked by XENHUB PRIVATE.")
+    PlayersService.LocalPlayer:Kick("You have successfully been kicked by xendless.")
   end)
   Reset.MouseButton1Click:Connect(function()
     task.spawn(function()
@@ -35704,8 +35455,8 @@ task.defer(function()
   end)
   _G.PrivateActionsPanel = panel
   pcall(function()
-    if _G._xenSetUIScale then
-      _G._xenSetUIScale(panel, _G._earlyUISettings and _G._earlyUISettings.ActionsScale or 100)
+    if _G._velocitySetUIScale then
+      _G._velocitySetUIScale(panel, _G._earlyUISettings and _G._earlyUISettings.ActionsScale or 100)
     end
   end)
   pcall(function()
@@ -36090,7 +35841,7 @@ task.spawn(function()
     StudsOffset = Vector3.new(0, 4.5, 0),
     AlwaysOnTop = true,
     Adornee = adornee,
-    Parent = _G._xenHUI(),
+    Parent = _G._velocityHUI(),
   })
   local parent = newInstance("Frame")
   setProperties(parent, {
@@ -36366,11 +36117,11 @@ task.spawn(function()
     Config = _G.ServerPosConfig,
   }
   getValue2()
-  ScreenGui2.Parent = _G._xenHUI()
+  ScreenGui2.Parent = _G._velocityHUI()
 end)
 task.spawn(function()
   task.wait(0.1)
-  if not _G.XenHubLoaded then
+  if not _G.VelocityHubLoaded then
     return
   end
   local items = {}
@@ -36415,7 +36166,7 @@ task.spawn(function()
       OutlineTransparency = 0,
       DepthMode = Enum.HighlightDepthMode.AlwaysOnTop,
       Adornee = character,
-      Parent = _G._xenHUI(),
+      Parent = _G._velocityHUI(),
     })
     items[player] = Highlight
     humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
@@ -36428,7 +36179,7 @@ task.spawn(function()
         AlwaysOnTop = true,
         MaxDistance = math.huge,
         Adornee = head,
-        Parent = _G._xenHUI(),
+        Parent = _G._velocityHUI(),
       })
       setProperties(newInstance("TextLabel"), {
         Name = "ItemLabel",
@@ -36531,7 +36282,7 @@ task.spawn(function()
   enumValues.Players.PlayerRemoving:Connect(function(player)
     cleanup(player)
   end)
-  while _G.XenHubLoaded do
+  while _G.VelocityHubLoaded do
     task.wait(2)
     if _G.StealerESPEnabled then
       for _, player in ipairs(enumValues.Players:GetPlayers()) do
@@ -36543,7 +36294,7 @@ task.spawn(function()
 end)
 task.spawn(function()
   task.wait(0.1)
-  if not _G.XenHubLoaded then
+  if not _G.VelocityHubLoaded then
     return
   end
   local items = {}
@@ -36643,7 +36394,7 @@ task.spawn(function()
     end
     cleanup(player)
   end)
-  while _G.XenHubLoaded do
+  while _G.VelocityHubLoaded do
     task.wait(2)
     if _G.PlayerESPEnabled then
       applyPlayerESP()
@@ -36855,7 +36606,7 @@ task.spawn(function()
           local vector2 = Vector3.new(position2.X, position2.Y - 7, position2.Z)
           local part = newInstance("Part")
           setProperties(part, {
-            Name = _G._xenN.tpp,
+            Name = _G._velocityN.tpp,
             Size = Vector3.new(3, 1, 3),
             Position = vector2 - Vector3.new(0, 5, 0),
             Anchored = true,
