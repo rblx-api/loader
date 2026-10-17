@@ -212,10 +212,10 @@ for i, char in ipairs(grokChars) do
 
 	local grad = Instance.new("UIGradient", letterLabel)
 	grad.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-		ColorSequenceKeypoint.new(0.35, Color3.fromRGB(230, 190, 255)),
-		ColorSequenceKeypoint.new(0.7, Color3.fromRGB(220, 20, 35)),
-		ColorSequenceKeypoint.new(1, Color3.fromRGB(110, 40, 210)),
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 245, 245)),
+		ColorSequenceKeypoint.new(0.35, Color3.fromRGB(255, 80, 90)),
+		ColorSequenceKeypoint.new(0.7, Color3.fromRGB(220, 15, 30)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 5)),
 	})
 	grad.Rotation = 90
 
@@ -12110,21 +12110,21 @@ titleStroke.Thickness = 3.5
 titleStroke.Color = Color3.fromRGB(15, 10, 25)
 local strokeGradient = Instance.new("UIGradient", titleStroke)
 strokeGradient.Color = ColorSequence.new({
-ColorSequenceKeypoint.new(0, Color3.fromRGB(230, 200, 255)),
-ColorSequenceKeypoint.new(0.5, Color3.fromRGB(80, 30, 140)),
-ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 10, 35)),
+ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 70, 75)),
+ColorSequenceKeypoint.new(0.5, Color3.fromRGB(115, 0, 8)),
+ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 0, 0)),
 })
 strokeGradient.Rotation = 90
 local titleGradient = Instance.new("UIGradient", imageLabel)
 titleGradient.Color = ColorSequence.new({
-ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-ColorSequenceKeypoint.new(0.25, Color3.fromRGB(235, 220, 255)),
-ColorSequenceKeypoint.new(0.5, Color3.fromRGB(200, 150, 255)),
-ColorSequenceKeypoint.new(0.75, Color3.fromRGB(150, 70, 250)),
-ColorSequenceKeypoint.new(1, Color3.fromRGB(85, 25, 180))
+ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 245, 245)),
+ColorSequenceKeypoint.new(0.25, Color3.fromRGB(255, 95, 100)),
+ColorSequenceKeypoint.new(0.5, Color3.fromRGB(235, 20, 35)),
+ColorSequenceKeypoint.new(0.75, Color3.fromRGB(175, 0, 12)),
+ColorSequenceKeypoint.new(1, Color3.fromRGB(75, 0, 5))
 })
 titleGradient.Rotation = 80
--- Efeito de brilho pulsante e reflexo animado no logo GROK
+-- Efeito de brilho pulsante e reflexo animado no logo VLEX
 task.spawn(function()
 pcall(function()
 local glowTweenInfo = TweenInfo.new(1.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
