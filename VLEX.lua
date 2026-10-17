@@ -12192,6 +12192,32 @@ rootPart.BorderSizePixel = 0
 rootPart.Image = "rbxassetid://97422699771755"
 rootPart.ScaleType = Enum.ScaleType.Fit
 rootPart.ZIndex = 21
+-- VLEX mini logo: replace the old GROK artwork with red stylized text.
+rootPart.Visible = false
+local miniLogoText = Instance.new("TextLabel", miniBtn)
+miniLogoText.Name = "VLEXMiniLogo"
+miniLogoText.AnchorPoint = Vector2.new(0.5, 0.5)
+miniLogoText.Size = UDim2.new(1, -8, 1, -2)
+miniLogoText.Position = UDim2.new(0.5, 0, 0.5, 0)
+miniLogoText.BackgroundTransparency = 1
+miniLogoText.BorderSizePixel = 0
+miniLogoText.Text = "VLEX"
+miniLogoText.Font = Enum.Font.Antique
+miniLogoText.TextScaled = true
+miniLogoText.TextColor3 = Color3.fromRGB(255, 25, 40)
+miniLogoText.TextStrokeColor3 = Color3.fromRGB(65, 0, 0)
+miniLogoText.TextStrokeTransparency = 0.05
+miniLogoText.ZIndex = 22
+local miniLogoStroke = Instance.new("UIStroke", miniLogoText)
+miniLogoStroke.Thickness = 2
+miniLogoStroke.Color = Color3.fromRGB(110, 0, 10)
+local miniLogoGradient = Instance.new("UIGradient", miniLogoText)
+miniLogoGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 105)),
+    ColorSequenceKeypoint.new(0.45, Color3.fromRGB(255, 20, 35)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(105, 0, 8)),
+})
+miniLogoGradient.Rotation = 90
 -- gradient dummy kept for any theme code that expects MiniTitleImage child
 local miniGrad = Instance.new("UIGradient", rootPart)
 miniGrad.Enabled = false
@@ -14491,7 +14517,7 @@ vector2318.LayoutOrder = nextLayoutOrder(keybinds)
 vector2318.ZIndex = 7
 pbFrame = Instance.new("Frame", gui)
 pbFrame.Name = "StealProgressBar"
-pbFrame.Size = UDim2.new(0, 260, 0, 52)
+pbFrame.Size = UDim2.new(0, 260, 0, 28)
 pbFrame.Position = UDim2.new(0.5, -130, 1, -75)
 pbFrame.BackgroundColor3 = Color3.fromRGB(12, 10, 16)
 pbFrame.BackgroundTransparency = 0.05
@@ -14545,7 +14571,7 @@ backgroundImagePB.Position = UDim2.new(0, 0, 0, 0)
 backgroundImagePB.BackgroundTransparency = 1
 backgroundImagePB.BorderSizePixel = 0
 backgroundImagePB.ScaleType = Enum.ScaleType.Crop
-backgroundImagePB.ImageTransparency = 0.2
+backgroundImagePB.ImageTransparency = 1
 backgroundImagePB.ZIndex = 10
 
 task.spawn(function()
@@ -14619,12 +14645,12 @@ pctStroke.Transparency = 0.35
 local pctGrad = Instance.new("UIGradient", progressPct)
 pctGrad.Color = ColorSequence.new({
 	ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(220, 180, 255)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(170, 90, 255)),
+	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 55, 65)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 0, 15)),
 })
 task.spawn(function()
 	local ti = TweenInfo.new(1.1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
-	TweenService:Create(pctStroke, ti, { Transparency = 0.05, Color = Color3.fromRGB(220, 140, 255) }):Play()
+	TweenService:Create(pctStroke, ti, { Transparency = 0.05, Color = Color3.fromRGB(255, 55, 65) }):Play()
 end)
 
 fpsNeon = Instance.new("TextLabel", pbFrame)
@@ -14638,6 +14664,7 @@ fpsNeon.Font = Enum.Font.GothamBold
 fpsNeon.TextSize = 12
 fpsNeon.TextXAlignment = Enum.TextXAlignment.Right
 fpsNeon.ZIndex = 14
+fpsNeon.Visible = false
 local fpsStroke = Instance.new("UIStroke", fpsNeon)
 fpsStroke.Thickness = 1
 fpsStroke.Color = Color3.fromRGB(150, 0, 15)
@@ -14645,8 +14672,8 @@ fpsStroke.Transparency = 0.55
 
 local rootPart2320 = Instance.new("Frame", pbFrame)
 rootPart2320.Name = "ProgressRow"
-rootPart2320.Size = UDim2.new(1, -28, 0, 12)
-rootPart2320.Position = UDim2.new(0, 14, 0, 30)
+rootPart2320.Size = UDim2.new(1, -24, 0, 14)
+rootPart2320.Position = UDim2.new(0, 12, 0, 7)
 rootPart2320.BackgroundTransparency = 1
 rootPart2320.ZIndex = 11
 
@@ -16975,3 +17002,42 @@ end
 end)
 end
 return
+
+
+-- VLEX: red Discord invite displayed above the local character.
+local function vlexAttachDiscordLabel(character)
+    if not character then return end
+    local head = character:FindFirstChild("Head") or character:WaitForChild("Head", 5)
+    if not head then return end
+    local old = head:FindFirstChild("VLEXDiscordInvite")
+    if old then old:Destroy() end
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "VLEXDiscordInvite"
+    billboard.Adornee = head
+    billboard.Size = UDim2.new(0, 300, 0, 34)
+    billboard.StudsOffset = Vector3.new(0, 2.7, 0)
+    billboard.AlwaysOnTop = true
+    billboard.MaxDistance = 1500
+    billboard.Parent = head
+    local label = Instance.new("TextLabel")
+    label.Name = "InviteText"
+    label.Size = UDim2.fromScale(1, 1)
+    label.BackgroundTransparency = 1
+    label.Text = "https://discord.gg/xjfRaEXVR"
+    label.TextColor3 = Color3.fromRGB(255, 35, 45)
+    label.TextStrokeColor3 = Color3.fromRGB(15, 0, 0)
+    label.TextStrokeTransparency = 0.05
+    label.Font = Enum.Font.GothamBold
+    label.TextScaled = true
+    label.Parent = billboard
+end
+
+if localPlayer then
+    if localPlayer.Character then
+        task.spawn(vlexAttachDiscordLabel, localPlayer.Character)
+    end
+    localPlayer.CharacterAdded:Connect(function(character)
+        task.wait(0.5)
+        vlexAttachDiscordLabel(character)
+    end)
+end
