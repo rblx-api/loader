@@ -1,18 +1,26 @@
 --[[
-    PARCH3 DUELS - Script v9.1.0
+    PARCH3 DUELS - Script v9.1.3
+    CAMBIOS v9.1.3:
+    - ✅ Cielos.jpg, Halloween2.jpg, Limosna.jpg, Nube.jpg, Amine.jpg en selector (ya estaba)
+    - ✅ Pestañas movidas de la IZQUIERDA (vertical) a ABAJO (horizontal)
+    - ✅ Sombra oscura de arriba hacia abajo en todos los botones derechos
+    CAMBIOS v9.1.2:
+    - ✅ Nuevas imágenes de fondo: Cielos.jpg, Halloween2.jpg, Limosna.jpg, Nube.jpg, Amine.jpg
+    CAMBIOS v9.1.1:
+    - ✅ Imagen "Parch3.jpg" en el botón de la izquierda (miniBtn)
+    - ✅ Imagen "Parch3.jpg" en la parte superior del panel GUI (título)
+    - ✅ Texto "Selec" en color ROJO en Background Image
+    - ✅ Velocidad de enemigos en color ROJO
+    - ✅ Texto "OPEN" en color ROJO en Bat Skin
     CAMBIOS v9.1.0:
     - ✅ Botones activos derechos: ROJO
     - ✅ Funciones del panel: AZUL
     - ✅ Bolitas de toggles activas: AZUL
     - ✅ Óvalo de pestaña activa: ROJO
-    - ✅ Pestañas verticales a la IZQUIERDA
-    - ✅ Título grande "Parch3" en AZUL (sin logo Rapture)
     - ✅ Fondo de Auto Steal: ROJO
     - ✅ Lock activo: Bloquea botones derechos, PERO Auto Steal sí se mueve
-    - ✅ Eliminado .gg/raptureduel y Best Script Free
     - ✅ Velocidad del jugador: BLANCO
     - ✅ Nombres de ESP (jugadores): BLANCO
-    - ✅ Nuevas imágenes de fondo (custom assets)
 ]]
 
 skipIntroEnabled = true
@@ -79,21 +87,20 @@ BYPASS_AIMBOT_SPEED = 60
 CONFIG_FILE = "Parch3Duels.json"
 _isDraggingButton = false
 
--- 🔧 PARCH3: PALETA DE COLORES
 local PASTEL_PINK  = Color3.fromRGB(255, 170, 220)
-local NEON_PINK    = Color3.fromRGB(255, 255, 255)   -- Blanco para acentos
-local BLACK_BG     = Color3.fromRGB(255, 255, 255)   -- Blanco para fondos
+local NEON_PINK    = Color3.fromRGB(255, 255, 255)
+local BLACK_BG     = Color3.fromRGB(255, 255, 255)
 local BLACK_STROKE = Color3.fromRGB(0, 0, 0)
 local INACTIVE_BG  = Color3.fromRGB(0, 0, 0)
 local INACTIVE_TXT = Color3.fromRGB(255, 255, 255)
 local ACTIVE_TXT   = Color3.fromRGB(255, 255, 255)
 local GRAY_TRACK   = Color3.fromRGB(0, 0, 0)         
 
-local RIGHT_BTN_ACTIVE_BG   = Color3.fromRGB(255, 0, 0)    -- ROJO (era oro)
-local RIGHT_BTN_INACTIVE_BG = Color3.fromRGB(255, 255, 255) -- BLANCO
-local RIGHT_BTN_TEXT        = Color3.fromRGB(0, 0, 0)       -- NEGRO
-local FUNCTION_BLUE         = Color3.fromRGB(0, 100, 255)   -- AZUL (era amarillo)
-local ACTIVE_TAB_BG         = Color3.fromRGB(255, 0, 0)     -- ROJO para pestaña activa
+local RIGHT_BTN_ACTIVE_BG   = Color3.fromRGB(255, 0, 0)
+local RIGHT_BTN_INACTIVE_BG = Color3.fromRGB(255, 255, 255)
+local RIGHT_BTN_TEXT        = Color3.fromRGB(0, 0, 0)
+local FUNCTION_BLUE         = Color3.fromRGB(0, 100, 255)
+local ACTIVE_TAB_BG         = Color3.fromRGB(255, 0, 0)
 
 local BTN_STROKE_THICKNESS = 2
 local BTN_STROKE_TRANSPARENCY = 0
@@ -122,7 +129,8 @@ NORMAL_STOP_PERCENT = 90
 backgroundIndex = 1
 backgroundImages = {
     "Halloween.jpg", "Naru.jpg", "Luna.jpg", "Itac.jpg",
-    "Chino.jpg", "Chino2.jpg", "Cereso.jpg"
+    "Chino.jpg", "Chino2.jpg", "Cereso.jpg",
+    "Cielos.jpg", "Halloween2.jpg", "Limosna.jpg", "Nube.jpg", "Amine.jpg"
 }
 
 backgroundImageTransparency = 0
@@ -164,7 +172,6 @@ local function getMenuSound(idList)
     return nil
 end
 
--- 🔧 PARCH3: Sonido de tab desactivado
 local function playMenuSound(kind)
     if kind == "tab" then return end
     pcall(function()
@@ -220,7 +227,6 @@ function updateAllUIThemeColors(color)
         end
     end
 
-    if titleLbl then titleLbl.TextColor3 = FUNCTION_BLUE end
     if miniBtn then miniBtn.TextColor3 = color end
 
     for plr, billboard in pairs(espBillboardCache) do
@@ -303,9 +309,6 @@ tryardHeartbeatConn = nil
 useCarrySystem = false
 lastMoveDir = _V3zero
 
--- ============================================================
--- SISTEMA DE DRAG (Con override para Lock)
--- ============================================================
 local function drag(f, ignoreLock)
     local dn, ds, sp, di = false, nil, nil, nil
     local endConn = nil
@@ -345,9 +348,7 @@ local function drag(f, ignoreLock)
     end)
 end
 
--- ============================================================
 -- MEDUSA WATCHER / RAGDOLL / ANTI FLING / ANTI DIE
--- ============================================================
 local function getMedusaHitTime() return _G._RaptureMedusaHitTime or 0 end
 local function isMedusaHit() return (_tick() - getMedusaHitTime()) < 4 end
 local function setMedusaHitTime() _G._RaptureMedusaHitTime = _tick() end
@@ -550,9 +551,7 @@ end
 function _antiDieSetEnabled(enabled) enabled = enabled == true; if enabled then _antiDie.StartEngine() else _antiDie.StopEngine() end end
 _G.AntiDie = { start = function() _antiDieStopped = false; _antiDieSetEnabled(true) end, stop = function() _antiDieSetEnabled(false) end }
 
--- ============================================================
 -- CUSTOM SOUNDS / INFINITE JUMP
--- ============================================================
 do
     local SOUNDS = { Bat = { id = "rbxassetid://5713085119", skip = 0.2 }, Medusa = { id = "rbxassetid://3102797479", doublePlay = true, delay = 0.5 } }
     local function ctMatchItem(inst)
@@ -1146,7 +1145,7 @@ local function espCreateBillboard(plr, char)
     local name = Instance.new("TextLabel", container)
     name.Size = UDim2.new(1, 0, 0, 20); name.Position = UDim2.new(0, 0, 0, 0); name.BackgroundTransparency = 1
     name.Text = plr.DisplayName or plr.Name
-    name.TextColor3 = Color3.fromRGB(255, 255, 255)   -- 🔧 PARCH3: BLANCO
+    name.TextColor3 = Color3.fromRGB(255, 255, 255)
     name.TextStrokeColor3 = Color3.fromRGB(0, 0, 0); name.TextStrokeTransparency = 0.3
     name.Font = Enum.Font.GothamBold; name.TextSize = 12
     return bb
@@ -1206,21 +1205,16 @@ function stopESP()
     espBillboardCache = {}; espHighlightCache = {}; espGlowCache = {}
 end
 
--- ============================================================
--- SPEED INDICATOR (🔧 PARCH3: sin carteles rosa)
--- ============================================================
 function setupSpeedIndicator(char)
     local head = char:WaitForChild("Head", 5); if not head then return end
     local oldBB = head:FindFirstChild("RaptureDuelSpeedIndicator"); if oldBB then oldBB:Destroy() end
     local bb = Instance.new("BillboardGui", head)
     bb.Name = "RaptureDuelSpeedIndicator"; bb.Size = UDim2.new(0, 220, 0, 140); bb.StudsOffset = _V3new(0, 3.6, 0); bb.AlwaysOnTop = true
     
-    -- SE ELIMINARON raptureLinkLabel y bestScripLabel
-
     speedLabel = Instance.new("TextLabel", bb)
     speedLabel.Name = "SpeedLabel"; speedLabel.Size = UDim2.new(1, 0, 0, 28); speedLabel.Position = UDim2.new(0, 0, 0, 60)
     speedLabel.BackgroundTransparency = 1; speedLabel.Text = "Speed: " .. string.format("%.1f", getActiveMoveSpeed())
-    speedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)   -- 🔧 PARCH3: BLANCO
+    speedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     speedLabel.Font = Enum.Font.GothamBold; speedLabel.TextSize = 22; speedLabel.TextStrokeTransparency = 0
     speedLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0); speedLabel.ZIndex = 5
     
@@ -1232,7 +1226,6 @@ function setupSpeedIndicator(char)
     ragdollCountdownLabel.TextXAlignment = Enum.TextXAlignment.Center; ragdollCountdownLabel.ZIndex = 10; ragdollCountdownLabel.Parent = bb
 end
 
--- Omitido código repetitivo idéntico al anterior (AntiLag, Unwalk, Toggles, etc)
 local unwalkSavedAnimate = nil; unwalkEnabled = false
 function startUnwalk()
     local c = LP.Character; if not c then return end
@@ -1767,19 +1760,33 @@ end
 function disableStretch() stretchEnabled = false; if stretchConn then stretchConn:Disconnect(); stretchConn = nil end; local cam = workspace.CurrentCamera; if cam then pcall(function() cam.FieldOfView = origFOV or 70 end) end end
 
 -- ============================================================
--- PINTAR BOTONES DERECHA (BLANCO/ROJO)
+-- ✅ CAMBIO 3: SOMBRA OSCURA DE ARRIBA HACIA ABAJO
 -- ============================================================
 function paintFloatingBtn(btnFrame, active)
     if not btnFrame then return end
     local bg = btnFrame:FindFirstChild("BtnGrad"); local label = btnFrame:FindFirstChild("TextLabel"); local stroke = btnFrame:FindFirstChildOfClass("UIStroke")
     if active then
         btnFrame.BackgroundColor3 = RIGHT_BTN_ACTIVE_BG
-        if bg then bg.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0.00, RIGHT_BTN_ACTIVE_BG:Lerp(Color3.new(1,1,1), 0.35)), ColorSequenceKeypoint.new(0.45, RIGHT_BTN_ACTIVE_BG), ColorSequenceKeypoint.new(1.00, RIGHT_BTN_ACTIVE_BG:Lerp(Color3.new(0,0,0), 0.15)) }) end
+        if bg then 
+            bg.Rotation = 90
+            bg.Color = ColorSequence.new({ 
+                ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
+                ColorSequenceKeypoint.new(0.35, RIGHT_BTN_ACTIVE_BG:Lerp(Color3.new(0,0,0), 0.5)),
+                ColorSequenceKeypoint.new(1.00, RIGHT_BTN_ACTIVE_BG)
+            }) 
+        end
         if label then label.TextColor3 = RIGHT_BTN_TEXT end
         if stroke then stroke.Color = RIGHT_BTN_ACTIVE_BG; stroke.Thickness = BTN_STROKE_THICKNESS; stroke.Transparency = BTN_STROKE_TRANSPARENCY end
     else
         btnFrame.BackgroundColor3 = RIGHT_BTN_INACTIVE_BG
-        if bg then bg.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(0.45, Color3.fromRGB(245, 245, 245)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(230, 230, 230)) }) end
+        if bg then 
+            bg.Rotation = 90
+            bg.Color = ColorSequence.new({ 
+                ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
+                ColorSequenceKeypoint.new(0.35, Color3.fromRGB(130, 130, 130)),
+                ColorSequenceKeypoint.new(1.00, RIGHT_BTN_INACTIVE_BG)
+            }) 
+        end
         if label then label.TextColor3 = RIGHT_BTN_TEXT end
         if stroke then stroke.Color = Color3.fromRGB(180, 180, 180); stroke.Thickness = BTN_STROKE_THICKNESS; stroke.Transparency = BTN_STROKE_TRANSPARENCY end
     end
@@ -1939,7 +1946,7 @@ end
 local _enemySpeedAcc = 0
 function updateEnemySpeedLabels()
     _enemySpeedAcc = _enemySpeedAcc + 1; if _enemySpeedAcc < 6 then return end; _enemySpeedAcc = 0
-    local color = getThemeColor(); local players = _GetPlayersCached()
+    local color = Color3.fromRGB(255, 0, 0); local players = _GetPlayersCached()
     for i = 1, #players do
         local player = players[i]
         if player ~= LP then
@@ -2073,9 +2080,9 @@ function buildGui()
     mainUIScale = Instance.new("UIScale", main); mainUIScale.Scale = uiScaleValue / 100
 
     local titleFrame = Instance.new("Frame", main); titleFrame.Size = UDim2.new(1, -140, 0, 40); titleFrame.Position = UDim2.new(0, 30, 0, 15); titleFrame.BackgroundTransparency = 1; titleFrame.ZIndex = 20
-    titleLbl = Instance.new("TextLabel", titleFrame); titleLbl.Size = UDim2.new(1, 0, 1, 0); titleLbl.BackgroundTransparency = 1
-    titleLbl.Text = "Parch3"; titleLbl.TextColor3 = FUNCTION_BLUE; titleLbl.Font = Enum.Font.GothamBlack; titleLbl.TextSize = 36
-    titleLbl.TextXAlignment = Enum.TextXAlignment.Left; titleLbl.ZIndex = 21
+    titleLbl = Instance.new("ImageLabel", titleFrame); titleLbl.Size = UDim2.new(0, 180, 0, 40); titleLbl.Position = UDim2.new(0, 0, 0, 0); titleLbl.BackgroundTransparency = 1
+    titleLbl.Image = getcustomasset("Parch3.jpg"); titleLbl.ScaleType = Enum.ScaleType.Fit
+    titleLbl.ZIndex = 21
 
     local lockBtnFrame = Instance.new("TextButton", main); lockBtnFrame.Size = UDim2.new(0, 32, 0, 32); lockBtnFrame.Position = UDim2.new(1, -80, 0, 20); lockBtnFrame.BackgroundColor3 = Color3.fromRGB(30,30,35); lockBtnFrame.BackgroundTransparency = 0.6; lockBtnFrame.BorderSizePixel = 0
     lockBtnFrame.Text = uiLocked and "🔒" or "🔓"; lockBtnFrame.TextColor3 = getThemeColor(); lockBtnFrame.Font = Enum.Font.GothamBold; lockBtnFrame.TextSize = 18; lockBtnFrame.AutoButtonColor = false; lockBtnFrame.ZIndex = 200
@@ -2089,23 +2096,25 @@ function buildGui()
     miniBtn.Font = Enum.Font.GothamBlack; miniBtn.TextSize = 16; miniBtn.ZIndex = 20; miniBtn.Visible = false; miniBtn.AutoButtonColor = false
     Instance.new("UICorner", miniBtn).CornerRadius = UDim.new(1, 0)
     local miniStroke = Instance.new("UIStroke", miniBtn); miniStroke.Color = PASTEL_PINK; miniStroke.Thickness = BTN_STROKE_THICKNESS; miniStroke.Transparency = BTN_STROKE_TRANSPARENCY
-    local miniImg = Instance.new("ImageLabel", miniBtn); miniImg.Name = "MiniImage"; miniImg.AnchorPoint = Vector2.new(0.5, 0.5); miniImg.Size = UDim2.new(0, 120, 0, 120); miniImg.Position = UDim2.new(0.5, 0, 0.5, 0); miniImg.BackgroundTransparency = 1; miniImg.Image = "rbxassetid://99633112120425"; miniImg.ScaleType = Enum.ScaleType.Fit; miniImg.ZIndex = 21; miniImg.Parent = miniBtn
+    local miniImg = Instance.new("ImageLabel", miniBtn); miniImg.Name = "MiniImage"; miniImg.AnchorPoint = Vector2.new(0.5, 0.5); miniImg.Size = UDim2.new(0, 120, 0, 120); miniImg.Position = UDim2.new(0.5, 0, 0.5, 0); miniImg.BackgroundTransparency = 1; miniImg.Image = getcustomasset("Parch3.jpg"); miniImg.ScaleType = Enum.ScaleType.Fit; miniImg.ZIndex = 21; miniImg.Parent = miniBtn
     miniBtn.MouseButton1Click:Connect(function() showGui() end)
 
     local slideTween = nil; local mainOriginalPos = main.Position
     showGui = function() if slideTween then slideTween:Cancel() end; if not main then return end; main.Visible = true; miniBtn.Visible = false; main.Position = UDim2.new(0, -GUI_W - 20, 0, 2); slideTween = TS:Create(main, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = mainOriginalPos}); slideTween:Play() end
     hideGui = function() if slideTween then slideTween:Cancel() end; if not main or not main.Visible then return end; local targetPos = UDim2.new(0, -GUI_W - 20, 0, 2); slideTween = TS:Create(main, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = targetPos}); slideTween:Play(); slideTween.Completed:Connect(function() main.Visible = false; miniBtn.Visible = true; slideTween = nil end) end
 
-    local TAB_W = 80
-    local tabBar = Instance.new("Frame", main); tabBar.Name = "SideTabBar"; tabBar.Size = UDim2.new(0, TAB_W, 0, 400); tabBar.Position = UDim2.new(0, 8, 0, 60); tabBar.BackgroundTransparency = 1; tabBar.BorderSizePixel = 0; tabBar.ZIndex = 10
-    local tabLayout = Instance.new("UIListLayout", tabBar); tabLayout.FillDirection = Enum.FillDirection.Vertical; tabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center; tabLayout.VerticalAlignment = Enum.VerticalAlignment.Top; tabLayout.Padding = UDim.new(0, 10); tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    local tabContent = Instance.new("Frame", main); tabContent.Name = "TabContent"; tabContent.Size = UDim2.new(1, -TAB_W - 22, 1, -75); tabContent.Position = UDim2.new(0, TAB_W + 12, 0, 60); tabContent.BackgroundTransparency = 1; tabContent.ClipsDescendants = true; tabContent.ZIndex = 5
+    -- ============================================================
+    -- ✅ CAMBIO 2: PESTAÑAS HORIZONTALES EN LA PARTE INFERIOR
+    -- ============================================================
+    local tabBar = Instance.new("Frame", main); tabBar.Name = "BottomTabBar"; tabBar.Size = UDim2.new(1, -20, 0, 40); tabBar.Position = UDim2.new(0, 10, 1, -50); tabBar.BackgroundTransparency = 1; tabBar.BorderSizePixel = 0; tabBar.ZIndex = 10
+    local tabLayout = Instance.new("UIListLayout", tabBar); tabLayout.FillDirection = Enum.FillDirection.Horizontal; tabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center; tabLayout.VerticalAlignment = Enum.VerticalAlignment.Center; tabLayout.Padding = UDim.new(0, 4); tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    local tabContent = Instance.new("Frame", main); tabContent.Name = "TabContent"; tabContent.Size = UDim2.new(1, -20, 1, -120); tabContent.Position = UDim2.new(0, 10, 0, 60); tabContent.BackgroundTransparency = 1; tabContent.ClipsDescendants = true; tabContent.ZIndex = 5
 
     local tabs = {"Speed", "Combat", "Visual", "Config", "Keybinds"}
     local tabButtonsLocal = {}; local contentPagesLocal = {}
 
     for i, name in ipairs(tabs) do
-        local btn = Instance.new("TextButton", tabBar); btn.Size = UDim2.new(1, -10, 0, 36); btn.BackgroundColor3 = Color3.fromRGB(22, 22, 28); btn.BackgroundTransparency = 0.15; btn.BorderSizePixel = 0; btn.Text = name
+        local btn = Instance.new("TextButton", tabBar); btn.Size = UDim2.new(0, 68, 0, 34); btn.BackgroundColor3 = Color3.fromRGB(22, 22, 28); btn.BackgroundTransparency = 0.15; btn.BorderSizePixel = 0; btn.Text = name
         btn.TextColor3 = TAB_INACT; btn.Font = Enum.Font.GothamBlack; btn.TextSize = 11; btn.TextWrapped = true; btn.AutoButtonColor = false; btn.ZIndex = 11; btn.LayoutOrder = i
         Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 12); btn:SetAttribute("IsActiveTab", i == 1)
         if i == 1 then btn.BackgroundColor3 = ACTIVE_TAB_BG; btn.TextColor3 = ACTIVE_TXT; btn.BackgroundTransparency = 0 end
@@ -2279,12 +2288,11 @@ function buildGui()
     do local row = mkRow(visualPage); mkLabel(row, "FOV Value"); local fovBox = mkBox(row, fovValue, 50, 60, function(v) if v and v >= 20 and v <= 120 then fovValue = _floor(v + 0.5); if not fovEnabled then enableCustomFov(); if setFovVisual then setFovVisual(true) end end; local cam = workspace.CurrentCamera; if cam then pcall(function() cam.FieldOfView = fovValue end) end; saveAllSettings() end end); fovSliderSet = function(val) if fovBox then fovBox.Text = tostring(val) end end end
     do
         local row = mkRow(visualPage, 40); mkLabel(row, "Bat Skin"); local pill, dot = mkPill(row, 10); animPill(pill, dot, false); dot.Visible = false
-        local openLbl = Instance.new("TextLabel", pill); openLbl.Name = "OpenLabel"; openLbl.Size = UDim2.new(1, 0, 1, 0); openLbl.BackgroundTransparency = 1; openLbl.Text = "OPEN"; openLbl.TextColor3 = PASTEL_PINK; openLbl.Font = Enum.Font.GothamBlack; openLbl.TextSize = 9; openLbl.TextXAlignment = Enum.TextXAlignment.Center; openLbl.ZIndex = 11
+        local openLbl = Instance.new("TextLabel", pill); openLbl.Name = "OpenLabel"; openLbl.Size = UDim2.new(1, 0, 1, 0); openLbl.BackgroundTransparency = 1; openLbl.Text = "OPEN"; openLbl.TextColor3 = Color3.fromRGB(255, 0, 0); openLbl.Font = Enum.Font.GothamBlack; openLbl.TextSize = 9; openLbl.TextXAlignment = Enum.TextXAlignment.Center; openLbl.ZIndex = 11
         local clk = Instance.new("TextButton", pill); clk.Size = UDim2.new(1, 0, 1, 0); clk.BackgroundTransparency = 1; clk.Text = ""; clk.AutoButtonColor = false; clk.ZIndex = 12; clk.MouseButton1Click:Connect(function() openBatSkinPicker() end)
     end
     local customSoundsSetVisual = mkToggle(visualPage, "Custom Sounds", function(on) customSoundsEnabled = on; if _G.RaptureCustomSounds then _G.RaptureCustomSounds.setEnabled(on) end; task.defer(saveAllSettings) end); setCustomSoundsVisual = customSoundsSetVisual
     
-    -- Lock visual
     local setLockVisual = mkToggle(visualPage, "Lock", function(on) toggleLockUI(on); task.defer(saveAllSettings) end)
     setLockUIVisual = setLockVisual; pcall(setLockUIVisual, uiLocked)
 
@@ -2293,7 +2301,7 @@ function buildGui()
     progressBarScaleBox = mkStepRow(configPage, "Progress Bar Scale", function() return progressBarScaleValue end, function(v) progressBarScaleValue = v; if pbScale then pbScale.Scale = v / 100 end end, 30, 150, 1)
     mkStepRow(configPage, "Button Scale", function() return _floor(floatingButtonScale * 100) end, function(v) floatingButtonScale = v / 100; applyFloatingButtonScale() end, 50, 200, 1)
     do
-        local row = mkRow(configPage, 44); mkLabel(row, "Background Image"); local btn = Instance.new("TextButton", row); btn.Size = UDim2.new(0, 80, 0, 24); btn.Position = UDim2.new(1, -92, 0.5, -12); btn.BackgroundColor3 = Color3.fromRGB(18, 14, 24); btn.BackgroundTransparency = 0.3; btn.BorderSizePixel = 0; btn.Text = "PICK"; btn.TextColor3 = getThemeColor(); btn.Font = Enum.Font.GothamBlack; btn.TextSize = 10; btn.ZIndex = 8
+        local row = mkRow(configPage, 44); mkLabel(row, "Background Image"); local btn = Instance.new("TextButton", row); btn.Size = UDim2.new(0, 80, 0, 24); btn.Position = UDim2.new(1, -92, 0.5, -12); btn.BackgroundColor3 = Color3.fromRGB(18, 14, 24); btn.BackgroundTransparency = 0.3; btn.BorderSizePixel = 0; btn.Text = "Selec"; btn.TextColor3 = Color3.fromRGB(255, 0, 0); btn.Font = Enum.Font.GothamBlack; btn.TextSize = 10; btn.ZIndex = 8
         Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 12); btn.Activated:Connect(function() openImagePicker() end)
     end
     do
@@ -2327,7 +2335,6 @@ function buildGui()
     addKeybindRow(keyPage, "TP Down", KB.TPFloor); addKeybindRow(keyPage, "Drop Brainrot", KB.DropBrainrot)
     addKeybindRow(keyPage, "Hide GUI", KB.GuiHide)
 
-    -- ========== BARRA DE STEAL (🔧 PARCH3: Fondo rojo, sin imagen) ==========
     pbFrame = Instance.new("Frame", gui); pbFrame.Size = UDim2.new(0, 480, 0, 76); pbFrame.Position = UDim2.new(0.5, -240, 1, -90); pbFrame.BackgroundTransparency = 1; pbFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0); pbFrame.BorderSizePixel = 0; pbFrame.Active = true; pbFrame.ClipsDescendants = true; pbFrame.Visible = true; pbFrame.ZIndex = 10
     pbScale = Instance.new("UIScale", pbFrame); pbScale.Scale = progressBarScaleValue / 100
     if savedProgressBarPos then pbFrame.Position = UDim2.new(savedProgressBarPos.XScale or 0.5, savedProgressBarPos.XOffset or -240, savedProgressBarPos.YScale or 1, savedProgressBarPos.YOffset or -90) end
@@ -2345,7 +2352,7 @@ function buildGui()
     progressFill = Instance.new("Frame", fillRegion); progressFill.Size = UDim2.new(0, 0, 1, 0); progressFill.Position = UDim2.new(0, 0, 0, 0); progressFill.BackgroundColor3 = Color3.fromRGB(255, 0, 0); progressFill.BorderSizePixel = 0; progressFill.ZIndex = 13
     Instance.new("UICorner", progressFill).CornerRadius = UDim.new(0, 10)
 
-    drag(pbFrame, true)  -- 🔧 PARCH3: true = siempre arrastrable aunque esté lockeado
+    drag(pbFrame, true)
     task.spawn(function()
         local lastFrame = _tick(); local fpsSamples = {}; local fpsAvg = 60
         RunService.RenderStepped:Connect(function()
@@ -2583,16 +2590,8 @@ end)
 task.defer(function() task.wait(0.1); _RaptureApplyThemeToSliders() end)
 
 print("===========================================")
-print("  PARCH3 DUELS CARGADO v9.1.0")
-print("  ✅ Botones activos derechos: ROJO")
-print("  ✅ Funciones del panel: AZUL")
-print("  ✅ Bolitas de toggles activas: AZUL")
-print("  ✅ Óvalo de pestaña activa: ROJO")
-print("  ✅ Pestañas verticales a la IZQUIERDA")
-print("  ✅ Título 'Parch3' en AZUL")
-print("  ✅ Fondo Auto Steal ROJO")
-print("  ✅ Lock: Botones bloqueados, Auto Steal movible")
-print("  ✅ Overhead: Sin .gg, sin Best Script, velocidad BLANCA")
-print("  ✅ ESP nombres BLANCOS")
-print("  ✅ Imágenes custom assets")
+print("  PARCH3 DUELS CARGADO v9.1.3")
+print("  ✅ Pestañas movidas a la parte inferior (horizontal)")
+print("  ✅ Sombra oscura arriba→abajo en botones derechos")
+print("  ✅ 5 imágenes nuevas (Cielos, Halloween2, Limosna, Nube, Amine)")
 print("===========================================")
