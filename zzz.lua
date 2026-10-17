@@ -1,49 +1,30 @@
-local _RP, _RW = print, warn
-_G.MeerkoStealWhy = "boot"
-_G.MeerkoStealLog = {}
-_G.MeerkoStealSay = function(msg)
-    msg = tostring(msg)
-    _G.MeerkoStealWhy = msg
-    local L = _G.MeerkoStealLog
-    local now = os.clock()
-    local last = L[#L]
-    if last and last.msg == msg then
-        last.n = last.n + 1
-        last.t = now
-    else
-        L[#L + 1] = { msg = msg, t = now, t0 = now, n = 1 }
-        while #L > 8 do table.remove(L, 1) end
-    end
-    if _G.MeerkoStealDebug then
-        if now - (_G._mkLastSay or 0) >= (tonumber(_G.MeerkoStealDebugGap) or 0.5) then
-            _G._mkLastSay = now
-            pcall(_RP, "[steal] " .. msg)
-        end
-    end
-end
-
 _G.MeerkoScanProfile = function(mode)
     if mode == "fast" then
+
+
         _G.MeerkoScanMode     = "fast"
-        _G.MeerkoPanelScanGap = tonumber(_G.MeerkoFastPanelGap)    or 0.12
-        _G.MeerkoRepickGap    = tonumber(_G.MeerkoFastRepickGap)   or 0.10
-        _G.MeerkoInRangeGap   = tonumber(_G.MeerkoFastInRangeGap)  or 0.10
+        _G.MeerkoPanelScanGap = tonumber(_G.MeerkoFastPanelGap)    or 0.15
+        _G.MeerkoRepickGap    = tonumber(_G.MeerkoFastRepickGap)   or 0.1
+        _G.MeerkoInRangeGap   = tonumber(_G.MeerkoFastInRangeGap)  or 0.1
         _G.MeerkoWatchdogTick = tonumber(_G.MeerkoFastWatchdogTick) or 0.15
-        _G.MeerkoSyncScanGap  = tonumber(_G.MeerkoFastSyncGap)     or 0.05
+        _G.MeerkoSyncScanGap  = tonumber(_G.MeerkoFastSyncGap)     or 0.1
         _G.MeerkoAutoTPPoll   = tonumber(_G.MeerkoFastTPPoll)      or 0.03
     else
         _G.MeerkoScanMode     = "normal"
-        _G.MeerkoPanelScanGap = tonumber(_G.MeerkoNormPanelGap)    or 0.6
-        _G.MeerkoRepickGap    = tonumber(_G.MeerkoNormRepickGap)   or 0.5
-        _G.MeerkoInRangeGap   = tonumber(_G.MeerkoNormInRangeGap)  or 0.3
-        _G.MeerkoWatchdogTick = tonumber(_G.MeerkoNormWatchdogTick) or 0.3
-        _G.MeerkoSyncScanGap  = tonumber(_G.MeerkoNormSyncGap)     or 0.25
-        _G.MeerkoAutoTPPoll   = tonumber(_G.MeerkoNormTPPoll)      or 0.05
+        _G.MeerkoPanelScanGap = tonumber(_G.MeerkoNormPanelGap)    or 0.25
+        _G.MeerkoRepickGap    = tonumber(_G.MeerkoNormRepickGap)   or 0.25
+        _G.MeerkoInRangeGap   = tonumber(_G.MeerkoNormInRangeGap)  or 0.2
+        _G.MeerkoWatchdogTick = tonumber(_G.MeerkoNormWatchdogTick) or 0.2
+        _G.MeerkoSyncScanGap  = tonumber(_G.MeerkoNormSyncGap)     or 0.15
+        _G.MeerkoAutoTPPoll   = tonumber(_G.MeerkoNormTPPoll)      or 0.03
     end
-    if _G.MeerkoStealSay then _G.MeerkoStealSay("scan profile -> " .. tostring(_G.MeerkoScanMode)) end
 end
 _G.MeerkoScanProfile("fast")
-task.delay(tonumber(_G.MeerkoFastWindow) or 60, function()
+
+
+task.spawn(function()
+    if not game:IsLoaded() then game.Loaded:Wait() end
+    task.wait(tonumber(_G.MeerkoFastWindow) or 60)
     if _G.MeerkoScanMode == "fast" then _G.MeerkoScanProfile("normal") end
 end)
 local print = function() end
@@ -54,89 +35,30 @@ _G.MeerkoAutoBuy = false
 if _G.MeerkoStealMode == nil then _G.MeerkoStealMode = "priority" end
 if _G.MeerkoAutoTP == nil then _G.MeerkoAutoTP = true end
 
--- TP safety: prefer a slightly slower, more stable route over hard misses/deaths.
-if _G.MeerkoTPSafeMode == nil then _G.MeerkoTPSafeMode = true end
-if _G.MeerkoTPSafeSpeed == nil then _G.MeerkoTPSafeSpeed = 300 end
-if _G.MeerkoTPSafeVerticalSpeed == nil then _G.MeerkoTPSafeVerticalSpeed = 110 end
-if _G.MeerkoTPReachTolerance == nil then _G.MeerkoTPReachTolerance = 4.5 end
-if _G.MeerkoTPRetryCount == nil then _G.MeerkoTPRetryCount = 2 end
-if _G.MeerkoTPRetryDelay == nil then _G.MeerkoTPRetryDelay = 0.08 end
-if _G.MeerkoVoidRecover == nil then _G.MeerkoVoidRecover = true end
+
 
 if not game:IsLoaded() then game.Loaded:Wait() end
+local _gameLoadAt = os.clock()
 
---[[ Net env-spoof: DISABLED (Elite parity) ------------------------------------
-     This used to require ReplicatedStorage.Packages.Net and then write into the
-     game module's own environment:
-         env.getfenv                  = <our function>
-         setreadonly(env.debug, false)
-         env.debug.getmemorycategory  = function() return "--" end
-     re-applied 80x over 8 seconds.
 
-     That is the loudest signal in this script, and it is self-defeating. The
-     Net wrapper calls debug.getmemorycategory() to identify its caller. Legit
-     game code returns a real script category; this returned the literal "--",
-     which is not a valid category -- so anything validating the returned value
-     against a known set sees "--" and flags immediately. Leaving env.debug
-     writable via setreadonly is independently checkable (table.isfrozen).
 
-     Elite never requires the module at all, so it never meets this check.
-     Meerko no longer needs it either: the grapple now resolves the UseItem
-     RemoteEvent structurally and calls FireServer on the raw Instance, which
-     never enters the Net wrapper.
 
-     Set _G.MeerkoNetSpoofEnable = true to restore the old behaviour.
---------------------------------------------------------------------------- ]]
-do
-    local RS = game:GetService("ReplicatedStorage")
-    local _spoofOk = false
-    local function _applySpoof()
-        if _G.MeerkoNetSpoofEnable ~= true then return false end
-        local ok = pcall(function()
-            local Net = require(RS:WaitForChild("Packages"):WaitForChild("Net"))
-            local og = getfenv
-            if type(og) ~= "function" then return end
-            for _, fname in ipairs({ "RemoteEvent", "RemoteFunction", "UnreliableRemoteEvent" }) do
-                local f = rawget(Net, fname)
-                if type(f) == "function" then
-                    local env = og(f)
-                    if type(env) == "table" then
-                        env.getfenv = function() return og(f) end
-                        if type(env.debug) == "table" then
-                            if setreadonly then pcall(setreadonly, env.debug, false) end
-                            env.debug.getmemorycategory = function() return "--" end
-                        end
-                    end
-                end
-            end
-            _spoofOk = true
-        end)
-        return ok and _spoofOk
-    end
-    _G.MeerkoNetSpoof = _applySpoof
-    _G.MeerkoNetSpoofReady = function() return _spoofOk end
-    if _G.MeerkoNetSpoofEnable == true then
-        _applySpoof()
-        task.spawn(function()
-            for _ = 1, 80 do
-                if _applySpoof() then end
-                task.wait(0.1)
-            end
-        end)
-    end
-end
-
-pcall(function() if setfpscap then setfpscap(9999) end end)
+task.spawn(function()
+    if not game:IsLoaded() then game.Loaded:Wait() end
+    task.wait(tonumber(_G.MeerkoFpsCapDelay) or 1.5)
+    pcall(function() if setfpscap then setfpscap(9999) end end)
+end)
 
 
 task.spawn(function()
     local Workspace = game:GetService("Workspace")
     local LocalPlayer = game:GetService("Players").LocalPlayer
+    local _RS = game:GetService("RunService")
     if not Workspace.StreamingEnabled then return end
     local plots
     local t0 = os.clock()
-    repeat plots = Workspace:FindFirstChild("Plots"); if not plots then task.wait(0.1) end
-    until plots or (os.clock() - t0) > 25
+    repeat plots = Workspace:FindFirstChild("Plots"); if not plots then _RS.Heartbeat:Wait() end
+    until plots or (os.clock() - t0) > 15
     if not plots then return end
     local function plotPos(plot)
         local ok, pv = pcall(function() return plot:GetPivot().Position end)
@@ -157,55 +79,71 @@ task.spawn(function()
         end
     end
     local sw = os.clock()
-    while pending > 0 and os.clock() - sw < 10 do task.wait(0.05) end
+    while pending > 0 and os.clock() - sw < 3 do task.wait(0.03) end
 end)
 
-_G.MeerkoBootDelay = tonumber(_G.MeerkoBootDelay) or 6
+_G.MeerkoBootDelay = tonumber(_G.MeerkoBootDelay) or 0.3
 if _G.MeerkoWaitForTools == nil then _G.MeerkoWaitForTools = true end
-_G.MeerkoToolWait = tonumber(_G.MeerkoToolWait) or 35
+_G.MeerkoToolWait = tonumber(_G.MeerkoToolWait) or 6
 do
     local _bootT0 = os.clock()
     local _BOOT_TOOLS = {
         "Flying Carpet", "Waverider", "Santa's Sleigh", "Witch's Broom", "Cupid's Wings",
-        "Grapple Hook", "Grappling Hook", "Grapple", "Hook", "Web Slinger", "Grapple Gun", "GrappleHook",
+        "Grapple Hook",
     }
-    local function _hasTool(n)
-        local plr = game:GetService("Players").LocalPlayer
-        if not plr then return false end
-        local char = plr.Character
-        local bp = plr:FindFirstChild("Backpack")
-        local t = (char and char:FindFirstChild(n)) or (bp and bp:FindFirstChild(n))
-        return t ~= nil and t:IsA("Tool")
-    end
-    local function _toolsReady()
-        if type(_G.MeerkoCarpetTool) == "string" and _G.MeerkoCarpetTool ~= "" and _hasTool(_G.MeerkoCarpetTool) then return true end
-        for _, n in ipairs(_BOOT_TOOLS) do
-            if _hasTool(n) then return true end
+    local _BOOT_SET = {}
+    for _, n in ipairs(_BOOT_TOOLS) do _BOOT_SET[n] = true end
+
+
+    local function _boxHasTool(box, want)
+        if not box then return false end
+        for _, t in ipairs(box:GetChildren()) do
+            if t:IsA("Tool") then
+                local n = t.Name
+                if n == want or _BOOT_SET[n] then return true end
+            end
         end
         return false
     end
+    local function _toolsReady()
+        local plr = game:GetService("Players").LocalPlayer
+        if not plr then return false end
+        local want = (type(_G.MeerkoCarpetTool) == "string" and _G.MeerkoCarpetTool ~= "")
+            and _G.MeerkoCarpetTool or nil
+        return _boxHasTool(plr.Character, want)
+            or _boxHasTool(plr:FindFirstChild("Backpack"), want)
+    end
     _G.MeerkoToolsReady = _toolsReady
     _G.MeerkoBootWait = function()
-        local d = tonumber(_G.MeerkoBootDelay) or 8
-        while os.clock() - _bootT0 < d do task.wait(0.25) end
-        if _G.MeerkoWaitForTools == false then return end
-        local cap = tonumber(_G.MeerkoToolWait) or 30
-        local t0 = os.clock()
-        while os.clock() - t0 < cap do
-            local ok, ready = pcall(_toolsReady)
-            if ok and ready then
-                task.wait(0.35)
+
+
+        local d    = tonumber(_G.MeerkoBootDelay) or 0.3
+        local cap  = tonumber(_G.MeerkoToolWait) or 6
+        local want = (_G.MeerkoWaitForTools ~= false)
+        local t0   = os.clock()
+        while true do
+            local ready = true
+            if want then
+                local ok, r = pcall(_toolsReady)
+                ready = (ok and r) and true or false
+            end
+            if ready and (os.clock() - _bootT0) >= d then
                 return
             end
-            task.wait(0.2)
+            if os.clock() - t0 >= cap then
+                return
+            end
+            task.wait(tonumber(_G.MeerkoBootPoll) or 0.03)
         end
-        warn("[MeerkoTP] tools never loaded within " .. cap .. "s, continuing anyway")
     end
 end
 
 _G.MeerkoPriVersion = _G.MeerkoPriVersion or 0
 if type(_G.MeerkoPriorityDefault) ~= "table" then _G.MeerkoPriorityDefault = {} end
 if type(_G.SHARED_PRIORITY_ITEMS) ~= "table" then _G.SHARED_PRIORITY_ITEMS = {} end
+if type(_G.SHARED_MUTATION_PRIORITY) ~= "table" then _G.SHARED_MUTATION_PRIORITY = {} end
+if type(_G.SHARED_TRAIT_PRIORITY) ~= "table" then _G.SHARED_TRAIT_PRIORITY = {} end
+if type(_G.SHARED_MUTATION_DISABLED) ~= "table" then _G.SHARED_MUTATION_DISABLED = {} end
 
 if LPH_OBFUSCATED == nil then
     local env = getfenv()
@@ -216,6 +154,9 @@ end
 do
     local _HS = game:GetService("HttpService")
     local _TS = game:GetService("TeleportService")
+    _G.MEERKO_DEFAULT_CONFIG_JSON = [==[{"mutationList":["Bloodrot","Candy","Crystal","Cursed","Cyber","Diamond","Divine","Galaxy","Gold","Lava","Phantom","Radioactive","Rainbow","YinYang"],"traitList":["1 Year","10B","26",":3","Algeria","Argentina","Aura Shades","Australia","Austria","Ball","Bee","Belgium","Blue Balloon","Blue Egg","Bosnia and Herzegovina","Brazil","Bubblegum","Bull","Bunny Ears","Burger","Canada","Cape Verde","Chocolate","Claws","Colombia","Cometstruck","Croatia","Curacao","Czechia","DR Congo","Disco","Ecuador","Egypt","England","Explosive","Fire","Fire Bee","Fireworks","France","Galactic","Germany","Ghana","Glitched","Granny","Green Balloon","Green Egg","Haiti","Halo","Ice Bee","Indonesia","Iran","Iraq","Ivory Coast","Jackolantern Pet","Japan","Job Application","John Pork","Jordan","Lightning","Lucky","Matteo Hat","Meowl","Mexico","Morocco","Netherlands","New Zealand","Norway","Nyan","Orange Balloon","Orange Egg","Paint","Panama","Paraguay","Pink Balloon","Pink Egg","Portugal","Qatar","Queen Bee","RIP Gravestone","Rainbow Balloon","Red Balloon","Reindeer Pet","Rose","Santa Hat","Saudi Arabia","Scotland","Senegal","Shark Fin","Skeleton","Skibidi","Sleepy","Snowy","Sombrero","South Africa","South Korea","Spain","Spider","Strawberry","Sun","Sweden","Switzerland","Taco","Tie","Tunisia","Turkey","UFO","United States","Uruguay","Uzbekistan","Wet","Witch Hat","Zombie"],"alertSound":"111786441593851","stealLead":0.07,"exX":1977,"landingDelay":0.15000000000000003,"infJump":true,"invisAngle":216,"xray":true,"goSpeed":220,"faceAway":false,"antiBee":true,"cframeSpeed":450,"stealFireKey":"LeftAlt","autoKickOnSteal":false,"invisDepth":10,"cloneKey":"V","autoBuyRange":17,"antiFlash":true,"autoBuyHover":9,"resetKey":"X","closeSpeed":300,"walkSpeedOn":false,"stealMode":"priority","dropKey":"G","priAlert":false,"nearestKey":"F","faceAwayNearest":false,"exY":355,"autoSteal":true,"priorityList":["Headless Horseman","Strawberry Elephant","Signore Carapace","John Pork","Meowl","Elefanto Frigo","Arcadragon","Skibidi Toilet","Griffin","Antonio","Dragon Aquanini","Dragon Gingerini","Love Love Bear","Kalika Bros","Moby Bros","Grabatron","Jelly Moby","La Supreme Combinasion","Ginger Gerat","Digi Narwhal","Hydra Dragon Cannelloni","Hydra Bunny","Bunny and Eggy","Kraken","Fishino Clownino","Tirilikalika Tirilikalako","Pancake and Syrup","Dragon Cannelloni","Sammyni Cakini","Ketupat Bros","Bumbatron","Venuspino","Dug dug dug","La Casa Boo","Rico Dinero","Foxini Lanternini","Duggy Bros","Rosey and Teddy","Globa Steppa","Los Hackers","Cerberus","Fragrama and Chocrama","Cooki and Milki","La Secret Combinasion","Burguro and Fryuro","Capitano Moby","Spooky and Pumpky","Garama and Madundung","Popcuru and Fizzuru","Pizza and Ranch","Reinito Sleighito","Tenini Ballini","Fragola La La La","Ketchuru and Musturu","Tralaledon","Tictac Sahur","Ketupat Kepat","Tang Tang Keletang","Orcaledon","La Ginger Sekolah","Los Spaghettis","Lavadorito Spinito","Swaggy Bros","La Taco Combinasion","Los Primos","Los Chillis","Chillin Chili","Tuff Toucan","W or L","Chipso and Queso","Guest 666","Money Money Reindeer","Quackini Snackini","Los Sekolahs","Los Tacoritas","Los Amigos","Fortunu and Cashuru","Jolly Jolly Sahur","Boppin Bunny","Gym Bros","Los Cupids","Festive 67","Celularcini Viciosini","Cloverat Clapat","La Food Combinasion","Hopilikalika Hopilikalako","Celestial Pegasus","Sammyni Fattini","Money Money Bros","La Spooky Grande","Cash or Card","Swag Soda","Los Planitos","Lovin Rose","Tacorita Bicicleta","Los Jolly Combinasionas","La Romantic Grande","La Easter Grande","Los Hotspotsitos","Rosetti Tualetti","Los Bros","Gobblino Uniciciclino","Chicleteira Cupideira","La Extinct Grande","Las Sis","Nacho Spyder","Gold Gold Gold","Los Mariachis","Snailo Clovero","La Jolly Grande","Los Candies","Churrito Bunnito","Bananito","Eviledon","Los 67","Los Sweethearts","Noo my Heart","La Lucky Grande","Ventoliero Pavonero","Baskito","Chimnino","Los Puggies","Camera Ramena","Los 25","Spinny Hammy","Money Money Puggy","Cigno Fulgoro","Los Spooky Combinasionas","Chicleteira Noelteira","Mariachi Corazoni","Tacorillo Crocodillo","Noo my Gold","Los Mobilis","Mieteteira Bicicleteira","DJ Panda","Los Combinasionas","Nuclearo Dinossauro","Bacuru and Egguru","Spaghetti Tualetti","La Grande Combinasion","Esok Sekolah"],"walkSpeed":29,"grabBeforeKick":true,"carpetStrict":true,"autoBuy":false,"psLink":"","antiDie":false,"carpetSpeedValue":140,"alertMinGen":80000000,"tpVelocity":550,"panelY":457,"invisAuto":true,"autoTp":true,"kickToPS":false,"faceAwayDelay":2,"climbSpeed":100,"carpetTool":"Waverider","carpetSpeedKey":"Q","stealQuickKey":"C","panelX":1068}]==]
+    local DEFAULT_CONFIG
+    pcall(function() DEFAULT_CONFIG = _HS:JSONDecode(_G.MEERKO_DEFAULT_CONFIG_JSON) end)
     local fileData, tpData
     if readfile then
         pcall(function()
@@ -228,6 +169,7 @@ do
         if td and td.SideTP then tpData = td.SideTP end
     end)
     local merged = {}
+    if type(DEFAULT_CONFIG) == "table" then for k, v in pairs(DEFAULT_CONFIG) do merged[k] = v end end
     if type(tpData) == "table" then for k, v in pairs(tpData) do merged[k] = v end end
     if type(fileData) == "table" then for k, v in pairs(fileData) do merged[k] = v end end
 
@@ -237,12 +179,14 @@ do
     if type(merged.cframeSpeed) == "number" then _G.MeerkoCFrameSpeed = math.clamp(merged.cframeSpeed, 100, 900) end
     if type(merged.walkSpeed) == "number" then _G.MeerkoWalkSpeed = math.clamp(merged.walkSpeed, 16, 29) end
     if type(merged.carpetTool) == "string" then _G.MeerkoCarpetTool = merged.carpetTool end
-    if type(merged.landingDelay) == "number" then _G.LandingDelay = math.clamp(merged.landingDelay, 0.05, 0.75) end
+    if type(merged.landingDelay) == "number" then _G.LandingDelay = math.clamp(merged.landingDelay, 0.01, 1.0) end
     if type(merged.closeSpeed) == "number" then _G.MeerkoCloseSpeed = math.clamp(merged.closeSpeed, 20, 400) end
-    if type(merged.tpSafeMode) == "boolean" then _G.MeerkoTPSafeMode = merged.tpSafeMode end
-    if type(merged.tpSafeSpeed) == "number" then _G.MeerkoTPSafeSpeed = math.clamp(merged.tpSafeSpeed, 180, 400) end
-    if type(merged.tpSafeVerticalSpeed) == "number" then _G.MeerkoTPSafeVerticalSpeed = math.clamp(merged.tpSafeVerticalSpeed, 60, 160) end
-    if type(merged.tpRetryCount) == "number" then _G.MeerkoTPRetryCount = math.clamp(merged.tpRetryCount, 0, 4) end
+    if type(merged.problemBaseSpeed) == "number" then _G.MeerkoProblemBaseSpeed = math.clamp(merged.problemBaseSpeed, 20, 400) end
+    if type(merged.slowCrossRow) == "boolean" then _G.MeerkoSlowCrossRow = merged.slowCrossRow end
+    if type(merged.stealLead) == "number" then _G.MeerkoStealLead = math.clamp(merged.stealLead, 0, 2) end
+    _G.MeerkoStealQuick = false
+    if type(merged.stealQuickKey) == "string" then _G.MeerkoStealQuickKey = merged.stealQuickKey end
+    if type(merged.stealFireKey) == "string" then _G.MeerkoStealFireKey = merged.stealFireKey end
     if type(merged.tpKey) == "string" then _G._stp_tpKeyName = merged.tpKey end
     if type(merged.nearestKey) == "string" then _G.MeerkoNearestKey = merged.nearestKey end
     if type(merged.prioritySoundID) == "string" then _G.MeerkoPrioritySoundID = merged.prioritySoundID end
@@ -267,6 +211,35 @@ do
         end
         if #d > 0 then _G.MeerkoPriorityDefault = d end
     end
+    if type(merged.mutationList) == "table" then
+        local clean = {}
+        for _, v in ipairs(merged.mutationList) do
+            if type(v) == "string" and v ~= "" then clean[#clean + 1] = v end
+        end
+        if #clean > 0 then
+            local L = _G.SHARED_MUTATION_PRIORITY
+            table.clear(L)
+            for i = 1, #clean do L[i] = clean[i] end
+        end
+    end
+    if type(merged.mutationDisabled) == "table" then
+        local D = _G.SHARED_MUTATION_DISABLED
+        table.clear(D)
+        for _, v in ipairs(merged.mutationDisabled) do
+            if type(v) == "string" and v ~= "" then D[v] = true end
+        end
+    end
+    if type(merged.traitList) == "table" then
+        local clean = {}
+        for _, v in ipairs(merged.traitList) do
+            if type(v) == "string" and v ~= "" then clean[#clean + 1] = v end
+        end
+        if #clean > 0 then
+            local L = _G.SHARED_TRAIT_PRIORITY
+            table.clear(L)
+            for i = 1, #clean do L[i] = clean[i] end
+        end
+    end
     if type(merged.invisAuto) == "boolean" then _G.MeerkoInvisAuto = merged.invisAuto end
     if type(merged.invisDepth) == "number" then _G.MeerkoInvisDepth = math.clamp(merged.invisDepth, 0, 10) end
     if type(merged.invisAngle) == "number" then _G.MeerkoInvisAngle = math.clamp(merged.invisAngle, 0, 360) end
@@ -277,10 +250,6 @@ do
     if type(merged.panelX) == "number" then _G._stp_panelX = merged.panelX end
     if type(merged.panelY) == "number" then _G._stp_panelY = merged.panelY end
     if type(merged.panelPos) == "table" then _G._stp_pos = merged.panelPos end
-    if type(merged.tgtX) == "number" then _G._meerko_tgtX = merged.tgtX end
-    if type(merged.tgtY) == "number" then _G._meerko_tgtY = merged.tgtY end
-    if type(merged.tgtW) == "number" then _G._meerko_tgtW = merged.tgtW end
-    if type(merged.tgtH) == "number" then _G._meerko_tgtH = merged.tgtH end
     if type(merged.autoKickOnSteal) == "boolean" then _G.MeerkoAutoKickOnSteal     = merged.autoKickOnSteal end
     if type(merged.resetKey)        == "string"  then _G.MeerkoResetKeyName        = merged.resetKey end
     if type(merged.cloneKey)        == "string"  then _G.MeerkoCloneKeyName        = merged.cloneKey end
@@ -328,6 +297,7 @@ local RS         = game:GetService("ReplicatedStorage")
 
 local LP = Players.LocalPlayer
 
+
 if _G.MeerkoNoZeroVel == nil then _G.MeerkoNoZeroVel = false end
 function _vzOK()
     if _G.MeerkoNoZeroVel == true then return false end
@@ -359,43 +329,65 @@ function _MeerkoIsFusing(animalData)
 end
 
 do
-local RS = game:GetService("ReplicatedStorage")
-local _netFolder = RS:WaitForChild("Packages"):WaitForChild("Net")
-local _net, _spoofed
--- Requiring the Net module is now opt-in. Without it _get() returns nil and
--- callers fall back to structural resolution / the UI path, same as Elite.
+
+
+local RS  = game:GetService("ReplicatedStorage")
+local RUN = game:GetService("RunService")
+
+
+local _netFolder
+local function _netDir()
+    if _netFolder then return _netFolder end
+    local pk = RS:FindFirstChild("Packages") or RS:WaitForChild("Packages", 10)
+    if not pk then return nil end
+    _netFolder = pk:FindFirstChild("Net") or pk:WaitForChild("Net", 10)
+    return _netFolder
+end
+local _net
 local function _getNet()
-    if _G.MeerkoNetSpoofEnable ~= true then return nil end
     if _net then return _net end
-    local ok, m = pcall(require, _netFolder)
+    local dir = _netDir()
+    if not dir then return nil end
+    local ok, m = pcall(require, dir)
     if ok and type(m) == "table" then _net = m end
     return _net
 end
-local function _spoofFn(Net, fname)
-    local f = rawget(Net, fname)
-    if type(f) ~= "function" then return end
-    local og = getfenv
-    if type(og) ~= "function" then return end
-    local env = og(f)
-    if type(env) ~= "table" then return end
-    env.getfenv = function() return og(f) end
-    if type(env.debug) == "table" then
-        if setreadonly then pcall(setreadonly, env.debug, false) end
-        env.debug.getmemorycategory = function() return "--" end
+local _queue, _hooked, _original = {}, false, nil
+local function _host()
+    for _, sig in ipairs({ RUN.Heartbeat, RUN.RenderStepped, RUN.PostSimulation }) do
+        local ok, conns = pcall(getconnections, sig)
+        if ok then
+            for _, c in ipairs(conns) do
+                local f = c.Function
+                if f and f ~= _G.__mkSyncHost and islclosure(f) and not isexecutorclosure(f) then
+                    local s = select(2, pcall(debug.info, f, "s"))
+                    if type(s) == "string" and s:find("^ReplicatedStorage%.") and not s:find("ReplicatedFirst") then
+                        return f
+                    end
+                end
+            end
+        end
     end
 end
-local function _spoof()
-    if _G.MeerkoNetSpoofEnable ~= true then return false end
-    if _G.MeerkoNetSpoof then return _G.MeerkoNetSpoof() end
-    if _spoofed then return true end
-    local Net = _getNet()
-    if not Net then return false end
-    pcall(function()
-        _spoofFn(Net, "RemoteEvent")
-        _spoofFn(Net, "RemoteFunction")
-        _spoofFn(Net, "UnreliableRemoteEvent")
-    end)
-    _spoofed = true
+local function _install()
+    if _hooked then return true end
+    if not _getNet() then return false end
+    local h = _host()
+    if not h then return false end
+    _G.__mkNetHost = h
+    local w = function(...)
+        local job = table.remove(_queue, 1)
+        if job then
+            local ok, r = pcall(_net[job.kind], _net, job.name)
+            job.result = (ok and typeof(r) == "Instance") and r or nil
+            job.done = true
+        end
+        return _original(...)
+    end
+    local ok, env = pcall(getfenv, h)
+    if ok and type(env) == "table" then pcall(setfenv, w, env) end
+    _original = hookfunction(h, w)
+    _hooked = true
     return true
 end
 local _cache = {}
@@ -409,17 +401,15 @@ local function _get(name, kind)
     local hit = _cache[ck]
     if hit and hit.Parent then return hit end
     _cache[ck] = nil
-    local Net = _getNet()
-    if not Net then return nil end
-    _spoof()
-    local ok, inst = pcall(function()
-        if kind == "RemoteFunction" then return Net:RemoteFunction(logical) end
-        if kind == "UnreliableRemoteEvent" then return Net:UnreliableRemoteEvent(logical) end
-        return Net:RemoteEvent(logical)
-    end)
-    if ok and typeof(inst) == "Instance" then
-        _cache[ck] = inst
-        return inst
+    if not _getNet() then return nil end
+    if not _install() then return nil end
+    local job = { kind = kind, name = logical }
+    table.insert(_queue, job)
+    local t = os.clock() + (tonumber(_G.MeerkoNetTimeout) or 5)
+    while not job.done and os.clock() < t do RUN.Heartbeat:Wait() end
+    if job.result and job.result.Parent then
+        _cache[ck] = job.result
+        return job.result
     end
     return nil
 end
@@ -431,6 +421,7 @@ _G.MeerkoNet = {
 _G.MeerkoGetRemote = _get
 _G.Resolve = _get
 _G.__secureGetRemote = function(method, name) return _get(name, method) end
+_G.MeerkoNetHooked = function() return _hooked end
 do
     local _dummy = Instance.new("RemoteEvent")
     local _rawFire = (clonefunction and clonefunction(_dummy.FireServer)) or _dummy.FireServer
@@ -452,6 +443,8 @@ local _mod
 local MAX_ATTEMPTS, RETRY_GAP = 40, 0.5
 local BOOT_T0, BOOT_BURST, BOOT_GAP = os.clock(), 3.0, 0.10
 local MAX_DEEP, DEEP_GAP = 3, 1.5
+local _bootDone = false
+local _bootGrace = 4.0
 
 local RS_SYNC = game:GetService("ReplicatedStorage")
 local _mask_sc
@@ -463,63 +456,79 @@ local function _getMask()
 end
 local secure_call = _G.secure_call
 if type(secure_call) ~= "function" then
-    local LAYERS = 2
-    local TEMPLATE do
-        local lines = {
-            "return function(__renv, __func, ...)",
-            "\tsetfenv(0, __renv)",
-            ("\tlocal function l%d(...) return __func(...) end"):format(LAYERS),
-        }
-        for c = LAYERS - 1, 1, -1 do
-            lines[#lines + 1] = ("\tlocal function l%d(...) return l%d(...) end"):format(c, c + 1)
-        end
-        lines[#lines + 1] = "\treturn l1(...)"
-        lines[#lines + 1] = "end"
-        TEMPLATE = table.concat(lines, string.char(10))
-    end
-    local _gti = getthreadidentity or get_thread_identity or getidentity
-    local _sti = setthreadidentity or set_thread_identity or setidentity
-    local _sentinel
-    secure_call = function(func, mask, ...)
-        if type(func) ~= "function" or typeof(mask) ~= "Instance" then return nil end
-        if not (_gti and _sti and getrenv and loadstring and setfenv) then return nil end
-        local renv = getrenv()
-        if not _sentinel then
-            local ok, env = pcall(getsenv, mask)
-            if not ok or type(env) ~= "table" then
-                env = setmetatable({ script = mask, _G = {}, shared = {} }, { __index = renv, __newindex = renv })
-            end
-            local loader = loadstring(TEMPLATE, "=" .. mask:GetFullName())
-            if not loader then return nil end
-            setfenv(loader, env)
-            _sentinel = loader()
-        end
-        local level = _gti()
-        local changed = {}
-        local okU, snap = pcall(debug.getupvalues, func)
-        if okU and type(snap) == "table" then
-            for i, v in pairs(snap) do
-                if typeof(v) == "Instance" and v:IsA("LuaSourceContainer") then
-                    if pcall(debug.setupvalue, func, i, mask) then changed[i] = v end
+
+
+    local RUN = game:GetService("RunService")
+    local state = { ready = false, inside = false }
+    local conn, original
+    local function host()
+        for _, sig in ipairs({ RUN.Heartbeat, RUN.RenderStepped, RUN.PostSimulation }) do
+            local ok, conns = pcall(getconnections, sig)
+            if ok then
+                for _, c in ipairs(conns) do
+                    local f = c.Function
+                    if f and f ~= _G.__mkNetHost and islclosure(f) and not isexecutorclosure(f) then
+                        local s = select(2, pcall(debug.info, f, "s"))
+                        if type(s) == "string" and s:find("^ReplicatedStorage%.") and not s:find("ReplicatedFirst") then
+                            return f, c, s
+                        end
+                    end
                 end
             end
         end
-        _sti(2)
-        local co, args = coroutine.create(_sentinel), table.pack(renv, func, ...)
-        local response, err
-        while true do
-            local r = table.pack(coroutine.resume(co, table.unpack(args, 1, args.n)))
-            if not r[1] then err = r[2] break end
-            if coroutine.status(co) == "dead" then response = table.pack(table.unpack(r, 2, r.n)) break end
-            args = table.pack(coroutine.yield(table.unpack(r, 2, r.n)))
-        end
-        _sti(level)
-        for i, orig in pairs(changed) do pcall(debug.setupvalue, func, i, orig) end
-        if err or not response then return nil end
-        return table.unpack(response, 1, response.n)
+    end
+    local function install()
+        if state.ready then return true end
+        local h, c, src = host()
+        if not h then return false end
+        local chunk = loadstring([[
+            local state, pack, unpack = ...
+            return function(...)
+                local job = state.job
+                if job and not job.done then
+                    job.done = true
+                    state.inside = true
+                    job.result = pack(pcall(job.fn, unpack(job.args, 1, job.args.n)))
+                    state.inside = false
+                end
+                return state.original(...)
+            end
+        ]], "=" .. src)
+        if not chunk then return false end
+        local ok, env = pcall(getfenv, h)
+        if ok and type(env) == "table" then pcall(setfenv, chunk, env) end
+        local wrapper = chunk(state, table.pack, table.unpack)
+        _G.__mkSyncHost = h
+        original = hookfunction(h, wrapper)
+        state.original = original
+        conn = c
+        state.ready = true
+        return true
+    end
+    secure_call = function(fn, ...)
+        if type(fn) ~= "function" then return nil end
+        if state.inside then return fn(...) end
+        if not install() then return nil end
+        state.job = { fn = fn, args = table.pack(...), done = false }
+        pcall(function() conn:Fire(0) end)
+        local job = state.job
+        state.job = nil
+        if not job or not job.done or not job.result then return nil end
+        if not job.result[1] then error(job.result[2], 2) end
+        return table.unpack(job.result, 2, job.result.n)
     end
     _G.secure_call = secure_call
+    _G.MeerkoSyncHooked = function() return state.ready end
 end
+task.spawn(function()
+    pcall(function()
+        local sync = _getSyncMod()
+        if sync and type(sync.GetAllChannels) == "function" then
+            local mask = _getMask()
+            if mask then pcall(secure_call, sync.GetAllChannels, mask) end
+        end
+    end)
+end)
 local _syncMod_sc, _nextTry_sc = nil, 0
 local function _getSyncMod()
     if _syncMod_sc then return _syncMod_sc end
@@ -637,9 +646,12 @@ local function _deepScan(mod)
         local n = _channelCount(t)
         if n > bestN then best, bestN, where = t, n, tag end
     end
+    local _fnCount = 0
     for fname, fn in next, mod do
         if type(fn) == "function" then
-            for i = 1, 24 do
+            _fnCount = _fnCount + 1
+            if _fnCount > 30 then break end
+            for i = 1, 16 do
                 local o, u = pcall(gu, fn, i)
                 if not o then break end
                 if type(u) == "table" then
@@ -657,46 +669,79 @@ end
 local _gcFound, _gcFoundN, _gcState = nil, 0, "idle"
 
 local function _gcScanOnce()
-    if type(getgc) ~= "function" then return end
     local plots = workspace:FindFirstChild("Plots")
     if not plots then return end
-    local live, nLive = {}, 0
-    for _, p in ipairs(plots:GetChildren()) do live[p.Name] = true; nLive = nLive + 1 end
+    local live, names, nLive = {}, {}, 0
+    for _, p in ipairs(plots:GetChildren()) do live[p.Name] = true; nLive = nLive + 1; names[nLive] = p.Name end
     if nLive == 0 then return end
 
+
+    local function score(t)
+        local hits, seen = 0, 0
+        for k, v in next, t do
+            seen = seen + 1
+            if type(k) == "string" and live[k]
+                and type(v) == "table" and type(rawget(v, "CacheTable")) == "table" then
+                hits = hits + 1
+            end
+            if seen >= 64 then break end
+        end
+        return hits
+    end
+
     local best, bestN = nil, 0
-    pcall(function()
-        local gc = getgc(true)
-        for i = 1, #gc do
-            local t = gc[i]
-            if type(t) == "table" then
-                pcall(function()
-                    
+    local hasFilter = type(filtergc) == "function"
+
+    if hasFilter then
+        local tries = {}
+        if nLive >= 2 then tries[1] = { names[1], names[2], "CacheTable" } end
+        tries[#tries + 1] = { names[1], "CacheTable" }
+        if nLive >= 3 then tries[#tries + 1] = { names[2], names[3], "CacheTable" } end
+        for _, keys in ipairs(tries) do
+            local ok, res = pcall(filtergc, "table", { Keys = keys }, false)
+            if ok and type(res) == "table" then
+                for _, t in ipairs(res) do
+                    if type(t) == "table" then
+                        local n = score(t)
+                        if n > bestN and n >= 2 then best, bestN = t, n end
+                    end
+                end
+            end
+            if bestN >= nLive then break end
+        end
+    end
+
+    if bestN == 0 and type(getgc) == "function"
+        and (not hasFilter or _G.MeerkoAllowFullGc == true)
+        and not (_G.MeerkoIsTeleporting and _G.MeerkoIsTeleporting())
+        and (os.clock() - (_G.__gcFullAt or 0)) >= (tonumber(_G.MeerkoFullGcGap) or 3.0)
+        and (workspace.StreamingEnabled == false or os.clock() - _gameLoadAt >= 4.0) then
+        _G.__gcFullAt = os.clock()
+        pcall(function()
+            local gc = getgc(true)
+            local _gcLimit = math.min(#gc, 4000)
+            for i = 1, _gcLimit do
+                local t = gc[i]
+                if type(t) == "table" then
                     local pk = 0
                     for k in next, t do
                         if type(k) == "string" and live[k] then pk = pk + 1; if pk >= 2 then break end end
                     end
-                    if pk < 2 then return end
-                    local hits, seen = 0, 0
-                    for k, v in next, t do
-                        seen = seen + 1
-                        if type(k) == "string" and live[k]
-                            and type(v) == "table" and type(rawget(v, "CacheTable")) == "table" then
-                            hits = hits + 1
-                        end
-                        if seen >= 64 then break end
+                    if pk >= 2 then
+                        local n = score(t)
+                        if n > bestN and n >= 2 then best, bestN = t, n end
                     end
-                    if hits > bestN and hits >= 2 then best, bestN = t, hits end
-                end)
-                if bestN >= nLive then break end
+                    if bestN >= nLive then break end
+                end
             end
-        end
-    end)
+        end)
+    end
     if best and bestN > _gcFoundN then _gcFound, _gcFoundN = best, bestN end
 end
 
 local _gcLastScan = 0
 local _gcRescans = 0
+local _gcMiss, _gcLastPlots = 0, -1
 local function _gcChans()
     if _gcFound then
         local _pl = workspace:FindFirstChild("Plots")
@@ -708,12 +753,34 @@ local function _gcChans()
             _gcRescans = _gcRescans + 1
             _gcScanOnce()
         end
-        return _gcFound, _gcFoundN, "getgc/plot-key+CacheTable"
+        return _gcFound, _gcFoundN, "gc/plot-key+CacheTable"
     end
-    if os.clock() - _gcLastScan < (tonumber(_G.MeerkoSyncScanGap) or 0.2) then return nil, 0, nil end
+
+
+
+    local _pl = workspace:FindFirstChild("Plots")
+    local _n = _pl and #_pl:GetChildren() or 0
+    if _n ~= _gcLastPlots then
+        _gcLastPlots = _n
+
+
+        _gcMiss = (_gcMiss > 2) and 2 or _gcMiss
+        _gcLastScan = _gcLastScan - 0.05
+    end
+
+    local gap = tonumber(_G.MeerkoSyncScanGap) or 0.2
+    local back = math.min(_gcMiss * (tonumber(_G.MeerkoSyncMissStep) or 0.15),
+                          tonumber(_G.MeerkoSyncMissMax) or 1)
+    if os.clock() - _gcLastScan < (gap + back) then return nil, 0, nil end
     _gcLastScan = os.clock()
     _gcScanOnce()
-    if _gcFound then return _gcFound, _gcFoundN, "getgc/plot-key+CacheTable" end
+    if _gcFound then
+        _gcMiss = 0
+        return _gcFound, _gcFoundN, "gc/plot-key+CacheTable"
+    end
+
+
+    if _n > 0 then _gcMiss = _gcMiss + 1 end
     return nil, 0, nil
 end
 
@@ -727,12 +794,13 @@ local function _apiChans(mod)
         if n > 0 then return reg, n, tag end
         return nil, 0, nil
     end
-    local mask = _getMask()
-    if _G.MeerkoAllowSecureSyncCall and mask and type(secure_call) == "function" then
+
+
+    if _G.MeerkoAllowSecureSyncCall ~= false and type(secure_call) == "function" then
         for _, form in ipairs({ "self", "plain" }) do
             local ok, reg = pcall(function()
-                if form == "self" then return secure_call(fn, mask, mod) end
-                return secure_call(fn, mask)
+                if form == "self" then return secure_call(fn, mod) end
+                return secure_call(fn)
             end)
             if ok then
                 local r, n, t = _accept(reg, "GetAllChannels/secure_call(" .. form .. ")")
@@ -757,38 +825,49 @@ end
 
 local _xchan2, _nextTry2, _attempts2 = nil, 0, 0
 local _xchan2Until = 0
+local _nextApi = 0
+local _chansLastScan = 0
 local function _chans()
     if _xchan2 then
         local now = os.clock()
         if now < _xchan2Until then return _xchan2 end
         if _channelCount(_xchan2) > 0 then _xchan2Until = now + 2 return _xchan2 end
     end
-    if os.clock() < _nextTry2 then return _xchan2 end
+    local now = os.clock()
+    if now - _chansLastScan < 0.02 then return _xchan2 end
+    if now < _nextTry2 then return _xchan2 end
+    _chansLastScan = now
     _attempts2 = _attempts2 + 1
 
-    local best, n, where = _gcChans()
+    local best, n, where
+    if _G.MeerkoAllowSecureSyncCall ~= false and os.clock() >= _nextApi then
+        local mod = _getSyncMod()
+        if mod then best, n, where = _apiChans(mod) end
+        if not best or n == 0 then _nextApi = os.clock() + (tonumber(_G.MeerkoSyncApiGap) or 0.5) end
+    end
 
-    if (not best or n == 0) and _attempts2 <= 400
-        and (_G.MeerkoAllowUpvalueProbe or _G.MeerkoAllowSecureSyncCall or _G.MeerkoAllowRawSyncCall) then
+    if not best or n == 0 then best, n, where = _gcChans() end
+
+    if (not best or n == 0) and _attempts2 <= 400 and _G.MeerkoAllowUpvalueProbe then
         local mod = _getSyncMod()
         if mod then
-            if _G.MeerkoAllowUpvalueProbe then
-                best, n, where = _probe(mod)
-                if (not best or n == 0) and os.clock() - _lastDeep > 1 then
-                    _lastDeep = os.clock()
-                    _deepScans = _deepScans + 1
-                    best, n, where = _deepScan(mod)
-                end
+            best, n, where = _probe(mod)
+            local inBoot = _gameLoadAt and (os.clock() - _gameLoadAt) < 4
+            if (not best or n == 0) and (not inBoot) and os.clock() - _lastDeep > 2 then
+                _lastDeep = os.clock()
+                _deepScans = _deepScans + 1
+                best, n, where = _deepScan(mod)
             end
-            if not best or n == 0 then best, n, where = _apiChans(mod) end
         end
     end
     if best and n > 0 then
         _xchan2 = best
-        _G.MeerkoSyncDiag = string.format("rawget/CacheTable scoring via %s - %d channels", tostring(where), n)
+        _G.MeerkoSyncDiag = string.format("%s - %d channels", tostring(where), n)
         return _xchan2
     end
-    _nextTry2 = os.clock() + 0.1
+
+    local inBoot2 = _gameLoadAt and (os.clock() - _gameLoadAt) < 4
+    _nextTry2 = os.clock() + (inBoot2 and 0.1 or ((_G.MeerkoScanMode == "fast") and 0.03 or 0.1))
     return _xchan2
 end
 _G.__secureChans = _chans
@@ -826,10 +905,16 @@ local _AD,_MD,_TD
 local function _data()
 if _AD then return true end
 local ok=pcall(function()
-local d=game:GetService("ReplicatedStorage"):WaitForChild("Datas")
-_AD=require(d:WaitForChild("Animals"))
-_MD=require(d:WaitForChild("Mutations"))
-_TD=require(d:WaitForChild("Traits"))
+
+local R=game:GetService("ReplicatedStorage")
+local d=R:FindFirstChild("Datas") or R:WaitForChild("Datas",2)
+if not d then return end
+local a=d:FindFirstChild("Animals") or d:WaitForChild("Animals",2)
+if a then _AD=require(a) end
+local m=d:FindFirstChild("Mutations") or d:WaitForChild("Mutations",2)
+if m then _MD=require(m) end
+local t=d:FindFirstChild("Traits") or d:WaitForChild("Traits",2)
+if t then _TD=require(t) end
 end)
 return ok and _AD~=nil
 end
@@ -850,11 +935,21 @@ end
 end
 return info.Generation*mult
 end
+local _sharedAnimals
 _G._meerkoAnimShim=setmetatable({GetGeneration=function(_,index,mutation,traits)return _G._meerkoGen(index,mutation,traits)end},{
 __index=function(_,k)
-local ok,real=pcall(function()return require(game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Animals"))end)
-if ok and type(real)=="table" then return rawget(real,k) end
-return nil
+
+if not _sharedAnimals then
+local ok,real=pcall(function()
+local R=game:GetService("ReplicatedStorage")
+local sh=R:FindFirstChild("Shared") or R:WaitForChild("Shared",3)
+local an=sh and (sh:FindFirstChild("Animals") or sh:WaitForChild("Animals",3))
+return an and require(an) or nil
+end)
+if ok and type(real)=="table" then _sharedAnimals=real end
+end
+if not _sharedAnimals then return nil end
+return rawget(_sharedAnimals,k)
 end})
 _G.Meerko_GetPlotChannel=function(plotName)return _G.MeerkoSyncGet(plotName)end
 _G.Meerko_GetAllPlots=function()return _G.MeerkoSyncAll() or {} end
@@ -873,7 +968,24 @@ _G.MeerkoAnimShim = _G._meerkoAnimShim
 _G.stealthGet    = function(n) return _G.MeerkoSyncGet(n) end
 _G.SyncInt       = {_cache={},_data=nil}
 
-task.spawn(function() for _=1,150 do if _G.MeerkoSyncAll() then break end task.wait(0.04) end end)
+
+
+task.spawn(function()
+    for i = 1, 260 do
+        local t = _G.MeerkoSyncAll()
+        local pl = workspace:FindFirstChild("Plots")
+        local kids = pl and pl:GetChildren()
+        local want = kids and #kids or 0
+        if want > 0 and type(t) == "table" then
+            local have = 0
+            for k = 1, want do
+                if rawget(t, kids[k].Name) ~= nil then have = have + 1 end
+            end
+            if have >= want then _G.MeerkoChannelsReady = true return end
+        end
+        task.wait(i <= 100 and 0.04 or 0.1)
+    end
+end)
 
 _G.MeerkoGetSyncData = _G.MeerkoGetSyncData or function(plot)
     local plotName = type(plot) == "string" and plot or (plot and plot.Name)
@@ -898,17 +1010,59 @@ end
 
 
 _mkNextModTry = 0
+
+function _MeerkoBuildDefaultBrainrotPriority()
+    if not AnimalsData then return end
+    table.clear(_brainrotDefaultPri)
+    table.clear(_brainrotDefaultRarity)
+    local rarities = { OG = 1, Secret = 2, ["Brainrot God"] = 3, ["Brainrot Titan"] = 4, ["Brainrot Legendary"] = 5, Legendary = 6, Mythic = 7, Epic = 8, Rare = 9, Uncommon = 10, Common = 11 }
+    local list = {}
+    for name, info in pairs(AnimalsData) do
+        if type(info) == "table" then
+            local r = tostring(info.Rarity or "Common")
+            local rIdx = rarities[r] or 12
+            table.insert(list, { name = info.DisplayName or name, index = name, r = r, rIdx = rIdx })
+        end
+    end
+    table.sort(list, function(a, b)
+        if a.rIdx ~= b.rIdx then return a.rIdx < b.rIdx end
+        return (a.name or a.index) < (b.name or b.index)
+    end)
+    for i, v in ipairs(list) do
+        local nn = _normName(v.name)
+        local ni = _normName(v.index)
+        _brainrotDefaultPri[nn] = i
+        _brainrotDefaultRarity[nn] = v.r
+        if _brainrotDefaultPri[ni] == nil then
+            _brainrotDefaultPri[ni] = i
+            _brainrotDefaultRarity[ni] = v.r
+        end
+    end
+    if #_G.SHARED_PRIORITY_ITEMS == 0 then
+        local cap = tonumber(_G.MeerkoDefaultPrioCap) or 60
+        for i, v in ipairs(list) do
+            if i > cap then break end
+            _G.SHARED_PRIORITY_ITEMS[i] = v.name
+        end
+    end
+    _G.MeerkoPriVersion = (_G.MeerkoPriVersion or 0) + 1
+end
+
 function loadModules()
-    if AnimalsData then return true end
+    if AnimalsData then
+        if not AnimalsShared and _G.MeerkoAnimShim then AnimalsShared = _G.MeerkoAnimShim end
+        return true
+    end
     if os.clock() < _mkNextModTry then return false end
-    _mkNextModTry = os.clock() + (tonumber(_G.MeerkoModRetry) or 3)
+    _mkNextModTry = os.clock() + (tonumber(_G.MeerkoModRetry) or 0.5)
     pcall(function()
-        local Datas = RS:FindFirstChild("Datas") or RS:WaitForChild("Datas", 5)
+        local Datas = RS:FindFirstChild("Datas") or RS:WaitForChild("Datas", 1.5)
         if Datas then
-            local a = Datas:FindFirstChild("Animals") or Datas:WaitForChild("Animals", 5)
+            local a = Datas:FindFirstChild("Animals") or Datas:WaitForChild("Animals", 1.5)
             if a then AnimalsData = require(a) end
         end
     end)
+    pcall(_MeerkoBuildDefaultBrainrotPriority)
     AnimalsShared = _G.MeerkoAnimShim
     if not NumberUtils then
         pcall(function()
@@ -929,252 +1083,23 @@ _G.MeerkoGetRemote = getRemote
 
 GRAPPLE_ARG = 0.8
 
---[[ Grapple: Elite method ----------------------------------------------------
-     Old Meerko method: require ReplicatedStorage.Packages.Net, spoof getfenv +
-     debug.getmemorycategory inside it, ask it for "UseItem", then blind-fire
-     both candidate remotes with a bare constant (0.8) and no target.
 
-     Elite method (implemented below):
-       * resolve UseItem by INSTANCE STRUCTURE, never requiring the Net module
-         (no getfenv / setreadonly / debug tampering = no detection surface)
-       * gate on the tool's own cooldown (Tool.Enabled) before firing
-       * fire (amount, position) with a real raycast target, amount scaled to
-         distance, instead of a constant with no target
-       * quiet mode: mute the hook's Sounds/Beams, drop the server-side
-         FlightPower, and hold velocity down so the pull does not fight the TP
-       * invalidate + re-resolve automatically if FireServer errors
 
-     Set _G.MeerkoGrappleLegacy = true to restore the old blind-fire path.
---------------------------------------------------------------------------- ]]
-
-do
-local _WSg = game:GetService("Workspace")
-
--- Grapple remote resolver: uses rymogs' Net-hook approach (hookfunction on the
--- game's own Heartbeat listener) to resolve remotes through the Net module
--- without any getfenv/setreadonly detection surface.
-local getGrappleRemote
-do
-    local netFolder, netModule, queue, hooked, original = nil, nil, {}, false, nil
-    local function netDirectory()
-        if netFolder then return netFolder end
-        local packages = RS:FindFirstChild("Packages") or RS:WaitForChild("Packages", 10)
-        if not packages then return nil end
-        netFolder = packages:FindFirstChild("Net") or packages:WaitForChild("Net", 10)
-        return netFolder
-    end
-    local function getNet()
-        if netModule then return netModule end
-        local directory = netDirectory()
-        if not directory then return nil end
-        local ok, module = pcall(require, directory)
-        if ok and type(module) == "table" then netModule = module end
-        return netModule
-    end
-    local function host()
-        for _, signal in ipairs({ RunService.Heartbeat, RunService.RenderStepped, RunService.PostSimulation }) do
-            local ok, connections = pcall(getconnections, signal)
-            if ok then
-                for _, connection in ipairs(connections) do
-                    local fn = connection.Function
-                    if fn and islclosure(fn) and not isexecutorclosure(fn) then
-                        local source = select(2, pcall(debug.info, fn, "s"))
-                        if type(source) == "string" and source:find("^ReplicatedStorage%.")
-                            and not source:find("ReplicatedFirst") then
-                            return fn
-                        end
-                    end
-                end
-            end
-        end
-    end
-    local function install()
-        if hooked then return true end
-        if not getNet() then return false end
-        local fn = host()
-        if not fn then return false end
-        local wrapper = function(...)
-            local job = table.remove(queue, 1)
-            if job then
-                local ok, remote = pcall(netModule[job.kind], netModule, job.name)
-                job.result = (ok and typeof(remote) == "Instance") and remote or nil
-                job.done = true
-            end
-            return original(...)
-        end
-        local ok, env = pcall(getfenv, fn)
-        if ok and type(env) == "table" then pcall(setfenv, wrapper, env) end
-        original = hookfunction(fn, wrapper)
-        hooked = true
-        return true
-    end
-    local cache = {}
-    getGrappleRemote = function(method, name)
-        local kind = method == "RemoteFunction" and "RemoteFunction"
-            or method == "UnreliableRemoteEvent" and "UnreliableRemoteEvent" or "RemoteEvent"
-        if type(name) ~= "string" or name == "" then return nil end
-        local cacheKey = kind .. "|" .. name
-        local cached = cache[cacheKey]
-        if cached and cached.Parent then return cached end
-        cache[cacheKey] = nil
-        if not getNet() or not install() then return nil end
-        local job = { kind = kind, name = name }
-        table.insert(queue, job)
-        local expires = os.clock() + 5
-        while not job.done and os.clock() < expires do RunService.Heartbeat:Wait() end
-        if job.result and job.result.Parent then cache[cacheKey] = job.result; return job.result end
-        return nil
-    end
-end
-
-function _grappleInvalidate()
-    _G.__MeerkoUseItem, _G.__MeerkoUseItemJob = nil, nil
-end
-_G.MeerkoGrappleInvalidate = _grappleInvalidate
-
-task.spawn(function() _grappleUseItem = getGrappleRemote("RemoteEvent", "UseItem") end)
-task.spawn(function() _grappleItemUse = getGrappleRemote("RemoteEvent", "75c9466d-e4c0-4b02-b26a-c3615fcc1e42") end)
+task.spawn(function() _grappleUseItem = getRemote("RemoteEvent", "UseItem") end)
+task.spawn(function() _grappleItemUse = getRemote("RemoteEvent", "75c9466d-e4c0-4b02-b26a-c3615fcc1e42") end)
 function _grappleRemoteGet()
-    if not (_grappleUseItem and _grappleUseItem.Parent) then
-        _grappleUseItem = getGrappleRemote("RemoteEvent", "UseItem")
-    end
-    if not (_grappleItemUse and _grappleItemUse.Parent) then
-        _grappleItemUse = getGrappleRemote("RemoteEvent", "75c9466d-e4c0-4b02-b26a-c3615fcc1e42")
-    end
     return (_grappleUseItem and _grappleUseItem.Parent and _grappleUseItem)
         or (_grappleItemUse and _grappleItemUse.Parent and _grappleItemUse)
+        or getRemote("RemoteEvent", "UseItem")
 end
 _G.MeerkoGrappleRemote = _grappleRemoteGet
-
-local _gMuteCache = setmetatable({}, { __mode = "k" })
-local function _gCollectMutes(tool)
-    local e = _gMuteCache[tool]
-    if e and (os.clock() - e.t) < 8 and tool.Parent then return e end
-    local snd, bm = {}, {}
-    pcall(function()
-        local scanned = 0
-        for _, s in ipairs(tool:GetDescendants()) do
-            scanned = scanned + 1
-            if scanned > 500 then break end
-            if s:IsA("Sound") then snd[#snd + 1] = s
-            elseif s:IsA("Beam") then bm[#bm + 1] = s end
-        end
-    end)
-    e = { t = os.clock(), snd = snd, bm = bm }
-    _gMuteCache[tool] = e
-    return e
-end
-
-local function _gMuteAndStopPull(tool, hrp)
-    if tool and tool.Parent then
-        local e = _gCollectMutes(tool)
-        for _, s in ipairs(e.snd) do
-            if s.Parent then pcall(function() s.Volume = 0; s:Stop() end) end
-        end
-        for _, b in ipairs(e.bm) do
-            if b.Parent then pcall(function() b.Enabled = false; b.Attachment0 = nil end) end
-        end
-    end
-    if hrp and hrp.Parent then
-        local fp = hrp:FindFirstChild("FlightPower")
-        if fp then pcall(function() fp:Destroy() end) end
-        -- never fight velMoveThrough / cframeStepThrough while a TP is running
-        if not isTeleporting and not _G.MeerkoTPBusy then
-            _vzL(hrp)
-            _vzA(hrp)
-        end
-    end
-end
-
--- one hold loop at a time; re-firing the hook just extends the existing one so
--- the 0.3s in-TP fire cadence cannot stack Heartbeat connections
-local _gHoldUntil, _gHoldConn = 0, nil
-local function _gHoldNoPull(tool, hrp, seconds)
-    _gHoldUntil = os.clock() + seconds
-    if _gHoldConn then return end
-    local last = 0
-    _gHoldConn = RunService.Heartbeat:Connect(function()
-        local now = os.clock()
-        if now - last >= 0.03 then
-            last = now
-            _gMuteAndStopPull(tool, hrp)
-        end
-        if now > _gHoldUntil then
-            if _gHoldConn then _gHoldConn:Disconnect(); _gHoldConn = nil end
-            _gMuteAndStopPull(tool, hrp)
-        end
-    end)
-end
-
-function _grappleToolReady(tool, waitS)
-    if not tool or not tool.Parent then return false end
-    local t0 = os.clock()
-    while true do
-        local ok, en = pcall(function() return tool.Enabled end)
-        if not ok or en ~= false then return true end
-        if os.clock() - t0 > (tonumber(waitS) or 0) then return false end
-        RunService.Heartbeat:Wait()
-        if not tool.Parent then return false end
-    end
-end
-_G.MeerkoToolReady = _grappleToolReady
-
-function _grappleDo(tool, pos, target, char)
-    if not tool or not pos then return false end
-    if typeof(pos) == "Instance" then pos = pos.Position end
-    if typeof(pos) == "CFrame"   then pos = pos.Position end
-    if typeof(pos) ~= "Vector3" then
-        _G.MeerkoGrappleWhy = "bad target position"
-        return false
-    end
-    char = char or LP.Character
-    local hrp = char and char:FindFirstChild("HumanoidRootPart")
-    if not hrp then
-        _G.MeerkoGrappleWhy = "no hrp"
-        return false
-    end
-    if not _grappleToolReady(tool, tonumber(_G.MeerkoGrappleCooldownWait) or 0.35) then
-        _G.MeerkoGrappleWhy = "hook on cooldown (Enabled=false)"
-        return false
-    end
-    if not (_grappleUseItem and _grappleUseItem.Parent) then
-        _grappleUseItem = getGrappleRemote("RemoteEvent", "UseItem")
-    end
-    if not (_grappleItemUse and _grappleItemUse.Parent) then
-        _grappleItemUse = getGrappleRemote("RemoteEvent", "75c9466d-e4c0-4b02-b26a-c3615fcc1e42")
-    end
-    if not (_grappleUseItem and _grappleUseItem.Parent)
-        and not (_grappleItemUse and _grappleItemUse.Parent) then
-        _G.MeerkoGrappleWhy = "unresolved"
-        return false
-    end
-    local mag = (pos - hrp.Position).Magnitude
-    local amt = math.clamp(mag / 120, 0, 2)
-    local quiet = (_G.MeerkoGrappleQuiet ~= false)
-    if quiet then _gMuteAndStopPull(tool, hrp) end
-    local fired = false
-    if _grappleUseItem and _grappleUseItem.Parent then
-        pcall(function() _grappleUseItem:FireServer(amt, pos) end); fired = true
-    end
-    if _grappleItemUse and _grappleItemUse.Parent then
-        pcall(function() _grappleItemUse:FireServer(amt, pos) end); fired = true
-    end
-    if quiet then
-        _gMuteAndStopPull(tool, hrp)
-        _gHoldNoPull(tool, hrp, tonumber(_G.MeerkoGrappleQuietFor) or 0.6)
-    end
-    _G.MeerkoGrappleWhy = fired and "ok" or "no remote fired"
-    return fired
-end
-_G.MeerkoGrappleDo = _grappleDo
-
-local function _grappleLegacyFire()
+function _fireGrapple()
     local fired = false
     if not (_grappleUseItem and _grappleUseItem.Parent) then
-        _grappleUseItem = getGrappleRemote("RemoteEvent", "UseItem")
+        _grappleUseItem = getRemote("RemoteEvent", "UseItem")
     end
     if not (_grappleItemUse and _grappleItemUse.Parent) then
-        _grappleItemUse = getGrappleRemote("RemoteEvent", "75c9466d-e4c0-4b02-b26a-c3615fcc1e42")
+        _grappleItemUse = getRemote("RemoteEvent", "75c9466d-e4c0-4b02-b26a-c3615fcc1e42")
     end
     if _grappleUseItem and _grappleUseItem.Parent then
         pcall(function() _grappleUseItem:FireServer(GRAPPLE_ARG) end); fired = true
@@ -1182,152 +1107,41 @@ local function _grappleLegacyFire()
     if _grappleItemUse and _grappleItemUse.Parent then
         pcall(function() _grappleItemUse:FireServer(GRAPPLE_ARG) end); fired = true
     end
-    _G.MeerkoGrappleWhy = fired and "ok (legacy)" or "legacy: no remote"
+    if not fired then
+        local r = getRemote("RemoteEvent", "UseItem")
+        if r then pcall(function() r:FireServer(GRAPPLE_ARG) end); fired = true end
+    end
     return fired
 end
-
-local _GFAN  = { 9, 10, 11, 12, 13, 14, 16, 18, 21, 24, 28, 32, 36, 40, 45 }
-local _GFAN2 = { 11, 14, 18, 24, 32, 42, 48 }
-local _GCOMPASS = {
-    Vector3.new( 1, 0,  0), Vector3.new(-1, 0,  0),
-    Vector3.new( 0, 0,  1), Vector3.new( 0, 0, -1),
-    Vector3.new( 0.7, 0,  0.7), Vector3.new( 0.7, 0, -0.7),
-    Vector3.new(-0.7, 0,  0.7), Vector3.new(-0.7, 0, -0.7),
-}
-
--- _fireGrapple()            -> pick a target in front / around and hook it
--- _fireGrapple(vec3)        -> aim toward that point, still snapped to real geometry
--- _fireGrapple(vec3, true)  -> hook exactly that point (must be 10-50 studs out)
-function _fireGrapple(value, exact)
-    if _G.MeerkoGrappleLegacy == true then return _grappleLegacyFire() end
-
-    local char = LP.Character
-    local hrp  = char and char:FindFirstChild("HumanoidRootPart")
-    if not hrp then return false end
-    if LP:GetAttribute("Stealing") and _G.MeerkoNoGrappleWhileCarrying == true then
-        _G.MeerkoGrappleWhy = "refused: carrying a brainrot"
-        return false
-    end
-
-    local tool = char:FindFirstChild("Grapple Hook") or (findGrapple())
-    if tool and tool.Parent ~= char then
-        local hum = char:FindFirstChildOfClass("Humanoid")
-        if not hum then return false end
-        pcall(function() hum:EquipTool(tool) end)
-        local t0 = os.clock()
-        repeat
-            RunService.Heartbeat:Wait()
-            char = LP.Character
-            tool = char and (char:FindFirstChild("Grapple Hook") or (findGrapple()))
-        until (tool and tool.Parent == char) or os.clock() - t0 > 0.5
-        hrp = char and char:FindFirstChild("HumanoidRootPart")
-    end
-    if not tool or not hrp then return false end
-
-    local par = RaycastParams.new()
-    par.FilterType = Enum.RaycastFilterType.Exclude
-    par.FilterDescendantsInstances = { char }
-
-    if exact and typeof(value) == "Vector3" then
-        local m = (value - hrp.Position).Magnitude
-        if m < 10 or m > 50 then return false end
-        local target
-        local hit = _WSg:Raycast(hrp.Position, value - hrp.Position, par)
-        if hit then target = hit.Instance end
-        if not target then
-            local okb, parts = pcall(function() return _WSg:GetPartBoundsInRadius(value, 6) end)
-            if okb and parts then
-                for _, p in ipairs(parts) do
-                    if p:IsA("BasePart") and not p:IsDescendantOf(char) then target = p; break end
-                end
-            end
-        end
-        if not target then return false end
-        return _grappleDo(tool, value, target, char)
-    end
-
-    local dest
-    if typeof(value) == "Vector3" then dest = value
-    elseif typeof(value) == "Instance" and value:IsA("BasePart") then dest = value.Position end
-
-    local dir
-    if dest then
-        local d = dest - hrp.Position
-        dir = Vector3.new(d.X, 0, d.Z)
-    end
-    if not dir or dir.Magnitude < 1 then
-        local lv = hrp.CFrame.LookVector
-        dir = Vector3.new(lv.X, 0, lv.Z)
-    end
-    if dir.Magnitude < 0.01 then return false end
-    dir = dir.Unit
-
-    local pos, target, bestM
-    for _, d in ipairs(_GFAN) do
-        local origin = hrp.Position + dir * d + Vector3.new(0, 3, 0)
-        local hit = _WSg:Raycast(origin, Vector3.new(0, -60, 0), par)
-        if hit then
-            local m = (hit.Position - hrp.Position).Magnitude
-            if m >= 10 and m <= 50 and (not bestM or m < bestM) then
-                pos, target, bestM = hit.Position, hit.Instance, m
-            end
-        end
-    end
-    if not pos then
-        for _, d in ipairs(_GFAN2) do
-            local hit = _WSg:Raycast(hrp.Position, dir * d, par)
-            if hit then
-                local m = (hit.Position - hrp.Position).Magnitude
-                if m >= 10 and m <= 50 and (not bestM or m < bestM) then
-                    pos, target, bestM = hit.Position, hit.Instance, m
-                end
-            end
-        end
-    end
-    if not pos then
-        for _, cd in ipairs(_GCOMPASS) do
-            for _, d in ipairs(_GFAN) do
-                local origin = hrp.Position + cd * d + Vector3.new(0, 3, 0)
-                local hit = _WSg:Raycast(origin, Vector3.new(0, -70, 0), par)
-                if hit then
-                    local m = (hit.Position - hrp.Position).Magnitude
-                    if m >= 10 and m <= 50 and (not bestM or m < bestM) then
-                        pos, target, bestM = hit.Position, hit.Instance, m
-                    end
-                end
-            end
-        end
-    end
-    if not pos or not target then
-        _G.MeerkoGrappleWhy = "no anchor within 10-50 studs"
-        return false
-    end
-    return _grappleDo(tool, pos, target, char)
-end
 _G.MeerkoFireGrappleBoth = _fireGrapple
-
-function fireGrapple(value, exact)
+function fireGrapple()
     local char = LP.Character
-    if not char then return false end
-    return _fireGrapple(value, exact)
+    if not char then return end
+    if not char:FindFirstChild("Grapple Hook") then
+        local bp = LP:FindFirstChild("Backpack")
+        local tool = bp and bp:FindFirstChild("Grapple Hook")
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if tool and hum then pcall(function() hum:EquipTool(tool) end) end
+    end
+    if not char:FindFirstChild("Grapple Hook") then return end
+    _fireGrapple()
 end
 _G.MeerkoFireGrapple = fireGrapple
-_G.MeerkoGrappleReady = function()
-    return findGrapple() ~= nil and _grappleRemoteGet() ~= nil
-end
-end
--- === end Elite-method grapple ==============================================
 
 CARPET_SPEED = 280
 INBASE_SPEED = 450
 SKY_CLONE_WAIT = 0.35
 CARPET_NAMES = { "Flying Carpet", "Waverider", "Santa's Sleigh", "Witch's Broom", "Cupid's Wings" }
+
+
+
+FLY_TOOLS = { "Flying Carpet", "Waverider", "Santa's Sleigh", "Witch's Broom", "Cupid's Wings" }
 function findTool(name)
     local char = LP.Character
     local bp = LP:FindFirstChild("Backpack")
     return (char and char:FindFirstChild(name)) or (bp and bp:FindFirstChild(name))
 end
-GRAPPLE_NAMES = { "Grapple Hook", "Grappling Hook", "Grapple", "Hook", "Web Slinger", "Grapple Gun", "GrappleHook" }
+GRAPPLE_NAMES = { "Grapple Hook" }
 function findGrapple()
     for _, n in ipairs(GRAPPLE_NAMES) do
         local t = findTool(n)
@@ -1364,6 +1178,8 @@ end
 function setCarpetTool(name)
     if type(name) ~= "string" or name == "" then return end
     _G.MeerkoCarpetTool = name
+
+    _lastCarpetName = nil
     for i = #CARPET_NAMES, 1, -1 do
         if CARPET_NAMES[i] == name then table.remove(CARPET_NAMES, i) end
     end
@@ -1400,7 +1216,7 @@ function carpetEngage(force)
     end
     _carpetEngaging = true
     local _t0 = os.clock()
-    while not findTool("Grapple Hook") and os.clock() - _t0 < 5 do
+    while not findTool("Grapple Hook") and os.clock() - _t0 < (tonumber(_G.MeerkoGrappleToolWait) or 5) do
         RunService.Heartbeat:Wait()
     end
     local char = LP.Character
@@ -1422,10 +1238,10 @@ function carpetEngage(force)
     if LP.Character and LP.Character:FindFirstChild("Grapple Hook") then
         _fireGrapple()
     end
-    task.wait(0.05)
+    task.wait(0.06)
     local h = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
     if h then pcall(function() h:UnequipTools() end) end
-    task.wait(0.05)
+    task.wait(0.04)
     local cn
     local _tc = os.clock()
     repeat
@@ -1502,19 +1318,79 @@ MUTATION_PRIORITY = {
     ["Cursed"]=1,["Lava"]=1,["Radioactive"]=1,["Cyber"]=1,["Rainbow"]=1,["Bloodrot"]=2,
 }
 
-MUTATED_BEATS_GRIFFIN = {
-    ["Fishino Clownino"]=true,["Globa Steppa"]=true,
-    ["La Supreme Combinasion"]=true,["Tirilikalika Tirilikalako"]=true,
-}
+TRAIT_PRIORITY = {}
+
+MUTATION_ICONS, TRAIT_ICONS = {}, {}
+
+function _MeerkoLoadGameData()
+    local ok1, mData = pcall(function() return require(game.ReplicatedStorage.Datas.Mutations) end)
+    if ok1 and type(mData) == "table" then
+        local mList = {}
+        for name, data in pairs(mData) do
+            if type(data) == "table" then
+                MUTATION_ICONS[name] = data.Icon
+                mList[#mList + 1] = name
+            end
+        end
+        table.sort(mList)
+        if #_G.SHARED_MUTATION_PRIORITY == 0 then
+            for i = 1, #mList do _G.SHARED_MUTATION_PRIORITY[i] = mList[i] end
+        end
+    end
+    local ok2, tData = pcall(function() return require(game.ReplicatedStorage.Datas.Traits) end)
+    if ok2 and type(tData) == "table" then
+        local tList = {}
+        for name, data in pairs(tData) do
+            if type(data) == "table" then
+                TRAIT_ICONS[name] = data.Icon
+                tList[#tList + 1] = name
+            end
+        end
+        table.sort(tList)
+        if #_G.SHARED_TRAIT_PRIORITY == 0 then
+            for i = 1, #tList do _G.SHARED_TRAIT_PRIORITY[i] = tList[i] end
+        end
+    end
+end
+
+task.spawn(function()
+    pcall(function()
+        local Datas = game:GetService("ReplicatedStorage"):FindFirstChild("Datas")
+        local a = Datas and Datas:FindFirstChild("Animals")
+        if a and not AnimalsData then AnimalsData = require(a) end
+        if AnimalsData then _MeerkoBuildDefaultBrainrotPriority() end
+    end)
+    pcall(_MeerkoLoadGameData)
+end)
 
 function getMutPrio(m)
     if not m or m == "" or m == "None" then return 0 end
+    local n = tostring(m)
+    local dis = _G.SHARED_MUTATION_DISABLED
+    if type(dis) == "table" and (dis[n] or dis[_normName(n)]) then return 0 end
+    local idx = _priIndexOfMut(n)
+    if not idx then
+        n = n:lower():gsub("[%s%-_]","")
+        idx = _priIndexOfMut(n)
+    end
+    if idx then return 999 - idx end
     if MUTATION_PRIORITY[m] then return MUTATION_PRIORITY[m] end
-    local n = tostring(m):lower():gsub("[%s%-_]","")
-    if n == "bloodrot" then return 2 end
-    if n == "yinyang" or n == "galaxy" or n == "candy" or n == "divine"
-        or n == "cursed" or n == "lava" or n == "radioactive" or n == "cyber"
-        or n == "rainbow" then return 1 end
+    if MUTATION_PRIORITY[n] then return MUTATION_PRIORITY[n] end
+    return 0
+end
+
+function getTraitPrio(t)
+    if not t or t == "" then return 0 end
+    local name = type(t) == "table" and t.name or tostring(t)
+    local n = name
+    local idx = _priIndexOfTrait(n)
+    if not idx then
+        n = n:lower():gsub("[%s%-_]","")
+        idx = _priIndexOfTrait(n)
+    end
+    if idx then return 999 - idx end
+    if TRAIT_PRIORITY[name] then return TRAIT_PRIORITY[name] end
+    if TRAIT_PRIORITY[n] then return TRAIT_PRIORITY[n] end
     return 0
 end
 
@@ -1533,29 +1409,84 @@ function _normName(s)
     return tostring(s):lower():gsub("[%s%-_'%.]", "")
 end
 _priCacheVer, _priCache = -1, {}
-function _priLookup()
+_brainrotDefaultPri = {}
+_brainrotDefaultRarity = {}
+_mutPriCacheVer, _mutPriCache = -1, {}
+_traitPriCacheVer, _traitPriCache = -1, {}
+
+function _priLookup(listName)
     local ver = _G.MeerkoPriVersion or 0
-    if _priCacheVer ~= ver then
-        table.clear(_priCache)
-        local plist = _G.SHARED_PRIORITY_ITEMS
-        if type(plist) == "table" then
-            for i = #plist, 1, -1 do _priCache[_normName(plist[i])] = i end
+    if listName == "mutation" then
+        if _mutPriCacheVer ~= ver then
+            table.clear(_mutPriCache)
+            local plist = _G.SHARED_MUTATION_PRIORITY
+            if type(plist) == "table" then
+                for i = #plist, 1, -1 do _mutPriCache[_normName(plist[i])] = i end
+            end
+            _mutPriCacheVer = ver
         end
-        _priCacheVer = ver
+        return _mutPriCache
+    elseif listName == "trait" then
+        if _traitPriCacheVer ~= ver then
+            table.clear(_traitPriCache)
+            local plist = _G.SHARED_TRAIT_PRIORITY
+            if type(plist) == "table" then
+                for i = #plist, 1, -1 do _traitPriCache[_normName(plist[i])] = i end
+            end
+            _traitPriCacheVer = ver
+        end
+        return _traitPriCache
+    else
+        if _priCacheVer ~= ver then
+            table.clear(_priCache)
+            local plist = _G.SHARED_PRIORITY_ITEMS
+            if type(plist) == "table" then
+                for i = #plist, 1, -1 do _priCache[_normName(plist[i])] = i end
+            end
+            _priCacheVer = ver
+        end
+        return _priCache
     end
-    return _priCache
 end
-_G.MeerkoPriLookup = _priLookup
+_G.MeerkoPriLookup = function() return _priLookup() end
 function _priIndexOf(name)
     if not name then return nil end
-    return _priLookup()[_normName(name)]
+    local n = _normName(name)
+    local idx = _priLookup()[n]
+    if idx then return idx end
+    local def = _brainrotDefaultPri[n]
+    if def and _brainrotDefaultRarity[n] == "OG" then
+        return def * 0.001
+    end
+    return nil
+end
+function _priIndexOfMut(name)
+    if not name then return nil end
+    return _priLookup("mutation")[_normName(name)]
+end
+function _priIndexOfTrait(name)
+    if not name then return nil end
+    return _priLookup("trait")[_normName(name)]
 end
 
-function petOutranks(aName, bName, aMut, bMut, aMPS, bMPS)
+function petOutranks(aName, bName, aMut, bMut, aMPS, bMPS, aTraits, bTraits)
     local iA = _priIndexOf(aName)
     local iB = _priIndexOf(bName)
-    if iA ~= nil and iB ~= nil then return iA < iB end
+    if iA ~= nil and iB ~= nil then
+        if iA ~= iB then return iA < iB end
+    end
     if (iA ~= nil) ~= (iB ~= nil) then return iA ~= nil end
+    if iA == nil and iB == nil then
+        if (aMPS or 0) ~= (bMPS or 0) then return (aMPS or 0) > (bMPS or 0) end
+    end
+    local ma, mb = getMutPrio(aMut), getMutPrio(bMut)
+    if ma ~= mb then return ma > mb end
+    if type(aTraits) == "table" and type(bTraits) == "table" then
+        local pa, pb = 0, 0
+        for _, t in ipairs(aTraits) do pa = math.max(pa, getTraitPrio(t)) end
+        for _, t in ipairs(bTraits) do pb = math.max(pb, getTraitPrio(t)) end
+        if pa ~= pb then return pa > pb end
+    end
     return (aMPS or 0) > (bMPS or 0)
 end
 
@@ -1567,24 +1498,24 @@ end
 
 function channelGet(channel, key)
     if not channel then return nil end
-    local v
-    pcall(function()
+    local ok, v = pcall(function()
         local ct = rawget(channel, "CacheTable")
-        if type(ct) == "table" then v = ct[key] end
-    end)
-    if v ~= nil then return v end
-    pcall(function()
+        if type(ct) == "table" then
+            local r = rawget(ct, key)
+            if r ~= nil then return r end
+        end
         local d = rawget(channel, "Data")
-        if type(d) == "table" then v = d[key] end
+        if type(d) == "table" then
+            local r = rawget(d, key)
+            if r ~= nil then return r end
+        end
+        return rawget(channel, key)
     end)
-    if v ~= nil then return v end
-    pcall(function() v = rawget(channel, key) end)
-    return v
+    if ok then return v end
+    return nil
 end
 
-function isMyPlot(channel)
-    if not channel then return false end
-    local owner = channelGet(channel, "Owner")
+function _ownerIsMe(owner)
     if not owner then return false end
     local result = false
     pcall(function()
@@ -1595,7 +1526,6 @@ function isMyPlot(channel)
         elseif typeof(owner) == "Instance" then
             result = owner == LP
         elseif type(owner) == "string" then
-            
             result = owner:lower() == LP.Name:lower()
                 or owner:lower() == (LP.DisplayName or LP.Name):lower()
         end
@@ -1603,14 +1533,26 @@ function isMyPlot(channel)
     return result
 end
 
-function ownerInGame(channel)
+function isMyPlot(channel)
     if not channel then return false end
-    local owner = channelGet(channel, "Owner")
+    return _ownerIsMe(channelGet(channel, "Owner"))
+end
+
+_ownerInGameCache, _ownerInGameAt = {}, {}
+function _ownerInGame(owner)
     if not owner then return false end
+    local cacheKey
+    if typeof(owner) == "Instance" then cacheKey = "i:" .. tostring(owner)
+    elseif type(owner) == "number" then cacheKey = "n:" .. owner
+    elseif type(owner) == "string" then cacheKey = "s:" .. owner:lower()
+    else cacheKey = "o:" .. tostring(owner) end
+    local now = os.clock()
+    local cached = _ownerInGameAt[cacheKey]
+    if cached and (now - cached.t) < 2 then return cached.v end
     local inGame = false
     pcall(function()
         if typeof(owner) == "Instance" and owner:IsA("Player") then
-            inGame = Players:FindFirstChild(owner.Name) ~= nil
+            inGame = owner.Parent == Players
         elseif type(owner) == "number" then
             inGame = Players:GetPlayerByUserId(owner) ~= nil
         elseif type(owner) == "table" and owner.Name then
@@ -1618,7 +1560,6 @@ function ownerInGame(channel)
         elseif typeof(owner) == "Instance" and owner.Name then
             inGame = Players:FindFirstChild(owner.Name) ~= nil
         elseif type(owner) == "string" then
-            
             if Players:FindFirstChild(owner) then
                 inGame = true
             else
@@ -1629,33 +1570,53 @@ function ownerInGame(channel)
             end
         end
     end)
+    _ownerInGameCache[cacheKey] = { v = inGame, t = now }
+    _ownerInGameAt[cacheKey] = { v = inGame, t = now }
     return inGame
+end
+
+function ownerInGame(channel)
+    if not channel then return false end
+    return _ownerInGame(channelGet(channel, "Owner"))
 end
 
 _petModelCache = setmetatable({}, { __mode = "v" })
 _genCache = {}
--- read the brainrot's own overhead "$3.5M/s" label when the data lookup comes up empty
+
 local _MPS_SUFFIX = { K = 1e3, M = 1e6, B = 1e9, T = 1e12, Q = 1e15 }
+_wmpsCache, _wmpsAt = {}, {}
 function _worldMPS(plot, slot)
     local podiums = plot and plot:FindFirstChild("AnimalPodiums")
     local podium = podiums and podiums:FindFirstChild(tostring(slot))
     if not podium then return nil end
+
+
+    local _ck = plot.Name .. "\0" .. tostring(slot)
+    local _now = os.clock()
+    if _wmpsAt[_ck] and (_now - _wmpsAt[_ck]) < (tonumber(_G.MeerkoWorldMPSTTL) or 1) then
+        return _wmpsCache[_ck]
+    end
     local best = nil
-    for _, d in ipairs(podium:GetDescendants()) do
-        if d:IsA("TextLabel") or d:IsA("TextButton") then
-            local txt = d.Text
-            if type(txt) == "string" and txt ~= "" then
-                local num, suf = txt:match("%$%s*([%d%.]+)%s*([KMBTQ]?)%s*/s")
-                if num then
-                    local v = tonumber(num)
-                    if v then
-                        v = v * (_MPS_SUFFIX[suf] or 1)
-                        if not best or v > best then best = v end
+    local function _scanLabels(parent)
+        for _, child in ipairs(parent:GetChildren()) do
+            if child:IsA("TextLabel") or child:IsA("TextButton") then
+                local txt = child.Text
+                if type(txt) == "string" and txt ~= "" then
+                    local num, suf = txt:match("%$%s*([%d%.]+)%s*([KMBTQ]?)%s*/s")
+                    if num then
+                        local v = tonumber(num)
+                        if v then
+                            v = v * (_MPS_SUFFIX[suf] or 1)
+                            if not best or v > best then best = v end
+                        end
                     end
                 end
             end
+            _scanLabels(child)
         end
     end
+    _scanLabels(podium)
+    _wmpsCache[_ck], _wmpsAt[_ck] = best, _now
     return best
 end
 function getPetPosition(plot, slot, strict)
@@ -1664,7 +1625,6 @@ function getPetPosition(plot, slot, strict)
     local podium = podiums:FindFirstChild(tostring(slot))
     if not podium then return nil end
 
-    
     local key = plot.Name .. "\0" .. tostring(slot)
     local cached = _petModelCache[key]
     if cached and cached.Parent and cached:IsDescendantOf(podium) then
@@ -1673,15 +1633,26 @@ function getPetPosition(plot, slot, strict)
     end
     _petModelCache[key] = nil
 
-    for _, desc in ipairs(podium:GetDescendants()) do
-        if desc:IsA("Model") and desc.Name ~= "Claim" and desc.Name ~= "Base" and desc.Name ~= "Decorations" then
-            if desc:FindFirstChildWhichIsA("MeshPart", true) then
-                local ok, cf = pcall(function() return desc:GetBoundingBox() end)
-                if ok then
-                    _petModelCache[key] = desc
-                    return cf.Position
+    local _skipNames = { Claim = true, Base = true, Decorations = true }
+    local function _findModel(parent)
+        for _, child in ipairs(parent:GetChildren()) do
+            if child:IsA("Model") and not _skipNames[child.Name] then
+                if child:FindFirstChildWhichIsA("MeshPart", true) then
+                    return child
                 end
             end
+            local found = _findModel(child)
+            if found then return found end
+        end
+        return nil
+    end
+
+    local model = _findModel(podium)
+    if model then
+        local ok, cf = pcall(function() return model:GetBoundingBox() end)
+        if ok then
+            _petModelCache[key] = model
+            return cf.Position
         end
     end
 
@@ -1693,22 +1664,30 @@ end
 
 function scanAllPets()
     local pets = {}
-    if not loadModules() then return pets end
+    if not loadModules() then
+        _G.MeerkoScanTotal, _G.MeerkoScanUsed, _G.MeerkoScanNoChan = 0, 0, 8
+        return pets
+    end
 
     local Plots = workspace:FindFirstChild("Plots")
-    if not Plots then return pets end
+    if not Plots then
+        _G.MeerkoScanTotal, _G.MeerkoScanUsed, _G.MeerkoScanNoChan = 0, 0, 8
+        return pets
+    end
 
     local _mkSeen, _mkUse, _mkTotal = 0, 0, 0
+    local _mkNoChan = 0
     local _mkTags = {}
     for _, plot in ipairs(Plots:GetChildren()) do
         _mkTotal = _mkTotal + 1
         local channel = getPlotChannel(plot.Name)
-        if not channel then _mkTags[#_mkTags + 1] = "nochan" continue end
+        if not channel then _mkTags[#_mkTags + 1] = "nochan" _mkNoChan = _mkNoChan + 1 continue end
         _mkSeen = _mkSeen + 1
-        if isMyPlot(channel) then _G.MeerkoMyPlot = plot.Name _mkTags[#_mkTags + 1] = "MINE" continue end
+        local owner = channelGet(channel, "Owner")
+        if _ownerIsMe(owner) then _G.MeerkoMyPlot = plot.Name _mkTags[#_mkTags + 1] = "MINE" continue end
         if _G.MeerkoMyPlot == plot.Name then _mkTags[#_mkTags + 1] = "MINE" continue end
-        if not _G.MeerkoMyPlot and channelGet(channel, "Owner") == nil then _mkTags[#_mkTags + 1] = "noowner?" continue end
-        if _G.MeerkoRequireOwner ~= false and not ownerInGame(channel) then _mkTags[#_mkTags + 1] = "left" continue end
+        if not _G.MeerkoMyPlot and owner == nil then _mkTags[#_mkTags + 1] = "noowner?" continue end
+        if _G.MeerkoRequireOwner ~= false and not _ownerInGame(owner) then _mkTags[#_mkTags + 1] = "left" continue end
         _mkUse = _mkUse + 1
 
         local animalList = channelGet(channel, "AnimalList")
@@ -1724,6 +1703,8 @@ function scanAllPets()
             if _MeerkoIsFusing(animalData) then continue end
 
             local mutation = animalData.Mutation or "None"
+            local traits = animalData.Traits
+            if type(traits) ~= "table" then traits = {} end
 
             local genValue
             local _gk = plot.Name .. "\0" .. tostring(slot)
@@ -1733,7 +1714,8 @@ function scanAllPets()
             else
                 genValue = 0
                 pcall(function()
-                    genValue = AnimalsShared:GetGeneration(animalName, animalData.Mutation, animalData.Traits, nil)
+                    local shim = AnimalsShared or _G.MeerkoAnimShim
+                    if shim then genValue = shim:GetGeneration(animalName, animalData.Mutation, animalData.Traits, nil) end
                 end)
                 if genValue and genValue > 0 then
                     _genCache[_gk] = { n = animalName, m = animalData.Mutation, t = animalData.Traits, g = genValue }
@@ -1755,7 +1737,7 @@ function scanAllPets()
                         index = animalName,
                         mps = genValue,
                         mutation = mutation,
-                        traits = type(animalData.Traits) == "table" and animalData.Traits or {},
+                        traits = traits,
                         position = pos,
                         plot = plot.Name,
                         slot = tostring(slot),
@@ -1767,34 +1749,78 @@ function scanAllPets()
         _mkTags[#_mkTags + 1] = tostring(_mkPlotN)
     end
 
+    _G.MeerkoScanTotal, _G.MeerkoScanUsed, _G.MeerkoScanNoChan = _mkTotal, _mkUse, _mkNoChan
     _G.MeerkoScanInfo = string.format("plots %d scanned of %d  pets %d  [%s]  %s", _mkUse, _mkTotal, #pets, table.concat(_mkTags, " "), tostring(_G.MeerkoScanMode))
-    local _priLk = _priLookup()
+    local function _bestTraitPrio(traits)
+        if type(traits) ~= "table" then return 0 end
+        local best = 0
+        for _, t in ipairs(traits) do
+            local p = getTraitPrio(t)
+            if p > best then best = p end
+        end
+        return best
+    end
+
     for _, p in ipairs(pets) do
-        p._pri = _priLk[_normName(p.name)] or (p.index and _priLk[_normName(p.index)]) or nil
+        p._pri = _priIndexOf(p.name) or (p.index and _priIndexOf(p.index)) or nil
+        p._mp = tonumber(p.mps) or 0
+        p._mut = getMutPrio(p.mutation)
+        p._trait = _bestTraitPrio(p.traits)
+    end
+
+    local function _petOrder(a, b)
+        local ia, ib = a._pri, b._pri
+        if (ia ~= nil) ~= (ib ~= nil) then return ia ~= nil end
+        if ia and ib and ia ~= ib then return ia < ib end
+        if ia == nil then
+            if a._mp ~= b._mp then return a._mp > b._mp end
+        end
+        if a._mut ~= b._mut then return a._mut > b._mut end
+        if a._trait ~= b._trait then return a._trait > b._trait end
+        if a._mp ~= b._mp then return a._mp > b._mp end
+        local pa, pb = tostring(a.plot), tostring(b.plot)
+        if pa ~= pb then return pa < pb end
+        return (tonumber(a.slot) or 0) < (tonumber(b.slot) or 0)
     end
 
     local mode = _G.MeerkoStealMode
     if mode == "highest" then
-        table.sort(pets, function(a, b) return (a.mps or 0) > (b.mps or 0) end)
+        table.sort(pets, function(a, b)
+            local ma, mb = tonumber(a.mps) or 0, tonumber(b.mps) or 0
+            if ma ~= mb then return ma > mb end
+            local pa, pb = tostring(a.plot), tostring(b.plot)
+            if pa ~= pb then return pa < pb end
+            return (tonumber(a.slot) or 0) < (tonumber(b.slot) or 0)
+        end)
         return pets
     end
 
-    table.sort(pets, function(a, b)
-        local ia, ib = a._pri, b._pri
-        if ia and ib then
-            if ia ~= ib then return ia < ib end
-            return (a.mps or 0) > (b.mps or 0)
-        end
-        if (ia ~= nil) ~= (ib ~= nil) then return ia ~= nil end
-        return (a.mps or 0) > (b.mps or 0)
-    end)
+    table.sort(pets, _petOrder)
 
     return pets
 end
-_G.MeerkoScanAllPets = scanAllPets  
+_G.MeerkoScanAllPets = scanAllPets
+
+
+_scanShared, _scanSharedAt = nil, 0
+function scanAllPetsCached(maxAge)
+    local now = os.clock()
+    if _scanShared and (now - _scanSharedAt) <= (tonumber(maxAge) or 0.15) then
+        return _scanShared
+    end
+    local ok, p = pcall(scanAllPets)
+    if ok and type(p) == "table" then
+        _scanShared, _scanSharedAt = p, now
+        return p
+    end
+    return nil
+end
+_G.MeerkoScanCached = scanAllPetsCached
 
 function scanForTP()
-    local full = scanAllPets()
+
+    local inBoot = _gameLoadAt and (os.clock() - _gameLoadAt) < 4
+    local full = scanAllPetsCached(tonumber(_G.MeerkoScanCacheAge) or (inBoot and 0.1 or 0.2))
     if type(full) ~= "table" then full = {} end
     if _G.MeerkoScanTiered and _G.MeerkoUseTiered ~= false then
         local ok, tiered = pcall(_G.MeerkoScanTiered)
@@ -1996,9 +2022,7 @@ _vizGen = 0
 function _vizEnsure()
     if _vizFolder and _vizFolder.Parent then return end
     _vizFolder = Instance.new("Folder")
-    -- was "MeerkoPathViz": Workspace is readable by the game's own LocalScripts,
-    -- so a self-identifying name is a free detection. Cleanup is by reference.
-    _vizFolder.Name = "Effects"
+    _vizFolder.Name = "MeerkoPathViz"
     _vizFolder.Parent = workspace
     _vizAnchor = Instance.new("Part")
     _vizAnchor.Name = "Anchor"
@@ -2045,7 +2069,7 @@ end
 vizPath = function(fromPos, waypoints)
     if _G.MeerkoShowPath ~= true then return end
     if #waypoints == 0 then return end
-    local COL = Color3.fromRGB(255, 195, 45)
+    local COL = Color3.fromRGB(0, 200, 140)
     local prev = fromPos
     for _, wp in ipairs(waypoints) do
         vizLine(prev, wp, COL)
@@ -2182,15 +2206,9 @@ function velMoveThrough(hrp, waypoints, speedOverride, allowJump, quickStart)
                 end
             end
             local _sp = _spd
-            if _G.MeerkoTPSafeMode ~= false then
-                _sp = math.min(_sp, tonumber(_G.MeerkoTPSafeSpeed) or 300)
-            end
             local _mc = _climbCap()
-            local _vCap = tonumber(_G.MeerkoTPSafeVerticalSpeed) or 110
-            if dir.Y > 0 and dir.Y * _sp > math.min(_mc, _vCap) then
-                _sp = math.min(_mc, _vCap) / dir.Y
-            elseif dir.Y < 0 and math.abs(dir.Y * _sp) > _vCap then
-                _sp = _vCap / math.abs(dir.Y)
+            if dir.Y > 0 and dir.Y * _sp > _mc then
+                _sp = _mc / dir.Y
             end
             _setFlightVel(hrp, Vector3.new(dir.X * _sp, dir.Y * _sp, dir.Z * _sp))
         end
@@ -2261,7 +2279,10 @@ do
 end
 
 do
+
+
     local _pSeen = setmetatable({}, { __mode = "k" })
+    local _ncBag = setmetatable({}, { __mode = "k" })
     local function _declaw(d)
         if d:IsA("BasePart") and d.CanCollide then pcall(function() d.CanCollide = false end) end
     end
@@ -2273,31 +2294,134 @@ do
             char.DescendantAdded:Connect(_declaw)
         end
     end
+
+    local _THEIRS = { "HumanoidRootPart", "UpperTorso", "LowerTorso", "Torso", "Head" }
+    local function _noCollide(char)
+        if _G.MeerkoNoCollideConstraints == false or not char then return end
+        local c = LP.Character
+        local mine = c and c:FindFirstChild("HumanoidRootPart")
+        if not mine then return end
+        local bag = _ncBag[char]
+        if not bag or bag.root ~= mine then bag = { root = mine }; _ncBag[char] = bag end
+        for _, n in ipairs(_THEIRS) do
+            local part = char:FindFirstChild(n)
+            if part and part:IsA("BasePart") then
+                local nc = bag[n]
+                if not (nc and nc.Parent) then
+                    pcall(function()
+                        local k = Instance.new("NoCollisionConstraint")
+                        k.Part0, k.Part1 = mine, part
+                        k.Parent = mine
+                        bag[n] = k
+                    end)
+                end
+            end
+        end
+    end
+    local _watched = setmetatable({}, { __mode = "k" })
+    local _pinHooked = setmetatable({}, { __mode = "k" })
+    local function _pin(p)
+        if not p:IsA("BasePart") then return end
+        if p.CanCollide then p.CanCollide = false end
+        if _watched[p] then return end
+        _watched[p] = true
+        pcall(function()
+            p:GetPropertyChangedSignal("CanCollide"):Connect(function()
+                if p.CanCollide then p.CanCollide = false end
+            end)
+        end)
+    end
+    local function _pinChar(ch)
+        if not ch then return end
+        for _, d in ipairs(ch:GetDescendants()) do _pin(d) end
+        if not _pinHooked[ch] then
+            _pinHooked[ch] = true
+            ch.DescendantAdded:Connect(function(d) task.defer(_pin, d) end)
+        end
+    end
     local function _hookPlayer(pl)
         if pl == LP then return end
-        if pl.Character then _declawChar(pl.Character) end
-        pl.CharacterAdded:Connect(function(c) task.wait(0.15); _declawChar(c) end)
+        if pl.Character then _declawChar(pl.Character); _noCollide(pl.Character); _pinChar(pl.Character) end
+        pl.CharacterAdded:Connect(function(c)
+            task.wait(0.05)
+            _declawChar(c)
+            _noCollide(c)
+            _pinChar(c)
+        end)
     end
     for _, pl in ipairs(Players:GetPlayers()) do _hookPlayer(pl) end
     Players.PlayerAdded:Connect(_hookPlayer)
-    task.spawn(function()
-        _G.MeerkoBootWait()
-        while true do
-            task.wait(3)
-            local myHrp = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
-            for _, pl in ipairs(Players:GetPlayers()) do
-                if pl ~= LP and pl.Character then
-                    local h = pl.Character:FindFirstChild("HumanoidRootPart")
-                    if not myHrp or (h and (h.Position - myHrp.Position).Magnitude <= 150) then
-                        for _, d in ipairs(pl.Character:GetDescendants()) do _declaw(d) end
-                        task.wait() 
+
+    LP.CharacterAdded:Connect(function()
+        task.wait(0.3)
+        for _, pl in ipairs(Players:GetPlayers()) do
+            if pl ~= LP and pl.Character then _noCollide(pl.Character) end
+        end
+    end)
+
+    local function _pinPlayer(pl)
+        if pl == LP then return end
+        if pl.Character then _pinChar(pl.Character) end
+        pl.CharacterAdded:Connect(function(c) task.wait(0.15) _pinChar(c) end)
+    end
+    for _, pl in ipairs(Players:GetPlayers()) do _pinPlayer(pl) end
+    Players.PlayerAdded:Connect(_pinPlayer)
+
+
+
+    local _MY_CLONE_N = tostring(LP.UserId) .. "_Clone"
+    local function _clones()
+        local t = _OTHER_CLONES
+        return (type(t) == "table") and t or {}
+    end
+
+    local _ncAcc = 0
+    RunService.Stepped:Connect(function(_, dt)
+        if _G.MeerkoNoCollide == false or _G.isCloning == true then return end
+        _ncAcc = _ncAcc + (dt or 0.016)
+        if _ncAcc < 0.1 then return end
+        _ncAcc = 0
+        local c = LP.Character
+        local myHrp = c and c:FindFirstChild("HumanoidRootPart")
+        if not myHrp then return end
+        local mp = myHrp.Position
+        local rng = tonumber(_G.MeerkoNoCollideRange) or 28
+        for _, pl in ipairs(Players:GetPlayers()) do
+            local ch = (pl ~= LP) and pl.Character
+            local h = ch and ch:FindFirstChild("HumanoidRootPart")
+            if h and (h.Position - mp).Magnitude <= rng then
+                for _, d in ipairs(ch:GetDescendants()) do
+                    if d:IsA("BasePart") and d.CanCollide then d.CanCollide = false end
+                end
+            end
+        end
+        for _, cl in ipairs(_clones()) do
+            if cl and cl.Parent and cl.Name ~= _MY_CLONE_N then
+                local h = cl:FindFirstChild("HumanoidRootPart")
+                if h and (h.Position - mp).Magnitude <= rng then
+                    for _, d in ipairs(cl:GetDescendants()) do
+                        if d:IsA("BasePart") and d.CanCollide then d.CanCollide = false end
                     end
                 end
             end
         end
     end)
-end
 
+    task.spawn(function()
+        while true do
+            task.wait(1)
+            if _G.MeerkoNoCollide ~= false and _G.isCloning ~= true then
+                for _, pl in ipairs(Players:GetPlayers()) do
+                    local ch = (pl ~= LP) and pl.Character
+                    if ch then _pinChar(ch) end
+                end
+                for _, cl in ipairs(_clones()) do
+                    if cl and cl.Parent and cl.Name ~= _MY_CLONE_N then _pinChar(cl) end
+                end
+            end
+        end
+    end)
+end
 local _len
 do
 local _DIRS = { Vector3.new(1,0,0), Vector3.new(-1,0,0), Vector3.new(0,0,1), Vector3.new(0,0,-1) }
@@ -2593,6 +2717,8 @@ local _vxOrigin
 local _vxDimX, _vxDimY, _vxDimZ = 0, 0, 0
 local _vxSz, _vxInflate = 4, 2.5
 local _vxSolid = {}
+local _vxSolidGen, _vxSolidAt = "", 0
+local _vxOX, _vxOY, _vxOZ = 0, 0, 0
 local _vxHeight = 5
 
 local function _vxWorld(sz, x, y, z)
@@ -2600,10 +2726,13 @@ local function _vxWorld(sz, x, y, z)
     return Vector3.new(_vxOrigin.X + x * sz + h, _vxOrigin.Y + y * sz + h, _vxOrigin.Z + z * sz + h)
 end
 local function _vxKey(x, y, z) return x + y * 1024 + z * 1048576 end
+local function _vxGKey(x, y, z)
+    return (x + _vxOX + 8192) + (y + _vxOY + 8192) * 16384 + (z + _vxOZ + 8192) * 268435456
+end
 
 local function _vxIsSolid(x, y, z)
     if x < 0 or y < 0 or z < 0 or x >= _vxDimX or y >= _vxDimY or z >= _vxDimZ then return true end
-    local k = _vxKey(x, y, z)
+    local k = _vxGKey(x, y, z)
     local c = _vxSolid[k]
     if c ~= nil then return c end
     local h = _vxSz * 0.5
@@ -2727,7 +2856,7 @@ local function _vxPop(h)
     return top[2]
 end
 
-local _vxHeurW = 2
+local _vxHeurW = tonumber(_G.MeerkoPathWeight) or 2.5
 local function _vxAStar(sz, startCell, goalCell, startPos, goalPos)
     local sx, sy, sz2 = _vxSnapStart(startPos, startCell.x, startCell.y, startCell.z)
     local gx, gy, gz = _vxSnapGoal(goalPos, goalCell.x, goalCell.y, goalCell.z)
@@ -2816,12 +2945,21 @@ voxelRoute = function(fromPos, toPos)
     local height  = tonumber(_G.MeerkoPathHeight) or 5
     local pad     = tonumber(_G.MeerkoPathPad)    or 40
 
+    _vxHeurW = tonumber(_G.MeerkoPathWeight) or 2.5
+    local _gen = sz .. "|" .. inflate .. "|" .. height
+    local _now = os.clock()
+    if _gen ~= _vxSolidGen or (_now - _vxSolidAt) > (tonumber(_G.MeerkoPathCacheTTL) or 3) then
+        table.clear(_vxSolid)
+        _vxSolidGen = _gen
+    end
+    _vxSolidAt = _now
     _vxSz, _vxInflate, _vxHeight = sz, inflate, height
-    table.clear(_vxSolid)
 
     local mn = Vector3.new(_vxMin(fromPos.X, toPos.X), _vxMin(fromPos.Y, toPos.Y), _vxMin(fromPos.Z, toPos.Z)) - Vector3.new(pad, pad, pad)
     local mx = Vector3.new(_vxMax(fromPos.X, toPos.X), _vxMax(fromPos.Y, toPos.Y), _vxMax(fromPos.Z, toPos.Z)) + Vector3.new(pad, pad, pad)
+    mn = Vector3.new(_vxFloor(mn.X / sz) * sz, _vxFloor(mn.Y / sz) * sz, _vxFloor(mn.Z / sz) * sz)
     _vxOrigin = mn
+    _vxOX, _vxOY, _vxOZ = _vxFloor(mn.X / sz), _vxFloor(mn.Y / sz), _vxFloor(mn.Z / sz)
     local size = mx - mn
     _vxDimX = _vxFloor(size.X / sz) + 1
     _vxDimY = _vxFloor(size.Y / sz) + 1
@@ -3030,40 +3168,131 @@ local function _hopRoute(fromPos, toPos)
 end
 _G.MeerkoHopRoute = _hopRoute
 
+
+
+function _softenLine(fromPos, toPos)
+    if _G.MeerkoSoftenLine == false then return nil end
+    local span = toPos - fromPos
+    local d = span.Magnitude
+    if d < (tonumber(_G.MeerkoSoftenMin) or 220) then return nil end
+    local flat = Vector3.new(span.X, 0, span.Z)
+    if flat.Magnitude < 1 then return nil end
+    flat = flat.Unit
+    local perp = Vector3.new(-flat.Z, 0, flat.X)
+
+    local segs = math.clamp(math.floor(d / (tonumber(_G.MeerkoSoftenSeg) or 160)) + 1, 2, 4)
+    local amp  = tonumber(_G.MeerkoSoftenAmp)  or 9
+    local ampY = tonumber(_G.MeerkoSoftenAmpY) or 5
+
+
+    local sgn = ((math.floor(math.abs(fromPos.X) + math.abs(toPos.Z)) % 2) == 0) and 1 or -1
+
+    local pts = {}
+    for i = 1, segs - 1 do
+        local t = i / segs
+        local w = math.sin(t * math.pi)
+        pts[#pts + 1] = fromPos + span * t
+            + perp * (amp * w * sgn)
+            + Vector3.new(0, ampY * w, 0)
+    end
+    pts[#pts + 1] = toPos
+
+    local prev = fromPos
+    for _, p in ipairs(pts) do
+        if not _clearWide(prev, p) then return nil end
+        prev = p
+    end
+    return pts
+end
+
+local function _centerSpanT(a, b)
+    local t0, t1 = nil, nil
+    for i = 0, 40 do
+        local t = i / 40
+        local x = a.X + (b.X - a.X) * t
+        local z = a.Z + (b.Z - a.Z) * t
+        if _inCenterZone(x, z) then
+            if not t0 then t0 = t end
+            t1 = t
+        end
+    end
+    return t0, t1
+end
+
+local function _hitSpanT(a, b)
+    local rp = RaycastParams.new()
+    rp.FilterType = Enum.RaycastFilterType.Exclude
+    rp.IgnoreWater = true
+    local skip = {}
+    for _, pl in ipairs(Players:GetPlayers()) do
+        if pl.Character then skip[#skip + 1] = pl.Character end
+    end
+    for _, cl in ipairs(_OTHER_CLONES) do skip[#skip + 1] = cl end
+    rp.FilterDescendantsInstances = skip
+    local t0, t1 = nil, nil
+    local n, edge = 28, 0.1
+    for i = 0, n - 1 do
+        local tA, tB = i / n, (i + 1) / n
+        if tB > edge and tA < (1 - edge) then
+            local pA, pB = a:Lerp(b, tA), a:Lerp(b, tB)
+            local d = pB - pA
+            if d.Magnitude > 0.05 then
+                local hit = workspace:Raycast(pA, d, rp)
+                if hit and _blocksWide(hit.Instance) then
+                    if not t0 then t0 = math.max(tA, edge) end
+                    t1 = math.min(tB, 1 - edge)
+                end
+            end
+        end
+    end
+    return t0, t1
+end
+
+local function _localHopOver(fromPos, toPos, tBlock0, tBlock1)
+    local lift = tonumber(_G.MeerkoCenterFly) or 10
+    local pad = tonumber(_G.MeerkoHopPad) or 0.12
+    local t0 = math.clamp(tBlock0 or 0.35, 0.08, 0.85)
+    local t1 = math.clamp(tBlock1 or 0.65, t0 + 0.04, 0.92)
+    local tRise0 = math.max(0.04, t0 - pad)
+    local tRise1, tFall0, tFall1 = t0, t1, math.min(0.94, t1 + pad)
+    local function at(t, yAdd)
+        local p = fromPos:Lerp(toPos, t)
+        local gy = fromPos.Y + (toPos.Y - fromPos.Y) * t
+        return Vector3.new(p.X, gy + (yAdd or 0), p.Z)
+    end
+    local route = { fromPos }
+    local function push(p)
+        if (route[#route] - p).Magnitude > 0.6 then route[#route + 1] = p end
+    end
+    push(at(tRise0, 0))
+    push(at((tRise0 + tRise1) * 0.5, lift * 0.5))
+    push(at(tRise1, lift))
+    push(at((tRise1 + tFall0) * 0.5, lift))
+    push(at(tFall0, lift))
+    push(at((tFall0 + tFall1) * 0.5, lift * 0.5))
+    push(at(tFall1, 0))
+    push(toPos)
+    return route
+end
+
 function computeRoute(fromPos, toPos, facingDir, maxLift, preferCrest)
     local _ = maxLift
 
-    if _G.MeerkoHopFirst == true and not _clearWide(fromPos, toPos) then
-        local hop = _hopRoute(fromPos, toPos)
-        if hop and #hop > 0 then return hop end
-    end
+    if _clearWide(fromPos, toPos) then return { toPos } end
 
-    if _G.MeerkoCrestFirst == true and not _clearWide(fromPos, toPos) then
-        local baseY = math.max(fromPos.Y, toPos.Y, 26)
-        local lifts = { tonumber(_G.MeerkoCrestLift) or 12, 20, 30, 44, 60 }
-        for _, lift in ipairs(lifts) do
-            local cruiseY = baseY + lift
-            local up   = Vector3.new(fromPos.X, cruiseY, fromPos.Z)
-            local over = Vector3.new(toPos.X,   cruiseY, toPos.Z)
-            local crest = { fromPos, up, over, toPos }
-            local ok = true
-            for i = 1, #crest - 1 do
-                local a, b = crest[i], crest[i + 1]
-                if (a - b).Magnitude > 0.5 then
-                    if not _crestClear(a, b) then ok = false; break end
-                end
+    if _segmentCrossesCenter(fromPos, toPos) then
+        local c0, c1 = _centerSpanT(fromPos, toPos)
+        local h0, h1 = _hitSpanT(fromPos, toPos)
+        if c0 and h0 and h1 and h1 >= c0 and h0 <= (c1 or 1) then
+            local t0 = math.max(h0, c0)
+            local t1 = math.min(h1, c1 or h1)
+            if (t1 - t0) > 0.02 then
+                return _localHopOver(fromPos, toPos, t0, t1)
             end
-            if ok then return crest end
         end
     end
 
     local centerPatch = nil
-    if _segmentCrossesCenter(fromPos, toPos) and not _clearWide(fromPos, toPos) then
-        centerPatch = _findBestCenterDetour(fromPos, toPos, fromPos.Y)
-        if centerPatch and #centerPatch > 0 then
-            fromPos = centerPatch[#centerPatch]
-        end
-    end
     local rowPatch = _findRowDetour(fromPos, toPos, fromPos.Y)
     if rowPatch and #rowPatch > 0 then
         fromPos = rowPatch[#rowPatch]
@@ -3201,36 +3430,22 @@ function doClone()
 
     if cloner.Parent ~= char then
         pcall(function() hum:EquipTool(cloner) end)
-        task.wait()
+        task.wait(0.06)
     end
 
-    pcall(function() hum:UnequipTools() end)
-    task.wait()
-    if cloner.Parent ~= char then
-        pcall(function() hum:EquipTool(cloner) end)
-        task.wait()
-    end
-
-    local pg = LP:FindFirstChild("PlayerGui")
-    local tf = pg and pg:FindFirstChild("ToolsFrames")
-    local qc = tf and tf:FindFirstChild("QuantumCloner")
-    local tb = qc and qc:FindFirstChild("TeleportToClone")
+    local useItem = getRemote("RemoteEvent", "UseItem")
+    local onTel   = getRemote("RemoteEvent", "QuantumCloner/OnTeleport")
+    if not useItem or not onTel then return false end
 
     _G.isCloning = true
-    pcall(function() cloner:Activate() end)
-    task.wait(0.05)
+    local useOk = pcall(function() useItem:FireServer() end)
+    task.wait(0.03)
+    local telOk = pcall(function() onTel:FireServer() end)
+    task.wait(0.18)
+    pcall(function() hum:UnequipTools() end)
+    task.delay(0.4, function() _G.isCloning = false end)
 
-    local fired = false
-    if tb then
-        tb.Visible = true
-        pcall(function() firesignal(tb.MouseButton1Click) end)
-        pcall(function() firesignal(tb.MouseButton1Up) end)
-        pcall(function() firesignal(tb.Activated) end)
-        fired = true
-    end
-
-    task.delay(0.55, function() _G.isCloning = false end)
-    return fired
+    return useOk and telOk
 end
 
 _TweenTS = game:GetService("TweenService")
@@ -3292,6 +3507,46 @@ function _makeOneWay(plat)
     end)
 end
 
+
+
+function carpetEngageFast()
+    local char = LP.Character
+    local hum  = char and char:FindFirstChildOfClass("Humanoid")
+    if not char or not hum then return nil end
+
+    if not char:FindFirstChild("Grapple Hook") then
+        local g = findTool("Grapple Hook")
+        if g then pcall(function() hum:EquipTool(g) end) end
+    end
+    local _t = os.clock()
+    while not (LP.Character and LP.Character:FindFirstChild("Grapple Hook"))
+        and os.clock() - _t < (tonumber(_G.MeerkoGoGrappleWait) or 0.35) do
+        local c = LP.Character
+        local h = c and c:FindFirstChildOfClass("Humanoid")
+        local g = findTool("Grapple Hook")
+        if g and h then pcall(function() h:EquipTool(g) end) end
+        RunService.Heartbeat:Wait()
+    end
+    if LP.Character and LP.Character:FindFirstChild("Grapple Hook") then
+        _fireGrapple()
+    end
+
+    local h2 = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
+    if h2 then pcall(function() h2:UnequipTools() end) end
+    RunService.Heartbeat:Wait()
+
+    local cn
+    local _t2 = os.clock()
+    repeat
+        cn = equipCarpet()
+        local c = LP.Character
+        if cn and c and c:FindFirstChild(cn) then break end
+        RunService.Heartbeat:Wait()
+    until os.clock() - _t2 > (tonumber(_G.MeerkoGoCarpetWait) or 2)
+    return cn
+end
+_G.MeerkoCarpetEngageFast = carpetEngageFast
+
 function goToBrainrot(petPos, slot)
     if not petPos then return end
     local char, hrp, hum
@@ -3307,17 +3562,31 @@ function goToBrainrot(petPos, slot)
     pcall(function() hrp.Anchored = false end)
     local _equipped = false
     do
-        local _e0 = os.clock()
-        repeat
+
+
+        for _, _cn in ipairs(CARPET_NAMES) do
+            if char and char:FindFirstChild(_cn) then _equipped = true break end
+        end
+        local _gd = (petPos and hrp and hrp.Parent) and (petPos - hrp.Position).Magnitude or math.huge
+        local _gmin = tonumber(_G.MeerkoGoGrappleMin) or 100
+        if not _equipped and _G.MeerkoGoGrapple ~= false and _gd > _gmin then
+            pcall(carpetEngageFast)
             char = LP.Character
             for _, _cn in ipairs(CARPET_NAMES) do
-                if char and char:FindFirstChild(_cn) then _equipped = true; break end
+                if char and char:FindFirstChild(_cn) then _equipped = true break end
+            end
+        end
+        local _e0 = os.clock()
+        while not _equipped and os.clock() - _e0 <= (tonumber(_G.MeerkoGoCarpetWait) or 3) do
+            char = LP.Character
+            for _, _cn in ipairs(CARPET_NAMES) do
+                if char and char:FindFirstChild(_cn) then _equipped = true break end
             end
             if _equipped then break end
             equipCarpet()
             RunService.Heartbeat:Wait()
-        until _equipped or os.clock() - _e0 > (tonumber(_G.MeerkoGoCarpetWait) or 1.5)
-        if _equipped then task.wait(tonumber(_G.MeerkoGoCarpetSettle) or 0.03) end
+        end
+        if _equipped then task.wait(tonumber(_G.MeerkoGoCarpetSettle) or 0.02) end
     end
     char = LP.Character
     hrp = char and char:FindFirstChild("HumanoidRootPart")
@@ -3342,7 +3611,7 @@ function goToBrainrot(petPos, slot)
             end
             if inRad then break end
             RunService.Heartbeat:Wait()
-        until os.clock() - _t0b > (tonumber(_G.MeerkoGoPlotWait) or 0.4)
+        until os.clock() - _t0b > (tonumber(_G.MeerkoGoPlotWait) or 1)
     end
     local h = petPos.Y
     pcall(function()
@@ -3357,7 +3626,9 @@ function goToBrainrot(petPos, slot)
         targetY = h - (tonumber(_G.MeerkoUnderOffset3) or 4)
         _wentUnder = true
     elseif (_slot and _slot >= 11) or (not _slot and h >= 11 and h <= 23.15) then
-        targetY = h - _under
+
+
+        targetY = h - (tonumber(_G.MeerkoUnderOffset2) or 3.5)
         _wentUnder = true
     elseif (_slot and _slot >= 1) or (not _slot and h >= -6.9 and h <= 8.9) then
         targetY = tonumber(_G.MeerkoFloor1Y) or -4
@@ -3368,26 +3639,28 @@ function goToBrainrot(petPos, slot)
     end
     local _to = Vector3.new(petPos.X, targetY, petPos.Z)
     if hrp and hrp.Parent then
-        -- Keep whatever direction we were already facing after cloning in;
-        -- only move the position. (CFrame.new(_to) alone would reset the
-        -- rotation and snap us to face the plot/brainrot.)
+
+
         do
-            local _s1 = tonumber(_G.MeerkoGoGlideSpeed1) or 150
+            local _goSpeed = tonumber(_G.MeerkoGoSpeed) or 400
+            local _s1 = tonumber(_G.MeerkoGoGlideSpeed1) or (_goSpeed * 0.375)
             local _t1 = tonumber(_G.MeerkoGoGlideTime1) or 0.03
-            local _s2 = tonumber(_G.MeerkoGoGlideSpeed2) or 400
+            local _s2 = tonumber(_G.MeerkoGoGlideSpeed2) or _goSpeed
             local _cap = tonumber(_G.MeerkoGoGlideMax) or 2.5
             local _g0 = os.clock()
+            local _lastJump = 0
             while os.clock() - _g0 < _cap do
                 if not (hrp and hrp.Parent) then break end
                 if LP:GetAttribute("Stealing") or _G.MeerkoTPStop then break end
                 local d = _to - hrp.Position
                 if d.Magnitude <= 3 then break end
                 equipCarpet()
-                if _G.MeerkoGoJump == true then
+                if _G.MeerkoGoJump == true and d.Magnitude > 15 and (os.clock() - _lastJump) > 0.5 then
                     local _gh = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
                     if _gh then
                         pcall(function() _gh:ChangeState(Enum.HumanoidStateType.Jumping) end)
                         pcall(function() _gh.Jump = true end)
+                        _lastJump = os.clock()
                     end
                 end
                 if _G.MeerkoGoZeroEachFrame ~= false then
@@ -3404,22 +3677,14 @@ function goToBrainrot(petPos, slot)
                 RunService.Heartbeat:Wait()
             end
         end
-        if _G.MeerkoGoJump == true then
-            local _gh = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
-            if _gh then
-                pcall(function() _gh:ChangeState(Enum.HumanoidStateType.Jumping) end)
-                pcall(function() _gh.Jump = true end)
-            end
-        end
         local _snapCF = CFrame.new(_to) * (hrp.CFrame - hrp.CFrame.Position)
         pcall(function()
             hrp.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
             hrp.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
             hrp.CFrame = _snapCF
         end)
-        -- Hold it for a few frames: a single write can be undone by the
-        -- humanoid's own physics step or a server correction landing in the
-        -- same tick, which would drop us back where we came from.
+
+
         for _ = 1, (tonumber(_G.MeerkoSnapHoldFrames) or 8) do
             RunService.Heartbeat:Wait()
             if not (hrp and hrp.Parent) then break end
@@ -3427,13 +3692,6 @@ function goToBrainrot(petPos, slot)
                 pcall(function()
                     hrp.CFrame = _snapCF
                 end)
-                if _G.MeerkoGoJump == true then
-                    local _gh = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
-                    if _gh then
-                        pcall(function() _gh:ChangeState(Enum.HumanoidStateType.Jumping) end)
-                        pcall(function() _gh.Jump = true end)
-                    end
-                end
             end
         end
     end
@@ -3441,13 +3699,10 @@ function goToBrainrot(petPos, slot)
         local _platPos = (hrp and hrp.Parent and hrp.Position) or _to
         local _feetY = _platPos.Y - 3
         local _sz = tonumber(_G.MeerkoPlatSize) or 10
-        -- was named "ANGVELSTempPlatform" and found again by that name; both the
-        -- name and the name-lookup are visible to the game. Track it by reference.
-        local _old = _G.__MeerkoPlat
-        if _old and _old.Parent then pcall(function() _old:Destroy() end) end
+        local _old = workspace:FindFirstChild("ANGVELSTempPlatform")
+        if _old then pcall(function() _old:Destroy() end) end
         local _plat = Instance.new("Part")
-        _G.__MeerkoPlat = _plat
-        _plat.Size = Vector3.new(_sz, 1, _sz)
+        _plat.Name = "ANGVELSTempPlatform"; _plat.Size = Vector3.new(_sz, 1, _sz)
         _plat.Position = Vector3.new(petPos.X, _feetY - (tonumber(_G.MeerkoPlatDrop) or 1.5), petPos.Z)
         _plat.Anchored = true; _plat.CanCollide = false; pcall(_makeOneWay, _plat); _plat.Transparency = 1
         _plat.Material = Enum.Material.SmoothPlastic; _plat.Parent = workspace
@@ -3506,7 +3761,11 @@ end
 do
     local lastSafe = nil
     local recovering = false
+    local _voidTick = 0
     RunService.Heartbeat:Connect(LPH_NO_VIRTUALIZE(function()
+        _voidTick = _voidTick + 1
+        if _voidTick < 2 then return end
+        _voidTick = 0
         if _G.MeerkoVoidRecover == false then return end
         local char = LP.Character
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
@@ -3565,8 +3824,8 @@ task.spawn(function()
                 isTeleporting = false
                 _G.MeerkoStealHold = false
                 _since = nil
-                if _G.MeerkoTPDebug ~= false then
-                    warn("[MeerkoTP] watchdog: isTeleporting was stuck -> cleared")
+                if _G.MeerkoTPDebug == true then
+                    
                 end
             end
         else
@@ -3598,9 +3857,7 @@ function cframeStepThrough(hrp, waypoints, stepSize)
             if os.clock() - _lastFire > 0.3 then
                 _lastFire = os.clock()
                 if char and char:FindFirstChild("Grapple Hook") then
-                    -- Elite-method fire can yield (cooldown gate / equip wait);
-                    -- spawn it so the 24-stud step cadence stays on Heartbeat
-                    task.spawn(_fireGrapple)
+                    _fireGrapple()
                 end
             end
         end
@@ -3648,6 +3905,35 @@ function _isStraightRoute(fromPos, route)
     return turns <= (tonumber(_G.MeerkoStraightMaxTurns) or 1)
 end
 
+local _meerkoAnimRestoreAt = 0
+local function restoreAnimations()
+    _meerkoAnimRestoreAt = os.clock() + 3
+    task.spawn(function()
+        local char = LP.Character
+        if not char then return end
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        local animate = char:FindFirstChild("Animate")
+        if animate then pcall(function() animate.Disabled = false end) end
+        if hum then
+            pcall(function() hum.AutoRotate = true end)
+            local animator = hum:FindFirstChildOfClass("Animator")
+            if animator then
+                pcall(function()
+                    local tracks = animator:GetPlayingAnimationTracks()
+                    if tracks then
+                        for _, t in ipairs(tracks) do
+                            if t.Priority == Enum.AnimationPriority.Core
+                               or t.Priority == Enum.AnimationPriority.Idle then
+                                pcall(function() t:Play(0.1) end)
+                            end
+                        end
+                    end
+                end)
+            end
+        end
+    end)
+end
+
 function doVelocityTP(forceGrapple)
     if isTeleporting then return end
     if LP:GetAttribute("Stealing") == true then return end
@@ -3667,8 +3953,11 @@ function doVelocityTP(forceGrapple)
         hrp.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
     end)
 
-    if _inVoid(hrp) or hrp.AssemblyLinearVelocity.Y < -40 then
-        _waitOutOfVoid(12)
+    if forceGrapple or _G.MeerkoAlwaysGrapple ~= false then
+        pcall(fireGrapple)
+    end
+
+    if _inVoid(hrp) then
         if _G.MeerkoTPStop then isTeleporting = false; return end
         char = LP.Character
         hrp = char and char:FindFirstChild("HumanoidRootPart")
@@ -3679,12 +3968,37 @@ function doVelocityTP(forceGrapple)
     local allPets = scanForTP()
     if #allPets == 0 then
         local _t0 = os.clock()
-        while #allPets == 0 and os.clock() - _t0 < (tonumber(_G.MeerkoTPScanWait) or 10) do
-            task.wait(0.05)
+        while #allPets == 0 and os.clock() - _t0 < (tonumber(_G.MeerkoTPScanWait) or 3) do
+            task.wait(0.03)
             allPets = scanForTP()
         end
     end
     if #allPets == 0 then isTeleporting = false; return end
+
+
+
+    if _G.MeerkoFullScanFirst ~= false then
+        local _fs0 = os.clock()
+        local _fcap = tonumber(_G.MeerkoFullScanWait) or 0.8
+        local _stale = tonumber(_G.MeerkoScanStaleGap) or 0.2
+        local _prev = tonumber(_G.MeerkoScanNoChan) or 0
+        local _lastProg = os.clock()
+        while (tonumber(_G.MeerkoScanNoChan) or 0) > 0
+            and os.clock() - _fs0 < _fcap do
+            if _G.MeerkoTPStop then break end
+            task.wait(0.03)
+            allPets = scanForTP()
+            local _now = tonumber(_G.MeerkoScanNoChan) or 0
+            if _now < _prev then
+                _prev, _lastProg = _now, os.clock()
+            elseif os.clock() - _lastProg >= _stale then
+                break
+            end
+        end
+        if (tonumber(_G.MeerkoScanNoChan) or 0) > 0 then
+
+        end
+    end
 
     if not (type(_G.MeerkoStealTargetUID) == "string" and _G.MeerkoStealTargetUID ~= "") then
         local pool, seen = {}, {}
@@ -3707,8 +4021,8 @@ function doVelocityTP(forceGrapple)
             end
         end
         _absorb(allPets)
-        for _ = 1, (tonumber(_G.MeerkoTPScans) or 2) do
-            task.wait(tonumber(_G.MeerkoTPScanGap) or 0.05)
+        for _ = 1, (tonumber(_G.MeerkoTPScans) or 1) do
+            task.wait(tonumber(_G.MeerkoTPScanGap) or 0.03)
             local _ok, _more = pcall(scanForTP)
             if _ok then _absorb(_more) end
         end
@@ -3732,18 +4046,29 @@ function doVelocityTP(forceGrapple)
     local petPos = pet.position
     local petName = pet.name
     if _G.MeerkoArmSteal then pcall(_G.MeerkoArmSteal, pet) end
-    _G.MeerkoStealSay(string.format("TP start -> %s [%s/%s] mps=%s pri=%s of %d", tostring(pet and pet.name), tostring(pet and pet.plot), tostring(pet and pet.slot), tostring(pet and pet.mps), tostring(pet and pet._pri), #allPets))
+    
 
     _G.MeerkoStealHold = true
 
-    pcall(fireGrapple)
+    local _hasCarpet = false
+    do
+        local _c = LP.Character
+        if _c then
+            for _, _n in ipairs(CARPET_NAMES) do
+                if _c:FindFirstChild(_n) then _hasCarpet = true break end
+            end
+        end
+    end
+    if not _hasCarpet then
+        pcall(fireGrapple)
+    end
 
     local adjY = petPos.Y
     if TALL_PETS[petName] then adjY = petPos.Y - TALL_OFFSET end
     local coordTable = adjY > 23.15 and MK_UPPER or MK_LOWER
 
     if petPos.Y <= 8.9 and isPlotUnlocked(pet.plot) then
-        carpetEngage(forceGrapple)
+        if not _hasCarpet then carpetEngage(forceGrapple) end
         vZero(hrp)
         local _to = Vector3.new(petPos.X, -4, petPos.Z)
         local route = computeRoute(hrp.Position, _to, nil)
@@ -3777,7 +4102,15 @@ function doVelocityTP(forceGrapple)
 
     local destPos = closestData.coord
 
-    local _carpet = carpetEngage(forceGrapple)
+    local _carpet = _hasCarpet and (function()
+        local _c = LP.Character
+        if _c then
+            for _, _n in ipairs(CARPET_NAMES) do
+                if _c:FindFirstChild(_n) then return _n end
+            end
+        end
+        return nil
+    end)() or carpetEngage(forceGrapple)
     vZero(hrp)
 
     local facingDir = closestData.facing == "NORTH" and Vector3.new(0, 0, -1) or Vector3.new(0, 0, 1)
@@ -3791,20 +4124,13 @@ function doVelocityTP(forceGrapple)
         local bestDist = (hrp.Position - frontCoord).Magnitude
         local pickedFront = true
 
-        -- 1st floor (MK_LOWER) approaches from the side only.
-        -- The front candidate is still built and left in bestCoord as a
-        -- fallback: plotSides() can legitimately return nothing for a plot,
-        -- and without it there would be no destination at all.
-        local _sideOnly = (not isUpper) and (_G.MeerkoFirstFloorSideOnly ~= false)
-
         local _tb = BASES_LOW[idx]
         local _isWest = idx <= 4
         local _rowBlocked = false
         local _dx, _dz = hrp.Position.X - _tb.X, hrp.Position.Z - _tb.Z
         local _distToBase = math.sqrt(_dx * _dx + _dz * _dz)
         local _sideRange = tonumber(_G.MeerkoSideTPRange) or 100
-        -- _rowBlocked forces the front approach, so it must not run in side-only mode
-        if not _sideOnly and _G.MeerkoPreferFrontOnRow ~= false and _distToBase > _sideRange then
+        if _G.MeerkoPreferFrontOnRow ~= false and _distToBase > _sideRange then
             for i = 1, 8 do
                 if i ~= idx and (i <= 4) == _isWest then
                     local bz = BASES_LOW[i].Z
@@ -3812,9 +4138,6 @@ function doVelocityTP(forceGrapple)
                 end
             end
         end
-
-        -- drop the front's distance so the nearest side always wins the compare
-        if _sideOnly then bestDist = math.huge end
 
         if not _rowBlocked then
             for _, d in ipairs(plotSides(coordTable, idx)) do
@@ -3830,19 +4153,8 @@ function doVelocityTP(forceGrapple)
         destPos = bestCoord
         facingDir = bestFace
         _frontApproach = pickedFront
-        if _G.MeerkoTPDebug ~= false then
-            local _mode = pickedFront and "FRONT" or "SIDE"
-            if _sideOnly then
-                -- pickedFront still true here means no side coord existed
-                _mode = pickedFront and "FRONT(sideonly-fallback)" or "SIDE(sideonly)"
-            end
-            warn(string.format(
-                "[MeerkoTP] PICK baseIdx=%d %s floor=%s | pet=(%.0f,%.0f,%.0f) plot=%s | dest=(%.0f,%.0f,%.0f) | me=(%.0f,%.0f,%.0f) | sides=%d",
-                idx, _mode, isUpper and "2nd" or "1st",
-                petPos.X, petPos.Y, petPos.Z, tostring(pet.plot),
-                destPos.X, destPos.Y, destPos.Z,
-                hrp.Position.X, hrp.Position.Y, hrp.Position.Z,
-                #plotSides(coordTable, idx)))
+        if _G.MeerkoTPDebug == true then
+            
         end
     end
 
@@ -3853,7 +4165,9 @@ function doVelocityTP(forceGrapple)
         destPos = destPos + axis * sign * (tonumber(_G.MeerkoCloneBackoff) or 0.5)
     end
 
-    local _route = computeRoute(hrp.Position, destPos, facingDir, nil, true)
+
+
+    local _route = computeRoute(hrp.Position, destPos, facingDir, nil, _G.MeerkoCrestRoute == true)
 
     local ASCEND_STEP = 10
     local _stepped = {}
@@ -3877,11 +4191,24 @@ function doVelocityTP(forceGrapple)
         end
     end
     local _mainSpeed = math.clamp(tonumber(_G.TPVelocity) or 400, 200, 750)
+    local _targetIdx = getClosestBaseIdx(petPos)
+    local _targetIsWest = _targetIdx <= 4
+    local _playerIsWest = hrp.Position.X < COLUMN_SPLIT_X
+    local _crossRow = _targetIsWest ~= _playerIsWest
+    local _isLower = coordTable == MK_LOWER
+    local _toTarget = (petPos - hrp.Position).Unit
+    local _lookDir = hrp.CFrame.LookVector
+    local _dot = _toTarget:Dot(_lookDir)
+    local _isBehind = _dot < -0.3
+    local _isProblemTP = _crossRow and _frontApproach and _isLower and _isBehind
     do
         local _len, _prev = 0, hrp.Position
         for _, wp in ipairs(_route) do _len = _len + (wp - _prev).Magnitude; _prev = wp end
         if _len < 100 then
             _mainSpeed = math.clamp(tonumber(_G.MeerkoCloseSpeed) or 80, 20, 400)
+        end
+        if _isProblemTP and _G.MeerkoSlowCrossRow == true then
+            _mainSpeed = math.clamp(tonumber(_G.MeerkoProblemBaseSpeed) or 60, 20, 400)
         end
     end
     _mainSpeed = _pingAdjustSpeed(_mainSpeed)
@@ -3896,6 +4223,7 @@ function doVelocityTP(forceGrapple)
     do
         local above = destPos + Vector3.new(0, 16, 0)
         local _t0 = os.clock()
+        local _lastJump = 0
         while os.clock() - _t0 < 1.5 do
             if not hrp or not hrp.Parent then break end
             if LP:GetAttribute("Stealing") or _G.MeerkoTPStop then break end
@@ -3903,13 +4231,14 @@ function doVelocityTP(forceGrapple)
             local d = above - hrp.Position
             local flat = Vector3.new(d.X, 0, d.Z).Magnitude
             if flat <= 3 and hrp.Position.Y >= destPos.Y then break end
-            if d.Y > 3 then
+            if d.Y > 3 and (os.clock() - _lastJump) > 0.5 then
                 local _hum = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
                 if _hum then
                     local st = _hum:GetState()
                     if st ~= Enum.HumanoidStateType.Jumping and st ~= Enum.HumanoidStateType.Freefall then
                         pcall(function() _hum:ChangeState(Enum.HumanoidStateType.Jumping) end)
                         pcall(function() _hum.Jump = true end)
+                        _lastJump = os.clock()
                     end
                 end
             end
@@ -3920,12 +4249,10 @@ function doVelocityTP(forceGrapple)
     end
 
     do
-        local _runCap = _frontApproach and (tonumber(_G.MeerkoFrontRunIn) or 120) or 320
-        if _G.MeerkoTPSafeMode ~= false then
-            _runCap = math.min(_runCap, tonumber(_G.MeerkoTPSafeSpeed) or 300)
-        end
+        local _runCap = _frontApproach and (tonumber(_G.MeerkoFrontRunIn) or 130) or 400
         local _t0 = os.clock()
         local _bestMag, _bestT = math.huge, os.clock()
+        local _lastJump = 0
         while os.clock() - _t0 < 4 do
             if not hrp or not hrp.Parent then break end
             if LP:GetAttribute("Stealing") or _G.MeerkoTPStop then break end
@@ -3935,13 +4262,14 @@ function doVelocityTP(forceGrapple)
             if mag <= 3 then break end
             if mag < _bestMag - 0.5 then _bestMag = mag; _bestT = os.clock()
             elseif os.clock() - _bestT > 0.6 then break end
-            if diff.Y > 3 then
+            if diff.Y > 3 and mag > 15 and (os.clock() - _lastJump) > 0.5 then
                 local _hum = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
                 if _hum then
                     local st = _hum:GetState()
                     if st ~= Enum.HumanoidStateType.Jumping and st ~= Enum.HumanoidStateType.Freefall then
                         pcall(function() _hum:ChangeState(Enum.HumanoidStateType.Jumping) end)
                         pcall(function() _hum.Jump = true end)
+                        _lastJump = os.clock()
                     end
                 end
             end
@@ -3952,43 +4280,16 @@ function doVelocityTP(forceGrapple)
     end
 
     if hrp and hrp.Parent and not _G.MeerkoTPStop then
-        local _tol = tonumber(_G.MeerkoTPReachTolerance) or 4.5
-        local _retryMax = math.clamp(tonumber(_G.MeerkoTPRetryCount) or 2, 0, 4)
-        for _retry = 1, _retryMax do
-            if not (hrp and hrp.Parent) or _G.MeerkoTPStop then break end
-            local _flatOff = Vector3.new(destPos.X - hrp.Position.X, 0, destPos.Z - hrp.Position.Z).Magnitude
-            local _yOff = math.abs(destPos.Y - hrp.Position.Y)
-            if _flatOff <= _tol and _yOff <= 6 then break end
-            if _G.MeerkoTPDebug ~= false then
-                warn(string.format("[MeerkoTP] REACH retry %d/%d: flat=%.1f y=%.1f -> fresh route", _retry, _retryMax, _flatOff, _yOff))
+        local _flatOff = Vector3.new(destPos.X - hrp.Position.X, 0, destPos.Z - hrp.Position.Z).Magnitude
+        if _flatOff > 10 then
+            if _G.MeerkoTPDebug == true then
+                
             end
-            task.wait(tonumber(_G.MeerkoTPRetryDelay) or 0.08)
-            local _fresh = computeRoute(hrp.Position, destPos, facingDir, nil, true)
-            if not _fresh or #_fresh == 0 then _fresh = { destPos } end
-            local _freshStepped = {}
-            local _prev = hrp.Position
-            for _, _wp in ipairs(_fresh) do
-                local _dy = _wp.Y - _prev.Y
-                if _dy > 15 then
-                    local _n = math.ceil(_dy / 10)
-                    for _s = 1, _n - 1 do
-                        local _t = _s / _n
-                        _freshStepped[#_freshStepped + 1] = Vector3.new(
-                            _prev.X + (_wp.X - _prev.X) * _t,
-                            _prev.Y + _dy * _t,
-                            _prev.Z + (_wp.Z - _prev.Z) * _t)
-                    end
-                end
-                _freshStepped[#_freshStepped + 1] = _wp
-                _prev = _wp
-            end
-            local _retrySpeed = _mainSpeed
-            if _G.MeerkoTPSafeMode ~= false then
-                _retrySpeed = math.min(_retrySpeed, tonumber(_G.MeerkoTPSafeSpeed) or 300)
-            end
-            velMoveThrough(hrp, _freshStepped, _retrySpeed, true, true)
+            local _rr = (_stepped and #_stepped > 0) and _stepped or { destPos }
+            velMoveThrough(hrp, _rr, _mainSpeed, true, true)
             if hrp and hrp.Parent then
-                _vzL(hrp); _vzA(hrp)
+                _vzL(hrp)
+                _vzA(hrp)
             end
         end
     end
@@ -3998,7 +4299,7 @@ function doVelocityTP(forceGrapple)
     end
     vZero(hrp)
 
-    local syncFrames = (_G.MeerkoTPSafeMode ~= false) and 8 or 5
+    local syncFrames = 3
     local syncConn
     syncConn = RunService.Heartbeat:Connect(LPH_NO_VIRTUALIZE(function()
         if not hrp or not hrp.Parent then syncConn:Disconnect(); return end
@@ -4009,21 +4310,24 @@ function doVelocityTP(forceGrapple)
         if syncFrames <= 0 then syncConn:Disconnect() end
     end))
 
-    for _ = 1, 20 do
-        task.wait(0.05)
+    local _landTries = tonumber(_G.MeerkoMaxLandTries) or 3
+    local _landGap   = tonumber(_G.MeerkoLandCheckGap) or 0.03
+    for _ = 1, _landTries do
+        task.wait(_landGap)
         if hum.FloorMaterial ~= Enum.Material.Air then break end
     end
 
     do
         local stable, _st0 = 0, os.clock()
-        while os.clock() - _st0 < 3 do
+        local _cap = tonumber(_G.MeerkoStableWait) or 0.3
+        while os.clock() - _st0 < _cap do
             if _G.MeerkoTPStop then break end
             local _hrp = char and char:FindFirstChild("HumanoidRootPart")
             if not _hrp or not _hrp.Parent then break end
             local flat = (Vector3.new(_hrp.Position.X, 0, _hrp.Position.Z) - Vector3.new(destPos.X, 0, destPos.Z)).Magnitude
             if flat <= 3.5 and math.abs(_hrp.Position.Y - destPos.Y) <= 4 then
                 stable = stable + 1
-                if stable >= 4 then break end
+                if stable >= 2 then break end
             else
                 stable = 0
                 pcall(function() _hrp.CFrame = CFrame.new(destPos, destPos + facingDir) end)
@@ -4037,8 +4341,7 @@ function doVelocityTP(forceGrapple)
     local _clonePos = (_ahrp and _ahrp.Parent and _ahrp.Position) or destPos
 
     local _clonePlat = Instance.new("Part")
-    -- was "MeerkoHubClonePlatform"; an unnamed Part is indistinguishable from
-    -- the thousands the game already has in Workspace.
+    _clonePlat.Name = "MeerkoHubClonePlatform"
     _clonePlat.Size = Vector3.new(12, 1, 12)
     _clonePlat.Position = Vector3.new(_clonePos.X, _clonePos.Y - 3, _clonePos.Z)
     _clonePlat.Anchored = true
@@ -4063,12 +4366,12 @@ function doVelocityTP(forceGrapple)
 
     _G.MeerkoStealHold = false
 
-    task.wait(tonumber(_G.LandingDelay) or tonumber(_G.TPCloneDelay) or 0.35)
+    task.wait(tonumber(_G.LandingDelay) or tonumber(_G.TPCloneDelay) or 0.12)
 
     if facingDir and facingDir.Magnitude > 0.1 then
         local _pinHum = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
         if _pinHum then pcall(function() _pinHum.AutoRotate = false end) end
-        for _ = 1, 4 do
+        for _ = 1, 2 do
             local _h = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
             if not _h or not _h.Parent then break end
             pcall(function()
@@ -4081,11 +4384,7 @@ function doVelocityTP(forceGrapple)
     end
 
     local _cloneOk = doClone()
-    if _clonePlat then
-        local _plat = _clonePlat
-        _clonePlat = nil
-        task.delay(1.5, function() pcall(function() _plat:Destroy() end) end)
-    end
+    if _clonePlat then pcall(function() _clonePlat:Destroy() end); _clonePlat = nil end
     do
         local _t0 = os.clock()
         repeat
@@ -4095,10 +4394,12 @@ function doVelocityTP(forceGrapple)
             if _h then
                 local _dx = _h.Position.X - _preClonePos.X
                 local _dz = _h.Position.Z - _preClonePos.Z
-                if (_dx * _dx + _dz * _dz) > 1 then break end
+                local _dy = _h.Position.Y - _preClonePos.Y
+                if (_dx * _dx + _dz * _dz) > 4 then break end
+                if _dy * _dy > 1 then break end
             end
             RunService.Heartbeat:Wait()
-        until os.clock() - _t0 > (tonumber(_G.MeerkoCloneSettle) or 0.5)
+        until os.clock() - _t0 > (tonumber(_G.MeerkoCloneSettle) or 0.6)
     end
     if _caConn then _caConn:Disconnect() end
 
@@ -4107,11 +4408,12 @@ function doVelocityTP(forceGrapple)
         if _rh then _rh.AutoRotate = true end
     end)
 
+    task.wait(0.1)
     goToBrainrot(petPos, pet and pet.slot)
     isTeleporting = false
     if _G.MeerkoTPStop then return end
     if _G.MeerkoArmSteal then pcall(_G.MeerkoArmSteal, pet) end
-    _G.MeerkoStealSay("TP arrive -> " .. tostring(pet and pet.name) .. " [" .. tostring(pet and pet.plot) .. "/" .. tostring(pet and pet.slot) .. "]")
+    restoreAnimations()
 end
 
 _manualTPBusy = false
@@ -4189,48 +4491,120 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
 end)
 
 task.spawn(function() pcall(loadModules) pcall(loadNet) end)
+task.spawn(function()
+    pcall(function()
+        local R = game:GetService("ReplicatedStorage")
+        local d = R:FindFirstChild("Datas") or R:WaitForChild("Datas", 3)
+        if d then
+            local a = d:FindFirstChild("Animals") or d:WaitForChild("Animals", 3)
+            if a then _AD = require(a) end
+            local m = d:FindFirstChild("Mutations") or d:WaitForChild("Mutations", 3)
+            if m then _MD = require(m) end
+            local t = d:FindFirstChild("Traits") or d:WaitForChild("Traits", 3)
+            if t then _TD = require(t) end
+        end
+    end)
+end)
+task.spawn(function()
+    if not game:IsLoaded() then game.Loaded:Wait() end
+    task.wait(0.2)
+    for _ = 1, 8 do
+        pcall(scanAllPetsCached, 0)
+        task.wait(0.08)
+    end
+    while true do
+        pcall(scanAllPetsCached, 0.3)
+        task.wait(0.2)
+    end
+end)
 
 _G.MeerkoChannelsReady = false
 
 task.spawn(function()
     local char = LP.Character or LP.CharacterAdded:Wait()
-
-    local hrpReady, humReady = false, false
-    task.spawn(function() char:WaitForChild("HumanoidRootPart", 20); hrpReady = true end)
-    task.spawn(function() char:WaitForChild("Humanoid", 20); humReady = true end)
-    local _tw0 = os.clock()
-    while (not hrpReady or not humReady) and os.clock() - _tw0 < 20 do
-        RunService.Heartbeat:Wait()
-    end
-    pcall(loadModules); pcall(loadNet)
+    char:WaitForChild("HumanoidRootPart", 10)
+    char:WaitForChild("Humanoid", 10)
+    pcall(loadModules)
     if _G.MeerkoAutoTP == false then return end
 
-    if _G.MeerkoWaitForTools ~= false and type(_G.MeerkoToolsReady) == "function" then
-        local _tt0 = os.clock()
-        local _tcap = tonumber(_G.MeerkoToolWait) or 30
-        while os.clock() - _tt0 < _tcap do
-            local ok, ready = pcall(_G.MeerkoToolsReady)
-            if ok and ready then break end
-            if _G.MeerkoAutoTP == false then return end
-            task.wait(0.2)
+    local _carpetDone = false
+    task.spawn(function()
+        local _tw = os.clock()
+        while os.clock() - _tw < 12 do
+            for _, n in ipairs(CARPET_NAMES) do
+                if findTool(n) then pcall(carpetEngage, _G.MeerkoJoinGrapple ~= false) _carpetDone = true return end
+            end
+            task.wait(0.05)
         end
+        _carpetDone = true
+    end)
+
+    local _toolsReady = false
+    task.spawn(function()
+        if _G.MeerkoWaitForTools ~= false and type(_G.MeerkoToolsReady) == "function" then
+            local _tt0 = os.clock()
+            local _tcap = tonumber(_G.MeerkoToolWait) or 6
+            while os.clock() - _tt0 < _tcap do
+                local ok, ready = pcall(_G.MeerkoToolsReady)
+                if ok and ready then break end
+                if _G.MeerkoAutoTP == false then return end
+                task.wait(tonumber(_G.MeerkoToolPoll) or 0.02)
+            end
+        end
+        _toolsReady = true
+    end)
+
+    local function _channelsProgress()
+        local Plots = workspace:FindFirstChild("Plots")
+        if not Plots then return 0, 0 end
+        local kids = Plots:GetChildren()
+        if #kids == 0 then return 0, 0 end
+        local ready = 0
+        for _, plot in ipairs(kids) do
+            if getPlotChannel(plot.Name) then ready = ready + 1 end
+        end
+        return ready, #kids
     end
-    pcall(carpetEngage)
+
+    local _bootT0 = os.clock()
+    local _wMax = tonumber(_G.MeerkoAutoTPWait) or 15
+    local _chanGrace = tonumber(_G.MeerkoChanGrace) or 2
+    local _petsFound = nil
+    local _lastTop = nil
+
+    while os.clock() - _bootT0 < _wMax do
+        if _G.MeerkoAutoTP == false then return end
+        if LP:GetAttribute("Stealing") == true then return end
+
+        local ready, total = _channelsProgress()
+        local chanOk = (total > 0 and ready >= total)
+            or (total > 0 and ready >= (total - _chanGrace) and (os.clock() - _bootT0) > _chanGrace)
+
+        local ok, pets = pcall(scanForTP)
+        if ok and pets and #pets > 0 then
+            _petsFound = pets
+            local top = tostring(pets[1].plot) .. "_" .. tostring(pets[1].slot)
+            if chanOk and top == _lastTop then break end
+            _lastTop = top
+        end
+
+        RunService.Heartbeat:Wait()
+    end
+
     do
         local _d = tonumber(_G._stp_tpDelay) or tonumber(_G.TPDelay) or 0
         if _d > 0 then task.wait(_d) end
     end
 
-    local _w0 = os.clock()
-    local _wMax = tonumber(_G.MeerkoAutoTPWait) or 20
-    while os.clock() - _w0 < _wMax do
+    if _G.MeerkoAutoTP == false then return end
+
+    local _wt0 = os.clock()
+    while (not _carpetDone or not _toolsReady) and os.clock() - _wt0 < 3 do
         if _G.MeerkoAutoTP == false then return end
-        if LP:GetAttribute("Stealing") == true then return end
-        local ok, pets = pcall(scanForTP)
-        if ok and pets and #pets > 0 then break end
-        task.wait(tonumber(_G.MeerkoAutoTPPoll) or 0.05)
+        task.wait(0.03)
     end
-    pcall(doVelocityTP)
+
+    pcall(doVelocityTP, true)
     if _G.MeerkoScanProfile then _G.MeerkoScanProfile("normal") end
 end)
 
@@ -4238,7 +4612,11 @@ do
     local Players = game:GetService("Players")
     local RunService = game:GetService("RunService")
     local LP = Players.LocalPlayer
-    local PG = LP:WaitForChild("PlayerGui")
+
+    local PG = LP:FindFirstChild("PlayerGui") or LP:WaitForChild("PlayerGui", 20)
+
+
+    local GUIHOST = (gethui and gethui()) or game:GetService("CoreGui")
 
     local function diag()
         pcall(loadModules)
@@ -4255,18 +4633,29 @@ do
                 end
             end
         end
-        local ok, pets = pcall(scanAllPets)
+        local pets = scanAllPetsCached(0.12)
+        local ok = pets ~= nil
         local nPets = (ok and pets and #pets) or 0
         local msg = string.format("plots=%d ch=%d owner=%d animals=%d PETS=%d", nPlots, nCh, nOwn, nAl, nPets)
-        print("[TP TEST] " .. msg)
+        
         if nPets > 0 and pets[1] then
-            print("[TP TEST] top=", pets[1].name, pets[1].plot, pets[1].slot)
+            
         end
         return nPets
     end
 
+    local _fspOverlap = OverlapParams.new()
+    _fspOverlap.FilterType = Enum.RaycastFilterType.Exclude
+    local function _promptWorldPos(p)
+        local pp = p and p.Parent
+        if not pp then return nil end
+        if pp:IsA("Attachment") then return pp.WorldPosition end
+        if pp:IsA("BasePart") then return pp.Position end
+        return nil
+    end
     local function findStealPrompt(pet)
         if not pet then return nil end
+        local podPrompt
         if pet.plot and pet.slot then
             local plots = workspace:FindFirstChild("Plots")
             local plot = plots and plots:FindFirstChild(pet.plot)
@@ -4278,21 +4667,49 @@ do
                 local attach = spawn and spawn:FindFirstChild("PromptAttachment")
                 if attach then
                     for _, p in ipairs(attach:GetChildren()) do
-                        if p:IsA("ProximityPrompt") then return p end
+                        if p:IsA("ProximityPrompt") then podPrompt = p break end
                     end
                 end
-                for _, d in ipairs(podium:GetDescendants()) do
-                    if d:IsA("ProximityPrompt") then return d end
+                if not podPrompt then
+                    podPrompt = podium:FindFirstChildWhichIsA("ProximityPrompt", true)
                 end
             end
         end
-        return nil
+        if pet.position then
+            local pp = podPrompt and _promptWorldPos(podPrompt)
+            if (not podPrompt) or (pp and (pp - pet.position).Magnitude > 15) then
+                _fspOverlap.FilterDescendantsInstances = LP.Character and { LP.Character } or {}
+                local okB, parts = pcall(workspace.GetPartBoundsInRadius, workspace, pet.position, 14, _fspOverlap)
+                if okB and parts then
+                    local best, bestD
+                    for _, part in ipairs(parts) do
+                        local pr = part:FindFirstChildOfClass("ProximityPrompt")
+                        if not pr then
+                            for _, ch in ipairs(part:GetChildren()) do
+                                if ch:IsA("Attachment") then
+                                    pr = ch:FindFirstChildOfClass("ProximityPrompt")
+                                    if pr then break end
+                                end
+                            end
+                        end
+                        if pr then
+                            local pos = _promptWorldPos(pr)
+                            local d = pos and (pos - pet.position).Magnitude or math.huge
+                            if not best or d < bestD then best, bestD = pr, d end
+                        end
+                    end
+                    if best then return best end
+                end
+            end
+        end
+        return podPrompt
     end
 
     local InternalStealCache = {}
     local STEAL_HOLD_DURATION = 1.3
-    local STEAL_PROXIMITY = tonumber(_G.MeerkoStealProximity) or 28
+    local STEAL_PROXIMITY = tonumber(_G.MeerkoStealProximity) or 31
     local _stealHoldStart, _stealHoldActive = 0, false
+
     local _stealTarget, _stealArmedAt = nil, 0
     local _lastTargetPick, _lastPickUid, _currentTargetName = 0, nil, nil
     local _stealLastScan, _autoLastScan = 0, 0
@@ -4300,10 +4717,11 @@ do
     local _armCheckAt = 0
     local _petsCache, _petsCacheAt = nil, 0
 
-    -- one scan shared by the picker, the in-range check and the watchdog
+
     local function _scanCached(now, maxAge)
-        if _petsCache and (now - _petsCacheAt) <= (maxAge or 0.15) then return _petsCache end
-        local ok, pets = pcall(scanAllPets)
+        if _petsCache and (now - _petsCacheAt) <= (maxAge or 0.1) then return _petsCache end
+        local pets = scanAllPetsCached(0.08)
+        local ok = pets ~= nil
         if ok and type(pets) == "table" then
             _petsCache, _petsCacheAt = pets, now
             return pets
@@ -4311,7 +4729,7 @@ do
         return nil
     end
 
-    -- is the brainrot still on that podium, per the game's own data
+
     local function _petListed(plot, slot)
         local ch = getPlotChannel(plot)
         local al = ch and channelGet(ch, "AnimalList")
@@ -4325,15 +4743,21 @@ do
     local function _prox()
         return tonumber(_G.MeerkoStealProximity) or STEAL_PROXIMITY
     end
+    local STEAL_HOLD_MAX = 2.6
     local function _holdDur()
-        return tonumber(_G.MeerkoStealHoldDuration) or STEAL_HOLD_DURATION
+
+
+        if _G.MeerkoStealHoldFull == true then return STEAL_HOLD_MAX end
+        local h = tonumber(_G.MeerkoStealHoldDuration) or STEAL_HOLD_DURATION
+        if h < STEAL_HOLD_DURATION then h = STEAL_HOLD_DURATION elseif h > STEAL_HOLD_MAX then h = STEAL_HOLD_MAX end
+        return h
     end
 
-    -- after each attempt: did the brainrot actually leave that podium?
-    -- one in-range miss flips the method, so the next grab already uses the other one
+
+
     local _cooldownUntil = 0
     local function _verifyFire(pet, path, judge)
-        task.delay(tonumber(_G.MeerkoVerifyDelay) or 0.5, function()
+        task.delay(tonumber(_G.MeerkoVerifyDelay) or 0.35, function()
             if not (pet and pet.plot and pet.slot ~= nil) then return end
             local listed, known = true, false
             pcall(function() listed, known = _petListed(pet.plot, pet.slot) end)
@@ -4341,30 +4765,15 @@ do
             if not listed then
                 _G.MeerkoStealFails = 0
                 _cooldownUntil = 0
-                _G.MeerkoStealSay("steal landed (" .. tostring(path) .. ")")
+                
                 return
             end
             if not judge then _cooldownUntil = 0 return end
-            if _G.MeerkoAutoSwapMethod ~= true then return end
-            _G.MeerkoStealFails = (_G.MeerkoStealFails or 0) + 1
-            if _G.MeerkoStealFails >= (tonumber(_G.MeerkoFailsBeforeSwap) or 1) then
-                _G.MeerkoStealFails = 0
-                if path == "remote" then
-                    _G.MeerkoRemoteStealOn = false
-                    _G.MeerkoStealSay("remote missed -> prompt mode")
-                else
-                    _G.MeerkoRemoteStealOn = true
-                    _G.MeerkoStealSay("prompt missed -> remote mode")
-                end
-            end
+
         end)
     end
     local function _holdBusy()
-        if _stealHoldActive
-            and (tick() - _stealHoldStart) < (_holdDur() + (tonumber(_G.MeerkoStealRetryGap) or 0.15)) then
-            return true
-        end
-        return tick() < _cooldownUntil
+        return _stealHoldActive
     end
 
     local _armedPet, _armLostSince = nil, 0
@@ -4394,15 +4803,15 @@ do
     _G.MeerkoArmedName = function() return _armedPet and _armedPet.name or nil end
 
     local UIC = {
-        bg   = Color3.fromRGB(12, 12, 18),
-        bg2  = Color3.fromRGB(18, 18, 26),
-        card = Color3.fromRGB(24, 24, 36),
-        track = Color3.fromRGB(32, 32, 48),
-        line = Color3.fromRGB(60, 60, 80),
-        acc  = Color3.fromRGB(0, 180, 255),
-        acc2 = Color3.fromRGB(100, 210, 255),
-        txt  = Color3.fromRGB(255, 255, 255),
-        dim  = Color3.fromRGB(140, 140, 160),
+        bg   = Color3.fromRGB(12, 14, 16),
+        bg2  = Color3.fromRGB(18, 21, 24),
+        card = Color3.fromRGB(24, 28, 32),
+        track = Color3.fromRGB(36, 42, 48),
+        line = Color3.fromRGB(54, 64, 72),
+        acc  = Color3.fromRGB(0, 200, 140),
+        acc2 = Color3.fromRGB(96, 240, 190),
+        txt  = Color3.fromRGB(235, 240, 240),
+        dim  = Color3.fromRGB(128, 142, 148),
     }
     local UIF, UIFB = Enum.Font.Gotham, Enum.Font.GothamBold
 
@@ -4421,26 +4830,87 @@ do
         if _oldDbg then _oldDbg:Destroy() end
     end)
 
-    -- This bar was the one piece of UI parented straight into PlayerGui under a
-    -- self-identifying name, so the game could both see it and name it. Prefer
-    -- the executor's hidden container; fall back to PlayerGui under a native-
-    -- looking name, and track it by reference rather than re-finding by name.
-    local stealBarSg, stealBarFill, stealBarTitle, stealBarPct, stealBarKey, stealBarCd
+    local stealBarSg, stealBarFill, stealBarTitle, stealBarPct
+    local _lastPctTxt, _lastFillX = nil, -1
     local function ensureStealBar()
         if stealBarSg and stealBarSg.Parent then return end
-        local host = (gethui and gethui()) or PG
-        stealBarSg = mk("ScreenGui", host, {
-            Name = "hudProgressLayer", ResetOnSpawn = false,
+
+        for _, par in ipairs({ GUIHOST, PG }) do
+            pcall(function()
+                local old = par and par:FindFirstChild("MeerkoStealBar")
+                if old then old:Destroy() end
+            end)
+        end
+        stealBarSg = mk("ScreenGui", GUIHOST, {
+            Name = "MeerkoStealBar", ResetOnSpawn = false,
             IgnoreGuiInset = true, DisplayOrder = 120,
         })
-        -- wider wrap to fit bar + two pill buttons on the right
         local wrap = mk("Frame", stealBarSg, {
             Name = "Wrap", AnchorPoint = Vector2.new(0.5, 1),
-            Position = UDim2.new(0.5, 0, 1, -120), Size = UDim2.fromOffset(340, 34),
+            Position = UDim2.new(0.5, 0, 1, -120), Size = UDim2.fromOffset(260, 34),
             BackgroundTransparency = 1,
         })
+        local modeBtn = corner(mk("TextButton", wrap, {
+            AnchorPoint = Vector2.new(0, 1), Position = UDim2.new(1, 44, 1, 0),
+            Size = UDim2.fromOffset(58, 20), BorderSizePixel = 0,
+            BackgroundColor3 = (_G.MeerkoStealQuick == true) and UIC.acc or UIC.track,
+            Text = (_G.MeerkoStealQuick == true) and "1.3s" or "2.6s",
+            Font = UIFB, TextSize = 11,
+            TextColor3 = (_G.MeerkoStealQuick == true) and UIC.bg or UIC.txt,
+            AutoButtonColor = false, Active = true,
+        }), 6)
+        stroke(modeBtn)
+        local function _repaintModeBtn()
+            local q = _G.MeerkoStealQuick == true
+            modeBtn.Text = q and "1.3s" or "2.6s"
+            modeBtn.BackgroundColor3 = q and UIC.acc or UIC.track
+            modeBtn.TextColor3 = q and UIC.bg or UIC.txt
+        end
+        _G.MeerkoRepaintStealMode = _repaintModeBtn
+        local quickKeyBtn = corner(mk("TextButton", wrap, {
+            AnchorPoint = Vector2.new(0, 1), Position = UDim2.new(1, 8, 1, 0),
+            Size = UDim2.fromOffset(30, 20), BorderSizePixel = 0,
+            BackgroundColor3 = UIC.track,
+            Text = tostring(_G.MeerkoStealQuickKey or "C"),
+            Font = UIFB, TextSize = 10,
+            TextColor3 = UIC.txt,
+            AutoButtonColor = false, Active = true,
+        }), 6)
+        stroke(quickKeyBtn)
+        local _qkListening = false
+        local function _repaintQuickKey()
+            quickKeyBtn.Text = _qkListening and "..." or tostring(_G.MeerkoStealQuickKey or "C")
+            quickKeyBtn.BackgroundColor3 = _qkListening and UIC.acc or UIC.track
+        end
+        quickKeyBtn.MouseButton1Click:Connect(function()
+            if _G.MeerkoBindListening then return end
+            _qkListening = true
+            _G.MeerkoBindListening = true
+            _repaintQuickKey()
+            local conn
+            conn = UIS.InputBegan:Connect(function(i, g)
+                if g then return end
+                if i.UserInputType ~= Enum.UserInputType.Keyboard then return end
+                local kn = i.KeyCode.Name
+                if kn == "Unknown" then return end
+                _G.MeerkoStealQuickKey = kn
+                _qkListening = false
+                _G.MeerkoBindListening = false
+                _repaintQuickKey()
+                conn:Disconnect()
+                if _G.MeerkoSaveSettings then pcall(_G.MeerkoSaveSettings) end
+            end)
+            task.delay(5, function()
+                if _qkListening then
+                    _qkListening = false
+                    _G.MeerkoBindListening = false
+                    _repaintQuickKey()
+                    if conn then conn:Disconnect() end
+                end
+            end)
+        end)
         stealBarTitle = mk("TextLabel", wrap, {
-            Size = UDim2.new(0, 200, 0, 12), Position = UDim2.fromOffset(0, 0),
+            Size = UDim2.new(1, -46, 0, 12), Position = UDim2.fromOffset(0, 0),
             BackgroundTransparency = 1, Font = UIFB, TextSize = 11,
             TextColor3 = UIC.txt, TextXAlignment = Enum.TextXAlignment.Left,
             TextTruncate = Enum.TextTruncate.AtEnd, Text = "STEAL",
@@ -4449,61 +4919,39 @@ do
             Color = Color3.new(0, 0, 0), Thickness = 2, Transparency = 0.55,
         })
         stealBarPct = mk("TextLabel", wrap, {
-            Size = UDim2.fromOffset(42, 12), Position = UDim2.new(0, 200, 0, 0),
+            Size = UDim2.fromOffset(42, 12), Position = UDim2.new(1, -42, 0, 0),
             BackgroundTransparency = 1, Font = UIFB, TextSize = 11,
-            TextColor3 = UIC.acc, TextXAlignment = Enum.TextXAlignment.Left, Text = "0%",
+            TextColor3 = UIC.acc, TextXAlignment = Enum.TextXAlignment.Right, Text = "0%",
         })
         mk("UIStroke", stealBarPct, {
             Color = Color3.new(0, 0, 0), Thickness = 2, Transparency = 0.55,
         })
-        -- keybind pill (e.g. "C")
-        local keyPill = corner(mk("Frame", wrap, {
-            Size = UDim2.fromOffset(28, 18), Position = UDim2.new(0, 256, 1, -22),
-            BackgroundColor3 = Color3.fromRGB(30, 30, 38), BorderSizePixel = 0,
-        }), 4)
-        stroke(keyPill, UIC.line)
-        stealBarKey = mk("TextLabel", keyPill, {
-            Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1,
-            Font = UIFB, TextSize = 11, TextColor3 = UIC.txt, Text = "C",
-        })
-        -- cooldown pill (e.g. "2.6s")
-        local cdPill = corner(mk("Frame", wrap, {
-            Size = UDim2.fromOffset(46, 18), Position = UDim2.new(0, 290, 1, -22),
-            BackgroundColor3 = Color3.fromRGB(30, 30, 38), BorderSizePixel = 0,
-        }), 4)
-        stroke(cdPill, UIC.line)
-        stealBarCd = mk("TextLabel", cdPill, {
-            Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1,
-            Font = UIFB, TextSize = 11, TextColor3 = UIC.dim, Text = "--",
-        })
         local track = corner(mk("Frame", wrap, {
-            Position = UDim2.new(0, 0, 1, -6), Size = UDim2.fromOffset(248, 6),
+            Position = UDim2.new(0, 0, 1, -6), Size = UDim2.new(1, 0, 0, 6),
             BackgroundColor3 = UIC.track, BackgroundTransparency = 0.25, BorderSizePixel = 0,
         }), 3)
-        stroke(track, Color3.fromRGB(10, 8, 4))
+        stroke(track, Color3.fromRGB(8, 10, 10))
         stealBarFill = corner(mk("Frame", track, {
             Size = UDim2.new(0, 0, 1, 0), BackgroundColor3 = UIC.acc, BorderSizePixel = 0,
         }), 3)
         mk("UIGradient", stealBarFill, {
             Color = ColorSequence.new(UIC.acc, UIC.acc2),
         })
-        -- update keybind label and cooldown countdown every frame
-        RunService.Heartbeat:Connect(function()
-            if not stealBarSg or not stealBarSg.Parent then return end
-            local key = tostring(_G.MeerkoNearestKey or "C")
-            if stealBarKey and stealBarKey.Parent then stealBarKey.Text = key end
-            if stealBarCd and stealBarCd.Parent then
-                local remaining = (_cooldownUntil or 0) - tick()
-                if remaining > 0.05 then
-                    stealBarCd.Text = string.format("%.1fs", remaining)
-                    stealBarCd.TextColor3 = UIC.acc
-                else
-                    stealBarCd.Text = "rdy"
-                    stealBarCd.TextColor3 = UIC.dim
-                end
-            end
-        end)
+
+        _lastPctTxt, _lastFillX = nil, -1
         stealBarSg.Enabled = true
+    end
+
+
+    local function _setFill(x)
+        if math.abs(x - _lastFillX) < 0.002 then return end
+        _lastFillX = x
+        stealBarFill.Size = UDim2.new(x, 0, 1, 0)
+    end
+    local function _setPctTxt(s)
+        if s == _lastPctTxt then return end
+        _lastPctTxt = s
+        stealBarPct.Text = s
     end
     local function showStealBar(name, pct)
         pcall(function()
@@ -4511,25 +4959,30 @@ do
             pct = math.clamp(tonumber(pct) or 0, 0, 1)
             stealBarSg.Enabled = true
             stealBarTitle.Text = name and ("STEAL  " .. tostring(name)) or "STEAL"
-            stealBarPct.Text = math.floor(pct * 100 + 0.5) .. "%"
-            stealBarFill.Size = UDim2.new(pct, 0, 1, 0)
+            _setPctTxt(math.floor(pct * 100 + 0.5) .. "%")
+            _setFill(pct)
         end)
     end
     local function setStealBarPct(pct)
         if not stealBarSg or not stealBarSg.Enabled then return end
-        pcall(function()
-            pct = math.clamp(tonumber(pct) or 0, 0, 1)
-            stealBarPct.Text = tostring(math.floor(pct * 100 + 0.5)) .. "%"
-            stealBarFill.Size = UDim2.new(pct, 0, 1, 0)
-        end)
+        pct = math.clamp(tonumber(pct) or 0, 0, 1)
+        _setPctTxt(math.floor(pct * 100 + 0.5) .. "%")
+        _setFill(pct)
+    end
+
+    local function setStealBarSeconds(secLeft, frac)
+        if not stealBarSg or not stealBarSg.Enabled then return end
+        frac = math.clamp(tonumber(frac) or 0, 0, 1)
+        _setPctTxt(string.format("%.1fs", math.max(tonumber(secLeft) or 0, 0)))
+        _setFill(frac)
     end
     local function hideStealBar()
         pcall(function()
             ensureStealBar()
             stealBarSg.Enabled = true
             stealBarTitle.Text = "STEAL"
-            stealBarPct.Text = "0%"
-            stealBarFill.Size = UDim2.new(0, 0, 1, 0)
+            _setPctTxt("0%")
+            _setFill(0)
         end)
     end
     task.defer(hideStealBar)
@@ -4575,18 +5028,18 @@ do
             end)
             if typeof(got) == "Instance" then
                 _reState[hash] = got
-                _G.MeerkoStealSay("remote resolved " .. tostring(hash):sub(1, 8))
+                
             else
                 _reState[hash] = "failed"
                 _reRetryAt[hash] = os.clock() + (tonumber(_G.MeerkoRemoteRetry) or 5)
-                _G.MeerkoStealSay("remote resolve FAILED " .. tostring(hash):sub(1, 8))
+                
             end
         end)
         task.delay(tonumber(_G.MeerkoRemoteResolveWait) or 3, function()
             if _reState[hash] == "pending" then
                 _reState[hash] = "failed"
                 _reRetryAt[hash] = os.clock() + (tonumber(_G.MeerkoRemoteRetry) or 5)
-                _G.MeerkoStealSay("remote resolve TIMEOUT " .. tostring(hash):sub(1, 8))
+                
             end
         end)
         return nil
@@ -4615,52 +5068,7 @@ do
     end
     _G.MeerkoStealBegin, _G.MeerkoStealCommit = _stealBegin, _stealCommit
 
-    -- fire the same two remotes (4) does; have them resolved before the first grab
-    local _RE_BEGIN  = "f40f7d9e-2f0d-4167-b250-899273f46874"
-    local _RE_COMMIT = "3ba148c9-7ed6-4675-93f8-9f7c356a2c54"
-    local _reWarmT0 = os.clock()
-    local function _remotesReady()
-        return typeof(_reState[_RE_BEGIN]) == "Instance"
-            and typeof(_reState[_RE_COMMIT]) == "Instance"
-    end
-    task.spawn(function()
-        for _ = 1, 60 do
-            if _remotesReady() then _G.MeerkoStealSay("steal remotes ready") return end
-            _re(nil, _RE_BEGIN)
-            _re(nil, _RE_COMMIT)
-            task.wait(0.25)
-        end
-    end)
-
-    local function remoteStealAsync(pet, judge)
-        if not (pet and type(pet.plot) == "string" and pet.slot ~= nil) then return false end
-        if _holdBusy() then
-            return false
-        end
-        if not _stealBegin() then return false end
-        _stealHoldStart = tick()
-        _stealHoldActive = true
-        showStealBar(pet.name, 0)
-        task.spawn(function()
-            local hold = tonumber(_G.MeerkoStealHoldDuration) or STEAL_HOLD_DURATION
-            while true do
-                local el = tick() - _stealHoldStart
-                if el >= hold then break end
-                setStealBarPct(el / hold)
-                RunService.Heartbeat:Wait()
-            end
-            setStealBarPct(1)
-            _stealCommit(pet.plot, pet.slot)
-            _verifyFire(pet, "remote", judge)
-            _stealHoldActive = false
-            task.wait(0.2)
-            hideStealBar()
-        end)
-        task.delay(STEAL_HOLD_DURATION + 0.6, hideStealBar)
-        return true
-    end
-
-    local function executeStealAsync(prompt, petName, restoreMax)
+    local function executeStealAsync(prompt, petName, restoreMax, pet)
         if _holdBusy() then
             return false
         end
@@ -4671,38 +5079,131 @@ do
         _stealHoldActive = true
         pcall(function() prompt.MaxActivationDistance = math.huge end)
         showStealBar(petName, 0)
+        if _G.MeerkoStealQuick == true then
+            task.spawn(function()
+                for _, fn in ipairs(data.holdCallbacks) do task.spawn(fn) end
+                pcall(function()
+                    local st = prompt:GetAttribute("State")
+                    if st ~= nil and st ~= "Steal" then _stealBegin() end
+                end)
+                _G.MeerkoStealSrvEnd = workspace:GetServerTimeNow() + STEAL_HOLD_DURATION
+                local _barConn
+                pcall(function()
+                    _barConn = RunService.RenderStepped:Connect(function()
+                        local rem = _G.MeerkoStealSrvEnd and (_G.MeerkoStealSrvEnd - workspace:GetServerTimeNow()) or 0
+                        if rem <= 0 then
+                            setStealBarPct(1)
+                        else
+                            setStealBarPct(1 - rem / STEAL_HOLD_DURATION)
+                        end
+                    end)
+                end)
+                local remaining = _G.MeerkoStealSrvEnd - workspace:GetServerTimeNow()
+                if remaining > 0 then task.wait(remaining) end
+                if _barConn then pcall(function() _barConn:Disconnect() end) end
+                if prompt and prompt.Parent then
+                    for _, fn in ipairs(data.triggerCallbacks) do task.spawn(fn) end
+                else
+                    _armedPet, _armLostSince = nil, 0
+                end
+                for _, fn in ipairs(data.holdEndCallbacks) do task.spawn(fn) end
+                task.wait(0.05)
+                _stealHoldActive = false
+                _G.MeerkoStealSrvEnd = nil
+                if restoreMax ~= nil then
+                    pcall(function()
+                        if prompt and prompt.Parent then prompt.MaxActivationDistance = restoreMax end
+                    end)
+                end
+                data.ready = true
+                hideStealBar()
+            end)
+            return true
+        end
         task.spawn(function()
             for _, fn in ipairs(data.holdCallbacks) do task.spawn(fn) end
-            local hold = tonumber(_G.MeerkoStealHoldDuration) or STEAL_HOLD_DURATION
+            local GRAB_MIN = STEAL_HOLD_DURATION
+            local GRAB_MAX = tonumber(_G.MeerkoStealHoldMax) or STEAL_HOLD_MAX
             pcall(function()
                 local hd = prompt.HoldDuration
-                if type(hd) == "number" and hd > 0 then
-                    hold = math.max(hold, hd + 0.05)
+                if type(hd) == "number" and hd > 0 and hd + 0.05 > GRAB_MIN then
+                    GRAB_MIN = hd + 0.05
                 end
+            end)
+            if GRAB_MAX < GRAB_MIN then GRAB_MAX = GRAB_MIN end
+            local _ppSeen, _ppKind, _charSeen, _hrpSeen = nil, 0, nil, nil
+            local function _grabRange()
+                local char = LP.Character
+                if not char then return true end
+                if char ~= _charSeen then
+                    _charSeen = char
+                    _hrpSeen = char:FindFirstChild("HumanoidRootPart")
+                end
+                local hrp = _hrpSeen
+                if not hrp or hrp.Parent ~= char then
+                    hrp = char:FindFirstChild("HumanoidRootPart")
+                    _hrpSeen = hrp
+                    if not hrp then return true end
+                end
+                local pp = prompt.Parent
+                if not pp then return true end
+                if pp ~= _ppSeen then
+                    _ppSeen = pp
+                    _ppKind = (pp:IsA("Attachment") and 1) or (pp:IsA("BasePart") and 2) or 0
+                end
+                local pos
+                if _ppKind == 1 then pos = pp.WorldPosition
+                elseif _ppKind == 2 then pos = pp.Position
+                else return true end
+                return (hrp.Position - pos).Magnitude <= (tonumber(_G.MeerkoStealGrabDist) or 12)
+            end
+            local DWELL = tonumber(_G.MeerkoStealDwell) or 0.22
+            local readyAt = nil
+            local _gone = false
+            local _barConn
+            pcall(function()
+                _barConn = RunService.RenderStepped:Connect(function()
+                    local el = tick() - _stealHoldStart
+                    if not (prompt and prompt.Parent and prompt:IsDescendantOf(workspace)) then return end
+                    if el < GRAB_MIN then
+                        setStealBarPct(el / GRAB_MIN)
+                    else
+                        local span = GRAB_MAX - GRAB_MIN
+                        local left = GRAB_MAX - el
+                        setStealBarPct(span > 0 and (1 - left / span) or 1)
+                    end
+                end)
             end)
             while true do
                 local el = tick() - _stealHoldStart
-                if el >= hold then break end
-                setStealBarPct(el / hold)
+                if not (prompt and prompt.Parent and prompt:IsDescendantOf(workspace)) then _gone = true break end
+                if el >= GRAB_MAX then break end
+                if _grabRange() then
+                    if not readyAt then readyAt = tick() end
+                    if el >= GRAB_MIN and (tick() - readyAt) >= DWELL then break end
+                else
+                    readyAt = nil
+                end
                 RunService.Heartbeat:Wait()
             end
-            setStealBarPct(1)
-            if prompt and prompt.Parent then
+            if _barConn then pcall(function() _barConn:Disconnect() end) end
+            setStealBarPct(0)
+            if not _gone and prompt and prompt.Parent then
                 for _, fn in ipairs(data.triggerCallbacks) do task.spawn(fn) end
+            elseif _gone then
+                _armedPet, _armLostSince = nil, 0
             end
             for _, fn in ipairs(data.holdEndCallbacks) do task.spawn(fn) end
+            task.wait(0.05)
             _stealHoldActive = false
             if restoreMax ~= nil then
                 pcall(function()
                     if prompt and prompt.Parent then prompt.MaxActivationDistance = restoreMax end
                 end)
             end
-            task.wait(0.05)
             data.ready = true
-            task.wait(0.2)
             hideStealBar()
         end)
-        task.delay(STEAL_HOLD_DURATION + 0.6, hideStealBar)
         return true
     end
 
@@ -4723,24 +5224,17 @@ do
     local _emptyScans = 0
     local function _fireSteal(pet)
         if not pet then return false end
-        if _holdBusy() then _G.MeerkoStealSay("hold already running") return false end
+        if _holdBusy() then  return false end
         local _fhrp = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
         local _fd = (_fhrp and pet.position) and (pet.position - _fhrp.Position).Magnitude or nil
         local _judge = (_fd ~= nil) and (_fd <= _prox() + 2) or false
-        local _cd = _holdDur() + (tonumber(_G.MeerkoVerifyDelay) or 0.5) + 0.15
-        _G.MeerkoStealSay("gates ok -> firing on " .. tostring(pet.name))
-        if _G.MeerkoRemoteStealOn ~= false then
-            if remoteStealAsync(pet, _judge) then
-                _G.MeerkoLastFire = os.clock()
-                _cooldownUntil = tick() + _cd
-                _G.MeerkoStealSay("FIRE remote -> " .. tostring(pet.name))
-                return true
-            end
-            _G.MeerkoStealSay("remote not ready -> prompt path")
-        end
+        local _cd = _holdDur() + (tonumber(_G.MeerkoStealCycleGap) or 0)
+        
+
+
         local prompt = findStealPrompt(pet)
         if not prompt or not prompt.Parent then
-            _G.MeerkoStealSay("no prompt at " .. tostring(pet.plot) .. "/" .. tostring(pet.slot))
+            
             return false
         end
         local oldMax
@@ -4748,14 +5242,12 @@ do
         pcall(function() prompt.MaxActivationDistance = math.huge end)
         buildStealCallbacks(prompt)
         if InternalStealCache[prompt] then
-            if executeStealAsync(prompt, pet.name, oldMax) then
+            if executeStealAsync(prompt, pet.name, oldMax, pet) then
                 _G.MeerkoLastFire = os.clock()
-                _cooldownUntil = tick() + _cd
                 _verifyFire(pet, "prompt", _judge)
-                _G.MeerkoStealSay("FIRE prompt-callback -> " .. tostring(pet.name))
                 return true
             end
-            _G.MeerkoStealSay("prompt-callback not ready")
+
             if oldMax ~= nil then pcall(function() prompt.MaxActivationDistance = oldMax end) end
             return false
         elseif fireproximityprompt then
@@ -4763,25 +5255,24 @@ do
             showStealBar(pet.name, 1)
             pcall(function() fireproximityprompt(prompt) end)
             _G.MeerkoLastFire = os.clock()
-            _cooldownUntil = tick() + (tonumber(_G.MeerkoVerifyDelay) or 0.5) + 0.5
             _verifyFire(pet, "prompt", _judge)
-            _G.MeerkoStealSay("FIRE proximityprompt -> " .. tostring(pet.name))
+
             task.delay(0.4, hideStealBar)
             pcall(function() if oldMax ~= nil then prompt.MaxActivationDistance = oldMax end end)
             return true
         end
-        _G.MeerkoStealSay("no steal method available")
+        
         return false
     end
     _G.MeerkoFireSteal = _fireSteal
     local function _stealTick()
         _G.MeerkoTickN = (_G.MeerkoTickN or 0) + 1
         stealOn = (_G.MeerkoStealMode ~= nil)
-        if not stealOn then _G.MeerkoStealSay("steal mode OFF") return end
+        if not stealOn then  return end
         local now = os.clock()
         local _lockUid = _G.MeerkoStealTargetUID
         local _lockChanged = (type(_lockUid) == "string" and _lockUid ~= "" and _lockUid ~= _lastPickUid)
-        local _needPick = (not _stealTarget) or _lockChanged or (now - _lastTargetPick) >= (tonumber(_G.MeerkoRepickGap) or 0.35)
+        local _needPick = (not _stealTarget) or _lockChanged or (now - _lastTargetPick) >= (tonumber(_G.MeerkoRepickGap) or 0.2)
         if _armedPet then
             local _lp = _armLivePos(_armedPet)
             if _lp then
@@ -4789,24 +5280,24 @@ do
                 _armLostSince = 0
             elseif _armLostSince == 0 then
                 _armLostSince = now
-            elseif now - _armLostSince > (tonumber(_G.MeerkoArmLostGrace) or 1.5) then
+            elseif now - _armLostSince > (tonumber(_G.MeerkoArmLostGrace) or 1.0) then
                 _armedPet, _armLostSince = nil, 0
             end
-            if _armedPet and (now - _armCheckAt) >= (tonumber(_G.MeerkoArmCheckGap) or 0.5) then
+            if _armedPet and (now - _armCheckAt) >= (tonumber(_G.MeerkoArmCheckGap) or 0.3) then
                 _armCheckAt = now
                 local okL, listed = pcall(_petListed, _armedPet.plot, _armedPet.slot)
                 if okL and not listed then
-                    _G.MeerkoStealSay("armed pet gone -> repicking")
+                    
                     _armedPet, _armLostSince = nil, 0
                 end
             end
-            if _armedPet then
+            if _armedPet and _G.MeerkoStealMode ~= "nearest" then
                 _stealTarget = _armedPet
                 if type(_armedPet.name) == "string" then _currentTargetName = _armedPet.name end
                 _needPick = false
             end
         end
-        local _scanGap = (_emptyScans >= 3) and (tonumber(_G.MeerkoStealIdleGap) or 0.3) or 0.01
+        local _scanGap = (_emptyScans >= 3) and (tonumber(_G.MeerkoStealIdleGap) or 0.2) or 0.01
         if not LP:GetAttribute("Stealing") and _needPick and (now - _autoLastScan) >= _scanGap then
             _autoLastScan = now
             _lastTargetPick = now
@@ -4847,61 +5338,62 @@ do
                 end
             end
         end
-        if _G.MeerkoStealInRangeFirst ~= false
-            and not (_armedPet and _G.MeerkoTPTargetWins ~= false)
+        if _G.MeerkoStealMode == "nearest"
             and not (type(_lockUid) == "string" and _lockUid ~= "") then
             local _c2 = LP.Character
             local _h2 = _c2 and _c2:FindFirstChild("HumanoidRootPart")
-            if _h2 then
-                local _cur = _stealTarget
-                local _curD = (_cur and _cur.position) and (_cur.position - _h2.Position).Magnitude or math.huge
-                if _curD > _prox() and (now - _inRangeLast) >= (tonumber(_G.MeerkoInRangeGap) or 0.25) then
-                    _inRangeLast = now
-                    local _pets2 = _scanCached(now, 0.15)
-                    local _ok2 = _pets2 ~= nil
-                    if _ok2 and type(_pets2) == "table" then
-                        local _near, _nd = nil, math.huge
-                        local _mp = _h2.Position
-                        for _, p in ipairs(_pets2) do
-                            if not p.conveyor and p.position then
-                                local d = (p.position - _mp).Magnitude
-                                if d < _nd then _nd, _near = d, p end
-                            end
+            if _h2 and (now - _inRangeLast) >= (tonumber(_G.MeerkoInRangeGap) or 0.15) then
+                _inRangeLast = now
+                local _pets2 = _scanCached(now, 0.15)
+                if _pets2 ~= nil and type(_pets2) == "table" then
+                    local _near, _nd = nil, math.huge
+                    local _mp = _h2.Position
+                    for _, p in ipairs(_pets2) do
+                        if not p.conveyor and p.position then
+                            local d = (p.position - _mp).Magnitude
+                            if d < _nd then _nd, _near = d, p end
                         end
-                        if _near and _nd <= _prox() then
-                            _stealTarget = _near
-                            _armedPet, _armLostSince = nil, 0
-                            _lastTargetPick = now
-                            if type(_near.name) == "string" then _currentTargetName = _near.name end
-                            _G.MeerkoStealSay(string.format("switch to in-range %s d=%.0f", tostring(_near.name), _nd))
+                    end
+                    if _near then
+                        local _nu = _petUid(_near)
+                        if _nu ~= _G.MeerkoLastNearUid then
+                            _G.MeerkoLastNearUid = _nu
+                            
                         end
+                        _stealTarget = _near
+                        _armedPet, _armLostSince = nil, 0
+                        _lastTargetPick = now
+                        if type(_near.name) == "string" then _currentTargetName = _near.name end
                     end
                 end
             end
         end
         local pet = _stealTarget
-        if not pet then _G.MeerkoStealSay("no target") return end
+        if not pet then  return end
 
-        if now - _stealLastScan < 0.033 then _G.MeerkoThrN = (_G.MeerkoThrN or 0) + 1 return end
+        if now - _stealLastScan < 0.02 then _G.MeerkoThrN = (_G.MeerkoThrN or 0) + 1 return end
         _stealLastScan = now
         local t = timeUntilCanSteal()
         if t == -1 then
             if LP:GetAttribute("Stealing") then _stealTarget = nil; _armedPet, _armLostSince = nil, 0 end
-            _G.MeerkoStealSay("busy: stealing/trading/web")
+            
             return
         end
-        if t > 0 and t > _holdDur() then _G.MeerkoStealSay(string.format("cooldown %.1fs", t)) return end
+        if t > 0 and t > _holdDur() then  return end
         local char = LP.Character
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
-        if not hrp then _G.MeerkoStealSay("no character") return end
+        if not hrp then  return end
 
         if pet.position then
             local toPet = pet.position - hrp.Position
             local dist = toPet.Magnitude
-            _G.MeerkoStealTgt = string.format("%s [%s/%s] d=%.0f", tostring(pet.name), tostring(pet.plot), tostring(pet.slot), dist)
-            local hold = tonumber(_G.MeerkoStealHoldDuration) or STEAL_HOLD_DURATION
+            if (now - (_G.__meerkoTgtAt or 0)) >= 0.15 then
+                _G.__meerkoTgtAt = now
+                _G.MeerkoStealTgt = tostring(pet.name) .. " [" .. tostring(pet.plot) .. "/" .. tostring(pet.slot) .. "] d=" .. math.floor(dist)
+            end
+            local hold = _holdDur()
 
-            local lead = tonumber(_G.MeerkoStealLead) or 0.27
+            local lead = tonumber(_G.MeerkoStealLead) or 0.6
 
             local closing = dist > 0.001 and (hrp.AssemblyLinearVelocity:Dot(toPet) / dist) or 0
 
@@ -4917,34 +5409,39 @@ do
                 end
             end
 
+            local _armed = _G.MeerkoStealQuick ~= true
+            local _mul = _armed and 1.5 or 1
             if _nearBase then
-                if dist > (tonumber(_G.MeerkoNearBaseStealStart) or 55) then _G.MeerkoStealSay(string.format("nearbase far d=%.0f", dist)) return end
+                if dist > (tonumber(_G.MeerkoNearBaseStealStart) or 80) * _mul then  return end
             elseif closing > (tonumber(_G.MeerkoFastApproach) or 150) then
 
-                if dist > (tonumber(_G.MeerkoStealLeadMax) or 223) then _G.MeerkoStealSay(string.format("lead far d=%.0f", dist)) return end
-                if (dist / closing) > hold * lead then _G.MeerkoStealSay(string.format("lead wait d=%.0f c=%.0f", dist, closing)) return end
+                if dist > (tonumber(_G.MeerkoStealLeadMax) or 420) * _mul then  return end
+                if (dist / closing) > hold * lead + (tonumber(_G.MeerkoStealEarly) or 0.35) * _mul then  return end
             elseif closing > 5 then
 
-                if dist > (tonumber(_G.MeerkoCloseProximity) or 24) then _G.MeerkoStealSay(string.format("moving far d=%.0f c=%.0f", dist, closing)) return end
+                if dist > (tonumber(_G.MeerkoCloseProximity) or 40) * _mul then  return end
             else
-                
-                if dist > _prox() then _G.MeerkoStealSay(string.format("far d=%.0f", dist)) return end
+
+                if dist > _prox() * _mul then  return end
             end
         end
         _fireSteal(pet)
     end
+    local _stealThrottle = 0
     RunService.Heartbeat:Connect(function()
-        local _ok, _err = pcall(_stealTick)
-        if not _ok then _G.MeerkoStealSay("ERROR " .. tostring(_err)) end
+        _stealThrottle = _stealThrottle + 1
+        if _stealThrottle < 2 then return end
+        _stealThrottle = 0
+        pcall(_stealTick)
     end)
 
     task.spawn(function()
         while true do
-            task.wait(tonumber(_G.MeerkoWatchdogTick) or 0.2)
+            task.wait(tonumber(_G.MeerkoWatchdogTick) or 0.15)
             if _G.MeerkoStealMode ~= nil and _G.MeerkoStealWatchdog ~= false
                 and not LP:GetAttribute("Stealing")
                 and not _holdBusy()
-                and (os.clock() - (_G.MeerkoLastFire or 0)) > (tonumber(_G.MeerkoWatchdogGap) or 1.5) then
+                and (os.clock() - (_G.MeerkoLastFire or 0)) > (tonumber(_G.MeerkoWatchdogGap) or 1.0) then
                 local c = LP.Character
                 local h = c and c:FindFirstChild("HumanoidRootPart")
                 if h then
@@ -4953,14 +5450,27 @@ do
                     if ok and type(pets) == "table" then
                         local near, nd = nil, math.huge
                         local mp = h.Position
-                        for _, p in ipairs(pets) do
-                            if not p.conveyor and p.position then
-                                local d = (p.position - mp).Magnitude
-                                if d < nd then nd, near = d, p end
+                        if _G.MeerkoStealMode == "nearest" then
+                            for _, p in ipairs(pets) do
+                                if not p.conveyor and p.position then
+                                    local d = (p.position - mp).Magnitude
+                                    if d < nd then nd, near = d, p end
+                                end
+                            end
+                        else
+                            local want = _armedPet or _stealTarget
+                            local wuid = want and _petUid(want)
+                            if wuid then
+                                for _, p in ipairs(pets) do
+                                    if not p.conveyor and p.position and _petUid(p) == wuid then
+                                        near, nd = p, (p.position - mp).Magnitude
+                                        break
+                                    end
+                                end
                             end
                         end
                         if near and nd <= _prox() then
-                            _G.MeerkoStealSay(string.format("WATCHDOG in range %s d=%.0f", tostring(near.name), nd))
+                            
                             pcall(_fireSteal, near)
                         end
                     end
@@ -4996,6 +5506,7 @@ do
         RunService.Heartbeat:Connect(function()
             local now = os.clock()
             if now - _unwalkLast < 1.5 then return end
+            if _meerkoAnimRestoreAt and now < _meerkoAnimRestoreAt then return end
             _unwalkLast = now
             if LP.Character then applyUnwalkAlways(LP.Character) end
         end)
@@ -5029,10 +5540,8 @@ do
         t.walkSpeed = tonumber(_G.MeerkoWalkSpeed) or 27
         t.landingDelay = tonumber(_G.LandingDelay) or 0.35
         t.closeSpeed = tonumber(_G.MeerkoCloseSpeed) or 80
-        t.tpSafeMode = _G.MeerkoTPSafeMode ~= false
-        t.tpSafeSpeed = tonumber(_G.MeerkoTPSafeSpeed) or 300
-        t.tpSafeVerticalSpeed = tonumber(_G.MeerkoTPSafeVerticalSpeed) or 110
-        t.tpRetryCount = tonumber(_G.MeerkoTPRetryCount) or 2
+        t.problemBaseSpeed = tonumber(_G.MeerkoProblemBaseSpeed) or 60
+        t.slowCrossRow = _G.MeerkoSlowCrossRow == true
         t.autoTp = _G.MeerkoAutoTP ~= false
         t.autoKickOnSteal = _G.MeerkoAutoKickOnSteal == true
         t.kickToPS = _G.MeerkoKickToPS == true
@@ -5047,14 +5556,21 @@ do
         t.invisAngle = tonumber(_G.MeerkoInvisAngle) or 180
         t.autoSteal = stealOn
         t.stealMode = _G.MeerkoStealMode
+        t.stealLead = tonumber(_G.MeerkoStealLead) or 0.6
+        t.stealFireKey = type(_G.MeerkoStealFireKey) == "string" and _G.MeerkoStealFireKey or nil
         t.priorityList = _G.SHARED_PRIORITY_ITEMS
+        t.mutationList = _G.SHARED_MUTATION_PRIORITY
+        do
+            local d = {}
+            for name, on in pairs(_G.SHARED_MUTATION_DISABLED) do
+                if on then d[#d + 1] = name end
+            end
+            t.mutationDisabled = d
+        end
+        t.traitList = _G.SHARED_TRAIT_PRIORITY
         t.panelX = tonumber(_G._stp_panelX)
         t.panelY = tonumber(_G._stp_panelY)
         t.panelPos = _G._stp_pos
-        t.tgtX = tonumber(_G._meerko_tgtX)
-        t.tgtY = tonumber(_G._meerko_tgtY)
-        t.tgtW = tonumber(_G._meerko_tgtW)
-        t.tgtH = tonumber(_G._meerko_tgtH)
         
         if type(_G.MeerkoCloneKeyName)  == "string" then t.cloneKey  = _G.MeerkoCloneKeyName  else t.cloneKey  = nil end
         if type(_G.MeerkoKickKeyName)   == "string" then t.kickKey   = _G.MeerkoKickKeyName   else t.kickKey   = nil end
@@ -5062,6 +5578,8 @@ do
         if type(_G.MeerkoNearestKey)    == "string" then t.nearestKey= _G.MeerkoNearestKey    else t.nearestKey= nil end
         if type(_G.MeerkoDropKeyName)   == "string" then t.dropKey   = _G.MeerkoDropKeyName   else t.dropKey   = nil end
         if type(_G.MeerkoResetKeyName)  == "string" then t.resetKey  = _G.MeerkoResetKeyName  else t.resetKey  = nil end
+        if type(_G.MeerkoCarpetSpeedKeyName) == "string" then t.carpetSpeedKey = _G.MeerkoCarpetSpeedKeyName else t.carpetSpeedKey = nil end
+        if type(_G.MeerkoStealQuickKey) == "string" then t.stealQuickKey = _G.MeerkoStealQuickKey else t.stealQuickKey = nil end
         t.antiFlash = _G.MeerkoAntiFlash ~= false
         t.faceAway = _G.MeerkoFaceAway == true
         t.faceAwayNearest = _G.MeerkoFaceAwayNearest == true
@@ -5070,6 +5588,8 @@ do
         t.infJump   = _G.MeerkoInfJump ~= false
         t.antiDie   = _G.AntiDieDisabled ~= true
         t.carpetSpeedValue = tonumber(_G.MeerkoCarpetSpeedValue) or 140
+
+        if type(_G.MeerkoCarpetTool) == "string" then t.carpetTool = _G.MeerkoCarpetTool else t.carpetTool = nil end
         t.autoBuy = _G.MeerkoAutoBuy == true
         t.autoBuyRange = tonumber(_G.MeerkoAutoBuyRange) or 17
         t.autoBuyHover = tonumber(_G.MeerkoAutoBuyHover) or 9
@@ -5084,9 +5604,11 @@ do
     if _G.MeerkoClimb == nil then _G.MeerkoClimb = 160 end
     if _G.MeerkoGoSpeed == nil then _G.MeerkoGoSpeed = 200 end
     if _G.MeerkoCFrameSpeed == nil then _G.MeerkoCFrameSpeed = 450 end
-    if _G.MeerkoWalkSpeed == nil then _G.MeerkoWalkSpeed = 27 end
+    if _G.MeerkoWalkSpeed == nil then _G.MeerkoWalkSpeed = 24 end
     if _G.LandingDelay == nil then _G.LandingDelay = 0.35 end
     if _G.MeerkoCloseSpeed == nil then _G.MeerkoCloseSpeed = 80 end
+    if _G.MeerkoProblemBaseSpeed == nil then _G.MeerkoProblemBaseSpeed = 60 end
+    if _G.MeerkoSlowCrossRow == nil then _G.MeerkoSlowCrossRow = false end
     if _G.MeerkoInvisDepth == nil then _G.MeerkoInvisDepth = 4.2 end
     if _G.MeerkoInvisAngle == nil then _G.MeerkoInvisAngle = 180 end
 
@@ -5094,20 +5616,22 @@ do
     local EASE = TweenInfo.new(0.16, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     local function tween(o, props) TS:Create(o, EASE, props):Play() end
 
-    local guiParent = (gethui and gethui()) or game:GetService("CoreGui") or PG
+    local guiParent = (gethui and gethui()) or game:GetService("CoreGui")
     for _, par in ipairs({ guiParent, PG }) do
         pcall(function()
-            local old = par:FindFirstChild("uiMainLayer")
+            local old = par:FindFirstChild("MeerkoTP")
             if old then old:Destroy() end
+            local oldBar = par:FindFirstChild("MeerkoTopBar")
+            if oldBar then oldBar:Destroy() end
         end)
     end
 
     local sg = mk("ScreenGui", nil, {
-        Name = "uiMainLayer", ResetOnSpawn = false, IgnoreGuiInset = true,
+        Name = "MeerkoTP", ResetOnSpawn = false, IgnoreGuiInset = true,
         DisplayOrder = 999999, ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
     })
     pcall(function() sg.Parent = guiParent end)
-    if not sg.Parent then sg.Parent = PG end
+    if not sg.Parent then pcall(function() sg.Parent = (gethui and gethui()) or game:GetService("CoreGui") end) end
 
     sg.Enabled = false
 
@@ -5119,40 +5643,31 @@ do
     end)
 
     do
-        local hudAlways = mk("ScreenGui", nil, {
-            Name = "uiHudAlways", ResetOnSpawn = false, IgnoreGuiInset = true,
-            DisplayOrder = 1000000, ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+        local barSg = mk("ScreenGui", nil, {
+            Name = "MeerkoTopBar", ResetOnSpawn = false, IgnoreGuiInset = true,
+            DisplayOrder = 999998, ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
         })
-        pcall(function() hudAlways.Parent = guiParent end)
-        if not hudAlways.Parent then hudAlways.Parent = PG end
+        pcall(function() barSg.Parent = guiParent end)
+        if not barSg.Parent then pcall(function() barSg.Parent = (gethui and gethui()) or game:GetService("CoreGui") end) end
 
-        local hdr = corner(mk("Frame", hudAlways, {
+        local hdr = corner(mk("Frame", barSg, {
             Name = "Bar", AnchorPoint = Vector2.new(0.5, 0),
-            Position = UDim2.new(0.5, 0, 0, 10), Size = UDim2.fromOffset(340, 26),
+            Position = UDim2.new(0.5, 0, 0, 26), Size = UDim2.fromOffset(400, 34),
             BackgroundColor3 = UIC.bg, BorderSizePixel = 0, ZIndex = 50,
         }), 8)
         mk("UIGradient", hdr, { Rotation = 90, Color = ColorSequence.new(UIC.card, UIC.bg) })
-        local hrim = mk("UIStroke", hdr, { Thickness = 1, Transparency = 0.15 })
-        mk("UIGradient", hrim, { Rotation = 90, Color = ColorSequence.new(UIC.acc, UIC.line) })
+        mk("UIStroke", hdr, { Thickness = 1, Transparency = 0.4, Color = UIC.line })
 
-        local function seg(x, w, txt, col, font)
+        local function seg(x, w, txt, col, font, sz)
             return mk("TextLabel", hdr, {
-                Size = UDim2.fromOffset(w, 26), Position = UDim2.fromOffset(x, 0),
-                BackgroundTransparency = 1, Text = txt, Font = font, TextSize = 11,
+                Size = UDim2.fromOffset(w, 34), Position = UDim2.fromOffset(x, 0),
+                BackgroundTransparency = 1, Text = txt, Font = font, TextSize = sz or 13,
                 TextColor3 = col, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 51,
             })
         end
-        local function div(x)
-            mk("Frame", hdr, {
-                Size = UDim2.fromOffset(1, 12), Position = UDim2.fromOffset(x, 7),
-                BackgroundColor3 = UIC.line, BorderSizePixel = 0, ZIndex = 51,
-            })
-        end
-        seg(16, 96, "MEERKO TP", UIC.acc, UIFB)
-        div(120)
-        local fpsLbl = seg(132, 84, "FPS: --", UIC.txt, UIF)
-        div(224)
-        local pingLbl = seg(236, 88, "PING: --", UIC.txt, UIF)
+        seg(18, 110, "MEERKO TP", UIC.acc, UIFB, 14)
+        local fpsLbl = seg(150, 100, "FPS --", UIC.txt, UIF)
+        local pingLbl = seg(268, 116, "PING --", UIC.txt, UIF)
 
         local frames, since, pingItem = 0, 0, nil
         RunService.RenderStepped:Connect(function(dt)
@@ -5178,42 +5693,22 @@ do
         Position = UDim2.fromOffset(tonumber(_G._stp_panelX) or 40, tonumber(_G._stp_panelY) or 160),
     })
 
-    local shadow = mk("Frame", root, {
-        Size = UDim2.new(1, 12, 1, 12), Position = UDim2.fromOffset(-6, -6),
-        BackgroundColor3 = Color3.fromRGB(0, 0, 0), BackgroundTransparency = 0.75,
-        ZIndex = -1, BorderSizePixel = 0,
-    })
-    corner(shadow, 20)
-
     local card = corner(mk("Frame", root, {
         BackgroundColor3 = UIC.bg, BorderSizePixel = 0, Size = UDim2.fromScale(1, 1), ZIndex = 1,
-    }), 20)
+    }), 10)
     mk("UIGradient", card, {
         Rotation = 135,
         Color = ColorSequence.new({ColorSequenceKeypoint.new(0, UIC.bg2), ColorSequenceKeypoint.new(1, UIC.bg)}),
     })
-    local rim = mk("UIStroke", card, { Thickness = 1.5, Transparency = 0.25, Color = UIC.acc })
-    mk("UIGradient", rim, {
-        Rotation = 135,
-        Color = ColorSequence.new({ColorSequenceKeypoint.new(0, UIC.acc), ColorSequenceKeypoint.new(1, UIC.acc2)}),
-    })
+    mk("UIStroke", card, { Thickness = 1, Transparency = 0.4, Color = UIC.line })
 
     local rail = mk("Frame", card, {
         Size = UDim2.new(0, RAIL, 1, 0), BackgroundTransparency = 1, ZIndex = 2,
     })
     mk("TextLabel", rail, {
-        Size = UDim2.new(1, -PAD * 2, 0, 18), Position = UDim2.fromOffset(PAD, 20),
-        BackgroundTransparency = 1, Text = "MEERKO", Font = UIFB, TextSize = 14,
+        Size = UDim2.new(1, -PAD * 2, 0, 20), Position = UDim2.fromOffset(PAD, 28),
+        BackgroundTransparency = 1, Text = "MEERKO TP", Font = UIFB, TextSize = 15,
         TextColor3 = UIC.txt, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 2,
-    })
-    mk("TextLabel", rail, {
-        Size = UDim2.new(1, -PAD * 2, 0, 12), Position = UDim2.fromOffset(PAD, 40),
-        BackgroundTransparency = 1, Text = "TELEPORT", Font = UIF, TextSize = 9,
-        TextColor3 = UIC.acc, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 2,
-    })
-    mk("Frame", rail, {
-        Position = UDim2.fromOffset(PAD, 58), Size = UDim2.new(1, -PAD * 2, 0, 2),
-        BackgroundColor3 = UIC.line, BorderSizePixel = 0,
     })
 
     local body = mk("Frame", card, {
@@ -5240,12 +5735,12 @@ do
             Size = UDim2.new(1, -PAD * 2, 0, 32), Position = UDim2.fromOffset(PAD, 72 + (order - 1) * 38),
             BackgroundColor3 = UIC.card, BackgroundTransparency = 0.5, Text = "",
             AutoButtonColor = false, Active = true, ZIndex = 2,
-        }), 12)
+        }), 6)
         local bg = mk("Frame", b, {
             Size = UDim2.fromScale(1, 1), BackgroundColor3 = UIC.acc,
             BackgroundTransparency = 1, BorderSizePixel = 0,
         })
-        corner(bg, 12)
+        corner(bg, 6)
         local lbl = mk("TextLabel", b, {
             Size = UDim2.new(1, 0, 1, 0), Position = UDim2.fromOffset(0, 0),
             BackgroundTransparency = 1, Text = name, Font = UIFB, TextSize = 11,
@@ -5291,12 +5786,12 @@ do
         local card = corner(mk("Frame", parent, {
             Size = UDim2.new(1, 0, 0, h), BackgroundColor3 = UIC.card,
             BorderSizePixel = 0, Active = true, ZIndex = 2,
-        }), 12)
+        }), 6)
         local bg = mk("Frame", card, {
             Size = UDim2.fromScale(1, 1), BackgroundColor3 = UIC.acc,
             BackgroundTransparency = 1, BorderSizePixel = 0,
         })
-        corner(bg, 12)
+        corner(bg, 6)
         return card
     end
 
@@ -5369,6 +5864,79 @@ do
         })
         box.FocusLost:Connect(function() set(box.Text) end)
         return box
+    end
+
+
+
+    local function dropdown(parent, txt, options, get, set)
+        local HEAD, ROW = 40, 26
+        local card2 = shell(parent, HEAD)
+        card2.ClipsDescendants = true
+        mk("TextLabel", card2, {
+            Size = UDim2.new(1, -24, 0, 12), Position = UDim2.fromOffset(14, 6),
+            BackgroundTransparency = 1, Text = txt, Font = UIF, TextSize = 11,
+            TextColor3 = UIC.dim, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 3,
+        })
+        local cur = mk("TextLabel", card2, {
+            Size = UDim2.new(1, -44, 0, 14), Position = UDim2.fromOffset(14, 20),
+            BackgroundTransparency = 1, Font = UIFB, TextSize = 12,
+            TextColor3 = UIC.txt, TextXAlignment = Enum.TextXAlignment.Left,
+            TextTruncate = Enum.TextTruncate.AtEnd, Text = "", ZIndex = 3,
+        })
+        local arrow = mk("TextLabel", card2, {
+            Size = UDim2.fromOffset(20, 14), Position = UDim2.new(1, -32, 0, 20),
+            BackgroundTransparency = 1, Font = UIFB, TextSize = 11,
+            TextColor3 = UIC.acc, TextXAlignment = Enum.TextXAlignment.Right,
+            Text = "v", ZIndex = 3,
+        })
+        local hit = mk("TextButton", card2, {
+            Size = UDim2.new(1, 0, 0, HEAD), BackgroundTransparency = 1, Text = "",
+            Active = true, AutoButtonColor = false, ZIndex = 4,
+        })
+        local list = mk("Frame", card2, {
+            Position = UDim2.fromOffset(0, HEAD), Size = UDim2.new(1, 0, 0, #options * ROW),
+            BackgroundTransparency = 1, Visible = false, ZIndex = 3,
+        })
+        mk("UIListLayout", list, { SortOrder = Enum.SortOrder.LayoutOrder })
+        local open, rows = false, {}
+        local function paint()
+            local v = get()
+            cur.Text = (type(v) == "string" and v ~= "") and v or tostring(options[1])
+            for _, r in ipairs(rows) do
+                local on = (r.name == cur.Text)
+                r.lbl.TextColor3 = on and UIC.acc or UIC.dim
+                r.bg.BackgroundTransparency = on and 0.85 or 1
+            end
+        end
+        local function setOpen(v)
+            open = v
+            list.Visible = v
+            arrow.Text = v and "^" or "v"
+            tween(card2, {
+                Size = UDim2.new(1, 0, 0, v and (HEAD + #options * ROW + 6) or HEAD),
+            })
+        end
+        for i, name in ipairs(options) do
+            local rb = mk("TextButton", list, {
+                Size = UDim2.new(1, 0, 0, ROW), BackgroundColor3 = UIC.acc,
+                BackgroundTransparency = 1, BorderSizePixel = 0, Text = "",
+                AutoButtonColor = false, Active = true, LayoutOrder = i, ZIndex = 4,
+            })
+            local rl = mk("TextLabel", rb, {
+                Size = UDim2.new(1, -30, 1, 0), Position = UDim2.fromOffset(22, 0),
+                BackgroundTransparency = 1, Text = name, Font = UIFB, TextSize = 11,
+                TextColor3 = UIC.dim, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 5,
+            })
+            rows[#rows + 1] = { name = name, lbl = rl, bg = rb }
+            rb.MouseButton1Click:Connect(function()
+                set(name)
+                paint()
+                setOpen(false)
+            end)
+        end
+        hit.MouseButton1Click:Connect(function() setOpen(not open) end)
+        paint()
+        return paint
     end
 
     local function slider(parent, txt, min, max, get, set, step)
@@ -5482,30 +6050,69 @@ do
         function() return _G.MeerkoAutoTP ~= false end,
         function() _G.MeerkoAutoTP = not (_G.MeerkoAutoTP ~= false); saveTpSettings() end)
 
+
+    label(home, "flying tool")
+    dropdown(home, "TOOL USED FOR FLYING", FLY_TOOLS,
+        function() return _G.MeerkoCarpetTool end,
+        function(n) setCarpetTool(n); saveTpSettings() end)
+
     label(tune, "movement", true)
-    _G.MeerkoRepaintTPSafe = toggle(tune, "TP SAFE MODE",
-        function() return _G.MeerkoTPSafeMode ~= false end,
-        function() _G.MeerkoTPSafeMode = not (_G.MeerkoTPSafeMode ~= false); saveTpSettings() end)
     for _, s in ipairs({
         { "TP Velocity",          200,  750, "TPVelocity",        5    },
         { "Rise Speed",           100,  250, "MeerkoClimb",       5    },
         { "Go To Brainrot Speed",  80,  600, "MeerkoGoSpeed",     5    },
-        { "Walk Speed",            16,   29, "MeerkoWalkSpeed",   1    },
-        { "Landing Delay",       0.05, 0.75, "LandingDelay",      0.05 },
+        { "Landing Delay",       0.01, 1.0,  "LandingDelay",      0.01 },
         { "100 Studs Base Speed",  20,  400, "MeerkoCloseSpeed",  5    },
+        { "Cross-Row Front Speed", 20,  400, "MeerkoProblemBaseSpeed", 5 },
     }) do
         slider(tune, s[1], s[2], s[3],
             function() return _G[s[4]] end, function(v) _G[s[4]] = v end, s[5])
     end
 
-    local pri = tab("Priority", 3)
-    local refreshPri
+    label(tune, "cross-row front approach")
+    toggle(tune, "SLOW BEHIND CROSS-ROW (FIRST FLOOR)",
+        function() return _G.MeerkoSlowCrossRow == true end,
+        function() _G.MeerkoSlowCrossRow = not (_G.MeerkoSlowCrossRow == true); saveTpSettings() end)
 
-    label(pri, "add animal", true)
+    local pri = tab("Priority", 3)
+    local refreshPri, currentPriTab = nil, "brainrot"
+
+    local function mkSubTabs(parent)
+        local tabsFrame = mk("Frame", parent, {
+            Size = UDim2.new(1, 0, 0, 26), BackgroundTransparency = 1,
+        })
+        local names = {"Brainrots", "Mutations", "Traits"}
+        local w = 1 / #names
+        for i, n in ipairs(names) do
+            local b = corner(mk("TextButton", tabsFrame, {
+                Size = UDim2.new(w, -4, 1, 0), Position = UDim2.new(w * (i - 1), 2, 0, 0),
+                BackgroundColor3 = UIC.acc, Text = n, Font = UIFB, TextSize = 11,
+                TextColor3 = UIC.bg, AutoButtonColor = false, Active = true, ZIndex = 3,
+            }), 6)
+            b.MouseButton1Click:Connect(function()
+                currentPriTab = n:lower():gsub("s$", "")
+                for _, c in ipairs(tabsFrame:GetChildren()) do
+                    if c:IsA("TextButton") then
+                        c.BackgroundColor3 = (c == b) and UIC.acc or UIC.track
+                        c.TextColor3 = (c == b) and UIC.bg or UIC.txt
+                    end
+                end
+                if refreshPri then refreshPri() end
+            end)
+            if i == 1 then
+                b.BackgroundColor3, b.TextColor3 = UIC.acc, UIC.bg
+            else
+                b.BackgroundColor3, b.TextColor3 = UIC.track, UIC.txt
+            end
+        end
+    end
+    mkSubTabs(pri)
+
+    local addBox
     do
         local card2 = shell(pri, 36)
         stroke(card2)
-        local box = mk("TextBox", card2, {
+        addBox = mk("TextBox", card2, {
             Size = UDim2.new(1, -74, 0, 24), Position = UDim2.fromOffset(10, 6),
             BackgroundColor3 = UIC.track, BorderSizePixel = 0,
             Font = UIF, TextSize = 12, TextColor3 = UIC.txt,
@@ -5513,27 +6120,33 @@ do
             PlaceholderText = "type a name, then Enter", PlaceholderColor3 = UIC.dim,
             ClearTextOnFocus = false, Text = "", Active = true, ZIndex = 4,
         })
-        corner(box, 10)
-        mk("UIPadding", box, { PaddingLeft = UDim.new(0, 8), PaddingRight = UDim.new(0, 8) })
+        corner(addBox, 6)
+        mk("UIPadding", addBox, { PaddingLeft = UDim.new(0, 8), PaddingRight = UDim.new(0, 8) })
         local addBtn = corner(mk("TextButton", card2, {
             Size = UDim2.fromOffset(52, 24), Position = UDim2.new(1, -60, 0, 6),
             BackgroundColor3 = UIC.acc, Text = "ADD", Font = UIFB, TextSize = 11,
             TextColor3 = UIC.bg, AutoButtonColor = false, Active = true, ZIndex = 4,
-        }), 12)
+        }), 6)
         local function doAdd()
-            local name = (box.Text or ""):match("^%s*(.-)%s*$")
+            local name = (addBox.Text or ""):match("^%s*(.-)%s*$")
             if name and name ~= "" then
-                table.insert(_G.SHARED_PRIORITY_ITEMS, name)
+                if currentPriTab == "brainrot" then
+                    table.insert(_G.SHARED_PRIORITY_ITEMS, name)
+                elseif currentPriTab == "mutation" then
+                    table.insert(_G.SHARED_MUTATION_PRIORITY, name)
+                else
+                    table.insert(_G.SHARED_TRAIT_PRIORITY, name)
+                end
                 _G.MeerkoPriVersion = (_G.MeerkoPriVersion or 0) + 1
                 pcall(saveTpSettings)
-                box.Text = ""
+                addBox.Text = ""
                 if refreshPri then refreshPri() end
             end
         end
         addBtn.MouseButton1Click:Connect(doAdd)
         addBtn.MouseEnter:Connect(function() tween(addBtn, { BackgroundColor3 = UIC.txt }) end)
         addBtn.MouseLeave:Connect(function() tween(addBtn, { BackgroundColor3 = UIC.acc }) end)
-        box.FocusLost:Connect(function(enter) if enter then doAdd() end end)
+        addBox.FocusLost:Connect(function(enter) if enter then doAdd() end end)
     end
 
     label(pri, "priority  -  top = highest")
@@ -5541,22 +6154,43 @@ do
         Size = UDim2.new(1, 0, 0, 0), BackgroundTransparency = 1,
         AutomaticSize = Enum.AutomaticSize.Y, ZIndex = 2,
     })
-    mk("UIListLayout", rowsHost, { Padding = UDim.new(0, 5), SortOrder = Enum.SortOrder.LayoutOrder })
+    mk("UIListLayout", rowsHost, { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder })
+
+    local function getListAndIcon()
+        if currentPriTab == "brainrot" then
+            return _G.SHARED_PRIORITY_ITEMS, nil
+        elseif currentPriTab == "mutation" then
+            return _G.SHARED_MUTATION_PRIORITY, MUTATION_ICONS
+        else
+            return _G.SHARED_TRAIT_PRIORITY, TRAIT_ICONS
+        end
+    end
 
     refreshPri = function()
         for _, c in ipairs(rowsHost:GetChildren()) do
             if c:IsA("GuiObject") then c:Destroy() end
         end
-        local L = _G.SHARED_PRIORITY_ITEMS
+        local L, icons = getListAndIcon()
         for i = 1, #L do
             local nm = tostring(L[i])
             local row = corner(mk("Frame", rowsHost, {
                 Size = UDim2.new(1, 0, 0, 30), BackgroundColor3 = UIC.card,
                 BorderSizePixel = 0, LayoutOrder = i, ZIndex = 2,
-            }), 12)
+            }), 6)
             stroke(row)
+            local iconId = icons and icons[nm]
+            local textOff = 12
+            if iconId and type(iconId) == "string" then
+                local icon = mk("ImageLabel", row, {
+                    Size = UDim2.fromOffset(22, 22), Position = UDim2.fromOffset(10, 4),
+                    BackgroundTransparency = 1, Image = tostring(iconId),
+                    ZIndex = 3,
+                })
+                textOff = 40
+            end
             mk("TextLabel", row, {
-                Size = UDim2.new(1, -104, 1, 0), Position = UDim2.fromOffset(12, 0),
+                Size = UDim2.new(1, (currentPriTab == "mutation") and -148 or -104, 1, 0),
+                Position = UDim2.fromOffset(textOff, 0),
                 BackgroundTransparency = 1, Text = i .. ".  " .. nm,
                 Font = UIF, TextSize = 12, TextColor3 = UIC.txt,
                 TextXAlignment = Enum.TextXAlignment.Left,
@@ -5572,7 +6206,7 @@ do
                     Size = UDim2.fromOffset(26, 22), Position = UDim2.new(1, xoff, 0.5, -11),
                     BackgroundColor3 = UIC.track, Text = sym, Font = UIFB, TextSize = 12,
                     TextColor3 = UIC.txt, AutoButtonColor = false, Active = true, ZIndex = 3,
-                }), 11)
+                }), 6)
                 b.MouseEnter:Connect(function() tween(b, { BackgroundColor3 = UIC.line }) end)
                 b.MouseLeave:Connect(function() tween(b, { BackgroundColor3 = UIC.track }) end)
                 b.MouseButton1Click:Connect(act)
@@ -5580,10 +6214,104 @@ do
             end
             mini(-98, "\u{25B2}", function() if i > 1 then L[i], L[i - 1] = L[i - 1], L[i]; commit() end end)
             mini(-68, "\u{25BC}", function() if i < #L then L[i], L[i + 1] = L[i + 1], L[i]; commit() end end)
-            mini(-36, "\u{2715}", function() table.remove(L, i); commit() end)
+            mini(-36, "X", function() table.remove(L, i); commit() end)
+            if currentPriTab == "mutation" then
+                local D = _G.SHARED_MUTATION_DISABLED
+                local off = D[nm] == true
+                local tg = corner(mk("TextButton", row, {
+                    Size = UDim2.fromOffset(34, 22), Position = UDim2.new(1, -136, 0.5, -11),
+                    BackgroundColor3 = off and UIC.track or UIC.acc,
+                    Text = off and "OFF" or "ON", Font = UIFB, TextSize = 10,
+                    TextColor3 = off and UIC.dim or UIC.bg,
+                    AutoButtonColor = false, Active = true, ZIndex = 3,
+                }), 6)
+                tg.MouseButton1Click:Connect(function()
+                    if D[nm] then D[nm] = nil else D[nm] = true end
+                    commit()
+                end)
+                if off then
+                    for _, c in ipairs(row:GetChildren()) do
+                        if c:IsA("TextLabel") then c.TextColor3 = UIC.dim end
+                        if c:IsA("ImageLabel") then c.ImageTransparency = 0.6 end
+                    end
+                end
+            end
         end
     end
-    tabOpenHook["Priority"] = refreshPri
+    tabOpenHook["Priority"] = function() if refreshPri then refreshPri() end end
+
+    local cfg = tab("Config", 4)
+    label(cfg, "config", true)
+    do
+        local exportBtn = corner(mk("TextButton", cfg, {
+            Size = UDim2.new(1, 0, 0, 34), BackgroundColor3 = UIC.acc,
+            Text = "EXPORT TO CLIPBOARD", Font = UIFB, TextSize = 12,
+            TextColor3 = UIC.bg, AutoButtonColor = false, Active = true, ZIndex = 3,
+        }), 8)
+        exportBtn.MouseButton1Click:Connect(function()
+            pcall(function()
+                local raw = readfile and readfile("SideTP.json")
+                if type(raw) == "string" and #raw > 0 then
+                    if type(setclipboard) == "function" then setclipboard(raw) end
+                    
+                else
+                    
+                end
+            end)
+        end)
+        exportBtn.MouseEnter:Connect(function() tween(exportBtn, { BackgroundColor3 = UIC.txt }) end)
+        exportBtn.MouseLeave:Connect(function() tween(exportBtn, { BackgroundColor3 = UIC.acc }) end)
+    end
+    do
+        local card = shell(cfg, 104)
+        stroke(card)
+        local importBox = mk("TextBox", card, {
+            Size = UDim2.new(1, -10, 0, 56), Position = UDim2.fromOffset(5, 5),
+            BackgroundColor3 = UIC.track, BorderSizePixel = 0,
+            Font = UIF, TextSize = 10, TextColor3 = UIC.txt,
+            TextXAlignment = Enum.TextXAlignment.Left, TextYAlignment = Enum.TextYAlignment.Top,
+            PlaceholderText = "paste exported JSON here", PlaceholderColor3 = UIC.dim,
+            ClearTextOnFocus = false, Text = "", MultiLine = true, Active = true, ZIndex = 4,
+        })
+        corner(importBox, 6)
+        mk("UIPadding", importBox, { PaddingLeft = UDim.new(0, 6), PaddingRight = UDim.new(0, 6), PaddingTop = UDim.new(0, 6), PaddingBottom = UDim.new(0, 6) })
+        local importBtn = corner(mk("TextButton", card, {
+            Size = UDim2.new(1, -10, 0, 30), Position = UDim2.fromOffset(5, 68),
+            BackgroundColor3 = UIC.acc, Text = "IMPORT AND SAVE", Font = UIFB, TextSize = 12,
+            TextColor3 = UIC.bg, AutoButtonColor = false, Active = true, ZIndex = 4,
+        }), 6)
+        importBtn.MouseButton1Click:Connect(function()
+            pcall(function()
+                local HS = game:GetService("HttpService")
+                local raw = importBox.Text or ""
+                local ok, t = pcall(HS.JSONDecode, HS, raw)
+                if not (ok and type(t) == "table" and type(t.priorityList) == "table") then
+                    
+                    return
+                end
+                if writefile then writefile("SideTP.json", raw) end
+                
+                importBox.Text = ""
+            end)
+        end)
+        importBtn.MouseEnter:Connect(function() tween(importBtn, { BackgroundColor3 = UIC.txt }) end)
+        importBtn.MouseLeave:Connect(function() tween(importBtn, { BackgroundColor3 = UIC.acc }) end)
+    end
+    do
+        local resetBtn = corner(mk("TextButton", cfg, {
+            Size = UDim2.new(1, 0, 0, 34), BackgroundColor3 = UIC.line,
+            Text = "RESET TO DEFAULT", Font = UIFB, TextSize = 12,
+            TextColor3 = UIC.txt, AutoButtonColor = false, Active = true, ZIndex = 3,
+        }), 8)
+        resetBtn.MouseButton1Click:Connect(function()
+            pcall(function()
+                if writefile then writefile("SideTP.json", _G.MEERKO_DEFAULT_CONFIG_JSON) end
+                
+            end)
+        end)
+        resetBtn.MouseEnter:Connect(function() tween(resetBtn, { BackgroundColor3 = UIC.acc }) end)
+        resetBtn.MouseLeave:Connect(function() tween(resetBtn, { BackgroundColor3 = UIC.line }) end)
+    end
 
     selectTab("Home")
     task.delay(1.5, diag)
@@ -5601,12 +6329,8 @@ do
         [Enum.HumanoidStateType.FallingDown] = true,
         [Enum.HumanoidStateType.GettingUp]   = true,
     }
-    local KILL = {
-        BallSocketConstraint = true, NoCollisionConstraint = true, HingeConstraint = true,
-        BodyVelocity = true, BodyPosition = true, BodyGyro = true,
-    }
 
-    local conns, char, hum, hrp, anim, lastVel = {}, nil, nil, nil, nil, Vector3.zero
+    local conns, char, hum, hrp, anim = {}, nil, nil, nil, nil
 
     local function ragdolled()
         return hum ~= nil and RAG_STATES[hum:GetState()] == true
@@ -5616,9 +6340,9 @@ do
         if not char then return end
         pcall(function()
             for _, o in ipairs(char:GetDescendants()) do
-                if KILL[o.ClassName] then o:Destroy()
-                elseif o:IsA("Motor6D") then o.Enabled = true
-                elseif o:IsA("Attachment") and (o.Name == "A" or o.Name == "B") then o:Destroy() end
+                if o:IsA("AnimationConstraint") and not o.Enabled then
+                    o.Enabled = true
+                end
             end
         end)
         if anim then
@@ -5630,11 +6354,22 @@ do
     end
 
     local function recover()
-        hum:ChangeState(Enum.HumanoidStateType.Running)
+        if hum:GetState() == Enum.HumanoidStateType.Physics then
+            pcall(function() hum:ChangeState(Enum.HumanoidStateType.GettingUp) end)
+        end
+        if hrp and hrp.Parent and not _G.MeerkoInvisActive then
+            pcall(function()
+                hrp.AssemblyLinearVelocity = Vector3.zero
+                hrp.AssemblyAngularVelocity = Vector3.zero
+            end)
+        end
         cleanup()
-        pcall(function() workspace.CurrentCamera.CameraSubject = hum end)
+        if not _G.MeerkoInvisActive then
+            pcall(function() workspace.CurrentCamera.CameraSubject = hum end)
+        end
         pcall(function()
-            require(LP:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule", 10)):GetControls():Enable()
+            local _ps = LP:FindFirstChild("PlayerScripts") or LP:WaitForChild("PlayerScripts", 10)
+            require(_ps:WaitForChild("PlayerModule", 10)):GetControls():Enable()
         end)
     end
 
@@ -5645,27 +6380,22 @@ do
         hum  = c:WaitForChild("Humanoid", 10)
         hrp  = c:WaitForChild("HumanoidRootPart", 10)
         anim = hum and hum:WaitForChild("Animator", 10)
-        lastVel = Vector3.zero
         if not hum then return end
 
         conns[#conns + 1] = hum.StateChanged:Connect(function()
-            if ragdolled() then recover() end
+            if ragdolled() and not _G.MeerkoInvisActive then recover() end
         end)
         conns[#conns + 1] = c.DescendantAdded:Connect(function()
-            if ragdolled() then cleanup() end
+            if ragdolled() and not _G.MeerkoInvisActive then cleanup() end
         end)
         local f = 0
         conns[#conns + 1] = RunService.Heartbeat:Connect(function()
             f = f + 1
-            if f < 6 then return end
+            if f < 2 then return end
             f = 0
-            if not (ragdolled() and hrp) then return end
-            cleanup()
-            local v = hrp.AssemblyLinearVelocity
-            if (v - lastVel).Magnitude > 40 and v.Magnitude > 25 then
-                hrp.AssemblyLinearVelocity = v.Unit * math.min(v.Magnitude, 15)
-            end
-            lastVel = v
+            if not ragdolled() then return end
+            if _G.MeerkoInvisActive then return end
+            recover()
         end)
     end
 
@@ -5710,22 +6440,22 @@ do
                 cam.FieldOfView = tonumber(_G.MeerkoFOV) or 70
             end
             acc = acc + dt
-            if acc >= 0.5 then acc = 0; muteBuzz() end
+            if acc >= 1.0 then acc = 0; muteBuzz() end
         end)
     end)
 end
 
 ;(function()
     local C = {
-        bg   = Color3.fromRGB(7, 8, 10),
-        bg2  = Color3.fromRGB(12, 13, 16),
-        row  = Color3.fromRGB(16, 17, 20),
-        rowH = Color3.fromRGB(24, 26, 29),
-        line = Color3.fromRGB(38, 40, 44),
-        acc  = Color3.fromRGB(0, 180, 255),
-        acc2 = Color3.fromRGB(100, 210, 255),
-        txt  = Color3.fromRGB(245, 247, 250),
-        dim  = Color3.fromRGB(145, 148, 155),
+        bg   = Color3.fromRGB(12, 14, 16),
+        bg2  = Color3.fromRGB(18, 21, 24),
+        row  = Color3.fromRGB(24, 28, 32),
+        rowH = Color3.fromRGB(36, 42, 48),
+        line = Color3.fromRGB(54, 64, 72),
+        acc  = Color3.fromRGB(0, 200, 140),
+        acc2 = Color3.fromRGB(96, 240, 190),
+        txt  = Color3.fromRGB(235, 240, 240),
+        dim  = Color3.fromRGB(128, 142, 148),
     }
     local FB, FR = Enum.Font.GothamBold, Enum.Font.Gotham
     local TS = game:GetService("TweenService")
@@ -5741,51 +6471,48 @@ end
     local function round(o, r) mk("UICorner", o, { CornerRadius = UDim.new(0, r or 8) }) return o end
 
     local host = (gethui and gethui()) or game:GetService("CoreGui")
-        or LP:WaitForChild("PlayerGui")
     pcall(function()
-        local old = host:FindFirstChild("uiListLayer")
+        local old = host:FindFirstChild("MeerkoTargets")
         if old then old:Destroy() end
     end)
 
     local sg = mk("ScreenGui", nil, {
-        Name = "uiListLayer", ResetOnSpawn = false,
+        Name = "MeerkoTargets", ResetOnSpawn = false,
         IgnoreGuiInset = true, DisplayOrder = 999998,
         ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
     })
     pcall(function() sg.Parent = host end)
-    if not sg.Parent then sg.Parent = LP:WaitForChild("PlayerGui") end
+    if not sg.Parent then pcall(function() sg.Parent = (gethui and gethui()) or game:GetService("CoreGui") end) end
 
-    -- Compact target panel: flat black, no outer rim or shadow.
-    local root = mk("Frame", sg, {
+    local root = round(mk("Frame", sg, {
         Name = "Root", Active = true, BackgroundColor3 = C.bg, BorderSizePixel = 0,
-        -- Wide / tall target panel to match the reference layout.
-        Size = UDim2.fromOffset(
-            tonumber(_G._meerko_tgtW) or 245,
-            tonumber(_G._meerko_tgtH) or 300
-        ),
-        Position = UDim2.fromOffset(tonumber(_G._meerko_tgtX) or 0,
-            tonumber(_G._meerko_tgtY) or 184),
+        Size = UDim2.fromOffset(260, 320),
+        Position = UDim2.fromOffset(tonumber(_G._meerko_tgtX) or 24,
+            tonumber(_G._meerko_tgtY) or 250),
+    }), 10)
+    mk("UIGradient", root, {
+        Rotation = 135,
+        Color = ColorSequence.new({ColorSequenceKeypoint.new(0, C.bg2), ColorSequenceKeypoint.new(1, C.bg)}),
     })
-
-    mk("UICorner", root, { CornerRadius = UDim.new(0, 12) })
-
+    mk("UIStroke", root, { Thickness = 1, Transparency = 0.4, Color = C.line })
     local head = mk("TextLabel", root, {
-        Position = UDim2.fromOffset(10, 6), Size = UDim2.new(1, -46, 0, 24),
-        BackgroundTransparency = 1, Text = "TARGETS", Font = FB, TextSize = 14,
+        Position = UDim2.fromOffset(16, 14), Size = UDim2.new(1, -70, 0, 18),
+        BackgroundTransparency = 1, Text = "TARGETS", Font = FB, TextSize = 12,
         TextColor3 = C.txt, TextXAlignment = Enum.TextXAlignment.Left,
     })
     local count = mk("TextLabel", root, {
-        AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -10, 0, 7),
-        Size = UDim2.fromOffset(24, 18), BackgroundTransparency = 1,
-        Text = "0", Font = FB, TextSize = 11, TextColor3 = C.acc,
+        AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -16, 0, 14),
+        Size = UDim2.fromOffset(44, 18), BackgroundTransparency = 1,
+        Text = "0", Font = FB, TextSize = 12, TextColor3 = C.acc,
         TextXAlignment = Enum.TextXAlignment.Right,
     })
+
     local modeContainer = mk("Frame", root, {
-        Position = UDim2.fromOffset(10, 43), Size = UDim2.new(1, -20, 0, 29),
+        Position = UDim2.fromOffset(16, 48), Size = UDim2.new(1, -32, 0, 32),
         BackgroundTransparency = 1,
     })
     mk("UIListLayout", modeContainer, {
-        Padding = UDim.new(0, 14), FillDirection = Enum.FillDirection.Horizontal,
+        Padding = UDim.new(0, 8), FillDirection = Enum.FillDirection.Horizontal,
         HorizontalAlignment = Enum.HorizontalAlignment.Left,
     })
     
@@ -5803,16 +6530,15 @@ end
     end
     
     local function modeBtn(txt, mode)
-        local btnBg = mk("Frame", modeContainer, {
-            Size = UDim2.fromOffset(96, 28), BackgroundColor3 = C.row,
+        local btnBg = round(mk("Frame", modeContainer, {
+            Size = UDim2.fromOffset(88, 28), BackgroundColor3 = C.row,
             BorderSizePixel = 0, ZIndex = 1,
-        })
-        mk("UICorner", btnBg, { CornerRadius = UDim.new(0, 12) })
+        }), 8)
         local bg = mk("Frame", btnBg, {
             Size = UDim2.fromScale(1, 1), BackgroundColor3 = C.acc,
             BackgroundTransparency = 1, BorderSizePixel = 0, ZIndex = 2,
         })
-        mk("UICorner", bg, { CornerRadius = UDim.new(0, 12) })
+        round(bg, 8)
         local btn = mk("TextButton", btnBg, {
             Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1,
             Text = txt, Font = FB, TextSize = 10, TextColor3 = C.dim,
@@ -5852,12 +6578,12 @@ end
     end)
 
     local list = mk("ScrollingFrame", root, {
-        Position = UDim2.fromOffset(7, 82), Size = UDim2.new(1, -14, 1, -88),
+        Position = UDim2.fromOffset(12, 88), Size = UDim2.new(1, -24, 1, -100),
         BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 0,
         CanvasSize = UDim2.new(),
         AutomaticCanvasSize = Enum.AutomaticSize.Y,
     })
-    mk("UIListLayout", list, { Padding = UDim.new(0, 3), SortOrder = Enum.SortOrder.LayoutOrder })
+    mk("UIListLayout", list, { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder })
 
     do
         local on, from, base, tracked
@@ -5870,7 +6596,6 @@ end
                     on = false
                     _G._meerko_tgtX = root.Position.X.Offset
                     _G._meerko_tgtY = root.Position.Y.Offset
-                    pcall(saveTpSettings)
                 end
             end)
         end)
@@ -5882,52 +6607,6 @@ end
             if not on or i ~= tracked then return end
             local d = i.Position - from
             root.Position = UDim2.fromOffset(base.X.Offset + d.X, base.Y.Offset + d.Y)
-        end)
-    end
-
-    -- Bottom-right resize handle: drag to change the TARGETS panel size.
-    -- Size is kept inside safe bounds and saved in globals for this session.
-    local resize = mk("TextButton", root, {
-        Name = "ResizeHandle", AnchorPoint = Vector2.new(1, 1),
-        Position = UDim2.new(1, -3, 1, -3), Size = UDim2.fromOffset(18, 18),
-        BackgroundTransparency = 1, BorderSizePixel = 0, Text = "",
-        AutoButtonColor = false, Active = true, ZIndex = 20,
-    })
-    local resizeMark = mk("Frame", resize, {
-        AnchorPoint = Vector2.new(1, 1), Position = UDim2.new(1, 0, 1, 0),
-        Size = UDim2.fromOffset(10, 2), Rotation = -45,
-        BackgroundColor3 = C.dim, BorderSizePixel = 0, ZIndex = 21,
-    })
-
-    do
-        local resizing, from, baseSize
-        resize.InputBegan:Connect(function(i)
-            if i.UserInputType ~= Enum.UserInputType.MouseButton1
-                and i.UserInputType ~= Enum.UserInputType.Touch then return end
-            resizing = true
-            from = i.Position
-            baseSize = root.AbsoluteSize
-            i.Changed:Connect(function()
-                if i.UserInputState == Enum.UserInputState.End then
-                    resizing = false
-                    _G._meerko_tgtW = root.AbsoluteSize.X
-                    _G._meerko_tgtH = root.AbsoluteSize.Y
-                    pcall(saveTpSettings)
-                end
-            end)
-        end)
-        resize.InputChanged:Connect(function(i)
-            if i.UserInputType == Enum.UserInputType.MouseMovement
-                or i.UserInputType == Enum.UserInputType.Touch then
-                tracked = i
-            end
-        end)
-        UIS.InputChanged:Connect(function(i)
-            if not resizing or i ~= tracked then return end
-            local d = i.Position - from
-            local w = math.clamp(baseSize.X + d.X, 205, 520)
-            local h = math.clamp(baseSize.Y + d.Y, 205, 700)
-            root.Size = UDim2.fromOffset(math.floor(w), math.floor(h))
         end)
     end
 
@@ -5983,150 +6662,61 @@ end
     end
 
     local rows = {}
-
-    -- Resolve icon IDs from the game's Mutation/Trait data.
-    local _iconDataCache = {}
-    local function _iconId(v)
-        if v == nil then return nil end
-        if type(v) == "number" then
-            return "rbxassetid://" .. tostring(math.floor(v))
-        end
-        if type(v) == "string" and v ~= "" then
-            if v:match("^rbxassetid://") or v:match("^rbxasset://") or v:match("^https?://") then
-                return v
-            end
-            local n = tonumber(v)
-            if n then return "rbxassetid://" .. tostring(math.floor(n)) end
-        end
-        return nil
-    end
-
-    local function _dataModule(name)
-        if _iconDataCache[name] ~= nil then
-            return _iconDataCache[name] or nil
-        end
-        local ok, result = pcall(function()
-            local d = RS:FindFirstChild("Datas")
-            local m = d and d:FindFirstChild(name)
-            return m and require(m)
-        end)
-        if ok and type(result) == "table" then
-            _iconDataCache[name] = result
-            return result
-        end
-        _iconDataCache[name] = false
-        return nil
-    end
-
-    local function _findIcon(data)
-        if type(data) ~= "table" then return nil end
-        for _, key in ipairs({
-            "Icon", "IconId", "IconID", "Image", "ImageId", "ImageID",
-            "Texture", "TextureId", "TextureID", "Thumbnail", "ThumbnailId",
-        }) do
-            local id = _iconId(data[key])
-            if id then return id end
-        end
-        return nil
-    end
-
-    local function _mutationIcon(name)
-        if not name or name == "" or name == "None" then return nil end
-        local md = _dataModule("Mutations")
-        return md and _findIcon(md[name]) or nil
-    end
-
-    local function _traitIcon(name)
-        if not name or name == "" then return nil end
-        local td = _dataModule("Traits")
-        return td and _findIcon(td[name]) or nil
-    end
-
-    local function _clearIcons(holder)
-        for _, child in ipairs(holder:GetChildren()) do
-            if child:IsA("ImageLabel") then child:Destroy() end
-        end
-    end
-
-    local function _addIcon(holder, image, order)
-        if not image then return end
-        mk("ImageLabel", holder, {
-            Size = UDim2.fromOffset(13, 13),
-            BackgroundTransparency = 1,
-            BorderSizePixel = 0,
-            Image = image,
-            ScaleType = Enum.ScaleType.Fit,
-            LayoutOrder = order or 1,
-        })
-    end
-
     local function rowFor(uid)
         local r = rows[uid]
         if r and r.card.Parent then return r end
-
-        local card = mk("Frame", list, {
-            Size = UDim2.new(1, 0, 0, 38), BackgroundColor3 = C.row,
+        local card = round(mk("Frame", list, {
+            Size = UDim2.new(1, -4, 0, 44), BackgroundColor3 = C.row,
             BorderSizePixel = 0, Active = true,
-        })
-        mk("UICorner", card, { CornerRadius = UDim.new(0, 4) })
-
-        local idx = mk("TextLabel", card, {
-            Position = UDim2.fromOffset(7, 0), Size = UDim2.fromOffset(14, 38),
-            BackgroundTransparency = 1, Text = "1", Font = FR, TextSize = 9,
-            TextColor3 = C.dim, TextXAlignment = Enum.TextXAlignment.Center,
-            TextYAlignment = Enum.TextYAlignment.Center, ZIndex = 2,
-        })
-
+        }), 6)
         local bg = mk("Frame", card, {
             Size = UDim2.fromScale(1, 1), BackgroundColor3 = C.acc,
             BackgroundTransparency = 1, BorderSizePixel = 0,
         })
-        
-
-        local bar = nil
-
+        round(bg, 6)
+        local rank = mk("TextLabel", card, {
+            Position = UDim2.fromOffset(6, 0), Size = UDim2.fromOffset(20, 44),
+            BackgroundTransparency = 1, Font = FB, TextSize = 11, TextColor3 = C.dim,
+            TextXAlignment = Enum.TextXAlignment.Center, Text = "", ZIndex = 2,
+        })
         local nm = mk("TextLabel", card, {
-            Position = UDim2.fromOffset(28, 4), Size = UDim2.new(1, -100, 0, 15),
-            BackgroundTransparency = 1, Font = FB, TextSize = 11, TextColor3 = C.txt,
+            Position = UDim2.fromOffset(30, 7), Size = UDim2.new(1, -104, 0, 15),
+            BackgroundTransparency = 1, Font = FB, TextSize = 12, TextColor3 = C.txt,
             TextXAlignment = Enum.TextXAlignment.Left,
             TextTruncate = Enum.TextTruncate.AtEnd, Text = "", ZIndex = 2,
         })
-
-        local iconHolder = mk("Frame", card, {
-            Position = UDim2.fromOffset(28, 20), Size = UDim2.new(1, -100, 0, 14),
-            BackgroundTransparency = 1, ZIndex = 2,
-        })
-        mk("UIListLayout", iconHolder, {
-            FillDirection = Enum.FillDirection.Horizontal,
-            HorizontalAlignment = Enum.HorizontalAlignment.Left,
-            VerticalAlignment = Enum.VerticalAlignment.Center,
-            Padding = UDim.new(0, 2),
-            SortOrder = Enum.SortOrder.LayoutOrder,
-        })
-
+        local icons = {}
+        for k = 1, 4 do
+            icons[k] = mk("ImageLabel", card, {
+                Position = UDim2.fromOffset(30 + (k - 1) * 16, 24), Size = UDim2.fromOffset(13, 13),
+                BackgroundTransparency = 1, Image = "", Visible = false, ZIndex = 2,
+            })
+        end
         local sub = mk("TextLabel", card, {
-            AnchorPoint = Vector2.new(1, 0.5),
-            Position = UDim2.new(1, -9, 0, 19),
-            Size = UDim2.fromOffset(72, 16),
-            BackgroundTransparency = 1, Font = FB, TextSize = 10, TextColor3 = C.acc,
+            Position = UDim2.fromOffset(30, 24), Size = UDim2.new(1, -104, 0, 12),
+            BackgroundTransparency = 1, Font = FR, TextSize = 9, TextColor3 = C.dim,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            TextTruncate = Enum.TextTruncate.AtEnd, Text = "", ZIndex = 2,
+        })
+        local mps = mk("TextLabel", card, {
+            AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -10, 0, 0),
+            Size = UDim2.fromOffset(66, 44), BackgroundTransparency = 1,
+            Font = FB, TextSize = 11, TextColor3 = C.acc,
             TextXAlignment = Enum.TextXAlignment.Right, Text = "", ZIndex = 2,
         })
-
         local hit = mk("TextButton", card, {
             Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1, Text = "",
             AutoButtonColor = false, Active = true, ZIndex = 3,
         })
-
-        r = {
-            card = card, bg = bg, bar = bar, idx = idx, name = nm, sub = sub,
-            icons = iconHolder, hit = hit, lastLocked = false,
-        }
+        r = { card = card, bg = bg, rank = rank, name = nm, sub = sub, mps = mps, icons = icons, hit = hit, lastLocked = false }
         rows[uid] = r
         return r
     end
 
     task.spawn(function()
         local _pd = tonumber(_G.MeerkoPanelStartDelay) or 0
+
+        if not game:IsLoaded() then game.Loaded:Wait() end
         if _pd > 0 then task.wait(_pd) end
         local _filled = false
         local _panelT0 = os.clock()
@@ -6137,7 +6727,9 @@ end
                 and os.clock() - _pw < (tonumber(_G.MeerkoPanelPauseMax) or 3) do
                 task.wait(0.2)
             end
-            local ok, pets = pcall(scanAllPets)
+            local bootActive = _gameLoadAt and (os.clock() - _gameLoadAt) < 4
+            local pets = scanAllPetsCached(bootActive and 0.1 or 0.15)
+        local ok = pets ~= nil
             if ok and type(pets) == "table" then
                 local seen = {}
                 for i, p in ipairs(pets) do
@@ -6146,34 +6738,67 @@ end
                         seen[uid] = true
                         local r = rowFor(uid)
                         r.pet = p
-                        r.card.LayoutOrder = i
-                        if r.idx then r.idx.Text = tostring(i) end
-                        r.name.Text = tostring(p.name or "?")
-                        r.sub.Text = "$" .. short(p.mps or 0) .. "/s"
-
-                        -- Mutation + Traits: icons only, shown below the brainrot name.
-                        _clearIcons(r.icons)
-                        local _io = 0
-                        local _mi = _mutationIcon(p.mutation)
-                        if _mi then
-                            _io = _io + 1
-                            _addIcon(r.icons, _mi, _io)
+                        if r.lastOrder ~= i then
+                            r.lastOrder = i
+                            r.card.LayoutOrder = i
+                            r.rank.Text = tostring(i)
                         end
-                        if type(p.traits) == "table" then
-                            for _, tr in ipairs(p.traits) do
-                                local _ti = _traitIcon(tr)
-                                if _ti then
-                                    _io = _io + 1
-                                    _addIcon(r.icons, _ti, _io)
+                        local nmTxt = tostring(p.name or "?")
+                        if r.lastName ~= nmTxt then r.lastName = nmTxt; r.name.Text = nmTxt end
+                        local mpsTxt = "$" .. short(p.mps or 0) .. "/s"
+                        if r.lastMps ~= mpsTxt then r.lastMps = mpsTxt; r.mps.Text = mpsTxt end
+                        local mutKey = tostring(p.mutation or "") .. "\0" .. tostring(p.traits and #p.traits or 0)
+                        if r.lastMut ~= mutKey then
+                            r.lastMut = mutKey
+                            local extra = ""
+                            local iconIds = {}
+                            local function addIcon(v)
+                                if v == nil then return end
+                                local s = tostring(v)
+                                if s:match("^%d+$") then s = "rbxassetid://" .. s end
+                                iconIds[#iconIds + 1] = s
+                            end
+                            if type(p.mutation) == "string" and p.mutation ~= "" and p.mutation ~= "None" then
+                                extra = p.mutation
+                                addIcon(MUTATION_ICONS[p.mutation])
+                            end
+                            if type(p.traits) == "table" then
+                                local ts = {}
+                                for _, tv in pairs(p.traits) do
+                                    local tn
+                                    if type(tv) == "string" then tn = tv
+                                    elseif type(tv) == "table" then
+                                        tn = tv.Name or tv.name or tv.Trait or tv.Id
+                                    end
+                                    if type(tn) == "string" then
+                                        ts[#ts + 1] = tn
+                                        addIcon(TRAIT_ICONS[tn])
+                                    end
+                                end
+                                if #ts > 0 then
+                                    extra = (extra ~= "" and (extra .. "  |  ") or "") .. table.concat(ts, ", ")
                                 end
                             end
+                            local nIcons = math.min(#iconIds, #r.icons)
+                            for k = 1, #r.icons do
+                                local ic = r.icons[k]
+                                if k <= nIcons then
+                                    if ic.Image ~= iconIds[k] then ic.Image = iconIds[k] end
+                                    ic.Visible = true
+                                else
+                                    ic.Visible = false
+                                end
+                            end
+                            local textX = 30 + nIcons * 16
+                            r.sub.Position = UDim2.fromOffset(textX, 24)
+                            r.sub.Size = UDim2.new(1, -(74 + textX), 0, 12)
+                            r.sub.Text = extra
                         end
                         local locked = (_G.MeerkoStealTargetUID == uid)
                         if locked ~= r.lastLocked then
                             r.lastLocked = locked
-                            tw(r.bg, { BackgroundTransparency = 1 })
-                            -- No left accent bar.
-                            tw(r.card, { BackgroundColor3 = C.row })
+                            tw(r.bg, { BackgroundTransparency = locked and 0 or 1 })
+                            tw(r.card, { BackgroundColor3 = locked and C.rowH or C.row })
                         end
                         if not r.wired then
                             r.wired = true
@@ -6232,16 +6857,16 @@ end
                 if n > 0 then _filled = true end
             end
             if not _filled and (os.clock() - _panelT0) < (tonumber(_G.MeerkoPanelRush) or 10) then
-                task.wait(tonumber(_G.MeerkoPanelRushGap) or 0.05)
+                task.wait(bootActive and 0.15 or (tonumber(_G.MeerkoPanelRushGap) or 0.15))
             else
-                task.wait(tonumber(_G.MeerkoPanelScanGap) or 0.4)
+                task.wait(tonumber(_G.MeerkoPanelScanGap) or 0.6)
             end
         end
     end)
 
     _G.MeerkoToggleTargets = function() sg.Enabled = not sg.Enabled end
 end)()
-task.wait(3)
+if not game:IsLoaded() then game.Loaded:Wait() end
 
 local Players         = game:GetService("Players")
 local RunService      = game:GetService("RunService")
@@ -6253,7 +6878,7 @@ local LP              = Players.LocalPlayer
 
 do
     local t0 = os.clock()
-    while type(_G.MeerkoBootWait) ~= "function" and os.clock() - t0 < 20 do task.wait(0.1) end
+    while type(_G.MeerkoBootWait) ~= "function" and os.clock() - t0 < 8 do task.wait(0.1) end
 end
 if type(_G.MeerkoBootWait)      ~= "function" then _G.MeerkoBootWait = function() end end
 if type(_G.MeerkoCarpetEngaging) ~= "function" then _G.MeerkoCarpetEngaging = function() return false end end
@@ -6269,25 +6894,8 @@ if _G.MeerkoInvisDepth       == nil then _G.MeerkoInvisDepth       = 4.2  end
 if _G.MeerkoInvisAngle       == nil then _G.MeerkoInvisAngle       = 180  end
 if _G.MeerkoAlertMinGen      == nil then _G.MeerkoAlertMinGen      = 80e6 end
 if _G.MeerkoCarpetSpeedValue == nil then _G.MeerkoCarpetSpeedValue = 140  end
-if _G.MeerkoFOVEnabled       == nil then _G.MeerkoFOVEnabled       = false end
 
--- FOV enforcement: fully independent of every other feature toggle (it was
--- previously piggybacking on the Anti Bee heartbeat loop, so if that was
--- off, the custom FOV never applied at all and the camera just sat at the
--- game's own default -- which happened to be 70, giving the impression it
--- was "resetting" when really it just never got set in the first place).
-task.spawn(function()
-    while true do
-        if _G.MeerkoFOVEnabled then
-            local cam = workspace.CurrentCamera
-            local target = tonumber(_G.MeerkoFOV) or 70
-            if cam and math.abs(cam.FieldOfView - target) > 0.1 then
-                cam.FieldOfView = target
-            end
-        end
-        task.wait(0.2)
-    end
-end)
+if _G.MeerkoCarpetSpeedKeyName == nil then _G.MeerkoCarpetSpeedKeyName = "Q" end
 
 ;(function()
     local FX = { ParticleEmitter = true, Beam = true, Trail = true, Fire = true,
@@ -6336,8 +6944,15 @@ end)
         if p.Character then task.spawn(hookChar, p.Character) end
         p.CharacterAdded:Connect(hookChar)
     end
-    for _, p in ipairs(Players:GetPlayers()) do pcall(hookPlayer, p) end
-    Players.PlayerAdded:Connect(hookPlayer)
+    task.defer(function()
+        for _, p in ipairs(Players:GetPlayers()) do
+            pcall(hookPlayer, p)
+            task.wait(0.05)
+        end
+    end)
+    Players.PlayerAdded:Connect(function(p)
+        task.defer(hookPlayer, p)
+    end)
 
     workspace.DescendantAdded:Connect(function(d)
         if _G.MeerkoAntiFlash == false then return end
@@ -6352,12 +6967,16 @@ end)
             if _G.MeerkoAntiFlash ~= false then
                 for _, p in ipairs(Players:GetPlayers()) do
                     if p.Character then strip(p.Character) end
+                    task.wait(0.05)
                 end
                 for _, m in ipairs(workspace:GetChildren()) do
-                    if m:IsA("Model") and m:FindFirstChildOfClass("Humanoid") then strip(m) end
+                    if m:IsA("Model") and m:FindFirstChildOfClass("Humanoid") then
+                        strip(m)
+                        task.wait(0.05)
+                    end
                 end
             end
-            task.wait(6) 
+            task.wait(10)
         end
     end)
 end)()
@@ -6373,7 +6992,7 @@ end)()
     task.spawn(function()
         while running do
             pcall(function() GS:ClearError() end)
-            task.wait(0.1)
+            task.wait(tonumber(_G.MeerkoClearErrGap) or 0.35)
         end
     end)
 
@@ -6425,99 +7044,267 @@ while not __P.LocalPlayer do task.wait() end
 local okAD, errAD = pcall(function()
     local Players    = game:GetService("Players")
     local RunService = game:GetService("RunService")
+    local Workspace  = game:GetService("Workspace")
+    local RS         = game:GetService("ReplicatedStorage")
     local LP         = Players.LocalPlayer
 
-    local _conn, _diedConn, _hbConn
-    local function _harden(hum)
-        pcall(function() hum.BreakJointsOnDeath = false end)
-        pcall(function() hum.RequiresNeck = false end)
-        pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false) end)
-        pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false) end)
-        pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false) end)
-        pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.Physics, false) end)
-    end
-    local function _revive(hum)
-        pcall(function() hum.Health = hum.MaxHealth end)
-        pcall(function() hum:ChangeState(Enum.HumanoidStateType.Running) end)
-    end
-    local function _bind()
-        local char = LP.Character
-        local hum = char and char:FindFirstChildOfClass("Humanoid")
-        if not hum then return end
-        _harden(hum)
-        if _conn then pcall(function() _conn:Disconnect() end) end
-        if _diedConn then pcall(function() _diedConn:Disconnect() end) end
-        if _hbConn then pcall(function() _hbConn:Disconnect() end) end
-        _conn = hum:GetPropertyChangedSignal("Health"):Connect(function()
-            if _G.AntiDieDisabled then return end
-            if hum.Health <= 0 then _revive(hum) end
-        end)
-        _diedConn = hum.Died:Connect(function()
-            if _G.AntiDieDisabled then return end
-            _revive(hum)
-        end)
-        local _lastHarden = 0
-        _hbConn = RunService.Heartbeat:Connect(function()
-            if _G.AntiDieDisabled or not hum or not hum.Parent then return end
-            local now = os.clock()
-            if now - _lastHarden >= 0.5 then _lastHarden = now; _harden(hum) end
-            if hum.Health <= 0 then _revive(hum) end
-            
-            if _G.MeerkoStealHold and hum.Health < hum.MaxHealth then
-                pcall(function() hum.Health = hum.MaxHealth end)
-            end
-            local char = hum.Parent
-            local hrp = char and char:FindFirstChild("HumanoidRootPart")
-            if char and hrp then
-                local state = hum:GetState()
-                local _rag = (state == Enum.HumanoidStateType.Physics
-                    or state == Enum.HumanoidStateType.Ragdoll
-                    or state == Enum.HumanoidStateType.FallingDown)
-                if not _rag then
-                    local _et = tonumber(LP:GetAttribute("RagdollEndTime"))
-                    if _et and (_et - workspace:GetServerTimeNow()) > 0 then _rag = true end
+    local antiRagdollConnections = {}
+    local antiRagdollCharacter, antiRagdollHumanoid, antiRagdollRootPart, antiRagdollAnimator
+    local lastVelocity = Vector3.new(0, 0, 0)
+    local velocityChangeThreshold = 40
+    local velocityMagnitudeThreshold = 25
+    local maxVelocity = 15
+
+    local function isFlyingCarpetActive()
+        if not antiRagdollCharacter then return false end
+        local tool = antiRagdollCharacter:FindFirstChildWhichIsA("Tool")
+        if not tool then return false end
+        local hrp = antiRagdollCharacter:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            for _, obj in ipairs(hrp:GetChildren()) do
+                if obj:IsA("BodyVelocity") or obj:IsA("BodyPosition") or obj:IsA("BodyGyro") then
+                    return true
                 end
-                if _rag then
-                    pcall(function() LP:SetAttribute("RagdollEndTime", workspace:GetServerTimeNow()) end)
-                    pcall(function() hum:ChangeState(Enum.HumanoidStateType.Running) end)
-                    if not _G.__meerkoResetBusy and LP:GetAttribute("Stealing") ~= true then
-                        pcall(function() hrp.AssemblyLinearVelocity = Vector3.zero end)
-                    end
-                    local cam = workspace.CurrentCamera
-                    if cam and cam.CameraSubject ~= hum then
-                        pcall(function() cam.CameraSubject = hum end)
-                    end
-                    for _, obj in ipairs(char:GetDescendants()) do
-                        if obj:IsA("BallSocketConstraint") or (obj.Name and obj.Name:find("RagdollAttachment")) then
-                            pcall(function() obj:Destroy() end)
+            end
+        end
+        return false
+    end
+
+    local function isRagdolled()
+        if not antiRagdollHumanoid then return false end
+        local state = antiRagdollHumanoid:GetState()
+        return state == Enum.HumanoidStateType.Physics
+            or state == Enum.HumanoidStateType.Ragdoll
+            or state == Enum.HumanoidStateType.FallingDown
+            or state == Enum.HumanoidStateType.GettingUp
+    end
+
+    local function enableAntiRagdollControls()
+        pcall(function()
+            local PlayerModule = LP:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule", 10)
+            require(PlayerModule):GetControls():Enable()
+        end)
+    end
+
+    local function cleanupRagdoll()
+        if not antiRagdollCharacter then return end
+        local carpetEquipped = isFlyingCarpetActive()
+        local function processChildren(parent)
+            for _, obj in ipairs(parent:GetChildren()) do
+                if obj:IsA("BallSocketConstraint") or obj:IsA("NoCollisionConstraint") or obj:IsA("HingeConstraint")
+                    or (obj:IsA("Attachment") and (obj.Name == "A" or obj.Name == "B")) then
+                    obj:Destroy()
+                elseif obj:IsA("BodyVelocity") or obj:IsA("BodyPosition") or obj:IsA("BodyGyro") then
+                    if not carpetEquipped then obj:Destroy() end
+                elseif obj:IsA("Motor6D") then
+                    obj.Enabled = true
+                elseif obj:IsA("BasePart") then
+                    for _, child in ipairs(obj:GetChildren()) do
+                        if child:IsA("Motor6D") then
+                            child.Enabled = true
+                        elseif child:IsA("BallSocketConstraint") or child:IsA("NoCollisionConstraint") or child:IsA("HingeConstraint") then
+                            child:Destroy()
+                        elseif child:IsA("Attachment") and (child.Name == "A" or child.Name == "B") then
+                            child:Destroy()
                         end
                     end
                 end
             end
-            if hum:GetState() == Enum.HumanoidStateType.Dead then
-                pcall(function() hum:ChangeState(Enum.HumanoidStateType.Running) end)
+        end
+        pcall(function() processChildren(antiRagdollCharacter) end)
+        if antiRagdollAnimator then
+            for _, track in pairs(antiRagdollAnimator:GetPlayingAnimationTracks()) do
+                local animName = track.Animation and track.Animation.Name:lower() or ""
+                if animName:find("rag") or animName:find("fall") or animName:find("hurt") or animName:find("down") then
+                    track:Stop(0)
+                end
+            end
+        end
+    end
+
+    local function _harden(hum)
+        pcall(function() hum.BreakJointsOnDeath = false end)
+        pcall(function() hum.RequiresNeck = false end)
+        pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false) end)
+        pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false) end)
+    end
+
+    local function _revive(hum)
+        pcall(function() hum.Health = hum.MaxHealth end)
+        pcall(function() hum:ChangeState(Enum.HumanoidStateType.Running) end)
+    end
+
+    local function setupAntiRagdollCharacter(char)
+        antiRagdollCharacter = char
+        antiRagdollHumanoid = char:WaitForChild("Humanoid", 10)
+        antiRagdollRootPart = char:WaitForChild("HumanoidRootPart", 10)
+        antiRagdollAnimator = antiRagdollHumanoid and antiRagdollHumanoid:WaitForChild("Animator", 10)
+        lastVelocity = Vector3.new(0, 0, 0)
+        if antiRagdollHumanoid then _harden(antiRagdollHumanoid) end
+    end
+
+    local function clearAntiRagdollConnections()
+        for _, c in pairs(antiRagdollConnections) do
+            pcall(function() c:Disconnect() end)
+        end
+        antiRagdollConnections = {}
+    end
+
+    local function setupAntiRagdollConnections()
+        clearAntiRagdollConnections()
+        if not antiRagdollHumanoid or not antiRagdollRootPart then return end
+
+        _harden(antiRagdollHumanoid)
+
+        table.insert(antiRagdollConnections, antiRagdollHumanoid:GetPropertyChangedSignal("Health"):Connect(function()
+            if _G.AntiDieDisabled then return end
+            if antiRagdollHumanoid and antiRagdollHumanoid.Parent and antiRagdollHumanoid.Health <= 0 then
+                _revive(antiRagdollHumanoid)
+            end
+        end))
+
+        table.insert(antiRagdollConnections, antiRagdollHumanoid.Died:Connect(function()
+            if _G.AntiDieDisabled then return end
+            if antiRagdollHumanoid and antiRagdollHumanoid.Parent then
+                _revive(antiRagdollHumanoid)
+            end
+        end))
+
+        local _lastHarden = 0
+        table.insert(antiRagdollConnections, RunService.Heartbeat:Connect(function()
+            if not antiRagdollHumanoid or not antiRagdollHumanoid.Parent then return end
+            if not _G.AntiDieDisabled then
+                local now = os.clock()
+                if now - _lastHarden >= 1.0 then _lastHarden = now; _harden(antiRagdollHumanoid) end
+                if antiRagdollHumanoid.Health <= 0 then _revive(antiRagdollHumanoid) end
+                if _G.MeerkoStealHold and antiRagdollHumanoid.Health < antiRagdollHumanoid.MaxHealth then
+                    pcall(function() antiRagdollHumanoid.Health = antiRagdollHumanoid.MaxHealth end)
+                end
+            end
+            if (_G.MeerkoAntiRagdollEnabled or _G.MeerkoAntiKnockbackEnabled) and isRagdolled() then
+                if _G.MeerkoStealHold then return end
+                if antiRagdollRootPart.AssemblyLinearVelocity.Magnitude > 60 then
+                    lastVelocity = antiRagdollRootPart.AssemblyLinearVelocity
+                    return
+                end
+                cleanupRagdoll()
+                local velocity = antiRagdollRootPart.AssemblyLinearVelocity
+                if (velocity - lastVelocity).Magnitude > velocityChangeThreshold
+                    and velocity.Magnitude > velocityMagnitudeThreshold then
+                    antiRagdollRootPart.AssemblyLinearVelocity = velocity.Unit * math.min(velocity.Magnitude, maxVelocity)
+                end
+                lastVelocity = velocity
+            end
+        end))
+
+        table.insert(antiRagdollConnections, antiRagdollHumanoid.StateChanged:Connect(function()
+            if (_G.MeerkoAntiRagdollEnabled or _G.MeerkoAntiKnockbackEnabled) and isRagdolled() then
+                if not isFlyingCarpetActive() then
+                    antiRagdollHumanoid:ChangeState(Enum.HumanoidStateType.Running)
+                end
+                cleanupRagdoll()
+                pcall(function() Workspace.CurrentCamera.CameraSubject = antiRagdollHumanoid end)
+                enableAntiRagdollControls()
+            end
+        end))
+
+        pcall(function()
+            local impulse
+            if _G.MeerkoGetRemote then
+                impulse = _G.MeerkoGetRemote("RemoteEvent", "CombatService/ApplyImpulse")
+            end
+            if not impulse then
+                local pkgs = RS:FindFirstChild("Packages")
+                local net  = pkgs and pkgs:FindFirstChild("Net")
+                impulse = net and net:FindFirstChild("RE/CombatService/ApplyImpulse")
+            end
+            if impulse then
+                table.insert(antiRagdollConnections, impulse.OnClientEvent:Connect(function()
+                    if (_G.MeerkoAntiRagdollEnabled or _G.MeerkoAntiKnockbackEnabled) and isRagdolled() then
+                        antiRagdollRootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                    end
+                end))
             end
         end)
+
+        table.insert(antiRagdollConnections, antiRagdollCharacter.DescendantAdded:Connect(function()
+            if (_G.MeerkoAntiRagdollEnabled or _G.MeerkoAntiKnockbackEnabled) and isRagdolled() then
+                cleanupRagdoll()
+            end
+        end))
+
+        enableAntiRagdollControls()
+        cleanupRagdoll()
     end
-    _bind()
+
+    local function startAntiRagdoll()
+        _G.MeerkoAntiRagdollEnabled = true
+        _G.MeerkoAntiKnockbackEnabled = true
+        if LP.Character then
+            setupAntiRagdollCharacter(LP.Character)
+            setupAntiRagdollConnections()
+        end
+    end
+
+    local function stopAntiRagdoll()
+        _G.MeerkoAntiRagdollEnabled = false
+        _G.MeerkoAntiKnockbackEnabled = false
+        clearAntiRagdollConnections()
+    end
+
+    _G.toggleAntiRagdoll = function(enabled)
+        if enabled then startAntiRagdoll() else stopAntiRagdoll() end
+    end
+    _G.enableAntiKnockback = function() startAntiRagdoll() end
+    _G.disableAntiKnockback = function() stopAntiRagdoll() end
+
     LP.CharacterAdded:Connect(function(char)
-        local hum = char:WaitForChild("Humanoid", 5)
-        if hum then _harden(hum) end
-        task.wait(0.1)
-        _bind()
+        clearAntiRagdollConnections()
+        antiRagdollCharacter = nil; antiRagdollHumanoid = nil; antiRagdollRootPart = nil; antiRagdollAnimator = nil
+        local humanoid = char:WaitForChild("Humanoid", 10)
+        local rootPart = char:WaitForChild("HumanoidRootPart", 10)
+        if not humanoid or not rootPart then return end
+        task.wait(0.2)
+        setupAntiRagdollCharacter(char)
+        if _G.MeerkoAntiRagdollEnabled or _G.MeerkoAntiKnockbackEnabled then
+            setupAntiRagdollConnections()
+        end
     end)
+
+    if LP.Character then
+        setupAntiRagdollCharacter(LP.Character)
+        if _G.MeerkoAntiRagdollEnabled or _G.MeerkoAntiKnockbackEnabled then
+            setupAntiRagdollConnections()
+        end
+    end
+
+    startAntiRagdoll()
 end)
-if not okAD then warn("[ANTI-DIE] BLOC EN ERREUR: " .. tostring(errAD)) end
+if not okAD then _G.MeerkoAntiDieError = tostring(errAD) end
 end)
 
 ;(function()
     local Lighting = game:GetService("Lighting")
     local BAD = { Blue = true, DiscoEffect = true, BeeBlur = true,
         Flashbang = true, ColorCorrection = true }
+    local KILL_CLASSES = {
+        BlurEffect = true,
+        BloomEffect = true,
+        SunRaysEffect = true,
+        ColorCorrectionEffect = true,
+        DepthOfFieldEffect = true,
+    }
     local function on() return _G.MeerkoAntiBee ~= false end
 
     local function nuke(o)
-        if on() and o and o.Parent and BAD[o.Name] then pcall(function() o:Destroy() end) end
+        if not on() or not o or not o.Parent then return end
+        if BAD[o.Name] then
+            pcall(function() o:Destroy() end)
+            return
+        end
+        if KILL_CLASSES[o.ClassName] then
+            pcall(function() o.Enabled = false end)
+        end
     end
 
     local buzz
@@ -6546,7 +7333,11 @@ end)
         local function safeMove(self, mv, rtc) return base(self, mv, rtc) end
         guarded[Controls] = safeMove
         Controls.moveFunction = safeMove
+        local _mfTick = 0
         RunService.Heartbeat:Connect(function()
+            _mfTick = _mfTick + 1
+            if _mfTick < 10 then return end
+            _mfTick = 0
             if not on() then return end
             if Controls.moveFunction ~= safeMove then Controls.moveFunction = safeMove end
         end)
@@ -6569,12 +7360,7 @@ end)
         LP:WaitForChild("PlayerScripts", 8)
         _G.MeerkoBootWait()
         Lighting.DescendantAdded:Connect(nuke)
-        do local n = 0
-            for _, o in ipairs(Lighting:GetDescendants()) do
-                n = n + 1; if n % 150 == 0 then task.wait() end
-                nuke(o)
-            end
-        end
+        for _, o in ipairs(Lighting:GetDescendants()) do nuke(o) end
         protect()
         local acc = 1
         RunService.Heartbeat:Connect(function(dt)
@@ -6586,8 +7372,8 @@ end)
             acc = acc + dt
             if acc < 0.5 then return end
             acc = 0
+            for _, o in ipairs(Lighting:GetDescendants()) do nuke(o) end
             muteBuzz()
-            
         end)
     end)
     LP.CharacterAdded:Connect(function() task.delay(1, protect) end)
@@ -6603,7 +7389,7 @@ end)()
         return 0.01 + (math.clamp(tonumber(_G.MeerkoInvisDepth) or 4.2, 0, 10) / 10) * 0.19
     end
     local function angle()
-        return math.clamp(tonumber(_G.MeerkoInvisAngle) or 0, 0, 360)
+        return math.clamp(tonumber(_G.MeerkoInvisAngle) or 180, 0, 360)
     end
     local function add(c) conns[#conns + 1] = c end
     local function rewire(char, from, to)
@@ -6735,30 +7521,42 @@ end)()
             end
         end))
 
-        -- Keep the hidden root perfectly aligned with the visible character.
-        -- Do not rotate it upside-down or apply a vertical offset: those were
-        -- the main causes of the "head hitting the ground" / abnormal movement.
+        local lastTarget, grace = nil, 60
         add(RunService.PreSimulation:Connect(function()
-            if not (active and realHRP and realHRP.Parent and hum.Parent and hum.Health > 0) then
-                return
-            end
-
+            if not (active and realHRP and hum.Health > 0) then return end
             local base = char.PrimaryPart or char:FindFirstChild("HumanoidRootPart")
-            if not (base and base:IsA("BasePart")) then return end
-
-            -- Keep the real/hidden root slightly below the visible body,
-            -- matching the original pet-on-ground placement, but do NOT
-            -- rotate the character upside-down.
-            local groundOffset = hum.HipHeight + (base.Size.Y / 2) - 1 + depth()
-            local cf = base.CFrame - Vector3.new(0, groundOffset, 0)
+            if not base then return end
+            if grace > 0 then
+                grace = grace - 1
+            elseif not stuck and lastTarget then
+                local _drift = (realHRP.Position - lastTarget).Magnitude
+                local _cloneDrift = cloneHRP and (cloneHRP.Position - lastTarget).Magnitude or 0
+                if _drift > 2.25 or _cloneDrift > 8 then
+                    stuck = true
+                    if not restarting then
+                        task.spawn(function()
+                            restarting = true
+                            pcall(stop)
+                            task.wait(0.5)
+                            restarting = false
+                            local ok = pcall(start)
+                            if not ok then
+                                task.wait(1)
+                                pcall(start)
+                            end
+                        end)
+                    end
+                end
+            end
+            local cf = base.CFrame
+                - Vector3.new(0, hum.HipHeight + (base.Size.Y / 2) - 1 + depth(), 0)
             realHRP.CFrame = cf * CFrame.Angles(math.rad(angle()), 0, 0)
             realHRP.AssemblyLinearVelocity = base.AssemblyLinearVelocity
-            realHRP.AssemblyAngularVelocity = base.AssemblyAngularVelocity
             realHRP.CanCollide = false
-
             if realHRP.Parent ~= workspace.CurrentCamera then
                 realHRP.Parent = workspace.CurrentCamera
             end
+            lastTarget = cf.Position
         end))
 
         add(LP.CharacterAdded:Connect(function() if active then stop() end end))
@@ -6813,58 +7611,30 @@ end)()
         end
     end
     _G.MeerkoStripAC = strip
-    task.spawn(function() _G.MeerkoBootWait() while true do pcall(strip) task.wait(3) end end) 
+    task.spawn(function() _G.MeerkoBootWait() while true do pcall(strip) task.wait(6) end end) 
     LP.CharacterAdded:Connect(function() task.wait(0.3) pcall(strip) end)
 end)()
 
 ;(function()
     local wsConn
-
     _G.MeerkoSetWalkSpeed = function(enabled)
-        _G.MeerkoWalkSpeedOn = enabled == true
-        if wsConn then pcall(function() wsConn:Disconnect() end) wsConn = nil end
+        _G.MeerkoWalkSpeedOn = enabled and true or false
+        if wsConn then wsConn:Disconnect() wsConn = nil end
         if not _G.MeerkoWalkSpeedOn then return end
-
         wsConn = RunService.Heartbeat:Connect(function(dt)
             if not _G.MeerkoWalkSpeedOn then return end
-            pcall(function()
-                if LP:GetAttribute("Stealing") ~= true then return end
-
-                local char = LP.Character
-                local hum = char and char:FindFirstChildOfClass("Humanoid")
-                if not char or not hum or hum.Health <= 0 then return end
-
-                -- Invisible creates a visible clone as Character.PrimaryPart while
-                -- the real HumanoidRootPart is temporarily moved to the camera.
-                -- Always move the active body root, never a stale HRP reference.
-                local root = char.PrimaryPart or char:FindFirstChild("HumanoidRootPart")
-                if not root or not root:IsA("BasePart") or not root.Parent then return end
-
-                local move = hum.MoveDirection
-                if move.Magnitude <= 0.001 then return end
-
-                local speed = math.clamp(tonumber(_G.MeerkoWalkSpeed) or 29, 5, 32)
-                local current = math.max(tonumber(hum.WalkSpeed) or 0, 0)
-                local extra = math.max(speed - current, 0)
-                if extra <= 0 then return end
-
-                local step = math.min(tonumber(dt) or 0.016, 0.05)
-                local delta = move.Unit * extra * step
-                root.CFrame = root.CFrame + delta
-
-                -- Keep the real root at the same position during Invisible so
-                -- carried pets/items do not remain at the old position.
-                if _G.MeerkoInvisActive == true then
-                    local real = char:FindFirstChild("HumanoidRootPart")
-                    if real and real ~= root and real:IsA("BasePart") and real.Parent then
-                        real.CFrame = root.CFrame
-                        real.AssemblyLinearVelocity = root.AssemblyLinearVelocity
-                    end
-                end
-            end)
+            if LP:GetAttribute("Stealing") ~= true then return end
+            local c = LP.Character
+            local hum = c and c:FindFirstChildOfClass("Humanoid")
+            local hrp = c and c:FindFirstChild("HumanoidRootPart")
+            if not hum or not hrp or hum.Health <= 0 then return end
+            local md = hum.MoveDirection
+            if md.Magnitude <= 0 then return end
+            local spd = math.clamp(tonumber(_G.MeerkoWalkSpeed) or 26, 5, 32)
+            if spd <= hum.WalkSpeed then return end
+            hrp.CFrame = hrp.CFrame + (md * (spd - hum.WalkSpeed) * (dt or 0.016))
         end)
     end
-
     if _G.MeerkoWalkSpeedOn == nil then _G.MeerkoWalkSpeedOn = true end
     if _G.MeerkoWalkSpeedOn == true then
         task.defer(function() pcall(_G.MeerkoSetWalkSpeed, true) end)
@@ -6878,6 +7648,7 @@ end)()
         if conn then conn:Disconnect() conn = nil end
         if not _G.MeerkoCarpetSpeed then return end
         task.spawn(function() pcall(equipCarpet) end)
+        local _csEquipAt = 0
         conn = RunService.Heartbeat:Connect(function()
             if LP:GetAttribute("Stealing") == true then
                 _G.MeerkoSetCarpetSpeed(false)
@@ -6889,7 +7660,11 @@ end)()
                 or c:FindFirstChild("Torso")
                 or c:FindFirstChild("HumanoidRootPart"))
             if not hum or not part then return end
-            if not _G.MeerkoCarpetEngaging() then pcall(equipCarpet) end
+            local now = os.clock()
+            if not _G.MeerkoCarpetEngaging() and (now - _csEquipAt) >= 1.0 then
+                _csEquipAt = now
+                pcall(equipCarpet)
+            end
             local spd = math.clamp(tonumber(_G.MeerkoCarpetSpeedValue) or 140, 20, 400)
             local md, keepY = hum.MoveDirection, part.Velocity.Y
             if md.Magnitude > 0 then
@@ -6902,7 +7677,10 @@ end)()
 
     UIS.InputBegan:Connect(function(i, g)
         if g or i.UserInputType ~= Enum.UserInputType.Keyboard then return end
-        if i.KeyCode.Name ~= (_G.MeerkoCarpetSpeedKeyName or "Q") then return end
+        local _csk = _G.MeerkoCarpetSpeedKeyName
+        if type(_csk) ~= "string" or _csk == "" then return end
+        if i.KeyCode.Name ~= _csk then return end
+        if _G.MeerkoBindListening then return end
         if LP:GetAttribute("Stealing") == true then return end
         local on = not (_G.MeerkoCarpetSpeed == true)
         _G.MeerkoSetCarpetSpeed(on)
@@ -7017,6 +7795,7 @@ end)()
     end
 
     task.spawn(function()
+        if not game:IsLoaded() then game.Loaded:Wait() end
         _G.MeerkoBootWait()
         task.wait(tonumber(_G.MeerkoXrayDelay) or 1)
         if _G.MeerkoXray ~= false then _G.MeerkoEnableXray() end
@@ -7150,9 +7929,16 @@ do
         _wfActive = true
         local ch = LP.Character
         if not ch then return end
-        local rr = ch:FindFirstChild("HumanoidRootPart")
+        local rr
         for _, o in pairs(Workspace.CurrentCamera:GetChildren()) do
-            if o.Name == "HumanoidRootPart" then rr = o break end
+            if o.Name == "UpperTorso" or o.Name == "Torso" then rr = o break end
+        end
+        if not rr then rr = ch:FindFirstChild("UpperTorso") or ch:FindFirstChild("Torso") end
+        if not rr then
+            for _, o in pairs(Workspace.CurrentCamera:GetChildren()) do
+                if o.Name == "HumanoidRootPart" then rr = o break end
+            end
+            rr = rr or ch:FindFirstChild("HumanoidRootPart")
         end
         if not rr then return end
         table.insert(_wfConns, RunService.Stepped:Connect(function()
@@ -7160,7 +7946,7 @@ do
             for _, p in ipairs(Players:GetPlayers()) do
                 if p ~= LP and p.Character then
                     for _, pt in ipairs(p.Character:GetChildren()) do
-                        if pt:IsA("BasePart") then pt.CanCollide = false end
+                        if pt:IsA("BasePart") and pt.CanCollide then pt.CanCollide = false end
                     end
                 end
             end
@@ -7190,10 +7976,7 @@ do
 end
 
 
-local CARPET_NAMES = { "Flying Carpet", "Waverider", "Santa's Sleigh", "Witch's Broom", "Cupid's Wings" }
 _G.__meerkoResetBusy = false
-_G.MeerkoResetCooldown = tonumber(_G.MeerkoResetCooldown) or 2.5
-_G.MeerkoResetFlingTime = tonumber(_G.MeerkoResetFlingTime) or 5
 _G.MeerkoInstaReset = function()
     local _now = os.clock()
     if _G.__meerkoResetBusy
@@ -7204,14 +7987,20 @@ _G.MeerkoInstaReset = function()
     _G.__meerkoResetAt = _now
     task.spawn(function()
         local RunService = game:GetService("RunService")
+
+
+
         local _prevAntiDie = _G.AntiDieDisabled
         _G.AntiDieDisabled = true
+
         _G.MeerkoStealHold = false
-        local _restored, _holding = false, true
+
+        local _restored = false
         local function _restore()
             if _restored then return end
             _restored = true
-            _holding = false
+
+
             _G.AntiDieDisabled = _prevAntiDie
             _G.__meerkoResetBusy = false
         end
@@ -7226,50 +8015,31 @@ _G.MeerkoInstaReset = function()
         end)
         task.delay(8, function() if _conn then _conn:Disconnect(); _conn = nil end _restore() end)
 
+
+
+        local _origChar = LP.Character
+        local _hum = _origChar and _origChar:FindFirstChildOfClass("Humanoid")
+        if _hum then
+            pcall(function() _hum:SetStateEnabled(Enum.HumanoidStateType.Dead, true) end)
+            pcall(function() _hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, true) end)
+            pcall(function() _hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, true) end)
+            pcall(function() _hum:SetStateEnabled(Enum.HumanoidStateType.Physics, true) end)
+            pcall(function() _hum.BreakJointsOnDeath = true end)
+            pcall(function() _hum.RequiresNeck = true end)
+        end
+
+        RunService.Heartbeat:Wait()
+
+
+
         pcall(function()
-            local char = LP.Character
-            if not char then return end
-            local _isCarpet = {}
-            for _, n in ipairs(CARPET_NAMES) do _isCarpet[n] = true end
-            pcall(equipCarpet)
-            local _origChar = char
-            task.spawn(function()
-                local RS2 = game:GetService("RunService")
-                while _holding and LP.Character == _origChar do
-                    pcall(equipCarpet)
-                    RS2.Heartbeat:Wait()
-                end
-            end)
-            local bp = LP:FindFirstChild("Backpack")
-            if bp then
-                for _, ch in ipairs(char:GetChildren()) do
-                    if ch:IsA("Tool") and not _isCarpet[ch.Name] then pcall(function() ch.Parent = bp end) end
-                end
-            end
-            local function _flingPart()
-                local c = LP.Character
-                if not c then return nil end
-                return c:FindFirstChild("UpperTorso") or c:FindFirstChild("Torso")
-                    or c:FindFirstChild("HumanoidRootPart")
-            end
-            local _t0 = os.clock()
-            while os.clock() - _t0 < (tonumber(_G.MeerkoResetFlingTime) or 5) do
-                if LP.Character ~= _origChar then break end
-                local _h = _origChar:FindFirstChildOfClass("Humanoid")
-                if not _h or _h.Health <= 0 or _h:GetState() == Enum.HumanoidStateType.Dead then break end
-                local part = _flingPart()
-                if not part then break end
-                pcall(function()
-                    for _, o in ipairs(part:GetChildren()) do
-                        if o:IsA("BodyPosition") or o:IsA("BodyVelocity") or o:IsA("BodyGyro")
-                            or o:IsA("AlignPosition") or o:IsA("LinearVelocity") then
-                            o:Destroy()
-                        end
-                    end
-                end)
-                pcall(function() part.Velocity = Vector3.new(0, 9999999, 0) end)
-                RunService.Heartbeat:Wait()
-            end
+            if _hum then _hum.Health = 0 end
+        end)
+
+        task.delay(tonumber(_G.MeerkoResetFallbackGap) or 0.6, function()
+            if not _origChar or LP.Character ~= _origChar then return end
+            local h = _origChar:FindFirstChildOfClass("Humanoid")
+            if h and h.Health > 0 then pcall(function() _origChar:BreakJoints() end) end
         end)
     end)
 end
@@ -7295,29 +8065,29 @@ task.spawn(function()
     end
 end)
 
-_G.MeerkoAutoTPKeyName = _G.MeerkoAutoTPKeyName or "T"
-_G.MeerkoAutoBuyKeyName = _G.MeerkoAutoBuyKeyName or "Y"
 
-local function _kb(input, name)
-    return type(name) == "string" and name ~= "" and input.KeyCode.Name == name
+
+local function _kb(kn, name)
+    return type(name) == "string" and name ~= "" and kn == name
 end
 UIS.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
     if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
-    if _G.MeerkoBindListening then return end   
+    if _G.MeerkoBindListening then return end
+    local kn = input.KeyCode.Name
 
-    if _kb(input, _G.MeerkoCloneKeyName) then
+    if _kb(kn, _G.MeerkoCloneKeyName) then
         _G.MeerkoAutoClone = not (_G.MeerkoAutoClone == true)
     end
     
-    if _kb(input, _G.MeerkoKickKeyName) then
+    if _kb(kn, _G.MeerkoKickKeyName) then
         task.spawn(function()
             _G.MeerkoKickToPS = true
             if _G.MeerkoKickOut then pcall(_G.MeerkoKickOut) end
         end)
     end
     
-    if _kb(input, _G.MeerkoStopTPKeyName) then
+    if _kb(kn, _G.MeerkoStopTPKeyName) then
         _G.MeerkoTPStop = true
         _G.MeerkoAutoTP = false
         if _G.MeerkoRepaintAutoTP then pcall(_G.MeerkoRepaintAutoTP) end
@@ -7326,34 +8096,22 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
         if hrp then pcall(function() hrp.AssemblyLinearVelocity = Vector3.zero end) end
     end
     
-    if _kb(input, _G.MeerkoNearestKey) then
+    if _kb(kn, _G.MeerkoNearestKey) then
         _G.MeerkoStealMode = (_G.MeerkoStealMode == "nearest") and "priority" or "nearest"
     end
+
+    if _kb(kn, _G.MeerkoStealQuickKey) then
+        _G.MeerkoStealQuick = not (_G.MeerkoStealQuick == true)
+        if _G.MeerkoRepaintStealMode then pcall(_G.MeerkoRepaintStealMode) end
+        if _G.MeerkoSaveSettings then pcall(_G.MeerkoSaveSettings) end
+    end
     
-    if _kb(input, _G.MeerkoDropKeyName) then
+    if _kb(kn, _G.MeerkoDropKeyName) then
         task.spawn(function() if _G.DropBrainrot then pcall(_G.DropBrainrot) end end)
     end
     
-    if _kb(input, _G.MeerkoResetKeyName) then
-        task.spawn(function()
-            if _G.MeerkoInstaReset then
-                pcall(_G.MeerkoInstaReset)
-            end
-        end)
-    end
-
-    -- AUTO TELEPORT keybind
-    if _kb(input, _G.MeerkoAutoTPKeyName) then
-        _G.MeerkoAutoTP = not (_G.MeerkoAutoTP == true)
-        if _G.MeerkoRepaintAutoTP then pcall(_G.MeerkoRepaintAutoTP) end
-        pcall(_G.MeerkoSaveSettings)
-    end
-
-    -- AUTO BUY keybind
-    if _kb(input, _G.MeerkoAutoBuyKeyName) then
-        _G.MeerkoAutoBuy = not (_G.MeerkoAutoBuy == true)
-        if _G.MeerkoRepaintAutoBuy then pcall(_G.MeerkoRepaintAutoBuy) end
-        pcall(_G.MeerkoSaveSettings)
+    if _kb(kn, _G.MeerkoResetKeyName) then
+        task.spawn(function() if _G.MeerkoInstaReset then pcall(_G.MeerkoInstaReset) end end)
     end
 end)
 
@@ -7361,56 +8119,16 @@ end)
 if _G.MeerkoAutoBuy == nil then _G.MeerkoAutoBuy = false end
 if _G.MeerkoAutoBuyRange == nil then _G.MeerkoAutoBuyRange = 17 end
 if _G.MeerkoAutoBuyHover == nil then _G.MeerkoAutoBuyHover = 9 end
-_G.MeerkoRepaintAutoBuy = _G.MeerkoRepaintAutoBuy or function() end
-
 
 do
     local Workspace = game:GetService("Workspace")
     local lockedPrompt, lockedPart, lockedModel
-    local bodyPos, purchaseRemote
-
-    local function resolvePurchaseRemote()
-        if purchaseRemote and purchaseRemote.Parent then return purchaseRemote end
-        pcall(function()
-            local net = RS:FindFirstChild("Packages") and RS.Packages:FindFirstChild("Net")
-            if not net then return end
-            for _, v in ipairs(net:GetChildren()) do
-                local nl = (v.Name or ""):lower()
-                for _, kw in ipairs({ "buy", "purchase", "animal", "shop", "acquire", "conveyor" }) do
-                    if nl:find(kw) then purchaseRemote = v; return end
-                end
-            end
-        end)
-        return purchaseRemote
-    end
+    local _abBodyPos
 
     local function firePurchase(prompt)
-        if not (prompt and prompt.Parent and prompt.Enabled) then return false end
-        local fired = false
+        if not prompt or not prompt.Parent or not prompt.Enabled then return end
         pcall(function() prompt.HoldDuration = 0 end)
-        if fireproximityprompt then
-            for _ = 1, 2 do
-                local ok = pcall(function() fireproximityprompt(prompt) end)
-                if ok then fired = true end
-                task.wait()
-                if not (prompt.Parent and prompt.Enabled) then break end
-            end
-        end
-        -- Only use a discovered purchase remote when the game exposes one;
-        -- do not assume an unrelated RemoteEvent's argument shape.
-        local r = resolvePurchaseRemote()
-        if r and prompt.Parent then
-            pcall(function()
-                if r:IsA("RemoteFunction") then
-                    local ok = pcall(function() r:InvokeServer(prompt.Parent) end)
-                    fired = fired or ok
-                elseif r:IsA("RemoteEvent") then
-                    local ok = pcall(function() r:FireServer(prompt.Parent) end)
-                    fired = fired or ok
-                end
-            end)
-        end
-        return fired
+        pcall(function() if fireproximityprompt then fireproximityprompt(prompt) end end)
     end
 
     local function partAlive()
@@ -7420,28 +8138,27 @@ do
         return lockedPrompt and lockedPrompt.Parent and lockedPrompt.Enabled
     end
 
-    local function hoverPart(char)
-        return char:FindFirstChild("UpperTorso") or char:FindFirstChild("Torso") or char:FindFirstChild("HumanoidRootPart")
-    end
-    local function ensureBodyPos(part)
-        if bodyPos and bodyPos.Parent == part then return bodyPos end
-        if bodyPos then bodyPos:Destroy() end
-        local bp = Instance.new("BodyPosition")
-        bp.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-        bp.P = 20000
-        bp.D = 1200
-        bp.Position = part.Position
-        bp.Parent = part
-        bodyPos = bp
-        return bp
-    end
     local function destroyBodyPos()
-        if bodyPos then pcall(function() bodyPos:Destroy() end); bodyPos = nil end
+        if _abBodyPos then
+            pcall(function() _abBodyPos:Destroy() end)
+            _abBodyPos = nil
+        end
+    end
+
+    local function hoverPart(char)
+        return char:FindFirstChild("UpperTorso") or char:FindFirstChild("Torso")
     end
 
     local _promptCache, _promptCacheAt = nil, 0
     local function allPrompts()
-        if _promptCache and os.clock() - _promptCacheAt < 5 then return _promptCache end
+        if _promptCache and os.clock() - _promptCacheAt < 5 then
+            local cleaned = {}
+            for _, p in ipairs(_promptCache) do
+                if p and p.Parent then cleaned[#cleaned + 1] = p end
+            end
+            _promptCache = cleaned
+            return cleaned
+        end
         local out, n = {}, 0
         for _, obj in ipairs(Workspace:GetDescendants()) do
             n = n + 1
@@ -7483,66 +8200,60 @@ do
         [Enum.HumanoidStateType.Ragdoll] = true,
         [Enum.HumanoidStateType.FallingDown] = true,
     }
-    local _abSweep, _abHarden = 0, 0
+    local _abHarden = 0
+    local _abTick = 0
     RunService.Heartbeat:Connect(function()
-        if _G.MeerkoAutoBuy ~= true or not partAlive() then destroyBodyPos(); return end
+        if _G.MeerkoAutoBuy ~= true or not partAlive() then return end
+        _abTick = _abTick + 1
+        if _abTick < 2 then return end
+        _abTick = 0
         local char = LP.Character
         local part = char and hoverPart(char)
-        if not part then destroyBodyPos(); return end
+        if not part then return end
         local hum = char:FindFirstChildOfClass("Humanoid")
-        local ragged = false
+        local now = os.clock()
         if hum then
-            local now = os.clock()
             if now - _abHarden > 0.5 then
                 _abHarden = now
-                pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.Physics, false) end)
                 pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false) end)
                 pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false) end)
                 pcall(function() hum.BreakJointsOnDeath = false end)
             end
-            ragged = _abRag[hum:GetState()] == true
+            local ragged = _abRag[hum:GetState()] == true
             local et = tonumber(LP:GetAttribute("RagdollEndTime"))
             if et and (et - workspace:GetServerTimeNow()) > 0 then ragged = true end
             if ragged then
-                pcall(function() LP:SetAttribute("RagdollEndTime", workspace:GetServerTimeNow()) end)
                 pcall(function() hum:ChangeState(Enum.HumanoidStateType.GettingUp) end)
-                pcall(function() hum:ChangeState(Enum.HumanoidStateType.Running) end)
                 local cam = workspace.CurrentCamera
                 if cam and cam.CameraSubject ~= hum then
                     pcall(function() cam.CameraSubject = hum end)
                 end
-                if now - _abSweep > 0.25 then
-                    _abSweep = now
-                    for _, o in ipairs(char:GetDescendants()) do
-                        if o:IsA("BallSocketConstraint") or o.Name == "RagdollAttachment" then
-                            pcall(function() o:Destroy() end)
-                        end
-                    end
-                end
             end
         end
         local hover = tonumber(_G.MeerkoAutoBuyHover) or 9
-        if _G.__meerkoResetBusy then return end
         local goal = lockedPart.Position + Vector3.new(0, hover, 0)
-        if ragged then
-            pcall(function() part.AssemblyAngularVelocity = Vector3.zero end)
+        if not (_abBodyPos and _abBodyPos.Parent == part) then
+            destroyBodyPos()
+            _abBodyPos = Instance.new("BodyPosition")
+            _abBodyPos.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+            _abBodyPos.P = 20000
+            _abBodyPos.D = 1000
+            _abBodyPos.Parent = part
         end
-        local bp = ensureBodyPos(part)
-        bp.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-        bp.P = 20000
-        bp.D = 1000
-        bp.Position = goal
-        if (part.Position - goal).Magnitude > (tonumber(_G.MeerkoAutoBuySnap) or 60) then
-            pcall(function()
-                part.CFrame = CFrame.new(goal)
-                part.AssemblyLinearVelocity = Vector3.zero
-                part.AssemblyAngularVelocity = Vector3.zero
-            end)
-        end
+        _abBodyPos.Position = goal
     end)
 
+    local _abJumped = false
     RunService.Heartbeat:Connect(function()
         if _G.MeerkoAutoBuy ~= true or not partAlive() or not promptAlive() then return end
+        if not _abJumped then
+            _abJumped = true
+            local char = LP.Character
+            local hum = char and char:FindFirstChildOfClass("Humanoid")
+            if hum then
+                pcall(function() hum:ChangeState(Enum.HumanoidStateType.Jumping) end)
+            end
+        end
         firePurchase(lockedPrompt)
     end)
 
@@ -7552,8 +8263,13 @@ do
             if _G.MeerkoAutoBuy ~= true then
                 lockedPrompt, lockedPart, lockedModel = nil, nil, nil
                 destroyBodyPos()
+                _abJumped = false
             elseif lockedPart or lockedModel then
-                if not partAlive() then lockedPrompt, lockedPart, lockedModel = nil, nil, nil end
+                if not partAlive() then
+                    lockedPrompt, lockedPart, lockedModel = nil, nil, nil
+                    destroyBodyPos()
+                    _abJumped = false
+                end
             else
                 local ok, found = pcall(scanConveyor)
                 local list = (ok and found) or {}
@@ -7571,12 +8287,15 @@ do
                     if best then
                         lockedPrompt, lockedPart, lockedModel = best.prompt, best.part, best.model or best.part.Parent
                         pcall(function() best.prompt.HoldDuration = 0 end)
-                        resolvePurchaseRemote()
                         firePurchase(best.prompt)
                     end
                 end
             end
         end
+    end)
+
+    LP.CharacterAdded:Connect(function()
+        destroyBodyPos()
     end)
 end
 
@@ -7589,7 +8308,10 @@ do
         local c = pl and pl.Character
         return c and c:FindFirstChild("HumanoidRootPart")
     end
+    local _fnBest, _fnAt = nil, 0
     local function findNearest(myRoot)
+        local now = os.clock()
+        if _fnBest and (now - _fnAt) < 0.15 then return _fnBest end
         local best, bestD = nil, math.huge
         for _, pl in ipairs(Players:GetPlayers()) do
             if pl ~= LP then
@@ -7600,6 +8322,7 @@ do
                 end
             end
         end
+        _fnBest, _fnAt = best, now
         return best
     end
     local function getPlotAtPosition(pos)
@@ -7694,23 +8417,165 @@ do
             myRoot.AssemblyAngularVelocity = Vector3.new(av.X, 0, av.Z)
         end
     end
-    RunService.RenderStepped:Connect(faceAwayStep)
-    RunService.Heartbeat:Connect(faceAwayStep)
+    local _faTick = 0
+    RunService.RenderStepped:Connect(function()
+        _faTick = _faTick + 1
+        if _faTick < 2 then return end
+        _faTick = 0
+        faceAwayStep()
+    end)
 end
 
+
+
 do
+    local _anSeen = setmetatable({}, { __mode = "k" })
+
+    local function _isPlayerRig(inst)
+        local m = inst:FindFirstAncestorOfClass("Model")
+        while m do
+            if Players:GetPlayerFromCharacter(m) then return true end
+            if Players:FindFirstChild(m.Name) then return true end
+            if m:FindFirstChildOfClass("Humanoid") and m.Parent == workspace then return true end
+            m = m:FindFirstAncestorOfClass("Model")
+        end
+        return false
+    end
+
+    local function _killTrack(t)
+        if not t then return end
+        pcall(function() t:Stop(0) end)
+        pcall(function() t:AdjustSpeed(0) end)
+    end
+
+    local function _hookAnimator(a)
+        if _G.MeerkoNoPetAnim == false then return end
+        if not a or not a.Parent or _anSeen[a] then return end
+        if _isPlayerRig(a) then return end
+        _anSeen[a] = true
+        pcall(function()
+            for _, t in ipairs(a:GetPlayingAnimationTracks()) do _killTrack(t) end
+        end)
+        pcall(function()
+            a.AnimationPlayed:Connect(function(t) _killTrack(t) end)
+        end)
+    end
+
+    workspace.DescendantAdded:Connect(function(d)
+        if d.ClassName == "Animator" then task.delay(tonumber(_G.MeerkoAnimHookDelay) or 0.6, _hookAnimator, d) end
+    end)
+
+    local _busyAnim = false
+    local function _sweepAll()
+        if _G.MeerkoNoPetAnim == false then return end
+        if _busyAnim then return end
+        _busyAnim = true
+        task.spawn(function()
+            local all = workspace:GetDescendants()
+            local i, n = 1, #all
+            while i <= n do
+                local t0 = os.clock()
+                while i <= n and (os.clock() - t0) < 0.004 do
+                    local o = all[i]
+                    i = i + 1
+                    if o and o.ClassName == "Animator" then _hookAnimator(o) end
+                end
+                RunService.Heartbeat:Wait()
+            end
+            _busyAnim = false
+        end)
+    end
+    _G.MeerkoStripPetAnims = _sweepAll
+
+    task.spawn(function()
+        if not game:IsLoaded() then game.Loaded:Wait() end
+        task.wait(tonumber(_G.MeerkoNoPetAnimDelay) or 3)
+        for _ = 1, 6 do
+            _sweepAll()
+            task.wait(1.5)
+        end
+        while true do
+            task.wait(tonumber(_G.MeerkoNoPetAnimGap) or 15)
+            _sweepAll()
+        end
+    end)
+end
+
+
+do
+    if _G.MeerkoPlayerESP == nil then _G.MeerkoPlayerESP = true end
+    local host = (gethui and gethui()) or game:GetService("CoreGui")
+    local bin
+    local hls = {}
+
+    local function _bin()
+        if bin and bin.Parent then return bin end
+        bin = Instance.new("Folder")
+        bin.Name = "MeerkoPlayerESP"
+        bin.Parent = host
+        return bin
+    end
+
+    local function _drop(pl)
+        local h = hls[pl]
+        if h then pcall(function() h:Destroy() end) end
+        hls[pl] = nil
+    end
+
+    local function _ensure(pl)
+        local h = hls[pl]
+        if h and h.Parent then return h end
+        h = Instance.new("Highlight")
+        h.Name = "ESP_" .. pl.Name
+        h.FillTransparency = tonumber(_G.MeerkoESPFill) or 0.55
+        h.OutlineTransparency = 0
+        h.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+        h.Parent = _bin()
+        hls[pl] = h
+        return h
+    end
+
+    Players.PlayerRemoving:Connect(_drop)
+
+    task.spawn(function()
+        if not game:IsLoaded() then game.Loaded:Wait() end
+        task.wait(tonumber(_G.MeerkoESPDelay) or 4)
+        local _lastCol
+        while true do
+            task.wait(tonumber(_G.MeerkoESPGap) or 0.4)
+            pcall(function()
+                local on = _G.MeerkoPlayerESP ~= false
+                local col = _G.MeerkoESPColor
+                if typeof(col) ~= "Color3" then col = Color3.fromRGB(255, 255, 255) end
+                local colChanged = col ~= _lastCol
+                _lastCol = col
+                for _, pl in ipairs(Players:GetPlayers()) do
+                    local ch = (pl ~= LP) and pl.Character
+                    local hrp = ch and ch:FindFirstChild("HumanoidRootPart")
+                    if on and hrp then
+                        local h = _ensure(pl)
+                        if h.Adornee ~= ch then h.Adornee = ch end
+                        if colChanged then
+                            h.FillColor = col
+                            h.OutlineColor = col
+                        end
+                        if not h.Enabled then h.Enabled = true end
+                    else
+                        local h = hls[pl]
+                        if h then h.Enabled = false; h.Adornee = nil end
+                    end
+                end
+            end)
+        end
+    end)
+end
+task.defer(function() do
     local TweenService = game:GetService("TweenService")
-    -- Meerko Extras palette matched to the reference image:
-    -- dark charcoal panels + teal/green accent + light Gotham typography.
     local C = {
-        bg = Color3.fromRGB(12,14,16),
-        card = Color3.fromRGB(24,28,32),
-        line = Color3.fromRGB(60,65,68),
-        acc = Color3.fromRGB(0, 180, 255),
-        txt = Color3.fromRGB(233,238,238),
-        dim = Color3.fromRGB(128,135,138),
-        track = Color3.fromRGB(44,49,53),
-        acc2 = Color3.fromRGB(100, 210, 255),
+        bg = Color3.fromRGB(12,14,16), card = Color3.fromRGB(24,28,32),
+        line = Color3.fromRGB(54,64,72), acc = Color3.fromRGB(0,200,140),
+        txt = Color3.fromRGB(235,240,240), dim = Color3.fromRGB(128,142,148),
+        track = Color3.fromRGB(36,42,48), acc2 = Color3.fromRGB(96,240,190),
     }
     local FB, FR = Enum.Font.GothamBold, Enum.Font.Gotham
     local EASE = TweenInfo.new(0.18, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
@@ -7724,16 +8589,19 @@ do
     local function corner(o, r) mk("UICorner", o, { CornerRadius = UDim.new(0, r or 4) }) return o end
 
     local host = (gethui and gethui()) or game:GetService("CoreGui")
-    pcall(function()
-        local old = host:FindFirstChild("MeerkoExtras")
-        if old then old:Destroy() end
-    end)
+    for _, _p in ipairs({ host, LP:FindFirstChild("PlayerGui") }) do
+        if _p then
+            pcall(function()
+                local old = _p:FindFirstChild("MeerkoExtras")
+                if old then old:Destroy() end
+            end)
+        end
+    end
     local sg = mk("ScreenGui", nil, {
         Name = "MeerkoExtras", ResetOnSpawn = false, IgnoreGuiInset = true,
         DisplayOrder = 999997, ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
     })
-    pcall(function() sg.Parent = host end)
-    if not sg.Parent then sg.Parent = LP:WaitForChild("PlayerGui") end
+    sg.Parent = host
 
     local function makeDrag(frame, handle, keyX, keyY)
         local on, from, base, tracked
@@ -7919,6 +8787,61 @@ do
         btn.MouseLeave:Connect(function() tw(card, { BackgroundColor3 = C.card }) end)
         btn.MouseButton1Click:Connect(fn)
     end
+    local function speedPick(parent, label, opts)
+        local card = corner(mk("Frame", parent, {
+            Size = UDim2.new(1, 0, 0, 42), BackgroundColor3 = C.card,
+            BorderSizePixel = 0, LayoutOrder = nextOrd(),
+        }), 4)
+        mk("TextLabel", card, {
+            Size = UDim2.new(1, -20, 0, 12), Position = UDim2.fromOffset(10, 5),
+            BackgroundTransparency = 1, Text = label, Font = FR, TextSize = 10,
+            TextColor3 = C.dim, TextXAlignment = Enum.TextXAlignment.Left,
+        })
+        local row = mk("Frame", card, {
+            Position = UDim2.fromOffset(10, 19), Size = UDim2.new(1, -20, 0, 18),
+            BackgroundTransparency = 1,
+        })
+        mk("UIListLayout", row, {
+            Padding = UDim.new(0, 6), FillDirection = Enum.FillDirection.Horizontal,
+            SortOrder = Enum.SortOrder.LayoutOrder,
+        })
+        local btns = {}
+        local function repaint()
+            local on  = (_G.MeerkoWalkSpeedOn ~= false)
+            local cur = tonumber(_G.MeerkoWalkSpeed)
+            for _, b in ipairs(btns) do
+                local sel = on and (cur == b.v)
+                b.f.BackgroundColor3 = sel and C.acc or C.track
+                b.t.TextColor3 = sel and C.bg or C.txt
+            end
+        end
+        for i, v in ipairs(opts) do
+            local f = corner(mk("Frame", row, {
+                Size = UDim2.new(0.5, -3, 1, 0), BackgroundColor3 = C.track,
+                BorderSizePixel = 0, LayoutOrder = i,
+            }), 4)
+            local t = mk("TextButton", f, {
+                Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1, Text = tostring(v),
+                Font = FB, TextSize = 11, TextColor3 = C.txt, AutoButtonColor = false, Active = true,
+            })
+            btns[#btns + 1] = { f = f, t = t, v = v }
+            t.MouseButton1Click:Connect(function()
+                local on  = (_G.MeerkoWalkSpeedOn ~= false)
+                local cur = tonumber(_G.MeerkoWalkSpeed)
+                if on and cur == v then
+                    if _G.MeerkoSetWalkSpeed then pcall(_G.MeerkoSetWalkSpeed, false) end
+                else
+                    _G.MeerkoWalkSpeed = v
+                    if _G.MeerkoSetWalkSpeed then pcall(_G.MeerkoSetWalkSpeed, true) end
+                end
+                repaint()
+                pcall(_G.MeerkoSaveSettings)
+            end)
+        end
+        repaint()
+        _toggleRepaints[#_toggleRepaints + 1] = repaint
+    end
+
 
     local function makeSub(titleText, sx, sy, keyX, keyY)
         local frame = corner(mk("Frame", sg, {
@@ -7926,7 +8849,7 @@ do
             Size = UDim2.fromOffset(248, 380), Visible = false,
             Position = UDim2.fromOffset(tonumber(_G[keyX]) or sx, tonumber(_G[keyY]) or sy),
         }), 6)
-        mk("UIStroke", frame, { Thickness = 1, Transparency = 0.4, Color = C.acc })
+        mk("UIStroke", frame, { Thickness = 1, Transparency = 0.5, Color = C.line })
         local head = mk("TextLabel", frame, {
             Position = UDim2.fromOffset(14, 12), Size = UDim2.new(1, -52, 0, 18),
             BackgroundTransparency = 1, Text = titleText, Font = FB, TextSize = 13,
@@ -7957,12 +8880,12 @@ do
         Size = UDim2.fromOffset(240, 0), AutomaticSize = Enum.AutomaticSize.Y,
         Position = UDim2.fromOffset(tonumber(_G._meerko_exX) or 300, tonumber(_G._meerko_exY) or 250),
     }), 6)
-    mk("UIStroke", main, { Thickness = 1, Transparency = 0.4, Color = C.acc })
+    mk("UIStroke", main, { Thickness = 1, Transparency = 0.5, Color = C.line })
     mk("UIListLayout", main, { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder, HorizontalAlignment = Enum.HorizontalAlignment.Center })
     mk("UIPadding", main, { PaddingTop = UDim.new(0,12), PaddingBottom = UDim.new(0,12), PaddingLeft = UDim.new(0,12), PaddingRight = UDim.new(0,12) })
     local mHead = mk("TextLabel", main, {
         Size = UDim2.new(1, 0, 0, 18), BackgroundTransparency = 1, Text = "MEERKO EXTRAS",
-        Font = FB, TextSize = 12, TextColor3 = C.txt, TextXAlignment = Enum.TextXAlignment.Left, LayoutOrder = nextOrd(),
+        Font = FB, TextSize = 13, TextColor3 = C.txt, TextXAlignment = Enum.TextXAlignment.Left, LayoutOrder = nextOrd(),
     })
     makeDrag(main, mHead, "_meerko_exX", "_meerko_exY")
 
@@ -7992,91 +8915,8 @@ do
         function() _G.MeerkoAutoKickOnSteal = not (_G.MeerkoAutoKickOnSteal == true) end)
     toggle(main, "AUTO BUY",
         function() return _G.MeerkoAutoBuy == true end,
-        function()
-            _G.MeerkoAutoBuy = not (_G.MeerkoAutoBuy == true)
-            if _G.MeerkoRepaintAutoBuy then pcall(_G.MeerkoRepaintAutoBuy) end
-            pcall(_G.MeerkoSaveSettings)
-        end)
-
-    -- ============================================================
-    -- WALK SPEED: 24 / 29 buttons
-    -- Two large buttons, evenly split across the card width, with
-    -- the active speed highlighted in the teal accent colour.
-    -- ============================================================
-    if _G.MeerkoWalkSpeed == nil then _G.MeerkoWalkSpeed = 24 end
-    if _G.MeerkoWalkSpeedOn == nil then _G.MeerkoWalkSpeedOn = true end
-    do
-        local card = corner(mk("Frame", main, {
-            Size = UDim2.new(1, 0, 0, 54), BackgroundColor3 = C.card,
-            BorderSizePixel = 0, LayoutOrder = nextOrd(),
-        }), 4)
-
-        mk("TextLabel", card, {
-            Size = UDim2.new(1, -20, 0, 14), Position = UDim2.fromOffset(10, 7),
-            BackgroundTransparency = 1, Text = "WALKSPEED", Font = FB, TextSize = 11,
-            TextColor3 = C.dim, TextXAlignment = Enum.TextXAlignment.Left,
-        })
-
-        -- Container row: stretches across the card with 8px side padding,
-        -- buttons split via UIListLayout so both stay perfectly even.
-        local row = mk("Frame", card, {
-            Size = UDim2.new(1, -16, 0, 26), Position = UDim2.fromOffset(8, 24),
-            BackgroundTransparency = 1,
-        })
-        mk("UIListLayout", row, {
-            Padding = UDim.new(0, 8),
-            FillDirection = Enum.FillDirection.Horizontal,
-            HorizontalAlignment = Enum.HorizontalAlignment.Center,
-            VerticalAlignment = Enum.VerticalAlignment.Center,
-            SortOrder = Enum.SortOrder.LayoutOrder,
-        })
-
-        local btns = {}
-        local function paintSpeeds()
-            local cur = tonumber(_G.MeerkoWalkSpeed) or 24
-            local on  = _G.MeerkoWalkSpeedOn ~= false
-            for v, b in pairs(btns) do
-                local active = on and (v == cur)
-                b.BackgroundColor3 = active and C.acc or C.track
-                b.TextColor3     = active and C.bg  or C.txt
-            end
-        end
-
-        local function speedButton(txt)
-            local v = tonumber(txt) or 24
-            -- 0.5 scale width minus half of the 8px gap => perfectly even split
-            local b = corner(mk("TextButton", row, {
-                Size = UDim2.new(0.5, -4, 1, 0),
-                BackgroundColor3 = C.track, Text = txt,
-                Font = FB, TextSize = 14, TextColor3 = C.txt,
-                AutoButtonColor = false, BorderSizePixel = 0,
-                LayoutOrder = v,
-            }), 4)
-            b.MouseEnter:Connect(function()
-                if not ((_G.MeerkoWalkSpeedOn ~= false) and ((tonumber(_G.MeerkoWalkSpeed) or 24) == v)) then
-                    tw(b, { BackgroundColor3 = C.line })
-                end
-            end)
-            b.MouseLeave:Connect(function() paintSpeeds() end)
-            b.MouseButton1Click:Connect(function()
-                _G.MeerkoWalkSpeed = v
-                _G.MeerkoWalkSpeedOn = true
-                if _G.MeerkoSetWalkSpeed then pcall(_G.MeerkoSetWalkSpeed, true) end
-                paintSpeeds()
-                pcall(_G.MeerkoSaveSettings)
-            end)
-            btns[v] = b
-            return b
-        end
-
-        speedButton("24")
-        speedButton("29")
-        paintSpeeds()
-
-        -- Keep the buttons visually in sync if anything else changes the value.
-        _toggleRepaints[#_toggleRepaints + 1] = paintSpeeds
-    end
-
+        function() _G.MeerkoAutoBuy = not (_G.MeerkoAutoBuy == true) end)
+    speedPick(main, "WALK SPEED", { 24, 29 })
     action(main, "KICK", function()
         task.spawn(function() if _G.MeerkoKickOut then pcall(_G.MeerkoKickOut) end end)
     end)
@@ -8084,6 +8924,8 @@ do
     toggle(featList, "ANTI FLASH",             function() return _G.MeerkoAntiFlash ~= false end,      function() _G.MeerkoAntiFlash = not (_G.MeerkoAntiFlash ~= false) end)
     toggle(featList, "ANTI BEE",               function() return _G.MeerkoAntiBee ~= false end,        function() _G.MeerkoAntiBee = not (_G.MeerkoAntiBee ~= false) end)
     toggle(featList, "INF JUMP",               function() return _G.MeerkoInfJump ~= false end,        function() _G.MeerkoInfJump = not (_G.MeerkoInfJump ~= false) end)
+    toggle(featList, "NO PLAYER COLLIDE",    function() return _G.MeerkoNoPlayerCollide ~= false end, function() _G.MeerkoNoPlayerCollide = not (_G.MeerkoNoPlayerCollide ~= false) end)
+    toggle(featList, "ANTI AFK",              function() return _G.MeerkoAntiAFK ~= false end,        function() _G.MeerkoAntiAFK = not (_G.MeerkoAntiAFK ~= false) end)
     toggle(featList, "ANTI DIE",               function() return _G.AntiDieDisabled ~= true end,       function() _G.AntiDieDisabled = (_G.AntiDieDisabled ~= true) end)
     toggle(featList, "WALK SPEED",             function() return _G.MeerkoWalkSpeedOn ~= false end,    function() if _G.MeerkoSetWalkSpeed then _G.MeerkoSetWalkSpeed(_G.MeerkoWalkSpeedOn == false) end end)
     toggle(featList, "CARPET SPEED",           function() return _G.MeerkoCarpetSpeed == true end,     function() if _G.MeerkoSetCarpetSpeed then _G.MeerkoSetCarpetSpeed(not (_G.MeerkoCarpetSpeed == true)) end end)
@@ -8091,10 +8933,9 @@ do
     toggle(featList, "AUTO KICK ON STEAL",     function() return _G.MeerkoAutoKickOnSteal == true end, function() _G.MeerkoAutoKickOnSteal = not (_G.MeerkoAutoKickOnSteal == true) end)
     toggle(featList, "KICK TO PRIVATE SERVER", function() return _G.MeerkoKickToPS == true end,        function() _G.MeerkoKickToPS = not (_G.MeerkoKickToPS == true) end)
     toggle(featList, "PRIORITY ALERT",         function() return _G.MeerkoPriAlert == true end,        function() _G.MeerkoPriAlert = not (_G.MeerkoPriAlert == true) end)
+    toggle(featList, "PLAYER ESP",             function() return _G.MeerkoPlayerESP ~= false end,      function() _G.MeerkoPlayerESP = not (_G.MeerkoPlayerESP ~= false) end)
     toggle(featList, "FACE AWAY",              function() return _G.MeerkoFaceAway == true end,        function() _G.MeerkoFaceAway = not (_G.MeerkoFaceAway == true) end)
     toggle(featList, "FACE AWAY: NEAREST",     function() return _G.MeerkoFaceAwayNearest == true end, function() _G.MeerkoFaceAwayNearest = not (_G.MeerkoFaceAwayNearest == true) end)
-    toggle(featList, "FOV",                    function() return _G.MeerkoFOVEnabled == true end,      function() _G.MeerkoFOVEnabled = not (_G.MeerkoFOVEnabled == true) end)
-    slider(featList, "FOV Value", 50, 120, function() return tonumber(_G.MeerkoFOV) or 70 end, function(v) _G.MeerkoFOV = v end, 1)
     slider(featList, "Auto Buy Range", 5, 40, function() return _G.MeerkoAutoBuyRange end, function(v) _G.MeerkoAutoBuyRange = v end, 1)
     slider(featList, "Auto Buy Float", 0, 20, function() return _G.MeerkoAutoBuyHover end, function(v) _G.MeerkoAutoBuyHover = v end, 1)
     slider(featList, "Carpet Speed", 20, 400, function() return _G.MeerkoCarpetSpeedValue end, function(v) _G.MeerkoCarpetSpeedValue = v end, 5)
@@ -8106,10 +8947,11 @@ do
     keybind(keysList, "KICK TO PRIVATE SERVER", function() return _G.MeerkoKickKeyName end,    function(k) _G.MeerkoKickKeyName = k end)
     keybind(keysList, "STOP TP",                function() return _G.MeerkoStopTPKeyName end,  function(k) _G.MeerkoStopTPKeyName = k end)
     keybind(keysList, "PRIORITY / NEAREST",     function() return _G.MeerkoNearestKey end,     function(k) _G.MeerkoNearestKey = k end)
+    keybind(keysList, "STEAL QUICK / ARMED",    function() return _G.MeerkoStealQuickKey end,   function(k) _G.MeerkoStealQuickKey = k end)
     keybind(keysList, "DROP BRAINROT",          function() return _G.MeerkoDropKeyName end,    function(k) _G.MeerkoDropKeyName = k end)
-    keybind(keysList, "INSTA RESET",            function() return _G.MeerkoResetKeyName end,   function(k) _G.MeerkoResetKeyName = k end)
-    keybind(keysList, "AUTO TELEPORT",          function() return _G.MeerkoAutoTPKeyName end,  function(k) _G.MeerkoAutoTPKeyName = k end)
-    keybind(keysList, "AUTO BUY",               function() return _G.MeerkoAutoBuyKeyName end, function(k) _G.MeerkoAutoBuyKeyName = k end)
+    keybind(keysList, "RESET",                  function() return _G.MeerkoResetKeyName end,   function(k) _G.MeerkoResetKeyName = k end)
+
+    keybind(keysList, "CARPET SPEED",           function() return _G.MeerkoCarpetSpeedKeyName end, function(k) _G.MeerkoCarpetSpeedKeyName = k end)
 
     task.spawn(function()
         while sg.Parent do
@@ -8117,4 +8959,144 @@ do
             task.wait(0.3)
         end
     end)
+end end)
+
+
+
+do
+    local Players    = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+    local LP         = Players.LocalPlayer
+
+    if _G.MeerkoNoPlayerCollide == nil then _G.MeerkoNoPlayerCollide = true end
+
+    local seen = setmetatable({}, { __mode = "k" })
+
+    local function isClone(inst)
+        local n = inst.Name
+        return n:match("^%d+_Clone$") ~= nil or n:find("Clone", 1, true) ~= nil
+    end
+
+
+    local function shouldPass(model)
+        if not model or model == LP.Character then return false end
+        for _, pl in ipairs(Players:GetPlayers()) do
+            if pl ~= LP and pl.Character == model then return true end
+        end
+        if isClone(model) and model:FindFirstChildWhichIsA("BasePart") then return true end
+        return false
+    end
+
+    local function declaw(part)
+        if not part:IsA("BasePart") then return end
+        if seen[part] and part.CanCollide == false then return end
+        seen[part] = true
+        pcall(function()
+            part.CanCollide = false
+            part.CanTouch = false
+        end)
+    end
+
+    local function pass(model)
+        if not model then return end
+        for _, d in ipairs(model:GetDescendants()) do declaw(d) end
+        if not seen[model] then
+            seen[model] = true
+            model.DescendantAdded:Connect(function(d)
+                if _G.MeerkoNoPlayerCollide ~= false then declaw(d) end
+            end)
+        end
+    end
+
+    local function sweep()
+        if _G.MeerkoNoPlayerCollide == false then return end
+        for _, pl in ipairs(Players:GetPlayers()) do
+            if pl ~= LP and pl.Character then pass(pl.Character) end
+        end
+        for _, m in ipairs(workspace:GetChildren()) do
+            if m:IsA("Model") and m ~= LP.Character and isClone(m) then pass(m) end
+        end
+    end
+
+    for _, pl in ipairs(Players:GetPlayers()) do
+        if pl ~= LP then
+            pl.CharacterAdded:Connect(function(c)
+                task.wait(0.2)
+                if _G.MeerkoNoPlayerCollide ~= false then pass(c) end
+            end)
+        end
+    end
+    Players.PlayerAdded:Connect(function(pl)
+        pl.CharacterAdded:Connect(function(c)
+            task.wait(0.2)
+            if _G.MeerkoNoPlayerCollide ~= false then pass(c) end
+        end)
+    end)
+    workspace.ChildAdded:Connect(function(m)
+        if _G.MeerkoNoPlayerCollide == false then return end
+        if m:IsA("Model") and m ~= LP.Character and isClone(m) then
+            task.wait(0.1)
+            pass(m)
+        end
+    end)
+
+    task.spawn(function()
+        if not game:IsLoaded() then game.Loaded:Wait() end
+        task.wait(tonumber(_G.MeerkoNoCollideDelay) or 5)
+        while true do
+            pcall(sweep)
+            task.wait(tonumber(_G.MeerkoNoCollideGap) or 8)
+        end
+    end)
+    _G.MeerkoNoCollideSweep = sweep
+end
+
+do
+    local Players = game:GetService("Players")
+    local LP = Players.LocalPlayer
+
+    if _G.MeerkoAntiAFK == nil then _G.MeerkoAntiAFK = true end
+    if _G.__meerkoAFKRan then return end
+    _G.__meerkoAFKRan = true
+
+    local ref = (type(cloneref) == "function") and cloneref or function(x) return x end
+    local VU  = select(2, pcall(function() return ref(game:GetService("VirtualUser")) end))
+    local VIM = select(2, pcall(function() return ref(game:GetService("VirtualInputManager")) end))
+
+    _G.MeerkoAFKHits = 0
+
+    local function nudge()
+        if typeof(VU) == "Instance" then
+            local ok = pcall(function()
+                VU:CaptureController()
+                pcall(function() VU:ClickButton2(Vector2.new()) end)
+            end)
+            if ok then return true end
+        end
+        if typeof(VIM) == "Instance" then
+            local ok = pcall(function()
+                VIM:SendMouseButtonEvent(0, 0, 1, true, game, 1)
+                VIM:SendMouseButtonEvent(0, 0, 1, false, game, 1)
+            end)
+            if ok then return true end
+        end
+        return false
+    end
+
+    LP.Idled:Connect(function()
+        if _G.MeerkoAntiAFK == false then return end
+        _G.MeerkoAFKHits = (_G.MeerkoAFKHits or 0) + 1
+        nudge()
+    end)
+
+    task.spawn(function()
+        while true do
+            task.wait(tonumber(_G.MeerkoAFKGap) or 240)
+            if _G.MeerkoAntiAFK ~= false then pcall(nudge) end
+        end
+    end)
+
+    _G.MeerkoAntiAFKTest = function()
+        return typeof(VU) == "Instance", typeof(VIM) == "Instance", nudge(), _G.MeerkoAFKHits
+    end
 end
