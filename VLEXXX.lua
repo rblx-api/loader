@@ -262,20 +262,45 @@ subtitle.AnchorPoint = Vector2.new(0.5, 0.5)
 subtitle.Position = UDim2.new(0.5, 0, 0.5, 42)
 subtitle.Size = UDim2.new(0, 260, 0, 22)
 subtitle.BackgroundTransparency = 1
-subtitle.Text = "S T E A L   ·   H U B"
+subtitle.Text = "Created by VLEX"
 subtitle.Font = Enum.Font.GothamBold
 subtitle.TextSize = 13
-subtitle.TextColor3 = Color3.fromRGB(210, 180, 255)
+subtitle.TextColor3 = Color3.fromRGB(255, 45, 45)
 subtitle.TextTransparency = 1
 subtitle.ZIndex = 6
 local subStroke = Instance.new("UIStroke", subtitle)
 subStroke.Thickness = 1
-subStroke.Color = Color3.fromRGB(90, 40, 160)
+subStroke.Color = Color3.fromRGB(150, 0, 0)
 subStroke.Transparency = 0.5
 task.delay(0.55, function()
 	if subtitle.Parent and not introClosed then
 		introTweenService:Create(subtitle, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			TextTransparency = 0.1,
+		}):Play()
+	end
+end)
+
+-- Discord invite shown in red beneath the creator credit.
+local discordCredit = Instance.new("TextLabel", introGui)
+discordCredit.Name = "DiscordInvite"
+discordCredit.AnchorPoint = Vector2.new(0.5, 0.5)
+discordCredit.Position = UDim2.new(0.5, 0, 0.5, 64)
+discordCredit.Size = UDim2.new(0, 360, 0, 20)
+discordCredit.BackgroundTransparency = 1
+discordCredit.Text = "https://discord.gg/xjfRaEXVR"
+discordCredit.Font = Enum.Font.GothamBold
+discordCredit.TextSize = 13
+discordCredit.TextColor3 = Color3.fromRGB(255, 0, 0)
+discordCredit.TextTransparency = 1
+discordCredit.ZIndex = 6
+local discordStroke = Instance.new("UIStroke", discordCredit)
+discordStroke.Thickness = 1
+discordStroke.Color = Color3.fromRGB(90, 0, 0)
+discordStroke.Transparency = 0.25
+task.delay(0.7, function()
+	if discordCredit.Parent and not introClosed then
+		introTweenService:Create(discordCredit, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			TextTransparency = 0,
 		}):Play()
 	end
 end)
@@ -334,6 +359,9 @@ closeIntro = function()
 		BackgroundTransparency = 1,
 	}):Play()
 	introTweenService:Create(subtitle, TweenInfo.new(0.25), { TextTransparency = 1 }):Play()
+	if discordCredit and discordCredit.Parent then
+		introTweenService:Create(discordCredit, TweenInfo.new(0.25), { TextTransparency = 1 }):Play()
+	end
 	introTweenService:Create(tip, TweenInfo.new(0.2), { TextTransparency = 1 }):Play()
 	for _, letterEntry in ipairs(introLetters) do
 		if letterEntry.image and letterEntry.image.Parent then
@@ -370,8 +398,10 @@ introRenderConnection = introRunService.RenderStepped:Connect(function()
 	for _, letterEntry in ipairs(introLetters) do
 		local image = letterEntry.image
 		if image and image.Parent then
-			local animationPhase = elapsedTime * 2.4 + letterEntry.GrokHubIndex * 1.37
-			local offset = UDim2.fromOffset(math.sin(animationPhase) * 10, math.cos(animationPhase * 1.35) * 14)
+				local animationPhase = elapsedTime * 2.4 + letterEntry.GrokHubIndex * 1.37
+			-- Smooth left-to-right wave across the intro letters.
+			local waveY = math.sin(elapsedTime * 4.2 - letterEntry.GrokHubIndex * 0.9) * 16
+			local offset = UDim2.fromOffset(math.sin(animationPhase) * 6, waveY)
 			image.Position = letterEntry.base + offset
 			image.Rotation = math.sin(animationPhase * 0.7) * 5
 			if letterEntry.halo then
