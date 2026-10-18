@@ -15570,7 +15570,7 @@ local label = Instance.new("TextLabel", btnFrame)
 label.Size = UDim2.new(1, 0, 1, 0)
 label.BackgroundTransparency = 1
 label.Text = "INSTA\nRESET"
-label.TextColor3 = Color3.fromRGB(225, 175, 255)
+label.TextColor3 = Color3.fromRGB(255, 255, 255)
 label.Font = Enum.Font.GothamBlack
 label.TextSize = 11
 label.TextWrapped = true
@@ -17006,42 +17006,4 @@ return
 end
 end)
 end
--- VLEX: red Discord invite displayed above the local character.
-local function vlexAttachDiscordLabel(character)
-    if not character then return end
-    local head = character:FindFirstChild("Head") or character:WaitForChild("Head", 5)
-    if not head then return end
-    local old = head:FindFirstChild("VLEXDiscordInvite")
-    if old then old:Destroy() end
-    local billboard = Instance.new("BillboardGui")
-    billboard.Name = "VLEXDiscordInvite"
-    billboard.Adornee = head
-    billboard.Size = UDim2.new(0, 300, 0, 34)
-    billboard.StudsOffset = Vector3.new(0, 2.7, 0)
-    billboard.AlwaysOnTop = true
-    billboard.MaxDistance = 1500
-    billboard.Parent = head
-    local label = Instance.new("TextLabel")
-    label.Name = "InviteText"
-    label.Size = UDim2.fromScale(1, 1)
-    label.BackgroundTransparency = 1
-    label.Text = "https://discord.gg/xjfRaEXVR"
-    label.TextColor3 = Color3.fromRGB(255, 35, 45)
-    label.TextStrokeColor3 = Color3.fromRGB(15, 0, 0)
-    label.TextStrokeTransparency = 0.05
-    label.Font = Enum.Font.GothamBold
-    label.TextScaled = true
-    label.Parent = billboard
-end
-
-if localPlayer then
-    if localPlayer.Character then
-        task.spawn(vlexAttachDiscordLabel, localPlayer.Character)
-    end
-    localPlayer.CharacterAdded:Connect(function(character)
-        task.wait(0.5)
-        vlexAttachDiscordLabel(character)
-    end)
-end
-
 return
