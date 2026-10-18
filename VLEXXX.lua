@@ -134,13 +134,13 @@ ring.ZIndex = 3
 local ringStroke = Instance.new("UIStroke", ring)
 ringStroke.Thickness = 2.4
 ringStroke.Transparency = 1
-ringStroke.Color = Color3.fromRGB(255, 55, 65)
+ringStroke.Color = Color3.fromRGB(200, 120, 255)
 Instance.new("UICorner", ring).CornerRadius = UDim.new(1, 0)
 local ringGrad = Instance.new("UIGradient", ringStroke)
 ringGrad.Color = ColorSequence.new({
 	ColorSequenceKeypoint.new(0.00, Color3.fromRGB(80, 20, 140)),
 	ColorSequenceKeypoint.new(0.30, Color3.fromRGB(220, 140, 255)),
-	ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 100, 100)),
+	ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 255, 255)),
 	ColorSequenceKeypoint.new(0.70, Color3.fromRGB(180, 80, 255)),
 	ColorSequenceKeypoint.new(1.00, Color3.fromRGB(80, 20, 140)),
 })
@@ -154,7 +154,7 @@ beam.Name = "LightBeam"
 beam.AnchorPoint = Vector2.new(0.5, 0.5)
 beam.Position = UDim2.new(0.5, 0, 0.5, 8)
 beam.Size = UDim2.new(0, 0, 0, 2)
-beam.BackgroundColor3 = Color3.fromRGB(255, 45, 55)
+beam.BackgroundColor3 = Color3.fromRGB(210, 160, 255)
 beam.BackgroundTransparency = 0.25
 beam.BorderSizePixel = 0
 beam.ZIndex = 4
@@ -190,10 +190,10 @@ for i = 1, 14 do
 end
 
 -- GROK letters
-local grokChars = {"V", "L", "E", "X"}
+local grokChars = {"G", "R", "O", "K"}
 for i, char in ipairs(grokChars) do
 	local letterLabel = Instance.new("TextLabel", introGui)
-	letterLabel.Name = "VLEXLetter_" .. i
+	letterLabel.Name = "GrokLetter_" .. i
 	letterLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 	letterLabel.Size = UDim2.fromOffset(8, 8)
 	letterLabel.Position = UDim2.new(0.5, (i - 2.5) * 58, 0.5, -28)
@@ -207,15 +207,15 @@ for i, char in ipairs(grokChars) do
 
 	local stroke = Instance.new("UIStroke", letterLabel)
 	stroke.Thickness = 2.5
-	stroke.Color = Color3.fromRGB(255, 35, 45)
+	stroke.Color = Color3.fromRGB(160, 70, 255)
 	stroke.Transparency = 0.35
 
 	local grad = Instance.new("UIGradient", letterLabel)
 	grad.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 245, 245)),
-		ColorSequenceKeypoint.new(0.35, Color3.fromRGB(255, 80, 90)),
-		ColorSequenceKeypoint.new(0.7, Color3.fromRGB(220, 15, 30)),
-		ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 5)),
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+		ColorSequenceKeypoint.new(0.35, Color3.fromRGB(230, 190, 255)),
+		ColorSequenceKeypoint.new(0.7, Color3.fromRGB(180, 90, 255)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(110, 40, 210)),
 	})
 	grad.Rotation = 90
 
@@ -228,7 +228,7 @@ for i, char in ipairs(grokChars) do
 	halo.Text = char
 	halo.Font = Enum.Font.GothamBlack
 	halo.TextScaled = true
-	halo.TextColor3 = Color3.fromRGB(255, 35, 45)
+	halo.TextColor3 = Color3.fromRGB(170, 80, 255)
 	halo.TextTransparency = 1
 	halo.ZIndex = 5
 
@@ -265,7 +265,7 @@ subtitle.BackgroundTransparency = 1
 subtitle.Text = "S T E A L   ·   H U B"
 subtitle.Font = Enum.Font.GothamBold
 subtitle.TextSize = 13
-subtitle.TextColor3 = Color3.fromRGB(255, 70, 80)
+subtitle.TextColor3 = Color3.fromRGB(210, 180, 255)
 subtitle.TextTransparency = 1
 subtitle.ZIndex = 6
 local subStroke = Instance.new("UIStroke", subtitle)
@@ -1018,8 +1018,8 @@ carryController.getCurrentSpeed = function(self)
 return self:getActiveSpeed()
 end
 colorThemes = {
-["Roxo & Preto"] = Color3.fromRGB(235, 20, 35),
-["Roxo Neon"] = Color3.fromRGB(255, 45, 55),
+["Roxo & Preto"] = Color3.fromRGB(155, 60, 255),
+["Roxo Neon"] = Color3.fromRGB(185, 90, 255),
 ["Violeta Escuro"] = Color3.fromRGB(115, 25, 190),
 ["Preto Absoluto"] = Color3.fromRGB(15, 15, 20),
 Gris = Color3.fromRGB(30, 30, 35),
@@ -1050,19 +1050,19 @@ end
 object = time
 object266 = color
 if progressFill then
-progressFill.BackgroundColor3 = Color3.fromRGB(235, 20, 35)
+progressFill.BackgroundColor3 = Color3.fromRGB(155, 60, 255)
 local fillStroke = progressFill:FindFirstChild("FillStroke")
 if fillStroke then
-fillStroke.Color = Color3.fromRGB(255, 45, 55)
+fillStroke.Color = Color3.fromRGB(185, 90, 255)
 end
 local uiGradient = progressFill:FindFirstChildOfClass("UIGradient")
 if uiGradient then
 local data = {}
 local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(25, 10, 40))
-local object282 = ColorSequenceKeypoint.new(0.5, Color3.fromRGB(235, 20, 35))
+local object282 = ColorSequenceKeypoint.new(0.5, Color3.fromRGB(155, 60, 255))
 data[1] = object
 data[2] = object282
-data[3] = ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 95, 100))
+data[3] = ColorSequenceKeypoint.new(1, Color3.fromRGB(215, 140, 255))
 uiGradient.Color = ColorSequence.new(data)
 end
 end
@@ -3294,7 +3294,7 @@ local function _gAcOpenPicker(catName, assetTypes)
 		local entry = _G._GrokAvatarChanger[catName]
 		if entry and entry.savedId == item.Id then
 			card.BackgroundColor3 = Color3.fromRGB(40, 20, 60)
-			st.Color = Color3.fromRGB(255, 35, 45)
+			st.Color = Color3.fromRGB(180, 100, 255)
 		end
 
 		card.MouseButton1Click:Connect(function()
@@ -6014,7 +6014,7 @@ discordText:Destroy()
 end
 local billboardGui = Instance.new("BillboardGui", head)
 billboardGui.Name = "FictionHubSpeedIndicator"
-billboardGui.Size = UDim2.new(0, 240, 0, 46)
+billboardGui.Size = UDim2.new(0, 300, 0, 46)
 billboardGui.StudsOffset = newVector3(0, 2.35, 0)
 billboardGui.AlwaysOnTop = true
 billboardGui.LightInfluence = 0
@@ -6031,12 +6031,20 @@ speedLabel.Font = Enum.Font.GothamBlack
 speedLabel.TextSize = 18
 speedLabel.TextXAlignment = Enum.TextXAlignment.Center
 speedLabel.ZIndex = 10
-addPrintedBranding(
-billboardGui,
-UDim2.new(0, 0, 0, 25),
-UDim2.new(1, 0, 0, 18),
-9
-)
+local discordLabel = Instance.new("TextLabel", billboardGui)
+discordLabel.Name = "DiscordText"
+discordLabel.Size = UDim2.new(1, 0, 0, 18)
+discordLabel.Position = UDim2.new(0, 0, 0, 25)
+discordLabel.BackgroundTransparency = 1
+discordLabel.Text = "https://discord.gg/xjfRaEXVR"
+discordLabel.TextColor3 = Color3.fromRGB(255, 35, 45)
+discordLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+discordLabel.TextStrokeTransparency = 0.08
+discordLabel.Font = Enum.Font.GothamBold
+discordLabel.TextSize = 9
+discordLabel.TextScaled = true
+discordLabel.TextXAlignment = Enum.TextXAlignment.Center
+discordLabel.ZIndex = 9
 end
 do
 local clone = nil
@@ -9742,11 +9750,11 @@ inactiveGrad = {
 },
 },
 ["Roxo"] = {
-base = Color3.fromRGB(235, 20, 35),
+base = Color3.fromRGB(155, 60, 255),
 activeText = Color3.fromRGB(255, 255, 255),
-activeStroke = Color3.fromRGB(255, 95, 100),
+activeStroke = Color3.fromRGB(215, 140, 255),
 activeGrad = {
-{ 0, Color3.fromRGB(255, 95, 100) },
+{ 0, Color3.fromRGB(215, 140, 255) },
 { 0.35, Color3.fromRGB(175, 75, 255) },
 { 0.7, Color3.fromRGB(130, 40, 215) },
 { 1, Color3.fromRGB(70, 15, 130) },
@@ -9797,7 +9805,7 @@ ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0)),
 end
 if textLabel then
 if button.Name == "InstaResetButton" or (button.Parent and button.Parent.Name == "InstaResetButton") then
-textLabel.TextColor3 = Color3.fromRGB(255, 55, 65)
+textLabel.TextColor3 = Color3.fromRGB(225, 175, 255)
 else
 textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 end
@@ -11948,7 +11956,7 @@ Trigger = instaReset,
 end
 end
 buildGui = function()
-Color3.fromRGB(255, 45, 55)
+Color3.fromRGB(185, 90, 255)
 local color = Color3.fromRGB(195, 160, 235)
 Color3.fromRGB(220, 180, 255)
 Color3.fromRGB(0, 0, 0)
@@ -12006,9 +12014,9 @@ mainGlowStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 local mainGlowGrad = Instance.new("UIGradient", mainGlowStroke)
 mainGlowGrad.Color = ColorSequence.new({
 	ColorSequenceKeypoint.new(0.00, Color3.fromRGB(90, 20, 160)),
-	ColorSequenceKeypoint.new(0.25, Color3.fromRGB(255, 55, 65)),
-	ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 100, 100)),
-	ColorSequenceKeypoint.new(0.75, Color3.fromRGB(255, 55, 65)),
+	ColorSequenceKeypoint.new(0.25, Color3.fromRGB(200, 120, 255)),
+	ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 255, 255)),
+	ColorSequenceKeypoint.new(0.75, Color3.fromRGB(200, 120, 255)),
 	ColorSequenceKeypoint.new(1.00, Color3.fromRGB(90, 20, 160)),
 })
 mainGlowGrad.Transparency = NumberSequence.new({
@@ -12077,7 +12085,7 @@ titleRbxAsset.BackgroundTransparency = 1
 titleRbxAsset.Image = "rbxassetid://97422699771755"
 titleRbxAsset.ScaleType = Enum.ScaleType.Fit
 titleRbxAsset.ZIndex = 25
-titleRbxAsset.Visible = false
+titleRbxAsset.Visible = true
 -- texto GROK removido: so a imagem TitleRbxAsset aparece no title
 local imageLabel = Instance.new("TextLabel", frame)
 imageLabel.Name = "TitleImage"
@@ -12085,13 +12093,8 @@ imageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 imageLabel.Size = UDim2.new(1, 0, 0.85, 0)
 imageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
 imageLabel.BackgroundTransparency = 1
-imageLabel.Text = "VLEX"
-imageLabel.Font = Enum.Font.Antique
-imageLabel.TextColor3 = Color3.fromRGB(255, 35, 45)
-imageLabel.TextStrokeColor3 = Color3.fromRGB(70, 0, 0)
-imageLabel.TextStrokeTransparency = 0.05
-imageLabel.TextScaled = true
-imageLabel.Visible = true
+imageLabel.Text = ""
+imageLabel.Visible = false
 imageLabel.ZIndex = 21
 local titleGlow = Instance.new("TextLabel", frame)
 titleGlow.Name = "TitleGlow"
@@ -12110,27 +12113,27 @@ titleStroke.Thickness = 3.5
 titleStroke.Color = Color3.fromRGB(15, 10, 25)
 local strokeGradient = Instance.new("UIGradient", titleStroke)
 strokeGradient.Color = ColorSequence.new({
-ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 70, 75)),
-ColorSequenceKeypoint.new(0.5, Color3.fromRGB(115, 0, 8)),
-ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 0, 0)),
+ColorSequenceKeypoint.new(0, Color3.fromRGB(230, 200, 255)),
+ColorSequenceKeypoint.new(0.5, Color3.fromRGB(80, 30, 140)),
+ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 10, 35)),
 })
 strokeGradient.Rotation = 90
 local titleGradient = Instance.new("UIGradient", imageLabel)
 titleGradient.Color = ColorSequence.new({
-ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 245, 245)),
-ColorSequenceKeypoint.new(0.25, Color3.fromRGB(255, 95, 100)),
-ColorSequenceKeypoint.new(0.5, Color3.fromRGB(235, 20, 35)),
-ColorSequenceKeypoint.new(0.75, Color3.fromRGB(175, 0, 12)),
-ColorSequenceKeypoint.new(1, Color3.fromRGB(75, 0, 5))
+ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+ColorSequenceKeypoint.new(0.25, Color3.fromRGB(235, 220, 255)),
+ColorSequenceKeypoint.new(0.5, Color3.fromRGB(200, 150, 255)),
+ColorSequenceKeypoint.new(0.75, Color3.fromRGB(150, 70, 250)),
+ColorSequenceKeypoint.new(1, Color3.fromRGB(85, 25, 180))
 })
 titleGradient.Rotation = 80
--- Efeito de brilho pulsante e reflexo animado no logo VLEX
+-- Efeito de brilho pulsante e reflexo animado no logo GROK
 task.spawn(function()
 pcall(function()
 local glowTweenInfo = TweenInfo.new(1.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
 TweenService:Create(titleGlow, glowTweenInfo, {
 TextTransparency = 0.12,
-TextColor3 = Color3.fromRGB(255, 95, 100)
+TextColor3 = Color3.fromRGB(215, 140, 255)
 }):Play()
 while imageLabel and imageLabel.Parent do
 titleGradient.Offset = Vector2.new(-1, 0)
@@ -12192,38 +12195,12 @@ rootPart.BorderSizePixel = 0
 rootPart.Image = "rbxassetid://97422699771755"
 rootPart.ScaleType = Enum.ScaleType.Fit
 rootPart.ZIndex = 21
--- VLEX mini logo: replace the old GROK artwork with red stylized text.
-rootPart.Visible = false
-local miniLogoText = Instance.new("TextLabel", miniBtn)
-miniLogoText.Name = "VLEXMiniLogo"
-miniLogoText.AnchorPoint = Vector2.new(0.5, 0.5)
-miniLogoText.Size = UDim2.new(1, -8, 1, -2)
-miniLogoText.Position = UDim2.new(0.5, 0, 0.5, 0)
-miniLogoText.BackgroundTransparency = 1
-miniLogoText.BorderSizePixel = 0
-miniLogoText.Text = "VLEX"
-miniLogoText.Font = Enum.Font.Antique
-miniLogoText.TextScaled = true
-miniLogoText.TextColor3 = Color3.fromRGB(255, 25, 40)
-miniLogoText.TextStrokeColor3 = Color3.fromRGB(65, 0, 0)
-miniLogoText.TextStrokeTransparency = 0.05
-miniLogoText.ZIndex = 22
-local miniLogoStroke = Instance.new("UIStroke", miniLogoText)
-miniLogoStroke.Thickness = 2
-miniLogoStroke.Color = Color3.fromRGB(110, 0, 10)
-local miniLogoGradient = Instance.new("UIGradient", miniLogoText)
-miniLogoGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 105)),
-    ColorSequenceKeypoint.new(0.45, Color3.fromRGB(255, 20, 35)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(105, 0, 8)),
-})
-miniLogoGradient.Rotation = 90
 -- gradient dummy kept for any theme code that expects MiniTitleImage child
 local miniGrad = Instance.new("UIGradient", rootPart)
 miniGrad.Enabled = false
 miniGrad.Color = ColorSequence.new({
 	ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 45, 55)),
+	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 160, 255)),
 	ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 70, 255)),
 })
 local miniGradient = Instance.new("UIGradient", rootPart)
@@ -12295,7 +12272,7 @@ local rootPart1955 = Instance.new("Frame", main)
 rootPart1955.Name = "TabsDivider"
 rootPart1955.Size = UDim2.new(1, -32, 0, 1)
 rootPart1955.Position = UDim2.new(0, 16, 0, 128)
-rootPart1955.BackgroundColor3 = Color3.fromRGB(235, 20, 35)
+rootPart1955.BackgroundColor3 = Color3.fromRGB(155, 60, 255)
 rootPart1955.BackgroundTransparency = 0.25
 rootPart1955.BorderSizePixel = 0
 rootPart1955.ZIndex = 11
@@ -12373,13 +12350,13 @@ b.TextColor3 = textColor3
 b.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
 end
 textButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-textButton.BackgroundColor3 = Color3.fromRGB(235, 20, 35)
+textButton.BackgroundColor3 = Color3.fromRGB(155, 60, 255)
 end)
 table.insert(tabButtons, textButton)
 end
 if tabButtons[1] then
 tabButtons[1].TextColor3 = Color3.fromRGB(255, 255, 255)
-tabButtons[1].BackgroundColor3 = Color3.fromRGB(235, 20, 35)
+tabButtons[1].BackgroundColor3 = Color3.fromRGB(155, 60, 255)
 end
 local data2034 = {}
 local function nextLayoutOrder(page)
@@ -12402,7 +12379,7 @@ glow.Size = UDim2.new(1, -16, 1, 0)
 glow.Position = UDim2.new(0, 9, 0, 1)
 glow.BackgroundTransparency = 1
 glow.Text = txt:upper()
-glow.TextColor3 = Color3.fromRGB(220, 20, 35)
+glow.TextColor3 = Color3.fromRGB(180, 90, 255)
 glow.Font = Enum.Font.GothamBlack
 glow.TextSize = 14
 glow.TextXAlignment = Enum.TextXAlignment.Left
@@ -12413,7 +12390,7 @@ l.Size = UDim2.new(1, -16, 1, 0)
 l.Position = UDim2.new(0, 8, 0, 0)
 l.BackgroundTransparency = 1
 l.Text = txt:upper()
-l.TextColor3 = Color3.fromRGB(255, 80, 90)
+l.TextColor3 = Color3.fromRGB(245, 235, 255)
 l.Font = Enum.Font.GothamBlack
 l.TextSize = 14
 l.TextXAlignment = Enum.TextXAlignment.Left
@@ -12432,7 +12409,7 @@ st.Transparency = 0.45
 local line = Instance.new("Frame", f)
 line.Size = UDim2.new(1, -24, 0, 2)
 line.Position = UDim2.new(0, 12, 1, -3)
-line.BackgroundColor3 = Color3.fromRGB(255, 35, 45)
+line.BackgroundColor3 = Color3.fromRGB(180, 100, 255)
 line.BackgroundTransparency = 0.35
 line.BorderSizePixel = 0
 line.ZIndex = 8
@@ -12481,7 +12458,7 @@ BackgroundColor3 = Color3.fromRGB(32, 18, 48),
 }):Play()
 if uiStroke then
 	TweenService:Create(uiStroke, TweenInfo.new(0.12), {
-		Color = Color3.fromRGB(255, 55, 65),
+		Color = Color3.fromRGB(200, 120, 255),
 		Transparency = 0.15,
 		Thickness = 1.4,
 	}):Play()
@@ -12523,7 +12500,7 @@ pill.Name = "Track"
 pill.Size = UDim2.new(0, 34, 0, 18)
 pill.AnchorPoint = Vector2.new(0.5, 0.5)
 pill.Position = UDim2.new(1, -(offset or 48), 0.5, 0)
-pill.BackgroundColor3 = Color3.fromRGB(235, 20, 35)
+pill.BackgroundColor3 = Color3.fromRGB(155, 60, 255)
 pill.BackgroundTransparency = 0.2
 pill.BorderSizePixel = 0
 pill.ZIndex = 8
@@ -12882,7 +12859,7 @@ textLabel.Size = UDim2.new(1, -80, 1, 0)
 textLabel.Position = UDim2.new(0, 14, 0, 0)
 textLabel.BackgroundTransparency = 1
 textLabel.Text = tostring(currentValue)
-textLabel.TextColor3 = Color3.fromRGB(255, 55, 65)
+textLabel.TextColor3 = Color3.fromRGB(210, 165, 255)
 textLabel.Font = Enum.Font.GothamBold
 textLabel.TextSize = 12
 textLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -13547,7 +13524,7 @@ leftArrowBtn.Size = UDim2.new(0, 32, 1, 0)
 leftArrowBtn.Position = UDim2.new(0, 0, 0, 0)
 leftArrowBtn.BackgroundTransparency = 1
 leftArrowBtn.Text = "◀"
-leftArrowBtn.TextColor3 = Color3.fromRGB(255, 45, 55)
+leftArrowBtn.TextColor3 = Color3.fromRGB(185, 90, 255)
 leftArrowBtn.Font = Enum.Font.GothamBold
 leftArrowBtn.TextSize = 13
 leftArrowBtn.ZIndex = 11
@@ -13556,7 +13533,7 @@ rightArrowBtn.Size = UDim2.new(0, 32, 1, 0)
 rightArrowBtn.Position = UDim2.new(1, -32, 0, 0)
 rightArrowBtn.BackgroundTransparency = 1
 rightArrowBtn.Text = "▶"
-rightArrowBtn.TextColor3 = Color3.fromRGB(255, 45, 55)
+rightArrowBtn.TextColor3 = Color3.fromRGB(185, 90, 255)
 rightArrowBtn.Font = Enum.Font.GothamBold
 rightArrowBtn.TextSize = 13
 rightArrowBtn.ZIndex = 11
@@ -13565,7 +13542,7 @@ valLabel.Size = UDim2.new(1, -64, 1, 0)
 valLabel.Position = UDim2.new(0, 32, 0, 0)
 valLabel.BackgroundTransparency = 1
 valLabel.Text = stretchOptions[currentStretchIndex]
-valLabel.TextColor3 = Color3.fromRGB(255, 55, 65)
+valLabel.TextColor3 = Color3.fromRGB(210, 165, 255)
 valLabel.Font = Enum.Font.GothamBold
 valLabel.TextSize = 12
 valLabel.TextXAlignment = Enum.TextXAlignment.Center
@@ -13702,7 +13679,7 @@ do
 		lbl.Position = UDim2.new(0, 10, 0, 0)
 		lbl.BackgroundTransparency = 1
 		lbl.Text = catName
-		lbl.TextColor3 = Color3.fromRGB(255, 80, 90)
+		lbl.TextColor3 = Color3.fromRGB(240, 235, 255)
 		lbl.Font = Enum.Font.GothamBold
 		lbl.TextSize = 12
 		lbl.TextXAlignment = Enum.TextXAlignment.Left
@@ -14295,7 +14272,7 @@ local label2285 = Instance.new("TextLabel", rootPart2279)
 label2285.Size = UDim2.new(1, 0, 1, 0)
 label2285.BackgroundTransparency = 1
 label2285.Text = "SAVE CONFIG"
-label2285.TextColor3 = Color3.fromRGB(255, 70, 80)
+label2285.TextColor3 = Color3.fromRGB(245, 230, 255)
 label2285.Font = Enum.Font.GothamBlack
 label2285.TextSize = 13
 label2285.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
@@ -14355,7 +14332,7 @@ local label2293 = Instance.new("TextLabel", rootPart2287)
 label2293.Size = UDim2.new(1, 0, 1, 0)
 label2293.BackgroundTransparency = 1
 label2293.Text = "RESET POSITIONS"
-label2293.TextColor3 = Color3.fromRGB(255, 60, 70)
+label2293.TextColor3 = Color3.fromRGB(235, 215, 255)
 label2293.Font = Enum.Font.GothamBlack
 label2293.TextSize = 13
 label2293.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
@@ -14517,10 +14494,10 @@ vector2318.LayoutOrder = nextLayoutOrder(keybinds)
 vector2318.ZIndex = 7
 pbFrame = Instance.new("Frame", gui)
 pbFrame.Name = "StealProgressBar"
-pbFrame.Size = UDim2.new(0, 260, 0, 18)
+pbFrame.Size = UDim2.new(0, 260, 0, 52)
 pbFrame.Position = UDim2.new(0.5, -130, 1, -75)
 pbFrame.BackgroundColor3 = Color3.fromRGB(12, 10, 16)
-pbFrame.BackgroundTransparency = 1
+pbFrame.BackgroundTransparency = 0.05
 pbFrame.BorderSizePixel = 0
 pbFrame.Active = true
 pbFrame.ClipsDescendants = true
@@ -14529,17 +14506,17 @@ pbFrame.ZIndex = 10
 Instance.new("UICorner", pbFrame).CornerRadius = UDim.new(0, 14)
 local pbStroke = Instance.new("UIStroke", pbFrame)
 pbStroke.Name = "PBStroke"
-pbStroke.Color = Color3.fromRGB(220, 20, 35)
+pbStroke.Color = Color3.fromRGB(180, 90, 255)
 pbStroke.Thickness = 2
-pbStroke.Transparency = 1
+pbStroke.Transparency = 0.1
 pbStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 local pbStrokeGrad = Instance.new("UIGradient", pbStroke)
 pbStrokeGrad.Color = ColorSequence.new({
-	ColorSequenceKeypoint.new(0.00, Color3.fromRGB(90, 0, 10)),
-	ColorSequenceKeypoint.new(0.25, Color3.fromRGB(255, 55, 65)),
-	ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 100, 100)),
-	ColorSequenceKeypoint.new(0.75, Color3.fromRGB(255, 55, 65)),
-	ColorSequenceKeypoint.new(1.00, Color3.fromRGB(90, 0, 10)),
+	ColorSequenceKeypoint.new(0.00, Color3.fromRGB(70, 20, 130)),
+	ColorSequenceKeypoint.new(0.25, Color3.fromRGB(200, 120, 255)),
+	ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 255, 255)),
+	ColorSequenceKeypoint.new(0.75, Color3.fromRGB(200, 120, 255)),
+	ColorSequenceKeypoint.new(1.00, Color3.fromRGB(70, 20, 130)),
 })
 pbStrokeGrad.Transparency = NumberSequence.new({
 	NumberSequenceKeypoint.new(0.00, 0.6),
@@ -14571,8 +14548,7 @@ backgroundImagePB.Position = UDim2.new(0, 0, 0, 0)
 backgroundImagePB.BackgroundTransparency = 1
 backgroundImagePB.BorderSizePixel = 0
 backgroundImagePB.ScaleType = Enum.ScaleType.Crop
-backgroundImagePB.ImageTransparency = 1
-backgroundImagePB.Visible = false
+backgroundImagePB.ImageTransparency = 0.2
 backgroundImagePB.ZIndex = 10
 
 task.spawn(function()
@@ -14629,29 +14605,28 @@ end
 
 progressPct = Instance.new("TextLabel", pbFrame)
 progressPct.Name = "ProgressPct"
-progressPct.Size = UDim2.new(1, 0, 1, 0)
-progressPct.Position = UDim2.new(0, 0, 0, 0)
+progressPct.Size = UDim2.new(0, 70, 0, 18)
+progressPct.Position = UDim2.new(0, 14, 0, 6)
 progressPct.BackgroundTransparency = 1
 progressPct.Text = "0%"
-progressPct.TextColor3 = Color3.fromRGB(255, 55, 65)
+progressPct.TextColor3 = Color3.fromRGB(255, 245, 255)
 progressPct.Font = Enum.Font.GothamBlack
-progressPct.TextSize = 12
-progressPct.TextXAlignment = Enum.TextXAlignment.Center
-progressPct.TextYAlignment = Enum.TextYAlignment.Center
-progressPct.ZIndex = 15
+progressPct.TextSize = 14
+progressPct.TextXAlignment = Enum.TextXAlignment.Left
+progressPct.ZIndex = 14
 local pctStroke = Instance.new("UIStroke", progressPct)
 pctStroke.Thickness = 1.4
-pctStroke.Color = Color3.fromRGB(255, 35, 45)
+pctStroke.Color = Color3.fromRGB(160, 70, 255)
 pctStroke.Transparency = 0.35
 local pctGrad = Instance.new("UIGradient", progressPct)
 pctGrad.Color = ColorSequence.new({
 	ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 55, 65)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 0, 15)),
+	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(220, 180, 255)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(170, 90, 255)),
 })
 task.spawn(function()
 	local ti = TweenInfo.new(1.1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
-	TweenService:Create(pctStroke, ti, { Transparency = 0.05, Color = Color3.fromRGB(255, 55, 65) }):Play()
+	TweenService:Create(pctStroke, ti, { Transparency = 0.05, Color = Color3.fromRGB(220, 140, 255) }):Play()
 end)
 
 fpsNeon = Instance.new("TextLabel", pbFrame)
@@ -14660,21 +14635,20 @@ fpsNeon.Size = UDim2.new(0, 150, 0, 18)
 fpsNeon.Position = UDim2.new(1, -164, 0, 6)
 fpsNeon.BackgroundTransparency = 1
 fpsNeon.Text = "FPS --  PING --ms"
-fpsNeon.TextColor3 = Color3.fromRGB(255, 70, 80)
+fpsNeon.TextColor3 = Color3.fromRGB(210, 180, 255)
 fpsNeon.Font = Enum.Font.GothamBold
 fpsNeon.TextSize = 12
 fpsNeon.TextXAlignment = Enum.TextXAlignment.Right
 fpsNeon.ZIndex = 14
-fpsNeon.Visible = false
 local fpsStroke = Instance.new("UIStroke", fpsNeon)
 fpsStroke.Thickness = 1
-fpsStroke.Color = Color3.fromRGB(150, 0, 15)
+fpsStroke.Color = Color3.fromRGB(100, 40, 180)
 fpsStroke.Transparency = 0.55
 
 local rootPart2320 = Instance.new("Frame", pbFrame)
 rootPart2320.Name = "ProgressRow"
-rootPart2320.Size = UDim2.new(1, 0, 0, 14)
-rootPart2320.Position = UDim2.new(0, 0, 0, 2)
+rootPart2320.Size = UDim2.new(1, -28, 0, 12)
+rootPart2320.Position = UDim2.new(0, 14, 0, 30)
 rootPart2320.BackgroundTransparency = 1
 rootPart2320.ZIndex = 11
 
@@ -14686,36 +14660,31 @@ frame2321.BackgroundTransparency = 0.1
 frame2321.BorderSizePixel = 0
 frame2321.ClipsDescendants = true
 frame2321.ZIndex = 12
-progressPct.Parent = frame2321
-progressPct.Position = UDim2.new(0, 0, 0, 0)
-progressPct.Size = UDim2.new(1, 0, 1, 0)
-progressPct.TextXAlignment = Enum.TextXAlignment.Center
-progressPct.TextYAlignment = Enum.TextYAlignment.Center
 Instance.new("UICorner", frame2321).CornerRadius = UDim.new(1, 0)
 local trackStroke = Instance.new("UIStroke", frame2321)
 trackStroke.Name = "UIStroke"
-trackStroke.Color = Color3.fromRGB(210, 20, 30)
+trackStroke.Color = Color3.fromRGB(140, 60, 220)
 trackStroke.Thickness = 1.3
 trackStroke.Transparency = 0.35
 task.spawn(function()
 	local ti = TweenInfo.new(1.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
-	TweenService:Create(trackStroke, ti, { Transparency = 0.1, Color = Color3.fromRGB(255, 55, 65) }):Play()
+	TweenService:Create(trackStroke, ti, { Transparency = 0.1, Color = Color3.fromRGB(200, 120, 255) }):Play()
 end)
 
 progressFill = Instance.new("Frame", frame2321)
 progressFill.Size = UDim2.new(0, 0, 1, 0)
 progressFill.Position = UDim2.new(0, 0, 0, 0)
-progressFill.BackgroundColor3 = Color3.fromRGB(255, 35, 45)
+progressFill.BackgroundColor3 = Color3.fromRGB(160, 70, 255)
 progressFill.BorderSizePixel = 0
 progressFill.ZIndex = 13
 Instance.new("UICorner", progressFill).CornerRadius = UDim.new(1, 0)
 local uiGradient4 = Instance.new("UIGradient", progressFill)
 uiGradient4.Color = ColorSequence.new({
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(130, 0, 10)),
-	ColorSequenceKeypoint.new(0.35, Color3.fromRGB(255, 35, 45)),
-	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 120, 120)),
-	ColorSequenceKeypoint.new(0.65, Color3.fromRGB(255, 35, 45)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(190, 0, 20)),
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(100, 20, 200)),
+	ColorSequenceKeypoint.new(0.35, Color3.fromRGB(180, 100, 255)),
+	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
+	ColorSequenceKeypoint.new(0.65, Color3.fromRGB(180, 100, 255)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 40, 230)),
 })
 uiGradient4.Rotation = 0
 -- shine stripe overlay on fill
@@ -14820,7 +14789,7 @@ UDim2.new(0, 0, 1, -16),
 UDim2.new(1, 0, 0, 14),
 8
 )
-Color3.fromRGB(235, 20, 35)
+Color3.fromRGB(155, 60, 255)
 local color = Color3.fromRGB(8, 8, 10)
 local buttons = {}
 local buttonTexts = {
@@ -14855,7 +14824,7 @@ local uiGradient = Instance.new("UIGradient", button)
 uiGradient.Name = "BtnGrad"
 uiGradient.Rotation = 90
 local data = {}
-local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0))
+local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(70, 70, 78))
 local object2464 = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(28, 28, 34))
 local object2465 = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(10, 10, 14))
 data[1] = object
@@ -14864,7 +14833,7 @@ data[3] = object2465
 data[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
 uiGradient.Color = ColorSequence.new(data)
 local uiStroke = Instance.new("UIStroke", button)
-uiStroke.Color = Color3.fromRGB(0, 0, 0)
+uiStroke.Color = Color3.fromRGB(70, 70, 78)
 uiStroke.Thickness = 1
 uiStroke.Transparency = 0.45
 uiStroke.Name = "NormalStroke"
@@ -15296,7 +15265,7 @@ local uiGradient = Instance.new("UIGradient", panel)
 uiGradient.Name = "BtnGrad"
 uiGradient.Rotation = 90
 local btnFrame = {}
-local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0))
+local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(70, 70, 78))
 local object2515 = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(28, 28, 34))
 local object2516 = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(10, 10, 14))
 btnFrame[1] = object
@@ -15305,7 +15274,7 @@ btnFrame[3] = object2516
 btnFrame[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
 uiGradient.Color = ColorSequence.new(btnFrame)
 local stroke = Instance.new("UIStroke", panel)
-stroke.Color = Color3.fromRGB(0, 0, 0)
+stroke.Color = Color3.fromRGB(70, 70, 78)
 stroke.Thickness = 1
 stroke.Transparency = 0.45
 stroke.Name = "TpBatStroke"
@@ -15427,7 +15396,7 @@ local uiGradient = Instance.new("UIGradient", panel)
 uiGradient.Name = "BtnGrad"
 uiGradient.Rotation = 90
 local btnFrame = {}
-local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0))
+local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(70, 70, 78))
 local object2543 = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(28, 28, 34))
 local object2544 = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(10, 10, 14))
 btnFrame[1] = object
@@ -15436,7 +15405,7 @@ btnFrame[3] = object2544
 btnFrame[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
 uiGradient.Color = ColorSequence.new(btnFrame)
 local uiStroke = Instance.new("UIStroke", panel)
-uiStroke.Color = Color3.fromRGB(0, 0, 0)
+uiStroke.Color = Color3.fromRGB(70, 70, 78)
 uiStroke.Thickness = 1
 uiStroke.Transparency = 0.45
 local label = Instance.new("TextLabel", panel)
@@ -15554,7 +15523,7 @@ local uiGradient = Instance.new("UIGradient", btnFrame)
 uiGradient.Name = "BtnGrad"
 uiGradient.Rotation = 90
 local data = {}
-local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0))
+local object = ColorSequenceKeypoint.new(0, Color3.fromRGB(70, 70, 78))
 local object2569 = ColorSequenceKeypoint.new(0.55, Color3.fromRGB(28, 28, 34))
 local object2570 = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(10, 10, 14))
 data[1] = object
@@ -15563,14 +15532,14 @@ data[3] = object2570
 data[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
 uiGradient.Color = ColorSequence.new(data)
 local uiStroke = Instance.new("UIStroke", btnFrame)
-uiStroke.Color = Color3.fromRGB(0, 0, 0)
+uiStroke.Color = Color3.fromRGB(70, 70, 78)
 uiStroke.Thickness = 1
 uiStroke.Transparency = 0.45
 local label = Instance.new("TextLabel", btnFrame)
 label.Size = UDim2.new(1, 0, 1, 0)
 label.BackgroundTransparency = 1
 label.Text = "INSTA\nRESET"
-label.TextColor3 = Color3.fromRGB(255, 55, 65)
+label.TextColor3 = Color3.fromRGB(225, 175, 255)
 label.Font = Enum.Font.GothamBlack
 label.TextSize = 11
 label.TextWrapped = true
@@ -17006,42 +16975,4 @@ return
 end
 end)
 end
--- VLEX: red Discord invite displayed above the local character.
-local function vlexAttachDiscordLabel(character)
-    if not character then return end
-    local head = character:FindFirstChild("Head") or character:WaitForChild("Head", 5)
-    if not head then return end
-    local old = head:FindFirstChild("VLEXDiscordInvite")
-    if old then old:Destroy() end
-    local billboard = Instance.new("BillboardGui")
-    billboard.Name = "VLEXDiscordInvite"
-    billboard.Adornee = head
-    billboard.Size = UDim2.new(0, 300, 0, 34)
-    billboard.StudsOffset = Vector3.new(0, 2.7, 0)
-    billboard.AlwaysOnTop = true
-    billboard.MaxDistance = 1500
-    billboard.Parent = head
-    local label = Instance.new("TextLabel")
-    label.Name = "InviteText"
-    label.Size = UDim2.fromScale(1, 1)
-    label.BackgroundTransparency = 1
-    label.Text = "https://discord.gg/xjfRaEXVR"
-    label.TextColor3 = Color3.fromRGB(255, 35, 45)
-    label.TextStrokeColor3 = Color3.fromRGB(15, 0, 0)
-    label.TextStrokeTransparency = 0.05
-    label.Font = Enum.Font.GothamBold
-    label.TextScaled = true
-    label.Parent = billboard
-end
-
-if localPlayer then
-    if localPlayer.Character then
-        task.spawn(vlexAttachDiscordLabel, localPlayer.Character)
-    end
-    localPlayer.CharacterAdded:Connect(function(character)
-        task.wait(0.5)
-        vlexAttachDiscordLabel(character)
-    end)
-end
-
 return
