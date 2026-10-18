@@ -1,12 +1,3 @@
--- 🔐 USUARIOS AUTORIZADOS
-local authorizedUsers = {"camaron4420"}
-local Players = game:GetService("Players")
-local localPlayer = Players.LocalPlayer
-if not localPlayer then return end
-local isAuthorized = false
-for _, u in ipairs(authorizedUsers) do if u == localPlayer.Name then isAuthorized = true break end end
-if not isAuthorized then pcall(function() localPlayer:Kick("RESET HWID - No autorizado") end) return end
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
