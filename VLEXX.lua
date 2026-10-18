@@ -13294,13 +13294,12 @@ end
 end)
 local frameAimbotVersion = createFrame2(custom, 38)
 mkLabel(frameAimbotVersion, "Aimbot Version")
-aimbotVersionLabel = createCarouselSelector(frameAimbotVersion, aimbotVersion, {
-"Grok",
-"shel.vc",
+aimbotVersionLabel = createCarouselSelector(frameAimbotVersion, aimbotVersion == "shel.vc" and "v2" or "v1", {
+"v1",
+"v2",
 }, function(newVersion)
-if newVersion ~= "shel.vc" then
-newVersion = "Grok"
-end
+-- Display v1/v2 while preserving the original internal implementation names.
+newVersion = newVersion == "v2" and "shel.vc" or "Grok"
 if newVersion ~= aimbotVersion then
 aimbotVersion = newVersion
 if autoBatEnabled then
@@ -17084,14 +17083,31 @@ local VLEX_CLICK_BOUND = setmetatable({}, {__mode = "k"})
 local function vlexApplyRedInterfaceText(root)
     if not root then return end
     for _, obj in ipairs(root:GetDescendants()) do
-        if obj:IsA("TextLabel") or obj:IsA("TextBox") then
+        if obj:IsA("UIStroke") then
+            obj.Color = VLEX_RED
+        end
+        if obj:IsA("TextLabel") then
             -- Make every label/number in the VLEX hub red.
             obj.TextColor3 = VLEX_RED
         elseif obj:IsA("TextButton") then
-            -- Keep mobile action button text red permanently, including after taps.
+            -- Buttons use only black and red; text stays red permanently after taps.
             obj.AutoButtonColor = false
             obj.TextColor3 = VLEX_RED
+            obj.BackgroundColor3 = VLEX_BLACK
+            for _, child in ipairs(obj:GetChildren()) do
+                if child:IsA("UIStroke") then
+                    child.Color = VLEX_RED
+                elseif child:IsA("UIGradient") then
+                    child.Enabled = false
+                end
+            end
             VLEX_CLICK_BOUND[obj] = true
+        elseif obj:IsA("TextBox") then
+            obj.TextColor3 = VLEX_RED
+            obj.BackgroundColor3 = VLEX_BLACK
+            for _, child in ipairs(obj:GetChildren()) do
+                if child:IsA("UIStroke") then child.Color = VLEX_RED end
+            end
         end
     end
 end
