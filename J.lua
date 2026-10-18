@@ -1,15 +1,5 @@
--- ⏱ KEY CON EXPIRACIÓN
-local keyExpiry = 1792260930392
-local now = os.time() * 1000
-if now > keyExpiry then
-  pcall(function()
-    game:GetService("Players").LocalPlayer:Kick("KEY EXPIRADA")
-  end)
-  return
-end
-
 -- 🔐 USUARIOS AUTORIZADOS
-local authorizedUsers = {"wasonoa89000"}
+local authorizedUsers = {"camaron4420"}
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 if not localPlayer then return end
@@ -17,259 +7,690 @@ local isAuthorized = false
 for _, u in ipairs(authorizedUsers) do if u == localPlayer.Name then isAuthorized = true break end end
 if not isAuthorized then pcall(function() localPlayer:Kick("RESET HWID - No autorizado") end) return end
 
--- script hecho por STRIKE TOP X SPECTROS
--- script hecho por STRIKE TOP X SPECTROS
---STRIKETOP discord.gg/XaDYCb3BdM X SPECTROS discord.gg/4ZC6PzAy7Y
---STRIKETOP discord.gg/XaDYCb3BdM X SPECTROS discord.gg/4ZC6PzAy7Y
 local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
-local GuiService = game:GetService("GuiService")
-local LocalPlayer = Players.LocalPlayer or Players.PlayerAdded:Wait()
+local HttpService = game:GetService("HttpService")
+local Workspace = game:GetService("Workspace")
+local LP = Players.LocalPlayer
 
-local GUI_NAME = "CleanBypassGui"
-local PURPLE = Color3.fromRGB(180, 70, 255)
-local DARK = Color3.fromRGB(10, 8, 15)
-local WHITE = Color3.fromRGB(245, 245, 250)
-local MUTED = Color3.fromRGB(185, 180, 195)
+-- // Estilo Clean (colores)
+local UI_COLORS = {
+    Background = Color3.fromRGB(0, 0, 0),
+    BackgroundDark = Color3.fromRGB(5, 5, 5),
+    BackgroundMedium = Color3.fromRGB(15, 15, 15),
+    BackgroundInput = Color3.fromRGB(200, 200, 200),
+    BackgroundButton = Color3.fromRGB(20, 20, 20),
+    BackgroundButtonLight = Color3.fromRGB(30, 30, 30),
+    TextPrimary = Color3.fromRGB(255, 255, 255),
+    TextSecondary = Color3.fromRGB(200, 200, 200),
+    TextAccent = Color3.fromRGB(0, 255, 100),
+    StrokeDefault = Color3.fromRGB(80, 80, 80),
+    StrokeDark = Color3.fromRGB(70, 70, 70),
+    StrokeInput = Color3.fromRGB(120, 120, 120),
+    Accent = Color3.fromRGB(0, 200, 80),
+    EnabledColor = Color3.fromRGB(0, 255, 100),
+    InactiveColor = Color3.fromRGB(255, 80, 100),
+    ToggleOn = Color3.fromRGB(200, 200, 200),
+    ToggleOff = Color3.fromRGB(40, 40, 40),
+    ActiveBorder = Color3.fromRGB(180, 180, 180),
+    SilverGray = Color3.fromRGB(180, 180, 180),
+    Black = Color3.fromRGB(0, 0, 0),
+    ShadowGray = Color3.fromRGB(100, 100, 100),
+}
+
+-- // Configuración del Bypass
+local Config = {
+    Enabled = false,
+    PowerValue = 97000,
+    Mode = "PC",
+    ToggleKey = Enum.KeyCode.V,
+    ToggleInputType = "Keyboard",
+    BackgroundVisible = true,
+    BackgroundStyle = 1,
+    WindowSizeIndex = 5,
+    IsVisible = true,
+    UILocked = false,
+    Position = {X_Scale = 0.5, X_Offset = -125, Y_Scale = 0.5, Y_Offset = -100}
+}
+
+-- // Variables del Bypass
+local DEPTH = 296
+local SPAM_DELAY = 0.12
 local running = false
-local settingsOpen = false
-local activeTab = "MAIN"
-local powerMode = "PC"
-local powerValues = { PC = 97000, Mobile = 72000 }
-local keyboardKey = Enum.KeyCode.RightShift
-local gamepadKey = Enum.KeyCode.ButtonY
-local listeningFor = nil
-local dragging, dragStart, startPos = false, nil, nil
+local bomb = nil
+local spamThread = nil
+local startedAt = 0
 
-local function getGuiParent()
-    if typeof(gethui) == "function" then
-        local ok, result = pcall(gethui)
-        if ok and result then return result end
+-- // 10 tamaños de ventana
+local WINDOW_SIZES = {
+    { Size = UDim2.new(0, 220, 0, 180) },
+    { Size = UDim2.new(0, 230, 0, 205) },
+    { Size = UDim2.new(0, 250, 0, 210) },
+    { Size = UDim2.new(0, 260, 0, 235) },
+    { Size = UDim2.new(0, 280, 0, 240) },
+    { Size = UDim2.new(0, 290, 0, 265) },
+    { Size = UDim2.new(0, 310, 0, 270) },
+    { Size = UDim2.new(0, 320, 0, 295) },
+    { Size = UDim2.new(0, 260, 0, 235) },
+    { Size = UDim2.new(0, 230, 0, 205) },
+}
+
+-- // Imágenes de fondo (solo la 3)
+local BG_IMAGES = {
+    "https://files.manuscdn.com/user_upload_by_module/session_file/310519663977376186/DoPhsBmjNsIqULtd.png",
+}
+
+local function loadKatanaBackground()
+    local loader = nil
+    pcall(function() if type(getcustomasset) == "function" then loader = getcustomasset end end)
+    if not loader then pcall(function() if type(getsynasset) == "function" then loader = getsynasset end end) end
+    if loader and type(writefile) == "function" then
+        local exists = false
+        if type(isfile) == "function" then pcall(function() exists = isfile("KatanaHub.png") end) end
+        if not exists then
+            pcall(function()
+                local bytes = game:HttpGet(BG_IMAGES[1])
+                if type(bytes) == "string" and #bytes > 1000 then writefile("KatanaHub.png", bytes) end
+            end)
+        end
+        local ok, asset = pcall(loader, "KatanaHub.png")
+        if ok and type(asset) == "string" then return asset end
     end
-    local ok, coreGui = pcall(function() return game:GetService("CoreGui") end)
-    if ok and coreGui then return coreGui end
-    return LocalPlayer:WaitForChild("PlayerGui")
+    return "rbxassetid://86916180687040"
 end
 
-local function new(className, props, parent)
-    local obj = Instance.new(className)
-    for k, v in pairs(props or {}) do obj[k] = v end
-    obj.Parent = parent
-    return obj
+-- // Guardar/Cargar
+local ConfigFile = "SpeedBypass_Config.json"
+local function SaveConfig()
+    if writefile then
+        local data = {
+            Position = {X_Scale = Config.Position.X_Scale, X_Offset = Config.Position.X_Offset, Y_Scale = Config.Position.Y_Scale, Y_Offset = Config.Position.Y_Offset},
+            PowerValue = Config.PowerValue,
+            Mode = Config.Mode,
+            ToggleKey = Config.ToggleKey.Name,
+            ToggleInputType = Config.ToggleInputType,
+            BackgroundVisible = Config.BackgroundVisible,
+            BackgroundStyle = Config.BackgroundStyle,
+            WindowSizeIndex = Config.WindowSizeIndex,
+            UILocked = Config.UILocked,
+        }
+        pcall(function() writefile(ConfigFile, HttpService:JSONEncode(data)) end)
+    end
 end
-local function corner(obj, radius)
-    return new("UICorner", {CornerRadius = UDim.new(0, radius)}, obj)
-end
-local function stroke(obj, color, thickness, transparency)
-    return new("UIStroke", {Color = color, Thickness = thickness or 1, Transparency = transparency or 0}, obj)
-end
-local function makeLabel(parent, text, size, pos, textSize, color, font)
-    return new("TextLabel", {
-        Size = size, Position = pos, BackgroundTransparency = 1, Text = text,
-        TextColor3 = color or WHITE, Font = font or Enum.Font.GothamBold,
-        TextSize = textSize or 12, TextXAlignment = Enum.TextXAlignment.Left,
-        TextYAlignment = Enum.TextYAlignment.Center, ZIndex = 7,
-    }, parent)
-end
-local function makeButton(parent, text, size, pos, textSize)
-    local b = new("TextButton", {
-        Size = size, Position = pos, BackgroundColor3 = DARK,
-        BackgroundTransparency = 0.12, BorderSizePixel = 0, AutoButtonColor = false,
-        Text = text, TextColor3 = PURPLE, Font = Enum.Font.GothamBlack,
-        TextSize = textSize or 12, ZIndex = 8,
-    }, parent)
-    corner(b, 8); stroke(b, Color3.fromRGB(20, 18, 25), 1.2)
-    return b
-end
-
-local parent = getGuiParent()
-local old = parent:FindFirstChild(GUI_NAME)
-if old then old:Destroy() end
-local gui = new("ScreenGui", {
-    Name = GUI_NAME, ResetOnSpawn = false, IgnoreGuiInset = true,
-    ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
-}, nil)
-if type(syn) == "table" and type(syn.protect_gui) == "function" then
-    pcall(syn.protect_gui, gui)
-elseif typeof(protectgui) == "function" then
-    pcall(protectgui, gui)
-end
-pcall(function() gui.Parent = parent end)
-if not gui.Parent then gui.Parent = LocalPlayer:WaitForChild("PlayerGui") end
-
-local main = new("Frame", {
-    Name = "MainFrame", Size = UDim2.fromOffset(360, 160),
-    Position = UDim2.new(0.5, -180, 0.5, -80), BackgroundColor3 = Color3.fromRGB(0,0,0),
-    BorderSizePixel = 0, ClipsDescendants = true, Active = true, ZIndex = 1,
-}, gui)
-corner(main, 24); stroke(main, Color3.fromRGB(15,15,15), 1.5)
-local bgImage = new("ImageLabel", {
-    Name = "BackgroundImage", Size = UDim2.fromScale(1,1), BackgroundTransparency = 1,
-    Image = "rbxassetid://103527217312966", ScaleType = Enum.ScaleType.Crop, ZIndex = 1,
-}, main)
-corner(bgImage, 24)
-local tint = new("Frame", {Size = UDim2.fromScale(1,1), BackgroundColor3 = Color3.fromRGB(0,0,0), BackgroundTransparency = 1, BorderSizePixel = 0, ZIndex = 2}, main)
-corner(tint,24)
-local imgLabel = makeLabel(main, "IMG", UDim2.fromOffset(70,30), UDim2.fromOffset(20,13), 14, PURPLE, Enum.Font.GothamBlack)
-imgLabel.ZIndex = 6
-local closeButton = makeButton(main, "X", UDim2.fromOffset(26,26), UDim2.new(1,-36,0,12), 14)
-closeButton.BackgroundTransparency = 1
-local gearButton = makeButton(main, "⚙", UDim2.fromOffset(28,28), UDim2.new(1,-70,0,11), 18)
-gearButton.BackgroundTransparency = 1
-local discordLabel = makeLabel(main, "discord.gg/cleanhub", UDim2.new(1,0,0,20), UDim2.fromOffset(0,43), 13, PURPLE, Enum.Font.GothamBold)
-discordLabel.TextXAlignment = Enum.TextXAlignment.Center
-local activateButton = makeButton(main, "ACTIVATED", UDim2.new(1,-40,0,42), UDim2.fromOffset(20,91), 18)
-activateButton.BackgroundTransparency = 0.25
-
--- Panel de ajustes; solo muestra MAIN y CONTROLS, como se pidió.
-local settingsPanel = new("Frame", {
-    Name = "SettingsPanel", Position = UDim2.fromOffset(0,0), Size = UDim2.fromOffset(300,196),
-    BackgroundColor3 = Color3.fromRGB(5,5,8), BackgroundTransparency = 0.08,
-    BorderSizePixel = 0, Visible = false, ZIndex = 5,
-}, gui)
-corner(settingsPanel, 12); stroke(settingsPanel, Color3.fromRGB(45,35,55), 1)
-local mainTab = makeButton(settingsPanel, "MAIN", UDim2.new(0.5,-5,0,27), UDim2.fromOffset(8,8), 10)
-local controlsTab = makeButton(settingsPanel, "CONTROLS", UDim2.new(0.5,-5,0,27), UDim2.new(0.5, -3, 0, 8), 10)
-local page = new("Frame", {Position=UDim2.fromOffset(8,43), Size=UDim2.new(1,-16,1,-51), BackgroundTransparency=1, BorderSizePixel=0, ZIndex=6}, settingsPanel)
-local mainPage = new("Frame", {Size=UDim2.fromScale(1,1), BackgroundTransparency=1, ZIndex=6}, page)
-local controlsPage = new("Frame", {Size=UDim2.fromScale(1,1), BackgroundTransparency=1, Visible=false, ZIndex=6}, page)
-
-local bypassLabel = makeLabel(mainPage, "BYPASS", UDim2.new(0.48,0,0,28), UDim2.fromOffset(5,3), 12, WHITE)
-local bypassToggle = makeButton(mainPage, "OFF", UDim2.fromOffset(78,27), UDim2.new(1,-83,0,3), 10)
-local modeLabel = makeLabel(mainPage, "POWER MODE", UDim2.new(0.48,0,0,28), UDim2.fromOffset(5,39), 11, WHITE)
--- Selector segmentado: PC y MOBILE visibles a la vez (la activa se resalta).
--- Letras finas y nítidas: fuente Gotham normal y el contorno (UIStroke) SOLO
--- en el borde, no sobre las letras (eso causaba el efecto grueso/borroso).
-local pcModeButton = makeButton(mainPage, "PC", UDim2.fromOffset(40,22), UDim2.new(1,-110,0,42), 11)
-pcModeButton.Font = Enum.Font.Gotham
-pcModeButton.TextStrokeTransparency = 1
-do local s = pcModeButton:FindFirstChildOfClass("UIStroke"); if s then s.ApplyStrokeMode = Enum.ApplyStrokeMode.Border end end
-local mobileModeButton = makeButton(mainPage, "MOBILE", UDim2.fromOffset(62,22), UDim2.new(1,-67,0,42), 11)
-mobileModeButton.Font = Enum.Font.Gotham
-mobileModeButton.TextStrokeTransparency = 1
-do local s = mobileModeButton:FindFirstChildOfClass("UIStroke"); if s then s.ApplyStrokeMode = Enum.ApplyStrokeMode.Border end end
-local powerLabel = makeLabel(mainPage, "POWER", UDim2.new(0.48,0,0,28), UDim2.fromOffset(5,75), 11, WHITE)
-local powerBox = new("TextBox", {
-    Size=UDim2.fromOffset(105,27), Position=UDim2.new(1,-110,0,75), BackgroundColor3=DARK,
-    BorderSizePixel=0, Text=tostring(powerValues[powerMode]), TextColor3=WHITE, PlaceholderText="1000 - 150000",
-    ClearTextOnFocus=false, Font=Enum.Font.GothamBold, TextSize=10, ZIndex=8,
-}, mainPage)
-corner(powerBox,8); stroke(powerBox,Color3.fromRGB(45,35,55),1)
-
-makeLabel(controlsPage, "KEYBOARD", UDim2.new(1,0,0,22), UDim2.fromOffset(5,4), 11, WHITE)
-local keyboardButton = makeButton(controlsPage, keyboardKey.Name, UDim2.new(1,-10,0,28), UDim2.fromOffset(5,27), 10)
-makeLabel(controlsPage, "GAMEPAD", UDim2.new(1,0,0,22), UDim2.fromOffset(5,62), 11, WHITE)
-local gamepadButton = makeButton(controlsPage, gamepadKey.Name, UDim2.new(1,-10,0,28), UDim2.fromOffset(5,85), 10)
-local controlHint = makeLabel(controlsPage, "Presiona un botón y luego la tecla deseada.", UDim2.new(1,-10,0,22), UDim2.fromOffset(5,119), 9, MUTED, Enum.Font.GothamMedium)
-controlHint.TextWrapped = true
-
-local function refresh()
-    activateButton.Text = running and "DESACTIVATE" or "ACTIVATED"
-    activateButton.TextColor3 = PURPLE
-    bypassToggle.Text = running and "ON" or "OFF"
-    bypassToggle.TextColor3 = running and Color3.fromRGB(255,160,160) or PURPLE
-    -- Resalta la opción activa del selector PC/MOBILE y muestra su Power.
-    local function paintMode(btn, isActive)
-        btn.TextColor3 = isActive and PURPLE or MUTED
-        btn.BackgroundTransparency = isActive and 0.0 or 0.35
-        local s = btn:FindFirstChildOfClass("UIStroke")
-        if s then
-            s.Color = isActive and PURPLE or Color3.fromRGB(20,18,25)
-            s.Transparency = 0.0
+local function LoadConfig()
+    if isfile and isfile(ConfigFile) then
+        local success, data = pcall(function() return HttpService:JSONDecode(readfile(ConfigFile)) end)
+        if success and data then
+            if data.Position then Config.Position = data.Position end
+            if data.PowerValue then Config.PowerValue = data.PowerValue end
+            if data.Mode then Config.Mode = data.Mode end
+            if data.ToggleKey then Config.ToggleKey = Enum.KeyCode[data.ToggleKey] or Enum.KeyCode.V end
+            if data.ToggleInputType == "Gamepad" then Config.ToggleInputType = "Gamepad" end
+            if data.BackgroundVisible ~= nil then Config.BackgroundVisible = data.BackgroundVisible end
+            if data.BackgroundStyle then Config.BackgroundStyle = data.BackgroundStyle end
+            if data.WindowSizeIndex then Config.WindowSizeIndex = data.WindowSizeIndex end
+            if data.UILocked ~= nil then Config.UILocked = data.UILocked end
         end
     end
-    paintMode(pcModeButton, powerMode == "PC")
-    paintMode(mobileModeButton, powerMode == "Mobile")
-    if not powerBox:IsFocused() then powerBox.Text = tostring(powerValues[powerMode]) end
-    keyboardButton.Text = listeningFor == "Keyboard" and "PRESS KEY..." or keyboardKey.Name
-    gamepadButton.Text = listeningFor == "Gamepad" and "PRESS BUTTON..." or gamepadKey.Name
-    mainTab.TextColor3 = activeTab == "MAIN" and PURPLE or MUTED
-    controlsTab.TextColor3 = activeTab == "CONTROLS" and PURPLE or MUTED
-    mainPage.Visible = activeTab == "MAIN"
-    controlsPage.Visible = activeTab == "CONTROLS"
 end
-local function setRunning(state)
-    -- Estado local solamente: el motor remoto antiguo fue retirado.
-    running = state
-    refresh()
+LoadConfig()
+
+-- // Funciones del Bypass
+local function buildBomb(power)
+    local maintable = {}
+    local spammedtable = {}
+    table.insert(spammedtable, {})
+    local z = spammedtable[1]
+    for i = 1, DEPTH do
+        local tableins = {}
+        table.insert(z, tableins)
+        z = tableins
+    end
+    local maxRep = math.floor(power / (DEPTH + 2))
+    for i = 1, maxRep do
+        table.insert(maintable, spammedtable)
+    end
+    return maintable
 end
-local function positionSettingsPanel()
-    local camera = workspace.CurrentCamera
-    local x = main.AbsolutePosition.X + main.AbsoluteSize.X + 10
-    
-    local y = main.AbsolutePosition.Y + (main.AbsoluteSize.Y - settingsPanel.AbsoluteSize.Y) / 2
-    if camera then
-        local viewport = camera.ViewportSize
-        local panelWidth = settingsPanel.AbsoluteSize.X
-        local overflow = (x + panelWidth) - (viewport.X - 8)
-        if overflow > 0 then
-            local pos = main.Position
-            main.Position = UDim2.new(pos.X.Scale, pos.X.Offset - overflow, pos.Y.Scale, pos.Y.Offset)
-            x = main.AbsolutePosition.X + main.AbsoluteSize.X + 10
+
+local function stopBypass()
+    running = false
+    if spamThread then
+        task.cancel(spamThread)
+        spamThread = nil
+    end
+    bomb = nil
+end
+
+local function startBypass(power)
+    stopBypass()
+    running = true
+    bomb = buildBomb(power)
+    spamThread = task.spawn(function()
+        while running do
+            if bomb then
+                pcall(function()
+                    game.RobloxReplicatedStorage.SetPlayerBlockList:FireServer(bomb)
+                end)
+            end
+            task.wait(SPAM_DELAY)
         end
-        x = math.max(8, x)
-        y = math.clamp(y, 8, math.max(8, viewport.Y - settingsPanel.AbsoluteSize.Y - 8))
-    end
-    settingsPanel.Position = UDim2.fromOffset(x, y)
+    end)
 end
 
-local function toggleSettings()
-    settingsOpen = not settingsOpen
-    settingsPanel.Visible = settingsOpen
-    if settingsOpen then positionSettingsPanel() end
-    refresh()
+-- // Eliminar GUI antigua
+for _, name in pairs({"AntiDieUI", "SpeedBypassUI"}) do
+    local old = game:GetService("CoreGui"):FindFirstChild(name)
+    if old then old:Destroy() end
 end
 
-activateButton.Activated:Connect(function() setRunning(not running) end)
-bypassToggle.Activated:Connect(function() setRunning(not running) end)
-gearButton.Activated:Connect(toggleSettings)
-closeButton.Activated:Connect(function() running = false; gui:Destroy() end)
-mainTab.Activated:Connect(function() activeTab = "MAIN"; listeningFor = nil; refresh() end)
-controlsTab.Activated:Connect(function() activeTab = "CONTROLS"; listeningFor = nil; refresh() end)
-pcModeButton.Activated:Connect(function() powerMode = "PC"; refresh() end)
-mobileModeButton.Activated:Connect(function() powerMode = "Mobile"; refresh() end)
-powerBox.FocusLost:Connect(function()
-    local n = tonumber(powerBox.Text)
-    if n then powerValues[powerMode] = math.clamp(math.floor(n),1000,150000) end
-    powerBox.Text = tostring(powerValues[powerMode])
-end)
-keyboardButton.Activated:Connect(function() listeningFor = "Keyboard"; refresh() end)
-gamepadButton.Activated:Connect(function() listeningFor = "Gamepad"; refresh() end)
+-- // Crear GUI
+local gui = Instance.new("ScreenGui")
+gui.Name = "SpeedBypassUI"
+gui.ResetOnSpawn = false
+gui.DisplayOrder = 10
+gui.IgnoreGuiInset = true
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+gui.Parent = game:GetService("CoreGui")
 
-UserInputService.InputBegan:Connect(function(input, processed)
-    if listeningFor == "Keyboard" and input.UserInputType == Enum.UserInputType.Keyboard then
-        keyboardKey = input.KeyCode; listeningFor = nil; refresh(); return
-    elseif listeningFor == "Gamepad" and input.UserInputType == Enum.UserInputType.Gamepad1 then
-        gamepadKey = input.KeyCode; listeningFor = nil; refresh(); return
+local main = Instance.new("Frame", gui)
+main.Name = "Main"
+main.Size = WINDOW_SIZES[Config.WindowSizeIndex].Size
+main.Position = UDim2.new(Config.Position.X_Scale or 0.5, Config.Position.X_Offset or -125, Config.Position.Y_Scale or 0.5, Config.Position.Y_Offset or -100)
+main.BackgroundColor3 = UI_COLORS.Background
+main.BackgroundTransparency = 0
+main.BorderSizePixel = 0
+main.Active = true
+main.ClipsDescendants = true
+main.ZIndex = 1
+local mainCorner = Instance.new("UICorner", main)
+mainCorner.CornerRadius = UDim.new(0, 16)
+local mainStroke = Instance.new("UIStroke", main)
+mainStroke.Color = UI_COLORS.StrokeDefault
+mainStroke.Thickness = 1.5
+
+-- Fondo con imagen (solo la 3)
+local bgImage = Instance.new("ImageLabel", main)
+bgImage.Size = UDim2.new(1, 0, 1, 0)
+bgImage.BackgroundTransparency = 1
+bgImage.Image = loadKatanaBackground()
+bgImage.ScaleType = Enum.ScaleType.Stretch
+bgImage.ZIndex = 0
+local bgCorner = Instance.new("UICorner", bgImage)
+bgCorner.CornerRadius = UDim.new(0, 16)
+
+-- Arrastre (controlado por UILocked)
+local dragging, dragInput, dragStart, mainStart = false, nil, nil, nil
+main.InputBegan:Connect(function(inp)
+    if Config.UILocked then return end
+    if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+        dragging = true; dragStart = inp.Position; mainStart = main.Position
+        inp.Changed:Connect(function()
+            if inp.UserInputState == Enum.UserInputState.End then
+                dragging = false
+                Config.Position = {X_Scale = main.Position.X.Scale, X_Offset = main.Position.X.Offset, Y_Scale = main.Position.Y.Scale, Y_Offset = main.Position.Y.Offset}
+                SaveConfig()
+            end
+        end)
     end
-    if processed then return end
-    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == keyboardKey then
-        setRunning(not running)
-    elseif input.UserInputType == Enum.UserInputType.Gamepad1 and input.KeyCode == gamepadKey then
-        setRunning(not running)
+end)
+main.InputChanged:Connect(function(inp)
+    if Config.UILocked then return end
+    if inp.UserInputType == Enum.UserInputType.MouseMovement or inp.UserInputType == Enum.UserInputType.Touch then dragInput = inp end
+end)
+UIS.InputChanged:Connect(function(inp)
+    if Config.UILocked then return end
+    if inp == dragInput and dragging then
+        local dx = inp.Position.X - dragStart.X
+        local dy = inp.Position.Y - dragStart.Y
+        main.Position = UDim2.new(mainStart.X.Scale, mainStart.X.Offset+dx, mainStart.Y.Scale, mainStart.Y.Offset+dy)
     end
 end)
 
-main.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        local p = input.Position
-        -- Evita iniciar el arrastre al tocar controles de la cabecera.
-        if p.Y - main.AbsolutePosition.Y <= 42 and p.X - main.AbsolutePosition.X < main.AbsoluteSize.X - 78 then
-            dragging = true; dragStart = input.Position; startPos = main.Position
+-- CABECERA
+local titleBar = Instance.new("Frame", main)
+titleBar.Size = UDim2.new(1, 0, 0, 35)
+titleBar.Position = UDim2.new(0, 0, 0, 0)
+titleBar.BackgroundColor3 = UI_COLORS.BackgroundDark
+titleBar.BackgroundTransparency = 0.5
+titleBar.ZIndex = 2
+local titleBarCorner = Instance.new("UICorner", titleBar)
+titleBarCorner.CornerRadius = UDim.new(0, 4)
+
+local titleDot = Instance.new("Frame", titleBar)
+titleDot.Size = UDim2.new(0, 10, 0, 10)
+titleDot.Position = UDim2.new(0, 12, 0, 12)
+titleDot.BackgroundColor3 = UI_COLORS.TextAccent
+titleDot.BorderSizePixel = 0
+titleDot.ZIndex = 5
+Instance.new("UICorner", titleDot).CornerRadius = UDim.new(1, 0)
+
+local titleLbl = Instance.new("TextLabel", titleBar)
+titleLbl.Size = UDim2.new(1, -130, 1, 0)
+titleLbl.Position = UDim2.new(0, 30, 0, 0)
+titleLbl.BackgroundTransparency = 1
+titleLbl.Text = "Katana Hub"
+titleLbl.TextColor3 = UI_COLORS.TextPrimary
+titleLbl.Font = Enum.Font.GothamBold
+titleLbl.TextSize = 14
+titleLbl.TextXAlignment = Enum.TextXAlignment.Left
+titleLbl.ZIndex = 5
+
+local subLbl = Instance.new("TextLabel", titleBar)
+subLbl.Size = UDim2.new(1, -130, 1, 0)
+subLbl.Position = UDim2.new(0, 30, 0, 18)
+subLbl.BackgroundTransparency = 1
+subLbl.Text = "Speed Bypass"
+subLbl.TextColor3 = UI_COLORS.TextSecondary
+subLbl.Font = Enum.Font.Gotham
+subLbl.TextSize = 10
+subLbl.TextXAlignment = Enum.TextXAlignment.Left
+subLbl.ZIndex = 5
+
+-- Función auxiliar para crear botones de cabecera (excepto el candado)
+local function createTitleButton(text, xPos, onClick)
+    local btn = Instance.new("TextButton", titleBar)
+    btn.Size = UDim2.new(0, 24, 0, 24)
+    btn.Position = UDim2.new(1, xPos, 0, 6)
+    btn.BackgroundColor3 = UI_COLORS.BackgroundButtonLight
+    btn.BackgroundTransparency = 0.78
+    btn.Text = text
+    btn.TextColor3 = UI_COLORS.TextPrimary
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 16
+    btn.ZIndex = 5
+    btn.Active = true
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+    local stroke = Instance.new("UIStroke", btn)
+    stroke.Color = UI_COLORS.StrokeDark
+    stroke.Thickness = 1
+    btn.Activated:Connect(onClick)
+    return btn
+end
+
+-- Botón de bloqueo (creado manualmente para control directo)
+local lockBtn = Instance.new("TextButton", titleBar)
+lockBtn.Size = UDim2.new(0, 24, 0, 24)
+lockBtn.Position = UDim2.new(1, -110, 0, 6)
+lockBtn.BackgroundColor3 = UI_COLORS.BackgroundButtonLight
+lockBtn.BackgroundTransparency = 0.78
+lockBtn.Text = Config.UILocked and "🔒" or "🔓"
+lockBtn.TextColor3 = UI_COLORS.TextPrimary
+lockBtn.Font = Enum.Font.GothamBold
+lockBtn.TextSize = 16
+lockBtn.ZIndex = 5
+lockBtn.Active = true
+Instance.new("UICorner", lockBtn).CornerRadius = UDim.new(0, 6)
+local strokeLock = Instance.new("UIStroke", lockBtn)
+strokeLock.Color = UI_COLORS.StrokeDark
+strokeLock.Thickness = 1
+
+lockBtn.Activated:Connect(function()
+    Config.UILocked = not Config.UILocked
+    lockBtn.Text = Config.UILocked and "🔒" or "🔓"
+    SaveConfig()
+end)
+
+-- Botones minimizar, reducir tamaño, aumentar tamaño
+local minBtn = createTitleButton("_", -32, function()
+    Config.IsVisible = not Config.IsVisible
+    main.Size = Config.IsVisible and WINDOW_SIZES[Config.WindowSizeIndex].Size or UDim2.new(0, WINDOW_SIZES[Config.WindowSizeIndex].Size.X.Offset, 0, 35)
+end)
+
+local resizeDownBtn = createTitleButton("-", -58, function()
+    if Config.WindowSizeIndex > 1 then Config.WindowSizeIndex = Config.WindowSizeIndex - 1
+    else Config.WindowSizeIndex = #WINDOW_SIZES end
+    main.Size = WINDOW_SIZES[Config.WindowSizeIndex].Size
+    if not Config.IsVisible then main.Size = UDim2.new(0, main.Size.X.Offset, 0, 35) end
+    SaveConfig()
+end)
+
+local resizeUpBtn = createTitleButton("+", -84, function()
+    if Config.WindowSizeIndex < #WINDOW_SIZES then Config.WindowSizeIndex = Config.WindowSizeIndex + 1
+    else Config.WindowSizeIndex = 1 end
+    main.Size = WINDOW_SIZES[Config.WindowSizeIndex].Size
+    if not Config.IsVisible then main.Size = UDim2.new(0, main.Size.X.Offset, 0, 35) end
+    SaveConfig()
+end)
+
+-- CONTENIDO
+local contentFrame = Instance.new("ScrollingFrame", main)
+contentFrame.Name = "Content"
+contentFrame.Position = UDim2.new(0, 12, 0, 42)
+contentFrame.Size = UDim2.new(1, -24, 1, -49)
+contentFrame.BackgroundTransparency = 1
+contentFrame.ZIndex = 3
+contentFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+contentFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+contentFrame.ScrollBarThickness = 3
+contentFrame.ScrollBarImageColor3 = UI_COLORS.TextAccent
+contentFrame.ScrollBarImageTransparency = 0.2
+contentFrame.ScrollingDirection = Enum.ScrollingDirection.Y
+contentFrame.ElasticBehavior = Enum.ElasticBehavior.Always
+
+local contentLayout = Instance.new("UIListLayout", contentFrame)
+contentLayout.Padding = UDim.new(0, 6)
+contentLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+local function createPanel(height)
+    local p = Instance.new("Frame", contentFrame)
+    p.Size = UDim2.new(1, 0, 0, height)
+    p.BackgroundColor3 = UI_COLORS.BackgroundMedium
+    p.BackgroundTransparency = 0.7
+    p.ZIndex = 4
+    Instance.new("UICorner", p).CornerRadius = UDim.new(0, 8)
+    local stroke = Instance.new("UIStroke", p)
+    stroke.Color = UI_COLORS.StrokeDark
+    stroke.Thickness = 1
+    return p
+end
+
+-- ===== PANELES =====
+-- 1. Status (centrado)
+local statusPanel = createPanel(40)
+local statusBtn = Instance.new("TextButton", statusPanel)
+statusBtn.Size = UDim2.new(0.6, 0, 0.6, 0)
+statusBtn.Position = UDim2.new(0.2, 0, 0.2, 0)
+statusBtn.BackgroundColor3 = UI_COLORS.BackgroundButton
+statusBtn.BackgroundTransparency = 0.5
+statusBtn.Text = "INACTIVE"
+statusBtn.TextColor3 = UI_COLORS.TextSecondary
+statusBtn.Font = Enum.Font.GothamBold
+statusBtn.TextSize = 12
+statusBtn.ZIndex = 5
+Instance.new("UICorner", statusBtn).CornerRadius = UDim.new(0, 6)
+local statusStroke = Instance.new("UIStroke", statusBtn)
+statusStroke.Color = UI_COLORS.StrokeDark
+statusStroke.Thickness = 1
+
+-- 2. Background Toggle
+local bgTogglePanel = createPanel(36)
+local bgToggleLabel = Instance.new("TextLabel", bgTogglePanel)
+bgToggleLabel.Size = UDim2.new(0.45, 0, 1, 0)
+bgToggleLabel.Position = UDim2.new(0, 8, 0, 0)
+bgToggleLabel.BackgroundTransparency = 1
+bgToggleLabel.Text = "Background:"
+bgToggleLabel.TextColor3 = UI_COLORS.TextSecondary
+bgToggleLabel.Font = Enum.Font.Gotham
+bgToggleLabel.TextSize = 11
+bgToggleLabel.TextXAlignment = Enum.TextXAlignment.Left
+bgToggleLabel.ZIndex = 5
+
+local shadowFrame = Instance.new("Frame", bgTogglePanel)
+shadowFrame.Size = UDim2.new(0.35, 0, 0.7, 0)
+shadowFrame.Position = UDim2.new(0.55, 0, 0.15, 0)
+shadowFrame.BackgroundColor3 = UI_COLORS.ShadowGray
+shadowFrame.BackgroundTransparency = 0.3
+shadowFrame.ZIndex = 4
+Instance.new("UICorner", shadowFrame).CornerRadius = UDim.new(0, 5)
+
+local bgToggleBtn = Instance.new("TextButton", bgTogglePanel)
+bgToggleBtn.Size = UDim2.new(0.35, 0, 0.7, 0)
+bgToggleBtn.Position = UDim2.new(0.55, -2, 0.15, 2)
+bgToggleBtn.BackgroundColor3 = UI_COLORS.SilverGray
+bgToggleBtn.BackgroundTransparency = 0.2
+bgToggleBtn.Text = Config.BackgroundVisible and "ON" or "OFF"
+bgToggleBtn.TextColor3 = UI_COLORS.Black
+bgToggleBtn.Font = Enum.Font.GothamBold
+bgToggleBtn.TextSize = 11
+bgToggleBtn.ZIndex = 5
+Instance.new("UICorner", bgToggleBtn).CornerRadius = UDim.new(0, 5)
+local bgToggleStroke = Instance.new("UIStroke", bgToggleBtn)
+bgToggleStroke.Color = UI_COLORS.SilverGray
+bgToggleStroke.Thickness = 1.5
+
+-- 3. Mode (PC y Mobile)
+local modePanel = createPanel(52)
+local modeLabel = Instance.new("TextLabel", modePanel)
+modeLabel.Size = UDim2.new(1, 0, 0.25, 0)
+modeLabel.Position = UDim2.new(0, 8, 0, 2)
+modeLabel.BackgroundTransparency = 1
+modeLabel.Text = "Mode:"
+modeLabel.TextColor3 = UI_COLORS.TextSecondary
+modeLabel.Font = Enum.Font.Gotham
+modeLabel.TextSize = 11
+modeLabel.TextXAlignment = Enum.TextXAlignment.Left
+modeLabel.ZIndex = 5
+
+local pcBtn = Instance.new("TextButton", modePanel)
+pcBtn.Size = UDim2.new(0.4, 0, 0.3, 0)
+pcBtn.Position = UDim2.new(0.3, 0, 0.3, 0)
+pcBtn.BackgroundColor3 = UI_COLORS.BackgroundButton
+pcBtn.BackgroundTransparency = 0.5
+pcBtn.Text = "PC"
+pcBtn.TextColor3 = UI_COLORS.TextSecondary
+pcBtn.Font = Enum.Font.GothamBold
+pcBtn.TextSize = 11
+pcBtn.ZIndex = 5
+Instance.new("UICorner", pcBtn).CornerRadius = UDim.new(0, 5)
+local pcStroke = Instance.new("UIStroke", pcBtn)
+pcStroke.Color = UI_COLORS.StrokeDark
+pcStroke.Thickness = 1
+
+local mobileBtn = Instance.new("TextButton", modePanel)
+mobileBtn.Size = UDim2.new(0.4, 0, 0.3, 0)
+mobileBtn.Position = UDim2.new(0.3, 0, 0.65, 0)
+mobileBtn.BackgroundColor3 = UI_COLORS.BackgroundButton
+mobileBtn.BackgroundTransparency = 0.5
+mobileBtn.Text = "Mobile"
+mobileBtn.TextColor3 = UI_COLORS.TextSecondary
+mobileBtn.Font = Enum.Font.GothamBold
+mobileBtn.TextSize = 11
+mobileBtn.ZIndex = 5
+Instance.new("UICorner", mobileBtn).CornerRadius = UDim.new(0, 5)
+local mobileStroke = Instance.new("UIStroke", mobileBtn)
+mobileStroke.Color = UI_COLORS.StrokeDark
+mobileStroke.Thickness = 1
+
+-- 4. Keybind
+local keyPanel = createPanel(32)
+local keyLabel = Instance.new("TextLabel", keyPanel)
+keyLabel.Size = UDim2.new(0.4, 0, 1, 0)
+keyLabel.Position = UDim2.new(0, 8, 0, 0)
+keyLabel.BackgroundTransparency = 1
+keyLabel.Text = "Keybind:"
+keyLabel.TextColor3 = UI_COLORS.TextSecondary
+keyLabel.Font = Enum.Font.Gotham
+keyLabel.TextSize = 11
+keyLabel.TextXAlignment = Enum.TextXAlignment.Left
+keyLabel.ZIndex = 5
+
+local keyBtn = Instance.new("TextButton", keyPanel)
+keyBtn.Size = UDim2.new(0.3, 0, 0.7, 0)
+keyBtn.Position = UDim2.new(0.42, 0, 0.15, 0)
+keyBtn.BackgroundColor3 = UI_COLORS.BackgroundButton
+keyBtn.BackgroundTransparency = 0.5
+keyBtn.Text = (Config.ToggleInputType == "Gamepad" and "GP " or "") .. Config.ToggleKey.Name
+keyBtn.TextColor3 = UI_COLORS.TextPrimary
+keyBtn.Font = Enum.Font.GothamBold
+keyBtn.TextSize = 11
+keyBtn.ZIndex = 5
+Instance.new("UICorner", keyBtn).CornerRadius = UDim.new(0, 5)
+local keyStroke = Instance.new("UIStroke", keyBtn)
+keyStroke.Color = UI_COLORS.StrokeDark
+keyStroke.Thickness = 1
+
+-- 5. Power
+local powerPanel = createPanel(36)
+local powerLabel = Instance.new("TextLabel", powerPanel)
+powerLabel.Size = UDim2.new(0.35, 0, 1, 0)
+powerLabel.Position = UDim2.new(0, 8, 0, 0)
+powerLabel.BackgroundTransparency = 1
+powerLabel.Text = "Power:"
+powerLabel.TextColor3 = UI_COLORS.TextSecondary
+powerLabel.Font = Enum.Font.Gotham
+powerLabel.TextSize = 11
+powerLabel.TextXAlignment = Enum.TextXAlignment.Left
+powerLabel.ZIndex = 5
+
+local powerInput = Instance.new("TextBox", powerPanel)
+powerInput.Size = UDim2.new(0.5, 0, 0.7, 0)
+powerInput.Position = UDim2.new(0.42, 0, 0.15, 0)
+powerInput.BackgroundColor3 = UI_COLORS.SilverGray
+powerInput.BackgroundTransparency = 0.3
+powerInput.Text = tostring(Config.PowerValue)
+powerInput.TextColor3 = UI_COLORS.Black
+powerInput.Font = Enum.Font.GothamBold
+powerInput.TextSize = 12
+powerInput.ZIndex = 5
+Instance.new("UICorner", powerInput).CornerRadius = UDim.new(0, 4)
+local powerStroke = Instance.new("UIStroke", powerInput)
+powerStroke.Color = UI_COLORS.StrokeInput
+powerStroke.Thickness = 1
+
+-- // Actualizar estado visual general
+local function updateUIState()
+    local enabled = Config.Enabled
+    statusBtn.Text = enabled and "ACTIVE" or "INACTIVE"
+    statusBtn.TextColor3 = enabled and UI_COLORS.EnabledColor or UI_COLORS.TextSecondary
+    mainStroke.Color = enabled and UI_COLORS.ActiveBorder or UI_COLORS.StrokeDefault
+
+    -- Modo PC/Mobile
+    if Config.Mode == "PC" then
+        pcBtn.BackgroundColor3 = UI_COLORS.SilverGray
+        pcBtn.BackgroundTransparency = 0.3
+        pcBtn.TextColor3 = UI_COLORS.Black
+        pcStroke.Color = UI_COLORS.SilverGray
+        mobileBtn.BackgroundColor3 = UI_COLORS.BackgroundButton
+        mobileBtn.BackgroundTransparency = 0.5
+        mobileBtn.TextColor3 = UI_COLORS.TextSecondary
+        mobileStroke.Color = UI_COLORS.StrokeDark
+    else
+        mobileBtn.BackgroundColor3 = UI_COLORS.SilverGray
+        mobileBtn.BackgroundTransparency = 0.3
+        mobileBtn.TextColor3 = UI_COLORS.Black
+        mobileStroke.Color = UI_COLORS.SilverGray
+        pcBtn.BackgroundColor3 = UI_COLORS.BackgroundButton
+        pcBtn.BackgroundTransparency = 0.5
+        pcBtn.TextColor3 = UI_COLORS.TextSecondary
+        pcStroke.Color = UI_COLORS.StrokeDark
+    end
+
+    -- Background toggle
+    if Config.BackgroundVisible then
+        bgToggleBtn.BackgroundColor3 = UI_COLORS.SilverGray
+        bgToggleBtn.BackgroundTransparency = 0.15
+        bgToggleStroke.Color = UI_COLORS.SilverGray
+        bgToggleBtn.TextColor3 = UI_COLORS.Black
+    else
+        bgToggleBtn.BackgroundColor3 = UI_COLORS.BackgroundButtonLight
+        bgToggleBtn.BackgroundTransparency = 0.4
+        bgToggleStroke.Color = UI_COLORS.StrokeDark
+        bgToggleBtn.TextColor3 = UI_COLORS.TextSecondary
+    end
+    bgToggleBtn.Text = Config.BackgroundVisible and "ON" or "OFF"
+    bgImage.Visible = Config.BackgroundVisible
+end
+
+-- // Input helpers: keyboard and controller buttons are both bindable.
+local function isGamepadInput(input)
+    return input.UserInputType == Enum.UserInputType.Gamepad1
+        or input.UserInputType == Enum.UserInputType.Gamepad2
+        or input.UserInputType == Enum.UserInputType.Gamepad3
+        or input.UserInputType == Enum.UserInputType.Gamepad4
+        or input.UserInputType == Enum.UserInputType.Gamepad5
+        or input.UserInputType == Enum.UserInputType.Gamepad6
+        or input.UserInputType == Enum.UserInputType.Gamepad7
+        or input.UserInputType == Enum.UserInputType.Gamepad8
+end
+local function isBindableInput(input)
+    return input.UserInputType == Enum.UserInputType.Keyboard or isGamepadInput(input)
+end
+local function bindDisplayName()
+    return (Config.ToggleInputType == "Gamepad" and "GP " or "") .. Config.ToggleKey.Name
+end
+
+-- // Eventos (todos funcionan siempre, sin bloqueo)
+statusBtn.Activated:Connect(function()
+    Config.Enabled = not Config.Enabled
+    updateUIState()
+    if Config.Enabled then
+        startedAt = os.clock()
+        startBypass(Config.PowerValue)
+    else
+        stopBypass()
+    end
+    SaveConfig()
+end)
+
+powerInput.FocusLost:Connect(function()
+    local val = tonumber(powerInput.Text)
+    if val then
+        Config.PowerValue = math.clamp(math.floor(val + 0.5), 1, 999999)
+        powerInput.Text = tostring(Config.PowerValue)
+        if Config.Enabled then startBypass(Config.PowerValue) end
+        SaveConfig()
+    else
+        powerInput.Text = tostring(Config.PowerValue)
+    end
+end)
+
+mobileBtn.Activated:Connect(function()
+    Config.Mode = "Mobile"
+    Config.PowerValue = 65000
+    powerInput.Text = "65000"
+    if Config.Enabled then startBypass(Config.PowerValue) end
+    updateUIState()
+    SaveConfig()
+end)
+
+pcBtn.Activated:Connect(function()
+    Config.Mode = "PC"
+    Config.PowerValue = 97000
+    powerInput.Text = "97000"
+    if Config.Enabled then startBypass(Config.PowerValue) end
+    updateUIState()
+    SaveConfig()
+end)
+
+keyBtn.Activated:Connect(function()
+    keyBtn.Text = "PRESS KEY"
+    keyBtn.TextColor3 = Color3.fromRGB(255, 200, 100)
+    local conn
+    conn = UIS.InputBegan:Connect(function(input)
+        if isBindableInput(input) and input.KeyCode ~= Enum.KeyCode.Unknown then
+            Config.ToggleKey = input.KeyCode
+            Config.ToggleInputType = isGamepadInput(input) and "Gamepad" or "Keyboard"
+            keyBtn.Text = bindDisplayName()
+            keyBtn.TextColor3 = UI_COLORS.TextPrimary
+            conn:Disconnect()
+            SaveConfig()
+        end
+    end)
+end)
+
+bgToggleBtn.Activated:Connect(function()
+    Config.BackgroundVisible = not Config.BackgroundVisible
+    updateUIState()
+    SaveConfig()
+end)
+
+-- // Keybind global
+UIS.InputBegan:Connect(function(input, gp)
+    if gp then return end
+    if isBindableInput(input) then
+        local inputType = isGamepadInput(input) and "Gamepad" or "Keyboard"
+        if inputType == Config.ToggleInputType and input.KeyCode == Config.ToggleKey then
+            Config.Enabled = not Config.Enabled
+            updateUIState()
+            if Config.Enabled then
+                startedAt = os.clock()
+                startBypass(Config.PowerValue)
+            else
+                stopBypass()
+            end
+            SaveConfig()
+        elseif input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.RightControl then
+            Config.IsVisible = not Config.IsVisible
+            main.Size = Config.IsVisible and WINDOW_SIZES[Config.WindowSizeIndex].Size or UDim2.new(0, WINDOW_SIZES[Config.WindowSizeIndex].Size.X.Offset, 0, 35)
         end
     end
 end)
-UserInputService.InputChanged:Connect(function(input)
-    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-        local delta = input.Position - dragStart
-        main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        if settingsOpen then task.defer(positionSettingsPanel) end
-    end
-end)
-UserInputService.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = false end
-end)
 
-refresh()
-loadstring(game:HttpGet("https://gist.githubusercontent.com/xd-myscript/ecc28f5c8eb2a54484b09c058216b951/raw/52ef0761336b805e3965d945c0a2d88105c72d11/CLEAN%20BYPASS.lua"))()
+-- Inicializar
+updateUIState()
+if Config.Enabled then
+    startBypass(Config.PowerValue)
+end
