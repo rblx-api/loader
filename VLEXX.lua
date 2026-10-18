@@ -17006,42 +17006,71 @@ return
 end
 end)
 end
--- VLEX: red Discord invite displayed above the local character.
-local function vlexAttachDiscordLabel(character)
-    if not character then return end
-    local head = character:FindFirstChild("Head") or character:WaitForChild("Head", 5)
-    if not head then return end
-    local old = head:FindFirstChild("VLEXDiscordInvite")
-    if old then old:Destroy() end
-    local billboard = Instance.new("BillboardGui")
-    billboard.Name = "VLEXDiscordInvite"
-    billboard.Adornee = head
-    billboard.Size = UDim2.new(0, 300, 0, 34)
-    billboard.StudsOffset = Vector3.new(0, 2.7, 0)
-    billboard.AlwaysOnTop = true
-    billboard.MaxDistance = 1500
-    billboard.Parent = head
-    local label = Instance.new("TextLabel")
-    label.Name = "InviteText"
-    label.Size = UDim2.fromScale(1, 1)
-    label.BackgroundTransparency = 1
-    label.Text = "https://discord.gg/xjfRaEXVR"
-    label.TextColor3 = Color3.fromRGB(255, 35, 45)
-    label.TextStrokeColor3 = Color3.fromRGB(15, 0, 0)
-    label.TextStrokeTransparency = 0.05
-    label.Font = Enum.Font.GothamBold
-    label.TextScaled = true
-    label.Parent = billboard
-end
 
-if localPlayer then
-    if localPlayer.Character then
-        task.spawn(vlexAttachDiscordLabel, localPlayer.Character)
+-- VLEX: remove the Discord label above the local character.
+if localPlayer and localPlayer.Character then
+    local head = localPlayer.Character:FindFirstChild("Head")
+    if head then
+        local invite = head:FindFirstChild("VLEXDiscordInvite")
+        if invite then invite:Destroy() end
     end
+end
+if localPlayer then
     localPlayer.CharacterAdded:Connect(function(character)
         task.wait(0.5)
-        vlexAttachDiscordLabel(character)
+        local head = character:FindFirstChild("Head")
+        if head then
+            local invite = head:FindFirstChild("VLEXDiscordInvite")
+            if invite then invite:Destroy() end
+        end
     end)
 end
+
+-- Change blue text on in-world BillboardGuis to red (including labels that appear later).
+local function vlexMakeBlueBillboardTextRed(instance)
+    if not instance:IsA("TextLabel") and not instance:IsA("TextButton") and not instance:IsA("TextBox") then
+        return
+    end
+    local billboard = instance:FindFirstAncestorWhichIsA("BillboardGui")
+    if not billboard then return end
+    local color = instance.TextColor3
+    if color.B > color.R * 1.25 and color.B > color.G * 1.15 and color.B > 0.35 then
+        instance.TextColor3 = Color3.fromRGB(255, 0, 0)
+        -- Add the requested Discord invite above this red in-world text.
+        if not billboard:FindFirstChild("VLEXDiscordInviteAboveRedText") then
+            local adornee = billboard.Adornee
+            if not adornee then
+                adornee = billboard.Parent
+            end
+            if adornee and (adornee:IsA("BasePart") or adornee:IsA("Model")) then
+                local inviteGui = Instance.new("BillboardGui")
+                inviteGui.Name = "VLEXDiscordInviteAboveRedText"
+                inviteGui.Adornee = adornee
+                inviteGui.Size = UDim2.new(0, 300, 0, 28)
+                inviteGui.StudsOffset = billboard.StudsOffset + Vector3.new(0, 1.1, 0)
+                inviteGui.AlwaysOnTop = true
+                inviteGui.MaxDistance = billboard.MaxDistance
+                inviteGui.Parent = adornee
+                local inviteLabel = Instance.new("TextLabel")
+                inviteLabel.Name = "InviteText"
+                inviteLabel.Size = UDim2.fromScale(1, 1)
+                inviteLabel.BackgroundTransparency = 1
+                inviteLabel.Text = "https://discord.gg/xjfRaEXVR"
+                inviteLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+                inviteLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                inviteLabel.TextStrokeTransparency = 0.15
+                inviteLabel.Font = Enum.Font.GothamBold
+                inviteLabel.TextScaled = true
+                inviteLabel.Parent = inviteGui
+            end
+        end
+    end
+end
+for _, instance in ipairs(workspace:GetDescendants()) do
+    vlexMakeBlueBillboardTextRed(instance)
+end
+workspace.DescendantAdded:Connect(function(instance)
+    task.defer(vlexMakeBlueBillboardTextRed, instance)
+end)
 
 return
