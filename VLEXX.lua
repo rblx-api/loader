@@ -262,20 +262,45 @@ subtitle.AnchorPoint = Vector2.new(0.5, 0.5)
 subtitle.Position = UDim2.new(0.5, 0, 0.5, 42)
 subtitle.Size = UDim2.new(0, 260, 0, 22)
 subtitle.BackgroundTransparency = 1
-subtitle.Text = "S T E A L   ·   H U B"
+subtitle.Text = "Created by VLEX"
 subtitle.Font = Enum.Font.GothamBold
 subtitle.TextSize = 13
-subtitle.TextColor3 = Color3.fromRGB(210, 180, 255)
+subtitle.TextColor3 = Color3.fromRGB(255, 45, 45)
 subtitle.TextTransparency = 1
 subtitle.ZIndex = 6
 local subStroke = Instance.new("UIStroke", subtitle)
 subStroke.Thickness = 1
-subStroke.Color = Color3.fromRGB(90, 40, 160)
+subStroke.Color = Color3.fromRGB(150, 0, 0)
 subStroke.Transparency = 0.5
 task.delay(0.55, function()
 	if subtitle.Parent and not introClosed then
 		introTweenService:Create(subtitle, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			TextTransparency = 0.1,
+		}):Play()
+	end
+end)
+
+-- Discord invite shown in red beneath the creator credit.
+local discordCredit = Instance.new("TextLabel", introGui)
+discordCredit.Name = "DiscordInvite"
+discordCredit.AnchorPoint = Vector2.new(0.5, 0.5)
+discordCredit.Position = UDim2.new(0.5, 0, 0.5, 64)
+discordCredit.Size = UDim2.new(0, 360, 0, 20)
+discordCredit.BackgroundTransparency = 1
+discordCredit.Text = "https://discord.gg/xjfRaEXVR"
+discordCredit.Font = Enum.Font.GothamBold
+discordCredit.TextSize = 13
+discordCredit.TextColor3 = Color3.fromRGB(255, 0, 0)
+discordCredit.TextTransparency = 1
+discordCredit.ZIndex = 6
+local discordStroke = Instance.new("UIStroke", discordCredit)
+discordStroke.Thickness = 1
+discordStroke.Color = Color3.fromRGB(90, 0, 0)
+discordStroke.Transparency = 0.25
+task.delay(0.7, function()
+	if discordCredit.Parent and not introClosed then
+		introTweenService:Create(discordCredit, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			TextTransparency = 0,
 		}):Play()
 	end
 end)
@@ -334,6 +359,9 @@ closeIntro = function()
 		BackgroundTransparency = 1,
 	}):Play()
 	introTweenService:Create(subtitle, TweenInfo.new(0.25), { TextTransparency = 1 }):Play()
+	if discordCredit and discordCredit.Parent then
+		introTweenService:Create(discordCredit, TweenInfo.new(0.25), { TextTransparency = 1 }):Play()
+	end
 	introTweenService:Create(tip, TweenInfo.new(0.2), { TextTransparency = 1 }):Play()
 	for _, letterEntry in ipairs(introLetters) do
 		if letterEntry.image and letterEntry.image.Parent then
@@ -370,8 +398,10 @@ introRenderConnection = introRunService.RenderStepped:Connect(function()
 	for _, letterEntry in ipairs(introLetters) do
 		local image = letterEntry.image
 		if image and image.Parent then
-			local animationPhase = elapsedTime * 2.4 + letterEntry.GrokHubIndex * 1.37
-			local offset = UDim2.fromOffset(math.sin(animationPhase) * 10, math.cos(animationPhase * 1.35) * 14)
+				local animationPhase = elapsedTime * 2.4 + letterEntry.GrokHubIndex * 1.37
+			-- Smooth left-to-right wave across the intro letters.
+			local waveY = math.sin(elapsedTime * 4.2 - letterEntry.GrokHubIndex * 0.9) * 16
+			local offset = UDim2.fromOffset(math.sin(animationPhase) * 6, waveY)
 			image.Position = letterEntry.base + offset
 			image.Rotation = math.sin(animationPhase * 0.7) * 5
 			if letterEntry.halo then
@@ -17036,34 +17066,6 @@ local function vlexMakeBlueBillboardTextRed(instance)
     local color = instance.TextColor3
     if color.B > color.R * 1.25 and color.B > color.G * 1.15 and color.B > 0.35 then
         instance.TextColor3 = Color3.fromRGB(255, 0, 0)
-        -- Add the requested Discord invite above this red in-world text.
-        if not billboard:FindFirstChild("VLEXDiscordInviteAboveRedText") then
-            local adornee = billboard.Adornee
-            if not adornee then
-                adornee = billboard.Parent
-            end
-            if adornee and (adornee:IsA("BasePart") or adornee:IsA("Model")) then
-                local inviteGui = Instance.new("BillboardGui")
-                inviteGui.Name = "VLEXDiscordInviteAboveRedText"
-                inviteGui.Adornee = adornee
-                inviteGui.Size = UDim2.new(0, 300, 0, 28)
-                inviteGui.StudsOffset = billboard.StudsOffset + Vector3.new(0, 1.1, 0)
-                inviteGui.AlwaysOnTop = true
-                inviteGui.MaxDistance = billboard.MaxDistance
-                inviteGui.Parent = adornee
-                local inviteLabel = Instance.new("TextLabel")
-                inviteLabel.Name = "InviteText"
-                inviteLabel.Size = UDim2.fromScale(1, 1)
-                inviteLabel.BackgroundTransparency = 1
-                inviteLabel.Text = "https://discord.gg/xjfRaEXVR"
-                inviteLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
-                inviteLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-                inviteLabel.TextStrokeTransparency = 0.15
-                inviteLabel.Font = Enum.Font.GothamBold
-                inviteLabel.TextScaled = true
-                inviteLabel.Parent = inviteGui
-            end
-        end
     end
 end
 for _, instance in ipairs(workspace:GetDescendants()) do
@@ -17073,4 +17075,55 @@ workspace.DescendantAdded:Connect(function(instance)
     task.defer(vlexMakeBlueBillboardTextRed, instance)
 end)
 
-return
+-- VLEX RED THEME: recolor the hub's interface text and mobile action buttons.
+local VLEX_RED = Color3.fromRGB(255, 0, 0)
+local VLEX_BLACK = Color3.fromRGB(0, 0, 0)
+local VLEX_WHITE = Color3.fromRGB(255, 255, 255)
+local VLEX_CLICK_BOUND = setmetatable({}, {__mode = "k"})
+
+local function vlexApplyRedInterfaceText(root)
+    if not root then return end
+    for _, obj in ipairs(root:GetDescendants()) do
+        if obj:IsA("TextLabel") or obj:IsA("TextBox") then
+            -- Make every label/number in the VLEX hub red.
+            obj.TextColor3 = VLEX_RED
+        elseif obj:IsA("TextButton") then
+            -- Keep mobile action button text red permanently, including after taps.
+            obj.AutoButtonColor = false
+            obj.TextColor3 = VLEX_RED
+            VLEX_CLICK_BOUND[obj] = true
+        end
+    end
+end
+
+local function vlexFindGuiRoots()
+    local roots = {}
+    local coreGui = game:GetService("CoreGui")
+    local playerGui = localPlayer and localPlayer:FindFirstChildOfClass("PlayerGui")
+    for _, parent in ipairs({coreGui, playerGui}) do
+        if parent then
+            local hub = parent:FindFirstChild("FictionHub")
+            if hub then table.insert(roots, hub) end
+            local mobile = parent:FindFirstChild("FictionHubMobilePanel")
+            if mobile then table.insert(roots, mobile) end
+            for _, name in ipairs({"TpBatButton", "BatV2Button", "InstaResetButton"}) do
+                local standalone = parent:FindFirstChild(name)
+                if standalone then table.insert(roots, standalone) end
+            end
+        end
+    end
+    return roots
+end
+
+local function vlexRefreshRedTheme()
+    for _, root in ipairs(vlexFindGuiRoots()) do
+        vlexApplyRedInterfaceText(root)
+    end
+end
+
+vlexRefreshRedTheme()
+task.spawn(function()
+    while task.wait(0.75) do
+        pcall(vlexRefreshRedTheme)
+    end
+end)
