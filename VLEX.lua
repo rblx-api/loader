@@ -17006,42 +17006,99 @@ return
 end
 end)
 end
--- VLEX: red Discord invite displayed above the local character.
-local function vlexAttachDiscordLabel(character)
-    if not character then return end
-    local head = character:FindFirstChild("Head") or character:WaitForChild("Head", 5)
-    if not head then return end
-    local old = head:FindFirstChild("VLEXDiscordInvite")
-    if old then old:Destroy() end
-    local billboard = Instance.new("BillboardGui")
-    billboard.Name = "VLEXDiscordInvite"
-    billboard.Adornee = head
-    billboard.Size = UDim2.new(0, 300, 0, 34)
-    billboard.StudsOffset = Vector3.new(0, 2.7, 0)
-    billboard.AlwaysOnTop = true
-    billboard.MaxDistance = 1500
-    billboard.Parent = head
-    local label = Instance.new("TextLabel")
-    label.Name = "InviteText"
-    label.Size = UDim2.fromScale(1, 1)
-    label.BackgroundTransparency = 1
-    label.Text = "https://discord.gg/xjfRaEXVR"
-    label.TextColor3 = Color3.fromRGB(255, 35, 45)
-    label.TextStrokeColor3 = Color3.fromRGB(15, 0, 0)
-    label.TextStrokeTransparency = 0.05
-    label.Font = Enum.Font.GothamBold
-    label.TextScaled = true
-    label.Parent = billboard
-end
 
-if localPlayer then
-    if localPlayer.Character then
-        task.spawn(vlexAttachDiscordLabel, localPlayer.Character)
+-- VLEX: remove the Discord label above the local character.
+if localPlayer and localPlayer.Character then
+    local head = localPlayer.Character:FindFirstChild("Head")
+    if head then
+        local invite = head:FindFirstChild("VLEXDiscordInvite")
+        if invite then invite:Destroy() end
     end
+end
+if localPlayer then
     localPlayer.CharacterAdded:Connect(function(character)
         task.wait(0.5)
-        vlexAttachDiscordLabel(character)
+        local head = character:FindFirstChild("Head")
+        if head then
+            local invite = head:FindFirstChild("VLEXDiscordInvite")
+            if invite then invite:Destroy() end
+        end
     end)
 end
 
-return
+-- Change blue text on in-world BillboardGuis to red (including labels that appear later).
+local function vlexMakeBlueBillboardTextRed(instance)
+    if not instance:IsA("TextLabel") and not instance:IsA("TextButton") and not instance:IsA("TextBox") then
+        return
+    end
+    local billboard = instance:FindFirstAncestorWhichIsA("BillboardGui")
+    if not billboard then return end
+    local color = instance.TextColor3
+    if color.B > color.R * 1.25 and color.B > color.G * 1.15 and color.B > 0.35 then
+        instance.TextColor3 = Color3.fromRGB(255, 0, 0)
+    end
+end
+for _, instance in ipairs(workspace:GetDescendants()) do
+    vlexMakeBlueBillboardTextRed(instance)
+end
+workspace.DescendantAdded:Connect(function(instance)
+    task.defer(vlexMakeBlueBillboardTextRed, instance)
+end)
+
+-- VLEX RED THEME: recolor the hub's interface text and mobile action buttons.
+local VLEX_RED = Color3.fromRGB(255, 0, 0)
+local VLEX_BLACK = Color3.fromRGB(0, 0, 0)
+local VLEX_WHITE = Color3.fromRGB(255, 255, 255)
+local VLEX_CLICK_BOUND = setmetatable({}, {__mode = "k"})
+
+local function vlexApplyRedInterfaceText(root)
+    if not root then return end
+    for _, obj in ipairs(root:GetDescendants()) do
+        if obj:IsA("TextLabel") or obj:IsA("TextBox") then
+            -- Make every label/number in the VLEX hub red.
+            obj.TextColor3 = VLEX_RED
+        elseif obj:IsA("TextButton") then
+            -- The mobile action buttons start red and turn black when tapped.
+            obj.AutoButtonColor = false
+            if not VLEX_CLICK_BOUND[obj] then
+                obj.TextColor3 = VLEX_RED
+                VLEX_CLICK_BOUND[obj] = true
+                obj.Activated:Connect(function()
+                    obj.TextColor3 = VLEX_BLACK
+                end)
+            end
+        end
+    end
+end
+
+local function vlexFindGuiRoots()
+    local roots = {}
+    local coreGui = game:GetService("CoreGui")
+    local playerGui = localPlayer and localPlayer:FindFirstChildOfClass("PlayerGui")
+    for _, parent in ipairs({coreGui, playerGui}) do
+        if parent then
+            local hub = parent:FindFirstChild("FictionHub")
+            if hub then table.insert(roots, hub) end
+            local mobile = parent:FindFirstChild("FictionHubMobilePanel")
+            if mobile then table.insert(roots, mobile) end
+            for _, name in ipairs({"TpBatButton", "BatV2Button", "InstaResetButton"}) do
+                local standalone = parent:FindFirstChild(name)
+                if standalone then table.insert(roots, standalone) end
+            end
+        end
+    end
+    return roots
+end
+
+local function vlexRefreshRedTheme()
+    for _, root in ipairs(vlexFindGuiRoots()) do
+        vlexApplyRedInterfaceText(root)
+    end
+end
+
+vlexRefreshRedTheme()
+task.spawn(function()
+    while task.wait(0.75) do
+        pcall(vlexRefreshRedTheme)
+    end
+end)
