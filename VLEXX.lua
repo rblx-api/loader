@@ -90,6 +90,31 @@ end
 
 introClosed = false
 local introLetters = {}
+-- Small-cap Unicode styling (similar to the requested “ꜰᴜᴇɴᴛᴇ” example).
+local vlexSmallCapsMap = {a="ᴀ", b="ʙ", c="ᴄ", d="ᴅ", e="ᴇ", f="ꜰ", g="ɢ", h="ʜ", i="ɪ", j="ᴊ", k="ᴋ", l="ʟ", m="ᴍ", n="ɴ", o="ᴏ", p="ᴘ", q="ǫ", r="ʀ", s="s", t="ᴛ", u="ᴜ", v="ᴠ", w="ᴡ", x="x", y="ʏ", z="ᴢ"}
+local function vlexSmallCaps(value)
+    return (tostring(value):gsub("%a", function(ch)
+        local mapped = vlexSmallCapsMap[ch:lower()]
+        if not mapped then return ch end
+        return ch:match("%u") and mapped:upper() or mapped
+    end))
+end
+local function vlexApplySmallCaps(root)
+    for _, obj in ipairs(root:GetDescendants()) do
+        if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
+            if obj:GetAttribute("VLEXSmallCapsApplied") ~= true then
+                obj:SetAttribute("VLEXSmallCapsApplied", true)
+                local original = obj.Text
+                obj.Text = vlexSmallCaps(original)
+                obj:GetPropertyChangedSignal("Text"):Connect(function()
+                    if not obj.Parent then return end
+                    local formatted = vlexSmallCaps(obj.Text)
+                    if obj.Text ~= formatted then obj.Text = formatted end
+                end)
+            end
+        end
+    end
+end
 local introAnimationStart = os.clock()
 local introRenderConnection = nil
 local activeTweens = {}
@@ -196,7 +221,7 @@ for i, char in ipairs(grokChars) do
 	letterLabel.Name = "VLEXLetter_" .. i
 	letterLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 	letterLabel.Size = UDim2.fromOffset(8, 8)
-	letterLabel.Position = UDim2.new(0.5, (i - 2.5) * 58, 0.5, -28)
+	letterLabel.Position = UDim2.new(0.5, (i - 2.5) * 170, 0.5, -28)
 	letterLabel.BackgroundTransparency = 1
 	letterLabel.Text = char
 	letterLabel.Font = Enum.Font.GothamBlack
@@ -237,7 +262,7 @@ for i, char in ipairs(grokChars) do
 		halo = halo,
 		grad = grad,
 		stroke = stroke,
-		base = letterLabel.Position,
+		base = UDim2.new(0.5, (i - 2.5) * 43, 0.5, -28),
 		GrokHubIndex = i,
 	}
 
@@ -262,16 +287,38 @@ subtitle.AnchorPoint = Vector2.new(0.5, 0.5)
 subtitle.Position = UDim2.new(0.5, 0, 0.5, 42)
 subtitle.Size = UDim2.new(0, 260, 0, 22)
 subtitle.BackgroundTransparency = 1
-subtitle.Text = "S T E A L   ·   H U B"
+subtitle.Text = "Created by @VLEX"
 subtitle.Font = Enum.Font.GothamBold
 subtitle.TextSize = 13
-subtitle.TextColor3 = Color3.fromRGB(210, 180, 255)
+subtitle.TextColor3 = Color3.fromRGB(255, 75, 85)
 subtitle.TextTransparency = 1
 subtitle.ZIndex = 6
 local subStroke = Instance.new("UIStroke", subtitle)
 subStroke.Thickness = 1
 subStroke.Color = Color3.fromRGB(90, 40, 160)
 subStroke.Transparency = 0.5
+
+local introDiscord = Instance.new("TextLabel", introGui)
+introDiscord.Name = "IntroDiscord"
+introDiscord.AnchorPoint = Vector2.new(0.5, 0.5)
+introDiscord.Position = UDim2.new(0.5, 0, 0.5, 68)
+introDiscord.Size = UDim2.new(0, 330, 0, 18)
+introDiscord.BackgroundTransparency = 1
+introDiscord.Text = "https://discord.gg/xjfRaEXVR"
+introDiscord.Font = Enum.Font.GothamMedium
+introDiscord.TextSize = 11
+introDiscord.TextColor3 = Color3.fromRGB(255, 65, 75)
+introDiscord.TextTransparency = 1
+introDiscord.ZIndex = 6
+local discordStroke = Instance.new("UIStroke", introDiscord)
+discordStroke.Thickness = 0.8
+discordStroke.Color = Color3.fromRGB(90, 0, 10)
+discordStroke.Transparency = 0.35
+ task.delay(0.72, function()
+    if introDiscord.Parent and not introClosed then
+        introTweenService:Create(introDiscord, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0.08}):Play()
+    end
+end)
 task.delay(0.55, function()
 	if subtitle.Parent and not introClosed then
 		introTweenService:Create(subtitle, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
@@ -335,6 +382,7 @@ closeIntro = function()
 	}):Play()
 	introTweenService:Create(subtitle, TweenInfo.new(0.25), { TextTransparency = 1 }):Play()
 	introTweenService:Create(tip, TweenInfo.new(0.2), { TextTransparency = 1 }):Play()
+	introTweenService:Create(introDiscord, TweenInfo.new(0.25), { TextTransparency = 1 }):Play()
 	for _, letterEntry in ipairs(introLetters) do
 		if letterEntry.image and letterEntry.image.Parent then
 			introTweenService:Create(letterEntry.image, TweenInfo.new(0.28, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
@@ -370,10 +418,16 @@ introRenderConnection = introRunService.RenderStepped:Connect(function()
 	for _, letterEntry in ipairs(introLetters) do
 		local image = letterEntry.image
 		if image and image.Parent then
-			local animationPhase = elapsedTime * 2.4 + letterEntry.GrokHubIndex * 1.37
-			local offset = UDim2.fromOffset(math.sin(animationPhase) * 10, math.cos(animationPhase * 1.35) * 14)
-			image.Position = letterEntry.base + offset
-			image.Rotation = math.sin(animationPhase * 0.7) * 5
+			local idx = letterEntry.GrokHubIndex
+			local animationPhase = elapsedTime * 2.4 + idx * 1.37
+            local converge = math.clamp(elapsedTime / 1.15, 0, 1)
+            converge = 1 - (1 - converge) * (1 - converge)
+            local startX = (idx - 2.5) * 170
+            local targetX = (idx - 2.5) * 43
+            local waveY = math.sin(elapsedTime * 4.2 - idx * 0.9) * 5 * converge
+            local x = startX + (targetX - startX) * converge
+            image.Position = UDim2.new(0.5, x, 0.5, -28 + waveY)
+            image.Rotation = math.sin(animationPhase * 0.7) * 2.5 * converge
 			if letterEntry.halo then
 				letterEntry.halo.Position = image.Position
 				letterEntry.halo.Rotation = image.Rotation
@@ -17034,3 +17088,9 @@ task.defer(function()
 end)
 
 return
+task.defer(function()
+    task.wait(1)
+    pcall(function() vlexApplySmallCaps(introGui) end)
+    local pg = introPlayer and introPlayer:FindFirstChildOfClass("PlayerGui")
+    if pg then pcall(function() vlexApplySmallCaps(pg) end) end
+end)
