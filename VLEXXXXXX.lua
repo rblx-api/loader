@@ -17006,71 +17006,43 @@ return
 end
 end)
 end
--- VLEX: speed on the first line and Discord invite directly underneath.
-local function vlexAttachDiscordLabel(character)
-    if not character then return end
-    local head = character:FindFirstChild("Head") or character:WaitForChild("Head", 5)
-    if not head then return end
-    local old = head:FindFirstChild("VLEXDiscordInvite")
-    if old then old:Destroy() end
 
-    local billboard = Instance.new("BillboardGui")
-    billboard.Name = "VLEXDiscordInvite"
-    billboard.Adornee = head
-    billboard.Size = UDim2.new(0, 340, 0, 54)
-    billboard.StudsOffset = Vector3.new(0, 3.4, 0)
-    billboard.AlwaysOnTop = true
-    billboard.MaxDistance = 1500
-    billboard.Parent = head
-
-    local speedLabel = Instance.new("TextLabel")
-    speedLabel.Name = "SpeedText"
-    speedLabel.Position = UDim2.new(0, 0, 0, 0)
-    speedLabel.Size = UDim2.new(1, 0, 0, 25)
-    speedLabel.BackgroundTransparency = 1
-    speedLabel.Text = "0.0 velocidad"
-    speedLabel.TextColor3 = Color3.fromRGB(255, 35, 45)
-    speedLabel.TextStrokeColor3 = Color3.fromRGB(15, 0, 0)
-    speedLabel.TextStrokeTransparency = 0.05
-    speedLabel.Font = Enum.Font.GothamBold
-    speedLabel.TextScaled = true
-    speedLabel.Parent = billboard
-
-    local inviteLabel = Instance.new("TextLabel")
-    inviteLabel.Name = "InviteText"
-    inviteLabel.Position = UDim2.new(0, 0, 0, 27)
-    inviteLabel.Size = UDim2.new(1, 0, 0, 24)
-    inviteLabel.BackgroundTransparency = 1
-    inviteLabel.Text = "https://discord.gg/xjfRaEXVR"
-    inviteLabel.TextColor3 = Color3.fromRGB(255, 35, 45)
-    inviteLabel.TextStrokeColor3 = Color3.fromRGB(15, 0, 0)
-    inviteLabel.TextStrokeTransparency = 0.05
-    inviteLabel.Font = Enum.Font.GothamBold
-    inviteLabel.TextScaled = true
-    inviteLabel.Parent = billboard
-
-    -- Update the speed readout while keeping the requested two-line layout.
-    task.spawn(function()
-        while billboard.Parent and character.Parent do
-            local root = character:FindFirstChild("HumanoidRootPart")
-            if root then
-                local velocity = root.AssemblyLinearVelocity
-                local speed = Vector3.new(velocity.X, 0, velocity.Z).Magnitude
-                speedLabel.Text = string.format("%.1f velocidad", speed)
-            end
-            task.wait(0.1)
+-- VLEX: remove the Discord label above the local character.
+if localPlayer and localPlayer.Character then
+    local head = localPlayer.Character:FindFirstChild("Head")
+    if head then
+        local invite = head:FindFirstChild("VLEXDiscordInvite")
+        if invite then invite:Destroy() end
+    end
+end
+if localPlayer then
+    localPlayer.CharacterAdded:Connect(function(character)
+        task.wait(0.5)
+        local head = character:FindFirstChild("Head")
+        if head then
+            local invite = head:FindFirstChild("VLEXDiscordInvite")
+            if invite then invite:Destroy() end
         end
     end)
 end
 
-if localPlayer then
-    if localPlayer.Character then
-        task.spawn(vlexAttachDiscordLabel, localPlayer.Character)
+-- Change blue text on in-world BillboardGuis to red (including labels that appear later).
+local function vlexMakeBlueBillboardTextRed(instance)
+    if not instance:IsA("TextLabel") and not instance:IsA("TextButton") and not instance:IsA("TextBox") then
+        return
     end
-    localPlayer.CharacterAdded:Connect(function(character)
-        task.wait(0.5)
-        vlexAttachDiscordLabel(character)
-    end)
+    local billboard = instance:FindFirstAncestorWhichIsA("BillboardGui")
+    if not billboard then return end
+    local color = instance.TextColor3
+    if color.B > color.R * 1.25 and color.B > color.G * 1.15 and color.B > 0.35 then
+        instance.TextColor3 = Color3.fromRGB(255, 0, 0)
+    end
 end
+for _, instance in ipairs(workspace:GetDescendants()) do
+    vlexMakeBlueBillboardTextRed(instance)
+end
+workspace.DescendantAdded:Connect(function(instance)
+    task.defer(vlexMakeBlueBillboardTextRed, instance)
+end)
 
 return
