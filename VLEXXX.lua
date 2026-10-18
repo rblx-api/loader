@@ -90,31 +90,6 @@ end
 
 introClosed = false
 local introLetters = {}
--- Small-cap Unicode styling (similar to the requested “ꜰᴜᴇɴᴛᴇ” example).
-local vlexSmallCapsMap = {a="ᴀ", b="ʙ", c="ᴄ", d="ᴅ", e="ᴇ", f="ꜰ", g="ɢ", h="ʜ", i="ɪ", j="ᴊ", k="ᴋ", l="ʟ", m="ᴍ", n="ɴ", o="ᴏ", p="ᴘ", q="ǫ", r="ʀ", s="s", t="ᴛ", u="ᴜ", v="ᴠ", w="ᴡ", x="x", y="ʏ", z="ᴢ"}
-local function vlexSmallCaps(value)
-    return (tostring(value):gsub("%a", function(ch)
-        local mapped = vlexSmallCapsMap[ch:lower()]
-        if not mapped then return ch end
-        return ch:match("%u") and mapped:upper() or mapped
-    end))
-end
-local function vlexApplySmallCaps(root)
-    for _, obj in ipairs(root:GetDescendants()) do
-        if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
-            if obj:GetAttribute("VLEXSmallCapsApplied") ~= true then
-                obj:SetAttribute("VLEXSmallCapsApplied", true)
-                local original = obj.Text
-                obj.Text = vlexSmallCaps(original)
-                obj:GetPropertyChangedSignal("Text"):Connect(function()
-                    if not obj.Parent then return end
-                    local formatted = vlexSmallCaps(obj.Text)
-                    if obj.Text ~= formatted then obj.Text = formatted end
-                end)
-            end
-        end
-    end
-end
 local introAnimationStart = os.clock()
 local introRenderConnection = nil
 local activeTweens = {}
@@ -221,7 +196,7 @@ for i, char in ipairs(grokChars) do
 	letterLabel.Name = "VLEXLetter_" .. i
 	letterLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 	letterLabel.Size = UDim2.fromOffset(8, 8)
-	letterLabel.Position = UDim2.new(0.5, (i - 2.5) * 170, 0.5, -28)
+	letterLabel.Position = UDim2.new(0.5, (i - 2.5) * 58, 0.5, -28)
 	letterLabel.BackgroundTransparency = 1
 	letterLabel.Text = char
 	letterLabel.Font = Enum.Font.GothamBlack
@@ -262,7 +237,7 @@ for i, char in ipairs(grokChars) do
 		halo = halo,
 		grad = grad,
 		stroke = stroke,
-		base = UDim2.new(0.5, (i - 2.5) * 43, 0.5, -28),
+		base = letterLabel.Position,
 		GrokHubIndex = i,
 	}
 
@@ -287,42 +262,45 @@ subtitle.AnchorPoint = Vector2.new(0.5, 0.5)
 subtitle.Position = UDim2.new(0.5, 0, 0.5, 42)
 subtitle.Size = UDim2.new(0, 260, 0, 22)
 subtitle.BackgroundTransparency = 1
-subtitle.Text = "Created by @VLEX"
+subtitle.Text = "Created by VLEX"
 subtitle.Font = Enum.Font.GothamBold
 subtitle.TextSize = 13
-subtitle.TextColor3 = Color3.fromRGB(255, 75, 85)
+subtitle.TextColor3 = Color3.fromRGB(255, 45, 45)
 subtitle.TextTransparency = 1
 subtitle.ZIndex = 6
 local subStroke = Instance.new("UIStroke", subtitle)
 subStroke.Thickness = 1
-subStroke.Color = Color3.fromRGB(90, 40, 160)
+subStroke.Color = Color3.fromRGB(150, 0, 0)
 subStroke.Transparency = 0.5
-
-local introDiscord = Instance.new("TextLabel", introGui)
-introDiscord.Name = "IntroDiscord"
-introDiscord.AnchorPoint = Vector2.new(0.5, 0.5)
-introDiscord.Position = UDim2.new(0.5, 0, 0.5, 68)
-introDiscord.Size = UDim2.new(0, 330, 0, 18)
-introDiscord.BackgroundTransparency = 1
-introDiscord.Text = "https://discord.gg/xjfRaEXVR"
-introDiscord.Font = Enum.Font.GothamMedium
-introDiscord.TextSize = 11
-introDiscord.TextColor3 = Color3.fromRGB(255, 65, 75)
-introDiscord.TextTransparency = 1
-introDiscord.ZIndex = 6
-local discordStroke = Instance.new("UIStroke", introDiscord)
-discordStroke.Thickness = 0.8
-discordStroke.Color = Color3.fromRGB(90, 0, 10)
-discordStroke.Transparency = 0.35
- task.delay(0.72, function()
-    if introDiscord.Parent and not introClosed then
-        introTweenService:Create(introDiscord, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0.08}):Play()
-    end
-end)
 task.delay(0.55, function()
 	if subtitle.Parent and not introClosed then
 		introTweenService:Create(subtitle, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			TextTransparency = 0.1,
+		}):Play()
+	end
+end)
+
+-- Discord invite shown in red beneath the creator credit.
+local discordCredit = Instance.new("TextLabel", introGui)
+discordCredit.Name = "DiscordInvite"
+discordCredit.AnchorPoint = Vector2.new(0.5, 0.5)
+discordCredit.Position = UDim2.new(0.5, 0, 0.5, 64)
+discordCredit.Size = UDim2.new(0, 360, 0, 20)
+discordCredit.BackgroundTransparency = 1
+discordCredit.Text = "https://discord.gg/xjfRaEXVR"
+discordCredit.Font = Enum.Font.GothamBold
+discordCredit.TextSize = 13
+discordCredit.TextColor3 = Color3.fromRGB(255, 0, 0)
+discordCredit.TextTransparency = 1
+discordCredit.ZIndex = 6
+local discordStroke = Instance.new("UIStroke", discordCredit)
+discordStroke.Thickness = 1
+discordStroke.Color = Color3.fromRGB(90, 0, 0)
+discordStroke.Transparency = 0.25
+task.delay(0.7, function()
+	if discordCredit.Parent and not introClosed then
+		introTweenService:Create(discordCredit, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			TextTransparency = 0,
 		}):Play()
 	end
 end)
@@ -381,8 +359,10 @@ closeIntro = function()
 		BackgroundTransparency = 1,
 	}):Play()
 	introTweenService:Create(subtitle, TweenInfo.new(0.25), { TextTransparency = 1 }):Play()
+	if discordCredit and discordCredit.Parent then
+		introTweenService:Create(discordCredit, TweenInfo.new(0.25), { TextTransparency = 1 }):Play()
+	end
 	introTweenService:Create(tip, TweenInfo.new(0.2), { TextTransparency = 1 }):Play()
-	introTweenService:Create(introDiscord, TweenInfo.new(0.25), { TextTransparency = 1 }):Play()
 	for _, letterEntry in ipairs(introLetters) do
 		if letterEntry.image and letterEntry.image.Parent then
 			introTweenService:Create(letterEntry.image, TweenInfo.new(0.28, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
@@ -418,16 +398,12 @@ introRenderConnection = introRunService.RenderStepped:Connect(function()
 	for _, letterEntry in ipairs(introLetters) do
 		local image = letterEntry.image
 		if image and image.Parent then
-			local idx = letterEntry.GrokHubIndex
-			local animationPhase = elapsedTime * 2.4 + idx * 1.37
-            local converge = math.clamp(elapsedTime / 1.15, 0, 1)
-            converge = 1 - (1 - converge) * (1 - converge)
-            local startX = (idx - 2.5) * 170
-            local targetX = (idx - 2.5) * 43
-            local waveY = math.sin(elapsedTime * 4.2 - idx * 0.9) * 5 * converge
-            local x = startX + (targetX - startX) * converge
-            image.Position = UDim2.new(0.5, x, 0.5, -28 + waveY)
-            image.Rotation = math.sin(animationPhase * 0.7) * 2.5 * converge
+				local animationPhase = elapsedTime * 2.4 + letterEntry.GrokHubIndex * 1.37
+			-- Smooth left-to-right wave across the intro letters.
+			local waveY = math.sin(elapsedTime * 4.2 - letterEntry.GrokHubIndex * 0.9) * 16
+			local offset = UDim2.fromOffset(math.sin(animationPhase) * 6, waveY)
+			image.Position = letterEntry.base + offset
+			image.Rotation = math.sin(animationPhase * 0.7) * 5
 			if letterEntry.halo then
 				letterEntry.halo.Position = image.Position
 				letterEntry.halo.Rotation = image.Rotation
@@ -6078,7 +6054,7 @@ speedLabel.Size = UDim2.new(1, 0, 0, 24)
 speedLabel.Position = UDim2.new(0, 0, 0, 0)
 speedLabel.BackgroundTransparency = 1
 speedLabel.Text = "Spd: 0.0"
-speedLabel.TextColor3 = Color3.fromRGB(255, 35, 45)
+speedLabel.TextColor3 = Color3.fromRGB(20, 70, 215)
 speedLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
 speedLabel.TextStrokeTransparency = 0.08
 speedLabel.Font = Enum.Font.GothamBlack
@@ -12272,30 +12248,6 @@ miniLogoGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(1, Color3.fromRGB(105, 0, 8)),
 })
 miniLogoGradient.Rotation = 90
-
--- VLEX interface text theme: white text throughout the main interface,
--- while both VLEX logo labels retain their signature red color.
-local function vlexSetInterfaceTextColor(obj)
-    if not obj or not obj:IsA("TextLabel") and not obj:IsA("TextButton") and not obj:IsA("TextBox") then
-        return
-    end
-    if obj.Name == "TitleImage" or obj.Name == "VLEXMiniLogo" or obj.Text == "VLEX" then
-        obj.TextColor3 = Color3.fromRGB(255, 25, 40)
-        return
-    end
-    obj.TextColor3 = Color3.fromRGB(255, 255, 255)
-end
-
-for _, descendant in ipairs(gui:GetDescendants()) do
-    vlexSetInterfaceTextColor(descendant)
-end
-gui.DescendantAdded:Connect(function(descendant)
-    task.defer(function()
-        if descendant and descendant.Parent then
-            vlexSetInterfaceTextColor(descendant)
-        end
-    end)
-end)
 -- gradient dummy kept for any theme code that expects MiniTitleImage child
 local miniGrad = Instance.new("UIGradient", rootPart)
 miniGrad.Enabled = false
@@ -13274,6 +13226,7 @@ if mobSetAutoRight then
 mobSetAutoRight(on)
 end
 end)
+createFrame(speed, "SPIN")
 createFrame(speed, "Teleport")
 local frame22142 = createFrame2(speed, 38)
 mkLabel(frame22142, "TP Down")
@@ -13342,13 +13295,12 @@ end
 end)
 local frameAimbotVersion = createFrame2(custom, 38)
 mkLabel(frameAimbotVersion, "Aimbot Version")
-aimbotVersionLabel = createCarouselSelector(frameAimbotVersion, aimbotVersion, {
-"Grok",
-"shel.vc",
+aimbotVersionLabel = createCarouselSelector(frameAimbotVersion, aimbotVersion == "shel.vc" and "v2" or "v1", {
+"v1",
+"v2",
 }, function(newVersion)
-if newVersion ~= "shel.vc" then
-newVersion = "Grok"
-end
+-- Display v1/v2 while preserving the original internal implementation names.
+newVersion = newVersion == "v2" and "shel.vc" or "Grok"
 if newVersion ~= aimbotVersion then
 aimbotVersion = newVersion
 if autoBatEnabled then
@@ -15648,7 +15600,7 @@ local label = Instance.new("TextLabel", btnFrame)
 label.Size = UDim2.new(1, 0, 1, 0)
 label.BackgroundTransparency = 1
 label.Text = "INSTA\nRESET"
-label.TextColor3 = Color3.fromRGB(255, 255, 255)
+label.TextColor3 = Color3.fromRGB(225, 175, 255)
 label.Font = Enum.Font.GothamBlack
 label.TextSize = 11
 label.TextWrapped = true
@@ -17084,37 +17036,152 @@ return
 end
 end)
 end
--- VLEX: remove the "Btn Flotuantes" option from the Visual category only.
-task.defer(function()
-    local function removeFloatingOption(root)
-        if not root then return end
-        for _, obj in ipairs(root:GetDescendants()) do
-            if obj:IsA("TextLabel") or obj:IsA("TextButton") then
-                local text = string.lower((obj.Text or ""):gsub("%s+", " "))
-                if text:find("btn flotuantes", 1, true) or text:find("btn flotantes", 1, true) then
-                    local row = obj
-                    while row.Parent and row.Parent ~= root and not row.Parent:IsA("ScrollingFrame") do
-                        row = row.Parent
-                        if row:IsA("Frame") then break end
+
+-- VLEX: remove the Discord label above the local character.
+if localPlayer and localPlayer.Character then
+    local head = localPlayer.Character:FindFirstChild("Head")
+    if head then
+        local invite = head:FindFirstChild("VLEXDiscordInvite")
+        if invite then invite:Destroy() end
+    end
+end
+if localPlayer then
+    localPlayer.CharacterAdded:Connect(function(character)
+        task.wait(0.5)
+        local head = character:FindFirstChild("Head")
+        if head then
+            local invite = head:FindFirstChild("VLEXDiscordInvite")
+            if invite then invite:Destroy() end
+        end
+    end)
+end
+
+-- Change blue text on in-world BillboardGuis to red (including labels that appear later).
+local function vlexMakeBlueBillboardTextRed(instance)
+    if not instance:IsA("TextLabel") and not instance:IsA("TextButton") and not instance:IsA("TextBox") then
+        return
+    end
+    local billboard = instance:FindFirstAncestorWhichIsA("BillboardGui")
+    if not billboard then return end
+    local color = instance.TextColor3
+    if color.B > color.R * 1.25 and color.B > color.G * 1.15 and color.B > 0.35 then
+        instance.TextColor3 = Color3.fromRGB(255, 0, 0)
+    end
+end
+for _, instance in ipairs(workspace:GetDescendants()) do
+    vlexMakeBlueBillboardTextRed(instance)
+end
+workspace.DescendantAdded:Connect(function(instance)
+    task.defer(vlexMakeBlueBillboardTextRed, instance)
+end)
+
+-- VLEX RED THEME: recolor the hub's interface text and mobile action buttons.
+local VLEX_RED = Color3.fromRGB(185, 24, 35)
+local VLEX_BLACK = Color3.fromRGB(0, 0, 0)
+local VLEX_WHITE = Color3.fromRGB(255, 255, 255)
+local VLEX_CLICK_BOUND = setmetatable({}, {__mode = "k"})
+
+local function vlexApplyRedInterfaceText(root)
+    if not root then return end
+    for _, obj in ipairs(root:GetDescendants()) do
+        if obj:IsA("UIStroke") then
+            obj.Color = VLEX_RED
+        end
+        if obj:IsA("TextLabel") then
+            -- Make every label/number in the VLEX hub white.
+            obj.TextColor3 = VLEX_WHITE
+        elseif obj:IsA("TextButton") then
+            -- Keep button text white permanently after taps.
+            obj.AutoButtonColor = false
+            obj.TextColor3 = VLEX_WHITE
+            obj.BackgroundColor3 = VLEX_BLACK
+            for _, child in ipairs(obj:GetChildren()) do
+                if child:IsA("UIStroke") then
+                    child.Color = VLEX_RED
+                elseif child:IsA("UIGradient") then
+                    child.Enabled = false
+                end
+            end
+            VLEX_CLICK_BOUND[obj] = true
+        elseif obj:IsA("TextBox") then
+            obj.TextColor3 = VLEX_WHITE
+            obj.BackgroundColor3 = VLEX_BLACK
+            for _, child in ipairs(obj:GetChildren()) do
+                if child:IsA("UIStroke") then child.Color = VLEX_RED end
+            end
+        end
+    end
+end
+
+local function vlexFindGuiRoots()
+    local roots = {}
+    local coreGui = game:GetService("CoreGui")
+    local playerGui = localPlayer and localPlayer:FindFirstChildOfClass("PlayerGui")
+    for _, parent in ipairs({coreGui, playerGui}) do
+        if parent then
+            local hub = parent:FindFirstChild("FictionHub")
+            if hub then table.insert(roots, hub) end
+            local mobile = parent:FindFirstChild("FictionHubMobilePanel")
+            if mobile then table.insert(roots, mobile) end
+            for _, name in ipairs({"TpBatButton", "BatV2Button", "InstaResetButton"}) do
+                local standalone = parent:FindFirstChild(name)
+                if standalone then table.insert(roots, standalone) end
+            end
+        end
+    end
+    return roots
+end
+
+local function vlexRefreshRedTheme()
+    for _, root in ipairs(vlexFindGuiRoots()) do
+        vlexApplyRedInterfaceText(root)
+    end
+end
+
+vlexRefreshRedTheme()
+task.spawn(function()
+    while task.wait(0.75) do
+        pcall(vlexRefreshRedTheme)
+    end
+end)
+
+-- VLEX custom-button prep: hide only the existing floating shortcut buttons.
+-- Their callback/function code is intentionally left intact so custom buttons
+-- can be connected to the same actions later. No buttons are destroyed.
+local function vlexHideOldShortcutButtons()
+    local coreGui = game:GetService("CoreGui")
+    local playerGui = localPlayer and localPlayer:FindFirstChildOfClass("PlayerGui")
+    local parents = {coreGui, playerGui}
+    for _, parent in ipairs(parents) do
+        if parent then
+            local panel = parent:FindFirstChild("FictionHubMobilePanel")
+            local floatingPanel = panel and panel:FindFirstChild("FloatingPanel")
+            local buttonsContainer = floatingPanel and floatingPanel:FindFirstChild("ButtonsContainer")
+            if buttonsContainer then
+                for _, child in ipairs(buttonsContainer:GetChildren()) do
+                    if child:IsA("GuiButton") then
+                        child.Visible = false
                     end
-                    row:Destroy()
+                end
+            end
+            -- Hide standalone floating shortcut GUIs without destroying them.
+            for _, guiName in ipairs({"TpBatButton", "BatV2Button", "InstaResetButton"}) do
+                local shortcutGui = parent:FindFirstChild(guiName)
+                if shortcutGui and shortcutGui:IsA("ScreenGui") then
+                    shortcutGui.Enabled = false
+                elseif shortcutGui and shortcutGui:IsA("GuiObject") then
+                    shortcutGui.Visible = false
                 end
             end
         end
     end
-    local player = game:GetService("Players").LocalPlayer
-    local playerGui = player and player:FindFirstChildOfClass("PlayerGui")
-    if playerGui then
-        for _, gui in ipairs(playerGui:GetChildren()) do
-            removeFloatingOption(gui)
-        end
+end
+
+-- Re-apply briefly in case the original UI creates its shortcut buttons late.
+task.spawn(function()
+    for _ = 1, 20 do
+        pcall(vlexHideOldShortcutButtons)
+        task.wait(0.25)
     end
 end)
-
-return
-task.defer(function()
-    task.wait(1)
-    pcall(function() vlexApplySmallCaps(introGui) end)
-    local pg = introPlayer and introPlayer:FindFirstChildOfClass("PlayerGui")
-    if pg then pcall(function() vlexApplySmallCaps(pg) end) end
-end)
+pcall(vlexHideOldShortcutButtons)
