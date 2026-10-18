@@ -14517,10 +14517,10 @@ vector2318.LayoutOrder = nextLayoutOrder(keybinds)
 vector2318.ZIndex = 7
 pbFrame = Instance.new("Frame", gui)
 pbFrame.Name = "StealProgressBar"
-pbFrame.Size = UDim2.new(0, 260, 0, 28)
+pbFrame.Size = UDim2.new(0, 260, 0, 18)
 pbFrame.Position = UDim2.new(0.5, -130, 1, -75)
 pbFrame.BackgroundColor3 = Color3.fromRGB(12, 10, 16)
-pbFrame.BackgroundTransparency = 0.05
+pbFrame.BackgroundTransparency = 1
 pbFrame.BorderSizePixel = 0
 pbFrame.Active = true
 pbFrame.ClipsDescendants = true
@@ -14531,7 +14531,7 @@ local pbStroke = Instance.new("UIStroke", pbFrame)
 pbStroke.Name = "PBStroke"
 pbStroke.Color = Color3.fromRGB(220, 20, 35)
 pbStroke.Thickness = 2
-pbStroke.Transparency = 0.1
+pbStroke.Transparency = 1
 pbStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 local pbStrokeGrad = Instance.new("UIGradient", pbStroke)
 pbStrokeGrad.Color = ColorSequence.new({
@@ -14572,6 +14572,7 @@ backgroundImagePB.BackgroundTransparency = 1
 backgroundImagePB.BorderSizePixel = 0
 backgroundImagePB.ScaleType = Enum.ScaleType.Crop
 backgroundImagePB.ImageTransparency = 1
+backgroundImagePB.Visible = false
 backgroundImagePB.ZIndex = 10
 
 task.spawn(function()
@@ -14672,8 +14673,8 @@ fpsStroke.Transparency = 0.55
 
 local rootPart2320 = Instance.new("Frame", pbFrame)
 rootPart2320.Name = "ProgressRow"
-rootPart2320.Size = UDim2.new(1, -24, 0, 14)
-rootPart2320.Position = UDim2.new(0, 12, 0, 7)
+rootPart2320.Size = UDim2.new(1, 0, 0, 14)
+rootPart2320.Position = UDim2.new(0, 0, 0, 2)
 rootPart2320.BackgroundTransparency = 1
 rootPart2320.ZIndex = 11
 
@@ -14686,6 +14687,10 @@ frame2321.BorderSizePixel = 0
 frame2321.ClipsDescendants = true
 frame2321.ZIndex = 12
 progressPct.Parent = frame2321
+progressPct.Position = UDim2.new(0, 0, 0, 0)
+progressPct.Size = UDim2.new(1, 0, 1, 0)
+progressPct.TextXAlignment = Enum.TextXAlignment.Center
+progressPct.TextYAlignment = Enum.TextYAlignment.Center
 Instance.new("UICorner", frame2321).CornerRadius = UDim.new(1, 0)
 local trackStroke = Instance.new("UIStroke", frame2321)
 trackStroke.Name = "UIStroke"
@@ -17001,9 +17006,6 @@ return
 end
 end)
 end
-return
-
-
 -- VLEX: red Discord invite displayed above the local character.
 local function vlexAttachDiscordLabel(character)
     if not character then return end
@@ -17041,3 +17043,5 @@ if localPlayer then
         vlexAttachDiscordLabel(character)
     end)
 end
+
+return
