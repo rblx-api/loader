@@ -896,15 +896,15 @@ function updateAllUIThemeColors(color)
     _lastThemeColor = color
 
     if progressFill then
-        progressFill.BackgroundColor3 = Color3.fromRGB(210, 210, 220)
+        progressFill.BackgroundColor3 = Color3.fromRGB(75, 75, 82)
         local fs = progressFill:FindFirstChild("FillStroke")
-        if fs then fs.Color = Color3.fromRGB(210, 210, 220) end
+        if fs then fs.Color = Color3.fromRGB(80, 80, 88) end
         local grad = progressFill:FindFirstChildOfClass("UIGradient")
         if grad then
             grad.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0.00, Color3.fromRGB(150, 150, 160)),
-                ColorSequenceKeypoint.new(0.50, Color3.fromRGB(210, 210, 220)),
-                ColorSequenceKeypoint.new(1.00, Color3.fromRGB(230, 230, 235)),
+                ColorSequenceKeypoint.new(0.00, Color3.fromRGB(65, 65, 72)),
+                ColorSequenceKeypoint.new(0.50, Color3.fromRGB(80, 80, 88)),
+                ColorSequenceKeypoint.new(1.00, Color3.fromRGB(95, 95, 102)),
             })
         end
     end
@@ -914,19 +914,19 @@ function updateAllUIThemeColors(color)
             local fr = pr:FindFirstChild("FillRegion")
             if fr then
                 local s = fr:FindFirstChild("FillRegionStroke")
-                if s then s.Color = Color3.fromRGB(210, 210, 220) end
+                if s then s.Color = Color3.fromRGB(80, 80, 88) end
             end
         end
         local discordLabel = pbFrame:FindFirstChild("DiscordLabel")
-        if discordLabel then discordLabel.TextColor3 = Color3.fromRGB(210, 210, 220) end
-        if performanceLabel then performanceLabel.TextColor3 = Color3.fromRGB(210, 210, 220) end
+        if discordLabel then discordLabel.TextColor3 = Color3.fromRGB(80, 80, 88) end
+        if performanceLabel then performanceLabel.TextColor3 = Color3.fromRGB(80, 80, 88) end
     end
     local function searchAndUpdateText(parent)
         for _, child in ipairs(parent:GetDescendants()) do
             if child:IsA("TextLabel") then
                 if child.Text:find("discord.gg") or child.Text:find("Spd:") or child.Name == "DiscordText" or
                    child.Name == "FictionHubSpeedIndicator" or child.Text:find("FPS") or child.Text:find("speed") then
-                    child.TextColor3 = Color3.fromRGB(210, 210, 220)
+                    child.TextColor3 = Color3.fromRGB(80, 80, 88)
                 end
             end
             if child:IsA("UIStroke") then
@@ -7174,7 +7174,7 @@ function forceResetUI()
             end
         end
     end
-    if miniBtn then miniBtn.TextColor3 = Color3.fromRGB(210, 210, 220) end
+    if miniBtn then miniBtn.TextColor3 = Color3.fromRGB(80, 80, 88) end
     local pGui = LP:FindFirstChild("PlayerGui")
     if pGui then
         local bb = pGui:FindFirstChild("RagCountdownBillboard")
@@ -8084,7 +8084,7 @@ function buildGui()
         l.Position = UDim2.new(0, 8, 0, 0)
         l.BackgroundTransparency = 1
         l.Text = txt:upper()
-        l.TextColor3 = Color3.fromRGB(230, 230, 235)
+        l.TextColor3 = Color3.fromRGB(95, 95, 102)
         l.Font = Enum.Font.SciFi
         l.TextSize = 15
         l.TextXAlignment = Enum.TextXAlignment.Left
@@ -8470,7 +8470,7 @@ function buildGui()
         for i = 1, dotCount do
             local d = Instance.new("Frame", dotsRow)
             d.Size = UDim2.new(0, 5, 0, 5)
-            d.BackgroundColor3 = Color3.fromRGB(150, 150, 160)
+            d.BackgroundColor3 = Color3.fromRGB(65, 65, 72)
             d.BorderSizePixel = 0
             d.ZIndex = 10
             Instance.new("UICorner", d).CornerRadius = UDim.new(1, 0)
@@ -8501,7 +8501,7 @@ function buildGui()
         local function refreshDotsSilent()
             for i, d in ipairs(dots) do
                 local active = (i == currentIdx)
-                d.BackgroundColor3 = active and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(150, 150, 160)
+                d.BackgroundColor3 = active and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(65, 65, 72)
                 d.Size = active and UDim2.new(0, 10, 0, 5) or UDim2.new(0, 5, 0, 5)
             end
         end
@@ -8510,7 +8510,7 @@ function buildGui()
             for i, d in ipairs(dots) do
                 local active = (i == currentIdx)
                 TS:Create(d, TweenInfo.new(0.22, Enum.EasingStyle.Quad), {
-                    BackgroundColor3 = active and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(150, 150, 160),
+                    BackgroundColor3 = active and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(65, 65, 72),
                     Size = active and UDim2.new(0, 10, 0, 5) or UDim2.new(0, 5, 0, 5),
                 }):Play()
             end
@@ -8685,7 +8685,7 @@ function buildGui()
         actLbl.Position = UDim2.new(1, -78, 0, 0)
         actLbl.BackgroundTransparency = 1
         actLbl.Text = "ACTIVATE"
-        actLbl.TextColor3 = Color3.fromRGB(230, 230, 235)
+        actLbl.TextColor3 = Color3.fromRGB(95, 95, 102)
         actLbl.Font = Enum.Font.GothamBold
         actLbl.TextSize = 9
         actLbl.TextXAlignment = Enum.TextXAlignment.Right
@@ -9662,7 +9662,7 @@ function buildGui()
     spacer.ZIndex = 7
 
     pbFrame = Instance.new("Frame", gui)
-    pbFrame.Size = UDim2.new(0, 320, 0, 70)
+    pbFrame.Size = UDim2.new(0, 320, 0, 38)
     pbFrame.Position = UDim2.new(0.5, -160, 1, -60)
     pbFrame.BackgroundColor3 = Color3.fromRGB(10,10,10)
     pbFrame.BackgroundTransparency = 0
@@ -9719,16 +9719,16 @@ function buildGui()
     progressFill = Instance.new("Frame", fillRegion)
     progressFill.Size = UDim2.new(0, 0, 1, 0)
     progressFill.Position = UDim2.new(0, 0, 0, 0)
-    progressFill.BackgroundColor3 = Color3.fromRGB(210, 210, 220)
+    progressFill.BackgroundColor3 = Color3.fromRGB(75, 75, 82)
     progressFill.BorderSizePixel = 0
     progressFill.ZIndex = 13
     Instance.new("UICorner", progressFill).CornerRadius = UDim.new(0, 7)
 
     local fillGrad = Instance.new("UIGradient", progressFill)
     fillGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(150, 150, 160)),
-        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(210, 210, 220)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(230, 230, 235)),
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(65, 65, 72)),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(80, 80, 88)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(95, 95, 102)),
     })
     fillGrad.Rotation = 0
 
@@ -9743,34 +9743,9 @@ function buildGui()
     progressPct.TextStrokeColor3 = Color3.fromRGB(0,0,0)
     progressPct.TextStrokeTransparency = 0.3
     progressPct.ZIndex = 16
+    progressPct.Visible = false
 
-    -- Discord text in the empty area below the Auto Steal progress bar.
-    -- Uses the same FredokaOne font as the SOUND DUELS branding.
-    local discordLabel = Instance.new("TextLabel", pbFrame)
-    discordLabel.Name = "DiscordLabel"
-    discordLabel.Size = UDim2.new(1, -4, 0, 28)
-    discordLabel.Position = UDim2.new(0, 6, 0, 32)
-    discordLabel.BackgroundTransparency = 1
-    discordLabel.BorderSizePixel = 0
-    discordLabel.Text = "discord.gg/eNUvbGdBWu"
-    discordLabel.TextColor3 = Color3.fromRGB(235, 205, 255)
-    discordLabel.Font = Enum.Font.FredokaOne
-    discordLabel.TextSize = 13
-    discordLabel.TextXAlignment = Enum.TextXAlignment.Center
-    discordLabel.TextYAlignment = Enum.TextYAlignment.Center
-    discordLabel.TextStrokeColor3 = Color3.fromRGB(55, 8, 115)
-    discordLabel.TextStrokeTransparency = 0.15
-    discordLabel.ZIndex = 17
-
-    local discordGrad = Instance.new("UIGradient", discordLabel)
-    discordGrad.Name = "DiscordPurpleGradient"
-    discordGrad.Rotation = 90
-    discordGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-        ColorSequenceKeypoint.new(0.35, Color3.fromRGB(198, 105, 255)),
-        ColorSequenceKeypoint.new(0.70, Color3.fromRGB(255, 25, 35)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(94, 22, 190)),
-    })
+    -- Progress panel intentionally contains only the bar.
 
     drag(pbFrame)
 
@@ -11058,8 +11033,8 @@ local LastPosMarker = (function()
 
     local COLOR_MARKER           = Color3.fromRGB(180, 180, 190)
     local COLOR_MARKER_GLOW      = Color3.fromRGB(170, 170, 180)
-    local COLOR_OUTLINE          = Color3.fromRGB(230, 230, 235)
-    local COLOR_TEXT             = Color3.fromRGB(230, 230, 235)
+    local COLOR_OUTLINE          = Color3.fromRGB(95, 95, 102)
+    local COLOR_TEXT             = Color3.fromRGB(95, 95, 102)
     local COLOR_TEXT_STROKE      = Color3.fromRGB(30, 30, 35)
     local COLOR_HANDLE_ADORNMENT = Color3.fromRGB(200, 200, 210)
 
