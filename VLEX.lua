@@ -24,8 +24,8 @@ local camera = workspace.CurrentCamera
 
 do
     local introShouldPlay = true
-    -- Audio de intro proporcionado por el usuario.
-    local MUSICA_ID = "rbxassetid://140637230317256"
+    -- Cambia este ID por el ID de audio autorizado de “Nuts” si quieres usar esa pista.
+    local MUSICA_ID = "rbxassetid://111075407213947"
     local THEME_ACCENT = Color3.fromRGB(255, 35, 45)
 
     local TweenService = game:GetService("TweenService")
@@ -69,10 +69,19 @@ do
 
         local bgMusic = Instance.new("Sound")
         bgMusic.Name = "IntroMusic"
-        bgMusic.Volume = 5
+        bgMusic.Volume = 0.65
         bgMusic.Looped = true
 
-        bgMusic.SoundId = MUSICA_ID
+        local soundLoaded = false
+        pcall(function()
+            if getcustomasset then
+                bgMusic.SoundId = getcustomasset("voidvs_intro_a.mp3")
+                soundLoaded = true
+            end
+        end)
+        if not soundLoaded then
+            bgMusic.SoundId = MUSICA_ID
+        end
         bgMusic.Parent = introGui
 
         task.spawn(function()
