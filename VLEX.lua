@@ -1172,10 +1172,7 @@ local outfitSelectorLabel = nil
 
 BACKGROUND_IMAGES = {
     { label = "VLEX Black", id = "rbxassetid://93860396783208" },
-    { label = "BG 2", id = "rbxassetid://79007973869217" },
-    { label = "BG 3", id = "rbxassetid://137164092894568" },
-    { label = "BG 4", id = "rbxassetid://88277668289864" },
-    { label = "BG 5", id = "rbxassetid://119053971797175" },
+    { label = "VLEX Red", id = "rbxassetid://136236536991386" },
 }
 backgroundSelectorLabel = nil
 backgroundImage = nil
