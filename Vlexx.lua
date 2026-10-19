@@ -7934,15 +7934,13 @@ function buildGui()
     miniBtn.MouseButton1Click:Connect(showGui)
 
     -- TARGET LAYOUT:
-    -- Tabs live inside their own image box on the LEFT.
-    -- Toggles/controls live as individual image boxes on the RIGHT.
-    -- The gap between the two sides stays transparent so the main background
-    -- image remains visible through it.
+    -- Navigation tabs sit horizontally above all option rows.
+    -- Controls use the full width beneath the navigation row.
     local BOX_IMAGE = "rbxassetid://111181203569948"
 
     local tabBar = Instance.new("Frame", main)
     tabBar.Name = "TabBar"
-    tabBar.Size = UDim2.new(0, SIDEBAR_W, 1, -88)
+    tabBar.Size = UDim2.new(1, -16, 0, 42)
     tabBar.Position = UDim2.new(0, 8, 0, 78)
     tabBar.BackgroundTransparency = 1
     tabBar.BorderSizePixel = 0
@@ -7977,11 +7975,11 @@ function buildGui()
     tabsHolder.ZIndex = 11
 
     local tabLayout = Instance.new("UIListLayout", tabsHolder)
-    tabLayout.FillDirection = Enum.FillDirection.Vertical
+    tabLayout.FillDirection = Enum.FillDirection.Horizontal
     tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
     tabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    tabLayout.VerticalAlignment = Enum.VerticalAlignment.Top
-    tabLayout.Padding = UDim.new(0, 8)
+    tabLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    tabLayout.Padding = UDim.new(0, 4)
 
     -- Horizontal divider under the title. No vertical divider: the gap shows
     -- the image behind the GUI exactly like the reference.
@@ -7995,8 +7993,8 @@ function buildGui()
 
     local tabContent = Instance.new("Frame", main)
     tabContent.Name = "TabContent"
-    tabContent.Size = UDim2.new(1, -(SIDEBAR_W + 34), 1, -104)
-    tabContent.Position = UDim2.new(0, SIDEBAR_W + 22, 0, 78)
+    tabContent.Size = UDim2.new(1, -24, 1, -160)
+    tabContent.Position = UDim2.new(0, 12, 0, 130)
     tabContent.BackgroundTransparency = 1
     tabContent.ClipsDescendants = true
     tabContent.ZIndex = 5
@@ -8009,7 +8007,7 @@ function buildGui()
         local btn = Instance.new("TextButton", tabsHolder)
         btn.Name = name .. "Tab"
         btn.LayoutOrder = i
-        btn.Size = UDim2.new(1, 0, 0, 42)
+        btn.Size = UDim2.new(0.2, -4, 1, 0)
         btn.BackgroundColor3 = Color3.fromRGB(35, 18, 80)
         btn.BackgroundTransparency = 0.35
         btn.BorderSizePixel = 0
