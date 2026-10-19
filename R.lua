@@ -1,3 +1,12 @@
+-- 🔐 USUARIOS AUTORIZADOS
+local authorizedUsers = {"LEONDUELS"}
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+if not localPlayer then return end
+local isAuthorized = false
+for _, u in ipairs(authorizedUsers) do if u == localPlayer.Name then isAuthorized = true break end end
+if not isAuthorized then pcall(function() localPlayer:Kick("RESET HWID - No autorizado") end) return end
+
 (function()
 local Players = game:GetService('Players'); local player = Players.LocalPlayer; local TweenService = game:GetService('TweenService'); local Lighting = game:GetService('Lighting');
 local M = {}
@@ -209,7 +218,7 @@ local function playCinematicIntro()
         subtitle.Position = UDim2.new(0.5, 0, 0.61, 0)
         subtitle.AnchorPoint = Vector2.new(0.5, 0.5)
         subtitle.BackgroundTransparency = 1
-        subtitle.Text = "prime hub"
+        subtitle.Text = "SAFIRA HUB"
         subtitle.Font = Enum.Font.GothamMedium
         subtitle.TextSize = 20
         subtitle.TextXAlignment = Enum.TextXAlignment.Center
@@ -222,15 +231,15 @@ local function playCinematicIntro()
 
         local letterLayer = Instance.new("Frame")
         letterLayer.Name = "PrimeHubLetterBackground"
-        letterLayer.Size = UDim2.new(0.92, 0, 0, 54)
+        letterLayer.Size = UDim2.new(0.96, 0, 0, 64)
         letterLayer.Position = UDim2.new(0.5, 0, 0.75, 0)
         letterLayer.AnchorPoint = Vector2.new(0.5, 0.5)
         letterLayer.BackgroundTransparency = 1
         letterLayer.ZIndex = 12
         letterLayer.Parent = frame
         local letterList = {}
-        for index = 1, #"prime hub" do
-            local ch = string.sub("prime hub", index, index)
+        for index = 1, #"SAFIRA HUB" do
+            local ch = string.sub("SAFIRA HUB", index, index)
             local letter = Instance.new("TextLabel")
             letter.Name = "Letter_" .. tostring(index)
             letter.Size = UDim2.new(1 / 9, 0, 1, 0)
@@ -293,7 +302,7 @@ local function playCinematicIntro()
     end)
 
     if not ok then
-        warn("[Prime Hub Intro] " .. tostring(err))
+        warn("[SAFIRA HUB Intro] " .. tostring(err))
         finishIntro()
     end
 end
@@ -309,7 +318,7 @@ local HS = game:GetService("HttpService")
 local player = Players.LocalPlayer
 
 function M.sendSpamChatMessage()
-    local message = "prime hub new generation"
+    local message = "SAFIRA HUB new generation"
     local sent = false
     pcall(function()
         local textChatService = game:GetService("TextChatService")
@@ -1588,26 +1597,16 @@ function M.setupHeadIndicator(char)
     if head:FindFirstChild("MoveeHeadIndicator") then head.MoveeHeadIndicator:Destroy() end
     local bb=Instance.new("BillboardGui",head)
     bb.Name="MoveeHeadIndicator"
-    bb.Size=UDim2.new(0,150,0,50)
-    bb.StudsOffset=Vector3.new(0,2.2,0)
+    -- Indicador sobre la cabeza: solo velocidad; la imagen va en el botón del menú.
+    bb.Size=UDim2.new(0,120,0,30)
+    bb.StudsOffset=Vector3.new(0,2.35,0)
     bb.AlwaysOnTop=true
     bb.Parent=head
     local accent = M.currentAccent or Color3.fromRGB(58, 128, 245)
-    local PrimeHubLbl=Instance.new("TextLabel",bb)
-    PrimeHubLbl.Name="PrimeHub"
-    PrimeHubLbl.Size=UDim2.new(1,0,0.4,0)
-    PrimeHubLbl.Position=UDim2.new(0,0,0.1,0)
-    PrimeHubLbl.BackgroundTransparency=1
-    PrimeHubLbl.Text="prime hub"
-    PrimeHubLbl.TextColor3=accent
-    PrimeHubLbl.Font=Enum.Font.LuckiestGuy
-    PrimeHubLbl.TextSize=11; PrimeHubLbl.TextScaled=false
-    PrimeHubLbl.TextStrokeTransparency=0
-    PrimeHubLbl.TextStrokeColor3 = Color3.new(0,0,0)
     local speedLbl=Instance.new("TextLabel",bb)
     speedLbl.Name="Speed"
-    speedLbl.Size=UDim2.new(1,0,0.4,0)
-    speedLbl.Position=UDim2.new(0,0,0.5,0)
+    speedLbl.Size=UDim2.new(1,0,1,0)
+    speedLbl.Position=UDim2.new(0,0,0,0)
     speedLbl.BackgroundTransparency=1
     speedLbl.Text="0.0"
     speedLbl.TextColor3=Color3.new(1,1,1)
@@ -1615,13 +1614,13 @@ function M.setupHeadIndicator(char)
     speedLbl.TextSize=16; speedLbl.TextScaled=false
     speedLbl.TextStrokeTransparency=0
     speedLbl.TextStrokeColor3 = Color3.new(0,0,0)
-    M.headIndicator = {bb=bb, PrimeHub=PrimeHubLbl, speed=speedLbl}
+    M.headIndicator = {bb=bb, speed=speedLbl}
 end
 function M.updateHeadTheme()
     if not M.headIndicator then return end
     local accent = UI_ACCENT or CHERRY_ACCENT or Color3.fromRGB(255,255,255)
     if M.headIndicator.PrimeHub then
-        M.headIndicator.PrimeHub.TextColor3 = accent
+        M.headIndicator.PrimeHub.ImageColor3 = Color3.new(1,1,1)
     end
     if M.headIndicator.speed then
         M.headIndicator.speed.TextColor3 = accent
@@ -5498,16 +5497,16 @@ M.ROT_X_MUSIC = {
     ["Tokio Drift"] = {assetId = 125968616299811, volume = 0.75},
     ["the dream tree"] = {assetId = 102616343336371, volume = 0.75},
     ["alors on danse larp version"] = {assetId = 74034501108599, volume = 0.75},
-    ["Prime Hub 1"] = {assetId = 131155338276252, volume = 0.75, startPosition = 8},
-    ["Prime Hub 2"] = {assetId = 77097411209853, volume = 0.75},
-    ["Prime Hub 3"] = {assetId = 139982007364841, volume = 0.75},
-    ["Prime Hub 4"] = {assetId = 109159861086023, volume = 0.75},
-    ["Prime Hub 5"] = {assetId = 109548574272322, volume = 0.75},
-    ["Prime Hub 6"] = {assetId = 74181901266359, volume = 0.75},
-    ["Prime Hub 7"] = {assetId = 103659269007598, volume = 0.75},
-    ["Prime Hub 8"] = {assetId = 120167544632035, volume = 0.75},
-    ["Prime Hub 9"] = {assetId = 132525879805359, volume = 0.75},
-    ["Prime Hub 10"] = {assetId = 74181901266359, volume = 0.75},
+    ["SAFIRA HUB 1"] = {assetId = 131155338276252, volume = 0.75, startPosition = 8},
+    ["SAFIRA HUB 2"] = {assetId = 77097411209853, volume = 0.75},
+    ["SAFIRA HUB 3"] = {assetId = 139982007364841, volume = 0.75},
+    ["SAFIRA HUB 4"] = {assetId = 109159861086023, volume = 0.75},
+    ["SAFIRA HUB 5"] = {assetId = 109548574272322, volume = 0.75},
+    ["SAFIRA HUB 6"] = {assetId = 74181901266359, volume = 0.75},
+    ["SAFIRA HUB 7"] = {assetId = 103659269007598, volume = 0.75},
+    ["SAFIRA HUB 8"] = {assetId = 120167544632035, volume = 0.75},
+    ["SAFIRA HUB 9"] = {assetId = 132525879805359, volume = 0.75},
+    ["SAFIRA HUB 10"] = {assetId = 74181901266359, volume = 0.75},
 }
 M.ROT_X_MUSIC_ORDER = {
     "Steve Lacy",
@@ -5515,15 +5514,15 @@ M.ROT_X_MUSIC_ORDER = {
     "Tokio Drift",
     "the dream tree",
     "alors on danse larp version",
-    "Prime Hub 1", "Prime Hub 2", "Prime Hub 3", "Prime Hub 4", "Prime Hub 5",
-    "Prime Hub 6", "Prime Hub 7", "Prime Hub 8", "Prime Hub 9", "Prime Hub 10",
+    "SAFIRA HUB 1", "SAFIRA HUB 2", "SAFIRA HUB 3", "SAFIRA HUB 4", "SAFIRA HUB 5",
+    "SAFIRA HUB 6", "SAFIRA HUB 7", "SAFIRA HUB 8", "SAFIRA HUB 9", "SAFIRA HUB 10",
 }
 M.ROT_X_MUSIC_START = M.ROT_X_MUSIC_START or {}
 for _, name in ipairs(M.ROT_X_MUSIC_ORDER or {}) do
     M.ROT_X_MUSIC_START[name] = tonumber(M.ROT_X_MUSIC_START[name]) or 0
 end
 for i = 1, 10 do
-    local k = "Prime Hub " .. i
+    local k = "SAFIRA HUB " .. i
     M.ROT_X_MUSIC_START[k] = tonumber(M.ROT_X_MUSIC_START[k]) or 0
 end
 function M.setPrimeHubMusicStart(name, seconds)
@@ -6725,7 +6724,7 @@ function M.openPrimeHubMusicPlayer()
     title.Size = UDim2.new(1, -56, 0, 24)
     title.Position = UDim2.new(0, 16, 0, 12)
     title.BackgroundTransparency = 1
-    title.Text = "Prime Hub Music"
+    title.Text = "SAFIRA HUB Music"
     title.TextColor3 = WHITE
     title.TextSize = 16
     title.Font = Enum.Font.GothamBold
@@ -6737,7 +6736,7 @@ function M.openPrimeHubMusicPlayer()
     sub.Size = UDim2.new(1, -56, 0, 16)
     sub.Position = UDim2.new(0, 16, 0, 36)
     sub.BackgroundTransparency = 1
-    sub.Text = "prime hub music"
+    sub.Text = "SAFIRA HUB music"
     sub.TextColor3 = WHITE_DIM
     sub.TextSize = 12
     sub.Font = Enum.Font.Gotham
@@ -6872,12 +6871,12 @@ function M.openPrimeHubMusicPlayer()
     local function refreshTitle()
         local sel = M.primeHubMusicSelection
         if not sel or sel == "Off" then
-            title.Text = "Prime Hub Music"
-            sub.Text = "prime hub music"
+            title.Text = "SAFIRA HUB Music"
+            sub.Text = "SAFIRA HUB music"
             playBtn.Text = ">"
         else
             title.Text = tostring(sel)
-            sub.Text = "prime hub • now playing"
+            sub.Text = "SAFIRA HUB • now playing"
             local snd = M._primeHubMusicSound
             if snd and snd.IsPlaying and not M._musicPaused then
                 playBtn.Text = "II"
@@ -7018,11 +7017,11 @@ function M.openPrimeHubMusicPlayer()
         if sel ~= _lastTitle then
             _lastTitle = sel
             if sel == "Off" then
-                title.Text = "Prime Hub Music"
-                sub.Text = "prime hub music"
+                title.Text = "SAFIRA HUB Music"
+                sub.Text = "SAFIRA HUB music"
             else
                 title.Text = tostring(sel)
-                sub.Text = "prime hub • now playing"
+                sub.Text = "SAFIRA HUB • now playing"
             end
         end
     end)
@@ -8613,7 +8612,7 @@ function M.buildPCKeyStatusPanel()
     title.Size = UDim2.new(1, -20, 0, 36)
     title.Position = UDim2.fromOffset(10, 0)
     title.BackgroundTransparency = 1
-    title.Text = "prime hub"
+    title.Text = "SAFIRA HUB"
     title.TextColor3 = Color3.fromRGB(235, 247, 255)
     title.TextStrokeColor3 = Color3.fromRGB(55, 150, 255)
     title.TextStrokeTransparency = 0.25
@@ -8772,7 +8771,7 @@ end
 function M.buildGui()
     applyAccentFromTheme()
     M.clearPersistentConns()
-    for _,n in ipairs({"MoveeDuels","Cherry_Menu","K7HubGUI","VantaHubUI","VynxxHubUI","VynxHubUI","PrimeHubUI","prime hub","CLEAN HUB","BLACK HUB","BloodHounds","AceDuelsAdaptReconstruct","RXZHub"}) do
+    for _,n in ipairs({"MoveeDuels","Cherry_Menu","K7HubGUI","VantaHubUI","VynxxHubUI","VynxHubUI","PrimeHubUI","SAFIRA HUB","CLEAN HUB","BLACK HUB","BloodHounds","AceDuelsAdaptReconstruct","RXZHub"}) do
         local cg=game:GetService("CoreGui")
         local old=cg:FindFirstChild(n); if old then old:Destroy() end
         local pg=player:FindFirstChild("PlayerGui")
@@ -8897,7 +8896,7 @@ function M.buildGui()
     TL.Size = UDim2.new(0, 200, 0, 66)
     TL.BackgroundTransparency = 1
     TL.BorderSizePixel = 0
-    TL.Text = "prime hub"
+    TL.Text = "SAFIRA HUB"
     TL.Font = Enum.Font.LuckiestGuy
     TL.TextSize = 60
     TL.TextXAlignment = Enum.TextXAlignment.Left
@@ -8914,7 +8913,7 @@ function M.buildGui()
         o.Position = UDim2.new(0, 8 + ox, 0, oy)
         o.Size = UDim2.new(0, 200, 0, 66)
         o.BackgroundTransparency = 1
-        o.Text = "prime hub"
+        o.Text = "SAFIRA HUB"
         o.Font = Enum.Font.LuckiestGuy
         o.TextSize = 60
         o.TextXAlignment = Enum.TextXAlignment.Left
@@ -9019,20 +9018,17 @@ function M.buildGui()
     CloseBtn.Parent = HF
     guiCorner(CloseBtn, 8)
     guiStroke(CloseBtn, C.divider, 1)
-    local MiniBtn = Instance.new("TextButton")
+    local MiniBtn = Instance.new("ImageButton")
     local mobileEntry = UIS.TouchEnabled and not UIS.KeyboardEnabled
-    -- ADAPT-style pill: black capsule + bold white "prime hub"
-    MiniBtn.Size = mobileEntry and UDim2.new(0, 88, 0, 30) or UDim2.new(0, 92, 0, 28)
+    -- Botón SAFIRA HUB: usa el mismo largo y alto que el botón minimizado de PRIME HUB.
+    MiniBtn.Size = UDim2.new(0, 180, 0, 40)
     MiniBtn.Position = mobileEntry and UDim2.new(0, 14, 0, 60) or Outer.Position
     MiniBtn.BackgroundColor3 = Color3.fromRGB(8, 8, 10)
     MiniBtn.BackgroundTransparency = 0.05
     MiniBtn.BorderSizePixel = 0
-    MiniBtn.Text = "prime hub"
-    MiniBtn.TextColor3 = Color3.fromRGB(230, 230, 235)
-    MiniBtn.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-    MiniBtn.TextStrokeTransparency = 0.55
-    MiniBtn.Font = Enum.Font.GothamBlack
-    MiniBtn.TextSize = mobileEntry and 13 or 12
+    MiniBtn.Image = "rbxassetid://119236750093198"
+    MiniBtn.ScaleType = Enum.ScaleType.Crop
+    MiniBtn.ImageColor3 = Color3.new(1, 1, 1)
     MiniBtn.Active = true
     MiniBtn.AutoButtonColor = false
     MiniBtn.ZIndex = 1000
@@ -9043,10 +9039,10 @@ function M.buildGui()
     if miniStroke then miniStroke.Transparency = 0.35 end
     makeDraggable_cyber(MiniBtn, MiniBtn)
     MiniBtn.MouseEnter:Connect(function()
-        TweenService:Create(MiniBtn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(22, 22, 26)}):Play()
+        TweenService:Create(MiniBtn, TweenInfo.new(0.12), {BackgroundTransparency = 0.0}):Play()
     end)
     MiniBtn.MouseLeave:Connect(function()
-        TweenService:Create(MiniBtn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(8, 8, 10)}):Play()
+        TweenService:Create(MiniBtn, TweenInfo.new(0.12), {BackgroundTransparency = 0.05}):Play()
     end)
     local openingGui = false
     local function playSmallBubbleOpen()
@@ -9958,7 +9954,7 @@ function M.buildGui()
     end)
     task.defer(function() end)
 
-    -- Prime Hub skin center: cosmetic-only local presets for the character and bat.
+    -- SAFIRA HUB skin center: cosmetic-only local presets for the character and bat.
     M.batSkinName = M.batSkinName or "Off"
     M.characterSkinName = M.characterSkinName or "Off"
     M._primeBatSkinOriginals = M._primeBatSkinOriginals or {}
@@ -10396,7 +10392,7 @@ uiSectionHeader(PUtil, "MOBILE")
     footerText.Size = UDim2.new(1, -16, 1, -8)
     footerText.Position = UDim2.new(0, 8, 0, 4)
     footerText.BackgroundTransparency = 1
-    footerText.Text = "prime hub"
+    footerText.Text = "SAFIRA HUB"
     footerText.TextColor3 = M.currentAccent or Color3.fromRGB(58, 128, 245)
     footerText.TextStrokeColor3 = Color3.fromRGB(120, 20, 80)
     footerText.TextStrokeTransparency = 0.15
@@ -10865,7 +10861,7 @@ pcall(function()
         end)
     end
 end)
-print("prime hub loaded!")
+print("SAFIRA HUB loaded!")
 local kbDebounce = {}
 UIS.InputBegan:Connect(function(inp, gpe)
     if UIS:GetFocusedTextBox() then return end
