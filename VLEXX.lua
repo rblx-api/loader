@@ -323,7 +323,7 @@ do
         title.Size = UDim2.new(1, 0, 0, 80)
         title.Position = UDim2.new(0, 0, 0, 75)
         title.BackgroundTransparency = 1
-        title.Text = "Sound Duels 2x1"
+        title.Text = "VLEX.VS"
         title.TextColor3 = Color3.fromRGB(235, 220, 255)
         title.Font = Enum.Font.GothamBlack
         title.TextSize = 72
@@ -337,7 +337,7 @@ do
         subtitle.Size = UDim2.new(1, 0, 0, 24)
         subtitle.Position = UDim2.new(0, 0, 0, 165)
         subtitle.BackgroundTransparency = 1
-        subtitle.Text = "Sound Duels │ 2x1"
+        subtitle.Text = ""
         subtitle.TextColor3 = THEME_ACCENT
         subtitle.Font = Enum.Font.GothamMedium
         subtitle.TextSize = 18
@@ -1172,10 +1172,7 @@ local outfitSelectorLabel = nil
 
 BACKGROUND_IMAGES = {
     { label = "VLEX Black", id = "rbxassetid://93860396783208" },
-    { label = "BG 2", id = "rbxassetid://79007973869217" },
-    { label = "BG 3", id = "rbxassetid://137164092894568" },
-    { label = "BG 4", id = "rbxassetid://88277668289864" },
-    { label = "BG 5", id = "rbxassetid://119053971797175" },
+    { label = "VLEX Red", id = "rbxassetid://136236536991386" },
 }
 backgroundSelectorLabel = nil
 backgroundImage = nil
@@ -6111,7 +6108,7 @@ end
 function paintFloatingBtn(btnFrame, active)
     if not btnFrame then return end
 
-    local BG_IMAGE = "rbxassetid://111181203569948"
+    local BG_IMAGE = "rbxassetid://93860396783208"
     local PURPLE = Color3.fromRGB(255, 25, 35)
 
     local bg = btnFrame:FindFirstChild("BtnGrad")
@@ -7639,24 +7636,24 @@ do
 end
 
 function buildGui()
-    local SILVER = Color3.fromRGB(180, 180, 190)
-    local SILVER_DARK = Color3.fromRGB(125, 125, 140)
-    local SILVER_LIGHT = Color3.fromRGB(235, 235, 245)
-    local BG = Color3.fromRGB(28, 8, 10)
-    local BG2 = Color3.fromRGB(45, 8, 12)
-    local ROW_BG = Color3.fromRGB(32, 7, 10)
-    local ROW_BORDER = Color3.fromRGB(8, 8, 12)
+    local SILVER = Color3.fromRGB(205, 205, 210)
+    local SILVER_DARK = Color3.fromRGB(95, 95, 102)
+    local SILVER_LIGHT = Color3.fromRGB(245, 245, 245)
+    local BG = Color3.fromRGB(5, 5, 7)
+    local BG2 = Color3.fromRGB(18, 18, 22)
+    local ROW_BG = Color3.fromRGB(16, 16, 19)
+    local ROW_BORDER = Color3.fromRGB(70, 70, 76)
     local WHITE = Color3.fromRGB(255,255,255)
-    local GRAY = Color3.fromRGB(22, 8, 10)
-    local INP = Color3.fromRGB(48, 10, 14)
-    local OFF = Color3.fromRGB(38, 8, 12)
-    local TAB_ACTIVE = Color3.fromRGB(255,255,255)
-    local TAB_INACT = Color3.fromRGB(235,235,245)
+    local GRAY = Color3.fromRGB(30, 30, 34)
+    local INP = Color3.fromRGB(24, 24, 28)
+    local OFF = Color3.fromRGB(35, 35, 40)
+    local TAB_ACTIVE = Color3.fromRGB(255, 35, 45)
+    local TAB_INACT = Color3.fromRGB(235, 235, 235)
     local SECT_LBL = SILVER
-    local HOV = Color3.fromRGB(25,25,32)
-    local DOT_ON = SILVER
-    local ON_COLOR = SILVER
-    local STROKE_COLOR = Color3.fromRGB(50,50,58)
+    local HOV = Color3.fromRGB(42, 42, 48)
+    local DOT_ON = Color3.fromRGB(255, 35, 45)
+    local ON_COLOR = Color3.fromRGB(255, 35, 45)
+    local STROKE_COLOR = Color3.fromRGB(80, 80, 88)
 
     -- New Sound Duels layout: wider body + left vertical navigation.
     local GUI_W, GUI_H = 430, 500
@@ -7692,9 +7689,10 @@ function buildGui()
     backgroundImage.Position = UDim2.new(0, 0, 0, 0)
     backgroundImage.BackgroundTransparency = 1
     backgroundImage.BorderSizePixel = 0
-    backgroundImage.Image = ""
+    backgroundImage.Image = "rbxassetid://93860396783208"
+    backgroundImage.ImageColor3 = Color3.fromRGB(165, 165, 172)
     backgroundImage.ScaleType = Enum.ScaleType.Stretch
-    backgroundImage.ImageTransparency = 1
+    backgroundImage.ImageTransparency = 0.08
     backgroundImage.ZIndex = 1
     Instance.new("UICorner", backgroundImage).CornerRadius = UDim.new(0, 18)
 
@@ -7746,6 +7744,7 @@ function buildGui()
     titleShadow.TextStrokeColor3 = Color3.fromRGB(15, 0, 0)
     titleShadow.TextStrokeTransparency = 0.2
     titleShadow.ZIndex = 22
+    titleShadow.Visible = false
 
     local titleGrad = Instance.new("UIGradient", titleLabel)
     titleGrad.Name = "VLEXRedGradient"
@@ -7778,6 +7777,7 @@ function buildGui()
     titleHighlight.TextTransparency = 0.82
     titleHighlight.TextStrokeTransparency = 1
     titleHighlight.ZIndex = 24
+    titleHighlight.Visible = false
 
     local subtitleLabel = Instance.new("TextLabel", titleFrame)
     subtitleLabel.Name = "SoundDuelsSubtitle"
@@ -7923,7 +7923,7 @@ function buildGui()
     -- TARGET LAYOUT:
     -- Navigation tabs sit horizontally above all option rows.
     -- Controls use the full width beneath the navigation row.
-    local BOX_IMAGE = "rbxassetid://111181203569948"
+    local BOX_IMAGE = "rbxassetid://93860396783208"
 
     local tabBar = Instance.new("Frame", main)
     tabBar.Name = "TabBar"
@@ -8053,7 +8053,7 @@ function buildGui()
             end
 
             btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-            btn.BackgroundColor3 = Color3.fromRGB(88,58,210)
+            btn.BackgroundColor3 = Color3.fromRGB(24, 24, 28)
         end)
 
         table.insert(tabButtons, btn)
@@ -8061,7 +8061,7 @@ function buildGui()
 
     if tabButtons[1] then
         tabButtons[1].TextColor3 = Color3.fromRGB(255, 255, 255)
-        tabButtons[1].BackgroundColor3 = Color3.fromRGB(88,58,210)
+        tabButtons[1].BackgroundColor3 = Color3.fromRGB(35, 5, 8)
     end
 
     local pageCounters = {}
@@ -9148,6 +9148,76 @@ function buildGui()
             saveAllSettings()
         end)
     end
+
+    -- Spin options directly below Steal Version; keep the rest of the UI unchanged.
+    -- The toggles remain enabled when the character respawns while this script is running.
+    local spinEnabled = false
+    local autoSpinEnabled = false
+    local SPIN_YAW_SPEED = math.rad(1440)
+    local spinHumanoid = nil
+    local previousAutoRotate = nil
+
+    mkToggle(configPage, "Spin", function(on)
+        spinEnabled = on
+        saveAllSettings()
+    end)
+
+    mkToggle(configPage, "Auto Spin", function(on)
+        autoSpinEnabled = on
+        saveAllSettings()
+    end)
+
+    local function restoreSpinAutoRotate()
+        if spinHumanoid and previousAutoRotate ~= nil and spinHumanoid.Parent then
+            spinHumanoid.AutoRotate = previousAutoRotate
+        end
+        spinHumanoid = nil
+        previousAutoRotate = nil
+    end
+
+    -- Run after the character controller so walking/jumping does not cancel the yaw.
+    -- The current character is looked up every frame, so the active toggle carries
+    -- over to a newly spawned character after reset.
+    pcall(function()
+        RunService:UnbindFromRenderStep("VLEX_VS_SpinController")
+    end)
+    RunService:BindToRenderStep("VLEX_VS_SpinController", Enum.RenderPriority.Character.Value + 1, function(dt)
+        local character = LP.Character
+        local root = character and character:FindFirstChild("HumanoidRootPart")
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+
+        if not root or not humanoid or humanoid.Health <= 0 then
+            restoreSpinAutoRotate()
+            return
+        end
+
+        local carrying = false
+        if autoSpinEnabled then
+            local ok, result = pcall(function()
+                if _G.AmbitiousSafeModeHoldingBrainrot then
+                    return _G.AmbitiousSafeModeHoldingBrainrot()
+                end
+                return false
+            end)
+            carrying = ok and result == true
+        end
+
+        local shouldSpin = spinEnabled or (autoSpinEnabled and carrying)
+        if not shouldSpin then
+            restoreSpinAutoRotate()
+            return
+        end
+
+        if spinHumanoid ~= humanoid then
+            restoreSpinAutoRotate()
+            spinHumanoid = humanoid
+            previousAutoRotate = humanoid.AutoRotate
+        end
+
+        humanoid.AutoRotate = false
+        local delta = SPIN_YAW_SPEED * math.max(dt, 0)
+        root.CFrame = root.CFrame * CFrame.Angles(0, delta, 0)
+    end)
 
     mkSect(configPage, "UI Settings")
     do
