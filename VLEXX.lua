@@ -7704,7 +7704,7 @@ function buildGui()
     -- Header / branding
     local titleFrame = Instance.new("Frame", main)
     titleFrame.Name = "TitleFrame"
-    titleFrame.Size = UDim2.new(1, -20, 0, 68)
+    titleFrame.Size = UDim2.new(1, -20, 0, 76)
     titleFrame.Position = UDim2.new(0, 10, 0, 5)
     titleFrame.BackgroundTransparency = 1
     titleFrame.ZIndex = 20
@@ -7712,19 +7712,24 @@ function buildGui()
     -- VLEX.VS branding: large title across the header, without the old icon.
     local titleLabel = Instance.new("TextLabel", titleFrame)
     titleLabel.Name = "VLEXVSTitle"
-    titleLabel.Size = UDim2.new(1, -48, 1, 0)
-    titleLabel.Position = UDim2.new(0, 4, 0, -2)
+    titleLabel.Size = UDim2.new(1, -12, 1, 0)
+    titleLabel.Position = UDim2.new(0, 2, 0, -2)
     titleLabel.BackgroundTransparency = 1
     titleLabel.Text = "VLEX.VS"
     titleLabel.TextColor3 = Color3.fromRGB(255, 35, 45)
     titleLabel.Font = Enum.Font.FredokaOne
     titleLabel.TextSize = 48
-    titleLabel.TextScaled = false
+    titleLabel.TextScaled = true
+    titleLabel.TextWrapped = false
     titleLabel.TextXAlignment = Enum.TextXAlignment.Left
     titleLabel.TextYAlignment = Enum.TextYAlignment.Center
     titleLabel.TextStrokeColor3 = Color3.fromRGB(55, 0, 5)
     titleLabel.TextStrokeTransparency = 0.08
     titleLabel.ZIndex = 23
+    local titleSizeConstraint = Instance.new("UITextSizeConstraint")
+    titleSizeConstraint.MinTextSize = 24
+    titleSizeConstraint.MaxTextSize = 58
+    titleSizeConstraint.Parent = titleLabel
 
     local titleShadow = Instance.new("TextLabel", titleFrame)
     titleShadow.Name = "VLEXVSTitleDepth"
@@ -7735,6 +7740,7 @@ function buildGui()
     titleShadow.TextColor3 = Color3.fromRGB(55, 0, 5)
     titleShadow.Font = titleLabel.Font
     titleShadow.TextSize = titleLabel.TextSize
+    titleShadow.TextScaled = true
     titleShadow.TextXAlignment = titleLabel.TextXAlignment
     titleShadow.TextYAlignment = titleLabel.TextYAlignment
     titleShadow.TextStrokeColor3 = Color3.fromRGB(15, 0, 0)
@@ -7766,6 +7772,7 @@ function buildGui()
     titleHighlight.TextColor3 = Color3.fromRGB(255, 255, 255)
     titleHighlight.Font = titleLabel.Font
     titleHighlight.TextSize = titleLabel.TextSize
+    titleHighlight.TextScaled = true
     titleHighlight.TextXAlignment = titleLabel.TextXAlignment
     titleHighlight.TextYAlignment = titleLabel.TextYAlignment
     titleHighlight.TextTransparency = 0.82
