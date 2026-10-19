@@ -323,7 +323,7 @@ do
         title.Size = UDim2.new(1, 0, 0, 80)
         title.Position = UDim2.new(0, 0, 0, 75)
         title.BackgroundTransparency = 1
-        title.Text = "Sound Duels 2x1"
+        title.Text = "VLEX.VS"
         title.TextColor3 = Color3.fromRGB(235, 220, 255)
         title.Font = Enum.Font.GothamBlack
         title.TextSize = 72
@@ -337,7 +337,7 @@ do
         subtitle.Size = UDim2.new(1, 0, 0, 24)
         subtitle.Position = UDim2.new(0, 0, 0, 165)
         subtitle.BackgroundTransparency = 1
-        subtitle.Text = "Sound Duels │ 2x1"
+        subtitle.Text = ""
         subtitle.TextColor3 = THEME_ACCENT
         subtitle.Font = Enum.Font.GothamMedium
         subtitle.TextSize = 18
@@ -974,7 +974,7 @@ function updateAllUIThemeColors(color)
         end
     end
     if miniBtn then
-        miniBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        miniBtn.TextColor3 = Color3.fromRGB(255, 35, 45)
         local ms = miniBtn:FindFirstChild("ChromeOutline")
         if ms then ms.Color = Color3.fromRGB(255, 25, 35) end
     end
@@ -1171,11 +1171,8 @@ local currentOutfitIndex = 1
 local outfitSelectorLabel = nil
 
 BACKGROUND_IMAGES = {
-    { label = "BG 1", id = "rbxassetid://127110691583459" },
-    { label = "BG 2", id = "rbxassetid://79007973869217" },
-    { label = "BG 3", id = "rbxassetid://137164092894568" },
-    { label = "BG 4", id = "rbxassetid://88277668289864" },
-    { label = "BG 5", id = "rbxassetid://119053971797175" },
+    { label = "VLEX Black", id = "rbxassetid://93860396783208" },
+    { label = "VLEX Red", id = "rbxassetid://136236536991386" },
 }
 backgroundSelectorLabel = nil
 backgroundImage = nil
@@ -4051,7 +4048,7 @@ function setupSpeedIndicator(char)
     speedLabel.Position = UDim2.new(0, 0, 0, 0)
     speedLabel.BackgroundTransparency = 1
     speedLabel.Text = "0 speed"
-    speedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    speedLabel.TextColor3 = Color3.fromRGB(255, 25, 35)
     speedLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
     speedLabel.TextStrokeTransparency = 0.08
     speedLabel.Font = Enum.Font.GothamBlack
@@ -6111,7 +6108,7 @@ end
 function paintFloatingBtn(btnFrame, active)
     if not btnFrame then return end
 
-    local BG_IMAGE = "rbxassetid://111181203569948"
+    local BG_IMAGE = "rbxassetid://93860396783208"
     local PURPLE = Color3.fromRGB(255, 25, 35)
 
     local bg = btnFrame:FindFirstChild("BtnGrad")
@@ -7639,24 +7636,24 @@ do
 end
 
 function buildGui()
-    local SILVER = Color3.fromRGB(180, 180, 190)
-    local SILVER_DARK = Color3.fromRGB(125, 125, 140)
-    local SILVER_LIGHT = Color3.fromRGB(235, 235, 245)
-    local BG = Color3.fromRGB(28, 8, 10)
-    local BG2 = Color3.fromRGB(45, 8, 12)
-    local ROW_BG = Color3.fromRGB(32, 7, 10)
-    local ROW_BORDER = Color3.fromRGB(8, 8, 12)
+    local SILVER = Color3.fromRGB(205, 205, 210)
+    local SILVER_DARK = Color3.fromRGB(95, 95, 102)
+    local SILVER_LIGHT = Color3.fromRGB(245, 245, 245)
+    local BG = Color3.fromRGB(5, 5, 7)
+    local BG2 = Color3.fromRGB(18, 18, 22)
+    local ROW_BG = Color3.fromRGB(16, 16, 19)
+    local ROW_BORDER = Color3.fromRGB(70, 70, 76)
     local WHITE = Color3.fromRGB(255,255,255)
-    local GRAY = Color3.fromRGB(22, 8, 10)
-    local INP = Color3.fromRGB(48, 10, 14)
-    local OFF = Color3.fromRGB(38, 8, 12)
-    local TAB_ACTIVE = Color3.fromRGB(255,255,255)
-    local TAB_INACT = Color3.fromRGB(235,235,245)
+    local GRAY = Color3.fromRGB(30, 30, 34)
+    local INP = Color3.fromRGB(24, 24, 28)
+    local OFF = Color3.fromRGB(35, 35, 40)
+    local TAB_ACTIVE = Color3.fromRGB(255, 35, 45)
+    local TAB_INACT = Color3.fromRGB(235, 235, 235)
     local SECT_LBL = SILVER
-    local HOV = Color3.fromRGB(25,25,32)
-    local DOT_ON = SILVER
-    local ON_COLOR = SILVER
-    local STROKE_COLOR = Color3.fromRGB(50,50,58)
+    local HOV = Color3.fromRGB(42, 42, 48)
+    local DOT_ON = Color3.fromRGB(255, 35, 45)
+    local ON_COLOR = Color3.fromRGB(255, 35, 45)
+    local STROKE_COLOR = Color3.fromRGB(80, 80, 88)
 
     -- New Sound Duels layout: wider body + left vertical navigation.
     local GUI_W, GUI_H = 430, 500
@@ -7692,9 +7689,10 @@ function buildGui()
     backgroundImage.Position = UDim2.new(0, 0, 0, 0)
     backgroundImage.BackgroundTransparency = 1
     backgroundImage.BorderSizePixel = 0
-    backgroundImage.Image = ""
+    backgroundImage.Image = "rbxassetid://93860396783208"
+    backgroundImage.ImageColor3 = Color3.fromRGB(165, 165, 172)
     backgroundImage.ScaleType = Enum.ScaleType.Stretch
-    backgroundImage.ImageTransparency = 1
+    backgroundImage.ImageTransparency = 0.08
     backgroundImage.ZIndex = 1
     Instance.new("UICorner", backgroundImage).CornerRadius = UDim.new(0, 18)
 
@@ -7704,44 +7702,32 @@ function buildGui()
     -- Header / branding
     local titleFrame = Instance.new("Frame", main)
     titleFrame.Name = "TitleFrame"
-    titleFrame.Size = UDim2.new(1, -20, 0, 68)
+    titleFrame.Size = UDim2.new(1, -20, 0, 76)
     titleFrame.Position = UDim2.new(0, 10, 0, 5)
     titleFrame.BackgroundTransparency = 1
     titleFrame.ZIndex = 20
 
-    -- SOUND DUELS chrome / glossy purple branding (reference-style)
-    local titleLogo = Instance.new("ImageLabel", titleFrame)
-    titleLogo.Name = "SoundDuelsLogo"
-    titleLogo.Size = UDim2.fromOffset(46, 46)
-    titleLogo.Position = UDim2.new(0, 2, 0, 8)
-    titleLogo.BackgroundTransparency = 1
-    titleLogo.Image = "rbxassetid://128045046792321"
-    titleLogo.ScaleType = Enum.ScaleType.Fit
-    titleLogo.Rotation = -12
-    titleLogo.ZIndex = 25
-
-    local logoCorner = Instance.new("UICorner", titleLogo)
-    logoCorner.CornerRadius = UDim.new(0, 6)
-
-    local logoStroke = Instance.new("UIStroke", titleLogo)
-    logoStroke.Color = Color3.fromRGB(255, 25, 35)
-    logoStroke.Thickness = 1.4
-    logoStroke.Transparency = 0.08
-
+    -- VLEX.VS branding: large title across the header, without the old icon.
     local titleLabel = Instance.new("TextLabel", titleFrame)
     titleLabel.Name = "VLEXVSTitle"
-    titleLabel.Size = UDim2.new(1, -74, 0, 48)
-    titleLabel.Position = UDim2.new(0, 58, 0, 7)
+    titleLabel.Size = UDim2.new(1, -12, 1, 0)
+    titleLabel.Position = UDim2.new(0, 2, 0, -2)
     titleLabel.BackgroundTransparency = 1
     titleLabel.Text = "VLEX.VS"
-    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.TextColor3 = Color3.fromRGB(255, 35, 45)
     titleLabel.Font = Enum.Font.FredokaOne
-    titleLabel.TextSize = 26
+    titleLabel.TextSize = 48
+    titleLabel.TextScaled = true
+    titleLabel.TextWrapped = false
     titleLabel.TextXAlignment = Enum.TextXAlignment.Left
     titleLabel.TextYAlignment = Enum.TextYAlignment.Center
-    titleLabel.TextStrokeColor3 = Color3.fromRGB(55, 8, 115)
-    titleLabel.TextStrokeTransparency = 0.12
+    titleLabel.TextStrokeColor3 = Color3.fromRGB(55, 0, 5)
+    titleLabel.TextStrokeTransparency = 0.08
     titleLabel.ZIndex = 23
+    local titleSizeConstraint = Instance.new("UITextSizeConstraint")
+    titleSizeConstraint.MinTextSize = 24
+    titleSizeConstraint.MaxTextSize = 58
+    titleSizeConstraint.Parent = titleLabel
 
     local titleShadow = Instance.new("TextLabel", titleFrame)
     titleShadow.Name = "VLEXVSTitleDepth"
@@ -7749,36 +7735,35 @@ function buildGui()
     titleShadow.Position = titleLabel.Position + UDim2.fromOffset(2, 3)
     titleShadow.BackgroundTransparency = 1
     titleShadow.Text = titleLabel.Text
-    titleShadow.TextColor3 = Color3.fromRGB(65, 0, 5)
+    titleShadow.TextColor3 = Color3.fromRGB(55, 0, 5)
     titleShadow.Font = titleLabel.Font
     titleShadow.TextSize = titleLabel.TextSize
+    titleShadow.TextScaled = true
     titleShadow.TextXAlignment = titleLabel.TextXAlignment
     titleShadow.TextYAlignment = titleLabel.TextYAlignment
-    titleShadow.TextStrokeColor3 = Color3.fromRGB(15, 0, 35)
+    titleShadow.TextStrokeColor3 = Color3.fromRGB(15, 0, 0)
     titleShadow.TextStrokeTransparency = 0.2
     titleShadow.ZIndex = 22
+    titleShadow.Visible = false
 
     local titleGrad = Instance.new("UIGradient", titleLabel)
-    titleGrad.Name = "ChromePurpleGradient"
+    titleGrad.Name = "VLEXRedGradient"
     titleGrad.Rotation = 90
     titleGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 150, 150)),
-        ColorSequenceKeypoint.new(0.16, Color3.fromRGB(255, 255, 255)),
-        ColorSequenceKeypoint.new(0.32, Color3.fromRGB(255, 55, 65)),
-        ColorSequenceKeypoint.new(0.55, Color3.fromRGB(190, 0, 15)),
-        ColorSequenceKeypoint.new(0.72, Color3.fromRGB(255, 75, 80)),
-        ColorSequenceKeypoint.new(0.88, Color3.fromRGB(125, 0, 8)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(45, 0, 4)),
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 105, 110)),
+        ColorSequenceKeypoint.new(0.25, Color3.fromRGB(255, 35, 45)),
+        ColorSequenceKeypoint.new(0.60, Color3.fromRGB(220, 0, 12)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(110, 0, 5)),
     })
 
     local titleStroke = Instance.new("UIStroke", titleLabel)
-    titleStroke.Name = "ChromeOutline"
-    titleStroke.Color = Color3.fromRGB(255, 25, 35)
-    titleStroke.Thickness = 1.35
-    titleStroke.Transparency = 0.08
+    titleStroke.Name = "VLEXRedOutline"
+    titleStroke.Color = Color3.fromRGB(255, 20, 30)
+    titleStroke.Thickness = 1.6
+    titleStroke.Transparency = 0.04
 
     local titleHighlight = Instance.new("TextLabel", titleFrame)
-    titleHighlight.Name = "SoundDuelsTitleHighlight"
+    titleHighlight.Name = "VLEXVSTitleHighlight"
     titleHighlight.Size = titleLabel.Size
     titleHighlight.Position = titleLabel.Position + UDim2.fromOffset(0, -1)
     titleHighlight.BackgroundTransparency = 1
@@ -7786,11 +7771,13 @@ function buildGui()
     titleHighlight.TextColor3 = Color3.fromRGB(255, 255, 255)
     titleHighlight.Font = titleLabel.Font
     titleHighlight.TextSize = titleLabel.TextSize
+    titleHighlight.TextScaled = true
     titleHighlight.TextXAlignment = titleLabel.TextXAlignment
     titleHighlight.TextYAlignment = titleLabel.TextYAlignment
-    titleHighlight.TextTransparency = 0.72
+    titleHighlight.TextTransparency = 0.82
     titleHighlight.TextStrokeTransparency = 1
     titleHighlight.ZIndex = 24
+    titleHighlight.Visible = false
 
     local subtitleLabel = Instance.new("TextLabel", titleFrame)
     subtitleLabel.Name = "SoundDuelsSubtitle"
@@ -7836,11 +7823,11 @@ function buildGui()
     miniBtn.BackgroundTransparency = 0
     miniBtn.BorderSizePixel = 0
     miniBtn.ClipsDescendants = true
-    miniBtn.Text = "SOUND DUELS"
-    miniBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    miniBtn.Text = "VLEX.VS"
+    miniBtn.TextColor3 = Color3.fromRGB(255, 35, 45)
     miniBtn.Font = Enum.Font.FredokaOne
     miniBtn.TextSize = 19
-    miniBtn.TextStrokeColor3 = Color3.fromRGB(55, 8, 115)
+    miniBtn.TextStrokeColor3 = Color3.fromRGB(80, 0, 0)
     miniBtn.TextStrokeTransparency = 0.12
     miniBtn.ZIndex = 20
     miniBtn.Visible = false
@@ -7851,8 +7838,8 @@ function buildGui()
     miniBtnDepth.Size = UDim2.new(1, 0, 1, 0)
     miniBtnDepth.Position = UDim2.fromOffset(2, 2)
     miniBtnDepth.BackgroundTransparency = 1
-    miniBtnDepth.Text = "SOUND DUELS"
-    miniBtnDepth.TextColor3 = Color3.fromRGB(42, 4, 85)
+    miniBtnDepth.Text = "VLEX.VS"
+    miniBtnDepth.TextColor3 = Color3.fromRGB(100, 0, 8)
     miniBtnDepth.Font = Enum.Font.FredokaOne
     miniBtnDepth.TextSize = 19
     miniBtnDepth.TextXAlignment = Enum.TextXAlignment.Center
@@ -7896,6 +7883,7 @@ function buildGui()
     performanceLabel.TextStrokeTransparency = 1
     performanceLabel.ZIndex = 21
     performanceLabel.Visible = false
+    performanceLabel.Text = ""
     performanceLabel.Size = UDim2.new(0, 0, 0, 0)
 
     local slideTween = nil
@@ -7907,6 +7895,7 @@ function buildGui()
         main.Visible = true
         miniBtn.Visible = false
         if performanceLabel then performanceLabel.Visible = false
+    performanceLabel.Text = ""
     performanceLabel.Size = UDim2.new(0, 0, 0, 0) end
         main.Position = UDim2.new(0, -GUI_W - 20, 0, 2)
         slideTween = TS:Create(main, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = mainOriginalPos})
@@ -7932,15 +7921,13 @@ function buildGui()
     miniBtn.MouseButton1Click:Connect(showGui)
 
     -- TARGET LAYOUT:
-    -- Tabs live inside their own image box on the LEFT.
-    -- Toggles/controls live as individual image boxes on the RIGHT.
-    -- The gap between the two sides stays transparent so the main background
-    -- image remains visible through it.
-    local BOX_IMAGE = "rbxassetid://111181203569948"
+    -- Navigation tabs sit horizontally above all option rows.
+    -- Controls use the full width beneath the navigation row.
+    local BOX_IMAGE = "rbxassetid://93860396783208"
 
     local tabBar = Instance.new("Frame", main)
     tabBar.Name = "TabBar"
-    tabBar.Size = UDim2.new(0, SIDEBAR_W, 1, -88)
+    tabBar.Size = UDim2.new(1, -16, 0, 42)
     tabBar.Position = UDim2.new(0, 8, 0, 78)
     tabBar.BackgroundTransparency = 1
     tabBar.BorderSizePixel = 0
@@ -7975,11 +7962,11 @@ function buildGui()
     tabsHolder.ZIndex = 11
 
     local tabLayout = Instance.new("UIListLayout", tabsHolder)
-    tabLayout.FillDirection = Enum.FillDirection.Vertical
+    tabLayout.FillDirection = Enum.FillDirection.Horizontal
     tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
     tabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    tabLayout.VerticalAlignment = Enum.VerticalAlignment.Top
-    tabLayout.Padding = UDim.new(0, 8)
+    tabLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    tabLayout.Padding = UDim.new(0, 4)
 
     -- Horizontal divider under the title. No vertical divider: the gap shows
     -- the image behind the GUI exactly like the reference.
@@ -7993,8 +7980,8 @@ function buildGui()
 
     local tabContent = Instance.new("Frame", main)
     tabContent.Name = "TabContent"
-    tabContent.Size = UDim2.new(1, -(SIDEBAR_W + 34), 1, -104)
-    tabContent.Position = UDim2.new(0, SIDEBAR_W + 22, 0, 78)
+    tabContent.Size = UDim2.new(1, -24, 1, -160)
+    tabContent.Position = UDim2.new(0, 12, 0, 130)
     tabContent.BackgroundTransparency = 1
     tabContent.ClipsDescendants = true
     tabContent.ZIndex = 5
@@ -8007,7 +7994,7 @@ function buildGui()
         local btn = Instance.new("TextButton", tabsHolder)
         btn.Name = name .. "Tab"
         btn.LayoutOrder = i
-        btn.Size = UDim2.new(1, 0, 0, 42)
+        btn.Size = UDim2.new(0.2, -4, 1, 0)
         btn.BackgroundColor3 = Color3.fromRGB(35, 18, 80)
         btn.BackgroundTransparency = 0.35
         btn.BorderSizePixel = 0
@@ -8066,7 +8053,7 @@ function buildGui()
             end
 
             btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-            btn.BackgroundColor3 = Color3.fromRGB(88,58,210)
+            btn.BackgroundColor3 = Color3.fromRGB(24, 24, 28)
         end)
 
         table.insert(tabButtons, btn)
@@ -8074,7 +8061,7 @@ function buildGui()
 
     if tabButtons[1] then
         tabButtons[1].TextColor3 = Color3.fromRGB(255, 255, 255)
-        tabButtons[1].BackgroundColor3 = Color3.fromRGB(88,58,210)
+        tabButtons[1].BackgroundColor3 = Color3.fromRGB(35, 5, 8)
     end
 
     local pageCounters = {}
@@ -9162,6 +9149,42 @@ function buildGui()
         end)
     end
 
+    -- Spin options added directly below Steal Version; other UI stays unchanged.
+    local spinEnabled = false
+    local autoSpinEnabled = false
+    local SPIN_YAW_SPEED = math.rad(1440)
+
+    mkToggle(configPage, "Spin", function(on)
+        spinEnabled = on
+        saveAllSettings()
+    end)
+
+    mkToggle(configPage, "Auto Spin", function(on)
+        autoSpinEnabled = on
+        saveAllSettings()
+    end)
+
+    RunService.Heartbeat:Connect(function(dt)
+        local character = LP.Character
+        local root = character and character:FindFirstChild("HumanoidRootPart")
+        if not root then return end
+
+        local carrying = false
+        if autoSpinEnabled then
+            local ok, result = pcall(function()
+                if _G.AmbitiousSafeModeHoldingBrainrot then
+                    return _G.AmbitiousSafeModeHoldingBrainrot()
+                end
+                return false
+            end)
+            carrying = ok and result == true
+        end
+
+        if spinEnabled or (autoSpinEnabled and carrying) then
+            root.CFrame = root.CFrame * CFrame.Angles(0, SPIN_YAW_SPEED * math.max(dt, 0), 0)
+        end
+    end)
+
     mkSect(configPage, "UI Settings")
     do
         local row = mkRow(configPage, 38)
@@ -9737,7 +9760,9 @@ function buildGui()
             local ping = 0
             pcall(function() ping = LP:GetNetworkPing() * 1000 end)
             if performanceLabel then
-                performanceLabel.Text = string.format("%dFPS · %dms", _floor(fpsAvg + 0.5), _floor(ping + 0.5))
+                performanceLabel.Text = ""
+                performanceLabel.Visible = false
+                performanceLabel.Size = UDim2.new(0, 0, 0, 0)
             end
             task.wait(0.75)
         end
