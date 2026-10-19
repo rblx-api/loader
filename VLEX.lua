@@ -25,7 +25,7 @@ local camera = workspace.CurrentCamera
 do
     local introShouldPlay = true
     -- Audio de intro proporcionado por el usuario.
-    local MUSICA_ID = "rbxassetid://98839453510161"
+    local MUSICA_ID = "rbxassetid://140637230317256"
     local THEME_ACCENT = Color3.fromRGB(255, 35, 45)
 
     local TweenService = game:GetService("TweenService")
@@ -69,7 +69,7 @@ do
 
         local bgMusic = Instance.new("Sound")
         bgMusic.Name = "IntroMusic"
-        bgMusic.Volume = 0.65
+        bgMusic.Volume = 5
         bgMusic.Looped = true
 
         bgMusic.SoundId = MUSICA_ID
