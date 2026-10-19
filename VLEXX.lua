@@ -1171,7 +1171,7 @@ local currentOutfitIndex = 1
 local outfitSelectorLabel = nil
 
 BACKGROUND_IMAGES = {
-    { label = "BG 1", id = "rbxassetid://127110691583459" },
+    { label = "VLEX Black", id = "rbxassetid://93860396783208" },
     { label = "BG 2", id = "rbxassetid://79007973869217" },
     { label = "BG 3", id = "rbxassetid://137164092894568" },
     { label = "BG 4", id = "rbxassetid://88277668289864" },
