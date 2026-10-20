@@ -1,295 +1,312 @@
+-- 🔐 USUARIOS AUTORIZADOS
+local authorizedUsers = {"wasonoa89000"}
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+if not localPlayer then return end
+local isAuthorized = false
+for _, u in ipairs(authorizedUsers) do if u == localPlayer.Name then isAuthorized = true break end end
+if not isAuthorized then pcall(function() localPlayer:Kick("RESET HWID - No autorizado") end) return end
+
 (function()
 local Players = game:GetService('Players'); local player = Players.LocalPlayer; local TweenService = game:GetService('TweenService'); local Lighting = game:GetService('Lighting');
 local M = {}
--- Pon aquí el ID de Roblox de la versión exacta de “Ebrio de amor” que quieras usar.
-M.INTRO_MUSIC_ID = "rbxassetid://1234567890"
-M.INTRO_MUSIC_TITLE = "Martillazo en el ano"
+-- ============================================================
+-- INTRO SAFIRA TOP 1 HUB  (pura GUI, SIN VideoFrame)
+-- Recrea el video de 5s: textos morados, barra de progreso, estrellas y Skip.
+-- AUDIO: sube https://files.catbox.moe/n08l19.mp3 a Roblox como Audio
+-- y pega el ID abajo. Se reproduce del segundo 20 al 25.
+-- ============================================================
+M.INTRO_MUSIC_ID = "rbxassetid://1234567890" -- <-- PON AQUÍ EL ID DEL MP3 subido a Roblox
+M.INTRO_MUSIC_TITLE = "Audio de la intro SAFIRA HUB"
 _G.PrimeHubFeKlan = M
+
 local function playCinematicIntro()
     _G.PrimeHubIntroFinished = false
     _G.PrimeHubForceMobileVisible = false
     _G.PrimeHubIntroActive = true
     _G.PrimeHubIntroDoneCallbacks = _G.PrimeHubIntroDoneCallbacks or {}
 
+    local introSound = nil
+
     local function finishIntro()
         if _G.PrimeHubIntroFinished then return end
         _G.PrimeHubIntroActive = false
         _G.PrimeHubIntroFinished = true
         _G.PrimeHubForceMobileVisible = true
-        for _, fn in ipairs(_G.PrimeHubIntroDoneCallbacks or {}) do
-            pcall(fn)
+        if introSound then
+            pcall(function() introSound:Stop() end)
+            pcall(function() introSound:Destroy() end)
+            introSound = nil
         end
+        for _, fn in ipairs(_G.PrimeHubIntroDoneCallbacks or {}) do pcall(fn) end
         _G.PrimeHubIntroDoneCallbacks = {}
-        pcall(function()
-            game:GetService("StarterGui"):SetCore("TopbarEnabled", true)
-        end)
+        pcall(function() game:GetService("StarterGui"):SetCore("TopbarEnabled", true) end)
     end
 
     local ok, err = pcall(function()
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local contentProvider = game:GetService("ContentProvider")
-        local tweenService = game:GetService("TweenService")
-        local soundService = game:GetService("SoundService")
+        local player = game:GetService("Players").LocalPlayer
         local starterGui = game:GetService("StarterGui")
-
+        local TweenService = game:GetService("TweenService")
+        local SoundService = game:GetService("SoundService")
         pcall(function() starterGui:SetCore("TopbarEnabled", false) end)
 
-        local Images = {
-            "rbxassetid://119431736728412",
-            "rbxassetid://138617155406381",
-            "rbxassetid://122004562009487",
-            "rbxassetid://111666139602475",
-            "rbxassetid://82853558221358",
-            "rbxassetid://99317983935093",
-            "rbxassetid://74191985576113",
-            "rbxassetid://121669722747151",
-            "rbxassetid://124065695091762",
-            "rbxassetid://79760018472683",
-            "rbxassetid://98676924517887",
-            "rbxassetid://71644601072524",
-            "rbxassetid://80090330579005",
-            "rbxassetid://91256497568305",
-            "rbxassetid://85473959437570",
-            "rbxassetid://132626038420199",
-            "rbxassetid://73726424486031",
-            "rbxassetid://79785986694281",
-            "rbxassetid://135839421830406",
-            "rbxassetid://118406628258941",
-            "rbxassetid://119813036601783",
-            "rbxassetid://130178636755957",
-            "rbxassetid://113191099517012",
-            "rbxassetid://75464387496017",
-            "rbxassetid://140097745510703",
-            "rbxassetid://71495063226448",
-            "rbxassetid://108194418196219",
-            "rbxassetid://90241015183433",
-            "rbxassetid://95507869630985",
-            "rbxassetid://83143023812890",
-            "rbxassetid://73599285484967",
-            "rbxassetid://87503691927922",
-            "rbxassetid://128451182143008",
-            "rbxassetid://91604141302936",
-            "rbxassetid://129446753297102",
-            "rbxassetid://118409437980786",
-            "rbxassetid://103979654042976",
-            "rbxassetid://105810228012424",
-            "rbxassetid://72498915673766",
-            "rbxassetid://94429962876409",
-            "rbxassetid://85231140206082",
-            "rbxassetid://136744481873464",
-            "rbxassetid://98988596558468",
-            "rbxassetid://131511384454581",
-            "rbxassetid://133000486425571",
-            "rbxassetid://75573133305762",
-            "rbxassetid://96089546593534",
-            "rbxassetid://125239586151231",
-            "rbxassetid://83918101020965",
-            "rbxassetid://92521133651284"
-        }
-
-        local FPS = 30
-        local FRAME_DELAY = 1 / FPS
-        local skipped = false
-        local total = #Images
-
-        -- Preload images (non-blocking if it fails)
+        -- ===== AUDIO: segundos 20 → 25 del MP3 =====
         pcall(function()
-            contentProvider:PreloadAsync(Images)
+            if M.INTRO_MUSIC_ID and M.INTRO_MUSIC_ID ~= "rbxassetid://1234567890" then
+                introSound = Instance.new("Sound")
+                introSound.Name = "SAFIRAIntroSFX"
+                introSound.SoundId = M.INTRO_MUSIC_ID
+                introSound.Volume = 0.85
+                introSound.TimePosition = 20
+                introSound.Looped = false
+                introSound.Parent = SoundService
+                introSound:Play()
+                -- Cortar exactamente a los 5 segundos (20→25)
+                task.delay(5, function()
+                    if introSound and introSound.Parent then
+                        pcall(function() introSound:Stop() end)
+                        pcall(function() introSound:Destroy() end)
+                        introSound = nil
+                    end
+                end)
+            end
         end)
 
         local pg = player:FindFirstChild("PlayerGui") or player:WaitForChild("PlayerGui", 5)
-        if not pg then
-            finishIntro()
-            return
-        end
+        if not pg then finishIntro(); return end
 
-        local old = pg:FindFirstChild("PRIMEHUBHubIntro")
+        local old = pg:FindFirstChild("SAFIRAHUBIntro")
         if old then old:Destroy() end
 
         local screenGui = Instance.new("ScreenGui")
-        screenGui.Name = "PRIMEHUBHubIntro"
+        screenGui.Name = "SAFIRAHUBIntro"
         screenGui.ResetOnSpawn = false
         screenGui.IgnoreGuiInset = true
         screenGui.DisplayOrder = 1000
+        screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
         screenGui.Parent = pg
 
-        -- Sound (starts at second 5)
-        local introSound = Instance.new("Sound")
-        introSound.Name = "PRIMEHUBIntroSound"
-        introSound.SoundId = tostring(M.INTRO_MUSIC_ID or "rbxassetid://1234567890")
-        introSound.Volume = 1.2
-        introSound.Looped = false
-        introSound.Parent = screenGui
-        introSound.TimePosition = 5
-        pcall(function() introSound:Play() end)
+        -- Fondo negro
+        local bg = Instance.new("Frame")
+        bg.Name = "Background"
+        bg.Size = UDim2.fromScale(1, 1)
+        bg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        bg.BorderSizePixel = 0
+        bg.Parent = screenGui
 
-        local frame = Instance.new("Frame")
-        frame.Size = UDim2.fromScale(1, 1)
-        frame.BackgroundColor3 = Color3.fromRGB(10, 5, 16)
-        frame.BorderSizePixel = 0
-        frame.Parent = screenGui
+        -- Estrellas
+        local starsFolder = Instance.new("Folder")
+        starsFolder.Name = "Stars"
+        starsFolder.Parent = bg
 
-        local layer1 = Instance.new("ImageLabel")
-        layer1.Size = UDim2.fromScale(1, 1)
-        layer1.BackgroundTransparency = 1
-        layer1.ScaleType = Enum.ScaleType.Fit
-        layer1.ZIndex = 2
-        layer1.Parent = frame
+        local function createStar(x, y, size, transparency)
+            local star = Instance.new("Frame")
+            star.Size = UDim2.fromOffset(size, size)
+            star.Position = UDim2.fromScale(x, y)
+            star.AnchorPoint = Vector2.new(0.5, 0.5)
+            star.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            star.BackgroundTransparency = transparency or 0.3
+            star.BorderSizePixel = 0
+            star.Parent = starsFolder
+            local corner = Instance.new("UICorner")
+            corner.CornerRadius = UDim.new(1, 0)
+            corner.Parent = star
+            return star
+        end
 
-        local layer2 = Instance.new("ImageLabel")
-        layer2.Size = UDim2.fromScale(1, 1)
-        layer2.BackgroundTransparency = 1
-        layer2.ScaleType = Enum.ScaleType.Fit
-        layer2.ZIndex = 1
-        layer2.Parent = frame
+        math.randomseed(os.clock() * 1000)
+        for i = 1, 90 do
+            createStar(math.random(), math.random(), math.random(1, 3), math.random(25, 75) / 100)
+        end
 
-        -- TAP SKIP INTRO hint
-        local skipHint = Instance.new("TextLabel")
-        skipHint.Size = UDim2.new(1, 0, 0, 28)
-        skipHint.Position = UDim2.new(0, 0, 0.9, 0)
-        skipHint.BackgroundTransparency = 1
-        skipHint.Text = "🎃  EDICIÓN ESPECIAL  •  TOCA PARA SALTAR  🎃"
-        skipHint.Font = Enum.Font.Gotham
-        skipHint.TextSize = 15
-        skipHint.TextColor3 = Color3.fromRGB(140, 140, 140)
-        skipHint.TextTransparency = 0.2
-        skipHint.TextStrokeTransparency = 0.6
-        skipHint.ZIndex = 15
-        skipHint.Parent = frame
+        local purple = Color3.fromRGB(180, 80, 255)
 
-        -- Full-screen skip button
-        local skipButton = Instance.new("TextButton")
-        skipButton.Size = UDim2.fromScale(1, 1)
-        skipButton.BackgroundTransparency = 1
-        skipButton.Text = ""
-        skipButton.ZIndex = 50
-        skipButton.Parent = frame
+        -- SAFIRA
+        local titleSafira = Instance.new("TextLabel")
+        titleSafira.Name = "SAFIRA"
+        titleSafira.Size = UDim2.new(1, 0, 0, 70)
+        titleSafira.Position = UDim2.new(0, 0, 0.28, 0)
+        titleSafira.BackgroundTransparency = 1
+        titleSafira.Text = "SAFIRA"
+        titleSafira.Font = Enum.Font.GothamBlack
+        titleSafira.TextSize = 64
+        titleSafira.TextColor3 = purple
+        titleSafira.TextTransparency = 1
+        titleSafira.TextStrokeTransparency = 0.55
+        titleSafira.TextStrokeColor3 = Color3.fromRGB(90, 0, 160)
+        titleSafira.Parent = bg
 
+        -- TOP 1
+        local titleTop = Instance.new("TextLabel")
+        titleTop.Name = "TOP1"
+        titleTop.Size = UDim2.new(1, 0, 0, 70)
+        titleTop.Position = UDim2.new(0, 0, 0.40, 0)
+        titleTop.BackgroundTransparency = 1
+        titleTop.Text = "TOP 1"
+        titleTop.Font = Enum.Font.GothamBlack
+        titleTop.TextSize = 64
+        titleTop.TextColor3 = purple
+        titleTop.TextTransparency = 1
+        titleTop.TextStrokeTransparency = 0.55
+        titleTop.TextStrokeColor3 = Color3.fromRGB(90, 0, 160)
+        titleTop.Parent = bg
+
+        -- HUB (aparece más tarde)
+        local titleHub = Instance.new("TextLabel")
+        titleHub.Name = "HUB"
+        titleHub.Size = UDim2.new(1, 0, 0, 60)
+        titleHub.Position = UDim2.new(0, 0, 0.52, 0)
+        titleHub.BackgroundTransparency = 1
+        titleHub.Text = "HUB"
+        titleHub.Font = Enum.Font.GothamBlack
+        titleHub.TextSize = 56
+        titleHub.TextColor3 = purple
+        titleHub.TextTransparency = 1
+        titleHub.TextStrokeTransparency = 0.55
+        titleHub.TextStrokeColor3 = Color3.fromRGB(90, 0, 160)
+        titleHub.Parent = bg
+
+        -- Porcentaje
+        local percentLabel = Instance.new("TextLabel")
+        percentLabel.Name = "Percent"
+        percentLabel.Size = UDim2.new(1, 0, 0, 28)
+        percentLabel.Position = UDim2.new(0, 0, 0.64, 0)
+        percentLabel.BackgroundTransparency = 1
+        percentLabel.Text = "0%"
+        percentLabel.Font = Enum.Font.GothamBold
+        percentLabel.TextSize = 20
+        percentLabel.TextColor3 = purple
+        percentLabel.TextTransparency = 1
+        percentLabel.Parent = bg
+
+        -- Barra fondo
+        local barBg = Instance.new("Frame")
+        barBg.Name = "BarBg"
+        barBg.Size = UDim2.new(0.35, 0, 0, 4)
+        barBg.Position = UDim2.new(0.325, 0, 0.685, 0)
+        barBg.BackgroundColor3 = Color3.fromRGB(60, 30, 90)
+        barBg.BackgroundTransparency = 1
+        barBg.BorderSizePixel = 0
+        barBg.Parent = bg
+        Instance.new("UICorner", barBg).CornerRadius = UDim.new(1, 0)
+
+        -- Barra relleno
+        local barFill = Instance.new("Frame")
+        barFill.Name = "BarFill"
+        barFill.Size = UDim2.new(0, 0, 1, 0)
+        barFill.BackgroundColor3 = purple
+        barFill.BorderSizePixel = 0
+        barFill.Parent = barBg
+        Instance.new("UICorner", barFill).CornerRadius = UDim.new(1, 0)
+
+        -- Créditos
+        local credits = Instance.new("TextLabel")
+        credits.Name = "Credits"
+        credits.Size = UDim2.new(1, 0, 0, 22)
+        credits.Position = UDim2.new(0, 0, 0.72, 0)
+        credits.BackgroundTransparency = 1
+        credits.Text = "By Leo  •  https://discord.gg/pMJzYKryX"
+        credits.Font = Enum.Font.Gotham
+        credits.TextSize = 14
+        credits.TextColor3 = Color3.fromRGB(220, 220, 230)
+        credits.TextTransparency = 1
+        credits.Parent = bg
+
+        -- Botón Skip (igual que en el video)
+        local skipBtn = Instance.new("TextButton")
+        skipBtn.Name = "SkipButton"
+        skipBtn.Size = UDim2.fromOffset(80, 32)
+        skipBtn.Position = UDim2.new(1, -100, 0, 20)
+        skipBtn.BackgroundColor3 = Color3.fromRGB(130, 60, 220)
+        skipBtn.Text = "Skip"
+        skipBtn.Font = Enum.Font.GothamBold
+        skipBtn.TextSize = 16
+        skipBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        skipBtn.BorderSizePixel = 0
+        skipBtn.AutoButtonColor = true
+        skipBtn.ZIndex = 5
+        skipBtn.Parent = bg
+        Instance.new("UICorner", skipBtn).CornerRadius = UDim.new(0, 8)
+
+        local skipped = false
         local function cleanupAndFinish()
             if skipped then return end
             skipped = true
+            -- Parar el audio de la intro al saltar o terminar
+            if introSound then
+                pcall(function() introSound:Stop() end)
+                pcall(function() introSound:Destroy() end)
+                introSound = nil
+            end
             pcall(function()
-                if introSound then
-                    introSound:Stop()
+                local fadeInfo = TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                TweenService:Create(bg, fadeInfo, {BackgroundTransparency = 1}):Play()
+                for _, child in ipairs(bg:GetDescendants()) do
+                    if child:IsA("TextLabel") or child:IsA("TextButton") then
+                        TweenService:Create(child, fadeInfo, {TextTransparency = 1, BackgroundTransparency = 1}):Play()
+                    elseif child:IsA("Frame") and child ~= bg then
+                        TweenService:Create(child, fadeInfo, {BackgroundTransparency = 1}):Play()
+                    end
                 end
             end)
-            pcall(function()
-                if screenGui and screenGui.Parent then
-                    screenGui:Destroy()
-                end
+            task.delay(0.4, function()
+                if screenGui and screenGui.Parent then screenGui:Destroy() end
+                pcall(function() starterGui:SetCore("TopbarEnabled", true) end)
+                finishIntro()
             end)
-            pcall(function() starterGui:SetCore("TopbarEnabled", true) end)
-            finishIntro()
         end
 
-        skipButton.MouseButton1Click:Connect(cleanupAndFinish)
-        skipButton.Activated:Connect(cleanupAndFinish)
+        skipBtn.Activated:Connect(cleanupAndFinish)
 
-        -- ========== ANIMACIÓN EN BUCLE ==========
-        -- El título queda visible desde el inicio sobre la animación.
-        local title = Instance.new("TextLabel")
-        title.Size = UDim2.new(0.9, 0, 0, 120)
-        title.Position = UDim2.new(0.5, 0, 0.5, 0)
-        title.AnchorPoint = Vector2.new(0.5, 0.5)
-        title.BackgroundTransparency = 1
-        title.Text = "EDICIÓN ESPECIAL"
-        title.Font = Enum.Font.LuckiestGuy
-        title.TextSize = 72
-        title.TextXAlignment = Enum.TextXAlignment.Center
-        title.TextYAlignment = Enum.TextYAlignment.Center
-        title.TextColor3 = Color3.fromRGB(255, 145, 35)
-        title.TextStrokeTransparency = 0.05
-        title.TextStrokeColor3 = Color3.fromRGB(76, 12, 100)
-        title.ZIndex = 10
-        title.Parent = frame
+        -- Tocar en cualquier lado también salta
+        local fullSkip = Instance.new("TextButton")
+        fullSkip.Name = "FullSkip"
+        fullSkip.Size = UDim2.fromScale(1, 1)
+        fullSkip.BackgroundTransparency = 1
+        fullSkip.Text = ""
+        fullSkip.ZIndex = 1
+        fullSkip.Parent = bg
+        fullSkip.Activated:Connect(cleanupAndFinish)
 
-        local subtitle = Instance.new("TextLabel")
-        subtitle.Size = UDim2.new(0.9, 0, 0, 36)
-        subtitle.Position = UDim2.new(0.5, 0, 0.61, 0)
-        subtitle.AnchorPoint = Vector2.new(0.5, 0.5)
-        subtitle.BackgroundTransparency = 1
-        subtitle.Text = "SAFIRA HUB"
-        subtitle.Font = Enum.Font.GothamMedium
-        subtitle.TextSize = 20
-        subtitle.TextXAlignment = Enum.TextXAlignment.Center
-        subtitle.TextYAlignment = Enum.TextYAlignment.Center
-        subtitle.TextColor3 = Color3.fromRGB(255, 170, 220)
-        subtitle.TextStrokeTransparency = 0.3
-        subtitle.TextStrokeColor3 = Color3.fromRGB(100, 0, 60)
-        subtitle.ZIndex = 10
-        subtitle.Parent = frame
-
-        local letterLayer = Instance.new("Frame")
-        letterLayer.Name = "PrimeHubLetterBackground"
-        letterLayer.Size = UDim2.new(0.96, 0, 0, 64)
-        letterLayer.Position = UDim2.new(0.5, 0, 0.75, 0)
-        letterLayer.AnchorPoint = Vector2.new(0.5, 0.5)
-        letterLayer.BackgroundTransparency = 1
-        letterLayer.ZIndex = 12
-        letterLayer.Parent = frame
-        local letterList = {}
-        for index = 1, #"SAFIRA HUB" do
-            local ch = string.sub("SAFIRA HUB", index, index)
-            local letter = Instance.new("TextLabel")
-            letter.Name = "Letter_" .. tostring(index)
-            letter.Size = UDim2.new(1 / 9, 0, 1, 0)
-            letter.Position = UDim2.new((index - 1) / 9, 0, 0, 0)
-            letter.BackgroundTransparency = 1
-            letter.Text = ch == " " and "·" or string.upper(ch)
-            letter.TextColor3 = Color3.fromRGB(255, 150, 35)
-            letter.TextStrokeColor3 = Color3.fromRGB(62, 8, 85)
-            letter.TextStrokeTransparency = 0.05
-            letter.Font = Enum.Font.GothamBlack
-            letter.TextSize = 25
-            letter.TextTransparency = 1
-            letter.ZIndex = 13
-            letter.Parent = letterLayer
-            table.insert(letterList, letter)
-        end
+        -- ========== ANIMACIÓN (imita el video de ~5s) ==========
         task.spawn(function()
-            for _, letter in ipairs(letterList) do
-                if skipped then return end
-                letter.TextTransparency = 0
-                task.wait(0.12)
-            end
-        end)
+            if skipped then return end
 
-        layer1.Image = Images[1]
-        layer2.Image = Images[1]
-        local currentIdx = 1
-        local useLayer1AsFront = true
+            local fadeIn = TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+            TweenService:Create(titleSafira, fadeIn, {TextTransparency = 0}):Play()
+            task.wait(0.12)
+            if skipped then return end
+            TweenService:Create(titleTop, fadeIn, {TextTransparency = 0}):Play()
+            task.wait(0.08)
+            if skipped then return end
+            TweenService:Create(percentLabel, fadeIn, {TextTransparency = 0}):Play()
+            TweenService:Create(credits, fadeIn, {TextTransparency = 0}):Play()
+            TweenService:Create(barBg, fadeIn, {BackgroundTransparency = 0.25}):Play()
 
-        -- La animación continúa hasta que el usuario toca la pantalla.
-        while not skipped do
-            local nextIdx = currentIdx + 1
-            if nextIdx > total then
-                nextIdx = 1
-            end
-
-            local behind = useLayer1AsFront and layer2 or layer1
-            local front = useLayer1AsFront and layer1 or layer2
-            behind.Image = Images[nextIdx]
-
-            -- No cambiar de capa hasta que la imagen esté cargada.
-            local loadStart = os.clock()
-            while not behind.IsLoaded and os.clock() - loadStart < 5 and not skipped do
+            -- Progreso 0 → 100%
+            local startTime = tick()
+            local duration = 2.15
+            while not skipped do
+                local t = math.clamp((tick() - startTime) / duration, 0, 1)
+                percentLabel.Text = math.floor(t * 100) .. "%"
+                barFill.Size = UDim2.new(t, 0, 1, 0)
+                if t >= 1 then break end
                 task.wait()
             end
-
             if skipped then return end
-            if behind.IsLoaded then
-                behind.ZIndex = 2
-                front.ZIndex = 1
-                useLayer1AsFront = not useLayer1AsFront
-                currentIdx = nextIdx
-            else
-                behind.Image = front.Image
+
+            percentLabel.Text = "100%"
+            barFill.Size = UDim2.new(1, 0, 1, 0)
+
+            task.wait(0.12)
+            if skipped then return end
+            TweenService:Create(titleHub, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+
+            task.wait(1.85)
+            if not skipped then
+                cleanupAndFinish()
             end
-
-            task.wait(FRAME_DELAY)
-        end
-
+        end)
     end)
 
     if not ok then
