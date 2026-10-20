@@ -1,794 +1,325 @@
-local _syncJobId = tostring(game.JobId)
-if _G.__SABCOM_SYNC_JOB ~= _syncJobId then
-	_G.__SABCOM_SYNC_JOB = _syncJobId
-	_G.SabcomPreloadedSynchronizer = nil
-	_G.SabcomSynchronizerReady = nil
+local _RP, _RW = print, warn
+_G.MeerkoStealWhy = "boot"
+_G.MeerkoStealLog = {}
+_G.MeerkoStealSay = function(msg)
+    msg = tostring(msg)
+    _G.MeerkoStealWhy = msg
+    local L = _G.MeerkoStealLog
+    local now = os.clock()
+    local last = L[#L]
+    if last and last.msg == msg then
+        last.n = last.n + 1
+        last.t = now
+    else
+        L[#L + 1] = { msg = msg, t = now, t0 = now, n = 1 }
+        while #L > 8 do table.remove(L, 1) end
+    end
+    if _G.MeerkoStealDebug then
+        if now - (_G._mkLastSay or 0) >= (tonumber(_G.MeerkoStealDebugGap) or 0.5) then
+            _G._mkLastSay = now
+            pcall(_RP, "[steal] " .. msg)
+        end
+    end
 end
 
-local function _looksLikeSynchronizer(t)
-	return type(t) == "table"
-		and type(t.GetTableFromChannel) == "function"
-		and type(t.GetAllChannels) == "function"
+_G.MeerkoScanProfile = function(mode)
+    if mode == "fast" then
+        _G.MeerkoScanMode     = "fast"
+        _G.MeerkoPanelScanGap = tonumber(_G.MeerkoFastPanelGap)    or 0.12
+        _G.MeerkoRepickGap    = tonumber(_G.MeerkoFastRepickGap)   or 0.10
+        _G.MeerkoInRangeGap   = tonumber(_G.MeerkoFastInRangeGap)  or 0.10
+        _G.MeerkoWatchdogTick = tonumber(_G.MeerkoFastWatchdogTick) or 0.15
+        _G.MeerkoSyncScanGap  = tonumber(_G.MeerkoFastSyncGap)     or 0.05
+        _G.MeerkoAutoTPPoll   = tonumber(_G.MeerkoFastTPPoll)      or 0.03
+    else
+        _G.MeerkoScanMode     = "normal"
+        _G.MeerkoPanelScanGap = tonumber(_G.MeerkoNormPanelGap)    or 0.6
+        _G.MeerkoRepickGap    = tonumber(_G.MeerkoNormRepickGap)   or 0.5
+        _G.MeerkoInRangeGap   = tonumber(_G.MeerkoNormInRangeGap)  or 0.3
+        _G.MeerkoWatchdogTick = tonumber(_G.MeerkoNormWatchdogTick) or 0.3
+        _G.MeerkoSyncScanGap  = tonumber(_G.MeerkoNormSyncGap)     or 0.25
+        _G.MeerkoAutoTPPoll   = tonumber(_G.MeerkoNormTPPoll)      or 0.05
+    end
+    if _G.MeerkoStealSay then _G.MeerkoStealSay("scan profile -> " .. tostring(_G.MeerkoScanMode)) end
 end
+_G.MeerkoScanProfile("fast")
+task.delay(tonumber(_G.MeerkoFastWindow) or 60, function()
+    if _G.MeerkoScanMode == "fast" then _G.MeerkoScanProfile("normal") end
+end)
+local print = function() end
+local warn  = function() end
+_G.MeerkoInvisAuto = false
+_G.MeerkoAutoKickOnSteal = false
+_G.MeerkoAutoBuy = false
+if _G.MeerkoStealMode == nil then _G.MeerkoStealMode = "priority" end
+if _G.MeerkoAutoTP == nil then _G.MeerkoAutoTP = true end
 
-local function _tryRequireSynchronizer()
-	local pre = _G.SabcomPreloadedSynchronizer
-	if _looksLikeSynchronizer(pre) then
-		return pre
-	end
-	return nil
-end
+-- TP safety: prefer a slightly slower, more stable route over hard misses/deaths.
+if _G.MeerkoTPSafeMode == nil then _G.MeerkoTPSafeMode = true end
+if _G.MeerkoTPSafeSpeed == nil then _G.MeerkoTPSafeSpeed = 300 end
+if _G.MeerkoTPSafeVerticalSpeed == nil then _G.MeerkoTPSafeVerticalSpeed = 110 end
+if _G.MeerkoTPReachTolerance == nil then _G.MeerkoTPReachTolerance = 4.5 end
+if _G.MeerkoTPRetryCount == nil then _G.MeerkoTPRetryCount = 2 end
+if _G.MeerkoTPRetryDelay == nil then _G.MeerkoTPRetryDelay = 0.08 end
+if _G.MeerkoVoidRecover == nil then _G.MeerkoVoidRecover = true end
 
-if _looksLikeSynchronizer(_G.SabcomPreloadedSynchronizer) then
-	_G.SabcomSynchronizerReady = true
-else
-	task.spawn(function()
-		task.wait(1.5)
-		if type(getgc) ~= "function" then
-			return
-		end
-		local function steal(deep)
-			local found
-			pcall(function()
-				for _, v in getgc(deep) do
-					if type(v) == "table" and _looksLikeSynchronizer(v) then
-						found = v
-						break
-					end
-				end
-			end)
-			if found then
-				_G.SabcomPreloadedSynchronizer = found
-				_G.SabcomSynchronizerReady = true
-				return true
-			end
-			return false
-		end
-		if steal(false) then
-			return
-		end
-		task.wait(1)
-		steal(true)
-	end)
-end
+if not game:IsLoaded() then game.Loaded:Wait() end
 
--- Global verdict-table cleaner.  It runs once immediately and then every
--- 10 seconds; inserting a copy into every function would create hundreds of
--- duplicate scans and would hit Luau's local/register limits again.
+--[[ Net env-spoof: DISABLED (Elite parity) ------------------------------------
+     This used to require ReplicatedStorage.Packages.Net and then write into the
+     game module's own environment:
+         env.getfenv                  = <our function>
+         setreadonly(env.debug, false)
+         env.debug.getmemorycategory  = function() return "--" end
+     re-applied 80x over 8 seconds.
+
+     That is the loudest signal in this script, and it is self-defeating. The
+     Net wrapper calls debug.getmemorycategory() to identify its caller. Legit
+     game code returns a real script category; this returned the literal "--",
+     which is not a valid category -- so anything validating the returned value
+     against a known set sees "--" and flags immediately. Leaving env.debug
+     writable via setreadonly is independently checkable (table.isfrozen).
+
+     Elite never requires the module at all, so it never meets this check.
+     Meerko no longer needs it either: the grapple now resolves the UseItem
+     RemoteEvent structurally and calls FireServer on the raw Instance, which
+     never enters the Net wrapper.
+
+     Set _G.MeerkoNetSpoofEnable = true to restore the old behaviour.
+--------------------------------------------------------------------------- ]]
 do
-	local cleanerEpoch = (tonumber(_G.__SabcomVerdictCleanerEpoch) or 0) + 1
-	_G.__SabcomVerdictCleanerEpoch = cleanerEpoch
-
-	local gg = getgc
-	local grmt = getrawmetatable
-	local srmt = setrawmetatable
-
-	local function runVerdictCleaner()
-		if type(gg) ~= "function" or type(grmt) ~= "function" or type(srmt) ~= "function" then
-			return 0, 0
-		end
-
-		local okGc, objects = pcall(gg, true)
-		if not okGc or type(objects) ~= "table" then return 0, 0 end
-
-		local locked, cleaned = 0, 0
-		for _, t in pairs(objects) do
-			if type(t) ~= "table" then continue end
-
-			local okMt, mt = pcall(grmt, t)
-			if not okMt or mt then continue end
-
-			local n, ptr, nums, selfk = 0, nil, 0, nil
-			for k, v in next, t do
-				n += 1
-				if type(v) == "number" and v == math.floor(v) and v >= 1 and v <= 8 then
-					ptr, nums = v, nums + 1
-				end
-				if rawequal(t, v) then selfk = k end
-			end
-			if not (selfk and ptr and nums == 1) then continue end
-
-			-- The verdict slot moved in the large update; use the table pointer.
-			local slot = rawget(t, ptr)
-			local dirty = false
-			if type(slot) == "string" and slot:match("^X%-%d+$") then
-				rawset(t, ptr, nil)
-				cleaned += 1
-				dirty, slot = true, nil
-			end
-
-			if slot == nil and n - (dirty and 1 or 0) == 2 then
-				if pcall(srmt, t, { __newindex = function() end }) then
-					locked += 1
-				end
-			end
-		end
-
-		return locked, cleaned
-	end
-
-	_G.SabcomRunVerdictCleaner = runVerdictCleaner
-	task.spawn(function()
-		while _G.__SabcomVerdictCleanerEpoch == cleanerEpoch do
-			local ok, locked, cleaned = pcall(runVerdictCleaner)
-			if ok then
-				print("[verdict cleaner] locked:", locked, "cleaned:", cleaned)
-			else
-				warn("[verdict cleaner] sweep failed:", locked)
-			end
-			task.wait(10)
-		end
-	end)
+    local RS = game:GetService("ReplicatedStorage")
+    local _spoofOk = false
+    local function _applySpoof()
+        if _G.MeerkoNetSpoofEnable ~= true then return false end
+        local ok = pcall(function()
+            local Net = require(RS:WaitForChild("Packages"):WaitForChild("Net"))
+            local og = getfenv
+            if type(og) ~= "function" then return end
+            for _, fname in ipairs({ "RemoteEvent", "RemoteFunction", "UnreliableRemoteEvent" }) do
+                local f = rawget(Net, fname)
+                if type(f) == "function" then
+                    local env = og(f)
+                    if type(env) == "table" then
+                        env.getfenv = function() return og(f) end
+                        if type(env.debug) == "table" then
+                            if setreadonly then pcall(setreadonly, env.debug, false) end
+                            env.debug.getmemorycategory = function() return "--" end
+                        end
+                    end
+                end
+            end
+            _spoofOk = true
+        end)
+        return ok and _spoofOk
+    end
+    _G.MeerkoNetSpoof = _applySpoof
+    _G.MeerkoNetSpoofReady = function() return _spoofOk end
+    if _G.MeerkoNetSpoofEnable == true then
+        _applySpoof()
+        task.spawn(function()
+            for _ = 1, 80 do
+                if _applySpoof() then end
+                task.wait(0.1)
+            end
+        end)
+    end
 end
 
-do
-	local HS = game:GetService("HttpService")
-	local CFG_FILE = "sabcom12dddd3.json"
-	local D = {
-		autoTp = true,
-		autoSteal = false,
-		stealMode = "priority",
-		tpMode = "priority",
-		tpKey = "T",
-		resetKey = "X",
-		cloneKey = "C",
-		dropKey = "B",
-		floatKey = "Z",
-		carpetSpeedKey = "Q",
-		autoBuyKey = "K",
-		autoBuy = false,
-		autoBuyRange = 17,
-		autoBuyGui = false,
-		autoBuyX = 224,
-		autoBuyY = 480,
-		loadOptimizer = false,
-		errorFix = false,
-		walkSpeedKey = "V",
-		walkSpeed = 16,
-		walkSpeedOn = false,
-		walkSpeedGui = true,
-		walkSpeedX = 16,
-		walkSpeedY = 560,
-		fovOn = false,
-		fov = 70,
-		fovGui = true,
-		fovX = 16,
-		fovY = 660,
-		infJumpKey = "G",
-		infJumpOn = false,
-		kickKey = "P",
-		hideGuiKey = "RightShift",
-		resetRepeats = 1,
-		resetDelay = 0.05,
-		tpDelay = 0,
-		tpVelocity = 400,
-		climbSpeed = 160,
-		climbSafe = 250,
-		climbFull = false,
-		goSpeed = 200,
-		closeSpeed = 80,
-		landingDelay = 0.35,
-		postCloneDelay = 0.1,
-		autoGrabRadius = 50,
-		autoGrabRadiusAuto = false,
-		boostWindow = 20,
-		sideTpRange = 100,
-		preferFrontOnRow = true,
-		directPath = true,
-		jumpOnce = true,
-		minGen = 0,
-		carpetTool = "",
-		carpetWaitMs = 200,
-		carpetRelance = true,
-		grappleWaitMs = 200,
-		grappleSettleMs = 60,
-		pingThresh = 170,
-		highPingSpeed = 400,
-		stallSec = 0.6,
-		repushAt = 0.9,
-		pathCell = 4,
-		pathRadius = 2.5,
-		pathHeight = 5,
-		pathPad = 40,
-		rowBoxX = 26,
-		rowBoxZ = 30,
-		rowLane = 30,
-		voidY = -50,
-		cloneBackoff = 0.5,
-		frontRunIn = 130,
-		settleFrames = 4,
-		settleMaxMs = 250,
-		stealHz = 0.05,
-		stealHoldDuration = 1.3,
-		antiDieHz = 0.1,
-		tpHealLock = false,
-		noAnim = true,
-		hotScanSec = 8,
-		upvalDepth = 128,
-		uiDelay = 0,
-		seqQuiet = true,
-		grappleQuiet = true,
-		strictSweep = true,
-		approachFloor2FromFloor1 = false,
-		panelX = 24,
-		panelY = 180,
-		panelMinimized = false,
-		settingsOpen = false,
-		stealTargetX = 16,
-		stealTargetY = 220,
-		autoKickX = 16,
-		autoKickY = 320,
-		psX = 224,
-		psY = 320,
-		invisGuiX = 16,
-		invisGuiY = 450,
-		faceAwayX = 240,
-		faceAwayY = 80,
-		priorityX = 300,
-		priorityY = 80,
-		priorityItems = {},
-		xray = false,
-		espPlayer = false,
-		brainrotEsp = false,
-		lineToBase = false,
-		lineToBrainrot = false,
-		autoGoOnSwitch = false,
-		autoTurret = false,
-		invis = false,
-		invisGui = false,
-		invisKey = "U",
-		autoInvis = false,
-		autoRecover = true,
-		invisAngle = 225,
-		sinkSlider = 7,
-		superOptimizer = false,
-		autoKickGui = false,
-		autoKick = false,
-		kickToPs = true,
-		psCode = "",
-		faceAwayGui = false,
-		faceAway = false,
-		faceAwayBaseOwner = true,
-		faceAwayNearest = false,
-		faceAwayTarget = "",
-		faceAwayClick = false,
-		autoCloseGui = false,
-		lockUi = false,
-		guiHue = 210,
-		guiBgAsset = "",
-		extrasX = 276,
-		extrasY = 80,
-	}
+pcall(function() if setfpscap then setfpscap(9999) end end)
 
-	local readJson = (function(name)
-		if type(readfile) ~= "function" then return nil end
-
-		-- A missing settings file is normal on the first launch.  Some executors
-		-- throw from readfile instead of returning nil, so guard both checks.
-		if type(isfile) == "function" then
-			local okExists, exists = pcall(isfile, name)
-			if okExists and not exists then return nil end
-		end
-
-		local okRead, raw = pcall(readfile, name)
-		if not okRead or type(raw) ~= "string" or #raw == 0 then return nil end
-
-		local okDecode, data = pcall(HS.JSONDecode, HS, raw)
-		if okDecode and type(data) == "table" then return data end
-		return nil
-	end)
-
-	local merge = (function(dst, src)
-		if type(src) ~= "table" then return dst end
-		for k, def in pairs(D) do
-			local v = src[k]
-			if v ~= nil and type(v) == type(def) then dst[k] = v end
-		end
-		return dst
-	end)
-
-	local cfg = {}
-	for k, v in pairs(D) do cfg[k] = v end
-	merge(cfg, readJson(CFG_FILE))
-
-	local function flag(on, offVal)
-		if on then return nil end
-		return offVal
-	end
-
-	local function loadKey(v, default)
-		if type(v) == "string" and v ~= "" then return v end
-		return default
-	end
-
-	_G.SabcomAutoTP = cfg.autoTp
-	_G.SabcomStealMode = (type(cfg.stealMode) == "string" and cfg.stealMode ~= "" and cfg.stealMode) or "priority"
-	if _G.SabcomStealMode == "highest" or _G.SabcomStealMode == "value" or _G.SabcomStealMode == "gen" then
-		_G.SabcomStealMode = "priority"
-	end
-	if _G.SabcomStealMode ~= "nearest" then _G.SabcomStealMode = "priority" end
-	_G.SabcomTPMode = _G.SabcomStealMode
-	_G.SabcomAutoSteal = cfg.autoSteal == true
-	_G._stp_tpKeyName = loadKey(cfg.tpKey, "T")
-	_G._stp_resetKeyName = loadKey(cfg.resetKey, "X")
-	_G._stp_cloneKeyName = loadKey(cfg.cloneKey, "C")
-	_G._stp_dropKeyName = loadKey(cfg.dropKey, "B")
-	_G._stp_floatKeyName = loadKey(cfg.floatKey, "Z")
-	_G._stp_carpetSpeedKeyName = loadKey(cfg.carpetSpeedKey, "Q")
-	_G._stp_autoBuyKeyName = loadKey(cfg.autoBuyKey, "K")
-	_G.SabcomAutoBuy = cfg.autoBuy == true
-	_G.SabcomAutoBuyRange = math.clamp(tonumber(cfg.autoBuyRange) or 17, 5, 50)
-	_G.SabcomAutoBuyGui = cfg.autoBuyGui == true
-	_G.SabcomLoadOptimizer = cfg.loadOptimizer == true
-	_G.SabcomErrorFix = cfg.errorFix == true
-	_G._stp_walkSpeedKeyName = loadKey(cfg.walkSpeedKey, "V")
-	_G.SabcomWalkSpeed = math.clamp(tonumber(cfg.walkSpeed) or 16, 16, 100)
-	_G.SabcomWalkSpeedOn = cfg.walkSpeedOn == true
-	_G.SabcomWalkSpeedGui = cfg.walkSpeedGui ~= false
-	_G.SabcomFovOn = cfg.fovOn == true
-	_G.SabcomFov = math.clamp(tonumber(cfg.fov) or 70, 70, 120)
-	_G.SabcomFovGui = cfg.fovGui ~= false
-	_G._stp_infJumpKeyName = loadKey(cfg.infJumpKey, "G")
-	_G.SabcomInfJump = cfg.infJumpOn == true
-	_G._stp_kickKeyName = loadKey(cfg.kickKey, "P")
-	_G._stp_hideGuiKeyName = loadKey(cfg.hideGuiKey, "RightShift")
-	_G.SabcomResetRepeats = 1
-	_G.SabcomResetDelay = math.clamp(tonumber(cfg.resetDelay) or 0.05, 0, 1)
-	_G._stp_tpDelay = cfg.tpDelay
-	_G.TPDelay = cfg.tpDelay
-	_G.TPVelocity = math.clamp(cfg.tpVelocity, 200, 750)
-	_G.SabcomClimb = math.clamp(cfg.climbSpeed, 100, 800)
-	_G.SabcomClimbSafe = math.clamp(cfg.climbSafe, 50, 400)
-	_G.SabcomClimbFull = cfg.climbFull
-	_G.SabcomGoSpeed = math.clamp(cfg.goSpeed, 80, 800)
-	_G.SabcomBrainrotSpeed = math.clamp(cfg.goSpeed, 150, 800)
-	_G.SabcomCloseSpeed = math.clamp(cfg.closeSpeed, 20, 250)
-	_G.LandingDelay = math.clamp(cfg.landingDelay, 0.15, 0.75)
-	_G.SabcomPostCloneDelay = math.clamp(tonumber(cfg.postCloneDelay) or 0.1, 0, 0.5)
-	_G.sabcomPostCloneDelay = _G.SabcomPostCloneDelay
-	_G.SabcomAutoGrabRadius = math.clamp(tonumber(cfg.autoGrabRadius) or 50, 10, 150)
-	_G.SabcomAutoGrabRadiusAuto = cfg.autoGrabRadiusAuto == true
-	_G.SabcomBoostWindow = math.clamp(cfg.boostWindow, 1, 60)
-	_G.SabcomSideTPRange = cfg.sideTpRange
-	_G.SabcomPreferFrontOnRow = flag(cfg.preferFrontOnRow, false)
-	_G.SabcomDirect = flag(cfg.directPath, false)
-	_G.SabcomJumpOnce = flag(cfg.jumpOnce, false)
-	_G.SabcomMinGen = tonumber(cfg.minGen) or 0
-	if type(cfg.carpetTool) == "string" and cfg.carpetTool ~= "" then
-		_G.SabcomCarpetTool = cfg.carpetTool
-	end
-	_G.SabcomCarpetWaitMs = cfg.carpetWaitMs
-	_G.SabcomCarpetRelance = flag(cfg.carpetRelance, false)
-	_G.SabcomGrappleWaitMs = cfg.grappleWaitMs
-	_G.SabcomGrappleSettleMs = cfg.grappleSettleMs
-	_G.SabcomPingThresh = cfg.pingThresh
-	_G.SabcomHighPingSpeed = cfg.highPingSpeed
-	_G.SabcomStallSec = cfg.stallSec
-	_G.SabcomRepushAt = cfg.repushAt
-	_G.SabcomPathCell = cfg.pathCell
-	_G.SabcomPathRadius = cfg.pathRadius
-	_G.SabcomPathHeight = cfg.pathHeight
-	_G.SabcomPathPad = cfg.pathPad
-	_G.SabcomRowBoxX = cfg.rowBoxX
-	_G.SabcomRowBoxZ = cfg.rowBoxZ
-	_G.SabcomRowLane = cfg.rowLane
-	_G.SabcomVoidY = cfg.voidY
-	_G.SabcomCloneBackoff = cfg.cloneBackoff
-	_G.SabcomFrontRunIn = cfg.frontRunIn
-	_G.SabcomSettleFrames = cfg.settleFrames
-	_G.SabcomSettleMaxMs = cfg.settleMaxMs
-	_G.SabcomStealHz = cfg.stealHz
-	_G.SabcomStealHoldDuration = cfg.stealHoldDuration
-	_G.SabcomAntiDieHz = cfg.antiDieHz
-	_G.SabcomTPHealLock = cfg.tpHealLock
-	_G.SabcomNoAnim = flag(cfg.noAnim, false)
-	_G.SabcomHotScanSec = cfg.hotScanSec
-	_G.SabcomUpvalDepth = cfg.upvalDepth
-	_G.SabcomUiDelay = 0
-	_G.SabcomSeqQuiet = cfg.seqQuiet
-	_G.SabcomGrappleQuiet = cfg.grappleQuiet
-	_G.SabcomStrictSweep = flag(cfg.strictSweep, false)
-	_G.ApproachFloor2FromFloor1 = cfg.approachFloor2FromFloor1
-	_G.SabcomXray = cfg.xray == true
-	_G.SabcomEspPlayer = cfg.espPlayer == true
-	_G.SabcomBrainrotEsp = cfg.brainrotEsp == true
-	_G.SabcomLineToBase = cfg.lineToBase == true
-	_G.SabcomLineToBrainrot = cfg.lineToBrainrot == true
-	_G.SabcomAutoGoOnSwitch = cfg.autoGoOnSwitch == true
-	_G.SabcomAutoTurret = cfg.autoTurret == true
-	_G.SabcomInvisGui = cfg.invisGui == true
-	_G._stp_invisKeyName = loadKey(cfg.invisKey, "U")
-	_G.AutoInvisDuringSteal = cfg.autoInvis == true
-	_G.AutoRecoverLagback = cfg.autoRecover ~= false
-	_G.InvisStealAngle = tonumber(cfg.invisAngle) or 225
-	_G.SinkSliderValue = tonumber(cfg.sinkSlider) or 7
-	_G.SabcomSuperOptimizer = cfg.superOptimizer == true
-	_G.SabcomAutoKickGui = cfg.autoKickGui == true
-	_G.SabcomAutoKick = cfg.autoKick == true
-	_G.SabcomKickToPS = cfg.kickToPs ~= false
-	_G.SabcomPSCode = (type(cfg.psCode) == "string" and cfg.psCode) or ""
-	_G.SabcomFaceAwayGui = cfg.faceAwayGui == true
-	_G.SabcomFaceAway = cfg.faceAway == true
-	if cfg.faceAwayBaseOwner ~= nil then
-		_G.SabcomFaceAwayBaseOwner = cfg.faceAwayBaseOwner == true
-	else
-		_G.SabcomFaceAwayBaseOwner = (type(cfg.faceAwayMode) == "string" and cfg.faceAwayMode or "baseowner") ~= "nearest"
-	end
-	if cfg.faceAwayNearest ~= nil then
-		_G.SabcomFaceAwayNearest = cfg.faceAwayNearest == true
-	else
-		_G.SabcomFaceAwayNearest = cfg.faceAwayMode == "nearest"
-	end
-	_G.SabcomFaceAwayTarget = (type(cfg.faceAwayTarget) == "string" and cfg.faceAwayTarget) or ""
-	_G.SabcomFaceAwayClick = cfg.faceAwayClick == true
-	_G.SabcomAutoCloseGui = cfg.autoCloseGui == true
-	_G.SabcomLockUi = cfg.lockUi == true
-	_G.SabcomGuiHue = math.clamp(tonumber(cfg.guiHue) or 210, 0, 360)
-	_G.SabcomGuiBgAsset = (type(cfg.guiBgAsset) == "string" and cfg.guiBgAsset) or ""
-	do
-		local px = tonumber(cfg.panelX) or 24
-		local py = tonumber(cfg.panelY) or 180
-		if px < 8 or py < 12 or px > 2400 or py > 1400 then
-			px, py = 24, 180
-		end
-		_G._stp_panelX = px
-		_G._stp_panelY = py
-	end
-	do
-		local sx = tonumber(cfg.stealTargetX) or 16
-		local sy = tonumber(cfg.stealTargetY) or 220
-		if sy == 390 then sy = 220 end
-		if sx < -400 or sy < -200 or sx > 2400 or sy > 1400 then
-			sx, sy = 16, 220
-		end
-		_G._stp_stealX = sx
-		_G._stp_stealY = sy
-	end
-	local function loadPanelPos(cfgKeyX, cfgKeyY, gX, gY, defX, defY)
-		local x = tonumber(cfg[cfgKeyX]) or defX
-		local y = tonumber(cfg[cfgKeyY]) or defY
-		if x < -400 or y < -200 or x > 2400 or y > 1400 then
-			x, y = defX, defY
-		end
-		_G[gX] = x
-		_G[gY] = y
-	end
-	loadPanelPos("autoKickX", "autoKickY", "_stp_akX", "_stp_akY", 16, 320)
-	loadPanelPos("autoBuyX", "autoBuyY", "_stp_abX", "_stp_abY", 224, 480)
-	loadPanelPos("psX", "psY", "_stp_psX", "_stp_psY", 224, 320)
-	loadPanelPos("invisGuiX", "invisGuiY", "_stp_ivX", "_stp_ivY", 16, 450)
-	loadPanelPos("walkSpeedX", "walkSpeedY", "_stp_wsX", "_stp_wsY", 16, 560)
-	loadPanelPos("fovX", "fovY", "_stp_fovX", "_stp_fovY", 16, 660)
-	loadPanelPos("faceAwayX", "faceAwayY", "_stp_faX", "_stp_faY", 240, 80)
-	loadPanelPos("priorityX", "priorityY", "_stp_priX", "_stp_priY", 300, 80)
-	loadPanelPos("extrasX", "extrasY", "_stp_exX", "_stp_exY", 276, 80)
-	_G.SabcomMinimized = cfg.panelMinimized
-	_G.SabcomSettingsOpen = cfg.settingsOpen
-	_G.SabcomCfgFile = CFG_FILE
-	_G.SabcomCfgDefaults = D
-	do
-		local pri = cfg.priorityItems
-		local out = {}
-		if type(pri) == "table" then
-			for _, n in ipairs(pri) do
-				if type(n) == "string" and n ~= "" then out[#out + 1] = n end
-			end
-		end
-		if #out > 0 then _G._stp_priorityCfg = out end
-	end
-
-	local collect = (function()
-		local t = {}
-		for k, v in pairs(D) do t[k] = v end
-		t.autoTp = _G.SabcomAutoTP ~= false
-		t.autoSteal = _G.SabcomAutoSteal == true
-		t.stealMode = (type(_G.SabcomStealMode) == "string" and _G.SabcomStealMode) or "priority"
-		t.tpMode = t.stealMode
-		t.tpKey = loadKey(_G._stp_tpKeyName, "T")
-		t.resetKey = loadKey(_G._stp_resetKeyName, "X")
-		t.cloneKey = loadKey(_G._stp_cloneKeyName, "C")
-		t.dropKey = loadKey(_G._stp_dropKeyName, "B")
-		t.floatKey = loadKey(_G._stp_floatKeyName, "Z")
-		t.carpetSpeedKey = loadKey(_G._stp_carpetSpeedKeyName, "Q")
-		t.autoBuyKey = loadKey(_G._stp_autoBuyKeyName, "K")
-		t.autoBuy = _G.SabcomAutoBuy == true
-		t.autoBuyRange = math.clamp(tonumber(_G.SabcomAutoBuyRange) or 17, 5, 50)
-		t.autoBuyGui = _G.SabcomAutoBuyGui == true
-		t.loadOptimizer = _G.SabcomLoadOptimizer == true
-		t.errorFix = _G.SabcomErrorFix == true
-		t.walkSpeedKey = loadKey(_G._stp_walkSpeedKeyName, "V")
-		t.walkSpeed = math.clamp(tonumber(_G.SabcomWalkSpeed) or 16, 16, 100)
-		t.walkSpeedOn = _G.SabcomWalkSpeedOn == true
-		t.walkSpeedGui = _G.SabcomWalkSpeedGui ~= false
-		t.fovOn = _G.SabcomFovOn == true
-		t.fov = math.clamp(tonumber(_G.SabcomFov) or 70, 70, 120)
-		t.fovGui = _G.SabcomFovGui ~= false
-		t.infJumpKey = loadKey(_G._stp_infJumpKeyName, "G")
-		t.infJumpOn = _G.SabcomInfJump == true
-		t.kickKey = loadKey(_G._stp_kickKeyName, "P")
-		t.hideGuiKey = loadKey(_G._stp_hideGuiKeyName, "RightShift")
-		t.resetRepeats = math.max(1, math.floor(tonumber(_G.SabcomResetRepeats) or 1))
-		t.resetDelay = tonumber(_G.SabcomResetDelay) or 0.05
-		t.tpDelay = tonumber(_G._stp_tpDelay) or tonumber(_G.TPDelay) or 0
-		t.tpVelocity = tonumber(_G.TPVelocity) or 400
-		t.climbSpeed = tonumber(_G.SabcomClimb) or 160
-		t.climbSafe = tonumber(_G.SabcomClimbSafe) or 250
-		t.climbFull = _G.SabcomClimbFull == true
-		t.goSpeed = tonumber(_G.SabcomGoSpeed) or tonumber(_G.SabcomBrainrotSpeed) or 200
-		t.closeSpeed = tonumber(_G.SabcomCloseSpeed) or 80
-		t.landingDelay = tonumber(_G.LandingDelay) or 0.35
-		t.postCloneDelay = tonumber(_G.SabcomPostCloneDelay) or 0.1
-		t.autoGrabRadius = math.clamp(tonumber(_G.SabcomAutoGrabRadius) or 50, 10, 150)
-		t.autoGrabRadiusAuto = _G.SabcomAutoGrabRadiusAuto == true
-		t.boostWindow = tonumber(_G.SabcomBoostWindow) or 20
-		t.sideTpRange = tonumber(_G.SabcomSideTPRange) or 100
-		t.preferFrontOnRow = _G.SabcomPreferFrontOnRow ~= false
-		t.directPath = _G.SabcomDirect ~= false
-		t.jumpOnce = _G.SabcomJumpOnce ~= false
-		t.minGen = tonumber(_G.SabcomMinGen) or 0
-		t.carpetTool = (type(_G.SabcomCarpetTool) == "string" and _G.SabcomCarpetTool) or ""
-		t.carpetWaitMs = tonumber(_G.SabcomCarpetWaitMs) or 200
-		t.carpetRelance = _G.SabcomCarpetRelance ~= false
-		t.grappleWaitMs = tonumber(_G.SabcomGrappleWaitMs) or 200
-		t.grappleSettleMs = tonumber(_G.SabcomGrappleSettleMs) or 60
-		t.pingThresh = tonumber(_G.SabcomPingThresh) or 170
-		t.highPingSpeed = tonumber(_G.SabcomHighPingSpeed) or 400
-		t.stallSec = tonumber(_G.SabcomStallSec) or 0.6
-		t.repushAt = tonumber(_G.SabcomRepushAt) or 0.9
-		t.pathCell = tonumber(_G.SabcomPathCell) or 4
-		t.pathRadius = tonumber(_G.SabcomPathRadius) or 2.5
-		t.pathHeight = tonumber(_G.SabcomPathHeight) or 5
-		t.pathPad = tonumber(_G.SabcomPathPad) or 40
-		t.rowBoxX = tonumber(_G.SabcomRowBoxX) or 26
-		t.rowBoxZ = tonumber(_G.SabcomRowBoxZ) or 30
-		t.rowLane = tonumber(_G.SabcomRowLane) or 30
-		t.voidY = tonumber(_G.SabcomVoidY) or -50
-		t.cloneBackoff = tonumber(_G.SabcomCloneBackoff) or 0.5
-		t.frontRunIn = tonumber(_G.SabcomFrontRunIn) or 130
-		t.settleFrames = tonumber(_G.SabcomSettleFrames) or 4
-		t.settleMaxMs = tonumber(_G.SabcomSettleMaxMs) or 250
-		t.stealHz = tonumber(_G.SabcomStealHz) or 0.05
-		t.stealHoldDuration = tonumber(_G.SabcomStealHoldDuration) or 1.3
-		t.antiDieHz = tonumber(_G.SabcomAntiDieHz) or 0.1
-		t.tpHealLock = _G.SabcomTPHealLock == true
-		t.noAnim = _G.SabcomNoAnim ~= false
-		t.hotScanSec = tonumber(_G.SabcomHotScanSec) or 8
-		t.upvalDepth = tonumber(_G.SabcomUpvalDepth) or 128
-		t.uiDelay = tonumber(_G.SabcomUiDelay) or 0
-		t.seqQuiet = _G.SabcomSeqQuiet == true
-		t.grappleQuiet = _G.SabcomGrappleQuiet == true
-		t.strictSweep = _G.SabcomStrictSweep ~= false
-		t.approachFloor2FromFloor1 = _G.ApproachFloor2FromFloor1 == true
-		local px = tonumber(_G._stp_panelX) or 24
-		local py = tonumber(_G._stp_panelY) or 180
-		if px < 8 or py < 12 or px > 2400 or py > 1400 then
-			px, py = 24, 180
-		end
-		t.panelX = px
-		t.panelY = py
-		t.panelMinimized = _G.SabcomMinimized == true
-		t.settingsOpen = _G.SabcomSettingsOpen == true
-		do
-			local sx = tonumber(_G._stp_stealX) or 16
-			local sy = tonumber(_G._stp_stealY) or 390
-			if sx < -400 or sy < -200 or sx > 2400 or sy > 1400 then
-				sx, sy = 16, 220
-			end
-			t.stealTargetX = sx
-			t.stealTargetY = sy
-		end
-		local function savePanelPos(gX, gY, cfgKeyX, cfgKeyY, defX, defY)
-			local x = tonumber(_G[gX]) or defX
-			local y = tonumber(_G[gY]) or defY
-			if x < -400 or y < -200 or x > 2400 or y > 1400 then
-				x, y = defX, defY
-			end
-			t[cfgKeyX] = x
-			t[cfgKeyY] = y
-		end
-		savePanelPos("_stp_akX", "_stp_akY", "autoKickX", "autoKickY", 16, 320)
-		savePanelPos("_stp_abX", "_stp_abY", "autoBuyX", "autoBuyY", 224, 480)
-		savePanelPos("_stp_psX", "_stp_psY", "psX", "psY", 224, 320)
-		savePanelPos("_stp_ivX", "_stp_ivY", "invisGuiX", "invisGuiY", 16, 450)
-		savePanelPos("_stp_wsX", "_stp_wsY", "walkSpeedX", "walkSpeedY", 16, 560)
-		savePanelPos("_stp_fovX", "_stp_fovY", "fovX", "fovY", 16, 660)
-		savePanelPos("_stp_faX", "_stp_faY", "faceAwayX", "faceAwayY", 240, 80)
-		savePanelPos("_stp_priX", "_stp_priY", "priorityX", "priorityY", 300, 80)
-		savePanelPos("_stp_exX", "_stp_exY", "extrasX", "extrasY", 276, 80)
-		do
-			local pri = _G.SHARED_PRIORITY_ITEMS
-			if type(pri) ~= "table" or #pri == 0 then
-				pri = _G._stp_priorityCfg
-			end
-			local out = {}
-			if type(pri) == "table" then
-				for _, n in ipairs(pri) do
-					if type(n) == "string" and n ~= "" then out[#out + 1] = n end
-				end
-			end
-			t.priorityItems = out
-		end
-		t.xray = _G.SabcomXray == true
-		t.espPlayer = _G.SabcomEspPlayer == true
-		t.brainrotEsp = _G.SabcomBrainrotEsp == true
-		t.lineToBase = _G.SabcomLineToBase == true
-		t.lineToBrainrot = _G.SabcomLineToBrainrot == true
-		t.autoGoOnSwitch = _G.SabcomAutoGoOnSwitch == true
-		t.autoTurret = _G.SabcomAutoTurret == true
-		t.invis = _G.invisibleStealEnabled == true
-		t.invisGui = _G.SabcomInvisGui == true
-		t.invisKey = loadKey(_G._stp_invisKeyName, "U")
-		t.autoInvis = _G.AutoInvisDuringSteal == true
-		t.autoRecover = _G.AutoRecoverLagback ~= false
-		t.invisAngle = tonumber(_G.InvisStealAngle) or 225
-		t.sinkSlider = tonumber(_G.SinkSliderValue) or 7
-		t.superOptimizer = _G.SabcomSuperOptimizer == true
-		t.autoKickGui = _G.SabcomAutoKickGui == true
-		t.autoKick = _G.SabcomAutoKick == true
-		t.kickToPs = _G.SabcomKickToPS ~= false
-		t.psCode = (type(_G.SabcomPSCode) == "string" and _G.SabcomPSCode) or ""
-		t.faceAwayGui = _G.SabcomFaceAwayGui == true
-		t.faceAway = _G.SabcomFaceAway == true
-		t.faceAwayBaseOwner = _G.SabcomFaceAwayBaseOwner == true
-		t.faceAwayNearest = _G.SabcomFaceAwayNearest == true
-		t.faceAwayTarget = (type(_G.SabcomFaceAwayTarget) == "string" and _G.SabcomFaceAwayTarget) or ""
-		t.faceAwayClick = _G.SabcomFaceAwayClick == true
-		t.autoCloseGui = _G.SabcomAutoCloseGui == true
-		t.lockUi = _G.SabcomLockUi == true
-		t.guiHue = math.clamp(tonumber(_G.SabcomGuiHue) or 210, 0, 360)
-		t.guiBgAsset = (type(_G.SabcomGuiBgAsset) == "string" and _G.SabcomGuiBgAsset) or ""
-		return t
-	end)
-
-	local _saveQ = false
-	local _saveDirty = false
-	local saveNow = (function()
-		if not writefile then return end
-		_saveDirty = false
-		writefile(CFG_FILE, HS:JSONEncode(collect())) 
-	end)
-	local save = (function()
-		if not writefile then return end
-		_saveDirty = true
-		if _saveQ then return end
-		_saveQ = true
-		task.delay(0.2, function()
-			_saveQ = false
-			if _saveDirty then
-				saveNow()
-			end
-			if type(_G.SabcomSyncBabySharkTpGlobals) == "function" then
-				_G.SabcomSyncBabySharkTpGlobals()
-			end
-		end)
-	end)
-
-	_G.SabcomCollectConfig = collect
-	_G.SabcomSaveConfig = save
-	_G.SabcomSaveConfigNow = saveNow
-	_G.Sabcom_SaveSettings = save
-	if type(_G.SabcomSyncBabySharkTpGlobals) == "function" then
-		_G.SabcomSyncBabySharkTpGlobals()
-	end
-end
-
-function _G.Sabcom_Step() end
-
-_G.Sabcom_SeqT0 = _G.Sabcom_SeqT0 or os.clock()
-_G.Sabcom_SeqLog = _G.Sabcom_SeqLog or {}
-_G.Sabcom_SeqDone = _G.Sabcom_SeqDone or false
-if type(_G.Sabcom_Step) ~= "function" then
-	function _G.Sabcom_Step(nom, detail)
-		local L = _G.Sabcom_SeqLog
-		if #L > 120 then return end
-		L[#L + 1] = {
-			ms = math.floor((os.clock() - _G.Sabcom_SeqT0) * 1000),
-			nom = nom,
-			det = detail,
-		}
-	end
-end
-
-local function _syncBabySharkTpGlobals()
-	if _G.SabcomAutoTP ~= nil then
-		_G.sabcomAutoTP = (_G.SabcomAutoTP ~= false)
-	end
-	if _G.SabcomVoidY ~= nil then _G.sabcomVoidY = _G.SabcomVoidY end
-	if _G.SabcomPingThresh ~= nil then _G.sabcomPingThresh = _G.SabcomPingThresh end
-	if _G.SabcomHighPingSpeed ~= nil then _G.sabcomHighPingSpeed = _G.SabcomHighPingSpeed end
-	if _G.SabcomGrappleWaitMs ~= nil then _G.sabcomGrappleWaitMs = _G.SabcomGrappleWaitMs end
-	if _G.SabcomGrappleSettleMs ~= nil then _G.sabcomGrappleSettleMs = _G.SabcomGrappleSettleMs end
-	if _G.SabcomCarpetWaitMs ~= nil then _G.sabcomCarpetWaitMs = _G.SabcomCarpetWaitMs end
-	if _G.SabcomSettleFrames ~= nil then _G.sabcomSettleFrames = _G.SabcomSettleFrames end
-	if _G.SabcomSettleMaxMs ~= nil then _G.sabcomSettleMaxMs = _G.SabcomSettleMaxMs end
-	if _G.SabcomBoostWindow ~= nil then _G.sabcomBoostWindow = _G.SabcomBoostWindow end
-	if _G.sabcomBoostWindow == nil then _G.sabcomBoostWindow = tonumber(_G.SabcomBoostWindow) or 20 end
-	if _G.SabcomBrainrotSpeed ~= nil then _G.sabcomBrainrotSpeed = _G.SabcomBrainrotSpeed end
-	if _G.SabcomCloneBackoff ~= nil then _G.sabcomCloneBackoff = _G.SabcomCloneBackoff end
-	if _G.SabcomFrontRunIn ~= nil then _G.sabcomFrontRunIn = _G.SabcomFrontRunIn end
-	if _G.SabcomSideTPRange ~= nil then _G.sabcomSideTPRange = _G.SabcomSideTPRange end
-	if _G.SabcomPostCloneDelay ~= nil then _G.sabcomPostCloneDelay = _G.SabcomPostCloneDelay end
-	if _G.SabcomAutoGrabRadius ~= nil and type(_G.SabcomSyncAutoGrabRadius) == "function" then
-		_G.SabcomSyncAutoGrabRadius()
-	end
-	if _G.SabcomPreferFrontOnRow ~= nil then _G.sabcomPreferFrontOnRow = _G.SabcomPreferFrontOnRow end
-	if _G.SabcomNoAnim ~= nil then _G.sabcomNoAnim = _G.SabcomNoAnim end
-	if _G.SabcomTPStop ~= nil then _G.sabcomTPStop = _G.SabcomTPStop end
-	if _G.SabcomStealHold ~= nil then _G.sabcomStealHold = _G.SabcomStealHold end
-
-	if _G.SabcomClimb ~= nil then _G.sabcomClimb = _G.SabcomClimb end
-	if _G.sabcomClimb == nil then _G.sabcomClimb = tonumber(_G.SabcomClimb) or 400 end
-	if _G.SabcomClimbSafe ~= nil then _G.sabcomClimbSafe = _G.SabcomClimbSafe end
-	if _G.SabcomClimbFull ~= nil then _G.sabcomClimbFull = _G.SabcomClimbFull end
-	if _G.SabcomDirect ~= nil then _G.sabcomDirect = _G.SabcomDirect end
-	if _G.SabcomStallSec ~= nil then _G.sabcomStallSec = _G.SabcomStallSec end
-	if _G.SabcomRepushAt ~= nil then _G.sabcomRepushAt = _G.SabcomRepushAt end
-	if _G.SabcomJumpOnce ~= nil then _G.sabcomJumpOnce = _G.SabcomJumpOnce end
-	if _G.SabcomStrictSweep ~= nil then _G.sabcomStrictSweep = _G.SabcomStrictSweep end
-	if _G.SabcomPathCell ~= nil then _G.sabcomPathCell = _G.SabcomPathCell end
-	if _G.SabcomPathRadius ~= nil then _G.sabcomPathRadius = _G.SabcomPathRadius end
-	if _G.SabcomPathHeight ~= nil then _G.sabcomPathHeight = _G.SabcomPathHeight end
-	if _G.SabcomPathPad ~= nil then _G.sabcomPathPad = _G.SabcomPathPad end
-	if _G.SabcomRowBoxX ~= nil then _G.sabcomRowBoxX = _G.SabcomRowBoxX end
-	if _G.SabcomRowBoxZ ~= nil then _G.sabcomRowBoxZ = _G.SabcomRowBoxZ end
-	if _G.SabcomRowLane ~= nil then _G.sabcomRowLane = _G.SabcomRowLane end
-end
-_G.SabcomSyncBabySharkTpGlobals = _syncBabySharkTpGlobals
-
-_G.__sabcomT0 = _G.__sabcomT0 or os.clock()
-_G.__TP_T0 = nil
-_G.__sabcomRestReady = false
-_G.sabcomFreezeUntil = _G.sabcomFreezeUntil or (os.clock() + 10)
-function _G.sabcomFrozen() return os.clock() < (_G.sabcomFreezeUntil or 0) end
-
-local function _afterTpLoad(fn)
-	task.spawn(function()
-		while not _G.__sabcomRestReady do
-			task.wait(0.05)
-		end
-		fn()
-	end)
-end
-_G.SabcomAfterTpLoad = _afterTpLoad
 
 task.spawn(function()
-	local t0 = os.clock()
-	while not _G.__sabcomRestReady do
-		if os.clock() - t0 > 25 then
-			_G.__sabcomRestReady = true
-			break
-		end
-		task.wait(0.1)
-	end
+    local Workspace = game:GetService("Workspace")
+    local LocalPlayer = game:GetService("Players").LocalPlayer
+    if not Workspace.StreamingEnabled then return end
+    local plots
+    local t0 = os.clock()
+    repeat plots = Workspace:FindFirstChild("Plots"); if not plots then task.wait(0.1) end
+    until plots or (os.clock() - t0) > 25
+    if not plots then return end
+    local function plotPos(plot)
+        local ok, pv = pcall(function() return plot:GetPivot().Position end)
+        if ok and pv and pv.Magnitude > 1 then return pv end
+        if plot.PrimaryPart then return plot.PrimaryPart.Position end
+        local bp = plot:FindFirstChildWhichIsA("BasePart", true)
+        return bp and bp.Position or nil
+    end
+    local pending = 0
+    for _, plot in ipairs(plots:GetChildren()) do
+        local pos = plotPos(plot)
+        if pos then
+            pending = pending + 1
+            task.spawn(function()
+                pcall(function() LocalPlayer:RequestStreamAroundAsync(pos) end)
+                pending = pending - 1
+            end)
+        end
+    end
+    local sw = os.clock()
+    while pending > 0 and os.clock() - sw < 10 do task.wait(0.05) end
 end)
 
-_G.SHARED_PRIORITY_ITEMS = {
-	"headless horseman","signore carapace","strawberry elephant","meowl","john pork",
-	"skibidi toilet","griffin","elefanto frigo","arcadragon","love love bear",
-	"grabatron","antonio","dragon gingerini","kalika bros","dragon aquanini",
-	"la supreme combinasion","digi narwhal","kraken","fishino clownino","tirilikalika tirilikalako",
-	"jelly moby","ginger gerat","moby bros","hydra bunny","pancake and syrup",
-	"hydra dragon cannelloni","dragon cannelloni","bunny and eggy","venuspino","los admins",
-	"rico dinero","dug dug dug","ketupat bros","duggy bros","rubiko and kubiko",
-	"la casa boo","los hackers","rosey and teddy","foxini lanternini","rubrikiko",
-	"los sekolahs","cerberus","capitano americano","bearito cabinito","abyssaloco",
-	"globa steppa","sammyni fattini","cloverat clapat","fortunu and cashuru","los chillis",
-	"los amigos","spooky and pumpky","guest 666","fragrama and chocrama","cooki and milki",
-	"reinito sleighito","celestial pegasus","popcuru and fizzuru","quackini snackini","la food combinasion",
-	"hopilikalika hopilikalika","gym bros","money money bros","burguro and fryuro","capitano moby",
-	"garama and madundung","cash or card",
-}
-if type(_G._stp_priorityCfg) == "table" and #_G._stp_priorityCfg > 0 then
-	local _priCopy = {}
-	for i, v in ipairs(_G._stp_priorityCfg) do _priCopy[i] = v end
-	_G.SHARED_PRIORITY_ITEMS = _priCopy
-	_G._stp_priorityCfg = _priCopy
+_G.MeerkoBootDelay = tonumber(_G.MeerkoBootDelay) or 6
+if _G.MeerkoWaitForTools == nil then _G.MeerkoWaitForTools = true end
+_G.MeerkoToolWait = tonumber(_G.MeerkoToolWait) or 35
+do
+    local _bootT0 = os.clock()
+    local _BOOT_TOOLS = {
+        "Flying Carpet", "Waverider", "Santa's Sleigh", "Witch's Broom", "Cupid's Wings",
+        "Grapple Hook", "Grappling Hook", "Grapple", "Hook", "Web Slinger", "Grapple Gun", "GrappleHook",
+    }
+    local function _hasTool(n)
+        local plr = game:GetService("Players").LocalPlayer
+        if not plr then return false end
+        local char = plr.Character
+        local bp = plr:FindFirstChild("Backpack")
+        local t = (char and char:FindFirstChild(n)) or (bp and bp:FindFirstChild(n))
+        return t ~= nil and t:IsA("Tool")
+    end
+    local function _toolsReady()
+        if type(_G.MeerkoCarpetTool) == "string" and _G.MeerkoCarpetTool ~= "" and _hasTool(_G.MeerkoCarpetTool) then return true end
+        for _, n in ipairs(_BOOT_TOOLS) do
+            if _hasTool(n) then return true end
+        end
+        return false
+    end
+    _G.MeerkoToolsReady = _toolsReady
+    _G.MeerkoBootWait = function()
+        local d = tonumber(_G.MeerkoBootDelay) or 8
+        while os.clock() - _bootT0 < d do task.wait(0.25) end
+        if _G.MeerkoWaitForTools == false then return end
+        local cap = tonumber(_G.MeerkoToolWait) or 30
+        local t0 = os.clock()
+        while os.clock() - t0 < cap do
+            local ok, ready = pcall(_toolsReady)
+            if ok and ready then
+                task.wait(0.35)
+                return
+            end
+            task.wait(0.2)
+        end
+        warn("[MeerkoTP] tools never loaded within " .. cap .. "s, continuing anyway")
+    end
 end
-task.defer(function()
-	if writefile and type(_G.SabcomSaveConfigNow) == "function" then
-		_G.SabcomSaveConfigNow()
-	end
-end)
+
+_G.MeerkoPriVersion = _G.MeerkoPriVersion or 0
+if type(_G.MeerkoPriorityDefault) ~= "table" then _G.MeerkoPriorityDefault = {} end
+if type(_G.SHARED_PRIORITY_ITEMS) ~= "table" then _G.SHARED_PRIORITY_ITEMS = {} end
+
+if LPH_OBFUSCATED == nil then
+    local env = getfenv()
+    env["LPH_NO_" .. "VIRTUALIZE"] = function(...) return ... end
+    env["LPH_JIT_" .. "MAX"]       = function(...) return ... end
+end
+
+do
+    local _HS = game:GetService("HttpService")
+    local _TS = game:GetService("TeleportService")
+    local fileData, tpData
+    if readfile then
+        pcall(function()
+            local raw = readfile("SideTP.json")
+            if type(raw) == "string" and #raw > 0 then fileData = _HS:JSONDecode(raw) end
+        end)
+    end
+    pcall(function()
+        local td = _TS:GetLocalPlayerTeleportData()
+        if td and td.SideTP then tpData = td.SideTP end
+    end)
+    local merged = {}
+    if type(tpData) == "table" then for k, v in pairs(tpData) do merged[k] = v end end
+    if type(fileData) == "table" then for k, v in pairs(fileData) do merged[k] = v end end
+
+    if type(merged.tpDelay) == "number" then _G._stp_tpDelay = merged.tpDelay end
+    if type(merged.tpVelocity) == "number" then _G.TPVelocity = math.clamp(merged.tpVelocity, 200, 750) end
+    if type(merged.climbSpeed) == "number" then _G.MeerkoClimb = math.clamp(merged.climbSpeed, 100, 250) end
+    if type(merged.cframeSpeed) == "number" then _G.MeerkoCFrameSpeed = math.clamp(merged.cframeSpeed, 100, 900) end
+    if type(merged.walkSpeed) == "number" then _G.MeerkoWalkSpeed = math.clamp(merged.walkSpeed, 16, 29) end
+    if type(merged.carpetTool) == "string" then _G.MeerkoCarpetTool = merged.carpetTool end
+    if type(merged.landingDelay) == "number" then _G.LandingDelay = math.clamp(merged.landingDelay, 0.05, 0.75) end
+    if type(merged.closeSpeed) == "number" then _G.MeerkoCloseSpeed = math.clamp(merged.closeSpeed, 20, 400) end
+    if type(merged.tpSafeMode) == "boolean" then _G.MeerkoTPSafeMode = merged.tpSafeMode end
+    if type(merged.tpSafeSpeed) == "number" then _G.MeerkoTPSafeSpeed = math.clamp(merged.tpSafeSpeed, 180, 400) end
+    if type(merged.tpSafeVerticalSpeed) == "number" then _G.MeerkoTPSafeVerticalSpeed = math.clamp(merged.tpSafeVerticalSpeed, 60, 160) end
+    if type(merged.tpRetryCount) == "number" then _G.MeerkoTPRetryCount = math.clamp(merged.tpRetryCount, 0, 4) end
+    if type(merged.tpKey) == "string" then _G._stp_tpKeyName = merged.tpKey end
+    if type(merged.nearestKey) == "string" then _G.MeerkoNearestKey = merged.nearestKey end
+    if type(merged.prioritySoundID) == "string" then _G.MeerkoPrioritySoundID = merged.prioritySoundID end
+    _G.MeerkoStealMode = "priority"
+    _G._stealUserOff = false
+    if type(merged.priorityList) == "table" then
+        local clean = {}
+        for _, v in ipairs(merged.priorityList) do
+            if type(v) == "string" and v ~= "" then clean[#clean + 1] = v end
+        end
+        if #clean > 0 then
+            local L = _G.SHARED_PRIORITY_ITEMS
+            table.clear(L)
+            for i = 1, #clean do L[i] = clean[i] end
+            _G.MeerkoPriVersion = _G.MeerkoPriVersion + 1
+        end
+    end
+    if type(merged.priorityDefault) == "table" then
+        local d = {}
+        for _, v in ipairs(merged.priorityDefault) do
+            if type(v) == "string" and v ~= "" then d[#d + 1] = v end
+        end
+        if #d > 0 then _G.MeerkoPriorityDefault = d end
+    end
+    if type(merged.invisAuto) == "boolean" then _G.MeerkoInvisAuto = merged.invisAuto end
+    if type(merged.invisDepth) == "number" then _G.MeerkoInvisDepth = math.clamp(merged.invisDepth, 0, 10) end
+    if type(merged.invisAngle) == "number" then _G.MeerkoInvisAngle = math.clamp(merged.invisAngle, 0, 360) end
+    if type(merged.autoTp) == "boolean" then _G.MeerkoAutoTP = merged.autoTp end
+    if type(merged.autoBuy) == "boolean" then _G.MeerkoAutoBuy = merged.autoBuy end
+    if type(merged.autoBuyRange) == "number" then _G.MeerkoAutoBuyRange = math.clamp(merged.autoBuyRange, 5, 40) end
+    if type(merged.autoBuyHover) == "number" then _G.MeerkoAutoBuyHover = math.clamp(merged.autoBuyHover, 0, 20) end
+    if type(merged.panelX) == "number" then _G._stp_panelX = merged.panelX end
+    if type(merged.panelY) == "number" then _G._stp_panelY = merged.panelY end
+    if type(merged.panelPos) == "table" then _G._stp_pos = merged.panelPos end
+    if type(merged.tgtX) == "number" then _G._meerko_tgtX = merged.tgtX end
+    if type(merged.tgtY) == "number" then _G._meerko_tgtY = merged.tgtY end
+    if type(merged.tgtW) == "number" then _G._meerko_tgtW = merged.tgtW end
+    if type(merged.tgtH) == "number" then _G._meerko_tgtH = merged.tgtH end
+    if type(merged.autoKickOnSteal) == "boolean" then _G.MeerkoAutoKickOnSteal     = merged.autoKickOnSteal end
+    if type(merged.resetKey)        == "string"  then _G.MeerkoResetKeyName        = merged.resetKey end
+    if type(merged.cloneKey)        == "string"  then _G.MeerkoCloneKeyName        = merged.cloneKey end
+    if type(merged.carpetSpeedKey)  == "string"  then _G.MeerkoCarpetSpeedKeyName  = merged.carpetSpeedKey end
+    if type(merged.kickKey)         == "string"  then _G.MeerkoKickKeyName         = merged.kickKey end
+    if type(merged.stopTpKey)       == "string"  then _G.MeerkoStopTPKeyName       = merged.stopTpKey end
+    if type(merged.dropKey)         == "string"  then _G.MeerkoDropKeyName         = merged.dropKey end
+    if type(merged.goSpeed)      == "number"  then _G.MeerkoGoSpeed            = math.clamp(merged.goSpeed, 80, 600) end
+    if type(merged.kickToPS)     == "boolean" then _G.MeerkoKickToPS           = merged.kickToPS end
+    if type(merged.psLink)       == "string"  then _G.MeerkoPrivateServerLink  = merged.psLink end
+    if type(merged.priAlert)     == "boolean" then _G.MeerkoPriAlert           = merged.priAlert end
+    if type(merged.alertSound)   == "string"  then _G.MeerkoAlertSound         = merged.alertSound end
+    if type(merged.alertMinGen)  == "number"  then _G.MeerkoAlertMinGen        = merged.alertMinGen end
+    if type(merged.walkSpeedOn)  == "boolean" then _G.MeerkoWalkSpeedOn        = merged.walkSpeedOn end
+    if type(merged.xray)         == "boolean" then _G.MeerkoXray               = merged.xray end
+    if type(merged.antiFlash)    == "boolean" then _G.MeerkoAntiFlash          = merged.antiFlash end
+    if type(merged.faceAway)        == "boolean" then _G.MeerkoFaceAway        = merged.faceAway end
+    if type(merged.faceAwayNearest) == "boolean" then _G.MeerkoFaceAwayNearest = merged.faceAwayNearest end
+    if type(merged.faceAwayDelay)   == "number"  then _G.MeerkoFaceAwayDelay   = merged.faceAwayDelay end
+    if type(merged.antiBee)      == "boolean" then _G.MeerkoAntiBee            = merged.antiBee end
+    if type(merged.infJump)      == "boolean" then _G.MeerkoInfJump            = merged.infJump end
+    if type(merged.antiDie)      == "boolean" then _G.AntiDieDisabled          = not merged.antiDie end
+    if type(merged.carpetSpeedValue) == "number" then _G.MeerkoCarpetSpeedValue = merged.carpetSpeedValue end
+    if type(merged.exX) == "number" then _G._meerko_exX = merged.exX end
+    if type(merged.exY) == "number" then _G._meerko_exY = merged.exY end
+    if type(merged.fX)  == "number" then _G._meerko_fX  = merged.fX  end
+    if type(merged.fY)  == "number" then _G._meerko_fY  = merged.fY  end
+    if type(merged.kX)  == "number" then _G._meerko_kX  = merged.kX  end
+    if type(merged.kY)  == "number" then _G._meerko_kY  = merged.kY  end
+
+    _G.MeerkoAutoTP = true
+    if writefile then
+        pcall(function()
+            local t = type(fileData) == "table" and fileData or {}
+            t.autoTp = true
+            writefile("SideTP.json", _HS:JSONEncode(t))
+        end)
+    end
+end
 
 local Players    = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -796,11042 +327,5916 @@ local UIS        = game:GetService("UserInputService")
 local RS         = game:GetService("ReplicatedStorage")
 
 local LP = Players.LocalPlayer
-if not LP then
-	repeat RunService.Heartbeat:Wait() until Players.LocalPlayer
-	LP = Players.LocalPlayer
+
+if _G.MeerkoNoZeroVel == nil then _G.MeerkoNoZeroVel = false end
+function _vzOK()
+    if _G.MeerkoNoZeroVel == true then return false end
+    if _G.MeerkoZeroWhileStealing ~= true and LP:GetAttribute("Stealing") == true then return false end
+    return true
+end
+function _vzL(p)
+    if p and _vzOK() then
+        p.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+    end
+end
+function _vzA(p)
+    if p and _vzOK() then
+        p.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+    end
+end
+
+_BLOCKING_MACHINE_TYPES = {
+    Fuse     = true,
+    Duel     = true,
+    Trade    = true,
+    Crafting = true,
+}
+function _MeerkoIsFusing(animalData)
+    if type(animalData) ~= "table" then return false end
+    local m = animalData.Machine
+    if type(m) ~= "table" then return false end
+    return _BLOCKING_MACHINE_TYPES[m.Type] == true
 end
 
 do
-	task.spawn(function()
-		local char = LP.Character or LP.CharacterAdded:Wait()
-		local hrp = char:FindFirstChild("HumanoidRootPart") or char:WaitForChild("HumanoidRootPart", 8)
-		if hrp then
-			LP:RequestStreamAroundAsync(hrp.Position) 
-		end
-	end)
+local RS = game:GetService("ReplicatedStorage")
+local _netFolder = RS:WaitForChild("Packages"):WaitForChild("Net")
+local _net, _spoofed
+-- Requiring the Net module is now opt-in. Without it _get() returns nil and
+-- callers fall back to structural resolution / the UI path, same as Elite.
+local function _getNet()
+    if _G.MeerkoNetSpoofEnable ~= true then return nil end
+    if _net then return _net end
+    local ok, m = pcall(require, _netFolder)
+    if ok and type(m) == "table" then _net = m end
+    return _net
 end
-
-_G.SabcomGrappleValue = _G.SabcomGrappleValue or 0.33
+local function _spoofFn(Net, fname)
+    local f = rawget(Net, fname)
+    if type(f) ~= "function" then return end
+    local og = getfenv
+    if type(og) ~= "function" then return end
+    local env = og(f)
+    if type(env) ~= "table" then return end
+    env.getfenv = function() return og(f) end
+    if type(env.debug) == "table" then
+        if setreadonly then pcall(setreadonly, env.debug, false) end
+        env.debug.getmemorycategory = function() return "--" end
+    end
+end
+local function _spoof()
+    if _G.MeerkoNetSpoofEnable ~= true then return false end
+    if _G.MeerkoNetSpoof then return _G.MeerkoNetSpoof() end
+    if _spoofed then return true end
+    local Net = _getNet()
+    if not Net then return false end
+    pcall(function()
+        _spoofFn(Net, "RemoteEvent")
+        _spoofFn(Net, "RemoteFunction")
+        _spoofFn(Net, "UnreliableRemoteEvent")
+    end)
+    _spoofed = true
+    return true
+end
+local _cache = {}
+local function _get(name, kind)
+    kind = (kind == "RemoteFunction" and "RemoteFunction")
+        or (kind == "UnreliableRemoteEvent" and "UnreliableRemoteEvent")
+        or "RemoteEvent"
+    if type(name) ~= "string" or name == "" then return nil end
+    local logical = name:match("^R[EF]/(.+)$") or name:match("^URE/(.+)$") or name
+    local ck = kind .. "|" .. logical
+    local hit = _cache[ck]
+    if hit and hit.Parent then return hit end
+    _cache[ck] = nil
+    local Net = _getNet()
+    if not Net then return nil end
+    _spoof()
+    local ok, inst = pcall(function()
+        if kind == "RemoteFunction" then return Net:RemoteFunction(logical) end
+        if kind == "UnreliableRemoteEvent" then return Net:UnreliableRemoteEvent(logical) end
+        return Net:RemoteEvent(logical)
+    end)
+    if ok and typeof(inst) == "Instance" then
+        _cache[ck] = inst
+        return inst
+    end
+    return nil
+end
+_G.MeerkoNet = {
+    RemoteEvent = function(_, name) return _get(name, "RemoteEvent") end,
+    RemoteFunction = function(_, name) return _get(name, "RemoteFunction") end,
+    UnreliableRemoteEvent = function(_, name) return _get(name, "UnreliableRemoteEvent") end,
+}
+_G.MeerkoGetRemote = _get
+_G.Resolve = _get
+_G.__secureGetRemote = function(method, name) return _get(name, method) end
 do
-	local function muteAndStopPull(tool, hrp)
-		if tool then
-			for _, s in ipairs(tool:GetDescendants()) do
-				if s:IsA("Sound") then
-					s.Volume = 0
-						s:Stop()
-				elseif s:IsA("Beam") then
-					s.Enabled = false
-						s.Attachment0 = nil
-				end
-			end
-		end
-		if hrp then
-			local fp = hrp:FindFirstChild("FlightPower")
-			if fp then fp:Destroy() end
-			if not _G.SabcomIsTeleporting then
-				hrp.AssemblyLinearVelocity = Vector3.zero
-					hrp.AssemblyAngularVelocity = Vector3.zero
-			end
-		end
-	end
-
-	local function holdNoPull(tool, hrp, seconds)
-		local t0 = os.clock()
-		local conn
-		local RSvc = RunService
-		conn = RSvc.Heartbeat:Connect(function()
-			muteAndStopPull(tool, hrp)
-			if os.clock() - t0 > seconds then
-				conn:Disconnect()
-				muteAndStopPull(tool, hrp)
-			end
-		end)
-	end
-
-	_G.__SabcomGrappleDisparar = function(tool, pos, alvo, char, RSv)
-		local refs = (getgenv and getgenv().__SabcomPMRefs) or _G.__SabcomPMRefs
-		if not refs then
-			refs = {}
-			do
-				local mouse = require((RSv or RS).Packages.PlayerMouse)
-				if type(mouse) == "table" then refs[1] = mouse end
-			end
-			if getgenv then getgenv().__SabcomPMRefs = refs end
-			_G.__SabcomPMRefs = refs
-		end
-
-		local hrp = char and char:FindFirstChild("HumanoidRootPart")
-		muteAndStopPull(tool, hrp)
-
-		local mira = CFrame.new(pos)
-		local antes = {}
-		for i, t in ipairs(refs) do
-			antes[i] = { rawget(t, "Hit"), rawget(t, "Target") }
-			t.Hit = mira
-				t.Target = alvo
-		end
-
-		tool:Activate() 
-
-		muteAndStopPull(tool, hrp)
-		holdNoPull(tool, hrp, 0.6)
-
-		task.spawn(function()
-			local RSvc = RunService
-			for _ = 1, 4 do
-				for _, t in ipairs(refs) do
-					do
-						t.Hit = mira
-						t.Target = alvo
-					end
-				end
-				muteAndStopPull(tool, hrp)
-				RSvc.Heartbeat:Wait()
-			end
-			for i, t in ipairs(refs) do
-				local a = antes[i]
-				t.Hit = a[1]
-					t.Target = a[2]
-			end
-			muteAndStopPull(tool, hrp)
-		end)
-
-		return true
-	end
-
-	_G.SabcomFireGrapple2 = function(value, exato)
-		local RSv = game:GetService("ReplicatedStorage")
-		local Plrs = Players
-		local eu = Plrs.LocalPlayer
-		local char = eu and eu.Character
-		local hrp = char and char:FindFirstChild("HumanoidRootPart")
-		if not hrp then return false end
-
-		if eu:GetAttribute("Stealing") then return false end
-
-		local tool = char:FindFirstChild("Grapple Hook")
-		if not tool then
-			local bp = eu:FindFirstChildOfClass("Backpack")
-			local t2 = bp and bp:FindFirstChild("Grapple Hook")
-			local hum = char:FindFirstChildOfClass("Humanoid")
-			if not t2 or not hum then return false end
-			hum:EquipTool(t2) 
-			local t0 = os.clock()
-			repeat
-				RunService.Heartbeat:Wait()
-				char = eu.Character
-				tool = char and char:FindFirstChild("Grapple Hook")
-			until tool or os.clock() - t0 > 0.5
-			if not tool then return false end
-			hrp = char and char:FindFirstChild("HumanoidRootPart")
-			if not hrp then return false end
-		end
-
-		local par0 = RaycastParams.new()
-		par0.FilterType = Enum.RaycastFilterType.Exclude
-		par0.FilterDescendantsInstances = { char }
-
-		if exato and typeof(value) == "Vector3" then
-			local pos = value
-			local m = (pos - hrp.Position).Magnitude
-			if m < 10 or m > 50 then return false end
-
-			local alvo
-			local hit = workspace:Raycast(hrp.Position, pos - hrp.Position, par0)
-			if hit then alvo = hit.Instance end
-			if not alvo then
-				for _, p in ipairs(workspace:GetPartBoundsInRadius(pos, 6)) do
-					if p:IsA("BasePart") and not p:IsDescendantOf(char) then alvo = p; break end
-				end
-			end
-			if not alvo then return false end
-			return _G.__SabcomGrappleDisparar(tool, pos, alvo, char, RSv)
-		end
-
-		local destino
-		if typeof(value) == "Vector3" then destino = value
-		elseif typeof(value) == "Instance" and value:IsA("BasePart") then destino = value.Position end
-
-		local dir
-		if destino then
-			dir = destino - hrp.Position
-			dir = Vector3.new(dir.X, 0, dir.Z)
-		end
-		if not dir or dir.Magnitude < 1 then
-			local lv = hrp.CFrame.LookVector
-			dir = Vector3.new(lv.X, 0, lv.Z)
-		end
-		if dir.Magnitude < 0.01 then return false end
-		dir = dir.Unit
-
-		local par = RaycastParams.new()
-		par.FilterType = Enum.RaycastFilterType.Exclude
-		par.FilterDescendantsInstances = { char }
-
-		local pos, alvo, melhorM
-		for _, d in ipairs({ 9, 10, 11, 12, 13, 14, 16, 18, 21, 24, 28, 32, 36, 40, 45 }) do
-			local origem = hrp.Position + dir * d + Vector3.new(0, 3, 0)
-			local hit = workspace:Raycast(origem, Vector3.new(0, -60, 0), par)
-			if hit then
-				local m = (hit.Position - hrp.Position).Magnitude
-				if m >= 10 and m <= 50 and (not melhorM or m < melhorM) then
-					pos, alvo, melhorM = hit.Position, hit.Instance, m
-				end
-			end
-		end
-		if not pos then
-			for _, d in ipairs({ 11, 14, 18, 24, 32, 42, 48 }) do
-				local hit = workspace:Raycast(hrp.Position, dir * d, par)
-				if hit then
-					local m = (hit.Position - hrp.Position).Magnitude
-					if m >= 10 and m <= 50 and (not melhorM or m < melhorM) then
-						pos, alvo, melhorM = hit.Position, hit.Instance, m
-					end
-				end
-			end
-		end
-		if not pos or not alvo then return false end
-
-		return _G.__SabcomGrappleDisparar(tool, pos, alvo, char, RSv)
-	end
-
-	_G.Sabcom_FireGrapple = _G.SabcomFireGrapple2
-	_G.SabcomGrappleReady = function()
-		return type(_G.SabcomFireGrapple2) == "function"
-	end
+    local _dummy = Instance.new("RemoteEvent")
+    local _rawFire = (clonefunction and clonefunction(_dummy.FireServer)) or _dummy.FireServer
+    _G.RawFire = function(name, ...)
+        local r = _get(name)
+        if not r then return false end
+        _rawFire(r, ...)
+        return true
+    end
+end
 end
 
 do
+local _xchan
+local _lastTry, _attempts = 0, 0
+local _deepScans, _lastDeep = 0, 0
+local _mod
 
-	local _mask
-	local _maskNow = (function()
-		if _mask and _mask.Parent then return _mask end
-		local c = RS:FindFirstChild("Controllers")
-		_mask = c and c:FindFirstChild("PlotController")
-		return _mask
-	end)
+local MAX_ATTEMPTS, RETRY_GAP = 40, 0.5
+local BOOT_T0, BOOT_BURST, BOOT_GAP = os.clock(), 3.0, 0.10
+local MAX_DEEP, DEEP_GAP = 3, 1.5
 
-	local _syncMod = _G.SabcomPreloadedSynchronizer
-	local function _getSyncMod()
-		if type(_syncMod) == "table" then return _syncMod end
-		if type(_G.SabcomPreloadedSynchronizer) == "table" then
-			_syncMod = _G.SabcomPreloadedSynchronizer
-			return _syncMod
-		end
-		local stolen = _tryRequireSynchronizer()
-		if type(stolen) == "table" then
-			_syncMod = stolen
-			return _syncMod
-		end
-		return nil
-	end
-	_getSyncMod()
-	_G.SabcomGetSyncMod = _getSyncMod
+local RS_SYNC = game:GetService("ReplicatedStorage")
+local _mask_sc
+local function _getMask()
+    if _mask_sc and _mask_sc.Parent then return _mask_sc end
+    local c = RS_SYNC:FindFirstChild("Controllers")
+    _mask_sc = c and c:FindFirstChild("PlotController")
+    return _mask_sc
+end
+local secure_call = _G.secure_call
+if type(secure_call) ~= "function" then
+    local LAYERS = 2
+    local TEMPLATE do
+        local lines = {
+            "return function(__renv, __func, ...)",
+            "\tsetfenv(0, __renv)",
+            ("\tlocal function l%d(...) return __func(...) end"):format(LAYERS),
+        }
+        for c = LAYERS - 1, 1, -1 do
+            lines[#lines + 1] = ("\tlocal function l%d(...) return l%d(...) end"):format(c, c + 1)
+        end
+        lines[#lines + 1] = "\treturn l1(...)"
+        lines[#lines + 1] = "end"
+        TEMPLATE = table.concat(lines, string.char(10))
+    end
+    local _gti = getthreadidentity or get_thread_identity or getidentity
+    local _sti = setthreadidentity or set_thread_identity or setidentity
+    local _sentinel
+    secure_call = function(func, mask, ...)
+        if type(func) ~= "function" or typeof(mask) ~= "Instance" then return nil end
+        if not (_gti and _sti and getrenv and loadstring and setfenv) then return nil end
+        local renv = getrenv()
+        if not _sentinel then
+            local ok, env = pcall(getsenv, mask)
+            if not ok or type(env) ~= "table" then
+                env = setmetatable({ script = mask, _G = {}, shared = {} }, { __index = renv, __newindex = renv })
+            end
+            local loader = loadstring(TEMPLATE, "=" .. mask:GetFullName())
+            if not loader then return nil end
+            setfenv(loader, env)
+            _sentinel = loader()
+        end
+        local level = _gti()
+        local changed = {}
+        local okU, snap = pcall(debug.getupvalues, func)
+        if okU and type(snap) == "table" then
+            for i, v in pairs(snap) do
+                if typeof(v) == "Instance" and v:IsA("LuaSourceContainer") then
+                    if pcall(debug.setupvalue, func, i, mask) then changed[i] = v end
+                end
+            end
+        end
+        _sti(2)
+        local co, args = coroutine.create(_sentinel), table.pack(renv, func, ...)
+        local response, err
+        while true do
+            local r = table.pack(coroutine.resume(co, table.unpack(args, 1, args.n)))
+            if not r[1] then err = r[2] break end
+            if coroutine.status(co) == "dead" then response = table.pack(table.unpack(r, 2, r.n)) break end
+            args = table.pack(coroutine.yield(table.unpack(r, 2, r.n)))
+        end
+        _sti(level)
+        for i, orig in pairs(changed) do pcall(debug.setupvalue, func, i, orig) end
+        if err or not response then return nil end
+        return table.unpack(response, 1, response.n)
+    end
+    _G.secure_call = secure_call
+end
+local _syncMod_sc, _nextTry_sc = nil, 0
+local function _getSyncMod()
+    if _syncMod_sc then return _syncMod_sc end
+    local p = RS_SYNC:FindFirstChild("Packages")
+    local m = p and p:FindFirstChild("Synchronizer")
+    if not m then return nil end
+    local ok, mod = pcall(require, m)
+    if ok and type(mod) == "table" then _syncMod_sc = mod end
+    return _syncMod_sc
+end
+_G.__secureChans = function()
+    if os.clock() < _nextTry_sc then return _xchan end
+    local sync = _getSyncMod()
+    if not sync then _nextTry_sc = os.clock() + 0.1; return _xchan end
+    if type(sync.GetAllChannels) ~= "function" then _nextTry_sc = os.clock() + 0.1; return _xchan end
+    local mask = _getMask()
+    if not mask then _nextTry_sc = os.clock() + 0.1; return _xchan end
+    local ok, reg = pcall(secure_call, sync.GetAllChannels, mask)
+    if ok and type(reg) == "table" then
+        _xchan = reg; _nextTry_sc = os.clock() + 1.5
+        _G.MeerkoSyncDiag = "GetAllChannels (secure_call) - undetect/instant"
+    else
+        _nextTry_sc = os.clock() + 0.1
+    end
+    return _xchan
+end
 
-	_G.Sabcom_MaskNow = _maskNow
+local function _retryGap()
+    if (os.clock() - BOOT_T0) < BOOT_BURST then return BOOT_GAP end
+    return RETRY_GAP
+end
 
-	local _xchan, _nextTry, _full = nil, 0, false
-	local _fullRecheck = 0
-	local function _regComplete(reg)
-		local p = workspace:FindFirstChild("Plots")
-		if not p then return false end
-		local kids = p:GetChildren()
-		if #kids == 0 then return false end
-		for _, plot in ipairs(kids) do
-			if reg[plot.Name] == nil then return false end
-		end
-		return true
-	end
-	local function _getUpvalues(fn)
-		local g = getupvalues or (debug and debug.getupvalues)
-		if type(g) == "function" then
-			local t = g(fn)
-			if type(t) == "table" then return t end
-		end
-		local gu = getupvalue or (debug and debug.getupvalue)
-		if type(gu) ~= "function" then return nil end
-		local out = {}
-		local lim = tonumber(_G.sabcomUpvalDepth) or 128
-		for i = 1, lim do
-			local a, b = gu(fn, i)
-			local v = (b ~= nil) and b or a
-			if v == nil then break end
-			out[i] = v
-		end
-		return out
-	end
-	local function _findChannels(upvals)
-		local found
-		do
-			for _, upval in next, upvals do
-				if type(upval) == "table" then
-					for _, val in next, upval do
-						if type(val) == "table" and rawget(val, "CacheTable") then
-							found = upval
-							return
-						end
-					end
-					for _, v1 in next, upval do
-						if type(v1) == "table" then
-							for _, v2 in next, v1 do
-								if type(v2) == "table" and rawget(v2, "CacheTable") then
-									found = v1
-									return
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-		return found
-	end
+local function _channelCount(t)
+    if type(t) ~= "table" then return 0 end
+    local ok, hits = pcall(function()
+        local h, n = 0, 0
+        for _, v in next, t do
+            n = n + 1
+            if type(v) == "table" and type(rawget(v, "CacheTable")) == "table" then
+                h = h + 1
+            end
+            
+            if n >= 50 then break end
+        end
+        return h
+    end)
+    return (ok and hits) or 0
+end
 
-	local function _chans()
+local function _module()
+    if _mod then return _mod end
+    local ok, m = pcall(function()
+        return require(game:GetService("ReplicatedStorage").Packages.Synchronizer)
+    end)
+    if ok and type(m) == "table" then _mod = m; return _mod end
+    local ok2, m2 = pcall(function()
+        local pkgs = game:GetService("ReplicatedStorage"):FindFirstChild("Packages")
+        local sync = pkgs and pkgs:FindFirstChild("Synchronizer")
+        if not sync then return nil end
+        return require(sync)
+    end)
+    if ok2 and type(m2) == "table" then _mod = m2 end
+    return _mod
+end
 
-		if _xchan then
+local function _probe(mod)
+    local gu = (debug and debug.getupvalue) or getupvalue
+    if type(gu) ~= "function" then return nil, 0, nil end
+    local best, bestN, where = nil, 0, nil
+    local function consider(t, tag)
+        local n = _channelCount(t)
+        if n > bestN then best, bestN, where = t, n, tag end
+    end
+    local cands = {
+        { mod.Get, 10, 4, "Get/10/4" },
+        { mod.GetAllChannels, 10, 1, "GetAll/10/1" },
+        { mod.Wait, 10, 1, "Wait/10/1" },
+    }
+    for _, c in ipairs(cands) do
+        if type(c[1]) == "function" then
+            local o, u = pcall(gu, c[1], c[2])
+            if o and type(u) == "table" then
+                consider(rawget(u, c[3]), c[4])
+                if bestN > 0 then return best, bestN, where end
+            end
+        end
+    end
+    for _, fn in ipairs({ mod.Get, mod.GetAllChannels, mod.Wait, mod.WaitAndCall, mod.GetTableFromChannel }) do
+        if type(fn) == "function" then
+            for i = 8, 12 do
+                local o, u = pcall(gu, fn, i)
+                if o and type(u) == "table" then
+                    consider(u, "up" .. i)
+                    for j = 1, 4 do consider(rawget(u, j), "up" .. i .. "/" .. j) end
+                    if bestN > 0 then return best, bestN, where end
+                end
+            end
+        end
+    end
+    local ok, up = pcall(gu, mod.Get, 9)
+    if ok and type(up) == "table" then
+        consider(rawget(up, 3), "Get/9/3")
+        if bestN > 0 then return best, bestN, where end
+        consider(up, "Get/9")
+        if bestN > 0 then return best, bestN, where end
+    end
+    return best, bestN, where
+end
+
+local function _deepScan(mod)
+    local gu = (debug and debug.getupvalue) or getupvalue
+    if type(gu) ~= "function" then return nil, 0, nil end
+    local best, bestN, where = nil, 0, nil
+    local function consider(t, tag)
+        local n = _channelCount(t)
+        if n > bestN then best, bestN, where = t, n, tag end
+    end
+    for fname, fn in next, mod do
+        if type(fn) == "function" then
+            for i = 1, 24 do
+                local o, u = pcall(gu, fn, i)
+                if not o then break end
+                if type(u) == "table" then
+                    consider(u, tostring(fname) .. "/" .. i)
+                    for j = 1, 4 do
+                        consider(rawget(u, j), tostring(fname) .. "/" .. i .. "/" .. j)
+                    end
+                end
+            end
+        end
+    end
+    return best, bestN, where
+end
+
+local _gcFound, _gcFoundN, _gcState = nil, 0, "idle"
+
+local function _gcScanOnce()
+    if type(getgc) ~= "function" then return end
+    local plots = workspace:FindFirstChild("Plots")
+    if not plots then return end
+    local live, nLive = {}, 0
+    for _, p in ipairs(plots:GetChildren()) do live[p.Name] = true; nLive = nLive + 1 end
+    if nLive == 0 then return end
+
+    local best, bestN = nil, 0
+    pcall(function()
+        local gc = getgc(true)
+        for i = 1, #gc do
+            local t = gc[i]
+            if type(t) == "table" then
+                pcall(function()
+                    
+                    local pk = 0
+                    for k in next, t do
+                        if type(k) == "string" and live[k] then pk = pk + 1; if pk >= 2 then break end end
+                    end
+                    if pk < 2 then return end
+                    local hits, seen = 0, 0
+                    for k, v in next, t do
+                        seen = seen + 1
+                        if type(k) == "string" and live[k]
+                            and type(v) == "table" and type(rawget(v, "CacheTable")) == "table" then
+                            hits = hits + 1
+                        end
+                        if seen >= 64 then break end
+                    end
+                    if hits > bestN and hits >= 2 then best, bestN = t, hits end
+                end)
+                if bestN >= nLive then break end
+            end
+        end
+    end)
+    if best and bestN > _gcFoundN then _gcFound, _gcFoundN = best, bestN end
+end
+
+local _gcLastScan = 0
+local _gcRescans = 0
+local function _gcChans()
+    if _gcFound then
+        local _pl = workspace:FindFirstChild("Plots")
+        local _nLive = _pl and #_pl:GetChildren() or 0
+        if _G.MeerkoSyncRescan == true and _gcFoundN < _nLive
+            and _gcRescans < (tonumber(_G.MeerkoSyncMaxRescan) or 20)
+            and (os.clock() - _gcLastScan) >= (tonumber(_G.MeerkoSyncRescanGap) or 3) then
+            _gcLastScan = os.clock()
+            _gcRescans = _gcRescans + 1
+            _gcScanOnce()
+        end
+        return _gcFound, _gcFoundN, "getgc/plot-key+CacheTable"
+    end
+    if os.clock() - _gcLastScan < (tonumber(_G.MeerkoSyncScanGap) or 0.2) then return nil, 0, nil end
+    _gcLastScan = os.clock()
+    _gcScanOnce()
+    if _gcFound then return _gcFound, _gcFoundN, "getgc/plot-key+CacheTable" end
+    return nil, 0, nil
+end
+
+local function _apiChans(mod)
+    if type(mod) ~= "table" then return nil, 0, nil end
+    local fn = rawget(mod, "GetAllChannels")
+    if type(fn) ~= "function" then return nil, 0, nil end
+    local function _accept(reg, tag)
+        if type(reg) ~= "table" then return nil, 0, nil end
+        local n = _channelCount(reg)
+        if n > 0 then return reg, n, tag end
+        return nil, 0, nil
+    end
+    local mask = _getMask()
+    if _G.MeerkoAllowSecureSyncCall and mask and type(secure_call) == "function" then
+        for _, form in ipairs({ "self", "plain" }) do
+            local ok, reg = pcall(function()
+                if form == "self" then return secure_call(fn, mask, mod) end
+                return secure_call(fn, mask)
+            end)
+            if ok then
+                local r, n, t = _accept(reg, "GetAllChannels/secure_call(" .. form .. ")")
+                if r then return r, n, t end
+            end
+        end
+    end
+    if _G.MeerkoAllowRawSyncCall then
+        for _, form in ipairs({ "self", "plain" }) do
+            local ok, reg = pcall(function()
+                if form == "self" then return fn(mod) end
+                return fn()
+            end)
+            if ok then
+                local r, n, t = _accept(reg, "GetAllChannels/RAW(" .. form .. ")")
+                if r then return r, n, t end
+            end
+        end
+    end
+    return nil, 0, nil
+end
+
+local _xchan2, _nextTry2, _attempts2 = nil, 0, 0
+local _xchan2Until = 0
+local function _chans()
+    if _xchan2 then
+        local now = os.clock()
+        if now < _xchan2Until then return _xchan2 end
+        if _channelCount(_xchan2) > 0 then _xchan2Until = now + 2 return _xchan2 end
+    end
+    if os.clock() < _nextTry2 then return _xchan2 end
+    _attempts2 = _attempts2 + 1
+
+    local best, n, where = _gcChans()
+
+    if (not best or n == 0) and _attempts2 <= 400
+        and (_G.MeerkoAllowUpvalueProbe or _G.MeerkoAllowSecureSyncCall or _G.MeerkoAllowRawSyncCall) then
+        local mod = _getSyncMod()
+        if mod then
+            if _G.MeerkoAllowUpvalueProbe then
+                best, n, where = _probe(mod)
+                if (not best or n == 0) and os.clock() - _lastDeep > 1 then
+                    _lastDeep = os.clock()
+                    _deepScans = _deepScans + 1
+                    best, n, where = _deepScan(mod)
+                end
+            end
+            if not best or n == 0 then best, n, where = _apiChans(mod) end
+        end
+    end
+    if best and n > 0 then
+        _xchan2 = best
+        _G.MeerkoSyncDiag = string.format("rawget/CacheTable scoring via %s - %d channels", tostring(where), n)
+        return _xchan2
+    end
+    _nextTry2 = os.clock() + 0.1
+    return _xchan2
+end
+_G.__secureChans = _chans
+
+_G.MeerkoSyncAll=function()return _chans()end
+_G.MeerkoSyncGet=function(idx)
+local t=_chans()
+if not t or idx==nil then return nil end
+local ok,cd=pcall(rawget,t,idx)
+if ok and type(cd)=="table" then return cd end
+local ok2,cd2=pcall(function() return t[idx] end)
+if ok2 and type(cd2)=="table" then return cd2 end
+return nil
+end
+_G.sProp=function(ch,key)
+if type(ch)~="table" or key==nil then return nil end
+local ct=rawget(ch,"CacheTable")
+if type(ct)~="table" then
+local okC,c2=pcall(function() return ch.CacheTable end)
+if okC and type(c2)=="table" then ct=c2 end
+end
+if type(ct)~="table" then return nil end
+local v=rawget(ct,key)
+if v~=nil then return v end
+local okV,v2=pcall(function() return ct[key] end)
+if okV then return v2 end
+return nil
+end
+_G._meerkoRawCT=function(plotName)
+local c=_G.MeerkoSyncGet(plotName)
+if not c then return nil end
+return rawget(c,"CacheTable")
+end
+local _AD,_MD,_TD
+local function _data()
+if _AD then return true end
+local ok=pcall(function()
+local d=game:GetService("ReplicatedStorage"):WaitForChild("Datas")
+_AD=require(d:WaitForChild("Animals"))
+_MD=require(d:WaitForChild("Mutations"))
+_TD=require(d:WaitForChild("Traits"))
+end)
+return ok and _AD~=nil
+end
+_G._meerkoGen=function(index,mutation,traits)
+if not _data() then return 0 end
+local info=_AD[index]
+if not info or not info.Generation then return 0 end
+local mult=1
+if mutation and mutation~="None" and mutation~="" then
+local m=_MD[mutation]
+if m and m.Modifier then mult=mult+m.Modifier end
+end
+if type(traits)=="table" then
+for _,tr in ipairs(traits)do
+local t=_TD[tr]
+if t and t.MultiplierModifier then mult=mult+t.MultiplierModifier end
+end
+end
+return info.Generation*mult
+end
+_G._meerkoAnimShim=setmetatable({GetGeneration=function(_,index,mutation,traits)return _G._meerkoGen(index,mutation,traits)end},{
+__index=function(_,k)
+local ok,real=pcall(function()return require(game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Animals"))end)
+if ok and type(real)=="table" then return rawget(real,k) end
+return nil
+end})
+_G.Meerko_GetPlotChannel=function(plotName)return _G.MeerkoSyncGet(plotName)end
+_G.Meerko_GetAllPlots=function()return _G.MeerkoSyncAll() or {} end
+_G.Meerko_GetPlotAnimalList=function(plotName)
+local ct=_G._meerkoRawCT(plotName)
+local al=ct and ct.AnimalList
+return type(al)=="table" and al or nil
+end
+end
+
+_G.MeerkoSyncAll  = _G.MeerkoSyncAll
+_G.MeerkoSyncGet  = _G.MeerkoSyncGet
+_G.MeerkoRawCT    = _G._meerkoRawCT
+_G.MeerkoGen      = _G._meerkoGen
+_G.MeerkoAnimShim = _G._meerkoAnimShim
+_G.stealthGet    = function(n) return _G.MeerkoSyncGet(n) end
+_G.SyncInt       = {_cache={},_data=nil}
+
+task.spawn(function() for _=1,150 do if _G.MeerkoSyncAll() then break end task.wait(0.04) end end)
+
+_G.MeerkoGetSyncData = _G.MeerkoGetSyncData or function(plot)
+    local plotName = type(plot) == "string" and plot or (plot and plot.Name)
+    if not plotName then return nil end
+    local Pkgs = game:GetService("ReplicatedStorage"):FindFirstChild("Packages")
+    local Sync = Pkgs and Pkgs:FindFirstChild("Synchronizer")
+    if not Sync then return nil end
+    local okMod, mod = pcall(require, Sync)
+    if not okMod or type(mod) ~= "table" then return nil end
+
+    local okT, data = pcall(function() return _G.MeerkoRawCT(plotName) end)
+    if okT and type(data) == "table" then return data end
+
+    local okC, ch = pcall(function() return _G.MeerkoSyncGet(plotName) end)
+    if okC and ch then
+        local synth = { __channel = ch }
+        pcall(function() local ct = rawget(ch, "CacheTable"); if type(ct)=="table" then synth.AnimalList = ct.AnimalList; synth.Owner = ct.Owner end end)
+        return synth
+    end
+    return nil
+end
 
 
-			if os.clock() >= _fullRecheck then
-				_fullRecheck = os.clock() + 0.5
-				_full = _regComplete(_xchan)
-			end
-			return _xchan
-		end
+_mkNextModTry = 0
+function loadModules()
+    if AnimalsData then return true end
+    if os.clock() < _mkNextModTry then return false end
+    _mkNextModTry = os.clock() + (tonumber(_G.MeerkoModRetry) or 3)
+    pcall(function()
+        local Datas = RS:FindFirstChild("Datas") or RS:WaitForChild("Datas", 5)
+        if Datas then
+            local a = Datas:FindFirstChild("Animals") or Datas:WaitForChild("Animals", 5)
+            if a then AnimalsData = require(a) end
+        end
+    end)
+    AnimalsShared = _G.MeerkoAnimShim
+    if not NumberUtils then
+        pcall(function()
+            local Utils = RS:FindFirstChild("Utils")
+            local n = Utils and Utils:FindFirstChild("NumberUtils")
+            if n then NumberUtils = require(n) end
+        end)
+    end
+    return AnimalsData ~= nil
+end
+
+function loadNet() return false end
+
+function getRemote(method, name)
+    return _G.__secureGetRemote(method, name)
+end
+_G.MeerkoGetRemote = getRemote
+
+GRAPPLE_ARG = 0.8
+
+--[[ Grapple: Elite method ----------------------------------------------------
+     Old Meerko method: require ReplicatedStorage.Packages.Net, spoof getfenv +
+     debug.getmemorycategory inside it, ask it for "UseItem", then blind-fire
+     both candidate remotes with a bare constant (0.8) and no target.
+
+     Elite method (implemented below):
+       * resolve UseItem by INSTANCE STRUCTURE, never requiring the Net module
+         (no getfenv / setreadonly / debug tampering = no detection surface)
+       * gate on the tool's own cooldown (Tool.Enabled) before firing
+       * fire (amount, position) with a real raycast target, amount scaled to
+         distance, instead of a constant with no target
+       * quiet mode: mute the hook's Sounds/Beams, drop the server-side
+         FlightPower, and hold velocity down so the pull does not fight the TP
+       * invalidate + re-resolve automatically if FireServer errors
+
+     Set _G.MeerkoGrappleLegacy = true to restore the old blind-fire path.
+--------------------------------------------------------------------------- ]]
+
+do
+local _WSg = game:GetService("Workspace")
+
+-- Grapple remote resolver: uses rymogs' Net-hook approach (hookfunction on the
+-- game's own Heartbeat listener) to resolve remotes through the Net module
+-- without any getfenv/setreadonly detection surface.
+local getGrappleRemote
+do
+    local netFolder, netModule, queue, hooked, original = nil, nil, {}, false, nil
+    local function netDirectory()
+        if netFolder then return netFolder end
+        local packages = RS:FindFirstChild("Packages") or RS:WaitForChild("Packages", 10)
+        if not packages then return nil end
+        netFolder = packages:FindFirstChild("Net") or packages:WaitForChild("Net", 10)
+        return netFolder
+    end
+    local function getNet()
+        if netModule then return netModule end
+        local directory = netDirectory()
+        if not directory then return nil end
+        local ok, module = pcall(require, directory)
+        if ok and type(module) == "table" then netModule = module end
+        return netModule
+    end
+    local function host()
+        for _, signal in ipairs({ RunService.Heartbeat, RunService.RenderStepped, RunService.PostSimulation }) do
+            local ok, connections = pcall(getconnections, signal)
+            if ok then
+                for _, connection in ipairs(connections) do
+                    local fn = connection.Function
+                    if fn and islclosure(fn) and not isexecutorclosure(fn) then
+                        local source = select(2, pcall(debug.info, fn, "s"))
+                        if type(source) == "string" and source:find("^ReplicatedStorage%.")
+                            and not source:find("ReplicatedFirst") then
+                            return fn
+                        end
+                    end
+                end
+            end
+        end
+    end
+    local function install()
+        if hooked then return true end
+        if not getNet() then return false end
+        local fn = host()
+        if not fn then return false end
+        local wrapper = function(...)
+            local job = table.remove(queue, 1)
+            if job then
+                local ok, remote = pcall(netModule[job.kind], netModule, job.name)
+                job.result = (ok and typeof(remote) == "Instance") and remote or nil
+                job.done = true
+            end
+            return original(...)
+        end
+        local ok, env = pcall(getfenv, fn)
+        if ok and type(env) == "table" then pcall(setfenv, wrapper, env) end
+        original = hookfunction(fn, wrapper)
+        hooked = true
+        return true
+    end
+    local cache = {}
+    getGrappleRemote = function(method, name)
+        local kind = method == "RemoteFunction" and "RemoteFunction"
+            or method == "UnreliableRemoteEvent" and "UnreliableRemoteEvent" or "RemoteEvent"
+        if type(name) ~= "string" or name == "" then return nil end
+        local cacheKey = kind .. "|" .. name
+        local cached = cache[cacheKey]
+        if cached and cached.Parent then return cached end
+        cache[cacheKey] = nil
+        if not getNet() or not install() then return nil end
+        local job = { kind = kind, name = name }
+        table.insert(queue, job)
+        local expires = os.clock() + 5
+        while not job.done and os.clock() < expires do RunService.Heartbeat:Wait() end
+        if job.result and job.result.Parent then cache[cacheKey] = job.result; return job.result end
+        return nil
+    end
+end
+
+function _grappleInvalidate()
+    _G.__MeerkoUseItem, _G.__MeerkoUseItemJob = nil, nil
+end
+_G.MeerkoGrappleInvalidate = _grappleInvalidate
+
+task.spawn(function() _grappleUseItem = getGrappleRemote("RemoteEvent", "UseItem") end)
+task.spawn(function() _grappleItemUse = getGrappleRemote("RemoteEvent", "75c9466d-e4c0-4b02-b26a-c3615fcc1e42") end)
+function _grappleRemoteGet()
+    if not (_grappleUseItem and _grappleUseItem.Parent) then
+        _grappleUseItem = getGrappleRemote("RemoteEvent", "UseItem")
+    end
+    if not (_grappleItemUse and _grappleItemUse.Parent) then
+        _grappleItemUse = getGrappleRemote("RemoteEvent", "75c9466d-e4c0-4b02-b26a-c3615fcc1e42")
+    end
+    return (_grappleUseItem and _grappleUseItem.Parent and _grappleUseItem)
+        or (_grappleItemUse and _grappleItemUse.Parent and _grappleItemUse)
+end
+_G.MeerkoGrappleRemote = _grappleRemoteGet
+
+local _gMuteCache = setmetatable({}, { __mode = "k" })
+local function _gCollectMutes(tool)
+    local e = _gMuteCache[tool]
+    if e and (os.clock() - e.t) < 8 and tool.Parent then return e end
+    local snd, bm = {}, {}
+    pcall(function()
+        local scanned = 0
+        for _, s in ipairs(tool:GetDescendants()) do
+            scanned = scanned + 1
+            if scanned > 500 then break end
+            if s:IsA("Sound") then snd[#snd + 1] = s
+            elseif s:IsA("Beam") then bm[#bm + 1] = s end
+        end
+    end)
+    e = { t = os.clock(), snd = snd, bm = bm }
+    _gMuteCache[tool] = e
+    return e
+end
+
+local function _gMuteAndStopPull(tool, hrp)
+    if tool and tool.Parent then
+        local e = _gCollectMutes(tool)
+        for _, s in ipairs(e.snd) do
+            if s.Parent then pcall(function() s.Volume = 0; s:Stop() end) end
+        end
+        for _, b in ipairs(e.bm) do
+            if b.Parent then pcall(function() b.Enabled = false; b.Attachment0 = nil end) end
+        end
+    end
+    if hrp and hrp.Parent then
+        local fp = hrp:FindFirstChild("FlightPower")
+        if fp then pcall(function() fp:Destroy() end) end
+        -- never fight velMoveThrough / cframeStepThrough while a TP is running
+        if not isTeleporting and not _G.MeerkoTPBusy then
+            _vzL(hrp)
+            _vzA(hrp)
+        end
+    end
+end
+
+-- one hold loop at a time; re-firing the hook just extends the existing one so
+-- the 0.3s in-TP fire cadence cannot stack Heartbeat connections
+local _gHoldUntil, _gHoldConn = 0, nil
+local function _gHoldNoPull(tool, hrp, seconds)
+    _gHoldUntil = os.clock() + seconds
+    if _gHoldConn then return end
+    local last = 0
+    _gHoldConn = RunService.Heartbeat:Connect(function()
+        local now = os.clock()
+        if now - last >= 0.03 then
+            last = now
+            _gMuteAndStopPull(tool, hrp)
+        end
+        if now > _gHoldUntil then
+            if _gHoldConn then _gHoldConn:Disconnect(); _gHoldConn = nil end
+            _gMuteAndStopPull(tool, hrp)
+        end
+    end)
+end
+
+function _grappleToolReady(tool, waitS)
+    if not tool or not tool.Parent then return false end
+    local t0 = os.clock()
+    while true do
+        local ok, en = pcall(function() return tool.Enabled end)
+        if not ok or en ~= false then return true end
+        if os.clock() - t0 > (tonumber(waitS) or 0) then return false end
+        RunService.Heartbeat:Wait()
+        if not tool.Parent then return false end
+    end
+end
+_G.MeerkoToolReady = _grappleToolReady
+
+function _grappleDo(tool, pos, target, char)
+    if not tool or not pos then return false end
+    if typeof(pos) == "Instance" then pos = pos.Position end
+    if typeof(pos) == "CFrame"   then pos = pos.Position end
+    if typeof(pos) ~= "Vector3" then
+        _G.MeerkoGrappleWhy = "bad target position"
+        return false
+    end
+    char = char or LP.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    if not hrp then
+        _G.MeerkoGrappleWhy = "no hrp"
+        return false
+    end
+    if not _grappleToolReady(tool, tonumber(_G.MeerkoGrappleCooldownWait) or 0.35) then
+        _G.MeerkoGrappleWhy = "hook on cooldown (Enabled=false)"
+        return false
+    end
+    if not (_grappleUseItem and _grappleUseItem.Parent) then
+        _grappleUseItem = getGrappleRemote("RemoteEvent", "UseItem")
+    end
+    if not (_grappleItemUse and _grappleItemUse.Parent) then
+        _grappleItemUse = getGrappleRemote("RemoteEvent", "75c9466d-e4c0-4b02-b26a-c3615fcc1e42")
+    end
+    if not (_grappleUseItem and _grappleUseItem.Parent)
+        and not (_grappleItemUse and _grappleItemUse.Parent) then
+        _G.MeerkoGrappleWhy = "unresolved"
+        return false
+    end
+    local mag = (pos - hrp.Position).Magnitude
+    local amt = math.clamp(mag / 120, 0, 2)
+    local quiet = (_G.MeerkoGrappleQuiet ~= false)
+    if quiet then _gMuteAndStopPull(tool, hrp) end
+    local fired = false
+    if _grappleUseItem and _grappleUseItem.Parent then
+        pcall(function() _grappleUseItem:FireServer(amt, pos) end); fired = true
+    end
+    if _grappleItemUse and _grappleItemUse.Parent then
+        pcall(function() _grappleItemUse:FireServer(amt, pos) end); fired = true
+    end
+    if quiet then
+        _gMuteAndStopPull(tool, hrp)
+        _gHoldNoPull(tool, hrp, tonumber(_G.MeerkoGrappleQuietFor) or 0.6)
+    end
+    _G.MeerkoGrappleWhy = fired and "ok" or "no remote fired"
+    return fired
+end
+_G.MeerkoGrappleDo = _grappleDo
+
+local function _grappleLegacyFire()
+    local fired = false
+    if not (_grappleUseItem and _grappleUseItem.Parent) then
+        _grappleUseItem = getGrappleRemote("RemoteEvent", "UseItem")
+    end
+    if not (_grappleItemUse and _grappleItemUse.Parent) then
+        _grappleItemUse = getGrappleRemote("RemoteEvent", "75c9466d-e4c0-4b02-b26a-c3615fcc1e42")
+    end
+    if _grappleUseItem and _grappleUseItem.Parent then
+        pcall(function() _grappleUseItem:FireServer(GRAPPLE_ARG) end); fired = true
+    end
+    if _grappleItemUse and _grappleItemUse.Parent then
+        pcall(function() _grappleItemUse:FireServer(GRAPPLE_ARG) end); fired = true
+    end
+    _G.MeerkoGrappleWhy = fired and "ok (legacy)" or "legacy: no remote"
+    return fired
+end
+
+local _GFAN  = { 9, 10, 11, 12, 13, 14, 16, 18, 21, 24, 28, 32, 36, 40, 45 }
+local _GFAN2 = { 11, 14, 18, 24, 32, 42, 48 }
+local _GCOMPASS = {
+    Vector3.new( 1, 0,  0), Vector3.new(-1, 0,  0),
+    Vector3.new( 0, 0,  1), Vector3.new( 0, 0, -1),
+    Vector3.new( 0.7, 0,  0.7), Vector3.new( 0.7, 0, -0.7),
+    Vector3.new(-0.7, 0,  0.7), Vector3.new(-0.7, 0, -0.7),
+}
+
+-- _fireGrapple()            -> pick a target in front / around and hook it
+-- _fireGrapple(vec3)        -> aim toward that point, still snapped to real geometry
+-- _fireGrapple(vec3, true)  -> hook exactly that point (must be 10-50 studs out)
+function _fireGrapple(value, exact)
+    if _G.MeerkoGrappleLegacy == true then return _grappleLegacyFire() end
+
+    local char = LP.Character
+    local hrp  = char and char:FindFirstChild("HumanoidRootPart")
+    if not hrp then return false end
+    if LP:GetAttribute("Stealing") and _G.MeerkoNoGrappleWhileCarrying == true then
+        _G.MeerkoGrappleWhy = "refused: carrying a brainrot"
+        return false
+    end
+
+    local tool = char:FindFirstChild("Grapple Hook") or (findGrapple())
+    if tool and tool.Parent ~= char then
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if not hum then return false end
+        pcall(function() hum:EquipTool(tool) end)
+        local t0 = os.clock()
+        repeat
+            RunService.Heartbeat:Wait()
+            char = LP.Character
+            tool = char and (char:FindFirstChild("Grapple Hook") or (findGrapple()))
+        until (tool and tool.Parent == char) or os.clock() - t0 > 0.5
+        hrp = char and char:FindFirstChild("HumanoidRootPart")
+    end
+    if not tool or not hrp then return false end
+
+    local par = RaycastParams.new()
+    par.FilterType = Enum.RaycastFilterType.Exclude
+    par.FilterDescendantsInstances = { char }
+
+    if exact and typeof(value) == "Vector3" then
+        local m = (value - hrp.Position).Magnitude
+        if m < 10 or m > 50 then return false end
+        local target
+        local hit = _WSg:Raycast(hrp.Position, value - hrp.Position, par)
+        if hit then target = hit.Instance end
+        if not target then
+            local okb, parts = pcall(function() return _WSg:GetPartBoundsInRadius(value, 6) end)
+            if okb and parts then
+                for _, p in ipairs(parts) do
+                    if p:IsA("BasePart") and not p:IsDescendantOf(char) then target = p; break end
+                end
+            end
+        end
+        if not target then return false end
+        return _grappleDo(tool, value, target, char)
+    end
+
+    local dest
+    if typeof(value) == "Vector3" then dest = value
+    elseif typeof(value) == "Instance" and value:IsA("BasePart") then dest = value.Position end
+
+    local dir
+    if dest then
+        local d = dest - hrp.Position
+        dir = Vector3.new(d.X, 0, d.Z)
+    end
+    if not dir or dir.Magnitude < 1 then
+        local lv = hrp.CFrame.LookVector
+        dir = Vector3.new(lv.X, 0, lv.Z)
+    end
+    if dir.Magnitude < 0.01 then return false end
+    dir = dir.Unit
+
+    local pos, target, bestM
+    for _, d in ipairs(_GFAN) do
+        local origin = hrp.Position + dir * d + Vector3.new(0, 3, 0)
+        local hit = _WSg:Raycast(origin, Vector3.new(0, -60, 0), par)
+        if hit then
+            local m = (hit.Position - hrp.Position).Magnitude
+            if m >= 10 and m <= 50 and (not bestM or m < bestM) then
+                pos, target, bestM = hit.Position, hit.Instance, m
+            end
+        end
+    end
+    if not pos then
+        for _, d in ipairs(_GFAN2) do
+            local hit = _WSg:Raycast(hrp.Position, dir * d, par)
+            if hit then
+                local m = (hit.Position - hrp.Position).Magnitude
+                if m >= 10 and m <= 50 and (not bestM or m < bestM) then
+                    pos, target, bestM = hit.Position, hit.Instance, m
+                end
+            end
+        end
+    end
+    if not pos then
+        for _, cd in ipairs(_GCOMPASS) do
+            for _, d in ipairs(_GFAN) do
+                local origin = hrp.Position + cd * d + Vector3.new(0, 3, 0)
+                local hit = _WSg:Raycast(origin, Vector3.new(0, -70, 0), par)
+                if hit then
+                    local m = (hit.Position - hrp.Position).Magnitude
+                    if m >= 10 and m <= 50 and (not bestM or m < bestM) then
+                        pos, target, bestM = hit.Position, hit.Instance, m
+                    end
+                end
+            end
+        end
+    end
+    if not pos or not target then
+        _G.MeerkoGrappleWhy = "no anchor within 10-50 studs"
+        return false
+    end
+    return _grappleDo(tool, pos, target, char)
+end
+_G.MeerkoFireGrappleBoth = _fireGrapple
+
+function fireGrapple(value, exact)
+    local char = LP.Character
+    if not char then return false end
+    return _fireGrapple(value, exact)
+end
+_G.MeerkoFireGrapple = fireGrapple
+_G.MeerkoGrappleReady = function()
+    return findGrapple() ~= nil and _grappleRemoteGet() ~= nil
+end
+end
+-- === end Elite-method grapple ==============================================
+
+CARPET_SPEED = 280
+INBASE_SPEED = 450
+SKY_CLONE_WAIT = 0.35
+CARPET_NAMES = { "Flying Carpet", "Waverider", "Santa's Sleigh", "Witch's Broom", "Cupid's Wings" }
+function findTool(name)
+    local char = LP.Character
+    local bp = LP:FindFirstChild("Backpack")
+    return (char and char:FindFirstChild(name)) or (bp and bp:FindFirstChild(name))
+end
+GRAPPLE_NAMES = { "Grapple Hook", "Grappling Hook", "Grapple", "Hook", "Web Slinger", "Grapple Gun", "GrappleHook" }
+function findGrapple()
+    for _, n in ipairs(GRAPPLE_NAMES) do
+        local t = findTool(n)
+        if t and t:IsA("Tool") then return t, n end
+    end
+    return nil
+end
+function listTools()
+    local out, char, bp = {}, LP.Character, LP:FindFirstChild("Backpack")
+    if char then for _, t in ipairs(char:GetChildren()) do if t:IsA("Tool") then out[#out + 1] = t.Name end end end
+    if bp then for _, t in ipairs(bp:GetChildren()) do if t:IsA("Tool") then out[#out + 1] = t.Name end end end
+    return table.concat(out, ", ")
+end
+_lastCarpetName = nil
+function equipCarpet()
+    local char = LP.Character
+    if not char then return nil end
+    if _lastCarpetName then
+        local t = char:FindFirstChild(_lastCarpetName)
+        if t and t.Parent == char then return _lastCarpetName end
+    end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    if not hum then return nil end
+    for _, n in ipairs(CARPET_NAMES) do
+        local t = findTool(n)
+        if t and t:IsA("Tool") then
+            if t.Parent ~= char then pcall(function() hum:EquipTool(t) end) end
+            _lastCarpetName = n
+            return n
+        end
+    end
+    return nil
+end
+function setCarpetTool(name)
+    if type(name) ~= "string" or name == "" then return end
+    _G.MeerkoCarpetTool = name
+    for i = #CARPET_NAMES, 1, -1 do
+        if CARPET_NAMES[i] == name then table.remove(CARPET_NAMES, i) end
+    end
+    table.insert(CARPET_NAMES, 1, name)
+end
+_G.MeerkoSetCarpetTool = setCarpetTool
+if type(_G.MeerkoCarpetTool) == "string" and _G.MeerkoCarpetTool ~= "" then
+    setCarpetTool(_G.MeerkoCarpetTool)
+end
+_carpetEngaging = false
+function carpetEngage(force)
+    if not force then
+        local c = LP.Character
+        if c then
+            for _, n in ipairs(CARPET_NAMES) do
+                local t = c:FindFirstChild(n)
+                if t and t:IsA("Tool") then
+                    _G.TPEngage = "carpet=" .. tostring(n)
+                    return n
+                end
+            end
+        end
+    end
+    if _carpetEngaging then
+        local _tw = os.clock()
+        repeat RunService.Heartbeat:Wait() until (not _carpetEngaging) or os.clock() - _tw > 6
+        local c = LP.Character
+        if c then
+            for _, n in ipairs(CARPET_NAMES) do
+                local t = c:FindFirstChild(n)
+                if t and t:IsA("Tool") then return n end
+            end
+        end
+    end
+    _carpetEngaging = true
+    local _t0 = os.clock()
+    while not findTool("Grapple Hook") and os.clock() - _t0 < 5 do
+        RunService.Heartbeat:Wait()
+    end
+    local char = LP.Character
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    if not char or not hum then _carpetEngaging = false; return nil end
+
+    if not char:FindFirstChild("Grapple Hook") then
+        local g = findTool("Grapple Hook")
+        if g then pcall(function() hum:EquipTool(g) end) end
+    end
+    local _te = os.clock()
+    while not (LP.Character and LP.Character:FindFirstChild("Grapple Hook")) and os.clock() - _te < 1.5 do
+        local c = LP.Character
+        local h2 = c and c:FindFirstChildOfClass("Humanoid")
+        local g = findTool("Grapple Hook")
+        if g and h2 then pcall(function() h2:EquipTool(g) end) end
+        RunService.Heartbeat:Wait()
+    end
+    if LP.Character and LP.Character:FindFirstChild("Grapple Hook") then
+        _fireGrapple()
+    end
+    task.wait(0.05)
+    local h = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
+    if h then pcall(function() h:UnequipTools() end) end
+    task.wait(0.05)
+    local cn
+    local _tc = os.clock()
+    repeat
+        cn = equipCarpet()
+        local c = LP.Character
+        if cn and c and c:FindFirstChild(cn) then break end
+        RunService.Heartbeat:Wait()
+    until os.clock() - _tc > 0.5
+    _G.TPEngage = "carpet=" .. tostring(cn)
+    _carpetEngaging = false
+    return cn
+end
+
+_G.MeerkoEquipCarpet = equipCarpet
+_G.MeerkoCarpetEngaging = function() return _carpetEngaging end
+
+if _G.MeerkoKeepCarpet == nil then _G.MeerkoKeepCarpet = true end
+LP.CharacterAdded:Connect(function(c)
+    if _G.MeerkoKeepCarpet == false then return end
+    task.spawn(function()
+        c:WaitForChild("Humanoid", 10)
+        task.wait(tonumber(_G.MeerkoCarpetRespawnDelay) or 0.6)
+        if _G.MeerkoKeepCarpet == false then return end
+        if _carpetEngaging or LP.Character ~= c then return end
+        if LP:GetAttribute("Stealing") == true then return end
+        for _, n in ipairs(CARPET_NAMES) do
+            if c:FindFirstChild(n) then return end
+        end
+        pcall(equipCarpet)
+    end)
+end)
+
+PET_PRIORITY_TIERS = {
+    [1] = { pets = {"Headless Horseman"}, threshold = 0 },
+    [2] = { pets = {"Signore Carapace"}, threshold = 0 },
+    [3] = { pets = {"John Pork"}, threshold = 0 },
+    [4] = { pets = {"Strawberry Elephant"}, threshold = 0 },
+    [5] = { pets = {"Arcadragon"}, threshold = 5e9 },
+    [6] = { pets = {"Elefanto Frigo"}, threshold = 10e9 },
+    [7] = { pets = {"Meowl"}, threshold = 5e9 },
+    [8] = { pets = {"Skibidi Toilet"}, threshold = 5e9 },
+    [9] = { pets = {"Love Love Bear"}, threshold = 0 },
+    [10] = { pets = {"Antonio"}, threshold = 0 },
+    [11] = { pets = {"Pancake and Syrup"}, threshold = 0 },
+    [12] = { pets = {"Griffin"}, threshold = 0 },
+    [13] = { pets = {"Globa Steppa","La Supreme Combinasion","Fishino Clownino","Dragon Gingerini","Tirilikalika Tirilikalako"}, threshold = 5e9 },
+    [14] = { pets = {"Ginger Gerat","Pet"}, threshold = 10e9 },
+    [15] = { pets = {"Hydra Bunny","Digi Narwhal","Kalika Bros"}, threshold = 3e9 },
+    [16] = { pets = {"Hydra Dragon Cannelloni","Dragon Cannelloni","Bunny and Eggy"}, threshold = 3e9 },
+    [17] = { pets = {"Ketupat Bros","Rosey and Teddy","La Casa Boo","Fragola la la"}, threshold = 3e9 },
+    [18] = { pets = {"Fragola La La La","Cerberus","Guest 666","Los Hackers"}, threshold = 1e9 },
+    [19] = { pets = {"Garama and Madunung","Spooky and Pumpky","Reinito Sleighito","Burguro And Fryuro","Cooki and Milki","Fragrama and Chocrama","La Food Combinasion","Los Amigos","Foxini Lanternini","Capitano Moby","Fortunu and Cashuru","Los Sekolahs","Celestial Pegasus"}, threshold = 750e6 },
+    [20] = { pets = {"La Secret Combinasion","Sammyni Fattini","Cloverat Clapat","Popcuru and Fizzuru"}, threshold = 1e9 },
+}
+
+TIER_LOOKUP = {}
+for tier, data in pairs(PET_PRIORITY_TIERS) do
+    for _, name in ipairs(data.pets) do TIER_LOOKUP[name] = tier end
+end
+
+LOCKED_TIERS = { [1]=true, [2]=true, [3]=true, [4]=true }
+
+DIRECT_THRESHOLDS = {
+    [3] = { [4] = 10e9 },
+    [4] = {},
+    [5] = { [6] = math.huge },
+    [6] = { [9] = math.huge, [10] = math.huge, [12] = 15e9 },
+    [10] = { [12] = 20e9 },
+    [11] = { [12] = 10e9 },
+}
+
+MUTATION_PRIORITY = {
+    ["Galaxy"]=1,["Candy"]=1,["Yin Yang"]=1,["YinYang"]=1,["Divine"]=1,
+    ["Cursed"]=1,["Lava"]=1,["Radioactive"]=1,["Cyber"]=1,["Rainbow"]=1,["Bloodrot"]=2,
+}
+
+MUTATED_BEATS_GRIFFIN = {
+    ["Fishino Clownino"]=true,["Globa Steppa"]=true,
+    ["La Supreme Combinasion"]=true,["Tirilikalika Tirilikalako"]=true,
+}
+
+function getMutPrio(m)
+    if not m or m == "" or m == "None" then return 0 end
+    if MUTATION_PRIORITY[m] then return MUTATION_PRIORITY[m] end
+    local n = tostring(m):lower():gsub("[%s%-_]","")
+    if n == "bloodrot" then return 2 end
+    if n == "yinyang" or n == "galaxy" or n == "candy" or n == "divine"
+        or n == "cursed" or n == "lava" or n == "radioactive" or n == "cyber"
+        or n == "rainbow" then return 1 end
+    return 0
+end
+
+function getCumThreshold(hi, lo)
+    if DIRECT_THRESHOLDS[hi] and DIRECT_THRESHOLDS[hi][lo] then return DIRECT_THRESHOLDS[hi][lo] end
+    if LOCKED_TIERS[hi] then return math.huge end
+    local total = 0
+    for t = hi + 1, lo do
+        local td = PET_PRIORITY_TIERS[t]
+        if td and td.threshold > 0 then total = total + td.threshold end
+    end
+    return total
+end
+
+function _normName(s)
+    return tostring(s):lower():gsub("[%s%-_'%.]", "")
+end
+_priCacheVer, _priCache = -1, {}
+function _priLookup()
+    local ver = _G.MeerkoPriVersion or 0
+    if _priCacheVer ~= ver then
+        table.clear(_priCache)
+        local plist = _G.SHARED_PRIORITY_ITEMS
+        if type(plist) == "table" then
+            for i = #plist, 1, -1 do _priCache[_normName(plist[i])] = i end
+        end
+        _priCacheVer = ver
+    end
+    return _priCache
+end
+_G.MeerkoPriLookup = _priLookup
+function _priIndexOf(name)
+    if not name then return nil end
+    return _priLookup()[_normName(name)]
+end
+
+function petOutranks(aName, bName, aMut, bMut, aMPS, bMPS)
+    local iA = _priIndexOf(aName)
+    local iB = _priIndexOf(bName)
+    if iA ~= nil and iB ~= nil then return iA < iB end
+    if (iA ~= nil) ~= (iB ~= nil) then return iA ~= nil end
+    return (aMPS or 0) > (bMPS or 0)
+end
+
+function getPlotChannel(plotName)
+    local channel
+    pcall(function() channel = _G.MeerkoSyncGet(plotName) end)
+    return channel
+end
+
+function channelGet(channel, key)
+    if not channel then return nil end
+    local v
+    pcall(function()
+        local ct = rawget(channel, "CacheTable")
+        if type(ct) == "table" then v = ct[key] end
+    end)
+    if v ~= nil then return v end
+    pcall(function()
+        local d = rawget(channel, "Data")
+        if type(d) == "table" then v = d[key] end
+    end)
+    if v ~= nil then return v end
+    pcall(function() v = rawget(channel, key) end)
+    return v
+end
+
+function isMyPlot(channel)
+    if not channel then return false end
+    local owner = channelGet(channel, "Owner")
+    if not owner then return false end
+    local result = false
+    pcall(function()
+        if typeof(owner) == "Instance" and owner:IsA("Player") then
+            result = owner.UserId == LP.UserId
+        elseif type(owner) == "table" and owner.UserId then
+            result = owner.UserId == LP.UserId
+        elseif typeof(owner) == "Instance" then
+            result = owner == LP
+        elseif type(owner) == "string" then
+            
+            result = owner:lower() == LP.Name:lower()
+                or owner:lower() == (LP.DisplayName or LP.Name):lower()
+        end
+    end)
+    return result
+end
+
+function ownerInGame(channel)
+    if not channel then return false end
+    local owner = channelGet(channel, "Owner")
+    if not owner then return false end
+    local inGame = false
+    pcall(function()
+        if typeof(owner) == "Instance" and owner:IsA("Player") then
+            inGame = Players:FindFirstChild(owner.Name) ~= nil
+        elseif type(owner) == "number" then
+            inGame = Players:GetPlayerByUserId(owner) ~= nil
+        elseif type(owner) == "table" and owner.Name then
+            inGame = Players:FindFirstChild(tostring(owner.Name)) ~= nil
+        elseif typeof(owner) == "Instance" and owner.Name then
+            inGame = Players:FindFirstChild(owner.Name) ~= nil
+        elseif type(owner) == "string" then
+            
+            if Players:FindFirstChild(owner) then
+                inGame = true
+            else
+                local lo = owner:lower()
+                for _, pl in ipairs(Players:GetPlayers()) do
+                    if pl.Name:lower() == lo or (pl.DisplayName or ""):lower() == lo then inGame = true break end
+                end
+            end
+        end
+    end)
+    return inGame
+end
+
+_petModelCache = setmetatable({}, { __mode = "v" })
+_genCache = {}
+-- read the brainrot's own overhead "$3.5M/s" label when the data lookup comes up empty
+local _MPS_SUFFIX = { K = 1e3, M = 1e6, B = 1e9, T = 1e12, Q = 1e15 }
+function _worldMPS(plot, slot)
+    local podiums = plot and plot:FindFirstChild("AnimalPodiums")
+    local podium = podiums and podiums:FindFirstChild(tostring(slot))
+    if not podium then return nil end
+    local best = nil
+    for _, d in ipairs(podium:GetDescendants()) do
+        if d:IsA("TextLabel") or d:IsA("TextButton") then
+            local txt = d.Text
+            if type(txt) == "string" and txt ~= "" then
+                local num, suf = txt:match("%$%s*([%d%.]+)%s*([KMBTQ]?)%s*/s")
+                if num then
+                    local v = tonumber(num)
+                    if v then
+                        v = v * (_MPS_SUFFIX[suf] or 1)
+                        if not best or v > best then best = v end
+                    end
+                end
+            end
+        end
+    end
+    return best
+end
+function getPetPosition(plot, slot, strict)
+    local podiums = plot:FindFirstChild("AnimalPodiums")
+    if not podiums then return nil end
+    local podium = podiums:FindFirstChild(tostring(slot))
+    if not podium then return nil end
+
+    
+    local key = plot.Name .. "\0" .. tostring(slot)
+    local cached = _petModelCache[key]
+    if cached and cached.Parent and cached:IsDescendantOf(podium) then
+        local ok, cf = pcall(function() return cached:GetBoundingBox() end)
+        if ok then return cf.Position end
+    end
+    _petModelCache[key] = nil
+
+    for _, desc in ipairs(podium:GetDescendants()) do
+        if desc:IsA("Model") and desc.Name ~= "Claim" and desc.Name ~= "Base" and desc.Name ~= "Decorations" then
+            if desc:FindFirstChildWhichIsA("MeshPart", true) then
+                local ok, cf = pcall(function() return desc:GetBoundingBox() end)
+                if ok then
+                    _petModelCache[key] = desc
+                    return cf.Position
+                end
+            end
+        end
+    end
+
+    if strict then return nil end
+    local ok, cf = pcall(function() return podium:GetPivot() end)
+    if ok then return cf.Position end
+    return podium.Position
+end
+
+function scanAllPets()
+    local pets = {}
+    if not loadModules() then return pets end
+
+    local Plots = workspace:FindFirstChild("Plots")
+    if not Plots then return pets end
+
+    local _mkSeen, _mkUse, _mkTotal = 0, 0, 0
+    local _mkTags = {}
+    for _, plot in ipairs(Plots:GetChildren()) do
+        _mkTotal = _mkTotal + 1
+        local channel = getPlotChannel(plot.Name)
+        if not channel then _mkTags[#_mkTags + 1] = "nochan" continue end
+        _mkSeen = _mkSeen + 1
+        if isMyPlot(channel) then _G.MeerkoMyPlot = plot.Name _mkTags[#_mkTags + 1] = "MINE" continue end
+        if _G.MeerkoMyPlot == plot.Name then _mkTags[#_mkTags + 1] = "MINE" continue end
+        if not _G.MeerkoMyPlot and channelGet(channel, "Owner") == nil then _mkTags[#_mkTags + 1] = "noowner?" continue end
+        if _G.MeerkoRequireOwner ~= false and not ownerInGame(channel) then _mkTags[#_mkTags + 1] = "left" continue end
+        _mkUse = _mkUse + 1
+
+        local animalList = channelGet(channel, "AnimalList")
+        if not animalList then _mkTags[#_mkTags + 1] = "nolist" continue end
+        local _mkPlotN = 0
+
+        for slot, animalData in pairs(animalList) do
+            if type(animalData) ~= "table" then continue end
+            local animalName = animalData.Index
+            if not animalName then continue end
+            local animalInfo = AnimalsData and AnimalsData[animalName]
+            if not animalInfo and _G.MeerkoRequireKnown == true then continue end
+            if _MeerkoIsFusing(animalData) then continue end
+
+            local mutation = animalData.Mutation or "None"
+
+            local genValue
+            local _gk = plot.Name .. "\0" .. tostring(slot)
+            local _gc = _genCache[_gk]
+            if _gc and _gc.n == animalName and _gc.m == animalData.Mutation and _gc.t == animalData.Traits then
+                genValue = _gc.g
+            else
+                genValue = 0
+                pcall(function()
+                    genValue = AnimalsShared:GetGeneration(animalName, animalData.Mutation, animalData.Traits, nil)
+                end)
+                if genValue and genValue > 0 then
+                    _genCache[_gk] = { n = animalName, m = animalData.Mutation, t = animalData.Traits, g = genValue }
+                end
+            end
+            if (not genValue or genValue <= 0) and _G.MeerkoWorldMPS ~= false then
+                local wm = _worldMPS(plot, slot)
+                if wm and wm > 0 then genValue = wm end
+            end
+
+            local displayName = (animalInfo and animalInfo.DisplayName) or animalName
+
+            local pos = getPetPosition(plot, slot, (_G.MeerkoRequireOwner == false) or (_G.MeerkoRequireModel == true))
+
+            if pos then
+                if genValue >= (tonumber(_G.MeerkoMinMPS) or 0) then
+                    table.insert(pets, {
+                        name = displayName,
+                        index = animalName,
+                        mps = genValue,
+                        mutation = mutation,
+                        traits = type(animalData.Traits) == "table" and animalData.Traits or {},
+                        position = pos,
+                        plot = plot.Name,
+                        slot = tostring(slot),
+                    })
+                    _mkPlotN = _mkPlotN + 1
+                end
+            end
+        end
+        _mkTags[#_mkTags + 1] = tostring(_mkPlotN)
+    end
+
+    _G.MeerkoScanInfo = string.format("plots %d scanned of %d  pets %d  [%s]  %s", _mkUse, _mkTotal, #pets, table.concat(_mkTags, " "), tostring(_G.MeerkoScanMode))
+    local _priLk = _priLookup()
+    for _, p in ipairs(pets) do
+        p._pri = _priLk[_normName(p.name)] or (p.index and _priLk[_normName(p.index)]) or nil
+    end
+
+    local mode = _G.MeerkoStealMode
+    if mode == "highest" then
+        table.sort(pets, function(a, b) return (a.mps or 0) > (b.mps or 0) end)
+        return pets
+    end
+
+    table.sort(pets, function(a, b)
+        local ia, ib = a._pri, b._pri
+        if ia and ib then
+            if ia ~= ib then return ia < ib end
+            return (a.mps or 0) > (b.mps or 0)
+        end
+        if (ia ~= nil) ~= (ib ~= nil) then return ia ~= nil end
+        return (a.mps or 0) > (b.mps or 0)
+    end)
+
+    return pets
+end
+_G.MeerkoScanAllPets = scanAllPets  
+
+function scanForTP()
+    local full = scanAllPets()
+    if type(full) ~= "table" then full = {} end
+    if _G.MeerkoScanTiered and _G.MeerkoUseTiered ~= false then
+        local ok, tiered = pcall(_G.MeerkoScanTiered)
+        if ok and type(tiered) == "table" and #tiered > 0 then
+            local seen = {}
+            for _, p in ipairs(full) do
+                if p and p.plot and p.slot ~= nil then
+                    seen[tostring(p.plot) .. "_" .. tostring(p.slot)] = true
+                end
+            end
+            for _, p in ipairs(tiered) do
+                if p and p.plot and p.slot ~= nil then
+                    local uid = tostring(p.plot) .. "_" .. tostring(p.slot)
+                    if not seen[uid] then
+                        seen[uid] = true
+                        full[#full + 1] = p
+                    end
+                end
+            end
+        end
+    end
+    return full
+end
+
+function _petUid(p)
+    if not p then return nil end
+    return tostring(p.plot) .. "_" .. tostring(p.slot)
+end
+function _pickPetOnFoot(pets, myPos)
+    if not pets or #pets == 0 then return nil end
+    local best
+    if _G.MeerkoStealMode == "nearest" and myPos then
+        local bestD = math.huge
+        for _, p in ipairs(pets) do
+            if not p.conveyor and p.position then
+                local d = (p.position - myPos).Magnitude
+                if d < bestD then bestD = d; best = p end
+            end
+        end
+    else
+        for _, p in ipairs(pets) do
+            if not p.conveyor then best = p; break end
+        end
+    end
+    return best or pets[1]
+end
+function _findTPSyncedPet(pets)
+    local uid = _G.MeerkoStealTargetUID
+    if type(uid) ~= "string" or uid == "" then return nil end
+    for _, p in ipairs(pets) do
+        if _petUid(p) == uid then return p end
+    end
+    return nil
+end
+function _clearTPSync()
+    _G.MeerkoTPSyncActive = false
+    _G.MeerkoStealTargetUID = nil
+    _G.MeerkoStealTarget = nil
+end
+function _armTPSync(pet)
+    if not pet then return end
+    _G.MeerkoStealTargetUID = _petUid(pet)
+    _G.MeerkoStealTarget = pet
+    _G.MeerkoTPSyncActive = true
+    local gen = (_G._MeerkoTPSyncGen or 0) + 1
+    _G._MeerkoTPSyncGen = gen
+    task.delay(12, function()
+        if _G._MeerkoTPSyncGen == gen then _clearTPSync() end
+    end)
+end
+_G.MeerkoClearTPSync = _clearTPSync
+function _findStealTarget(pets)
+    if not _G.MeerkoTPSyncActive then return nil end
+    return _findTPSyncedPet(pets)
+end
+function _publishStealTarget(pet)
+    if not pet then return end
+    _G.MeerkoStealTargetUID = _petUid(pet)
+    _G.MeerkoStealTarget = pet
+end
+
+MK_UPPER = {
+    B = {{coord=Vector3.new(-487.921448,16.850713,-75.768013),facing="NORTH"},{coord=Vector3.new(-332.379730,16.850722,-75.762100),facing="NORTH"},{coord=Vector3.new(-487.134918,16.850713,-18.094154),facing="SOUTH"},{coord=Vector3.new(-316.300171,16.850713,-17.845898),facing="SOUTH"}},
+    C = {{coord=Vector3.new(-330.765381,16.850713,31.424425),facing="NORTH"},{coord=Vector3.new(-502.989349,16.850713,31.172430),facing="NORTH"},{coord=Vector3.new(-489.077087,16.850713,89.010147),facing="SOUTH"},{coord=Vector3.new(-330.908936,16.850713,88.930145),facing="SOUTH"}},
+    D = {{coord=Vector3.new(-331.264893,16.850713,138.209167),facing="NORTH"},{coord=Vector3.new(-487.935181,16.850713,138.026321),facing="NORTH"},{coord=Vector3.new(-487.774933,16.850713,195.882538),facing="SOUTH"},{coord=Vector3.new(-330.799133,16.850575,196.022354),facing="SOUTH"}},
+}
+MK_LOWER = {
+    B = {{coord=Vector3.new(-335.725586,-3.048217,-74.984589),facing="NORTH"},{coord=Vector3.new(-503.214233,-3.048217,-75.043137),facing="NORTH"},{coord=Vector3.new(-483.619385,-3.718430,-18.844337),facing="SOUTH"},{coord=Vector3.new(-316.147095,-3.048218,-18.818844),facing="SOUTH"}},
+    C = {{coord=Vector3.new(-335.985413,-3.048218,32.051426),facing="NORTH"},{coord=Vector3.new(-503.277008,-3.048217,31.956175),facing="NORTH"},{coord=Vector3.new(-483.749390,-3.048218,88.147003),facing="SOUTH"},{coord=Vector3.new(-315.793823,-3.048217,88.163979),facing="SOUTH"}},
+    D = {{coord=Vector3.new(-335.476654,-3.048218,139.001083),facing="NORTH"},{coord=Vector3.new(-503.710083,-3.048218,138.989883),facing="NORTH"},{coord=Vector3.new(-315.654938,-3.048218,195.302444),facing="SOUTH"},{coord=Vector3.new(-483.859253,-3.048218,195.269043),facing="SOUTH"}},
+}
+UPPER_Y_THRESHOLD = 7
+TALL_PETS = { ["La Secret Combinasion"]=true, ["La Jolly Grande"]=true }
+TALL_OFFSET = 3
+
+BASES_LOW = {
+    [1] = Vector3.new(-476.52, -2, 220.94090270996094),
+    [2] = Vector3.new(-476.52, -2, 113.77315521240234),
+    [3] = Vector3.new(-476.52, -2, 6.178487777709961),
+    [4] = Vector3.new(-476.52, -2, -101.07275390625),
+    [5] = Vector3.new(-342.66, -2, 221.44737243652344),
+    [6] = Vector3.new(-342.66, -2, 113.41409301757812),
+    [7] = Vector3.new(-342.66, -2, 6.249461650848389),
+    [8] = Vector3.new(-342.66, -2, -99.73458862304688),
+}
+BASES_HIGH = {
+    [1] = Vector3.new(-479.51, 18, 220.94090270996094),
+    [2] = Vector3.new(-479.51, 18, 113.77315521240234),
+    [3] = Vector3.new(-479.51, 18, 6.178487777709961),
+    [4] = Vector3.new(-479.51, 18, -101.07275390625),
+    [5] = Vector3.new(-339.48, 18, 221.44737243652344),
+    [6] = Vector3.new(-339.48, 18, 113.41409301757812),
+    [7] = Vector3.new(-339.48, 18, 6.249461650848389),
+    [8] = Vector3.new(-339.48, 18, -99.73458862304688),
+}
+FRONT_Y_LOW   = -3.048217
+FRONT_Y_HIGH  = 16.850713
+COLUMN_SPLIT_X = -410
+FRONT_Z_CLAMP  = 18
+SIDE_NEAR_Z    = 45
+
+function getClosestBaseIdx(pos)
+    local closest, dist = 1, math.huge
+    for i = 1, 8 do
+        local b = BASES_LOW[i]
+        local d = (pos.X - b.X)^2 + (pos.Z - b.Z)^2
+        if d < dist then dist = d; closest = i end
+    end
+    return closest
+end
+
+function buildFrontCandidate(idx, isUpper, playerZ)
+    local base = isUpper and BASES_HIGH[idx] or BASES_LOW[idx]
+    local frontY = isUpper and FRONT_Y_HIGH or FRONT_Y_LOW
+    local frontZ = math.clamp(playerZ - base.Z, -FRONT_Z_CLAMP, FRONT_Z_CLAMP) + base.Z
+    local coord = Vector3.new(base.X, frontY, frontZ)
+    local faceDir = (idx <= 4) and Vector3.new(-1, 0, 0) or Vector3.new(1, 0, 0)
+    return coord, faceDir
+end
+
+function plotSides(coordTable, idx)
+    local base = BASES_LOW[idx]
+    local isWest = idx <= 4
+    local out = {}
+    for _, coords in pairs(coordTable) do
+        for _, data in ipairs(coords) do
+            if ((data.coord.X < COLUMN_SPLIT_X) == isWest)
+               and math.abs(data.coord.Z - base.Z) < SIDE_NEAR_Z then
+                out[#out + 1] = data
+            end
+        end
+    end
+    return out
+end
+
+function _floor1LaserSolid(plotName)
+    local solid = false
+    pcall(function()
+        local Plots = workspace:FindFirstChild("Plots")
+        local plot = Plots and Plots:FindFirstChild(plotName)
+        if not plot then return end
+        for _, d in ipairs(plot:GetDescendants()) do
+            if d:IsA("BasePart") and (d.Name == "LaserHitbox" or d.Name == "Laser")
+                and d.CanCollide and d.Position.Y <= 9 then
+                solid = true
+                break
+            end
+        end
+    end)
+    return solid
+end
+
+function isPlotUnlocked(plotName)
+    local ok, res = pcall(function()
+        local channel = getPlotChannel(plotName)
+        if not channel then return false end
+        if channelGet(channel, "BlockEndTimeFirstFloor") ~= nil then return false end
+        return not _floor1LaserSolid(plotName)
+    end)
+    return ok and (res == true)
+end
+
+function findClosest(petPos, coordTable)
+    local best, bestKey, bestDist = nil, nil, math.huge
+    for skyKey, coords in pairs(coordTable) do
+        for _, data in ipairs(coords) do
+            local c = data.coord
+            local d = math.sqrt((petPos.X - c.X)^2 + (petPos.Z - c.Z)^2)
+            if d < bestDist then bestDist = d; best = data; bestKey = skyKey end
+        end
+    end
+    return best, bestKey
+end
+
+do
+_vizParts = {}
+_vizGen = 0
+
+function _vizEnsure()
+    if _vizFolder and _vizFolder.Parent then return end
+    _vizFolder = Instance.new("Folder")
+    -- was "MeerkoPathViz": Workspace is readable by the game's own LocalScripts,
+    -- so a self-identifying name is a free detection. Cleanup is by reference.
+    _vizFolder.Name = "Effects"
+    _vizFolder.Parent = workspace
+    _vizAnchor = Instance.new("Part")
+    _vizAnchor.Name = "Anchor"
+    _vizAnchor.Anchored = true; _vizAnchor.CanCollide = false; _vizAnchor.CanQuery = false
+    _vizAnchor.CanTouch = false; _vizAnchor.Transparency = 1; _vizAnchor.Size = Vector3.one
+    _vizAnchor.CFrame = CFrame.new()
+    _vizAnchor.Parent = _vizFolder
+end
+clearViz = function()
+    if _vizFolder then pcall(function() _vizFolder:Destroy() end) end
+    _vizFolder, _vizAnchor = nil, nil
+    table.clear(_vizParts)
+end
+local function _ghost(cf, size, color, op)
+    _vizEnsure()
+    local a = Instance.new("BoxHandleAdornment")
+    a.Adornee = _vizAnchor
+    a.AlwaysOnTop = true
+    a.ZIndex = 0
+    pcall(function() a.Shading = Enum.AdornShading.XRayShaded end)
+    a.Color3 = color
+    a.Transparency = 1 - op
+    a.Size = size
+    a.CFrame = cf
+    a.Parent = _vizAnchor
+end
+local function _neon(cf, size, color, ball, transp)
+    _vizEnsure()
+    local p = Instance.new("Part")
+    p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false; p.CastShadow = false
+    p.Material = Enum.Material.Neon; p.Color = color
+    p.Transparency = transp or 0
+    if ball then p.Shape = Enum.PartType.Ball end
+    p.Size = size; p.CFrame = cf; p.Parent = _vizFolder
+end
+function vizLine(a, b, color)
+    local d = b - a
+    if d.Magnitude < 0.05 then return end
+    _neon(CFrame.lookAt((a + b) * 0.5, b), Vector3.new(0.25, 0.25, d.Magnitude), color, false, 0)
+end
+function vizDot(pos, color, sz)
+    _neon(CFrame.new(pos), Vector3.new(sz, sz, sz), color, true, 0)
+end
+vizPath = function(fromPos, waypoints)
+    if _G.MeerkoShowPath ~= true then return end
+    if #waypoints == 0 then return end
+    local COL = Color3.fromRGB(255, 195, 45)
+    local prev = fromPos
+    for _, wp in ipairs(waypoints) do
+        vizLine(prev, wp, COL)
+        prev = wp
+    end
+    vizDot(waypoints[#waypoints], COL, 1.6)
+end
+end
+
+MK_SPEED = 125
+MK_ARRIVE = 3
+_STRIP_OK = (type(getconnections) == "function")
+function _climbCap()
+    local v = math.clamp(tonumber(_G.MeerkoClimb) or 200, 100, 250)
+    if not _STRIP_OK then v = 55 end
+    return v
+end
+
+function vZero(hrp)
+    if hrp then _vzL(hrp); _vzA(hrp) end
+end
 
 
-		local hot = (os.clock() - (_G.__sabcomT0 or 0)) < (tonumber(_G.sabcomHotScanSec) or 8)
-		if not hot and os.clock() < _nextTry then return nil end
-		_nextTry = os.clock() + 0.05
+function _setFlightVel(hrp, vel)
+    local char = hrp and hrp.Parent
+    local part = (char and (char:FindFirstChild("UpperTorso") or char:FindFirstChild("Torso"))) or hrp
+    if part then part.AssemblyLinearVelocity = vel end
+end
 
-		local sync = _getSyncMod()
-		if not sync then return nil end
-		local getfn
-		getfn = sync.Get 
-		if type(getfn) ~= "function" then getfn = rawget(sync, "Get") end
-		if type(getfn) ~= "function" then return nil end
+function velMoveThrough(hrp, waypoints, speedOverride, allowJump, quickStart)
+    if not hrp or not hrp.Parent or #waypoints == 0 then return end
+    local _runSpeed = speedOverride or (_G.TPVelocity and math.clamp(_G.TPVelocity, 200, 750)) or CARPET_SPEED
+    vizPath(hrp.Position, waypoints)
+    local wpIdx = 1
+    local done = false
+    local conn
+    local function finish()
+        if done then return end
+        done = true
+        if hrp and hrp.Parent then
+            _vzL(hrp)
+            _vzA(hrp)
+            local _, y = hrp.CFrame:ToEulerAnglesYXZ()
+            hrp.CFrame = CFrame.new(waypoints[#waypoints]) * CFrame.Angles(0, y, 0)
+        end
+        if conn then conn:Disconnect() end
+    end
+    local lastDist, stall = math.huge, 0
 
-		local ups = _getUpvalues(getfn)
-		if type(ups) ~= "table" then
-			return nil
-		end
+    local _stStart = os.clock()
+    local _lastJump = 0
 
-		local reg = _findChannels(ups)
-		if type(reg) == "table" then
-			local n = 0
-			for _ in pairs(reg) do n = n + 1 end
-			if n > 0 then
-				_xchan = reg
-				if _regComplete(reg) then _full = true end
-				_G.SabcomSyncDiag = string.format("bypassed via upvalues - %d channels", n)
-				return _xchan
-			end
-		end
-		return nil
-	end
+    local _routeLen = 0
+    do
+        local _p = hrp.Position
+        for _, wp in ipairs(waypoints) do
+            _routeLen = _routeLen + (_p - wp).Magnitude
+            _p = wp
+        end
+    end
+    local _mayJump = _routeLen >= (tonumber(_G.MeerkoJumpMinDist) or 100)
 
-	_G.SabcomSyncAll = function() return _chans() end
-	_G.SabcomSyncGet = function(idx)
-		local t = _chans()
-		if not t or idx == nil then return nil end
-		local cd = rawget(t, idx)
-		if type(cd) == "table" then return cd end
-		local cd2 = t[idx]
-		if type(cd2) == "table" then return cd2 end
-		return nil
-	end
+    local _ = quickStart
 
-	_G.sProp = function(ch, key)
-		if type(ch) ~= "table" or key == nil then return nil end
-		local ct = rawget(ch, "CacheTable")
-		if type(ct) ~= "table" then
-			local c2 = ch.CacheTable
-			if type(c2) == "table" then ct = c2 end
-		end
-		if type(ct) ~= "table" then return nil end
-		local v = rawget(ct, key)
-		if v ~= nil then return v end
-		local v2 = ct[key]
-		if v2 ~= nil then return v2 end
-		return nil
-	end
-	_G.Sabcom_ChannelGet = _G.sProp
+    conn = RunService.Heartbeat:Connect(LPH_NO_VIRTUALIZE(function()
+        if not hrp or not hrp.Parent or done then
+            if conn then conn:Disconnect() end
+            return
+        end
+        if _G.MeerkoTPStop then finish() return end
+        equipCarpet()
+        if _mayJump and _G.MeerkoJumpEachStep ~= false then
+            local _now = os.clock()
+            if _now - _lastJump >= (tonumber(_G.MeerkoJumpGap) or 0.2) then
+                _lastJump = _now
+                local _jh = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
+                if _jh then
+                    pcall(function() _jh:ChangeState(Enum.HumanoidStateType.Jumping) end)
+                    pcall(function() _jh.Jump = true end)
+                end
+            end
+        end
+        local target = waypoints[wpIdx]
+        local diff = target - hrp.Position
+        local mag = diff.Magnitude
+        local _spd = _runSpeed
+        if wpIdx < #waypoints and mag < 26 then
+            local nxt = waypoints[wpIdx + 1]
+            local b = nxt - target
+            if mag > 0.1 and b.Magnitude > 0.1 and diff.Unit:Dot(b.Unit) < 0.9 then
+                _spd = math.min(_spd, 240)
+            end
+        end
+        local _arr = math.max(MK_ARRIVE, _spd / 60 * 1.25)
+        if mag < _arr then
+            wpIdx = wpIdx + 1
+            if wpIdx > #waypoints then finish() return end
+            lastDist, stall = math.huge, 0
+            if _G.MeerkoZeroEachStep ~= false and _vzOK() then
+                pcall(function()
+                    local _v = hrp.AssemblyLinearVelocity
+                    local _keepY = (_G.MeerkoZeroStepKeepY == false) and 0 or math.max(_v.Y, 0)
+                    hrp.AssemblyLinearVelocity = Vector3.new(0, _keepY, 0)
+                    hrp.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+                end)
+            end
+            if _mayJump and _G.MeerkoJumpEachStep ~= false then
+                local _wh = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
+                if _wh then
+                    _lastJump = os.clock()
+                    pcall(function() _wh:ChangeState(Enum.HumanoidStateType.Jumping) end)
+                    pcall(function() _wh.Jump = true end)
+                end
+            end
+            target = waypoints[wpIdx]
+            diff = target - hrp.Position
+            mag = diff.Magnitude
+        end
 
-	local function _rawChanGet(c, k)
-		if c == nil or k == nil then return nil end
-		if type(c.Get) == "function" then
-			return c:Get(k)
-		end
-		if type(c) == "table" then
-			local ct = rawget(c, "CacheTable")
-			if type(ct) == "table" then
-				return ct[k]
-			end
-			return c[k]
-		end
-		return nil
-	end
-	function _G.sabcomChannelGet(ch, key)
-		if ch == nil or key == nil then return nil end
-		if type(_G.sProp) == "function" then
-			local v = _G.sProp(ch, key)
-			if v ~= nil then return v end
-		end
-		if type(ch) == "table" then
-			local t = rawget(ch, "CacheTable")
-			if type(t) == "table" then
-				return t[key]
-			end
-		end
-		return _rawChanGet(ch, key)
-	end
+        if mag > lastDist - 0.05 then stall = stall + 1 else stall = 0 end
+        lastDist = mag
+        if stall >= (tonumber(_G.MeerkoStallFrames) or 18) then finish() return end
 
-	function _G.sabcomGetPlotChannel(name)
-		if name == nil then return nil end
-		if typeof(name) == "Instance" then
-			local ord
-			ord = name:GetAttribute("Order") 
-			if ord ~= nil then
-				local ch = _G.SabcomSyncGet("Plot" .. tostring(ord))
-				if type(ch) == "table" then return ch end
-			end
-			name = name.Name
-		end
-		local plotsFolder = workspace:FindFirstChild("Plots")
-		local plotInst = plotsFolder and plotsFolder:FindFirstChild(tostring(name))
-		if plotInst then
-			local ord
-			ord = plotInst:GetAttribute("Order") 
-			if ord ~= nil then
-				local ch = _G.SabcomSyncGet("Plot" .. tostring(ord))
-				if type(ch) == "table" then return ch end
-			end
-		end
-		return _G.SabcomSyncGet(tostring(name))
-	end
+        if mag >= 0.1 then
+            local dir = diff.Unit
+            if (allowJump or diff.Y > 10) and diff.Y > 5 and wpIdx < #waypoints then
+                local hum = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
+                if hum then
+                    local st = hum:GetState()
+                    if st ~= Enum.HumanoidStateType.Jumping and st ~= Enum.HumanoidStateType.Freefall then
+                        pcall(function() hum:ChangeState(Enum.HumanoidStateType.Jumping) end)
+                        pcall(function() hum.Jump = true end)
+                    end
+                end
+            end
+            local _sp = _spd
+            if _G.MeerkoTPSafeMode ~= false then
+                _sp = math.min(_sp, tonumber(_G.MeerkoTPSafeSpeed) or 300)
+            end
+            local _mc = _climbCap()
+            local _vCap = tonumber(_G.MeerkoTPSafeVerticalSpeed) or 110
+            if dir.Y > 0 and dir.Y * _sp > math.min(_mc, _vCap) then
+                _sp = math.min(_mc, _vCap) / dir.Y
+            elseif dir.Y < 0 and math.abs(dir.Y * _sp) > _vCap then
+                _sp = _vCap / math.abs(dir.Y)
+            end
+            _setFlightVel(hrp, Vector3.new(dir.X * _sp, dir.Y * _sp, dir.Z * _sp))
+        end
+    end))
 
-	_G._sabcomRawCT = function(plotName)
-		local c = _G.SabcomSyncGet(plotName)
-		if not c then return nil end
-		return rawget(c, "CacheTable")
-	end
-	_G._sabcomGenShim = setmetatable({
-		GetGeneration = function(_, index, mutation, traits)
-			if type(_G.SabcomGen) == "function" then
-				return _G.SabcomGen(index, mutation, traits)
-			end
-			return 0
-		end,
-	}, {
-		__index = function(_, k)
-			local shim = _G.SabcomAnimShim
-			if type(shim) == "table" then return shim[k] end
-			return nil
-		end,
-	})
+    local totalDist = 0
+    do
+        local prev = hrp.Position
+        for _, wp in ipairs(waypoints) do
+            totalDist = totalDist + (prev - wp).Magnitude
+            prev = wp
+        end
+    end
+    local timeout = totalDist / math.min(MK_SPEED, _runSpeed) + (tonumber(_G.MeerkoFlightGrace) or 2)
+    local elapsed = 0
+    while not done and elapsed < timeout do
+        task.wait(0.05)
+        elapsed = elapsed + 0.05
+        if not (hrp and hrp.Parent) then break end
+    end
+    finish()
+    vZero(hrp)
+end
 
-	function _G.Sabcom_GetPlotChannel(plotRef)
-		local plot = plotRef
-		if type(plotRef) == "string" then
-			local pl = workspace:FindFirstChild("Plots")
-			plot = pl and pl:FindFirstChild(plotRef) or nil
-		end
-		if typeof(plot) == "Instance" then
-			local ord
-			ord = plot:GetAttribute("Order") 
-			if ord ~= nil then
-				local ch = _G.SabcomSyncGet("Plot" .. tostring(ord))
-				if type(ch) == "table" then return ch end
-			end
-			local ch = _G.SabcomSyncGet(plot.Name)
-			if type(ch) == "table" then return ch end
-		elseif plotRef ~= nil then
-			local ch = _G.SabcomSyncGet(tostring(plotRef))
-			if type(ch) == "table" then return ch end
-		end
-		return nil
-	end
-	_G.Sabcom_GetAllPlots = function() return _G.SabcomSyncAll() or {} end
-	_G.Sabcom_GetPlotAnimalList = function(plotName)
-		local ct = _G._sabcomRawCT(plotName)
-		local al = ct and ct.AnimalList
-		return type(al) == "table" and al or nil
-	end
+_OTHER_CLONES = {}
+do
+    local _MY_CLONE = tostring(LP.UserId) .. "_Clone"
+    local _seen = {}
+    local function _isOtherClone(inst)
+        if not inst then return false end
+        local n = inst.Name
+        if n == _MY_CLONE then return false end
+        if n:match("^%d+_Clone$") then return true end
+        if not n:find("lone", 1, true) then return false end
+        if not inst:IsA("Model") then return false end
+        if inst == LP.Character then return false end
+        if not inst:FindFirstChild("HumanoidRootPart") then return false end
+        if not inst:FindFirstChildOfClass("Humanoid") then return false end
+        for _, pl in ipairs(Players:GetPlayers()) do
+            if pl.Character == inst then return false end
+        end
+        return true
+    end
+    local function _neutralize(inst)
+        if not inst or _seen[inst] then return end
+        _seen[inst] = true
+        _OTHER_CLONES[#_OTHER_CLONES + 1] = inst
+        local function declaw(d)
+            if d:IsA("BasePart") and d.CanCollide then pcall(function() d.CanCollide = false end) end
+        end
+        for _, d in ipairs(inst:GetDescendants()) do declaw(d) end
+        inst.DescendantAdded:Connect(declaw)
+        inst.Destroying:Connect(function()
+            _seen[inst] = nil
+            for i = #_OTHER_CLONES, 1, -1 do
+                if _OTHER_CLONES[i] == inst then table.remove(_OTHER_CLONES, i); break end
+            end
+        end)
+    end
+    local function _scan(inst)
+        if _isOtherClone(inst) then _neutralize(inst) end
+    end
+    for _, c in ipairs(workspace:GetChildren()) do _scan(c) end
+    workspace.ChildAdded:Connect(function(c)
+        _scan(c)
+        task.defer(function() if c and c.Parent == workspace then _scan(c) end end)
+    end)
+end
 
-	function _G.Sabcom_SynStatus()
-		local t = _chans()
-		local n = 0
-		if type(t) == "table" then for _ in pairs(t) do n = n + 1 end end
-		return { mod = _syncMod ~= nil, mask = _maskNow() ~= nil, full = _full, channels = n, diag = _G.SabcomSyncDiag }
-	end
-	_chans()
+do
+    local _pSeen = setmetatable({}, { __mode = "k" })
+    local function _declaw(d)
+        if d:IsA("BasePart") and d.CanCollide then pcall(function() d.CanCollide = false end) end
+    end
+    local function _declawChar(char)
+        if not char then return end
+        for _, d in ipairs(char:GetDescendants()) do _declaw(d) end
+        if not _pSeen[char] then
+            _pSeen[char] = true
+            char.DescendantAdded:Connect(_declaw)
+        end
+    end
+    local function _hookPlayer(pl)
+        if pl == LP then return end
+        if pl.Character then _declawChar(pl.Character) end
+        pl.CharacterAdded:Connect(function(c) task.wait(0.15); _declawChar(c) end)
+    end
+    for _, pl in ipairs(Players:GetPlayers()) do _hookPlayer(pl) end
+    Players.PlayerAdded:Connect(_hookPlayer)
+    task.spawn(function()
+        _G.MeerkoBootWait()
+        while true do
+            task.wait(3)
+            local myHrp = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
+            for _, pl in ipairs(Players:GetPlayers()) do
+                if pl ~= LP and pl.Character then
+                    local h = pl.Character:FindFirstChild("HumanoidRootPart")
+                    if not myHrp or (h and (h.Position - myHrp.Position).Magnitude <= 150) then
+                        for _, d in ipairs(pl.Character:GetDescendants()) do _declaw(d) end
+                        task.wait() 
+                    end
+                end
+            end
+        end
+    end)
+end
+
+local _len
+do
+local _DIRS = { Vector3.new(1,0,0), Vector3.new(-1,0,0), Vector3.new(0,0,1), Vector3.new(0,0,-1) }
+local _STRUCT = { ["structure base home"] = true, ["Wall"] = true, ["Floor"] = true, ["Roof"] = true }
+local _SKIP_NAME = { ["DeliveryHitbox"]=true, ["StealHitbox"]=true, ["LaserHitbox"]=true,
+    ["AnimalTarget"]=true, ["Multiplier"]=true, ["Laser"]=true, ["Hitbox"]=true,
+    ["Spawn"]=true, ["MainRoot"]=true, ["SecondFloor"]=true, ["ThirdFloor"]=true, ["Slope"]=true }
+local function _blocks(inst)
+    if not inst then return false end
+    if _SKIP_NAME[inst.Name] then return false end
+    if inst.CanCollide then return true end
+    local _par = inst.Parent
+    if _par and (_par.Name == "ObstacleVolumes" or _par.Name == "ObstacleVolume") then return false end
+    if _STRUCT[inst.Name] then return true end
+    local s = inst.Size
+    if s and math.max(s.X * s.Y, s.X * s.Z, s.Y * s.Z) > 150 then return true end
+    return false
+end
+local function _blocksWide(inst)
+    if not inst then return false end
+    if _SKIP_NAME[inst.Name] then return false end
+    if inst.CanCollide then return true end
+    local _par = inst.Parent
+    if _par and (_par.Name == "ObstacleVolumes" or _par.Name == "ObstacleVolume") then return false end
+    if _STRUCT[inst.Name] then return true end
+    local s = inst.Size
+    if s and math.max(s.X * s.Y, s.X * s.Z, s.Y * s.Z) > 30 then return true end
+    return false
+end
+local function _block(origin, target, blockFn)
+    blockFn = blockFn or _blocks
+    local rp = RaycastParams.new()
+    rp.FilterType = Enum.RaycastFilterType.Exclude
+    rp.IgnoreWater = true
+    local skip = {}
+    for _, pl in ipairs(Players:GetPlayers()) do
+        if pl.Character then skip[#skip + 1] = pl.Character end
+    end
+    for _, cl in ipairs(_OTHER_CLONES) do skip[#skip + 1] = cl end
+    local o = origin
+    for _ = 1, 16 do
+        rp.FilterDescendantsInstances = skip
+        local d = target - o
+        if d.Magnitude < 0.05 then return nil end
+        local res = workspace:Raycast(o, d, rp)
+        if not res then return nil end
+        if blockFn(res.Instance) then return res end
+        skip[#skip + 1] = res.Instance
+        o = res.Position + d.Unit * 0.3
+    end
+    return nil
+end
+local function _clear(a, b) return _block(a, b) == nil end
+local function _clearDist(origin, dir, maxD)
+    local res = _block(origin, origin + dir.Unit * maxD)
+    if not res then return maxD end
+    return (res.Position - origin).Magnitude
+end
+function _len(pts)
+    local s, prev = 0, pts[1]
+    for k = 2, #pts do s = s + (pts[k] - prev).Magnitude; prev = pts[k] end
+    return s
+end
+local function _pull(pts)
+    if #pts <= 2 then return pts end
+    local out = { pts[1] }
+    local i = 1
+    while i < #pts do
+        local j = #pts
+        while j > i + 1 and not _clear(out[#out], pts[j]) do j = j - 1 end
+        out[#out + 1] = pts[j]
+        i = j
+    end
+    return out
+end
+local function _stages(toPos)
+    local st = {}
+    for _, dr in ipairs(_DIRS) do
+        local cd = _clearDist(toPos, dr, 46)
+        if cd >= 12 then st[#st + 1] = toPos + dr * math.min(cd - 5, 38) end
+    end
+    return st
+end
+local function _routeClear(pts)
+    for i = 1, #pts - 1 do
+        if not _clear(pts[i], pts[i + 1]) then return false end
+    end
+    return true
+end
+local function _peakY(pts)
+    local m = -math.huge
+    for _, p in ipairs(pts) do if p.Y > m then m = p.Y end end
+    return m
+end
+local function _starts(fromPos)
+    local pts = { fromPos }
+    if _block(fromPos, fromPos + Vector3.new(0, 40, 0)) then
+        for _, dr in ipairs(_DIRS) do
+            local cd = _clearDist(fromPos, dr, 40)
+            if cd >= 12 then pts[#pts + 1] = fromPos + dr * math.min(cd - 5, 34) end
+        end
+    end
+    return pts
+end
+
+local function _candidates(sp, stage, toPos)
+    local list = {}
+    local function add(mid)
+        if mid then list[#list + 1] = { sp, mid, stage, toPos }
+        else list[#list + 1] = { sp, stage, toPos } end
+    end
+    add(nil)
+    add(Vector3.new(stage.X, sp.Y, stage.Z))
+    add(Vector3.new(sp.X, stage.Y, sp.Z))
+    local dir = Vector3.new(stage.X - sp.X, 0, stage.Z - sp.Z)
+    if dir.Magnitude > 0.1 then
+        dir = dir.Unit
+        local perp = Vector3.new(-dir.Z, 0, dir.X)
+        for _, off in ipairs({ 20, -20, 40, -40 }) do
+            add(sp + perp * off)
+        end
+    end
+    return list
+end
+
+local PathfindingService = game:GetService("PathfindingService")
+local _CLEARANCE = 16
+local function _clearWideRay(a, b)
+    return _block(a, b, _blocksWide) == nil
+end
+
+local _SWEEP_R = 4
+local _ENDPOINT_SLACK = 6
+local _canSphere = nil
+local function _sweepBlockFn(inst)
+    if _G.MeerkoStrictSweep == false then return _blocks(inst) end
+    return _blocksWide(inst)
+end
+local function _sweepDir(a, b)
+    local rp = RaycastParams.new()
+    rp.FilterType = Enum.RaycastFilterType.Exclude
+    rp.IgnoreWater = true
+    local skip = {}
+    for _, pl in ipairs(Players:GetPlayers()) do
+        if pl.Character then skip[#skip + 1] = pl.Character end
+    end
+    for _, cl in ipairs(_OTHER_CLONES) do skip[#skip + 1] = cl end
+    local o = a
+    for _ = 1, 24 do
+        rp.FilterDescendantsInstances = skip
+        local d = b - o
+        if d.Magnitude < 0.05 then return false end
+        local res
+        local ok = pcall(function() res = workspace:Spherecast(o, _SWEEP_R, d, rp) end)
+        if not ok then _canSphere = false; return nil end
+        if not res then return false end
+        if _sweepBlockFn(res.Instance) then return true end
+        skip[#skip + 1] = res.Instance
+        local adv = (res.Distance or 0) - 0.05
+        if adv > 0 then o = o + d.Unit * math.min(adv, d.Magnitude) end
+    end
+    return true
+end
+local function _sweepBlocked(a, b, slackA, slackB)
+    if _canSphere == nil then
+        _canSphere = pcall(function()
+            workspace:Spherecast(Vector3.new(0, 10000, 0), 1, Vector3.new(0, -1, 0), RaycastParams.new())
+        end)
+    end
+    if not _canSphere then return nil end
+    local d = b - a
+    local len = d.Magnitude
+    if len < 0.1 then return false end
+    local u = d / len
+    local a2 = a + u * math.min(slackA or _ENDPOINT_SLACK, len * 0.4)
+    local b2 = b - u * math.min(slackB or _ENDPOINT_SLACK, len * 0.4)
+    local fwd = _sweepDir(a2, b2)
+    if fwd == nil then return nil end
+    if fwd then return true end
+    local rev = _sweepDir(b2, a2)
+    if rev == nil then return nil end
+    return rev
+end
+
+local function _clearWide(a, b, slackA, slackB)
+    if not _clear(a, b) then return false end
+    local sw = _sweepBlocked(a, b, slackA, slackB)
+    if sw ~= nil then return not sw end
+    local d = Vector3.new(b.X - a.X, 0, b.Z - a.Z)
+    if d.Magnitude < 0.1 then
+        local ox = Vector3.new(_CLEARANCE, 0, 0)
+        local oz = Vector3.new(0, 0, _CLEARANCE)
+        return _clearWideRay(a + ox, b + ox) and _clearWideRay(a - ox, b - ox)
+            and _clearWideRay(a + oz, b + oz) and _clearWideRay(a - oz, b - oz)
+    end
+    local perp = Vector3.new(-d.Z, 0, d.X).Unit * _CLEARANCE
+    local up = Vector3.new(0, _CLEARANCE, 0)
+    return _clearWideRay(a + perp, b + perp)
+        and _clearWideRay(a - perp, b - perp)
+        and _clearWideRay(a + up, b + up)
+        and _clearWideRay(a - up, b - up)
+end
+
+local function _crestClear(a, b)
+    if not _clear(a, b) then return false end
+    local cl = tonumber(_G.MeerkoCrestClearance) or 6
+    local d = Vector3.new(b.X - a.X, 0, b.Z - a.Z)
+    if d.Magnitude < 0.1 then
+        return true
+    end
+    local perp = Vector3.new(-d.Z, 0, d.X).Unit * cl
+    return _clearWideRay(a + perp, b + perp)
+        and _clearWideRay(a - perp, b - perp)
+        and _clearWideRay(a + Vector3.new(0, cl, 0), b + Vector3.new(0, cl, 0))
+end
+
+local function _pullWide(pts)
+    if #pts <= 2 then return pts end
+    local out = { pts[1] }
+    local i = 1
+    local n = #pts
+    while i < n do
+        local j = n
+        while j > i + 1 do
+            local a, b = out[#out], pts[j]
+            local sA = (i == 1) and _ENDPOINT_SLACK or 0
+            local sB = (j == n) and _ENDPOINT_SLACK or 0
+            if _clearWide(a, b, sA, sB) then break end
+            j = j - 1
+        end
+        out[#out + 1] = pts[j]
+        i = j
+    end
+    return out
+end
+
+local function _pushOffWalls(pts)
+    if #pts <= 2 then return pts end
+    local MARGIN = 8
+    local MAX_PUSH = 12
+    local out = { pts[1] }
+    for i = 2, #pts - 1 do
+        local p = pts[i]
+        local shift = Vector3.zero
+        for _, dr in ipairs(_DIRS) do
+            local res = _block(p, p + dr * MARGIN, _blocks)
+            if res then
+                local dist = (res.Position - p).Magnitude
+                if dist < MARGIN then
+                    shift = shift - dr * (MARGIN - dist)
+                end
+            end
+        end
+        do
+            local resUp = _block(p, p + Vector3.new(0, MARGIN, 0), _blocks)
+            if resUp then
+                local dist = (resUp.Position - p).Magnitude
+                if dist < 4 then shift = shift + Vector3.new(0, -(4 - dist), 0) end
+            end
+        end
+        if shift.Magnitude > 0.1 then
+            if shift.Magnitude > MAX_PUSH then shift = shift.Unit * MAX_PUSH end
+            local moved = p + shift
+            if _clear(out[#out], moved) then
+                out[#out + 1] = moved
+            else
+                out[#out + 1] = p
+            end
+        else
+            out[#out + 1] = p
+        end
+    end
+    out[#out + 1] = pts[#pts]
+    return out
+end
+
+
+do
+local _vxFloor, _vxSqrt = math.floor, math.sqrt
+local _vxMin, _vxMax = math.min, math.max
+local function _vxAbs(n) return n < 0 and -n or n end
+
+local _vxOverlap = OverlapParams.new()
+_vxOverlap.FilterType = Enum.RaycastFilterType.Exclude
+_vxOverlap.RespectCanCollide = true
+
+local _vxCast = RaycastParams.new()
+_vxCast.FilterType = Enum.RaycastFilterType.Exclude
+_vxCast.RespectCanCollide = true
+_vxCast.IgnoreWater = true
+
+local _vxOrigin
+local _vxDimX, _vxDimY, _vxDimZ = 0, 0, 0
+local _vxSz, _vxInflate = 4, 2.5
+local _vxSolid = {}
+local _vxHeight = 5
+
+local function _vxWorld(sz, x, y, z)
+    local h = sz * 0.5
+    return Vector3.new(_vxOrigin.X + x * sz + h, _vxOrigin.Y + y * sz + h, _vxOrigin.Z + z * sz + h)
+end
+local function _vxKey(x, y, z) return x + y * 1024 + z * 1048576 end
+
+local function _vxIsSolid(x, y, z)
+    if x < 0 or y < 0 or z < 0 or x >= _vxDimX or y >= _vxDimY or z >= _vxDimZ then return true end
+    local k = _vxKey(x, y, z)
+    local c = _vxSolid[k]
+    if c ~= nil then return c end
+    local h = _vxSz * 0.5
+    local cx = _vxOrigin.X + x * _vxSz + h
+    local cy = _vxOrigin.Y + y * _vxSz + h
+    local cz = _vxOrigin.Z + z * _vxSz + h
+    local sxz = _vxSz + _vxInflate
+    local vy = _vxHeight > _vxSz and _vxHeight or _vxSz
+    local vcy = cy - h + vy * 0.5
+    local parts = workspace:GetPartBoundsInBox(CFrame.new(cx, vcy, cz), Vector3.new(sxz, vy, sxz), _vxOverlap)
+    local solid = #parts > 0
+    _vxSolid[k] = solid
+    return solid
+end
+
+local function _vxSegClear(from, to, radius, height, sample)
+    local dir = to - from
+    local mag = dir.Magnitude
+    if mag < 0.05 then return true end
+    if workspace:Raycast(from, dir, _vxCast) then return false end
+    local r = radius > 1 and radius or 1
+    if workspace:Blockcast(CFrame.new(from), Vector3.new(r * 2, height, r * 2), dir, _vxCast) ~= nil then return false end
+    local n = _vxFloor(mag)
+    if sample ~= false and n >= 2 then
+        local step = dir / n
+        local torso = Vector3.new(r * 2, 3, r * 2)
+        for i = 1, n - 1 do
+            local pt = from + step * i
+            if #workspace:GetPartBoundsInBox(CFrame.new(pt), torso, _vxOverlap) > 0 then return false end
+        end
+    end
+    return true
+end
+
+local _vxNeigh = {}
+do
+    for dx = -1, 1 do
+        for dy = -1, 1 do
+            for dz = -1, 1 do
+                if dx ~= 0 or dy ~= 0 or dz ~= 0 then
+                    local nz = (dx ~= 0 and 1 or 0) + (dy ~= 0 and 1 or 0) + (dz ~= 0 and 1 or 0)
+                    local kd = dx + dy * 1024 + dz * 1048576
+                    _vxNeigh[#_vxNeigh + 1] = { dx, dy, dz, _vxSqrt(dx * dx + dy * dy + dz * dz), nz, kd }
+                end
+            end
+        end
+    end
+end
+
+local function _vxNoCorner(cx, cy, cz, off)
+    if off[5] < 2 then return true end
+    if off[1] ~= 0 and _vxIsSolid(cx + off[1], cy, cz) then return false end
+    if off[2] ~= 0 and _vxIsSolid(cx, cy + off[2], cz) then return false end
+    if off[3] ~= 0 and _vxIsSolid(cx, cy, cz + off[3]) then return false end
+    return true
+end
+
+local function _vxSnapGoal(goalPos, x, y, z)
+    if not _vxIsSolid(x, y, z) then return x, y, z end
+    for r = 1, 16 do
+        for dx = -r, r do
+            for dy = -r, r do
+                for dz = -r, r do
+                    if _vxMax(_vxAbs(dx), _vxAbs(dy), _vxAbs(dz)) == r then
+                        local nx, ny, nz = x + dx, y + dy, z + dz
+                        if not _vxIsSolid(nx, ny, nz) and (_vxWorld(_vxSz, nx, ny, nz) - goalPos).Magnitude <= 8 then
+                            return nx, ny, nz
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return x, y, z
+end
+local function _vxSnapStart(pos, x, y, z)
+    if not _vxIsSolid(x, y, z) then return x, y, z end
+    for r = 1, 16 do
+        for dx = -r, r do
+            for dy = -r, r do
+                for dz = -r, r do
+                    if _vxMax(_vxAbs(dx), _vxAbs(dy), _vxAbs(dz)) == r then
+                        local nx, ny, nz = x + dx, y + dy, z + dz
+                        if not _vxIsSolid(nx, ny, nz) and not workspace:Raycast(pos, _vxWorld(_vxSz, nx, ny, nz) - pos, _vxCast) then
+                            return nx, ny, nz
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return x, y, z
+end
+
+local function _vxPush(h, f, key)
+    local i = #h + 1
+    h[i] = { f, key }
+    while i > 1 do
+        local p = _vxFloor(i * 0.5)
+        if h[p][1] <= h[i][1] then break end
+        h[p], h[i] = h[i], h[p]
+        i = p
+    end
+end
+local function _vxPop(h)
+    local n = #h
+    if n == 0 then return nil end
+    local top = h[1]
+    h[1] = h[n]
+    h[n] = nil
+    n -= 1
+    local i = 1
+    while true do
+        local l, r, s = i + i, i + i + 1, i
+        if l <= n and h[l][1] < h[s][1] then s = l end
+        if r <= n and h[r][1] < h[s][1] then s = r end
+        if s == i then break end
+        h[i], h[s] = h[s], h[i]
+        i = s
+    end
+    return top[2]
+end
+
+local _vxHeurW = 2
+local function _vxAStar(sz, startCell, goalCell, startPos, goalPos)
+    local sx, sy, sz2 = _vxSnapStart(startPos, startCell.x, startCell.y, startCell.z)
+    local gx, gy, gz = _vxSnapGoal(goalPos, goalCell.x, goalCell.y, goalCell.z)
+    local goalKey = _vxKey(gx, gy, gz)
+    local startKey = _vxKey(sx, sy, sz2)
+
+    local nodes = { [startKey] = { x = sx, y = sy, z = sz2, g = 0, parent = nil } }
+    local closed = {}
+    local heap = {}
+    _vxPush(heap, 0, startKey)
+
+    local function Heur(x, y, z)
+        local ax, ay, az = x - gx, y - gy, z - gz
+        return _vxSqrt(ax * ax + ay * ay + az * az)
+    end
+
+    local pops = 0
+    while #heap > 0 do
+        local curKey = _vxPop(heap)
+        if closed[curKey] then continue end
+        closed[curKey] = true
+        pops += 1
+        if pops > 300000 then break end
+
+        local cur = nodes[curKey]
+        if curKey == goalKey then
+            local path = {}
+            local n = cur
+            while n do
+                path[#path + 1] = _vxWorld(sz, n.x, n.y, n.z)
+                n = n.parent and nodes[n.parent]
+            end
+            local rev = {}
+            for i = #path, 1, -1 do rev[#rev + 1] = path[i] end
+            return rev
+        end
+
+        local cx, cy, cz = cur.x, cur.y, cur.z
+        local cg = cur.g
+        for _, off in _vxNeigh do
+            local nk = curKey + off[6]
+            if closed[nk] then continue end
+            local nx, ny, nz = cx + off[1], cy + off[2], cz + off[3]
+            if _vxIsSolid(nx, ny, nz) then continue end
+            if not _vxNoCorner(cx, cy, cz, off) then continue end
+            local tg = cg + off[4]
+            local ex = nodes[nk]
+            if not ex or tg < ex.g then
+                if ex then
+                    ex.g, ex.parent, ex.x, ex.y, ex.z = tg, curKey, nx, ny, nz
+                else
+                    nodes[nk] = { x = nx, y = ny, z = nz, g = tg, parent = curKey }
+                end
+                _vxPush(heap, tg + _vxHeurW * Heur(nx, ny, nz), nk)
+            end
+        end
+    end
+    return nil
+end
+
+local function _vxSimplify(path, radius, height)
+    if not path or #path < 3 then return path end
+    local out = { path[1] }
+    local anchor = 1
+    local i = 2
+    while i <= #path do
+        if not _vxSegClear(path[anchor], path[i + 1] or path[i], radius, height, false) then
+            out[#out + 1] = path[i]
+            anchor = i
+        end
+        i += 1
+    end
+    out[#out + 1] = path[#path]
+    return out
+end
+
+voxelRoute = function(fromPos, toPos)
+    local char = LP.Character
+    local _flt = char and { char } or {}
+    for _, cl in ipairs(_OTHER_CLONES) do _flt[#_flt + 1] = cl end
+    _vxOverlap.FilterDescendantsInstances = _flt
+    _vxCast.FilterDescendantsInstances = _flt
+
+    local sz      = tonumber(_G.MeerkoPathCell)   or 4
+    local inflate = tonumber(_G.MeerkoPathRadius) or 2.5
+    local height  = tonumber(_G.MeerkoPathHeight) or 5
+    local pad     = tonumber(_G.MeerkoPathPad)    or 40
+
+    _vxSz, _vxInflate, _vxHeight = sz, inflate, height
+    table.clear(_vxSolid)
+
+    local mn = Vector3.new(_vxMin(fromPos.X, toPos.X), _vxMin(fromPos.Y, toPos.Y), _vxMin(fromPos.Z, toPos.Z)) - Vector3.new(pad, pad, pad)
+    local mx = Vector3.new(_vxMax(fromPos.X, toPos.X), _vxMax(fromPos.Y, toPos.Y), _vxMax(fromPos.Z, toPos.Z)) + Vector3.new(pad, pad, pad)
+    _vxOrigin = mn
+    local size = mx - mn
+    _vxDimX = _vxFloor(size.X / sz) + 1
+    _vxDimY = _vxFloor(size.Y / sz) + 1
+    _vxDimZ = _vxFloor(size.Z / sz) + 1
+    if _vxDimX * _vxDimY * _vxDimZ > 200000 then return nil end
+
+    local startCell = {
+        x = _vxFloor((fromPos.X - _vxOrigin.X) / sz),
+        y = _vxFloor((fromPos.Y - _vxOrigin.Y) / sz),
+        z = _vxFloor((fromPos.Z - _vxOrigin.Z) / sz),
+    }
+    local goalCell = {
+        x = _vxFloor((toPos.X - _vxOrigin.X) / sz),
+        y = _vxFloor((toPos.Y - _vxOrigin.Y) / sz),
+        z = _vxFloor((toPos.Z - _vxOrigin.Z) / sz),
+    }
+
+    local path = _vxAStar(sz, startCell, goalCell, fromPos, toPos)
+    if not path then return nil end
+    path = _vxSimplify(path, inflate, height)
+    if not path or #path == 0 then return nil end
+
+    local route = {}
+    for idx = 2, #path do route[#route + 1] = path[idx] end
+    if #route == 0 or (route[#route] - toPos).Magnitude > 0.5 then
+        route[#route + 1] = toPos
+    end
+    return route
+end
 
 end
+
+_G.MeerkoVoxelRoute = voxelRoute
+
+local _MAP_CENTER = { minX = -458, maxX = -362, minZ = -40, maxZ = 185 }
+local _BYPASS_Z_NORTH, _BYPASS_Z_SOUTH = 205, -95
+local _BYPASS_X_WEST,  _BYPASS_X_EAST  = -525, -295
+
+local function _inCenterZone(x, z)
+    return x >= _MAP_CENTER.minX and x <= _MAP_CENTER.maxX
+       and z >= _MAP_CENTER.minZ and z <= _MAP_CENTER.maxZ
+end
+
+local function _segmentCrossesCenter(a, b)
+    if _inCenterZone(a.X, a.Z) or _inCenterZone(b.X, b.Z) then return true end
+    for i = 1, 10 do
+        local t = i / 11
+        if _inCenterZone(a.X + (b.X - a.X) * t, a.Z + (b.Z - a.Z) * t) then return true end
+    end
+    return false
+end
+
+local function _findBestCenterDetour(fromPos, toPos, y)
+    local candidates = {
+        { Vector3.new(fromPos.X, y, _BYPASS_Z_NORTH), Vector3.new(toPos.X, y, _BYPASS_Z_NORTH) },
+        { Vector3.new(fromPos.X, y, _BYPASS_Z_SOUTH), Vector3.new(toPos.X, y, _BYPASS_Z_SOUTH) },
+        { Vector3.new(_BYPASS_X_WEST, y, fromPos.Z), Vector3.new(_BYPASS_X_WEST, y, toPos.Z) },
+        { Vector3.new(_BYPASS_X_EAST, y, fromPos.Z), Vector3.new(_BYPASS_X_EAST, y, toPos.Z) },
+    }
+    local best, bestLen = nil, math.huge
+    for _, pair in ipairs(candidates) do
+        local w1, w2 = pair[1], pair[2]
+        if _clearWide(fromPos, w1) and _clearWide(w1, w2) and _clearWide(w2, toPos) then
+            local len = (fromPos - w1).Magnitude + (w1 - w2).Magnitude + (w2 - toPos).Magnitude
+            if len < bestLen then bestLen = len; best = { w1, w2 } end
+        end
+    end
+    return best
+end
+_G.MeerkoSegmentCrossesCenter = _segmentCrossesCenter
+_G.MeerkoFindCenterDetour     = _findBestCenterDetour
+
+local function _rowBoxX() return tonumber(_G.MeerkoRowBoxX) or 26 end
+local function _rowBoxZ() return tonumber(_G.MeerkoRowBoxZ) or 30 end
+local function _rowLane() return tonumber(_G.MeerkoRowLane) or 30 end
+
+local function _nearestBase(p)
+    local bi, bd = nil, math.huge
+    for i = 1, 8 do
+        local b = BASES_LOW[i]
+        local d = (p.X - b.X) ^ 2 + (p.Z - b.Z) ^ 2
+        if d < bd then bd = d; bi = i end
+    end
+    if bd > 70 * 70 then return nil end
+    return bi
+end
+
+local function _segmentHitsOtherBase(a, b, ignA, ignB)
+    local hx, hz = _rowBoxX(), _rowBoxZ()
+    for i = 0, 24 do
+        local t = i / 24
+        local px = a.X + (b.X - a.X) * t
+        local pz = a.Z + (b.Z - a.Z) * t
+        for k = 1, 8 do
+            if k ~= ignA and k ~= ignB then
+                local bs = BASES_LOW[k]
+                if math.abs(px - bs.X) <= hx and math.abs(pz - bs.Z) <= hz then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
+local function _findRowDetour(fromPos, toPos, y)
+    local iFrom, iTo = _nearestBase(fromPos), _nearestBase(toPos)
+    if not _segmentHitsOtherBase(fromPos, toPos, iFrom, iTo) then return nil end
+
+    local colX = BASES_LOW[iTo or 1].X
+    local off  = _rowLane()
+    local lanes = {}
+    local outer = (colX < COLUMN_SPLIT_X) and (colX - off) or (colX + off)
+    lanes[#lanes + 1] = outer
+    local inner = (colX < COLUMN_SPLIT_X) and (colX + off) or (colX - off)
+    if not _inCenterZone(inner, (fromPos.Z + toPos.Z) * 0.5) then
+        lanes[#lanes + 1] = inner
+    end
+
+    local best, bestLen = nil, math.huge
+    for _, laneX in ipairs(lanes) do
+        local w1 = Vector3.new(laneX, y, fromPos.Z)
+        local w2 = Vector3.new(laneX, y, toPos.Z)
+        if _clearWide(fromPos, w1) and _clearWide(w1, w2) and _clearWide(w2, toPos)
+           and not _segmentHitsOtherBase(w1, w2, iFrom, iTo) then
+            local len = (fromPos - w1).Magnitude + (w1 - w2).Magnitude + (w2 - toPos).Magnitude
+            if len < bestLen then bestLen = len; best = { w1, w2 } end
+        end
+    end
+    return best
+end
+_G.MeerkoFindRowDetour = _findRowDetour
+
+local _hopRP = RaycastParams.new()
+_hopRP.FilterType = Enum.RaycastFilterType.Exclude
+
+local function _partTopY(inst)
+    local ok, t = pcall(function()
+        local cf, sz = inst.CFrame, inst.Size
+        local half = (math.abs(cf.RightVector.Y) * sz.X
+            + math.abs(cf.UpVector.Y) * sz.Y
+            + math.abs(cf.LookVector.Y) * sz.Z) / 2
+        return cf.Position.Y + half
+    end)
+    if ok and t then return t end
+    return inst.Position.Y + (inst.Size.Y / 2)
+end
+
+local function _hopBlockerTop(a, b)
+    local ignore = { LP.Character }
+    for _, cl in ipairs(_OTHER_CLONES) do ignore[#ignore + 1] = cl end
+    local top = nil
+    for _ = 1, 10 do
+        _hopRP.FilterDescendantsInstances = ignore
+        local r = workspace:Raycast(a, b - a, _hopRP)
+        if not r then break end
+        if _blocks(r.Instance) then
+            local t = _partTopY(r.Instance)
+            if not top or t > top then top = t end
+        end
+        ignore[#ignore + 1] = r.Instance
+    end
+    return top
+end
+
+local function _hopRoute(fromPos, toPos)
+    local flat = Vector3.new(toPos.X - fromPos.X, 0, toPos.Z - fromPos.Z)
+    local dist = flat.Magnitude
+    if dist < 8 then return nil end
+    local dir = flat.Unit
+    local step = tonumber(_G.MeerkoHopStep) or 8
+    local clear = tonumber(_G.MeerkoHopClear) or 4
+    local maxUp = tonumber(_G.MeerkoHopMaxUp) or 22
+    local groundY = fromPos.Y
+    local route = {}
+    local inHop, hopY, hopStart = false, nil, nil
+    local i = step
+    while i <= dist do
+        local a = fromPos + dir * (i - step)
+        local b = fromPos + dir * math.min(i, dist)
+        local ga = Vector3.new(a.X, groundY, a.Z)
+        local gb = Vector3.new(b.X, groundY, b.Z)
+        if not _clear(ga, gb) then
+            local top = _hopBlockerTop(ga, gb) or (groundY + 6)
+            local want = top + clear
+            if want - groundY > maxUp then return nil end
+            if not inHop then
+                inHop, hopY, hopStart = true, want, ga
+                route[#route + 1] = Vector3.new(a.X, want, a.Z)
+            elseif want > hopY then
+                hopY = want
+                route[#route + 1] = Vector3.new(a.X, want, a.Z)
+            end
+        elseif inHop then
+            inHop = false
+            route[#route + 1] = Vector3.new(b.X, hopY, b.Z)
+            route[#route + 1] = gb
+        end
+        i = i + step
+    end
+    if inHop then
+        route[#route + 1] = Vector3.new(toPos.X, hopY, toPos.Z)
+    end
+    route[#route + 1] = toPos
+    return route
+end
+_G.MeerkoHopRoute = _hopRoute
+
+function computeRoute(fromPos, toPos, facingDir, maxLift, preferCrest)
+    local _ = maxLift
+
+    if _G.MeerkoHopFirst == true and not _clearWide(fromPos, toPos) then
+        local hop = _hopRoute(fromPos, toPos)
+        if hop and #hop > 0 then return hop end
+    end
+
+    if _G.MeerkoCrestFirst == true and not _clearWide(fromPos, toPos) then
+        local baseY = math.max(fromPos.Y, toPos.Y, 26)
+        local lifts = { tonumber(_G.MeerkoCrestLift) or 12, 20, 30, 44, 60 }
+        for _, lift in ipairs(lifts) do
+            local cruiseY = baseY + lift
+            local up   = Vector3.new(fromPos.X, cruiseY, fromPos.Z)
+            local over = Vector3.new(toPos.X,   cruiseY, toPos.Z)
+            local crest = { fromPos, up, over, toPos }
+            local ok = true
+            for i = 1, #crest - 1 do
+                local a, b = crest[i], crest[i + 1]
+                if (a - b).Magnitude > 0.5 then
+                    if not _crestClear(a, b) then ok = false; break end
+                end
+            end
+            if ok then return crest end
+        end
+    end
+
+    local centerPatch = nil
+    if _segmentCrossesCenter(fromPos, toPos) and not _clearWide(fromPos, toPos) then
+        centerPatch = _findBestCenterDetour(fromPos, toPos, fromPos.Y)
+        if centerPatch and #centerPatch > 0 then
+            fromPos = centerPatch[#centerPatch]
+        end
+    end
+    local rowPatch = _findRowDetour(fromPos, toPos, fromPos.Y)
+    if rowPatch and #rowPatch > 0 then
+        fromPos = rowPatch[#rowPatch]
+    end
+
+    local function _withPatch(route)
+        if (not centerPatch or #centerPatch == 0)
+           and (not rowPatch or #rowPatch == 0) then return route end
+        local merged = {}
+        if centerPatch then for _, p in ipairs(centerPatch) do merged[#merged + 1] = p end end
+        if rowPatch    then for _, p in ipairs(rowPatch)    do merged[#merged + 1] = p end end
+        for _, p in ipairs(route) do merged[#merged + 1] = p end
+        return merged
+    end
+
+    if _clearWide(fromPos, toPos) then return _withPatch({ toPos }) end
+
+    if preferCrest then
+        local cruiseY = math.max(fromPos.Y, toPos.Y, 26) + 12
+        local up   = Vector3.new(fromPos.X, cruiseY, fromPos.Z)
+        local over = Vector3.new(toPos.X,   cruiseY, toPos.Z)
+        local crest = { fromPos, up, over, toPos }
+        local ok = true
+        for i = 1, #crest - 1 do
+            local a, b = crest[i], crest[i + 1]
+            if (a - b).Magnitude > 0.5 then
+                local sA = (i == 1) and _ENDPOINT_SLACK or 0
+                local sB = (i == #crest - 1) and _ENDPOINT_SLACK or 0
+                if not _clearWide(a, b, sA, sB) then ok = false; break end
+            end
+        end
+        if ok then return _withPatch(crest) end
+    end
+
+    do
+        local vr = voxelRoute(fromPos, toPos)
+        if vr and #vr > 0 then return _withPatch(vr) end
+    end
+
+    local entry = facingDir and (toPos - facingDir * 14) or toPos
+
+    local best, bestLen = nil, math.huge
+    local function consider(pts)
+        if not pts or #pts < 2 then return end
+        local n = #pts
+        for i = 1, n - 1 do
+            local a, b = pts[i], pts[i + 1]
+            if (a - b).Magnitude > 0.5 then
+                local sA = (i == 1) and _ENDPOINT_SLACK or 0
+                local sB = (i == n - 1) and _ENDPOINT_SLACK or 0
+                if not _clearWide(a, b, sA, sB) then return end
+            end
+        end
+        local pulled = _pullWide(pts)
+        local L = _len(pulled)
+        if L < bestLen then best, bestLen = pulled, L end
+    end
+
+    do
+        local dirF = Vector3.new(entry.X - fromPos.X, 0, entry.Z - fromPos.Z)
+        if dirF.Magnitude > 0.1 then
+            dirF = dirF.Unit
+            local perp = Vector3.new(-dirF.Z, 0, dirF.X)
+            local midBase = (fromPos + entry) * 0.5
+            for _, off in ipairs({ 14, -14, 24, -24, 38, -38, 56, -56, 76, -76 }) do
+                consider({ fromPos, midBase + perp * off, entry })
+                consider({ fromPos, fromPos + perp * off, entry + perp * off, entry })
+            end
+        end
+    end
+
+    local navRaw
+    if not best then
+        local groundTo = Vector3.new(entry.X, fromPos.Y, entry.Z)
+        local path = PathfindingService:CreatePath({
+            AgentRadius = 16, AgentHeight = 5, AgentCanJump = true, AgentJumpHeight = 10, AgentMaxSlope = 89,
+        })
+        local FLOAT = 5
+        local nav = { fromPos }
+        local ok = pcall(function()
+            path:ComputeAsync(Vector3.new(fromPos.X, fromPos.Y, fromPos.Z), groundTo)
+        end)
+        if ok and path.Status == Enum.PathStatus.Success then
+            local last = fromPos
+            for _, wp in ipairs(path:GetWaypoints()) do
+                if (wp.Position - last).Magnitude >= 8 then
+                    nav[#nav + 1] = wp.Position + Vector3.new(0, FLOAT, 0)
+                    last = wp.Position
+                end
+            end
+        end
+        nav[#nav + 1] = entry + Vector3.new(0, FLOAT, 0)
+        nav = _pushOffWalls(nav)
+        navRaw = nav
+        consider(nav)
+    end
+
+    local route = best
+    if not route and _clear(fromPos, toPos) then route = { toPos } end
+    if not route and navRaw then route = _pullWide(navRaw) end
+    if not route then route = { toPos } end
+    if (route[#route] - toPos).Magnitude > 0.5 then
+        route[#route + 1] = toPos
+    end
+    return _withPatch(route)
+end
+end
+
+function equipTool(name)
+    local char = LP.Character
+    if not char or char:FindFirstChild(name) then return char ~= nil end
+    local bp = LP:FindFirstChild("Backpack")
+    if not bp then return false end
+    local tool = bp:FindFirstChild(name)
+    if tool and tool:IsA("Tool") then tool.Parent = char; return true end
+    return false
+end
+
+function unequipAll()
+    local char, bp = LP.Character, LP.Backpack
+    if not char or not bp then return end
+    for _, t in pairs(char:GetChildren()) do
+        if t:IsA("Tool") then t.Parent = bp end
+    end
+end
+
+function doClone()
+    local char = LP.Character or LP.CharacterAdded:Wait()
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    if not char or not hum then return false end
+
+    local cloner = (LP:FindFirstChild("Backpack") and LP.Backpack:FindFirstChild("Quantum Cloner"))
+                or char:FindFirstChild("Quantum Cloner")
+    if not cloner then return false end
+
+    if cloner.Parent ~= char then
+        pcall(function() hum:EquipTool(cloner) end)
+        task.wait()
+    end
+
+    pcall(function() hum:UnequipTools() end)
+    task.wait()
+    if cloner.Parent ~= char then
+        pcall(function() hum:EquipTool(cloner) end)
+        task.wait()
+    end
+
+    local pg = LP:FindFirstChild("PlayerGui")
+    local tf = pg and pg:FindFirstChild("ToolsFrames")
+    local qc = tf and tf:FindFirstChild("QuantumCloner")
+    local tb = qc and qc:FindFirstChild("TeleportToClone")
+
+    _G.isCloning = true
+    pcall(function() cloner:Activate() end)
+    task.wait(0.05)
+
+    local fired = false
+    if tb then
+        tb.Visible = true
+        pcall(function() firesignal(tb.MouseButton1Click) end)
+        pcall(function() firesignal(tb.MouseButton1Up) end)
+        pcall(function() firesignal(tb.Activated) end)
+        fired = true
+    end
+
+    task.delay(0.55, function() _G.isCloning = false end)
+    return fired
+end
+
+_TweenTS = game:GetService("TweenService")
+function meerkoTween(rootPart, hum, targetPos, lookDir)
+    if not rootPart or not rootPart.Parent then return end
+    local STEP = 20
+    local speed = (_G.TPTravelSpeed or 100)
+    local hasLook = lookDir ~= nil and lookDir.Magnitude > 0.001
+    local prevAnchored = rootPart.Anchored
+    _vzL(rootPart)
+    _vzA(rootPart)
+    pcall(function() rootPart.Anchored = true end)
+    local deadline = os.clock() + 12
+    while rootPart and rootPart.Parent and os.clock() < deadline do
+        local pos = rootPart.Position
+        local toTarget = targetPos - pos
+        local d = toTarget.Magnitude
+        if d < 0.5 then break end
+        local stepDist = math.min(STEP, d)
+        local stepGoal = pos + toTarget.Unit * stepDist
+        local stepCF
+        if hasLook then
+            stepCF = CFrame.lookAt(stepGoal, stepGoal + lookDir)
+        else
+            stepCF = (rootPart.CFrame - rootPart.CFrame.Position) + stepGoal
+        end
+        local dur = math.clamp(stepDist / speed, 0.02, 1)
+        local tw = _TweenTS:Create(rootPart, TweenInfo.new(dur, Enum.EasingStyle.Linear), { CFrame = stepCF })
+        tw:Play()
+        tw.Completed:Wait()
+    end
+    pcall(function() rootPart.Anchored = prevAnchored end)
+    if rootPart and rootPart.Parent then _vzL(rootPart) end
+end
+
+function _makeOneWay(plat)
+    if not plat then return end
+    local rsConn
+    local lastY = nil
+    rsConn = RunService.Stepped:Connect(function()
+        if not plat or not plat.Parent then
+            if rsConn then rsConn:Disconnect() end
+            return
+        end
+        local char = LP.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            local currentY = hrp.Position.Y
+            if not lastY then lastY = currentY end
+            local deltaY = currentY - lastY
+            local isMovingUp = (hrp.AssemblyLinearVelocity.Y > 1) or (deltaY > 0.01 and deltaY < 5)
+            if isMovingUp then
+                plat.CanCollide = false
+            else
+                plat.CanCollide = (currentY > plat.Position.Y + 0.1)
+            end
+            lastY = currentY
+        end
+    end)
+end
+
+function goToBrainrot(petPos, slot)
+    if not petPos then return end
+    local char, hrp, hum
+    local _t0 = os.clock()
+    repeat
+        char = LP.Character
+        hrp = char and char:FindFirstChild("HumanoidRootPart")
+        hum = char and char:FindFirstChildOfClass("Humanoid")
+        if hrp and hum then break end
+        RunService.Heartbeat:Wait()
+    until os.clock() - _t0 > 3
+    if not hrp or not hum then return end
+    pcall(function() hrp.Anchored = false end)
+    local _equipped = false
+    do
+        local _e0 = os.clock()
+        repeat
+            char = LP.Character
+            for _, _cn in ipairs(CARPET_NAMES) do
+                if char and char:FindFirstChild(_cn) then _equipped = true; break end
+            end
+            if _equipped then break end
+            equipCarpet()
+            RunService.Heartbeat:Wait()
+        until _equipped or os.clock() - _e0 > (tonumber(_G.MeerkoGoCarpetWait) or 1.5)
+        if _equipped then task.wait(tonumber(_G.MeerkoGoCarpetSettle) or 0.03) end
+    end
+    char = LP.Character
+    hrp = char and char:FindFirstChild("HumanoidRootPart")
+    hum = char and char:FindFirstChildOfClass("Humanoid")
+    if not hrp then return end
+    pcall(function() hrp.Anchored = false end)
+    local _plotRad = (petPos.Y <= 8.9) and 26 or 25
+    do
+        local _t0b = os.clock()
+        repeat
+            local p = hrp.Position
+            local inRad = false
+            local plotsFolder = workspace:FindFirstChild("Plots")
+            if plotsFolder then
+                for _, plot in ipairs(plotsFolder:GetChildren()) do
+                    pcall(function()
+                        local pp = plot:GetPivot().Position
+                        if math.abs(p.X - pp.X) < _plotRad and math.abs(p.Z - pp.Z) < _plotRad then inRad = true end
+                    end)
+                    if inRad then break end
+                end
+            end
+            if inRad then break end
+            RunService.Heartbeat:Wait()
+        until os.clock() - _t0b > (tonumber(_G.MeerkoGoPlotWait) or 0.4)
+    end
+    local h = petPos.Y
+    pcall(function()
+        hrp.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+        hrp.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+    end)
+    local _wentUnder = false
+    local _slot = tonumber(slot)
+    local _under = tonumber(_G.MeerkoUnderOffset) or 6
+    local targetY = hrp.Position.Y
+    if (_slot and _slot >= 19) or (not _slot and h > 23.15) then
+        targetY = h - (tonumber(_G.MeerkoUnderOffset3) or 4)
+        _wentUnder = true
+    elseif (_slot and _slot >= 11) or (not _slot and h >= 11 and h <= 23.15) then
+        targetY = h - _under
+        _wentUnder = true
+    elseif (_slot and _slot >= 1) or (not _slot and h >= -6.9 and h <= 8.9) then
+        targetY = tonumber(_G.MeerkoFloor1Y) or -4
+        if _G.MeerkoFloor1Platform ~= false then _wentUnder = true end
+    else
+        targetY = h - _under
+        _wentUnder = true
+    end
+    local _to = Vector3.new(petPos.X, targetY, petPos.Z)
+    if hrp and hrp.Parent then
+        -- Keep whatever direction we were already facing after cloning in;
+        -- only move the position. (CFrame.new(_to) alone would reset the
+        -- rotation and snap us to face the plot/brainrot.)
+        do
+            local _s1 = tonumber(_G.MeerkoGoGlideSpeed1) or 150
+            local _t1 = tonumber(_G.MeerkoGoGlideTime1) or 0.03
+            local _s2 = tonumber(_G.MeerkoGoGlideSpeed2) or 400
+            local _cap = tonumber(_G.MeerkoGoGlideMax) or 2.5
+            local _g0 = os.clock()
+            while os.clock() - _g0 < _cap do
+                if not (hrp and hrp.Parent) then break end
+                if LP:GetAttribute("Stealing") or _G.MeerkoTPStop then break end
+                local d = _to - hrp.Position
+                if d.Magnitude <= 3 then break end
+                equipCarpet()
+                if _G.MeerkoGoJump == true then
+                    local _gh = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
+                    if _gh then
+                        pcall(function() _gh:ChangeState(Enum.HumanoidStateType.Jumping) end)
+                        pcall(function() _gh.Jump = true end)
+                    end
+                end
+                if _G.MeerkoGoZeroEachFrame ~= false then
+                    pcall(function()
+                        hrp.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                        hrp.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+                    end)
+                end
+                local _v = d.Unit * (((os.clock() - _g0) < _t1) and _s1 or _s2)
+                if _G.MeerkoGoNoRise ~= false and hrp.Position.Y >= _to.Y - 0.5 and _v.Y > 0 then
+                    _v = Vector3.new(_v.X, 0, _v.Z)
+                end
+                _setFlightVel(hrp, _v)
+                RunService.Heartbeat:Wait()
+            end
+        end
+        if _G.MeerkoGoJump == true then
+            local _gh = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
+            if _gh then
+                pcall(function() _gh:ChangeState(Enum.HumanoidStateType.Jumping) end)
+                pcall(function() _gh.Jump = true end)
+            end
+        end
+        local _snapCF = CFrame.new(_to) * (hrp.CFrame - hrp.CFrame.Position)
+        pcall(function()
+            hrp.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+            hrp.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+            hrp.CFrame = _snapCF
+        end)
+        -- Hold it for a few frames: a single write can be undone by the
+        -- humanoid's own physics step or a server correction landing in the
+        -- same tick, which would drop us back where we came from.
+        for _ = 1, (tonumber(_G.MeerkoSnapHoldFrames) or 8) do
+            RunService.Heartbeat:Wait()
+            if not (hrp and hrp.Parent) then break end
+            if (hrp.Position - _to).Magnitude > 4 then
+                pcall(function()
+                    hrp.CFrame = _snapCF
+                end)
+                if _G.MeerkoGoJump == true then
+                    local _gh = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
+                    if _gh then
+                        pcall(function() _gh:ChangeState(Enum.HumanoidStateType.Jumping) end)
+                        pcall(function() _gh.Jump = true end)
+                    end
+                end
+            end
+        end
+    end
+    if _wentUnder and _G.MeerkoPlatform ~= false then
+        local _platPos = (hrp and hrp.Parent and hrp.Position) or _to
+        local _feetY = _platPos.Y - 3
+        local _sz = tonumber(_G.MeerkoPlatSize) or 10
+        -- was named "ANGVELSTempPlatform" and found again by that name; both the
+        -- name and the name-lookup are visible to the game. Track it by reference.
+        local _old = _G.__MeerkoPlat
+        if _old and _old.Parent then pcall(function() _old:Destroy() end) end
+        local _plat = Instance.new("Part")
+        _G.__MeerkoPlat = _plat
+        _plat.Size = Vector3.new(_sz, 1, _sz)
+        _plat.Position = Vector3.new(petPos.X, _feetY - (tonumber(_G.MeerkoPlatDrop) or 1.5), petPos.Z)
+        _plat.Anchored = true; _plat.CanCollide = false; pcall(_makeOneWay, _plat); _plat.Transparency = 1
+        _plat.Material = Enum.Material.SmoothPlastic; _plat.Parent = workspace
+        task.spawn(function()
+            local _s = tick()
+            while tick() - _s < (tonumber(_G.MeerkoPlatLife) or 20) do
+                if LP:GetAttribute("Stealing") then break end
+                task.wait(0.1)
+            end
+            if _plat and _plat.Parent then _plat:Destroy() end
+        end)
+    end
+end
+
+_Stats = game:GetService("Stats")
+function _pingMs()
+    local ok, p = pcall(function() return LP:GetNetworkPing() * 1000 end)
+    if ok and type(p) == "number" and p > 0 then return p end
+    local ok2, p2 = pcall(function()
+        return _Stats.Network.ServerStatsItem["Data Ping"]:GetValue()
+    end)
+    if ok2 and type(p2) == "number" and p2 > 0 then return p2 end
+    return 0
+end
+_G.MeerkoPingMs = _pingMs
+function _pingAdjustSpeed(spd)
+    local thresh = tonumber(_G.MeerkoPingThresh) or 170
+    local capped = tonumber(_G.MeerkoHighPingSpeed) or 400
+    if _pingMs() >= thresh and spd > capped then return capped end
+    return spd
+end
+
+function _inVoid(hrp)
+    if not hrp or not hrp.Parent then return true end
+    local voidY = tonumber(_G.MeerkoVoidY) or -50
+    return hrp.Position.Y < voidY
+end
+function _waitOutOfVoid(timeout)
+    local t0 = os.clock()
+    local good = 0
+    while os.clock() - t0 < (timeout or 12) do
+        if _G.MeerkoTPStop then return false end
+        local char = LP.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        if hrp and hrp.Parent and not _inVoid(hrp) and math.abs(hrp.AssemblyLinearVelocity.Y) < 12 then
+            good += 1
+            if good >= 4 then return true end
+        else
+            good = 0
+        end
+        RunService.Heartbeat:Wait()
+    end
+    return false
+end
+
+do
+    local lastSafe = nil
+    local recovering = false
+    RunService.Heartbeat:Connect(LPH_NO_VIRTUALIZE(function()
+        if _G.MeerkoVoidRecover == false then return end
+        local char = LP.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        if not hrp or not hrp.Parent then return end
+        local voidY = tonumber(_G.MeerkoVoidY) or -50
+        if hrp.Position.Y >= voidY then
+            if math.abs(hrp.AssemblyLinearVelocity.Y) < 40 then
+                lastSafe = hrp.Position
+            end
+            return
+        end
+        if recovering or not lastSafe then return end
+        recovering = true
+
+        pcall(function()
+            _vzL(hrp)
+            _vzA(hrp)
+            hrp.CFrame = CFrame.new(lastSafe + Vector3.new(0, 5, 0))
+        end)
+        task.spawn(function()
+            local delay = tonumber(_G.MeerkoVoidRecoverDelay) or 0
+            if delay > 0 then task.wait(delay) end
+            local vy = tonumber(_G.MeerkoVoidY) or -50
+            local tries = 0
+            while tries < 80 do
+                local c = LP.Character
+                local h = c and c:FindFirstChild("HumanoidRootPart")
+                if not h or not h.Parent then break end
+                if h.Position.Y >= vy and math.abs(h.AssemblyLinearVelocity.Y) < 18 then
+                    break
+                end
+                if lastSafe then
+                    pcall(function()
+                        _vzL(h)
+                        _vzA(h)
+                        h.CFrame = CFrame.new(lastSafe + Vector3.new(0, 5, 0))
+                    end)
+                end
+                tries = tries + 1
+                RunService.Heartbeat:Wait()
+            end
+            recovering = false
+        end)
+    end))
+end
+
+isTeleporting = false
 
 task.spawn(function()
-	local plots
-	local t0 = os.clock()
-	repeat
-		plots = workspace:FindFirstChild("Plots")
-		if not plots then RunService.Heartbeat:Wait() end
-	until plots or (os.clock() - t0) > 25
-	if not plots then return end
-	local done = {}
-	local _lastPlotWarm = 0
-	local conn
-	conn = RunService.Heartbeat:Connect(function()
-		local now = os.clock()
-		if now - _lastPlotWarm < 0.12 then return end
-		_lastPlotWarm = now
-		_G.SabcomSyncAll()
-		local kids = plots:GetChildren()
-		local pending = 0
-		for _, plot in ipairs(kids) do
-			if not done[plot.Name] then
-				pending = pending + 1
-				local ch
-				if _G.SabcomSyncGet then
-					local ord
-					ord = plot:GetAttribute("Order")
-					if ord ~= nil then ch = _G.SabcomSyncGet("Plot" .. tostring(ord)) end
-					if not ch then ch = _G.SabcomSyncGet(plot.Name) end
-				end
-				if ch then
-					if ch.Get then
-							ch:Get("AnimalList")
-							ch:Get("Owner")
-						end
-					local al = _G.sProp and _G.sProp(ch, "AnimalList")
-					if al ~= nil then done[plot.Name] = true end
-				end
-			end
-		end
-		if #kids > 0 and pending == 0 and conn then
-			conn:Disconnect()
-			conn = nil
-		end
-	end)
+    local _since = nil
+    while true do
+        task.wait(1)
+        if isTeleporting then
+            _since = _since or os.clock()
+            if os.clock() - _since > (tonumber(_G.MeerkoTPWatchdog) or 25) then
+                isTeleporting = false
+                _G.MeerkoStealHold = false
+                _since = nil
+                if _G.MeerkoTPDebug ~= false then
+                    warn("[MeerkoTP] watchdog: isTeleporting was stuck -> cleared")
+                end
+            end
+        else
+            _since = nil
+        end
+    end
 end)
 
-do
-	local RunSvc = RunService
-	local conns = {}
-	local stopped = false
-	local function stopAll()
-		if stopped then return end
-		stopped = true
-		for _, c in ipairs(conns) do c:Disconnect() end
-		conns = {}
-	end
-	local probe = function()
-		if stopped then return end
-		if _G.__sabcomRestReady then
-			stopAll()
-			return
-		end
-		_G.Sabcom_MaskNow()
-		_G.SabcomSyncAll()
-	end
+_G.MeerkoDoClone = doClone
+_G.MeerkoIsTeleporting = function() return isTeleporting end
 
-	local function sig(...)
-		for _, n in ipairs({ ... }) do
-			local s = RunSvc[n]
-			if typeof(s) == "RBXScriptSignal" then return s end
-		end
-		return nil
-	end
-	for _, s in ipairs({
-		sig("PostSimulation", "Heartbeat"),
-		}) do
-		local c = s:Connect(probe)
-		if c then conns[#conns + 1] = c end
-	end
-
-	local watch = {
-		Synchronizer = true, PlotController = true,
-		Packages = true, Controllers = true,
-	}
-	do
-		local c = RS.DescendantAdded:Connect((function(d)
-			if watch[d.Name] then probe() end
-		end))
-		if c then conns[#conns + 1] = c end
-	end
-
-	task.spawn(function()
-		local t = os.clock()
-		while os.clock() - t < 20 and not stopped do
-			local plots = workspace:FindFirstChild("Plots")
-			if plots then
-				local c = plots.ChildAdded:Connect(probe)
-				if c then conns[#conns + 1] = c end
-				return
-			end
-			RunSvc.Heartbeat:Wait()
-		end
-	end)
-
+function cframeStepThrough(hrp, waypoints, stepSize)
+    if not hrp or not hrp.Parent or #waypoints == 0 then return end
+    stepSize = stepSize or 24
+    local lockY = hrp.Position.Y
+    vizPath(hrp.Position, waypoints)
+    local wpIdx = 1
+    local deadline = os.clock() + 10
+    local _lastFire = 0
+    while hrp and hrp.Parent and os.clock() < deadline do
+        if _G.MeerkoTPStop then break end
+        do
+            local char = hrp.Parent
+            local hum = char and char:FindFirstChildOfClass("Humanoid")
+            if hum and char and not char:FindFirstChild("Grapple Hook") then
+                local g = findGrapple()
+                if g then pcall(function() hum:EquipTool(g) end) end
+            end
+            if os.clock() - _lastFire > 0.3 then
+                _lastFire = os.clock()
+                if char and char:FindFirstChild("Grapple Hook") then
+                    -- Elite-method fire can yield (cooldown gate / equip wait);
+                    -- spawn it so the 24-stud step cadence stays on Heartbeat
+                    task.spawn(_fireGrapple)
+                end
+            end
+        end
+        local target = waypoints[wpIdx]
+        local flat = Vector3.new(target.X - hrp.Position.X, 0, target.Z - hrp.Position.Z)
+        local mag = flat.Magnitude
+        if mag < 2 then
+            wpIdx = wpIdx + 1
+            if wpIdx > #waypoints then break end
+            RunService.Heartbeat:Wait()
+        else
+            local hop = math.min(stepSize, mag)
+            local nextPos = hrp.Position + flat.Unit * hop
+            local _, y = hrp.CFrame:ToEulerAnglesYXZ()
+            hrp.CFrame = CFrame.new(Vector3.new(nextPos.X, lockY, nextPos.Z)) * CFrame.Angles(0, y, 0)
+            _vzL(hrp)
+            _vzA(hrp)
+            task.wait(hop / math.clamp(tonumber(_G.MeerkoCFrameSpeed) or 450, 60, 900))
+        end
+    end
+    do
+        local hum = hrp and hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
+        if hum then pcall(function() hum:UnequipTools() end) end
+        task.wait(0.05)
+        equipCarpet()
+    end
+    if hrp and hrp.Parent then
+        _vzL(hrp)
+        _vzA(hrp)
+    end
 end
 
-do
-	local _AD,_MD,_TD
-	local _data = (function()
-		if _AD then return true end
-		do
-			local d=RS:FindFirstChild("Datas")
-			if not d then return end
-			local a,m,t=d:FindFirstChild("Animals"),d:FindFirstChild("Mutations"),d:FindFirstChild("Traits")
-			if not a or not m or not t then return end
-			_AD=require(a)
-			_MD=require(m)
-			_TD=require(t)
-		end
-		return _AD~=nil
-	end)
-	_G.SabcomGen=function(index,mutation,traits)
-		if not _data() then return 0 end
-		local info=_AD[index]
-		if not info or not info.Generation then return 0 end
-		local mult=1
-		if mutation and mutation~="None" and mutation~="" then
-			local m=_MD[mutation]
-			if m and m.Modifier then mult=mult+m.Modifier end
-		end
-		if type(traits)=="table" then
-			for _,tr in ipairs(traits)do
-				local t=_TD[tr]
-				if t and t.MultiplierModifier then mult=mult+t.MultiplierModifier end
-			end
-		end
-		return info.Generation*mult
-	end
-	_G.SabcomAnimShim=setmetatable({GetGeneration=(function(_,index,mutation,traits)return _G.SabcomGen(index,mutation,traits)end)},{
-	__index=(function(_,k)
-		local sh=RS:FindFirstChild("Shared"); local an=sh and sh:FindFirstChild("Animals"); local real = an and require(an)
-		if type(real)=="table" then return rawget(real,k) end
-		return nil
-	end)})
+function _isStraightRoute(fromPos, route)
+    if not route or #route <= 1 then return true end
+    local turns, lastDir, prev = 0, nil, fromPos
+    for _, wp in ipairs(route) do
+        local seg = wp - prev
+        if seg.Magnitude > 1 then
+            local dir = seg.Unit
+            if lastDir and dir:Dot(lastDir) < 0.94 then turns = turns + 1 end
+            lastDir = dir
+        end
+        prev = wp
+    end
+    return turns <= (tonumber(_G.MeerkoStraightMaxTurns) or 1)
 end
 
-local AnimalsData, AnimalsShared, NumberUtils
-local MutationsData, TraitsData, SyncMod
+function doVelocityTP(forceGrapple)
+    if isTeleporting then return end
+    if LP:GetAttribute("Stealing") == true then return end
+    isTeleporting = true
+    if _G.MeerkoDisarmSteal then _G.MeerkoDisarmSteal() end
+    _G.MeerkoTPStop = false
+    clearViz()
+    if not NetModule then pcall(loadNet) end
 
-local function safeRequire(path)
-	if not path then return nil end
-	local res = require(path)
-	return res or nil
+    local char = LP.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    if not hrp or not hum then isTeleporting = false; return end
+
+    pcall(function()
+        hrp.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+        hrp.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+    end)
+
+    if _inVoid(hrp) or hrp.AssemblyLinearVelocity.Y < -40 then
+        _waitOutOfVoid(12)
+        if _G.MeerkoTPStop then isTeleporting = false; return end
+        char = LP.Character
+        hrp = char and char:FindFirstChild("HumanoidRootPart")
+        hum = char and char:FindFirstChildOfClass("Humanoid")
+        if not hrp or not hum then isTeleporting = false; return end
+    end
+
+    local allPets = scanForTP()
+    if #allPets == 0 then
+        local _t0 = os.clock()
+        while #allPets == 0 and os.clock() - _t0 < (tonumber(_G.MeerkoTPScanWait) or 10) do
+            task.wait(0.05)
+            allPets = scanForTP()
+        end
+    end
+    if #allPets == 0 then isTeleporting = false; return end
+
+    if not (type(_G.MeerkoStealTargetUID) == "string" and _G.MeerkoStealTargetUID ~= "") then
+        local pool, seen = {}, {}
+        local function _absorb(list)
+            if type(list) ~= "table" then return end
+            for _, p in ipairs(list) do
+                if not p.conveyor and p.plot and p.slot ~= nil then
+                    local uid = tostring(p.plot) .. "_" .. tostring(p.slot)
+                    local ex = seen[uid]
+                    if not ex then
+                        seen[uid] = p
+                        pool[#pool + 1] = p
+                    elseif (p.mps or 0) > (ex.mps or 0) then
+                        for i = 1, #pool do
+                            if pool[i] == ex then pool[i] = p break end
+                        end
+                        seen[uid] = p
+                    end
+                end
+            end
+        end
+        _absorb(allPets)
+        for _ = 1, (tonumber(_G.MeerkoTPScans) or 2) do
+            task.wait(tonumber(_G.MeerkoTPScanGap) or 0.05)
+            local _ok, _more = pcall(scanForTP)
+            if _ok then _absorb(_more) end
+        end
+        if #pool > 0 then allPets = pool end
+    end
+
+    local pet
+    if type(_G.MeerkoStealTargetUID) == "string" and _G.MeerkoStealTargetUID ~= "" then
+        pet = _findStealTarget(allPets)
+        if not pet then isTeleporting = false; return end
+    else
+        local prio, best
+        for _, p in ipairs(allPets) do
+            if not p.conveyor then
+                if p._pri and (not prio or p._pri < prio._pri) then prio = p end
+                if not best or (p.mps or 0) > (best.mps or 0) then best = p end
+            end
+        end
+        pet = prio or best or allPets[1]
+    end
+    local petPos = pet.position
+    local petName = pet.name
+    if _G.MeerkoArmSteal then pcall(_G.MeerkoArmSteal, pet) end
+    _G.MeerkoStealSay(string.format("TP start -> %s [%s/%s] mps=%s pri=%s of %d", tostring(pet and pet.name), tostring(pet and pet.plot), tostring(pet and pet.slot), tostring(pet and pet.mps), tostring(pet and pet._pri), #allPets))
+
+    _G.MeerkoStealHold = true
+
+    pcall(fireGrapple)
+
+    local adjY = petPos.Y
+    if TALL_PETS[petName] then adjY = petPos.Y - TALL_OFFSET end
+    local coordTable = adjY > 23.15 and MK_UPPER or MK_LOWER
+
+    if petPos.Y <= 8.9 and isPlotUnlocked(pet.plot) then
+        carpetEngage(forceGrapple)
+        vZero(hrp)
+        local _to = Vector3.new(petPos.X, -4, petPos.Z)
+        local route = computeRoute(hrp.Position, _to, nil)
+        if not route or #route == 0 then route = { _to } end
+        local _straight = _isStraightRoute(hrp.Position, route)
+        local _obSpeed = math.clamp(tonumber(_G.TPVelocity) or 400, 200, 750)
+        if _straight then
+            _obSpeed = math.clamp(tonumber(_G.MeerkoStraightSpeed) or 300, 100, 500)
+        end
+        do
+            local _len, _prev = 0, hrp.Position
+            for _, wp in ipairs(route) do _len = _len + (wp - _prev).Magnitude; _prev = wp end
+            if _len < 100 then
+                _obSpeed = math.clamp(tonumber(_G.MeerkoCloseSpeed) or 80, 20, 400)
+            end
+        end
+        _obSpeed = _pingAdjustSpeed(_obSpeed)
+        velMoveThrough(hrp, route, _obSpeed, true, true)
+        if hrp and hrp.Parent then
+            _vzL(hrp)
+            _vzA(hrp)
+        end
+        _G.MeerkoStealHold = false
+        isTeleporting = false
+        if _G.MeerkoTPStop then return end
+        return
+    end
+
+    local closestData, skyKey = findClosest(petPos, coordTable)
+    if not closestData or not skyKey then _G.MeerkoStealHold = false; isTeleporting = false; return end
+
+    local destPos = closestData.coord
+
+    local _carpet = carpetEngage(forceGrapple)
+    vZero(hrp)
+
+    local facingDir = closestData.facing == "NORTH" and Vector3.new(0, 0, -1) or Vector3.new(0, 0, 1)
+
+    local _frontApproach = false
+    do
+        local isUpper = (coordTable == MK_UPPER)
+        local idx = getClosestBaseIdx(petPos)
+        local frontCoord, frontFace = buildFrontCandidate(idx, isUpper, hrp.Position.Z)
+        local bestCoord, bestFace = frontCoord, frontFace
+        local bestDist = (hrp.Position - frontCoord).Magnitude
+        local pickedFront = true
+
+        -- 1st floor (MK_LOWER) approaches from the side only.
+        -- The front candidate is still built and left in bestCoord as a
+        -- fallback: plotSides() can legitimately return nothing for a plot,
+        -- and without it there would be no destination at all.
+        local _sideOnly = (not isUpper) and (_G.MeerkoFirstFloorSideOnly ~= false)
+
+        local _tb = BASES_LOW[idx]
+        local _isWest = idx <= 4
+        local _rowBlocked = false
+        local _dx, _dz = hrp.Position.X - _tb.X, hrp.Position.Z - _tb.Z
+        local _distToBase = math.sqrt(_dx * _dx + _dz * _dz)
+        local _sideRange = tonumber(_G.MeerkoSideTPRange) or 100
+        -- _rowBlocked forces the front approach, so it must not run in side-only mode
+        if not _sideOnly and _G.MeerkoPreferFrontOnRow ~= false and _distToBase > _sideRange then
+            for i = 1, 8 do
+                if i ~= idx and (i <= 4) == _isWest then
+                    local bz = BASES_LOW[i].Z
+                    if (bz - hrp.Position.Z) * (bz - _tb.Z) < 0 then _rowBlocked = true; break end
+                end
+            end
+        end
+
+        -- drop the front's distance so the nearest side always wins the compare
+        if _sideOnly then bestDist = math.huge end
+
+        if not _rowBlocked then
+            for _, d in ipairs(plotSides(coordTable, idx)) do
+                local dd = (hrp.Position - d.coord).Magnitude
+                if dd < bestDist then
+                    bestDist = dd
+                    bestCoord = d.coord
+                    bestFace = d.facing == "NORTH" and Vector3.new(0, 0, -1) or Vector3.new(0, 0, 1)
+                    pickedFront = false
+                end
+            end
+        end
+        destPos = bestCoord
+        facingDir = bestFace
+        _frontApproach = pickedFront
+        if _G.MeerkoTPDebug ~= false then
+            local _mode = pickedFront and "FRONT" or "SIDE"
+            if _sideOnly then
+                -- pickedFront still true here means no side coord existed
+                _mode = pickedFront and "FRONT(sideonly-fallback)" or "SIDE(sideonly)"
+            end
+            warn(string.format(
+                "[MeerkoTP] PICK baseIdx=%d %s floor=%s | pet=(%.0f,%.0f,%.0f) plot=%s | dest=(%.0f,%.0f,%.0f) | me=(%.0f,%.0f,%.0f) | sides=%d",
+                idx, _mode, isUpper and "2nd" or "1st",
+                petPos.X, petPos.Y, petPos.Z, tostring(pet.plot),
+                destPos.X, destPos.Y, destPos.Z,
+                hrp.Position.X, hrp.Position.Y, hrp.Position.Z,
+                #plotSides(coordTable, idx)))
+        end
+    end
+
+    if facingDir and facingDir.Magnitude > 0.1 then
+        local axis = facingDir.Unit
+        local toPlayer = hrp.Position - destPos
+        local sign = (axis:Dot(toPlayer) >= 0) and 1 or -1
+        destPos = destPos + axis * sign * (tonumber(_G.MeerkoCloneBackoff) or 0.5)
+    end
+
+    local _route = computeRoute(hrp.Position, destPos, facingDir, nil, true)
+
+    local ASCEND_STEP = 10
+    local _stepped = {}
+    do
+        local prev = hrp.Position
+        for _, wp in ipairs(_route) do
+            local dy = wp.Y - prev.Y
+            if dy > ASCEND_STEP * 1.5 then
+                local n = math.ceil(dy / ASCEND_STEP)
+                for s = 1, n - 1 do
+                    local t = s / n
+                    _stepped[#_stepped + 1] = Vector3.new(
+                        prev.X + (wp.X - prev.X) * t,
+                        prev.Y + dy * t,
+                        prev.Z + (wp.Z - prev.Z) * t
+                    )
+                end
+            end
+            _stepped[#_stepped + 1] = wp
+            prev = wp
+        end
+    end
+    local _mainSpeed = math.clamp(tonumber(_G.TPVelocity) or 400, 200, 750)
+    do
+        local _len, _prev = 0, hrp.Position
+        for _, wp in ipairs(_route) do _len = _len + (wp - _prev).Magnitude; _prev = wp end
+        if _len < 100 then
+            _mainSpeed = math.clamp(tonumber(_G.MeerkoCloseSpeed) or 80, 20, 400)
+        end
+    end
+    _mainSpeed = _pingAdjustSpeed(_mainSpeed)
+    velMoveThrough(hrp, _stepped, _mainSpeed, true, true)
+    if _G.MeerkoTPStop then
+        if hrp and hrp.Parent then vZero(hrp) end
+        _G.MeerkoStealHold = false
+        isTeleporting = false
+        return
+    end
+
+    do
+        local above = destPos + Vector3.new(0, 16, 0)
+        local _t0 = os.clock()
+        while os.clock() - _t0 < 1.5 do
+            if not hrp or not hrp.Parent then break end
+            if LP:GetAttribute("Stealing") or _G.MeerkoTPStop then break end
+            equipCarpet()
+            local d = above - hrp.Position
+            local flat = Vector3.new(d.X, 0, d.Z).Magnitude
+            if flat <= 3 and hrp.Position.Y >= destPos.Y then break end
+            if d.Y > 3 then
+                local _hum = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
+                if _hum then
+                    local st = _hum:GetState()
+                    if st ~= Enum.HumanoidStateType.Jumping and st ~= Enum.HumanoidStateType.Freefall then
+                        pcall(function() _hum:ChangeState(Enum.HumanoidStateType.Jumping) end)
+                        pcall(function() _hum.Jump = true end)
+                    end
+                end
+            end
+            _setFlightVel(hrp, d.Unit * math.min(math.max(d.Magnitude * 8, 55), 320))
+            _vzA(hrp)
+            RunService.Heartbeat:Wait()
+        end
+    end
+
+    do
+        local _runCap = _frontApproach and (tonumber(_G.MeerkoFrontRunIn) or 120) or 320
+        if _G.MeerkoTPSafeMode ~= false then
+            _runCap = math.min(_runCap, tonumber(_G.MeerkoTPSafeSpeed) or 300)
+        end
+        local _t0 = os.clock()
+        local _bestMag, _bestT = math.huge, os.clock()
+        while os.clock() - _t0 < 4 do
+            if not hrp or not hrp.Parent then break end
+            if LP:GetAttribute("Stealing") or _G.MeerkoTPStop then break end
+            equipCarpet()
+            local diff = destPos - hrp.Position
+            local mag = diff.Magnitude
+            if mag <= 3 then break end
+            if mag < _bestMag - 0.5 then _bestMag = mag; _bestT = os.clock()
+            elseif os.clock() - _bestT > 0.6 then break end
+            if diff.Y > 3 then
+                local _hum = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
+                if _hum then
+                    local st = _hum:GetState()
+                    if st ~= Enum.HumanoidStateType.Jumping and st ~= Enum.HumanoidStateType.Freefall then
+                        pcall(function() _hum:ChangeState(Enum.HumanoidStateType.Jumping) end)
+                        pcall(function() _hum.Jump = true end)
+                    end
+                end
+            end
+            _setFlightVel(hrp, diff.Unit * math.min(math.max(mag * 8, 55), _runCap))
+            _vzA(hrp)
+            RunService.Heartbeat:Wait()
+        end
+    end
+
+    if hrp and hrp.Parent and not _G.MeerkoTPStop then
+        local _tol = tonumber(_G.MeerkoTPReachTolerance) or 4.5
+        local _retryMax = math.clamp(tonumber(_G.MeerkoTPRetryCount) or 2, 0, 4)
+        for _retry = 1, _retryMax do
+            if not (hrp and hrp.Parent) or _G.MeerkoTPStop then break end
+            local _flatOff = Vector3.new(destPos.X - hrp.Position.X, 0, destPos.Z - hrp.Position.Z).Magnitude
+            local _yOff = math.abs(destPos.Y - hrp.Position.Y)
+            if _flatOff <= _tol and _yOff <= 6 then break end
+            if _G.MeerkoTPDebug ~= false then
+                warn(string.format("[MeerkoTP] REACH retry %d/%d: flat=%.1f y=%.1f -> fresh route", _retry, _retryMax, _flatOff, _yOff))
+            end
+            task.wait(tonumber(_G.MeerkoTPRetryDelay) or 0.08)
+            local _fresh = computeRoute(hrp.Position, destPos, facingDir, nil, true)
+            if not _fresh or #_fresh == 0 then _fresh = { destPos } end
+            local _freshStepped = {}
+            local _prev = hrp.Position
+            for _, _wp in ipairs(_fresh) do
+                local _dy = _wp.Y - _prev.Y
+                if _dy > 15 then
+                    local _n = math.ceil(_dy / 10)
+                    for _s = 1, _n - 1 do
+                        local _t = _s / _n
+                        _freshStepped[#_freshStepped + 1] = Vector3.new(
+                            _prev.X + (_wp.X - _prev.X) * _t,
+                            _prev.Y + _dy * _t,
+                            _prev.Z + (_wp.Z - _prev.Z) * _t)
+                    end
+                end
+                _freshStepped[#_freshStepped + 1] = _wp
+                _prev = _wp
+            end
+            local _retrySpeed = _mainSpeed
+            if _G.MeerkoTPSafeMode ~= false then
+                _retrySpeed = math.min(_retrySpeed, tonumber(_G.MeerkoTPSafeSpeed) or 300)
+            end
+            velMoveThrough(hrp, _freshStepped, _retrySpeed, true, true)
+            if hrp and hrp.Parent then
+                _vzL(hrp); _vzA(hrp)
+            end
+        end
+    end
+
+    if hrp and hrp.Parent then
+        hrp.CFrame = CFrame.new(hrp.Position, hrp.Position + facingDir)
+    end
+    vZero(hrp)
+
+    local syncFrames = (_G.MeerkoTPSafeMode ~= false) and 8 or 5
+    local syncConn
+    syncConn = RunService.Heartbeat:Connect(LPH_NO_VIRTUALIZE(function()
+        if not hrp or not hrp.Parent then syncConn:Disconnect(); return end
+        syncFrames = syncFrames - 1
+        hrp.CFrame = CFrame.new(destPos, destPos + facingDir)
+        _vzL(hrp)
+        _vzA(hrp)
+        if syncFrames <= 0 then syncConn:Disconnect() end
+    end))
+
+    for _ = 1, 20 do
+        task.wait(0.05)
+        if hum.FloorMaterial ~= Enum.Material.Air then break end
+    end
+
+    do
+        local stable, _st0 = 0, os.clock()
+        while os.clock() - _st0 < 3 do
+            if _G.MeerkoTPStop then break end
+            local _hrp = char and char:FindFirstChild("HumanoidRootPart")
+            if not _hrp or not _hrp.Parent then break end
+            local flat = (Vector3.new(_hrp.Position.X, 0, _hrp.Position.Z) - Vector3.new(destPos.X, 0, destPos.Z)).Magnitude
+            if flat <= 3.5 and math.abs(_hrp.Position.Y - destPos.Y) <= 4 then
+                stable = stable + 1
+                if stable >= 4 then break end
+            else
+                stable = 0
+                pcall(function() _hrp.CFrame = CFrame.new(destPos, destPos + facingDir) end)
+                _vzL(_hrp)
+                _vzA(_hrp)
+            end
+            RunService.Heartbeat:Wait()
+        end
+    end
+    local _ahrp = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
+    local _clonePos = (_ahrp and _ahrp.Parent and _ahrp.Position) or destPos
+
+    local _clonePlat = Instance.new("Part")
+    -- was "MeerkoHubClonePlatform"; an unnamed Part is indistinguishable from
+    -- the thousands the game already has in Workspace.
+    _clonePlat.Size = Vector3.new(12, 1, 12)
+    _clonePlat.Position = Vector3.new(_clonePos.X, _clonePos.Y - 3, _clonePos.Z)
+    _clonePlat.Anchored = true
+    _clonePlat.CanCollide = true
+    _clonePlat.Transparency = 1
+    _clonePlat.Material = Enum.Material.SmoothPlastic
+    _clonePlat.Parent = workspace
+
+    if _ahrp and _ahrp.Parent then
+        _vzL(_ahrp)
+        _vzA(_ahrp)
+    end
+
+    local _preClonePos, _preCloneChar
+    do
+        _preCloneChar = LP.Character
+        local _h = _preCloneChar and _preCloneChar:FindFirstChild("HumanoidRootPart")
+        _preClonePos = _h and _h.Position or destPos
+    end
+    local _charAdded = false
+    local _caConn = LP.CharacterAdded:Connect(function() _charAdded = true end)
+
+    _G.MeerkoStealHold = false
+
+    task.wait(tonumber(_G.LandingDelay) or tonumber(_G.TPCloneDelay) or 0.35)
+
+    if facingDir and facingDir.Magnitude > 0.1 then
+        local _pinHum = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
+        if _pinHum then pcall(function() _pinHum.AutoRotate = false end) end
+        for _ = 1, 4 do
+            local _h = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
+            if not _h or not _h.Parent then break end
+            pcall(function()
+                _h.CFrame = CFrame.new(_h.Position, _h.Position + facingDir)
+                _vzL(_h)
+                _vzA(_h)
+            end)
+            RunService.Heartbeat:Wait()
+        end
+    end
+
+    local _cloneOk = doClone()
+    if _clonePlat then
+        local _plat = _clonePlat
+        _clonePlat = nil
+        task.delay(1.5, function() pcall(function() _plat:Destroy() end) end)
+    end
+    do
+        local _t0 = os.clock()
+        repeat
+            if _charAdded then break end
+            if LP.Character ~= _preCloneChar then break end
+            local _h = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
+            if _h then
+                local _dx = _h.Position.X - _preClonePos.X
+                local _dz = _h.Position.Z - _preClonePos.Z
+                if (_dx * _dx + _dz * _dz) > 1 then break end
+            end
+            RunService.Heartbeat:Wait()
+        until os.clock() - _t0 > (tonumber(_G.MeerkoCloneSettle) or 0.5)
+    end
+    if _caConn then _caConn:Disconnect() end
+
+    pcall(function()
+        local _rh = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
+        if _rh then _rh.AutoRotate = true end
+    end)
+
+    goToBrainrot(petPos, pet and pet.slot)
+    isTeleporting = false
+    if _G.MeerkoTPStop then return end
+    if _G.MeerkoArmSteal then pcall(_G.MeerkoArmSteal, pet) end
+    _G.MeerkoStealSay("TP arrive -> " .. tostring(pet and pet.name) .. " [" .. tostring(pet and pet.plot) .. "/" .. tostring(pet and pet.slot) .. "]")
 end
 
-local loadModules = (function()
-	if AnimalsData then return true end
-	local datas = RS:FindFirstChild("Datas")
-	local animals = datas and datas:FindFirstChild("Animals")
-	local utils = RS:FindFirstChild("Utils")
-	local numberUtils = utils and utils:FindFirstChild("NumberUtils")
-	if not animals or not numberUtils then return false end
-	AnimalsData = safeRequire(animals)
-	AnimalsShared = _G.SabcomAnimShim
-	NumberUtils = safeRequire(numberUtils)
-	MutationsData = MutationsData or safeRequire(datas and datas:FindFirstChild("Mutations"))
-	TraitsData = TraitsData or safeRequire(datas and datas:FindFirstChild("Traits"))
-	return AnimalsData ~= nil
-end)
-
-do
-	local pkg = RS:FindFirstChild("Packages")
-	local datas = RS:FindFirstChild("Datas")
-	local utils = RS:FindFirstChild("Utils")
-	SyncMod = _G.SabcomPreloadedSynchronizer or _tryRequireSynchronizer()
-	AnimalsData = AnimalsData or safeRequire(datas and datas:FindFirstChild("Animals"))
-	MutationsData = MutationsData or safeRequire(datas and datas:FindFirstChild("Mutations"))
-	TraitsData = TraitsData or safeRequire(datas and datas:FindFirstChild("Traits"))
-	NumberUtils = NumberUtils or safeRequire(utils and utils:FindFirstChild("NumberUtils"))
-	AnimalsShared = _G.SabcomAnimShim
-	_G.SabcomSyncMod = SyncMod
+_manualTPBusy = false
+function manualFullTP()
+    if _manualTPBusy or isTeleporting then return end
+    if LP:GetAttribute("Stealing") == true then return end
+    _manualTPBusy = true
+    if _G.MeerkoScanProfile and _G.MeerkoScanMode == "fast" then _G.MeerkoScanProfile("normal") end
+    local okAll = pcall(function()
+        local _t0 = os.clock()
+        local _lastN, _lastTop = -1, nil
+        repeat
+            local ok, pets = pcall(scanForTP)
+            if ok and pets and #pets > 0 then
+                local top = tostring(pets[1].plot) .. "_" .. tostring(pets[1].slot)
+                if #pets == _lastN and top == _lastTop then break end
+                _lastN, _lastTop = #pets, top
+                task.wait(tonumber(_G.MeerkoScanSettle) or 0.06)
+            else
+                task.wait(0.05)
+            end
+        until os.clock() - _t0 > (tonumber(_G.MeerkoTPMaxWait) or 4)
+        doVelocityTP(true)
+    end)
+    _manualTPBusy = false
+    return okAll
 end
-
-local function getSyncChannel(name)
-	if type(name) ~= "string" or name == "" then return nil end
-	local mod = SyncMod
-	if type(mod) ~= "table" then
-		mod = _tryRequireSynchronizer()
-		if type(mod) == "table" then SyncMod = mod end
-	end
-	if type(mod) == "table" and type(mod.GetTableFromChannel) == "function" then
-		local old
-		if getthreadidentity then old = getthreadidentity() end
-		if setthreadidentity then setthreadidentity(8) end
-		local t = mod:GetTableFromChannel(name)
-		if old and setthreadidentity then setthreadidentity(old) end
-		if type(t) == "table" then return t end
-	end
-	if type(_G.Sabcom_GetPlotChannel) == "function" then
-		local t = _G.Sabcom_GetPlotChannel(name)
-		if type(t) == "table" then return t end
-	end
-	return nil
-end
-_G.SabcomGetSyncChannel = getSyncChannel
-
-local GRAPPLE_ARG = 0.8
-
-local CARPET_SPEED = 280
-local INBASE_SPEED = 450
-local SKY_CLONE_WAIT = 0.3
-local CARPET_NAMES = { "Flying Carpet", "Waverider", "Santa's Sleigh", "Witch's Broom", "Cupid's Wings" }
-local TP_ITEM_NAMES = { "Flying Carpet", "Waverider", "Santa's Sleigh", "Witch's Broom", "Cupid's Wings" }
-local function findTool(name)
-	local char = LP.Character
-	local bp = LP:FindFirstChild("Backpack") or LP:FindFirstChildOfClass("Backpack")
-	local sg = LP:FindFirstChild("StarterGear")
-	local t = (char and char:FindFirstChild(name)) or (bp and bp:FindFirstChild(name)) or (sg and sg:FindFirstChild(name))
-	return t
-end
-
-local function _pokePlayerTools()
-	local bp = LP:FindFirstChild("Backpack")
-		if bp then
-			bp:GetChildren()
-			bp:FindFirstChild("Grapple Hook")
-		end
-		local sg = LP:FindFirstChild("StarterGear")
-		if sg then sg:GetChildren() end
-		local char = LP.Character
-		if char then char:FindFirstChild("Grapple Hook") end
-	
-end
-
-local function _streamPlayerNow()
-	do
-		local char = LP.Character
-		local hrp = char and (char:FindFirstChild("HumanoidRootPart") or char.PrimaryPart)
-		if not hrp then return end
-		LP:RequestStreamAroundAsync(hrp.Position) 
-	end
-end
-
-local function _waitGrapple(timeout)
-	timeout = tonumber(timeout) or 5
-	_pokePlayerTools()
-	local found = findTool("Grapple Hook")
-	if found then return found end
-
-	local done, tool = false, nil
-	local conns = {}
-	local function take(inst)
-		if done or not inst then return end
-		if inst.Name == "Grapple Hook" and (inst:IsA("Tool") or inst:IsA("HopperBin")) then
-			tool = inst
-			done = true
-		end
-	end
-	local function watch(folder)
-		if not folder then return end
-		local ex = folder:FindFirstChild("Grapple Hook")
-		if ex then
-			take(ex)
-			return
-		end
-		conns[#conns + 1] = folder.ChildAdded:Connect(take)
-		task.spawn(function()
-			local w = folder:WaitForChild("Grapple Hook", timeout)
-			take(w)
-		end)
-	end
-
-	local bp = LP:FindFirstChild("Backpack")
-	if bp then
-		watch(bp)
-	else
-		task.spawn(function()
-			local got = LP:WaitForChild("Backpack", timeout)
-			watch(got)
-		end)
-	end
-	watch(LP.Character)
-	watch(LP:FindFirstChild("StarterGear"))
-	conns[#conns + 1] = LP.CharacterAdded:Connect(function(c)
-		watch(c)
-		task.spawn(_streamPlayerNow)
-	end)
-
-	local t0 = os.clock()
-	while not done and os.clock() - t0 < timeout do
-		_pokePlayerTools()
-		local f = findTool("Grapple Hook")
-		if f then
-			take(f)
-			break
-		end
-		RunService.Heartbeat:Wait()
-	end
-	for _, c in ipairs(conns) do
-		c:Disconnect() 
-	end
-	return tool or findTool("Grapple Hook")
-end
-
-
-local function equipCarpet()
-	local char = LP.Character
-	local hum = char and char:FindFirstChildOfClass("Humanoid")
-	if not hum then return nil end
-	for _, n in ipairs(CARPET_NAMES) do
-		local t = findTool(n)
-		if t and t:IsA("Tool") then
-			if t.Parent ~= char then hum:EquipTool(t)  end
-			return n
-		end
-	end
-	return nil
-end
-local function setCarpetTool(name)
-	if type(name) ~= "string" or name == "" then return end
-	_G.SabcomCarpetTool = name
-	for i = #CARPET_NAMES, 1, -1 do
-		if CARPET_NAMES[i] == name then table.remove(CARPET_NAMES, i) end
-	end
-	table.insert(CARPET_NAMES, 1, name)
-end
-local function currentCarpetTool()
-	if type(_G.SabcomCarpetTool) == "string" and _G.SabcomCarpetTool ~= "" then
-		return _G.SabcomCarpetTool
-	end
-	return CARPET_NAMES[1] or "Flying Carpet"
-end
-local function cycleCarpetTool()
-	local cur = currentCarpetTool()
-	local idx = 1
-	for i, n in ipairs(TP_ITEM_NAMES) do
-		if n == cur then idx = i; break end
-	end
-	local nxt = TP_ITEM_NAMES[(idx % #TP_ITEM_NAMES) + 1]
-	setCarpetTool(nxt)
-	return nxt
-end
-_G.SabcomSetCarpetTool = setCarpetTool
-_G.SabcomCurrentCarpetTool = currentCarpetTool
-_G.SabcomCycleCarpetTool = cycleCarpetTool
-if type(_G.SabcomCarpetTool) == "string" and _G.SabcomCarpetTool ~= "" then
-	setCarpetTool(_G.SabcomCarpetTool)
-end
-
-do
-	local floatOn, floatConn = false, nil
-	local floatPad = nil
-	local function removeFloat()
-		if floatConn then floatConn:Disconnect(); floatConn = nil end
-		if floatPad then floatPad:Destroy(); floatPad = nil end
-		local e = workspace:FindFirstChild("SabcomFloatPad")
-		if e then e:Destroy() end
-	end
-	local function createFloat()
-		removeFloat()
-		local c = LP.Character
-		local hrp = c and c:FindFirstChild("HumanoidRootPart")
-		if not hrp then return end
-		local p = Instance.new("Part")
-		p.Name = "SabcomFloatPad"
-		p.Size = Vector3.new(7, 1, 7)
-		p.Anchored = true
-		p.CanCollide = true
-		p.CanTouch = false
-		p.CanQuery = false
-		p.Transparency = 1
-		p.CastShadow = false
-		p.CFrame = CFrame.new(hrp.Position - Vector3.new(0, 3.35, 0))
-		p.Parent = workspace
-		floatPad = p
-		floatConn = RunService.Heartbeat:Connect(function()
-			if not floatOn then return end
-			local ch = LP.Character
-			local h = ch and ch:FindFirstChild("HumanoidRootPart")
-			if h and floatPad and floatPad.Parent then
-				floatPad.CFrame = CFrame.new(h.Position - Vector3.new(0, 3.35, 0))
-			end
-		end)
-	end
-	local function setFloat(on)
-		floatOn = on and true or false
-		_G.SabcomFloat = floatOn
-		if floatOn then createFloat() else removeFloat() end
-		if type(_G.SabcomPaintFloat) == "function" then _G.SabcomPaintFloat() end
-	end
-	_G.SabcomSetFloat = setFloat
-	_G.toggleFloat = function() setFloat(not floatOn) end
-	do
-		LP.CharacterAdded:Connect(function()
-			task.wait(0.5)
-			if floatOn then removeFloat(); createFloat() end
-		end)
-	end
-
-	local infOn, infConn, lastJump = false, nil, 0
-	local function setInfJump(on)
-		infOn = on and true or false
-		_G.SabcomInfJump = infOn
-		if infConn then infConn:Disconnect(); infConn = nil end
-		if type(_G.SabcomPaintInfJump) == "function" then _G.SabcomPaintInfJump() end
-		if not infOn then return end
-		infConn = RunService.Heartbeat:Connect(function()
-			if not UIS:IsKeyDown(Enum.KeyCode.Space) then return end
-			local now = tick()
-			if now - lastJump < 0.1 then return end
-			local c = LP.Character
-			if not c then return end
-			local hrp = c:FindFirstChild("HumanoidRootPart")
-			local hum = c:FindFirstChildOfClass("Humanoid")
-			if not hrp or not hum or hum.Health <= 0 then return end
-			lastJump = now
-			hrp.AssemblyLinearVelocity = Vector3.new(hrp.AssemblyLinearVelocity.X, 55, hrp.AssemblyLinearVelocity.Z)
-		end)
-	end
-	_G.SabcomSetInfJump = setInfJump
-	_G.toggleInfJump = function() setInfJump(not infOn) end
-	if _G.SabcomInfJump == true then
-		task.defer(function() setInfJump(true) end)
-	end
-
-	local carpetOn, carpetConn = false, nil
-	local function setCarpetSpeed(on)
-		carpetOn = on and true or false
-		_G.SabcomCarpetSpeed = carpetOn
-		if carpetConn then carpetConn:Disconnect(); carpetConn = nil end
-		if type(_G.SabcomPaintCarpetSpeed) == "function" then _G.SabcomPaintCarpetSpeed() end
-		if not carpetOn then return end
-		carpetConn = RunService.Heartbeat:Connect(function()
-			local c = LP.Character
-			if not c then return end
-			local hum = c:FindFirstChildOfClass("Humanoid")
-			local hrp = c:FindFirstChild("HumanoidRootPart")
-			if not hum or not hrp then return end
-			if LP:GetAttribute("Stealing") then
-				setCarpetSpeed(false)
-				return
-			end
-			local name = equipCarpet()
-			if name and c:FindFirstChild(name) then
-				local md = hum.MoveDirection
-				local spd = 140
-				if md.Magnitude > 0 then
-					hrp.AssemblyLinearVelocity = Vector3.new(md.X * spd, hrp.AssemblyLinearVelocity.Y, md.Z * spd)
-				else
-					hrp.AssemblyLinearVelocity = Vector3.new(0, hrp.AssemblyLinearVelocity.Y, 0)
-				end
-			end
-		end)
-	end
-	_G.SabcomSetCarpetSpeed = setCarpetSpeed
-	_G.toggleCarpetSpeed = function() setCarpetSpeed(not carpetOn) end
-
-	LP:GetAttributeChangedSignal("Stealing"):Connect(function()
-		if LP:GetAttribute("Stealing") then
-			if floatOn then setFloat(false) end
-			if carpetOn then setCarpetSpeed(false) end
-		end
-	end)
-end
-
-do
-	local autoBuyActive = false
-	local autoBuyRing = nil
-	local conveyorAnimals = {}
-	local DETECT_RADIUS = 17
-	local HOVER_HEIGHT = 3
-	local RING_COLOR = Color3.fromRGB(125, 211, 252)
-	local carpetLockConn = nil
-	local purchaseRemote = nil
-	local conveyorWatchConn = nil
-
-	local function buyRange()
-		return tonumber(_G.SabcomAutoBuyRange) or DETECT_RADIUS
-	end
-
-	local function snapToBuyTarget(hrp, part)
-		if not hrp or not part or not part.Parent then return end
-		local pos = part.Position + Vector3.new(0, HOVER_HEIGHT, 0)
-		hrp.AssemblyLinearVelocity = Vector3.zero
-			hrp.AssemblyAngularVelocity = Vector3.zero
-			hrp.CFrame = CFrame.new(pos)
-	end
-
-	local function createAutoBuyRing()
-		local existing = workspace:FindFirstChild("SabcomAutoBuyRing")
-		if existing then existing:Destroy() end
-		local r = Instance.new("Part")
-		r.Name = "SabcomAutoBuyRing"
-		r.Shape = Enum.PartType.Cylinder
-		r.Anchored = true
-		r.CanCollide = false
-		r.CanTouch = false
-		r.CanQuery = false
-		r.CastShadow = false
-		r.Material = Enum.Material.Neon
-		r.Transparency = 0.5
-		r.Color = RING_COLOR
-		local range = buyRange()
-		r.Size = Vector3.new(0.5, range * 2, range * 2)
-		r.Parent = workspace
-		autoBuyRing = r
-	end
-	local function destroyAutoBuyRing()
-		if autoBuyRing then autoBuyRing:Destroy(); autoBuyRing = nil end
-		local e = workspace:FindFirstChild("SabcomAutoBuyRing")
-		if e then e:Destroy() end
-	end
-
-	local _abRingFrame = 0
-	RunService.Heartbeat:Connect(function()
-		if not autoBuyActive then return end
-		_abRingFrame = _abRingFrame + 1
-		if _abRingFrame < 3 then return end
-		_abRingFrame = 0
-		local char = LP.Character
-		local hrp = char and char:FindFirstChild("HumanoidRootPart")
-		if not hrp or not autoBuyRing then return end
-		local range = buyRange()
-		autoBuyRing.Size = Vector3.new(0.5, range * 2, range * 2)
-		autoBuyRing.CFrame = (hrp.CFrame * CFrame.Angles(0, 0, math.rad(90))) + Vector3.new(0, -2.5, 0)
-	end)
-
-	local function scanConveyor()
-		local results = {}
-		-- Scope to workspace.Plots when possible (~2-3k descendants vs 30k+ full workspace)
-		local root = workspace:FindFirstChild("Plots") or workspace
-		for _, obj in ipairs(root:GetDescendants()) do
-			if not (obj:IsA("ProximityPrompt") and obj.Enabled) then continue end
-			local txt = obj.ActionText or ""
-			if not (txt == "Purchase" or txt:lower():find("purchase") or txt:lower():find("comprar")) then continue end
-			local part = obj.Parent
-			if not part then continue end
-			local realPart = (part:IsA("Attachment") and part.Parent) or part
-			if not (realPart and realPart:IsA("BasePart")) then continue end
-			local model, cur = nil, realPart
-			for _ = 1, 8 do
-				if cur and cur:IsA("Model") then model = cur; break end
-				cur = cur and cur.Parent
-			end
-			results[#results + 1] = {
-				name = (model and model.Name ~= "" and model.Name) or "Brainrot",
-				prompt = obj,
-				part = realPart,
-				model = model,
-			}
-		end
-		return results
-	end
-	local function refreshConveyor()
-		local found = scanConveyor()
-		if found then conveyorAnimals = found end
-	end
-	_G.refreshConveyor = refreshConveyor
-
-	local function resolvePurchaseRemote()
-		if purchaseRemote and purchaseRemote.Parent then return purchaseRemote end
-		do
-			if type(_G.SabcomGetRemote) == "function" then
-				local r = _G.SabcomGetRemote("BuyAnimal") or _G.SabcomGetRemote("Purchase")
-				if r then purchaseRemote = r; return end
-			end
-			local net = RS:FindFirstChild("Packages") and RS.Packages:FindFirstChild("Net")
-			if not net then return end
-			local kws = {"buy", "purchase", "animal", "shop", "acquire", "conveyor"}
-			for _, v in ipairs(net:GetChildren()) do
-				local nl = string.lower(v.Name or "")
-				for _, kw in ipairs(kws) do
-					if nl:find(kw, 1, true) then
-						purchaseRemote = v
-						return
-					end
-				end
-			end
-		end
-		return purchaseRemote
-	end
-
-	local function firePurchaseNatural(prompt)
-		if not prompt or not prompt.Parent or not prompt.Enabled then return end
-		local fireFn = fireproximityprompt or _G.__SabcomFirePrompt
-		do
-			if type(fireFn) == "function" then
-				fireFn(prompt)
-			else
-				prompt:InputHoldBegin()
-				prompt:InputHoldEnd()
-			end
-		end
-		local remote = purchaseRemote or resolvePurchaseRemote()
-		if not remote then return end
-		local parent = prompt.Parent
-		task.spawn(function()
-			do
-				if remote:IsA("RemoteFunction") then
-					remote:InvokeServer(parent)
-				elseif remote:IsA("RemoteEvent") then
-					remote:FireServer(parent)
-				end
-			end
-		end)
-	end
-
-	local function nearestBuyEntry(hrp)
-		if not hrp then return nil end
-		local radius = buyRange()
-		local best, bestDist = nil, math.huge
-		for _, entry in ipairs(conveyorAnimals) do
-			local pr = entry.prompt
-			local part = entry.part
-			if pr and pr.Parent and pr.Enabled and part and part.Parent then
-				local d = (hrp.Position - part.Position).Magnitude
-				if d <= radius and d < bestDist then
-					bestDist = d
-					best = entry
-				end
-			end
-		end
-		return best
-	end
-
-	local function fireAllPurchasesInRange(hrp)
-		if not hrp then return end
-		local radius = buyRange() + 8
-		local hp = hrp.Position
-		for _, entry in ipairs(conveyorAnimals) do
-			local pr = entry.prompt
-			local part = entry.part
-			if pr and pr.Parent and pr.Enabled and part and part.Parent
-				and (hp - part.Position).Magnitude <= radius then
-				firePurchaseNatural(pr)
-			end
-		end
-	end
-
-	local function tickAutoBuy(refreshList)
-		if not autoBuyActive then return end
-		local hrp = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
-		if not hrp then return end
-		if refreshList then refreshConveyor() end
-		local near = nearestBuyEntry(hrp)
-		if near and near.part then
-			snapToBuyTarget(hrp, near.part)
-		end
-		fireAllPurchasesInRange(hrp)
-	end
-
-	local function startCarpetLock()
-		if carpetLockConn then carpetLockConn:Disconnect(); carpetLockConn = nil end
-		task.spawn(function()
-			for _ = 1, 15 do
-				if not autoBuyActive then break end
-				equipCarpet()
-				local char = LP.Character
-				if char then
-					for _, n in ipairs(CARPET_NAMES) do
-						if char:FindFirstChild(n) then return end
-					end
-				end
-				RunService.Heartbeat:Wait()
-			end
-		end)
-		carpetLockConn = RunService.Heartbeat:Connect(function()
-			if not autoBuyActive then return end
-			equipCarpet()
-		end)
-	end
-	local function stopCarpetLock()
-		if carpetLockConn then carpetLockConn:Disconnect(); carpetLockConn = nil end
-	end
-
-	local function startConveyorWatch()
-		if conveyorWatchConn then return end
-		conveyorWatchConn = workspace.DescendantAdded:Connect(function(obj)
-			if not autoBuyActive then return end
-			if not obj:IsA("ProximityPrompt") then return end
-			local txt = obj.ActionText or ""
-			if txt == "Purchase" or txt:lower():find("purchase") or txt:lower():find("comprar") then
-				refreshConveyor()
-			end
-		end)
-	end
-
-	local function stopConveyorWatch()
-		if conveyorWatchConn then
-			conveyorWatchConn:Disconnect()
-			conveyorWatchConn = nil
-		end
-	end
-
-	RunService.Heartbeat:Connect(function()
-		if autoBuyActive then
-			tickAutoBuy(true)
-		end
-	end)
-
-	RunService.RenderStepped:Connect(function()
-		tickAutoBuy(false)
-	end)
-
-	RunService.Stepped:Connect(function()
-		tickAutoBuy(false)
-	end)
-
-	local function setAutoBuy(on)
-		if on ~= nil then
-			autoBuyActive = on and true or false
-		else
-			autoBuyActive = not autoBuyActive
-		end
-		_G.SabcomAutoBuy = autoBuyActive
-		if autoBuyActive then
-			createAutoBuyRing()
-			refreshConveyor()
-			resolvePurchaseRemote()
-			startCarpetLock()
-			startConveyorWatch()
-		else
-			destroyAutoBuyRing()
-			stopCarpetLock()
-			stopConveyorWatch()
-		end
-		if type(_G.SabcomPaintAutoBuy) == "function" then _G.SabcomPaintAutoBuy() end
-	end
-	_G.SabcomSetAutoBuy = setAutoBuy
-	_G.toggleAutoBuy = function(v)
-		if v == nil then setAutoBuy(not autoBuyActive) else setAutoBuy(v) end
-	end
-	if _G.SabcomAutoBuy == true then
-		task.defer(function() setAutoBuy(true) end)
-	end
-end
-do
-	local wsOn, wsConn = false, nil
-	local DEFAULT_WS = 16
-	local function wantSpeed()
-		return math.clamp(tonumber(_G.SabcomWalkSpeed) or DEFAULT_WS, 16, 100)
-	end
-	local function restoreDefault()
-		do
-			local c = LP.Character
-			local hum = c and c:FindFirstChildOfClass("Humanoid")
-			if hum then hum.WalkSpeed = DEFAULT_WS end
-		end
-	end
-	local function setWalkSpeedOn(on)
-		wsOn = on and true or false
-		_G.SabcomWalkSpeedOn = wsOn
-		if wsConn then wsConn:Disconnect(); wsConn = nil end
-		if type(_G.SabcomPaintWalkSpeed) == "function" then _G.SabcomPaintWalkSpeed() end
-		if not wsOn then
-			restoreDefault()
-			return
-		end
-		wsConn = RunService.Heartbeat:Connect(function(dt)
-			local c = LP.Character
-			if not c then return end
-			local hum = c:FindFirstChildOfClass("Humanoid")
-			local hrp = c:FindFirstChild("HumanoidRootPart")
-			if not hum or not hrp or hum.Health <= 0 then return end
-			local want = wantSpeed()
-			if hum.MoveDirection.Magnitude > 0 and want > hum.WalkSpeed then
-				hrp.CFrame = hrp.CFrame + (hum.MoveDirection * (want - hum.WalkSpeed) * dt)
-			end
-		end)
-	end
-	_G.SabcomSetWalkSpeed = setWalkSpeedOn
-	_G.toggleWalkSpeed = function() setWalkSpeedOn(not wsOn) end
-	do
-		LP.CharacterAdded:Connect(function()
-			task.wait(0.4)
-			if wsOn then setWalkSpeedOn(true) end
-		end)
-	end
-	if _G.SabcomWalkSpeedOn == true then
-		task.defer(function() setWalkSpeedOn(true) end)
-	end
-end
-
-do
-	local fovOn, fovConn = false, nil
-	local MIN_FOV, MAX_FOV, DEFAULT_FOV = 70, 120, 70
-	local function wantFov()
-		return math.clamp(tonumber(_G.SabcomFov) or DEFAULT_FOV, MIN_FOV, MAX_FOV)
-	end
-	local function applyFov()
-		local cam = workspace.CurrentCamera
-		if cam then cam.FieldOfView = wantFov() end
-	end
-	local function restoreDefault()
-		local cam = workspace.CurrentCamera
-		if cam then cam.FieldOfView = DEFAULT_FOV end
-	end
-	local function setFovOn(on)
-		fovOn = on and true or false
-		_G.SabcomFovOn = fovOn
-		if fovConn then fovConn:Disconnect(); fovConn = nil end
-		if type(_G.SabcomPaintFov) == "function" then _G.SabcomPaintFov() end
-		if not fovOn then
-			restoreDefault()
-			return
-		end
-		applyFov()
-		fovConn = RunService.Heartbeat:Connect(applyFov)
-	end
-	_G.SabcomSetFov = setFovOn
-	_G.toggleFov = function() setFovOn(not fovOn) end
-	do
-		workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
-			task.wait(0.05)
-			if fovOn then applyFov() end
-		end)
-	end
-	if _G.SabcomFovOn == true then
-		task.defer(function() setFovOn(true) end)
-	end
-end
-
-do
-	local dropBusy, flinging = false, false
-	local function dropRoot(char)
-		local hum = char and char:FindFirstChildOfClass("Humanoid")
-		return hum and hum.RootPart
-	end
-	local function flingBurst(duration)
-		if flinging then return end
-		flinging = true
-		local t0 = os.clock()
-		while flinging and (os.clock() - t0) < duration do
-			RunService.Heartbeat:Wait()
-			local char = LP.Character
-			local root = dropRoot(char)
-			if not (char and char.Parent and root and root.Parent) then break end
-			local vel = root.AssemblyLinearVelocity
-			if vel.Magnitude < 0.1 then vel = root.CFrame.LookVector * 80 end
-			local boom = vel * 10000 + Vector3.new(0, 10000, 0)
-			do
-				root.Velocity = boom
-				root.AssemblyLinearVelocity = boom
-			end
-			RunService.RenderStepped:Wait()
-			if char and char.Parent and root and root.Parent then
-				root.Velocity = vel
-					root.AssemblyLinearVelocity = vel
-			end
-			RunService.Stepped:Wait()
-			if char and char.Parent and root and root.Parent then
-				local nudge = vel + Vector3.new(0, 0.1, 0)
-				root.Velocity = nudge
-					root.AssemblyLinearVelocity = nudge
-			end
-		end
-		flinging = false
-		local root = dropRoot(LP.Character)
-		if root and root.Parent then
-			root.Velocity = Vector3.zero
-				root.AssemblyLinearVelocity = Vector3.zero
-		end
-	end
-	_G.SabcomDropBrainrot = function()
-		if dropBusy then return end
-		dropBusy = true
-		if _G.invisibleStealEnabled == true and type(_G.toggleInvisibleSteal) == "function" then
-			_G.toggleInvisibleSteal()
-			task.wait(0.2)
-		end
-		flingBurst(0.3)
-		task.wait(0.2)
-		dropBusy = false
-	end
-	do
-		LP.CharacterAdded:Connect(function()
-			flinging = false
-			dropBusy = false
-		end)
-	end
-end
-
-do
-	local espOn = false
-	local espConns = {}
-	local espHolders = {}
-	local lineConn
-
-	local function guiParent()
-		local pg = LP:FindFirstChild("PlayerGui")
-		if pg then return pg end
-		if gethui then
-			local h = gethui()
-			if h then return h end
-		end
-		local cg = game:GetService("CoreGui")
-		return cg or nil
-	end
-
-	local function clearHolder(plr)
-		local h = espHolders[plr]
-		if h then h:Destroy() end
-		espHolders[plr] = nil
-	end
-
-	local function bestPetForOwner(ownerName)
-		local list = _G.SabcomStealPetList
-		if type(list) ~= "table" or not ownerName then return nil end
-		local best
-		for _, pet in ipairs(list) do
-			if pet and tostring(pet.owner or "") == ownerName then
-				if not best or (tonumber(pet.mps) or 0) > (tonumber(best.mps) or 0) then
-					best = pet
-				end
-			end
-		end
-		return best
-	end
-
-	local function makeEsp(plr)
-		if not espOn or plr == LP then return end
-		local char = plr.Character
-		local hrp = char and char:FindFirstChild("HumanoidRootPart")
-		if not hrp then return end
-		clearHolder(plr)
-		local parent = guiParent()
-		if not parent then return end
-		local holder = Instance.new("ScreenGui")
-		holder.Name = "SabcomEspHL_" .. plr.Name
-		holder.ResetOnSpawn = false
-		holder.IgnoreGuiInset = true
-		holder.Parent = parent
-		local hl = Instance.new("Highlight")
-		hl.Adornee = char
-		hl.FillColor = Color3.fromRGB(255, 80, 80)
-		hl.FillTransparency = 0.6
-		hl.OutlineColor = Color3.fromRGB(255, 180, 180)
-		hl.OutlineTransparency = 0
-		hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-		hl.Parent = holder
-		local bb = Instance.new("BillboardGui")
-		bb.Adornee = hrp
-		bb.AlwaysOnTop = true
-		bb.Size = UDim2.new(0, 180, 0, 44)
-		bb.StudsOffset = Vector3.new(0, 3.2, 0)
-		bb.Parent = holder
-		local nameLbl = Instance.new("TextLabel")
-		nameLbl.Size = UDim2.new(1, 0, 0.5, 0)
-		nameLbl.BackgroundTransparency = 1
-		nameLbl.Text = plr.Name
-		nameLbl.Font = Enum.Font.GothamBold
-		nameLbl.TextSize = 14
-		nameLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
-		nameLbl.TextStrokeTransparency = 0.3
-		nameLbl.Parent = bb
-		local petLbl = Instance.new("TextLabel")
-		petLbl.Size = UDim2.new(1, 0, 0.5, 0)
-		petLbl.Position = UDim2.new(0, 0, 0.5, 0)
-		petLbl.BackgroundTransparency = 1
-		petLbl.Text = ""
-		petLbl.Font = Enum.Font.Gotham
-		petLbl.TextSize = 11
-		petLbl.TextColor3 = Color3.fromRGB(200, 255, 180)
-		petLbl.TextStrokeTransparency = 0.4
-		petLbl.Parent = bb
-		espHolders[plr] = holder
-		local last = 0
-		local hb = RunService.Heartbeat:Connect(function()
-			if not espOn or not plr.Parent then return end
-			local now = os.clock()
-			if now - last < 0.5 then return end
-			last = now
-			local pet = bestPetForOwner(plr.Name)
-			petLbl.Text = pet and ((pet.name or "?") .. " " .. (pet.genText or "")) or ""
-			if plr.Character then
-				local nh = plr.Character:FindFirstChild("HumanoidRootPart")
-				if nh then
-					bb.Adornee = nh
-					hl.Adornee = plr.Character
-				end
-			end
-		end)
-		espConns[#espConns + 1] = hb
-		local ca = plr.CharacterAdded:Connect(function(newChar)
-			if not espOn then return end
-			clearHolder(plr)
-			newChar:WaitForChild("HumanoidRootPart", 5)
-			if espOn then makeEsp(plr) end
-		end)
-		espConns[#espConns + 1] = ca
-	end
-
-	local function setEspPlayer(on)
-		on = on and true or false
-		_G.SabcomEspPlayer = on
-		if on == espOn then return end
-		if not on then
-			espOn = false
-			for _, c in ipairs(espConns) do
-				c:Disconnect() 
-			end
-			espConns = {}
-			for plr in pairs(espHolders) do clearHolder(plr) end
-			return
-		end
-		espOn = true
-		for _, plr in ipairs(Players:GetPlayers()) do
-			if plr ~= LP then makeEsp(plr) end
-		end
-		espConns[#espConns + 1] = Players.PlayerAdded:Connect(function(plr)
-			if not espOn then return end
-			task.wait(1)
-			makeEsp(plr)
-		end)
-		espConns[#espConns + 1] = Players.PlayerRemoving:Connect(function(plr)
-			clearHolder(plr)
-		end)
-	end
-	_G.SabcomSetEspPlayer = setEspPlayer
-
-	local ATT0_BASE, ATT1_BASE = "SabcomLineBase_A0", "SabcomLineBase_A1"
-	local ATT0_BR, ATT1_BR = "SabcomLineBr_A0", "SabcomLineBr_A1"
-
-	local function getDummy(name)
-		local d = workspace:FindFirstChild(name)
-		if d and d:IsA("BasePart") then return d end
-		d = Instance.new("Part")
-		d.Name = name
-		d.Anchored = true
-		d.CanCollide = false
-		d.CanQuery = false
-		d.CanTouch = false
-		d.CastShadow = false
-		d.Transparency = 1
-		d.Size = Vector3.new(0.2, 0.2, 0.2)
-		d.Parent = workspace
-		return d
-	end
-
-	local function getAtt(part, name, offset)
-		if not part then return nil end
-		local a = part:FindFirstChild(name)
-		if not (a and a:IsA("Attachment")) then
-			a = Instance.new("Attachment")
-			a.Name = name
-			a.Parent = part
-		end
-		a.Position = offset or Vector3.zero
-		return a
-	end
-
-	local function makeBeam(parent, name, color)
-		local old = parent and parent:FindFirstChild(name)
-		if old then old:Destroy() end
-		local b = Instance.new("Beam")
-		b.Name = name
-		b.FaceCamera = true
-		b.LightEmission = 1
-		b.LightInfluence = 0
-		b.Color = ColorSequence.new(color)
-		b.Transparency = NumberSequence.new(0)
-		b.Width0 = 0.28
-		b.Width1 = 0.28
-		b.Segments = 6
-		b.Enabled = false
-		b.Parent = parent
-		return b
-	end
-
-	local function hideBeam(b)
-		if b then b.Enabled = false end
-	end
-
-	local function drawBodyLine(hrp, worldPos, livePart, pack)
-		if not hrp or not worldPos then
-			hideBeam(pack.beam)
-			return
-		end
-		pack.att0 = getAtt(hrp, pack.att0Name, Vector3.zero)
-		local target = livePart
-		if not (target and target.Parent) then
-			pack.dummy = getDummy(pack.dummyName)
-			pack.dummy.CFrame = CFrame.new(worldPos)
-			target = pack.dummy
-		end
-		pack.att1 = getAtt(target, pack.att1Name, pack.att1Off or Vector3.new(0, 2, 0))
-		if not pack.beam or pack.beam.Parent ~= hrp then
-			pack.beam = makeBeam(hrp, pack.beamName, pack.color)
-		end
-		pack.beam.Attachment0 = pack.att0
-		pack.beam.Attachment1 = pack.att1
-		pack.beam.Enabled = true
-	end
-
-	local packBase = {
-		att0Name = ATT0_BASE, att1Name = ATT1_BASE, dummyName = "SabcomLineToBaseAnchor",
-		beamName = "SabcomLineToBase", color = Color3.fromRGB(255, 255, 255),
-		att1Off = Vector3.zero,
-	}
-	local packBr = {
-		att0Name = ATT0_BR, att1Name = ATT1_BR, dummyName = "SabcomLineToBrainrotAnchor",
-		beamName = "SabcomLineToBrainrot", color = Color3.fromRGB(125, 211, 252),
-		att1Off = Vector3.new(0, 2.5, 0),
-	}
-	do
-		for _, n in ipairs({ "SabcomLineToBase", "SabcomLineToBrainrot" }) do
-			local o = workspace:FindFirstChild(n)
-			if o and o:IsA("BasePart") then o:Destroy() end
-		end
-	end
-
-	local function myBasePos()
-		local plots = workspace:FindFirstChild("Plots")
-		if not plots then return nil end
-		for _, plot in ipairs(plots:GetChildren()) do
-			local sign = plot:FindFirstChild("PlotSign")
-			local yours = sign and sign:FindFirstChild("YourBase")
-			if yours and yours.Enabled then
-				local base = plot:FindFirstChild("Base") or plot:FindFirstChildWhichIsA("BasePart", true)
-				if base then return base.Position end
-				local cf = plot:GetPivot()
-				if cf then return cf.Position end
-			end
-		end
-		return nil
-	end
-
-	local function petWorldPos(pet)
-		if type(pet) ~= "table" then return nil, nil end
-		if pet.model and pet.model.Parent then
-			local part = pet.model.PrimaryPart
-				or pet.model:FindFirstChild("HumanoidRootPart")
-				or pet.model:FindFirstChildWhichIsA("BasePart")
-			if part then return part.Position, part end
-			local cf = pet.model:GetPivot()
-			if cf and cf.Position.Magnitude > 1 then return cf.Position, nil end
-		end
-		if typeof(pet.position) == "Vector3" and pet.position.Magnitude > 1 then
-			return pet.position, nil
-		end
-		return nil, nil
-	end
-
-	local function petIsPriority(p)
-		if type(p) ~= "table" then return false end
-		local function norm(s)
-			return tostring(s or ""):lower():gsub("[%s%-_'%.]", "")
-		end
-		local a, b = norm(p.name), norm(p.index)
-		local lists = { _G.SHARED_PRIORITY_ITEMS, _G._stp_priorityCfg }
-		for _, list in ipairs(lists) do
-			if type(list) == "table" then
-				for _, n in ipairs(list) do
-					local nn = norm(n)
-					if nn ~= "" and (nn == a or nn == b) then return true end
-				end
-			end
-		end
-		return false
-	end
-
-	local function priorityPet()
-		local list = _G.SabcomStealPetList
-		local uid = _G.SabcomManualStealUID or _G.SabcomStealTargetUID
-		if type(list) == "table" and uid then
-			for _, p in ipairs(list) do
-				if p and p.uid == uid then return p end
-			end
-		end
-		local tgt = _G.SabcomStealTarget
-		if type(tgt) == "table" then return tgt end
-		if type(list) ~= "table" then return nil end
-		for _, p in ipairs(list) do
-			if p and not p.mine and petIsPriority(p) then
-				return p
-			end
-		end
-		return nil
-	end
-
-	local function setLineToBase(on)
-		_G.SabcomLineToBase = on and true or false
-		if not on then hideBeam(packBase.beam) end
-	end
-	local function setLineToBrainrot(on)
-		_G.SabcomLineToBrainrot = on and true or false
-		if not on then hideBeam(packBr.beam) end
-	end
-	_G.SabcomSetLineToBase = setLineToBase
-	_G.SabcomSetLineToBrainrot = setLineToBrainrot
-
-	lineConn = RunService.RenderStepped:Connect(function()
-		local wantBase = _G.SabcomLineToBase == true
-		local wantBr = _G.SabcomLineToBrainrot == true
-		local hrp = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
-		if not hrp then
-			hideBeam(packBase.beam)
-			hideBeam(packBr.beam)
-			return
-		end
-		if wantBase then
-			drawBodyLine(hrp, myBasePos(), nil, packBase)
-		else
-			hideBeam(packBase.beam)
-		end
-		if wantBr then
-			local pos, part = petWorldPos(priorityPet())
-			drawBodyLine(hrp, pos, part, packBr)
-		else
-			hideBeam(packBr.beam)
-		end
-	end)
-
-	local BR_ESP_MIN = 10000000
-	local brEspOn = false
-	local brEspEntries = {}
-	local brEspConn
-	local brEspAnchors
-
-	local function clearBrEspEntry(uid)
-		local e = brEspEntries[uid]
-		if e then
-			if e.folder then e.folder:Destroy() end
-			brEspEntries[uid] = nil
-		end
-	end
-
-	local function clearAllBrEsp()
-		for uid in pairs(brEspEntries) do clearBrEspEntry(uid) end
-		if brEspAnchors then
-			brEspAnchors:Destroy()
-			brEspAnchors = nil
-		end
-	end
-
-	local function _brPetMps(pet)
-		local m = tonumber(pet.mps) or tonumber(pet.genValue) or 0
-		if m < BR_ESP_MIN then
-			local ensureGen = _G.SabcomEnsurePetGen
-			if type(ensureGen) == "function" then
-				local gm = ensureGen(pet)
-				m = tonumber(gm) or m
-			end
-		end
-		return m
-	end
-
-	local function _getOrCreateBrAnchor(uid, pos)
-		if typeof(pos) ~= "Vector3" or pos.Magnitude <= 1 then return nil end
-		if not brEspAnchors or not brEspAnchors.Parent then
-			brEspAnchors = workspace:FindFirstChild("SabcomBrEspAnchors")
-			if not brEspAnchors then
-				brEspAnchors = Instance.new("Folder")
-				brEspAnchors.Name = "SabcomBrEspAnchors"
-				brEspAnchors.Parent = workspace
-			end
-		end
-		local part = brEspAnchors:FindFirstChild(uid)
-		if not part then
-			part = Instance.new("Part")
-			part.Name = uid
-			part.Anchored = true
-			part.CanCollide = false
-			part.CanQuery = false
-			part.CanTouch = false
-			part.Transparency = 1
-			part.Size = Vector3.new(0.4, 0.4, 0.4)
-			part.Parent = brEspAnchors
-		end
-		part.CFrame = CFrame.new(pos + Vector3.new(0, 2.5, 0))
-		return part
-	end
-
-	local function resolvePetModel(pet)
-		if type(pet) ~= "table" then return nil, nil end
-		local uid = pet.uid or (pet.plot and pet.slot and (tostring(pet.plot) .. "_" .. tostring(pet.slot)))
-		local model = pet.model
-		if not (model and model.Parent) and pet.plot and pet.slot then
-			local plots = workspace:FindFirstChild("Plots")
-			local plot = plots and plots:FindFirstChild(tostring(pet.plot))
-			if plot then
-				local findPodium = _findPodiumModel
-				if type(findPodium) ~= "function" then
-					local podiums = plot:FindFirstChild("AnimalPodiums")
-					local podium = podiums and podiums:FindFirstChild(tostring(pet.slot))
-					if podium then
-						for _, child in ipairs(podium:GetChildren()) do
-							if child:IsA("Model") and child:FindFirstChildOfClass("Humanoid") then
-								if not Players:GetPlayerFromCharacter(child) then
-									model = child
-									break
-								end
-							end
-						end
-					end
-				else
-					model = select(1, findPodium(plot, tostring(pet.slot)))
-				end
-				if model then pet.model = model end
-			end
-		end
-		if model and model.Parent then
-			local part = model.PrimaryPart
-				or model:FindFirstChild("HumanoidRootPart")
-				or model:FindFirstChildWhichIsA("BasePart")
-			if not part then
-				part = model:FindFirstChildWhichIsA("BasePart", true)
-			end
-			if part then return model, part end
-		end
-		local pos = typeof(pet.position) == "Vector3" and pet.position
-		if pos and pos.Magnitude > 1 and uid then
-			local anchor = _getOrCreateBrAnchor(uid, pos)
-			if anchor then return anchor, anchor end
-		end
-		return nil, nil
-	end
-
-	local function applyBrEsp(pet, isPri, isTop)
-		local uid = pet.uid or (pet.plot and pet.slot and (tostring(pet.plot) .. "_" .. tostring(pet.slot)))
-		if not uid then return end
-		local model, part = resolvePetModel(pet)
-		if not model or not part then return end
-
-		local e = brEspEntries[uid]
-		if e and e.model ~= model then
-			clearBrEspEntry(uid)
-			e = nil
-		end
-
-		if not e then
-			local folder = Instance.new("Folder")
-			folder.Name = "SabcomBrEsp"
-			folder.Parent = model
-
-			local hl = Instance.new("Highlight")
-			hl.Name = "BrEspHL"
-			hl.Adornee = model
-			hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-			hl.Parent = folder
-
-			local bb = Instance.new("BillboardGui")
-			bb.Name = "BrEspBB"
-			bb.Adornee = part
-			bb.AlwaysOnTop = true
-			bb.Size = UDim2.new(0, 210, 0, 58)
-			bb.StudsOffset = Vector3.new(0, 4.8, 0)
-			bb.Parent = folder
-
-			local nameLbl = Instance.new("TextLabel")
-			nameLbl.Name = "Name"
-			nameLbl.Size = UDim2.new(1, 0, 0.48, 0)
-			nameLbl.BackgroundTransparency = 1
-			nameLbl.Font = Enum.Font.GothamBlack
-			nameLbl.TextSize = 15
-			nameLbl.TextStrokeTransparency = 0.15
-			nameLbl.Parent = bb
-
-			local genLbl = Instance.new("TextLabel")
-			genLbl.Name = "Gen"
-			genLbl.Size = UDim2.new(1, 0, 0.52, 0)
-			genLbl.Position = UDim2.new(0, 0, 0.48, 0)
-			genLbl.BackgroundTransparency = 1
-			genLbl.Font = Enum.Font.GothamBold
-			genLbl.TextSize = 14
-			genLbl.TextColor3 = Color3.fromRGB(255, 220, 60)
-			genLbl.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-			genLbl.TextStrokeTransparency = 0.2
-			genLbl.Parent = bb
-
-			e = { folder = folder, hl = hl, bb = bb, nameLbl = nameLbl, genLbl = genLbl, model = model }
-			brEspEntries[uid] = e
-		end
-
-		local m = _brPetMps(pet)
-		local txt = pet.genText
-		if type(_G.SabcomEnsurePetGen) == "function" then
-			local gm, gt = _G.SabcomEnsurePetGen(pet)
-			m = tonumber(gm) or m
-			txt = gt or txt
-		end
-		e.nameLbl.Text = pet.name or pet.index or "?"
-		e.genLbl.Text = txt or ("$" .. tostring(math.floor(m + 0.5)) .. "/s")
-
-		if isTop then
-			e.hl.FillColor = Color3.fromRGB(255, 215, 0)
-			e.hl.OutlineColor = Color3.fromRGB(255, 245, 120)
-			e.hl.FillTransparency = 0.28
-			e.hl.OutlineTransparency = 0
-			e.nameLbl.TextColor3 = Color3.fromRGB(255, 230, 80)
-		elseif isPri then
-			e.hl.FillColor = Color3.fromRGB(60, 140, 255)
-			e.hl.OutlineColor = Color3.fromRGB(140, 190, 255)
-			e.hl.FillTransparency = 0.32
-			e.hl.OutlineTransparency = 0
-			e.nameLbl.TextColor3 = Color3.fromRGB(80, 160, 255)
-		else
-			e.hl.FillColor = Color3.fromRGB(0, 210, 255)
-			e.hl.OutlineColor = Color3.fromRGB(160, 235, 255)
-			e.hl.FillTransparency = 0.42
-			e.hl.OutlineTransparency = 0.05
-			e.nameLbl.TextColor3 = Color3.fromRGB(210, 245, 255)
-		end
-		e.bb.Adornee = part
-		e.hl.Adornee = model
-	end
-
-	local function _collectBrEspPets()
-		local byUid = {}
-		local function add(pet)
-			if type(pet) ~= "table" or pet.mine or not pet.plot or not pet.slot then return end
-			local uid = pet.uid or (tostring(pet.plot) .. "_" .. tostring(pet.slot))
-			pet.uid = uid
-			if not byUid[uid] then byUid[uid] = pet end
-		end
-		local scanFn = _G.Sabcom_ScanAllPets
-		if type(scanFn) == "function" then
-			local pets = scanFn(true)
-			if type(pets) == "table" then
-				for _, pet in ipairs(pets) do add(pet) end
-			end
-		end
-		local list = _G.SabcomStealPetList
-		if type(list) == "table" then
-			for _, pet in ipairs(list) do add(pet) end
-		end
-		local out = {}
-		for _, pet in pairs(byUid) do out[#out + 1] = pet end
-		return out
-	end
-
-	local function refreshBrEsp()
-		if not brEspOn then return end
-		local pets = _collectBrEspPets()
-		if #pets == 0 then return end
-
-		local topUid, topMps = nil, -1
-		for _, pet in ipairs(pets) do
-			local m = _brPetMps(pet)
-			if m > topMps then
-				topMps = m
-				topUid = pet.uid
-			end
-		end
-
-		local seen = {}
-		for _, pet in ipairs(pets) do
-			local m = _brPetMps(pet)
-			local isPri = petIsPriority(pet)
-			local isTop = topUid ~= nil and pet.uid == topUid and topMps > 0
-			if isTop or m >= BR_ESP_MIN or isPri then
-				local uid = pet.uid
-				seen[uid] = true
-				applyBrEsp(pet, isPri, isTop)
-			end
-		end
-		for uid in pairs(brEspEntries) do
-			if not seen[uid] then clearBrEspEntry(uid) end
-		end
-	end
-
-	local function setBrainrotEsp(on)
-		on = on and true or false
-		_G.SabcomBrainrotEsp = on
-		if on == brEspOn then return end
-		brEspOn = on
-		if not on then
-			if brEspConn then
-				brEspConn:Disconnect()
-				brEspConn = nil
-			end
-			clearAllBrEsp()
-			return
-		end
-		local last = 0
-		brEspConn = RunService.Heartbeat:Connect(function()
-			local now = os.clock()
-			if now - last < 0.35 then return end
-			last = now
-			refreshBrEsp()
-		end)
-		task.defer(refreshBrEsp)
-	end
-	_G.SabcomSetBrainrotEsp = setBrainrotEsp
-
-	if _G.SabcomEspPlayer == true then
-		task.defer(function() setEspPlayer(true) end)
-	end
-	if _G.SabcomBrainrotEsp == true then
-		task.defer(function() setBrainrotEsp(true) end)
-	end
-end
-
-local _carpetEngaging = false
-
-
-local _carpetBoostUntil = 0
-_G.sabcomBoostWindow = tonumber(_G.sabcomBoostWindow) or 20
-
-local function carpetEngage(force)
-	_G.Sabcom_Step("carpetEngage: appel", force and "force=true" or "force=false")
-	if not force and os.clock() < _carpetBoostUntil then
-		local c = LP.Character
-		if c then
-			for _, n in ipairs(CARPET_NAMES) do
-				local t = c:FindFirstChild(n)
-				if t and t:IsA("Tool") then
-					return n
-				end
-			end
-		end
-	end
-	if _carpetEngaging then
-		local _tw = os.clock()
-		repeat RunService.Heartbeat:Wait() until (not _carpetEngaging) or os.clock() - _tw > 6
-		local c = LP.Character
-		if c then
-			for _, n in ipairs(CARPET_NAMES) do
-				local t = c:FindFirstChild(n)
-				if t and t:IsA("Tool") then return n end
-			end
-		end
-	end
-	_carpetEngaging = true
-	_waitGrapple(5)
-
-	local char = LP.Character
-	local hum = char and char:FindFirstChildOfClass("Humanoid")
-	if not char or not hum then _carpetEngaging = false; return nil end
-
-
-	local _justEquipped = false
-	if not char:FindFirstChild("Grapple Hook") then
-		local g = findTool("Grapple Hook")
-		if g then
-			hum:EquipTool(g)
-			_justEquipped = true
-		end
-	end
-
-
-	do
-		local _gw = (tonumber(_G.sabcomGrappleWaitMs) or 200) / 1000
-		local _gt = os.clock()
-		while os.clock() - _gt < _gw do
-			local _c = LP.Character
-			if _c and _c:FindFirstChild("Grapple Hook") then break end
-
-			if _c and _c ~= char then
-				char = _c
-				hum = _c:FindFirstChildOfClass("Humanoid")
-				local g = findTool("Grapple Hook")
-				if g and hum then
-					hum:EquipTool(g)
-					_justEquipped = true
-				end
-			end
-			RunService.Heartbeat:Wait()
-		end
-	end
-
-
-	if _justEquipped then
-		task.wait((tonumber(_G.sabcomGrappleSettleMs) or 60) / 1000)
-	end
-
-
-	local _fired = 0
-	do
-		local _c = LP.Character
-		local _tool = _c and _c:FindFirstChild("Grapple Hook")
-		local _r, _errMsg = nil, nil
-		local _cause = nil
-
-		if not _c then
-			_cause = "pas de personnage"
-		elseif not _tool then
-
-			_cause = (findTool("Grapple Hook") and "outil en inventaire mais PAS EN MAIN")
-				or "outil introuvable (ni main ni sac)"
-		else
-			if type(_G.SabcomFireGrapple2) ~= "function" then
-				error("SabcomFireGrapple2 indisponible")
-			end
-			local result = _G.SabcomFireGrapple2()
-			if result then
-				_fired = 1
-			else
-				_cause = "SabcomFireGrapple2 a renvoye false (pas de point 10-50 studs)"
-			end
-			_G.Sabcom_Step("grapple: tir", ((_fired == 1) and "ENVOYE via SabcomFireGrapple2" or ("ECHEC: " .. tostring(_cause)))
-				.. (_justEquipped and "  (equipe a l'instant)" or "  (deja en main)"))
-		end
-
-
-		_G.Sabcom_GrappleLog = _G.Sabcom_GrappleLog or {}
-		if _fired == 1 then
-			_G.Sabcom_GrappleOk = (_G.Sabcom_GrappleOk or 0) + 1
-		else
-			_G.Sabcom_GrappleFail = (_G.Sabcom_GrappleFail or 0) + 1
-
-
-			if not _G.sabcomGrappleQuiet then
-				local _o = (getgenv and getgenv().print) or print
-				_o(string.rep("=", 56))
-				_o(string.format("GRAPPLE ECHEC #%d  (apres %dms d'attente)",
-					_G.Sabcom_GrappleFail, math.floor((os.clock() - _t0) * 1000)))
-				_o("  CAUSE : " .. tostring(_cause or "inconnue"))
-				if _errMsg then _o("  erreur: " .. tostring(_errMsg)) end
-				_o(string.format("  en main=%s  en sac=%s  remote=%s  perso=%s  tp=%s",
-					tostring(_tool ~= nil), tostring(findTool("Grapple Hook") ~= nil),
-					tostring(_r ~= nil), tostring(_c ~= nil), tostring(_G.__TP_T0 ~= nil)))
-				_o(string.format("  cumul: %d envoyes / %d tentatives",
-					_G.Sabcom_GrappleOk or 0, (_G.Sabcom_GrappleOk or 0) + _G.Sabcom_GrappleFail))
-				_o(string.rep("=", 56))
-			end
-
-			if #_G.Sabcom_GrappleLog < 40 then
-				_G.Sabcom_GrappleLog[#_G.Sabcom_GrappleLog + 1] = {
-					t      = math.floor(os.clock() * 10) / 10,
-					cause  = _cause or "inconnue",
-					err    = _errMsg,
-					inHand = _tool ~= nil,
-					inBag  = findTool("Grapple Hook") ~= nil,
-					remote = _r ~= nil,
-					char   = _c ~= nil,
-					tp     = _G.__TP_T0 ~= nil,
-					waitMs = math.floor(((os.clock() - _t0) * 1000)),
-				}
-			end
-		end
-	end
-
-	task.wait(0.06)
-
-
-	task.wait(0.06)
-
-	local cn
-	local _tc = os.clock()
-	repeat
-		cn = equipCarpet()
-		local c = LP.Character
-		if cn and c and c:FindFirstChild(cn) then break end
-		RunService.Heartbeat:Wait()
-	until os.clock() - _tc > 0.4
-
-
-	if cn and _fired > 0 then
-		_carpetBoostUntil = os.clock() + (_G.sabcomBoostWindow or 20)
-	elseif cn then
-		_carpetBoostUntil = 0
-
-	end
-	_carpetEngaging = false
-	return cn
-end
-local _normCache = {}
-local function _normName(s)
-	local k = tostring(s)
-	local hit = _normCache[k]
-	if hit then return hit end
-
-	local v = (k:lower():gsub("[%s%-_'%.]", ""))
-	_normCache[k] = v
-	return v
-end
-
-local _priMap, _priMapSrc = nil, nil
-local function _invalidatePriMap()
-	_priMap = nil
-	_priMapSrc = nil
-end
-_G.SabcomInvalidatePriMap = _invalidatePriMap
-local function _priIndexOf(name)
-	local list = _G.SHARED_PRIORITY_ITEMS
-	if type(list) ~= "table" or not name then return nil end
-	if _priMapSrc ~= list or _priMap == nil then
-		_priMap, _priMapSrc = {}, list
-		for i = #list, 1, -1 do _priMap[_normName(list[i])] = i end
-	end
-	return _priMap[_normName(name)]
-end
-
-local _chCache = {}
-local function getPlotChannel(plotRef)
-	local chave = (typeof(plotRef) == "Instance") and plotRef.Name or tostring(plotRef or "")
-	local guardado = _chCache[chave]
-	if type(guardado) == "table" then return guardado end
-	if type(_G.sabcomGetPlotChannel) == "function" then
-		local plotCh = _G.sabcomGetPlotChannel(plotRef)
-		if type(plotCh) == "table" then
-			_chCache[chave] = plotCh
-			return plotCh
-		end
-	end
-	local keys = {}
-	if typeof(plotRef) == "Instance" then
-		local ord
-		ord = plotRef:GetAttribute("Order") 
-		if ord ~= nil then keys[#keys + 1] = "Plot" .. tostring(ord) end
-		keys[#keys + 1] = plotRef.Name
-	elseif type(plotRef) == "string" and plotRef ~= "" then
-		local plotsFolder = workspace:FindFirstChild("Plots")
-		local plotInst = plotsFolder and plotsFolder:FindFirstChild(plotRef)
-		if plotInst then
-			local ord
-			ord = plotInst:GetAttribute("Order")
-			if ord ~= nil then keys[#keys + 1] = "Plot" .. tostring(ord) end
-		end
-		keys[#keys + 1] = plotRef
-	end
-	for _, key in ipairs(keys) do
-		local ch = getSyncChannel(key)
-		if type(ch) == "table" then
-			_chCache[chave] = ch
-			_chCache[key] = ch
-			return ch
-		end
-	end
-	if _G.Sabcom_GetPlotChannel then
-		local ch = _G.Sabcom_GetPlotChannel(plotRef)
-		if type(ch) == "table" then
-			_chCache[chave] = ch
-			return ch
-		end
-	end
-	return nil
-end
-
-local function channelGet(channel, key)
-	if not channel or not key then return nil end
-	if type(_G.sProp) == "function" then
-		return _G.sProp(channel, key)
-	end
-	if type(_G.sabcomChannelGet) == "function" then
-		return _G.sabcomChannelGet(channel, key)
-	end
-	if _G.Sabcom_ChannelGet then
-		return _G.Sabcom_ChannelGet(channel, key)
-	end
-	return nil
-end
-
-local _podiumPos = setmetatable({}, { __mode = "k" })
-
-local _slotStr = {}
-local function _slotKey(slot)
-	local s = _slotStr[slot]
-	if s == nil then s = tostring(slot); _slotStr[slot] = s end
-	return s
-end
-
-local getPetPosition = function(plot, slot)
-	local sub = _podiumPos[plot]
-	if sub == nil then sub = {}; _podiumPos[plot] = sub end
-	local hit = sub[slot]
-	if hit then return hit end
-
-	local podiums = plot:FindFirstChild("AnimalPodiums")
-	if not podiums then return nil end
-	local podium = podiums:FindFirstChild(_slotKey(slot))
-	if not podium then return nil end
-
-	local pos
-	local cf = podium:GetPivot()
-	if cf and cf.Position.Magnitude > 1 then
-		pos = cf.Position
-	end
-	if not pos and podium.Position and podium.Position.Magnitude > 1 then
-		pos = podium.Position
-	end
-	if not pos then return nil end
-	sub[slot] = pos
-	return pos
-end
-
-local _mpsAnimals, _mpsMut, _mpsTrait
-local _mpsNextTry = 0
-local function _mpsData()
-	if _mpsAnimals and _mpsMut and _mpsTrait then return _mpsAnimals end
-
-	if os.clock() < _mpsNextTry then return _mpsAnimals end
-	_mpsNextTry = os.clock() + 0.025
-
-	if not _mpsAnimals then
-		local m = require(RS.Datas.Animals)
-		if type(m) == "table" then _mpsAnimals = m end
-		if not _mpsAnimals and type(AnimalsData) == "table" then _mpsAnimals = AnimalsData end
-	end
-	if not _mpsMut then
-		local m = require(RS.Datas.Mutations)
-		if type(m) == "table" then _mpsMut = m end
-	end
-	if not _mpsTrait then
-		local m = require(RS.Datas.Traits)
-		if type(m) == "table" then _mpsTrait = m end
-	end
-	return _mpsAnimals
-end
-
-local function _up9Mps(entry, AD)
-
-	AD = AD or _mpsData()
-	if not AD then return 0 end
-	local data = AD[entry.Index]
-	if not data then return 0 end
-	local base = data.Generation or 0
-	local mult = 1
-	if entry.Mutation and _mpsMut then
-		local mut = _mpsMut[entry.Mutation]
-		if mut then mult = mult + (mut.Modifier or 0) end
-	end
-	if type(entry.Traits) == "table" and _mpsTrait then
-		for _, t in pairs(entry.Traits) do
-			local tr = _mpsTrait[t]
-			if tr then mult = mult + (tr.MultiplierModifier or 0) end
-		end
-	end
-	return base * mult
-end
-
-local function _chanRegistry()
-	if type(_G.SabcomSyncAll) ~= "function" then return nil end
-	local reg = _G.SabcomSyncAll()
-	if type(reg) == "table" then return reg end
-	return nil
-end
-_G.Sabcom_ChanRegistry = _chanRegistry
-
-_G.Sabcom_SnippetChannels = _chanRegistry
-
-local _petSeenT = {}
-
-local displayNameToIndex = {}
-local function rebuildDisplayIndex()
-	displayNameToIndex = {}
-	local AD = AnimalsData
-	if type(AD) ~= "table" then AD = _mpsData() end
-	if type(AD) ~= "table" then return end
-	for idx, info in pairs(AD) do
-		if type(info) == "table" and info.DisplayName then
-			displayNameToIndex[info.DisplayName] = idx
-		end
-		displayNameToIndex[idx] = idx
-	end
-end
-
-local function _ensureSyncMod()
-	if type(SyncMod) == "table" then
-		_G.SabcomSynchronizerReady = true
-		return true
-	end
-	local pre = _G.SabcomPreloadedSynchronizer
-	if type(pre) == "table" then
-		SyncMod = pre
-		_G.SabcomSyncMod = pre
-		_G.SabcomSynchronizerReady = true
-		return true
-	end
-	local mod = _tryRequireSynchronizer()
-	if type(mod) == "table" then
-		SyncMod = mod
-		_G.SabcomPreloadedSynchronizer = mod
-		_G.SabcomSynchronizerReady = true
-		_G.SabcomSyncMod = mod
-		return true
-	end
-	return false
-end
-
-local function ensureSyncData()
-	if type(AnimalsData) == "table" and next(displayNameToIndex) then return true end
-	local pkg = RS:FindFirstChild("Packages")
-	local datas = RS:FindFirstChild("Datas")
-	local utils = RS:FindFirstChild("Utils")
-	_ensureSyncMod()
-	if not SyncMod then
-		SyncMod = _tryRequireSynchronizer()
-		_G.SabcomSyncMod = SyncMod
-	end
-	if type(AnimalsData) ~= "table" then
-		AnimalsData = safeRequire(datas and datas:FindFirstChild("Animals"))
-	end
-	if type(MutationsData) ~= "table" then
-		MutationsData = safeRequire(datas and datas:FindFirstChild("Mutations"))
-	end
-	if type(TraitsData) ~= "table" then
-		TraitsData = safeRequire(datas and datas:FindFirstChild("Traits"))
-	end
-	if type(NumberUtils) ~= "table" then
-		NumberUtils = safeRequire(utils and utils:FindFirstChild("NumberUtils"))
-	end
-	rebuildDisplayIndex()
-	return type(AnimalsData) == "table"
-end
-
-
-local _nomVersIndex = nil
-
-
-local _MutD, _TraD, _dataOk = nil, nil, false
-local function _chargerModifs()
-	if _dataOk then return end
-	do
-		local D = game:GetService("ReplicatedStorage"):FindFirstChild("Datas")
-		if not D then return end
-		local m = D:FindFirstChild("Mutations")
-		local t = D:FindFirstChild("Traits")
-		if m then _MutD = require(m) end
-		if t then _TraD = require(t) end
-		if _MutD or _TraD then _dataOk = true end
-	end
-end
-
-local function calculateGeneration(index, mutation, traits)
-	ensureSyncData()
-	-- prefer game's own GetGeneration (handles ALL current + new mutations, traits, combos)
-	if AnimalsShared and AnimalsShared.GetGeneration then
-		local ok, v = pcall(AnimalsShared.GetGeneration, AnimalsShared, index, mutation, traits, nil)
-		if ok and type(v) == "number" and v > 0 then return v end
-	end
-	if type(AnimalsData) ~= "table" then return 0 end
-	local info = AnimalsData[index]
-	if type(info) ~= "table" or not rawget(info, "Generation") then return 0 end
-	local base = rawget(info, "Generation")
-	local mult = 1
-	if mutation and mutation ~= "None" and mutation ~= "" and type(MutationsData) == "table" then
-		local mInfo = MutationsData[mutation]
-		if type(mInfo) == "table" and rawget(mInfo, "Modifier") then
-			mult = mult + rawget(mInfo, "Modifier")
-		end
-	end
-	if type(traits) == "table" and type(TraitsData) == "table" then
-		for _, tr in ipairs(traits) do
-			local tInfo = TraitsData[tr]
-			if type(tInfo) == "table" and rawget(tInfo, "MultiplierModifier") then
-				mult = mult + rawget(tInfo, "MultiplierModifier")
-			end
-		end
-	end
-	return math.floor(base * mult)
-end
-
-
-local function _generation(index, mutation, traits)
-	local AD = _mpsData()
-	if type(AD) ~= "table" then return 0 end
-	local info = AD[index]
-	if type(info) ~= "table" then return 0 end
-	local base = rawget(info, "Generation")
-	if not base then return 0 end
-	_chargerModifs()
-	local mult = 1
-	if mutation and mutation ~= "None" and mutation ~= "" and type(_MutD) == "table" then
-		local mi = _MutD[mutation]
-		if type(mi) == "table" and rawget(mi, "Modifier") then
-			mult = mult + rawget(mi, "Modifier")
-		end
-	end
-	if type(traits) == "table" and type(_TraD) == "table" then
-		for _, tr in ipairs(traits) do
-			local ti = _TraD[tr]
-			if type(ti) == "table" and rawget(ti, "MultiplierModifier") then
-				mult = mult + rawget(ti, "MultiplierModifier")
-			end
-		end
-	end
-	return math.floor(base * mult)
-end
-
-local function getPlotOwner(plot)
-	local sign = plot:FindFirstChild("PlotSign")
-	if not sign then return nil end
-	local gui = sign:FindFirstChildWhichIsA("SurfaceGui", true)
-	if not gui then return nil end
-	local label = gui:FindFirstChildWhichIsA("TextLabel", true)
-	if not label then return nil end
-	local text = label.Text
-	if not text or text == "" or text:lower():find("empty") then return nil end
-	local owner = text:match("^(.+)'s Base$")
-	return owner or text
-end
-
-
-local function _proprietaire(plot)
-	local sign = plot:FindFirstChild("PlotSign")
-	if not sign then return nil end
-	local gui = sign:FindFirstChildWhichIsA("SurfaceGui", true)
-	if not gui then return nil end
-	local lab = gui:FindFirstChildWhichIsA("TextLabel", true)
-	if not lab then return nil end
-	local txt = lab.Text
-	if not txt or txt == "" or txt:lower():find("empty") then return nil end
-	return txt:match("^(.+)'s Base$") or txt
-end
-
-local function _fmtGenText(genVal)
-	genVal = tonumber(genVal) or 0
-	local s
-	if NumberUtils and NumberUtils.ToString then
-		local txt = NumberUtils:ToString(genVal)
-		if type(txt) == "string" and txt ~= "" then
-			s = txt
-		end
-	end
-	if not s then s = tostring(genVal) end
-	return "$" .. s .. "/s"
-end
-
-local _BLOCKING_MACHINE_TYPES = { Fuse = true, Duel = true, Trade = true, Crafting = true }
-
-local function _syncOwnerName(owner)
-	if owner == nil then return nil end
-	if typeof(owner) == "Instance" and owner:IsA("Player") then return owner.Name end
-	if typeof(owner) == "Instance" and owner.Name then return owner.Name end
-	if type(owner) == "string" then return owner end
-	if type(owner) == "table" and owner.Name then return tostring(owner.Name) end
-	if type(owner) == "table" and owner.UserId then
-		local plr = Players:GetPlayerByUserId(owner.UserId)
-		return plr and plr.Name or nil
-	end
-	if type(owner) == "number" then
-		local plr = Players:GetPlayerByUserId(owner)
-		return plr and plr.Name or nil
-	end
-	return tostring(owner)
-end
-
-local function _isMineOwner(ownerName)
-	if type(ownerName) ~= "string" or ownerName == "" then return false end
-	local low = ownerName:lower()
-	local me = LP.Name:lower()
-	local disp = LP.DisplayName:lower()
-	if low == me or low == disp then return true end
-	local fromSign = low:match("^(.+)'s base$")
-	if fromSign and (fromSign == me or fromSign == disp) then return true end
-	return false
-end
-
-local STEAL_NAME_BLACKLIST = {
-	octopubase = true,
-	octopusbase = true,
+_G.MeerkoStartSideTP = manualFullTP
+
+if type(_G.SHARED_PRIORITY_ITEMS) ~= "table" or #_G.SHARED_PRIORITY_ITEMS == 0 then
+_G.SHARED_PRIORITY_ITEMS = {
+    "Headless Horseman","Strawberry Elephant","Signore Carapace","John Pork","Meowl",
+    "Elefanto Frigo","Arcadragon","Skibidi Toilet","Griffin","Antonio",
+    "Dragon Aquanini","Dragon Gingerini","Love Love Bear","Kalika Bros","Moby Bros",
+    "Grabatron","Jelly Moby","La Supreme Combinasion","Ginger Gerat","Digi Narwhal",
+    "Hydra Dragon Cannelloni","Hydra Bunny","Bunny and Eggy","Kraken","Fishino Clownino",
+    "Tirilikalika Tirilikalako","Pancake and Syrup","Dragon Cannelloni","Sammyni Cakini","Ketupat Bros",
+    "Bumbatron","Venuspino","Dug dug dug","La Casa Boo","Rico Dinero",
+    "Foxini Lanternini","Duggy Bros","Rosey and Teddy","Globa Steppa","Los Hackers",
+    "Cerberus","Fragrama and Chocrama","Cooki and Milki","La Secret Combinasion","Burguro and Fryuro",
+    "Capitano Moby","Spooky and Pumpky","Garama and Madundung","Popcuru and Fizzuru","Pizza and Ranch",
+    "Reinito Sleighito","Tenini Ballini","Fragola La La La","Ketchuru and Musturu","Tralaledon",
+    "Tictac Sahur","Ketupat Kepat","Tang Tang Keletang","Orcaledon","La Ginger Sekolah",
+    "Los Spaghettis","Lavadorito Spinito","Swaggy Bros","La Taco Combinasion","Los Primos",
+    "Los Chillis","Chillin Chili","Tuff Toucan","W or L","Chipso and Queso",
+    "Guest 666","Money Money Reindeer","Quackini Snackini","Los Sekolahs","Los Tacoritas",
+    "Los Amigos","Fortunu and Cashuru","Jolly Jolly Sahur","Boppin Bunny","Gym Bros",
+    "Los Cupids","Festive 67","Celularcini Viciosini","Cloverat Clapat","La Food Combinasion",
+    "Hopilikalika Hopilikalako","Celestial Pegasus","Sammyni Fattini","Money Money Bros","La Spooky Grande",
+    "Cash or Card","Swag Soda","Los Planitos","Lovin Rose","Tacorita Bicicleta",
+    "Los Jolly Combinasionas","La Romantic Grande","La Easter Grande","Los Hotspotsitos","Rosetti Tualetti",
+    "Los Bros","Gobblino Uniciclino","Chicleteira Cupideira","La Extinct Grande","Las Sis",
+    "Nacho Spyder","Gold Gold Gold","Los Mariachis","Snailo Clovero","La Jolly Grande",
+    "Los Candies","Churrito Bunnito","Bananito","Eviledon","Los 67",
+    "Los Sweethearts","Noo my Heart","La Lucky Grande","Ventoliero Pavonero","Baskito",
+    "Chimnino","Los Puggies","Camera Ramena","Los 25","Spinny Hammy",
+    "Money Money Puggy","Cigno Fulgoro","Los Spooky Combinasionas","Chicleteira Noelteira","Mariachi Corazoni",
+    "Tacorillo Crocodillo","Noo my Gold","Los Mobilis","Mieteteira Bicicleteira","DJ Panda",
+    "Los Combinasionas","Nuclearo Dinossauro","Bacuru and Egguru","Spaghetti Tualetti","La Grande Combinasion",
+    "Esok Sekolah",
 }
-
-local function _isBlacklistedPet(p)
-	if not p then return true end
-	local n = _normName(p.name)
-	local i = _normName(p.index)
-	return (n ~= "" and STEAL_NAME_BLACKLIST[n] == true) or (i ~= "" and STEAL_NAME_BLACKLIST[i] == true)
 end
-
-local function _plotIsMine(plotRef)
-	if plotRef == nil then return false end
-	local plot = plotRef
-	if type(plotRef) ~= "userdata" then
-		local plots = workspace:FindFirstChild("Plots")
-		plot = plots and plots:FindFirstChild(tostring(plotRef))
-	end
-	if not plot then return false end
-	return _isMineOwner(getPlotOwner(plot) or "")
-end
-
-local function _isOwnPet(p)
-	if not p then return true end
-	if p.mine == true then return true end
-	if _isMineOwner(tostring(p.owner or "")) then return true end
-	if p.plot and _plotIsMine(p.plot) then return true end
-	return false
-end
-
-local _petAllowed = function(p)
-	if not p or p.conveyor then return false end
-	if _isOwnPet(p) then return false end
-	if _isBlacklistedPet(p) then return false end
-	return true
-end
-
-local function _isFusingAnimal(animalData)
-	if type(animalData) ~= "table" then return false end
-	local m = animalData.Machine
-	if type(m) ~= "table" then return false end
-	return _BLOCKING_MACHINE_TYPES[m.Type] == true and m.Active == true
-end
-
-local function _extractAnimalList(plotData)
-	if type(plotData) ~= "table" then return nil end
-	local animalList = rawget(plotData, "AnimalList") or plotData.AnimalList
-	if type(animalList) ~= "table" then
-		animalList = channelGet(plotData, "AnimalList")
-	end
-	if type(animalList) ~= "table" then
-		local ct = rawget(plotData, "CacheTable") or plotData.CacheTable
-		if type(ct) == "table" then
-			animalList = rawget(ct, "AnimalList") or ct.AnimalList or ct.Animals
-		end
-	end
-	if type(animalList) ~= "table" then
-		animalList = rawget(plotData, "Animals") or plotData.Animals
-	end
-	if type(animalList) ~= "table" then return nil end
-	return animalList
-end
-
-local _RequestData
-local _plotDataCache, _plotDataCacheT = {}, {}
-
-local function getRequestData()
-	if _RequestData then return _RequestData end
-	local pkg = RS:FindFirstChild("Packages")
-		local sync = pkg and pkg:FindFirstChild("Synchronizer")
-		_RequestData = sync and sync:FindFirstChild("RequestData")
-	return _RequestData
-end
-
-local function readPlotDataServer(plot)
-	if not plot then return nil end
-	local nome = plot.Name
-	local now = os.clock()
-	if _plotDataCache[nome] and (now - (_plotDataCacheT[nome] or 0)) < 0.75 then
-		return _plotDataCache[nome]
-	end
-	local rd = getRequestData()
-	if not rd then return nil end
-	local data = rd:InvokeServer(nome)
-	if type(data) ~= "table" then return nil end
-	_plotDataCache[nome] = data
-	_plotDataCacheT[nome] = now
-	return data
-end
-_G.SabcomReadPlotDataServer = readPlotDataServer
-
-local function _plotChannelKeys(plot)
-	local keys, out = {}, {}
-	local function add(k)
-		k = type(k) == "string" and k or (k ~= nil and tostring(k) or "")
-		if k ~= "" and not keys[k] then
-			keys[k] = true
-			out[#out + 1] = k
-		end
-	end
-	if type(plot) == "string" then
-		add(plot)
-	elseif plot then
-		local ord = plot:GetAttribute("Order")
-		if ord ~= nil then add("Plot" .. tostring(ord)) end
-		add(plot.Name)
-	end
-	return out
-end
-
-
-local function _readPlotSync(plot)
-	ensureSyncData()
-
-	local ch = getPlotChannel(plot)
-	if not ch then
-		for _, key in ipairs(_plotChannelKeys(plot)) do
-			ch = getPlotChannel(key)
-			if ch then break end
-		end
-	end
-	if ch then
-		local animalList = (_G.sProp and _G.sProp(ch, "AnimalList")) or _extractAnimalList(ch)
-		local owner = (_G.sProp and _G.sProp(ch, "Owner")) or channelGet(ch, "Owner") or rawget(ch, "Owner") or ch.Owner
-		if type(animalList) == "table" and next(animalList) ~= nil then
-			return animalList, owner
-		end
-	end
-
-	return nil, nil
-end
-
-local function _findPodiumModel(plot, slotName)
-	local podiums = plot:FindFirstChild("AnimalPodiums")
-	local podium = podiums and podiums:FindFirstChild(slotName)
-	if not podium then return nil, nil end
-	for _, child in ipairs(podium:GetChildren()) do
-		if child:IsA("Model") and child:FindFirstChildOfClass("Humanoid") then
-			if not Players:GetPlayerFromCharacter(child) then
-				return child, podium
-			end
-		end
-	end
-	return nil, podium
-end
-
--- ============================================================
--- MUTATION READER: multi-source detection
--- Wrapped in do-block: locals free at end (avoid Luau 200-slot ceiling)
--- Exposed via _G.__sabReadMut for cross-scope access
--- ============================================================
-do
-local _MutPrefixCache, _MutPrefixCacheN = nil, 0
-local function _mutPrefixes()
-	local src = MutationsData or _worldMutationsData
-	if type(src) ~= "table" then return _MutPrefixCache or {} end
-	local n = 0
-	for _ in pairs(src) do n = n + 1 end
-	if _MutPrefixCache and _MutPrefixCacheN == n then return _MutPrefixCache end
-	local out = {}
-	for name in pairs(src) do
-		if type(name) == "string" and name ~= "" and name ~= "None" then
-			out[#out + 1] = name
-			-- also add space-variant for YinYang
-			if name == "YinYang" then out[#out + 1] = "Yin Yang" end
-		end
-	end
-	table.sort(out, function(a, b) return #a > #b end)
-	_MutPrefixCache, _MutPrefixCacheN = out, n
-	return out
-end
-
-local function _detectMutFromText(txt)
-	if type(txt) ~= "string" or txt == "" then return nil end
-	local low = txt:lower()
-	for _, mut in ipairs(_mutPrefixes()) do
-		local ml = mut:lower()
-		local plen = #ml
-		if #low >= plen + 1 and low:sub(1, plen) == ml then
-			local nx = low:sub(plen + 1, plen + 1)
-			if nx == " " or nx == "-" or nx == "_" then
-				return mut == "Yin Yang" and "YinYang" or mut
-			end
-		end
-	end
-	return nil
-end
-
-local function _readMutation(model, podium, prompt, entry)
-	-- 1. sync entry
-	if type(entry) == "table" then
-		local m = entry.Mutation
-		if type(m) == "string" and m ~= "" and m ~= "None" then
-			return m == "Yin Yang" and "YinYang" or m
-		end
-	end
-	-- 2. model attributes (multiple key variants)
-	if model then
-		for _, k in ipairs({ "Mutation", "__mutation", "MutationType", "PetMutation", "BrainrotMutation" }) do
-			local v = model:GetAttribute(k)
-			if type(v) == "string" and v ~= "" and v ~= "None" then
-				return v == "Yin Yang" and "YinYang" or v
-			end
-		end
-		-- 2b. child Value objects
-		for _, c in ipairs(model:GetChildren()) do
-			if (c:IsA("StringValue") or c:IsA("ObjectValue")) and (c.Name == "Mutation" or c.Name == "__mutation") then
-				local v = tostring(c.Value or "")
-				if v ~= "" and v ~= "None" then
-					return v == "Yin Yang" and "YinYang" or v
-				end
-			end
-		end
-	end
-	-- 3. podium attributes
-	if podium then
-		for _, k in ipairs({ "Mutation", "__mutation" }) do
-			local v = podium:GetAttribute(k)
-			if type(v) == "string" and v ~= "" and v ~= "None" then
-				return v == "Yin Yang" and "YinYang" or v
-			end
-		end
-	end
-	-- 4. prompt ObjectText prefix (e.g. "Golden La Vacca")
-	if prompt then
-		local detected = _detectMutFromText(tostring(prompt.ObjectText or ""))
-		if detected then return detected end
-	end
-	-- 5. model name prefix
-	if model and model.Name then
-		local detected = _detectMutFromText(model.Name)
-		if detected then return detected end
-	end
-	return "None"
-end
-_G.__sabReadMut = _readMutation
-end
-
-
-
-local function _petStillLive(pet)
-	if type(pet) ~= "table" or not pet.plot or pet.slot == nil then return false end
-	if pet.prompt and pet.prompt.Parent then return true end
-	local plotName = tostring(pet.plot)
-	local slotName = tostring(pet.slot)
-	local plots = workspace:FindFirstChild("Plots")
-	local plot = plots and plots:FindFirstChild(plotName)
-	if not plot then return false end
-	local podiums = plot:FindFirstChild("AnimalPodiums")
-	local podium = podiums and podiums:FindFirstChild(slotName)
-	if podium and _worldStealPrompt(podium) then return true end
-	if pet.model and pet.model.Parent then return true end
-	return false
-end
-_G.SabcomPetStillLive = _petStillLive
-
-local _podListCache = {}
-local _scanCatalogo
-local _SUF = { K = 1e3, M = 1e6, B = 1e9, T = 1e12, Q = 1e15, Qi = 1e18, Sx = 1e21, Sp = 1e24, Oc = 1e27 }
-
-local function _montarCatalogo()
-	if _scanCatalogo and next(_scanCatalogo) then return _scanCatalogo end
-	_scanCatalogo = {}
-	ensureSyncData()
-	local AD = AnimalsData or _mpsData()
-	if type(AD) ~= "table" then return _scanCatalogo end
-	for idx, info in pairs(AD) do
-		if type(idx) == "string" then
-			_scanCatalogo[idx:lower()] = idx
-			if type(info) == "table" and type(info.DisplayName) == "string" then
-				_scanCatalogo[info.DisplayName:lower()] = idx
-			end
-		end
-	end
-	return _scanCatalogo
-end
-
-local function _mpsDoTexto(model)
-	if not model then return nil end
-	local achado
-	local gui = model:FindFirstChildWhichIsA("BillboardGui", true) or model:FindFirstChildWhichIsA("SurfaceGui", true)
-	local labels = gui and gui:GetDescendants() or nil
-	if not labels then return nil end
-	for _, d in ipairs(labels) do
-		if d:IsA("TextLabel") and type(d.Text) == "string" then
-			local num, suf = d.Text:match("%$%s*([%d%.]+)%s*(%a*)%s*/s")
-			if num then
-				local v = tonumber(num)
-				if v then
-					if suf and suf ~= "" then
-						local m = _SUF[suf] or _SUF[suf:sub(1, 1):upper() .. (suf:sub(2) or "")]
-						if m then v = v * m end
-					end
-					achado = v
-					break
-				end
-			end
-		end
-	end
-	return achado
-end
-
-local _podiumsDe = function(plot)
-	local c = _podListCache[plot.Name]
-	if c then return c end
-	local podiums = plot:FindFirstChild("AnimalPodiums")
-	if not podiums then return nil end
-	local lista = {}
-	local filhos = podiums:GetChildren()
-	local numericos = 0
-	for _, pod in ipairs(filhos) do
-		if tonumber(pod.Name) then
-			numericos = numericos + 1
-			local pp = pod:GetPivot().Position
-			lista[#lista + 1] = { nome = pod.Name, pos = pp }
-		end
-	end
-	if #lista == 0 then return nil end
-	if #lista == numericos and numericos > 0 then
-		_podListCache[plot.Name] = lista
-	end
-	return lista
-end
-
-local _slotDoModel = function(plot, model)
-	local lista = _podiumsDe(plot)
-	if not lista then return nil end
-	local pivo = model:GetPivot().Position
-	local melhor, melhorD
-	for _, pod in ipairs(lista) do
-		local d = (pod.pos - pivo).Magnitude
-		if not melhorD or d < melhorD then melhorD, melhor = d, pod.nome end
-	end
-	if melhor and melhorD and melhorD <= 8 then return melhor end
-	return nil
-end
-
-local function _stealPromptForSlot(plot, slot)
-	local podiums = plot and plot:FindFirstChild("AnimalPodiums")
-	local podium = podiums and podiums:FindFirstChild(tostring(slot))
-	local base = podium and podium:FindFirstChild("Base")
-	local spawnp = base and base:FindFirstChild("Spawn")
-	local att = spawnp and spawnp:FindFirstChild("PromptAttachment")
-	local prompt = att and att:FindFirstChildWhichIsA("ProximityPrompt")
-	if prompt then
-		local txt = string.lower(tostring(prompt.ActionText or ""))
-		if txt:find("steal", 1, true) or txt == "" then
-			return prompt, podium
-		end
-	end
-	return nil, podium
-end
-
-
-local _genTentado = false
-local function _fixGen()
-	if _genTentado then return end
-	_genTentado = true
-	-- shim has 0 upvalues on most builds -> getupvalue throws; pcall swallows it.
-	-- The shim already routes to _G.SabcomGen which works standalone, so a failure here is harmless.
-	pcall(function()
-		local f = AnimalsShared and AnimalsShared.GetGeneration
-		if not f then return end
-		local esperado = debug.getupvalue(f, 2)
-		if esperado ~= nil then
-			debug.setupvalue(f, 1, function() return esperado end)
-		end
-	end)
-end
-_G.__sabFixGen = _fixGen
-
-
-local _worldCatalog
-local _worldAnimalsData, _worldMutationsData, _worldTraitsData
-
-local function _worldLooksLikeAnimals(t)
-	if type(t) ~= "table" then return false end
-	local a = rawget(t, "Boneca Ambalabu") or rawget(t, "Cappuccino Assassino")
-	return type(a) == "table" and type(a.Generation) == "number" and type(a.DisplayName) == "string"
-end
-
-local function _worldLooksLikeMutations(t)
-	if type(t) ~= "table" then return false end
-	local g = rawget(t, "Gold")
-	return type(g) == "table" and g.Modifier == 0.25
-end
-
-local function _worldLooksLikeTraits(t)
-	if type(t) ~= "table" then return false end
-	local c = rawget(t, "Chocolate")
-	return type(c) == "table" and type(c.MultiplierModifier) == "number"
-end
-
-local function _worldStealLoadedTables()
-	if _worldAnimalsData and _worldMutationsData then return true end
-
-	local loaded = (getloadedmodules and getloadedmodules()) or nil
-	if type(loaded) == "table" then
-		for _, mod in ipairs(loaded) do
-			if typeof(mod) == "Instance" and mod:IsA("ModuleScript") then
-				local parent = mod.Parent
-				if parent and parent.Name == "Datas" then
-					local tbl = getscriptclosure and getscriptclosure(mod) or nil
-					if not (type(tbl) == "table") then tbl = nil end
-					if type(tbl) == "function" then tbl = nil end
-					if _worldLooksLikeAnimals(tbl) then _worldAnimalsData = tbl end
-					if _worldLooksLikeMutations(tbl) then _worldMutationsData = tbl end
-					if _worldLooksLikeTraits(tbl) then _worldTraitsData = tbl end
-				end
-			end
-		end
-	end
-
-	if (not _worldAnimalsData or not _worldMutationsData) and type(getgc) == "function" then
-		do
-			for _, v in getgc(true) do
-				if type(v) == "table" then
-					if not _worldAnimalsData and _worldLooksLikeAnimals(v) then
-						_worldAnimalsData = v
-					elseif not _worldMutationsData and _worldLooksLikeMutations(v) then
-						_worldMutationsData = v
-					elseif not _worldTraitsData and _worldLooksLikeTraits(v) then
-						_worldTraitsData = v
-					end
-					if _worldAnimalsData and _worldMutationsData and _worldTraitsData then
-						break
-					end
-				end
-			end
-		end
-	end
-
-	_worldCatalog = {}
-	if type(_worldAnimalsData) == "table" then
-		for index, info in pairs(_worldAnimalsData) do
-			if type(index) == "string" then
-				_worldCatalog[index:lower()] = index
-				if type(info) == "table" and type(info.DisplayName) == "string" then
-					_worldCatalog[info.DisplayName:lower()] = index
-				end
-			end
-		end
-	end
-	return _worldAnimalsData ~= nil
-end
-
-local function _worldNormalizeMutation(mut)
-	if type(mut) ~= "string" or mut == "" or mut == "None" then return "None" end
-	if mut == "Yin Yang" then return "YinYang" end
-	return mut
-end
-
-local function _worldCalculateGeneration(index, mutation)
-	-- prefer game's own GetGeneration if available
-	if AnimalsShared and AnimalsShared.GetGeneration then
-		local ok, v = pcall(AnimalsShared.GetGeneration, AnimalsShared, index, mutation, nil, nil)
-		if ok and type(v) == "number" and v > 0 then return v end
-	end
-	local info = _worldAnimalsData and _worldAnimalsData[index]
-	if type(info) ~= "table" or type(info.Generation) ~= "number" then return 0 end
-	local mult = 1
-	mutation = _worldNormalizeMutation(mutation)
-	if mutation ~= "None" and type(_worldMutationsData) == "table" then
-		local mi = _worldMutationsData[mutation]
-		if type(mi) == "table" and type(mi.Modifier) == "number" then
-			mult = mult + mi.Modifier
-		end
-	end
-	return math.floor(info.Generation * mult)
-end
-
-local function _worldParseGenText(text)
-	if type(text) ~= "string" then return nil end
-	local num, suf = text:match("%$?%s*([%d%.]+)%s*(%a*)%s*/s")
-	local v = tonumber(num)
-	if not v then return nil end
-	if suf and suf ~= "" then
-		local m = _SUF[suf] or _SUF[suf:sub(1, 1):upper() .. suf:sub(2)]
-		if m then v = v * m end
-	end
-	return v
-end
-
-local function _worldStealPrompt(podium)
-	local base = podium:FindFirstChild("Base")
-	local spawn = base and base:FindFirstChild("Spawn")
-	local att = spawn and spawn:FindFirstChild("PromptAttachment")
-	if not att then return nil end
-	for _, p in ipairs(att:GetChildren()) do
-		if p:IsA("ProximityPrompt") then
-			local txt = string.lower(tostring(p.ActionText or ""))
-			if txt:find("steal", 1, true) then
-				return p
-			end
-		end
-	end
-	return nil
-end
-
-local function _worldPodiumPos(podium)
-	local cf = podium:GetPivot()
-	if cf and cf.Position.Magnitude > 1 then
-		return cf.Position
-	end
-	return nil
-end
-
-local function _worldIsOwnPlot(plot)
-	local sign = plot:FindFirstChild("PlotSign")
-	local yb = sign and sign:FindFirstChild("YourBase")
-	if yb and yb:IsA("BillboardGui") and yb.Enabled == true then
-		return true
-	end
-	if not sign then return false end
-	for _, lab in ipairs(sign:GetDescendants()) do
-		if lab:IsA("TextLabel") then
-			local txt = tostring(lab.Text or "")
-			local owner = txt:match("^(.+)'s Base$")
-			if owner and LP and (owner == LP.Name or owner == LP.DisplayName) then
-				return true
-			end
-		end
-	end
-	return _plotIsMine(plot)
-end
-
-local function _worldPlotOwner(plot)
-	local sign = plot:FindFirstChild("PlotSign")
-	if not sign then return nil end
-	for _, lab in ipairs(sign:GetDescendants()) do
-		if lab:IsA("TextLabel") then
-			local txt = tostring(lab.Text or "")
-			local low = txt:lower()
-			if not (low:find("your base", 1, true) or low:find("empty", 1, true) or low == "") then
-				return txt:match("^(.+)'s Base$") or txt
-			end
-		end
-	end
-	return getPlotOwner(plot)
-end
-
-local function _worldFindModel(plot, name)
-	if type(name) ~= "string" or name == "" then return nil end
-	local direct = plot:FindFirstChild(name)
-	if direct and direct:IsA("Model") then return direct end
-	local low = name:lower()
-	for _, child in ipairs(plot:GetChildren()) do
-		if child:IsA("Model") and child.Name:lower() == low then
-			if child:FindFirstChildOfClass("Humanoid") and not Players:GetPlayerFromCharacter(child) then
-				return child
-			end
-		end
-	end
-	return nil
-end
-
-local function _worldGenFromModelGui(model)
-	if not model then return nil end
-	for _, d in ipairs(model:GetDescendants()) do
-		if d:IsA("TextLabel") then
-			local v = _worldParseGenText(d.Text)
-			if v then return v end
-		end
-	end
-	return nil
-end
-
-local function _worldScanCore()
-	if _G.__sabFixGen then _G.__sabFixGen() end
-	_worldStealLoadedTables()
-	local now = os.clock()
-	local pets = {}
-	local Plots = workspace:FindFirstChild("Plots")
-	if not Plots then return pets end
-
-	for _, plot in ipairs(Plots:GetChildren()) do
-		if _worldIsOwnPlot(plot) then
-			continue
-		end
-		local owner = _worldPlotOwner(plot)
-		local podiums = plot:FindFirstChild("AnimalPodiums")
-		if not podiums then
-			continue
-		end
-		for _, podium in ipairs(podiums:GetChildren()) do
-			if not tonumber(podium.Name) then
-				continue
-			end
-			local prompt = _worldStealPrompt(podium)
-			local name = prompt and tostring(prompt.ObjectText or "") or ""
-			if name == "" then
-				continue
-			end
-
-			local index = _worldCatalog and _worldCatalog[name:lower()] or name
-			local info = _worldAnimalsData and _worldAnimalsData[index]
-			if type(info) == "table" and (info.Egg == true or info.LuckyBlock == true) then
-				continue
-			end
-			if _isBlacklistedPet({ name = name, index = index }) then
-				continue
-			end
-
-			local model = _worldFindModel(plot, name)
-			local mutation = (_G.__sabReadMut or function() return "None" end)(model, podium, prompt, nil)
-
-			local genVal = 0
-			if type(info) == "table" then
-				genVal = _worldCalculateGeneration(index, mutation)
-			end
-			if genVal <= 0 then
-				genVal = _worldGenFromModelGui(model) or 0
-			end
-
-			local pos = _worldPodiumPos(podium)
-			if not pos then
-				continue
-			end
-
-			local display = (type(info) == "table" and info.DisplayName) or name
-			local slotName = tostring(podium.Name)
-			pets[#pets + 1] = {
-				plot = plot.Name,
-				owner = owner,
-				slot = slotName,
-				name = display,
-				index = index,
-				genValue = genVal,
-				genText = _fmtGenText(genVal),
-				mps = genVal,
-				mutation = mutation,
-				traits = nil,
-				position = pos,
-				uid = plot.Name .. "_" .. slotName,
-				model = model,
-				podium = podium,
-				prompt = prompt,
-				firstSeen = now,
-				mine = false,
-				sync = false,
-				order = plot:GetAttribute("Order"),
-			}
-		end
-	end
-	table.sort(pets, function(a, b)
-		return (a.mps or 0) > (b.mps or 0)
-	end)
-	return pets
-end
-
-local scanAllPets = function(_light)
-	local now = os.clock()
-	local pets = _worldScanCore()
-	local Plots = workspace:FindFirstChild("Plots")
-
-	_G.__sabcomScanPending = 0
-	_G.__sabcomScanComplete = Plots ~= nil
-	if #pets > 0 then
-		_G.__sabcomEarlyReady = true
-		_G.__sabcomEarlyFrames = (_G.__sabcomEarlyFrames or 0) + 1
-	end
-	if _G.__sabcomScanComplete and _G.__sabcomTComplete == nil then
-		_G.__sabcomTComplete = now
-	end
-	if #pets > 0 and _G.__sabcomTAnimList == nil then _G.__sabcomTAnimList = now end
-	if _G.__sabcomTEntry == nil and #pets > 0 then
-		_G.__sabcomTEntry = now
-	end
-
-	if _light then
-		return pets
-	end
-	for _, p in ipairs(pets) do
-		p._pri = _priIndexOf(p.name) or (p.index and _priIndexOf(p.index)) or nil
-	end
-	if _G.SabcomStealMode == "highest" then
-		table.sort(pets, function(a, b) return (a.mps or 0) > (b.mps or 0) end)
-	else
-		table.sort(pets, function(a, b)
-			local pa, pb = a._pri, b._pri
-			if pa and pb then return pa < pb end
-			if pa then return true end
-			if pb then return false end
-			return (a.mps or 0) > (b.mps or 0)
-		end)
-	end
-	return pets
-end
-
-_G.SabcomWorldScan = _worldScanCore
-_G.NewScanner = { scan = _worldScanCore }
-_G.ScanAllPets = scanAllPets
-
-_G.Sabcom_ScanAllPets = scanAllPets
-
-local function _bustScanCache()
-	_plotDataCache = {}
-	_plotDataCacheT = {}
-	_chCache = {}
-	_podListCache = {}
-	_podiumPos = setmetatable({}, { __mode = "k" })
-	_scanCatalogo = nil
-	_worldCatalog = nil
-end
-local function _bustPlotCache(plotName)
-	if not plotName then return end
-	local key = tostring(plotName)
-	_chCache[key] = nil
-	_plotDataCache[key] = nil
-	_plotDataCacheT[key] = nil
-	_podListCache[key] = nil
-end
-_G.SabcomBustPlotCache = _bustPlotCache
-_G.SabcomBustScanCache = _bustScanCache
-
-_G.__sabcomEarlyFrames = 0
-_G.__sabcomEarlyReady  = false
-_G.__sabcomRadarOff    = false
-
-local function scanForTP()
-	return scanAllPets()
-end
-
-local function _petMeetsMinGen(p)
-	local minG = tonumber(_G.SabcomMinGen) or 0
-	if minG <= 0 or not p then return true end
-	local m = tonumber(p.mps) or 0
-	if m <= 0 and p.index then
-		m = _up9Mps({ Index = p.index, Mutation = p.mutation, Traits = p.traits }) or 0
-		p.mps = m
-	end
-	return m >= minG
-end
-
-local function _petBaseGen(p)
-	if not p then return 0 end
-	local AD = _mpsData()
-	local info = type(AD) == "table" and AD[p.index]
-	if type(info) == "table" then
-		return tonumber(rawget(info, "Generation")) or tonumber(p.mps) or 0
-	end
-	return tonumber(p.mps) or 0
-end
-
-local function _fmtMps(n)
-	n = tonumber(n) or 0
-	if n >= 1000000 then return string.format("$%.1fM/s", n / 1000000) end
-	if n >= 1000 then return string.format("$%.1fk/s", n / 1000) end
-	return "$" .. tostring(math.floor(n + 0.5)) .. "/s"
-end
-
-local function _ensurePetGen(p)
-	if not p then return 0, "$0/s" end
-	local m = tonumber(p.mps) or 0
-	if m <= 0 then m = tonumber(p.genValue) or 0 end
-	if m <= 0 and p.index then
-		m = tonumber(_up9Mps({ Index = p.index, Mutation = p.mutation, Traits = p.traits })) or 0
-	end
-	if m <= 0 and p.index then
-		m = tonumber(calculateGeneration(p.index, p.mutation, p.traits)) or 0
-	end
-	if m > 0 then
-		p.mps = m
-		p.genValue = m
-		p.genText = _fmtGenText(m)
-	end
-	local txt = p.genText
-	if (not txt or txt == "$0/s") and m > 0 then
-		txt = _fmtGenText(m)
-		p.genText = txt
-	end
-	return m, txt or _fmtMps(m)
-end
-_G.SabcomEnsurePetGen = _ensurePetGen
-
-local function _buildStealPetList(pets, mode)
-	if type(pets) ~= "table" then return {} end
-	mode = tostring(mode or _G.SabcomStealMode or "priority"):lower()
-	if mode == "highest" then mode = "value" end
-	local list = {}
-	for _, p in ipairs(pets) do
-		if p and _petAllowed(p) and _petMeetsMinGen(p) then
-			if (not p.mps or p.mps <= 0) and p.index then
-				p.mps = _up9Mps({ Index = p.index, Mutation = p.mutation, Traits = p.traits }) or 0
-			end
-			if p.plot and p.slot then
-				p.uid = tostring(p.plot) .. "_" .. tostring(p.slot)
-			end
-			list[#list + 1] = p
-		end
-	end
-	local hrp = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
-	local myPos = hrp and hrp.Position
-	if mode == "nearest" and myPos then
-		table.sort(list, function(a, b)
-			local da = a.position and (a.position - myPos).Magnitude or math.huge
-			local db = b.position and (b.position - myPos).Magnitude or math.huge
-			return da < db
-		end)
-	elseif mode == "gen" then
-		table.sort(list, function(a, b) return _petBaseGen(a) > _petBaseGen(b) end)
-	elseif mode == "value" then
-		table.sort(list, function(a, b) return (tonumber(a.mps) or 0) > (tonumber(b.mps) or 0) end)
-	else
-		table.sort(list, function(a, b)
-			local pa = _priIndexOf(a.index) or _priIndexOf(a.name)
-			local pb = _priIndexOf(b.index) or _priIndexOf(b.name)
-			if pa and pb then
-				if pa ~= pb then return pa < pb end
-			elseif pa then
-				return true
-			elseif pb then
-				return false
-			end
-			local ma, mb = tonumber(a.mps) or 0, tonumber(b.mps) or 0
-			if ma ~= mb then return ma > mb end
-			local fa, fb = tonumber(a.firstSeen) or 0, tonumber(b.firstSeen) or 0
-			if fa ~= fb and fa > 0 and fb > 0 then return fa < fb end
-			local ua = tostring(a.plot or "") .. "_" .. tostring(a.slot or "")
-			local ub = tostring(b.plot or "") .. "_" .. tostring(b.slot or "")
-			return ua < ub
-		end)
-	end
-	return list
-end
-_G.SabcomBuildStealPetList = _buildStealPetList
-
-local function _pickPetByMode(pets, mode)
-	if type(pets) ~= "table" or #pets == 0 then return nil end
-	local list = _buildStealPetList(pets, mode)
-	return list[1]
-end
-
-local function _petUid(p)
-	if not p then return nil end
-	if p.plot and p.slot then
-		return tostring(p.plot) .. "_" .. tostring(p.slot)
-	end
-	if p.uid then
-		return tostring(p.uid)
-	end
-	return nil
-end
-
-local function _stealListSig(list, mode)
-	mode = tostring(mode or _G.SabcomStealMode or "priority"):lower()
-	if mode == "highest" then mode = "value" end
-	if type(list) ~= "table" then return mode .. "|" end
-	local parts = { mode }
-	for _, p in ipairs(list) do
-		parts[#parts + 1] = tostring(_petUid(p) or "")
-	end
-	return table.concat(parts, "|")
-end
-
-local function _mergeStealPetList(existing, scanned, mode)
-	mode = tostring(mode or _G.SabcomStealMode or "priority"):lower()
-	if mode == "highest" then mode = "value" end
-	if type(scanned) ~= "table" or #scanned == 0 then
-		if type(existing) ~= "table" or #existing == 0 then return {} end
-		local kept = {}
-		for _, p in ipairs(existing) do
-			if _petStillLive(p) then kept[#kept + 1] = p end
-		end
-		return _buildStealPetList(kept, mode)
-	end
-	if type(existing) ~= "table" or #existing == 0 then
-		return _buildStealPetList(scanned, mode)
-	end
-
-	local byUid, order = {}, {}
-	for _, p in ipairs(existing) do
-		local uid = _petUid(p)
-		if uid then
-			byUid[uid] = p
-			order[#order + 1] = uid
-		end
-	end
-
-	local scanSet, added, removed = {}, false, false
-	for _, p in ipairs(scanned) do
-		if p and _petAllowed(p) and _petMeetsMinGen(p) and _petStillLive(p) then
-			if p.plot and p.slot then
-				p.uid = tostring(p.plot) .. "_" .. tostring(p.slot)
-			end
-			local uid = _petUid(p)
-			if uid then
-				scanSet[uid] = true
-				local old = byUid[uid]
-				if old then
-					local fs = old.firstSeen
-					for k, v in pairs(p) do old[k] = v end
-					if fs then old.firstSeen = fs end
-				else
-					byUid[uid] = p
-					order[#order + 1] = uid
-					added = true
-				end
-			end
-		end
-	end
-
-	local newOrder = {}
-	for _, uid in ipairs(order) do
-		if scanSet[uid] and byUid[uid] then
-			newOrder[#newOrder + 1] = uid
-		elseif byUid[uid] and _petStillLive(byUid[uid]) then
-			newOrder[#newOrder + 1] = uid
-		elseif byUid[uid] then
-			byUid[uid] = nil
-			removed = true
-		end
-	end
-
-	local merged = {}
-	for _, uid in ipairs(newOrder) do
-		merged[#merged + 1] = byUid[uid]
-	end
-	return _buildStealPetList(merged, mode)
-end
-_G.SabcomMergeStealPetList = _mergeStealPetList
-
-local function get_all_pets()
-	local out = {}
-	local cache = _G.SabcomStealPetList
-	local minGen = tonumber(_G.SabcomMinGen) or 0
-	local myName = LP.Name
-	local myDisplay = LP.DisplayName
-	local pri = _G._stp_priorityCfg
-	if type(pri) ~= "table" or #pri == 0 then
-		pri = _G.SHARED_PRIORITY_ITEMS
-	end
-	local prioSet = {}
-	if type(pri) == "table" then
-		for _, p in ipairs(pri) do
-			if type(p) == "string" then
-				prioSet[string.lower(p)] = true
-				prioSet[_normName(p)] = true
-			end
-		end
-	end
-	if type(cache) == "table" then
-		for _, a in ipairs(cache) do
-			if a and (tonumber(a.mps) or tonumber(a.genValue) or 0) >= 1 then
-				local owner = tostring(a.owner or "")
-				if _petAllowed(a) then
-					local gen = tonumber(a.mps) or tonumber(a.genValue) or 0
-					local isBrainrot = gen >= 10000000
-					local isPriority = (a.name and prioSet[string.lower(tostring(a.name))])
-						or (a.index and prioSet[string.lower(tostring(a.index))])
-						or prioSet[_normName(a.name)]
-						or prioSet[_normName(a.index)]
-					if minGen > 0 and gen < minGen and not isBrainrot and not isPriority then
-						continue
-					end
-					out[#out + 1] = {
-						name = a.name,
-						petName = a.name,
-						index = a.index,
-						mpsText = a.genText or a.mpsText,
-						mpsValue = gen,
-						mps = gen,
-						genValue = gen,
-						owner = a.owner,
-						plot = a.plot,
-						slot = a.slot,
-						uid = a.uid or (a.plot and a.slot and (tostring(a.plot) .. "_" .. tostring(a.slot))),
-						mutation = a.mutation,
-						position = a.position,
-						model = a.model,
-						animalData = a,
-					}
-				end
-			end
-		end
-	end
-	table.sort(out, function(a, b) return (a.mpsValue or 0) > (b.mpsValue or 0) end)
-	return out
-end
-_G.SabcomGetAllPets = get_all_pets
-
-local function _priDbg(key, ...)
-	if tostring(_G.SabcomStealMode or ""):lower() ~= "priority" then
-		return
-	end
-	local now = os.clock()
-	local last = _G.__SabcomPriDbgTimes
-	if type(last) ~= "table" then
-		last = {}
-		_G.__SabcomPriDbgTimes = last
-	end
-	if (now - (tonumber(last[key]) or 0)) < 2 then
-		return
-	end
-	last[key] = now
-	print("[DEBUG]", ...)
-end
-
-local function _promptPetUid(prompt)
-	if not prompt or not prompt.Parent then return nil end
-	local plots = workspace:FindFirstChild("Plots")
-	if not plots then return nil end
-	local plotModel = prompt:FindFirstAncestorWhichIsA("Model")
-	while plotModel and plotModel.Parent and plotModel.Parent ~= plots do
-		plotModel = plotModel.Parent
-	end
-	if not plotModel or plotModel.Parent ~= plots then return nil end
-	local podiums = plotModel:FindFirstChild("AnimalPodiums")
-	if not podiums then return nil end
-	local node = prompt
-	while node and node ~= podiums do
-		if node.Parent == podiums then
-			return plotModel.Name .. "_" .. tostring(node.Name), plotModel.Name, tostring(node.Name)
-		end
-		node = node.Parent
-	end
-	return nil
-end
-
-local function _findPetByUid(pets, uid)
-	if type(pets) ~= "table" or type(uid) ~= "string" or uid == "" then return nil end
-	uid = tostring(uid)
-	for _, p in ipairs(pets) do
-		local a = _petUid(p)
-		local b = (p.plot ~= nil and p.slot ~= nil) and (tostring(p.plot) .. "_" .. tostring(p.slot)) or nil
-		if a == uid or b == uid or tostring(p.uid or "") == uid then
-			return p
-		end
-	end
-	return nil
-end
-local function _findTPSyncedPet(pets)
-	local uid = _G.sabcomStealTargetUID
-	if type(uid) ~= "string" or uid == "" then return nil end
-	for _, p in ipairs(pets) do
-		if _petUid(p) == uid then return p end
-	end
-	return nil
-end
-local function _clearTPSync()
-	_G.SabcomTPSyncActive = false
-	_G.SabcomStealTargetUID = nil
-	_G.sabcomTPSyncActive = false
-	_G.sabcomStealTargetUID = nil
-end
-
-_G.SabcomClearTPSync = _clearTPSync
-
-local function _selectedStealUid()
-	local man = _G.SabcomManualStealUID
-	if type(man) == "string" and man ~= "" then return man end
-	local sel = _G.SabcomStealTarget or _G.SabcomSelectedPetData
-	local uid = sel and _petUid(sel)
-	if type(uid) == "string" and uid ~= "" then return uid end
-	uid = _G.SabcomStealTargetUID
-	if type(uid) == "string" and uid ~= "" then return uid end
-	return nil
-end
-
-local function _resolveTPPet(pets)
-	local pet = _findPetByUid(pets, _selectedStealUid())
-	if pet then return pet end
-	return _pickPetByMode(pets, _G.SabcomStealMode or "priority")
-end
-
-local function _stealPetReady(pet)
-	if type(pet) ~= "table" then return false end
-	if not _petAllowed(pet) then return false end
-	if not pet.position then return false end
-	if not _petUid(pet) then return false end
-	local n = pet.name or pet.index
-	return type(n) == "string" and n ~= ""
-end
-
-
-
-local UPPER = {
-	B = {{coord=Vector3.new(-487.921448,16.850713,-75.768013),facing="NORTH"},{coord=Vector3.new(-332.379730,16.850722,-75.762100),facing="NORTH"},{coord=Vector3.new(-487.134918,16.850713,-18.094154),facing="SOUTH"},{coord=Vector3.new(-316.300171,16.850713,-17.845898),facing="SOUTH"}},
-	C = {{coord=Vector3.new(-330.765381,16.850713,31.424425),facing="NORTH"},{coord=Vector3.new(-502.989349,16.850713,31.172430),facing="NORTH"},{coord=Vector3.new(-489.077087,16.850713,89.010147),facing="SOUTH"},{coord=Vector3.new(-330.908936,16.850713,88.930145),facing="SOUTH"}},
-	D = {{coord=Vector3.new(-331.264893,16.850713,138.209167),facing="NORTH"},{coord=Vector3.new(-487.935181,16.850713,138.026321),facing="NORTH"},{coord=Vector3.new(-487.774933,16.850713,195.882538),facing="SOUTH"},{coord=Vector3.new(-330.799133,16.850575,196.022354),facing="SOUTH"}},
-}
-local LOWER = {
-	B = {{coord=Vector3.new(-335.725586,-3.048217,-74.984589),facing="NORTH"},{coord=Vector3.new(-503.214233,-3.048217,-75.043137),facing="NORTH"},{coord=Vector3.new(-483.619385,-3.718430,-18.844337),facing="SOUTH"},{coord=Vector3.new(-316.147095,-3.048218,-18.818844),facing="SOUTH"}},
-	C = {{coord=Vector3.new(-335.985413,-3.048218,32.051426),facing="NORTH"},{coord=Vector3.new(-503.277008,-3.048217,31.956175),facing="NORTH"},{coord=Vector3.new(-483.749390,-3.048218,88.147003),facing="SOUTH"},{coord=Vector3.new(-315.793823,-3.048217,88.163979),facing="SOUTH"}},
-	D = {{coord=Vector3.new(-335.476654,-3.048218,139.001083),facing="NORTH"},{coord=Vector3.new(-503.710083,-3.048218,138.989883),facing="NORTH"},{coord=Vector3.new(-315.654938,-3.048218,195.302444),facing="SOUTH"},{coord=Vector3.new(-483.859253,-3.048218,195.269043),facing="SOUTH"}},
-}
-local UPPER_Y_THRESHOLD = 7
-local TALL_PETS = { ["La Secret Combinasion"]=true, ["La Jolly Grande"]=true }
-local TALL_OFFSET = 3
-
-local BASES_LOW = {
-	[1] = Vector3.new(-476.52, -2, 220.94090270996094),
-	[2] = Vector3.new(-476.52, -2, 113.77315521240234),
-	[3] = Vector3.new(-476.52, -2, 6.178487777709961),
-	[4] = Vector3.new(-476.52, -2, -101.07275390625),
-	[5] = Vector3.new(-342.66, -2, 221.44737243652344),
-	[6] = Vector3.new(-342.66, -2, 113.41409301757812),
-	[7] = Vector3.new(-342.66, -2, 6.249461650848389),
-	[8] = Vector3.new(-342.66, -2, -99.73458862304688),
-}
-local BASES_HIGH = {
-	[1] = Vector3.new(-479.51, 18, 220.94090270996094),
-	[2] = Vector3.new(-479.51, 18, 113.77315521240234),
-	[3] = Vector3.new(-479.51, 18, 6.178487777709961),
-	[4] = Vector3.new(-479.51, 18, -101.07275390625),
-	[5] = Vector3.new(-339.48, 18, 221.44737243652344),
-	[6] = Vector3.new(-339.48, 18, 113.41409301757812),
-	[7] = Vector3.new(-339.48, 18, 6.249461650848389),
-	[8] = Vector3.new(-339.48, 18, -99.73458862304688),
-}
-local FRONT_Y_LOW   = -3.048217
-local FRONT_Y_HIGH  = 16.850713
-local COLUMN_SPLIT_X = -410
-local FRONT_Z_CLAMP  = 18
-local SIDE_NEAR_Z    = 45
-
-local function getClosestBaseIdx(pos)
-	local closest, dist = 1, math.huge
-	for i = 1, 8 do
-		local b = BASES_LOW[i]
-		local d = (pos.X - b.X)^2 + (pos.Z - b.Z)^2
-		if d < dist then dist = d; closest = i end
-	end
-	return closest
-end
-
-local function buildFrontCandidate(idx, isUpper, playerZ)
-	local base = isUpper and BASES_HIGH[idx] or BASES_LOW[idx]
-	local frontY = isUpper and FRONT_Y_HIGH or FRONT_Y_LOW
-	local frontZ = math.clamp(playerZ - base.Z, -FRONT_Z_CLAMP, FRONT_Z_CLAMP) + base.Z
-	local coord = Vector3.new(base.X, frontY, frontZ)
-	local faceDir = (idx <= 4) and Vector3.new(-1, 0, 0) or Vector3.new(1, 0, 0)
-	return coord, faceDir
-end
-
-local function plotSides(coordTable, idx)
-	local base = BASES_LOW[idx]
-	local isWest = idx <= 4
-	local out = {}
-	for _, coords in pairs(coordTable) do
-		for _, data in ipairs(coords) do
-			if ((data.coord.X < COLUMN_SPLIT_X) == isWest)
-				and math.abs(data.coord.Z - base.Z) < SIDE_NEAR_Z then
-				out[#out + 1] = data
-			end
-		end
-	end
-	return out
-end
-
-local function _floor1LaserSolid(plotName)
-	local solid = false
-	do
-		local Plots = workspace:FindFirstChild("Plots")
-		local plot = Plots and Plots:FindFirstChild(plotName)
-		if not plot then return solid end
-		local folder = plot:FindFirstChild("Laser")
-		local parts = folder and folder:GetChildren() or plot:GetChildren()
-		for _, d in ipairs(parts) do
-			if d:IsA("BasePart") and (d.Name == "LaserHitbox" or d.Name == "Laser")
-				and d.CanCollide and d.Position.Y <= 9 then
-				solid = true
-				break
-			end
-		end
-	end
-	return solid
-end
-
-
-local function findClosest(petPos, coordTable)
-	local best, bestKey, bestDist = nil, nil, math.huge
-	for skyKey, coords in pairs(coordTable) do
-		for _, data in ipairs(coords) do
-			local c = data.coord
-			local d = math.sqrt((petPos.X - c.X)^2 + (petPos.Z - c.Z)^2)
-			if d < bestDist then bestDist = d; best = data; bestKey = skyKey end
-		end
-	end
-	return best, bestKey
-end
-
-local SPEED = 125
-local ARRIVE = 3
-local _STRIP_OK = (type(getconnections) == "function")
-local function _climbCap()
-
-
-	local v = math.clamp(tonumber(_G.sabcomClimb) or 400, 100, 800)
-	if not _STRIP_OK then v = math.min(v, tonumber(_G.sabcomClimbSafe) or 250) end
-	return v
-end
-
-local function vZero(hrp)
-	if hrp then hrp.AssemblyLinearVelocity = Vector3.zero; hrp.AssemblyAngularVelocity = Vector3.zero end
-end
-
-local function velMoveThrough(hrp, waypoints, speedOverride, allowJump, quickStart)
-	if not hrp or not hrp.Parent or #waypoints == 0 then return end
-	local _runSpeed = speedOverride or (_G.TPVelocity and math.clamp(_G.TPVelocity, 200, 750)) or CARPET_SPEED
-
-
-	if _G.sabcomDirect ~= false and #waypoints > 1
-		and type(_G.Sabcom_ClearWide) == "function" then
-		local res = {}
-		local from = hrp.Position
-		local i = 1
-		while i <= #waypoints do
-			local best = i
-			local voieLibre = _G.Sabcom_ClearWide
-			for j = #waypoints, i, -1 do
-				if voieLibre(from, waypoints[j]) then best = j break end
-			end
-			res[#res + 1] = waypoints[best]
-			from = waypoints[best]
-			i = best + 1
-		end
-		if #res > 0 then waypoints = res end
-	end
-
-
-	local _mcCap = _climbCap()
-	local function _boost(vers)
-		if not (hrp and hrp.Parent and vers) then return end
-		local d = vers - hrp.Position
-		if d.Magnitude < 0.1 then return end
-		local u = d.Unit
-		local s = _runSpeed
-
-
-		local vx, vy, vz = u.X * s, u.Y * s, u.Z * s
-		if vy > _mcCap then
-			if _G.sabcomClimbFull then
-				local k = _mcCap / vy
-				vx, vy, vz = vx * k, _mcCap, vz * k
-			else
-				vy = _mcCap
-			end
-		end
-		do
-			local v = Vector3.new(vx, vy, vz)
-			hrp.Velocity = v
-			hrp.AssemblyLinearVelocity = v
-		end
-	end
-
-
-	_boost(waypoints[1])
-
-	local wpIdx = 1
-	local done = false
-	local conn
-	local function finish()
-		if done then return end
-		done = true
-		if hrp and hrp.Parent then
-			hrp.AssemblyLinearVelocity = Vector3.zero
-			hrp.AssemblyAngularVelocity = Vector3.zero
-			local _, y = hrp.CFrame:ToEulerAnglesYXZ()
-			hrp.CFrame = CFrame.new(waypoints[#waypoints]) * CFrame.Angles(0, y, 0)
-		end
-		if conn then conn:Disconnect() end
-	end
-	local lastDist, stall = math.huge, 0
-	local _lastPos, _lastMoveT = nil, nil
-	local _jumpDone = false
-
-	local _stStart = os.clock()
-
-	local _ = quickStart
-
-	local _carpetInHand = nil
-
-
-	local _mcCached = _climbCap()
-	local _humCached = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
-	conn = RunService.Heartbeat:Connect(function()
-		if not hrp or not hrp.Parent or done then
-			if conn then conn:Disconnect() end
-			return
-		end
-		if _G.sabcomTPStop then finish() return end
-
-
-		if not (_carpetInHand and _carpetInHand.Parent == hrp.Parent) then
-			local _cn = equipCarpet()
-			local _ch = hrp.Parent
-			_carpetInHand = _cn and _ch and _ch:FindFirstChild(_cn) or nil
-		end
-		local target = waypoints[wpIdx]
-		local diff = target - hrp.Position
-		local mag = diff.Magnitude
-
-
-		local _arr = math.max(ARRIVE, _runSpeed / 60 * 1.25)
-		if mag < _arr then
-			wpIdx = wpIdx + 1
-			if wpIdx > #waypoints then finish() return end
-			lastDist, stall = math.huge, 0
-			_lastPos, _lastMoveT = nil, nil
-			target = waypoints[wpIdx]
-			diff = target - hrp.Position
-			mag = diff.Magnitude
-
-			_boost(target)
-			return
-		end
-
-
-		do
-			local _t = os.clock()
-			local _p = hrp.Position
-			if (not _lastPos) or (_p - _lastPos).Magnitude > 1.5 then
-				_lastPos, _lastMoveT = _p, _t
-			end
-			stall = ((_t - (_lastMoveT or _t)) >= (tonumber(_G.sabcomStallSec) or 0.6)) and 999 or 0
-		end
-		lastDist = mag
-		if stall >= 18 then
-
-
-			_lastPos, _lastMoveT = nil, nil
-			stall = 0
-			_boost(target)
-			return
-		end
-
-
-		do
-
-
-			local seuil = (tonumber(_G.sabcomRepushAt) or 0.9) * _runSpeed
-			if seuil > 0 and hrp.AssemblyLinearVelocity.Magnitude < seuil then
-				_boost(target)
-			end
-		end
-
-
-		if (not _jumpDone) and mag >= 0.1 and (allowJump or diff.Y > 10) and diff.Y > 5 then
-			if _G.sabcomJumpOnce ~= false then _jumpDone = true end
-
-
-			if not (_humCached and _humCached.Parent) then
-				_humCached = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
-			end
-			local hum = _humCached
-			if hum then
-				local st = hum:GetState()
-				if st ~= Enum.HumanoidStateType.Jumping and st ~= Enum.HumanoidStateType.Freefall then
-					hum:ChangeState(Enum.HumanoidStateType.Jumping) 
-					hum.Jump = true 
-				end
-			end
-		end
-	end)
-	local totalDist = 0
-	local prev = hrp.Position
-	for _, wp in ipairs(waypoints) do
-		totalDist = totalDist + (prev - wp).Magnitude
-		prev = wp
-	end
-	local timeout = totalDist / math.min(SPEED, _runSpeed) + 2
-	local elapsed = 0
-	while not done and elapsed < timeout do
-		task.wait(0.05)
-		elapsed = elapsed + 0.05
-	end
-	finish()
-	vZero(hrp)
-end
-
-local _OTHER_CLONES = {}
-do
-	local _MY_CLONE = tostring(LP.UserId) .. "_Clone"
-	local _seen = {}
-	local function _isOtherClone(n)
-		return type(n) == "string" and n ~= _MY_CLONE and n:match("^%d+_Clone$") ~= nil
-	end
-	local function _neutralize(inst)
-		if not inst or _seen[inst] then return end
-		_seen[inst] = true
-		_OTHER_CLONES[#_OTHER_CLONES + 1] = inst
-		local function declaw(d)
-			if d:IsA("BasePart") and d.CanCollide then d.CanCollide = false end
-		end
-		for _, d in ipairs(inst:GetDescendants()) do declaw(d) end
-		inst.DescendantAdded:Connect(declaw)
-		inst.Destroying:Connect(function()
-			_seen[inst] = nil
-			for i = #_OTHER_CLONES, 1, -1 do
-				if _OTHER_CLONES[i] == inst then table.remove(_OTHER_CLONES, i); break end
-			end
-		end)
-	end
-	local function _scan(inst)
-		if _isOtherClone(inst.Name) then _neutralize(inst) end
-	end
-	for _, c in ipairs(workspace:GetChildren()) do _scan(c) end
-	workspace.ChildAdded:Connect(function(c)
-
-
-		if not c:IsA("Model") then return end
-		if _isOtherClone(c.Name) then _neutralize(c) return end
-
-
-		if c.Name == "Model" then
-			task.defer(function() if c and c.Parent == workspace then _scan(c) end end)
-		end
-	end)
-end
-
-
-local computeRoute, _len
-do
-	-- Keep the route planner in its own function prototype.  The surrounding
-	-- script already has many live top-level locals; declaring the planner's
-	-- helpers in that same prototype can exceed Luau's 200-register ceiling.
-	local function _initRoutePlanner()
-	local _DIRS = { Vector3.new(1,0,0), Vector3.new(-1,0,0), Vector3.new(0,0,1), Vector3.new(0,0,-1) }
-	local _STRUCT = { ["structure base home"] = true, ["Wall"] = true, ["Floor"] = true, ["Roof"] = true, ["Laser"] = true, ["LaserHitbox"] = true }
-	local _SKIP_NAME = { ["DeliveryHitbox"]=true, ["StealHitbox"]=true,
-		["AnimalTarget"]=true, ["Multiplier"]=true, ["Hitbox"]=true,
-		["Spawn"]=true, ["MainRoot"]=true, ["SecondFloor"]=true, ["ThirdFloor"]=true, ["Slope"]=true }
-	local function _blocks(inst)
-		if not inst then return false end
-		if _SKIP_NAME[inst.Name] then return false end
-		if inst.CanCollide then return true end
-		if _STRUCT[inst.Name] then return true end
-		local s = inst.Size
-		if s and math.max(s.X * s.Y, s.X * s.Z, s.Y * s.Z) > 150 then return true end
-		return false
-	end
-	local function _blocksWide(inst)
-		if not inst then return false end
-		if _SKIP_NAME[inst.Name] then return false end
-		if inst.CanCollide then return true end
-		if _STRUCT[inst.Name] then return true end
-		local s = inst.Size
-		if s and math.max(s.X * s.Y, s.X * s.Z, s.Y * s.Z) > 30 then return true end
-		return false
-	end
-	local function _block(origin, target, blockFn)
-		blockFn = blockFn or _blocks
-		local rp = RaycastParams.new()
-		rp.FilterType = Enum.RaycastFilterType.Exclude
-		rp.IgnoreWater = true
-		local skip = {}
-		for _, pl in ipairs(Players:GetPlayers()) do
-			if pl.Character then skip[#skip + 1] = pl.Character end
-		end
-		for _, cl in ipairs(_OTHER_CLONES) do skip[#skip + 1] = cl end
-		local o = origin
-		for _ = 1, 16 do
-			rp.FilterDescendantsInstances = skip
-			local d = target - o
-			if d.Magnitude < 0.05 then return nil end
-			local res = workspace:Raycast(o, d, rp)
-			if not res then return nil end
-			if blockFn(res.Instance) then return res end
-			skip[#skip + 1] = res.Instance
-			o = res.Position + d.Unit * 0.3
-		end
-		return nil
-	end
-	local function _clear(a, b) return _block(a, b) == nil end
-	function _len(pts)
-		local s, prev = 0, pts[1]
-		for k = 2, #pts do s = s + (pts[k] - prev).Magnitude; prev = pts[k] end
-		return s
-	end
-
-
-	local PathfindingService = game:GetService("PathfindingService")
-	local _CLEARANCE = 16
-	local function _clearWideRay(a, b)
-		return _block(a, b, _blocksWide) == nil
-	end
-
-	local _SWEEP_R = 4
-	local _ENDPOINT_SLACK = 6
-	local _canSphere = nil
-	local function _sweepBlockFn(inst)
-		if _G.sabcomStrictSweep == false then return _blocks(inst) end
-		return _blocksWide(inst)
-	end
-	local function _sweepDir(a, b)
-		local rp = RaycastParams.new()
-		rp.FilterType = Enum.RaycastFilterType.Exclude
-		rp.IgnoreWater = true
-		local skip = {}
-		for _, pl in ipairs(Players:GetPlayers()) do
-			if pl.Character then skip[#skip + 1] = pl.Character end
-		end
-		for _, cl in ipairs(_OTHER_CLONES) do skip[#skip + 1] = cl end
-		local o = a
-		for _ = 1, 24 do
-			rp.FilterDescendantsInstances = skip
-			local d = b - o
-			if d.Magnitude < 0.05 then return false end
-			local res
-			res = workspace:Spherecast(o, _SWEEP_R, d, rp)
-			if res == nil then _canSphere = false; return nil end
-			if not res then return false end
-			if _sweepBlockFn(res.Instance) then return true end
-			skip[#skip + 1] = res.Instance
-			local adv = (res.Distance or 0) - 0.05
-			if adv > 0 then o = o + d.Unit * math.min(adv, d.Magnitude) end
-		end
-		return true
-	end
-	local function _sweepBlocked(a, b, slackA, slackB)
-		if _canSphere == nil then
-			_canSphere = workspace:Spherecast(Vector3.new(0, 10000, 0), 1, Vector3.new(0, -1, 0), RaycastParams.new())
-		end
-		if not _canSphere then return nil end
-		local d = b - a
-		local len = d.Magnitude
-		if len < 0.1 then return false end
-		local u = d / len
-		local a2 = a + u * math.min(slackA or _ENDPOINT_SLACK, len * 0.4)
-		local b2 = b - u * math.min(slackB or _ENDPOINT_SLACK, len * 0.4)
-		local fwd = _sweepDir(a2, b2)
-		if fwd == nil then return nil end
-		if fwd then return true end
-		local rev = _sweepDir(b2, a2)
-		if rev == nil then return nil end
-		return rev
-	end
-
-
-	local _clearWide
-	_G.Sabcom_ClearWide = function(a, b, sa, sb) return _clearWide(a, b, sa, sb) end
-	function _clearWide(a, b, slackA, slackB)
-		if not _clear(a, b) then return false end
-		local sw = _sweepBlocked(a, b, slackA, slackB)
-		if sw ~= nil then return not sw end
-		local d = Vector3.new(b.X - a.X, 0, b.Z - a.Z)
-		if d.Magnitude < 0.1 then
-			local ox = Vector3.new(_CLEARANCE, 0, 0)
-			local oz = Vector3.new(0, 0, _CLEARANCE)
-			return _clearWideRay(a + ox, b + ox) and _clearWideRay(a - ox, b - ox)
-				and _clearWideRay(a + oz, b + oz) and _clearWideRay(a - oz, b - oz)
-		end
-		local perp = Vector3.new(-d.Z, 0, d.X).Unit * _CLEARANCE
-		local up = Vector3.new(0, _CLEARANCE, 0)
-		return _clearWideRay(a + perp, b + perp)
-			and _clearWideRay(a - perp, b - perp)
-			and _clearWideRay(a + up, b + up)
-			and _clearWideRay(a - up, b - up)
-	end
-
-	local function _pullWide(pts)
-		if #pts <= 2 then return pts end
-		local out = { pts[1] }
-		local i = 1
-		local n = #pts
-		while i < n do
-			local j = n
-			while j > i + 1 do
-				local a, b = out[#out], pts[j]
-				local sA = (i == 1) and _ENDPOINT_SLACK or 0
-				local sB = (j == n) and _ENDPOINT_SLACK or 0
-				if _clearWide(a, b, sA, sB) then break end
-				j = j - 1
-			end
-			out[#out + 1] = pts[j]
-			i = j
-		end
-		return out
-	end
-
-	local function _pushOffWalls(pts)
-		if #pts <= 2 then return pts end
-		local MARGIN = 8
-		local MAX_PUSH = 12
-		local out = { pts[1] }
-		for i = 2, #pts - 1 do
-			local p = pts[i]
-			local shift = Vector3.zero
-			for _, dr in ipairs(_DIRS) do
-				local res = _block(p, p + dr * MARGIN, _blocks)
-				if res then
-					local dist = (res.Position - p).Magnitude
-					if dist < MARGIN then
-						shift = shift - dr * (MARGIN - dist)
-					end
-				end
-			end
-			do
-				local resUp = _block(p, p + Vector3.new(0, MARGIN, 0), _blocks)
-				if resUp then
-					local dist = (resUp.Position - p).Magnitude
-					if dist < 4 then shift = shift + Vector3.new(0, -(4 - dist), 0) end
-				end
-			end
-			if shift.Magnitude > 0.1 then
-				if shift.Magnitude > MAX_PUSH then shift = shift.Unit * MAX_PUSH end
-				local moved = p + shift
-				if _clear(out[#out], moved) then
-					out[#out + 1] = moved
-				else
-					out[#out + 1] = p
-				end
-			else
-				out[#out + 1] = p
-			end
-		end
-		out[#out + 1] = pts[#pts]
-		return out
-	end
-
-	local voxelRoute = (function()
-		local _vxFloor, _vxSqrt = math.floor, math.sqrt
-		local _vxMin, _vxMax = math.min, math.max
-		local function _vxAbs(n) return n < 0 and -n or n end
-
-		local _vxOverlap = OverlapParams.new()
-		_vxOverlap.FilterType = Enum.RaycastFilterType.Exclude
-		_vxOverlap.RespectCanCollide = true
-
-		local _vxCast = RaycastParams.new()
-		_vxCast.FilterType = Enum.RaycastFilterType.Exclude
-		_vxCast.RespectCanCollide = true
-		_vxCast.IgnoreWater = true
-
-		local _vxOrigin
-		local _vxDimX, _vxDimY, _vxDimZ = 0, 0, 0
-		local _vxSz, _vxInflate = 4, 3.0
-		local _vxSolid = {}
-		local _vxHeight = 5.5
-
-		local function _vxWorld(sz, x, y, z)
-			local h = sz * 0.5
-			return Vector3.new(_vxOrigin.X + x * sz + h, _vxOrigin.Y + y * sz + h, _vxOrigin.Z + z * sz + h)
-		end
-		local function _vxKey(x, y, z) return x + y * 1024 + z * 1048576 end
-
-		local function _vxIsSolid(x, y, z)
-			if x < 0 or y < 0 or z < 0 or x >= _vxDimX or y >= _vxDimY or z >= _vxDimZ then return true end
-			local k = _vxKey(x, y, z)
-			local c = _vxSolid[k]
-			if c ~= nil then return c end
-			local h = _vxSz * 0.5
-			local cx = _vxOrigin.X + x * _vxSz + h
-			local cy = _vxOrigin.Y + y * _vxSz + h
-			local cz = _vxOrigin.Z + z * _vxSz + h
-			local sxz = _vxSz + _vxInflate
-			local vy = _vxHeight > _vxSz and _vxHeight or _vxSz
-			local vcy = cy - h + vy * 0.5
-			local parts = workspace:GetPartBoundsInBox(CFrame.new(cx, vcy, cz), Vector3.new(sxz, vy, sxz), _vxOverlap)
-			local solid = #parts > 0
-			_vxSolid[k] = solid
-			return solid
-		end
-
-		local function _vxSegClear(from, to, radius, height, sample)
-			local dir = to - from
-			local mag = dir.Magnitude
-			if mag < 0.05 then return true end
-			if workspace:Raycast(from, dir, _vxCast) then return false end
-			local r = radius > 1 and radius or 1
-			if workspace:Blockcast(CFrame.new(from), Vector3.new(r * 2, height, r * 2), dir, _vxCast) ~= nil then return false end
-			local n = _vxFloor(mag)
-			if sample ~= false and n >= 2 then
-				local step = dir / n
-				local torso = Vector3.new(r * 2, 3, r * 2)
-				for i = 1, n - 1 do
-					local pt = from + step * i
-					if #workspace:GetPartBoundsInBox(CFrame.new(pt), torso, _vxOverlap) > 0 then return false end
-				end
-			end
-			return true
-		end
-
-		local _vxNeigh = {}
-		do
-			for dx = -1, 1 do
-				for dy = -1, 1 do
-					for dz = -1, 1 do
-						if dx ~= 0 or dy ~= 0 or dz ~= 0 then
-							local nz = (dx ~= 0 and 1 or 0) + (dy ~= 0 and 1 or 0) + (dz ~= 0 and 1 or 0)
-							local kd = dx + dy * 1024 + dz * 1048576
-							_vxNeigh[#_vxNeigh + 1] = { dx, dy, dz, _vxSqrt(dx * dx + dy * dy + dz * dz), nz, kd }
-						end
-					end
-				end
-			end
-		end
-
-		local function _vxNoCorner(cx, cy, cz, off)
-			if off[5] < 2 then return true end
-			if off[1] ~= 0 and _vxIsSolid(cx + off[1], cy, cz) then return false end
-			if off[2] ~= 0 and _vxIsSolid(cx, cy + off[2], cz) then return false end
-			if off[3] ~= 0 and _vxIsSolid(cx, cy, cz + off[3]) then return false end
-			return true
-		end
-
-		local function _vxSnapGoal(goalPos, x, y, z)
-			if not _vxIsSolid(x, y, z) then return x, y, z end
-			for r = 1, 16 do
-				for dx = -r, r do
-					for dy = -r, r do
-						for dz = -r, r do
-							if _vxMax(_vxAbs(dx), _vxAbs(dy), _vxAbs(dz)) == r then
-								local nx, ny, nz = x + dx, y + dy, z + dz
-								if not _vxIsSolid(nx, ny, nz) and (_vxWorld(_vxSz, nx, ny, nz) - goalPos).Magnitude <= 8 then
-									return nx, ny, nz
-								end
-							end
-						end
-					end
-				end
-			end
-			return x, y, z
-		end
-		local function _vxSnapStart(pos, x, y, z)
-			if not _vxIsSolid(x, y, z) then return x, y, z end
-			for r = 1, 16 do
-				for dx = -r, r do
-					for dy = -r, r do
-						for dz = -r, r do
-							if _vxMax(_vxAbs(dx), _vxAbs(dy), _vxAbs(dz)) == r then
-								local nx, ny, nz = x + dx, y + dy, z + dz
-								if not _vxIsSolid(nx, ny, nz) and not workspace:Raycast(pos, _vxWorld(_vxSz, nx, ny, nz) - pos, _vxCast) then
-									return nx, ny, nz
-								end
-							end
-						end
-					end
-				end
-			end
-			return x, y, z
-		end
-
-		local function _vxPush(h, f, key)
-			local i = #h + 1
-			h[i] = { f, key }
-			while i > 1 do
-				local p = _vxFloor(i * 0.5)
-				if h[p][1] <= h[i][1] then break end
-				h[p], h[i] = h[i], h[p]
-				i = p
-			end
-		end
-		local function _vxPop(h)
-			local n = #h
-			if n == 0 then return nil end
-			local top = h[1]
-			h[1] = h[n]
-			h[n] = nil
-			n -= 1
-			local i = 1
-			while true do
-				local l, r, s = i + i, i + i + 1, i
-				if l <= n and h[l][1] < h[s][1] then s = l end
-				if r <= n and h[r][1] < h[s][1] then s = r end
-				if s == i then break end
-				h[i], h[s] = h[s], h[i]
-				i = s
-			end
-			return top[2]
-		end
-
-		local _vxHeurW = 2
-		local function _vxAStar(sz, startCell, goalCell, startPos, goalPos)
-			local sx, sy, sz2 = _vxSnapStart(startPos, startCell.x, startCell.y, startCell.z)
-			local gx, gy, gz = _vxSnapGoal(goalPos, goalCell.x, goalCell.y, goalCell.z)
-			local goalKey = _vxKey(gx, gy, gz)
-			local startKey = _vxKey(sx, sy, sz2)
-
-			local nodes = { [startKey] = { x = sx, y = sy, z = sz2, g = 0, parent = nil } }
-			local closed = {}
-			local heap = {}
-			_vxPush(heap, 0, startKey)
-
-			local function Heur(x, y, z)
-				local ax, ay, az = x - gx, y - gy, z - gz
-				return _vxSqrt(ax * ax + ay * ay + az * az)
-			end
-
-			local pops = 0
-			while #heap > 0 do
-				local curKey = _vxPop(heap)
-				if closed[curKey] then continue end
-				closed[curKey] = true
-				pops += 1
-				if pops > 300000 then break end
-
-				local cur = nodes[curKey]
-				if curKey == goalKey then
-					local path = {}
-					local n = cur
-					while n do
-						path[#path + 1] = _vxWorld(sz, n.x, n.y, n.z)
-						n = n.parent and nodes[n.parent]
-					end
-					local rev = {}
-					for i = #path, 1, -1 do rev[#rev + 1] = path[i] end
-					return rev
-				end
-
-				local cx, cy, cz = cur.x, cur.y, cur.z
-				local cg = cur.g
-				for _, off in _vxNeigh do
-					local nk = curKey + off[6]
-					if closed[nk] then continue end
-					local nx, ny, nz = cx + off[1], cy + off[2], cz + off[3]
-					if _vxIsSolid(nx, ny, nz) then continue end
-					if not _vxNoCorner(cx, cy, cz, off) then continue end
-					local tg = cg + off[4]
-					local ex = nodes[nk]
-					if not ex or tg < ex.g then
-						if ex then
-							ex.g, ex.parent, ex.x, ex.y, ex.z = tg, curKey, nx, ny, nz
-						else
-							nodes[nk] = { x = nx, y = ny, z = nz, g = tg, parent = curKey }
-						end
-						_vxPush(heap, tg + _vxHeurW * Heur(nx, ny, nz), nk)
-					end
-				end
-			end
-			return nil
-		end
-
-		local function _vxSimplify(path, radius, height)
-			if not path or #path < 3 then return path end
-			local out = { path[1] }
-			local anchor = 1
-			local i = 2
-			while i <= #path do
-				if not _vxSegClear(path[anchor], path[i + 1] or path[i], radius, height, false) then
-					out[#out + 1] = path[i]
-					anchor = i
-				end
-				i += 1
-			end
-			out[#out + 1] = path[#path]
-			return out
-		end
-
-		return function(fromPos, toPos)
-			local char = LP.Character
-			local _flt = char and { char } or {}
-			for _, cl in ipairs(_OTHER_CLONES) do _flt[#_flt + 1] = cl end
-			_vxOverlap.FilterDescendantsInstances = _flt
-			_vxCast.FilterDescendantsInstances = _flt
-
-			local sz      = tonumber(_G.sabcomPathCell)   or 4
-			local inflate = tonumber(_G.sabcomPathRadius) or 2.5
-			local height  = tonumber(_G.sabcomPathHeight) or 5
-			local pad     = tonumber(_G.sabcomPathPad)    or 40
-
-			_vxSz, _vxInflate, _vxHeight = sz, inflate, height
-			table.clear(_vxSolid)
-
-			local mn = Vector3.new(_vxMin(fromPos.X, toPos.X), _vxMin(fromPos.Y, toPos.Y), _vxMin(fromPos.Z, toPos.Z)) - Vector3.new(pad, pad, pad)
-			local mx = Vector3.new(_vxMax(fromPos.X, toPos.X), _vxMax(fromPos.Y, toPos.Y), _vxMax(fromPos.Z, toPos.Z)) + Vector3.new(pad, pad, pad)
-			_vxOrigin = mn
-			local size = mx - mn
-			_vxDimX = _vxFloor(size.X / sz) + 1
-			_vxDimY = _vxFloor(size.Y / sz) + 1
-			_vxDimZ = _vxFloor(size.Z / sz) + 1
-			if _vxDimX * _vxDimY * _vxDimZ > 200000 then return nil end
-
-			local startCell = {
-				x = _vxFloor((fromPos.X - _vxOrigin.X) / sz),
-				y = _vxFloor((fromPos.Y - _vxOrigin.Y) / sz),
-				z = _vxFloor((fromPos.Z - _vxOrigin.Z) / sz),
-			}
-			local goalCell = {
-				x = _vxFloor((toPos.X - _vxOrigin.X) / sz),
-				y = _vxFloor((toPos.Y - _vxOrigin.Y) / sz),
-				z = _vxFloor((toPos.Z - _vxOrigin.Z) / sz),
-			}
-
-			local path = _vxAStar(sz, startCell, goalCell, fromPos, toPos)
-			if not path then return nil end
-			path = _vxSimplify(path, inflate, height)
-			if not path or #path == 0 then return nil end
-
-			local route = {}
-			for idx = 2, #path do route[#route + 1] = path[idx] end
-			if #route == 0 or (route[#route] - toPos).Magnitude > 0.5 then
-				route[#route + 1] = toPos
-			end
-			return route
-		end
-	end)()
-
-	_G.sabcomVoxelRoute = voxelRoute
-
-
-	local _MAP_CENTER = { minX = -458, maxX = -362, minZ = -40, maxZ = 185 }
-	local _BYPASS_Z_NORTH, _BYPASS_Z_SOUTH = 205, -95
-	local _BYPASS_X_WEST,  _BYPASS_X_EAST  = -525, -295
-
-	local function _inCenterZone(x, z)
-		return x >= _MAP_CENTER.minX and x <= _MAP_CENTER.maxX
-			and z >= _MAP_CENTER.minZ and z <= _MAP_CENTER.maxZ
-	end
-
-
-	local function _segmentCrossesCenter(a, b)
-		if _inCenterZone(a.X, a.Z) or _inCenterZone(b.X, b.Z) then return true end
-		for i = 1, 10 do
-			local t = i / 11
-			if _inCenterZone(a.X + (b.X - a.X) * t, a.Z + (b.Z - a.Z) * t) then return true end
-		end
-		return false
-	end
-
-
-	local function _findBestCenterDetour(fromPos, toPos, y)
-		local candidates = {
-			{ Vector3.new(fromPos.X, y, _BYPASS_Z_NORTH), Vector3.new(toPos.X, y, _BYPASS_Z_NORTH) },
-			{ Vector3.new(fromPos.X, y, _BYPASS_Z_SOUTH), Vector3.new(toPos.X, y, _BYPASS_Z_SOUTH) },
-			{ Vector3.new(_BYPASS_X_WEST, y, fromPos.Z), Vector3.new(_BYPASS_X_WEST, y, toPos.Z) },
-			{ Vector3.new(_BYPASS_X_EAST, y, fromPos.Z), Vector3.new(_BYPASS_X_EAST, y, toPos.Z) },
-		}
-		local best, bestLen = nil, math.huge
-		for _, pair in ipairs(candidates) do
-			local w1, w2 = pair[1], pair[2]
-			if _clearWide(fromPos, w1) and _clearWide(w1, w2) and _clearWide(w2, toPos) then
-				local len = (fromPos - w1).Magnitude + (w1 - w2).Magnitude + (w2 - toPos).Magnitude
-				if len < bestLen then bestLen = len; best = { w1, w2 } end
-			end
-		end
-		return best
-	end
-	_G.sabcomSegmentCrossesCenter = _segmentCrossesCenter
-	_G.sabcomFindCenterDetour     = _findBestCenterDetour
-
-
-	local function _rowBoxX() return tonumber(_G.sabcomRowBoxX) or 26 end
-	local function _rowBoxZ() return tonumber(_G.sabcomRowBoxZ) or 30 end
-	local function _rowLane() return tonumber(_G.sabcomRowLane) or 30 end
-
-
-	local function _nearestBase(p)
-		local bi, bd = nil, math.huge
-		for i = 1, 8 do
-			local b = BASES_LOW[i]
-			local d = (p.X - b.X) ^ 2 + (p.Z - b.Z) ^ 2
-			if d < bd then bd = d; bi = i end
-		end
-		if bd > 70 * 70 then return nil end
-		return bi
-	end
-
-
-	local function _segmentHitsOtherBase(a, b, ignA, ignB)
-		local hx, hz = _rowBoxX(), _rowBoxZ()
-		for i = 0, 24 do
-			local t = i / 24
-			local px = a.X + (b.X - a.X) * t
-			local pz = a.Z + (b.Z - a.Z) * t
-			for k = 1, 8 do
-				if k ~= ignA and k ~= ignB then
-					local bs = BASES_LOW[k]
-					if math.abs(px - bs.X) <= hx and math.abs(pz - bs.Z) <= hz then
-						return true
-					end
-				end
-			end
-		end
-		return false
-	end
-
-	local function _findRowDetour(fromPos, toPos, y)
-		local iFrom, iTo = _nearestBase(fromPos), _nearestBase(toPos)
-		if not _segmentHitsOtherBase(fromPos, toPos, iFrom, iTo) then return nil end
-
-
-		local colX = BASES_LOW[iTo or 1].X
-		local off  = _rowLane()
-		local lanes = {}
-
-
-		local outer = (colX < COLUMN_SPLIT_X) and (colX - off) or (colX + off)
-		lanes[#lanes + 1] = outer
-
-
-		local inner = (colX < COLUMN_SPLIT_X) and (colX + off) or (colX - off)
-		if not _inCenterZone(inner, (fromPos.Z + toPos.Z) * 0.5) then
-			lanes[#lanes + 1] = inner
-		end
-
-		local best, bestLen = nil, math.huge
-		for _, laneX in ipairs(lanes) do
-			local w1 = Vector3.new(laneX, y, fromPos.Z)
-			local w2 = Vector3.new(laneX, y, toPos.Z)
-			if _clearWide(fromPos, w1) and _clearWide(w1, w2) and _clearWide(w2, toPos)
-				and not _segmentHitsOtherBase(w1, w2, iFrom, iTo) then
-				local len = (fromPos - w1).Magnitude + (w1 - w2).Magnitude + (w2 - toPos).Magnitude
-				if len < bestLen then bestLen = len; best = { w1, w2 } end
-			end
-		end
-		return best
-	end
-	_G.sabcomFindRowDetour = _findRowDetour
-
-	local _navPath = PathfindingService:CreatePath({
-		AgentRadius = 16, AgentHeight = 5, AgentCanJump = true, AgentJumpHeight = 10, AgentMaxSlope = 89,
-	})
-
-	local function _appendWp(out, p)
-		if not p then return end
-		if #out == 0 or (out[#out] - p).Magnitude > 1.5 then
-			out[#out + 1] = p
-		end
-	end
-
-	local function _pfsAround(a, b)
-		do
-			_navPath:ComputeAsync(a, Vector3.new(b.X, a.Y, b.Z))
-		end
-		if _navPath.Status ~= Enum.PathStatus.Success then return nil end
-		local out = {}
-		local last = a
-		for _, wp in ipairs(_navPath:GetWaypoints()) do
-			local p = wp.Position + Vector3.new(0, 5, 0)
-			if (p - last).Magnitude >= 6 then
-				out[#out + 1] = p
-				last = p
-			end
-		end
-		if #out == 0 then return nil end
-		return out
-	end
-
-	local function _routeClear(pts)
-		if not pts or #pts < 2 then return false end
-		for i = 1, #pts - 1 do
-			local a, b = pts[i], pts[i + 1]
-			if (a - b).Magnitude > 0.5 and not _clearWide(a, b) then return false end
-		end
-		return true
-	end
-
-	local function _detourAround(a, b)
-		local vr = voxelRoute(a, b)
-		if vr and #vr > 0 and _routeClear(vr) then return vr end
-		local nav = _pfsAround(a, b)
-		if nav and #nav > 0 then
-			_appendWp(nav, b)
-			nav = _pushOffWalls(nav)
-			if _routeClear(nav) then return nav end
-		end
-		return nil
-	end
-
-	local function _repairBlockedRoute(pts, dest)
-		if not pts or #pts == 0 then pts = { dest } end
-		if (pts[#pts] - dest).Magnitude > 0.5 then
-			local copy = {}
-			for i = 1, #pts do copy[i] = pts[i] end
-			copy[#copy + 1] = dest
-			pts = copy
-		end
-		local out = { pts[1] }
-		local n = #pts
-		for i = 2, n do
-			local a, b = out[#out], pts[i]
-			local sA = (#out == 1) and _ENDPOINT_SLACK or 0
-			local sB = (i == n) and _ENDPOINT_SLACK or 0
-			if (a - b).Magnitude < 1.5 or _clearWide(a, b, sA, sB) then
-				_appendWp(out, b)
-			else
-				local det = _detourAround(a, b)
-				if det then
-					for _, p in ipairs(det) do _appendWp(out, p) end
-				end
-				_appendWp(out, b)
-			end
-		end
-		return out
-	end
-
-	function computeRoute(fromPos, toPos, facingDir, maxLift)
-		local _ = maxLift
-
-
-		local centerPatch = nil
-		if _segmentCrossesCenter(fromPos, toPos) and not _clearWide(fromPos, toPos) then
-			centerPatch = _findBestCenterDetour(fromPos, toPos, fromPos.Y)
-			if centerPatch and #centerPatch > 0 then
-
-				fromPos = centerPatch[#centerPatch]
-			end
-		end
-
-
-		local rowPatch = _findRowDetour(fromPos, toPos, fromPos.Y)
-		if rowPatch and #rowPatch > 0 then
-			fromPos = rowPatch[#rowPatch]
-		end
-
-
-		local function _withPatch(route)
-			if (not centerPatch or #centerPatch == 0)
-				and (not rowPatch or #rowPatch == 0) then return route end
-			local merged = {}
-			if centerPatch then for _, p in ipairs(centerPatch) do merged[#merged + 1] = p end end
-			if rowPatch    then for _, p in ipairs(rowPatch)    do merged[#merged + 1] = p end end
-			for _, p in ipairs(route) do merged[#merged + 1] = p end
-			return merged
-		end
-		local function _finish(route)
-			return _repairBlockedRoute(_withPatch(route or { toPos }), toPos)
-		end
-
-		if _clearWide(fromPos, toPos) then return _finish({ toPos }) end
-
-		do
-			local vr = voxelRoute(fromPos, toPos)
-			if vr and #vr > 0 then return _finish(vr) end
-		end
-
-		local entry = facingDir and (toPos - facingDir * 14) or toPos
-
-		local best, bestLen = nil, math.huge
-		local function consider(pts)
-			if not pts or #pts < 2 then return end
-			local n = #pts
-			for i = 1, n - 1 do
-				local a, b = pts[i], pts[i + 1]
-				if (a - b).Magnitude > 0.5 then
-					local sA = (i == 1) and _ENDPOINT_SLACK or 0
-					local sB = (i == n - 1) and _ENDPOINT_SLACK or 0
-					if not _clearWide(a, b, sA, sB) then return end
-				end
-			end
-			local pulled = _pullWide(pts)
-			local L = _len(pulled)
-			if L < bestLen then best, bestLen = pulled, L end
-		end
-
-		do
-			local dirF = Vector3.new(entry.X - fromPos.X, 0, entry.Z - fromPos.Z)
-			if dirF.Magnitude > 0.1 then
-				dirF = dirF.Unit
-				local perp = Vector3.new(-dirF.Z, 0, dirF.X)
-				local midBase = (fromPos + entry) * 0.5
-				for _, off in ipairs({ 14, -14, 24, -24, 38, -38, 56, -56, 76, -76 }) do
-					consider({ fromPos, midBase + perp * off, entry })
-					consider({ fromPos, fromPos + perp * off, entry + perp * off, entry })
-				end
-			end
-		end
-
-		local navRaw
-		do
-			local nav = { fromPos }
-			local around = _pfsAround(fromPos, entry)
-			if around then
-				for _, p in ipairs(around) do nav[#nav + 1] = p end
-			end
-			nav[#nav + 1] = entry + Vector3.new(0, 5, 0)
-			nav = _pushOffWalls(nav)
-			navRaw = nav
-			consider(nav)
-		end
-
-		local route = best
-		if not route and navRaw then route = _pullWide(navRaw) end
-		if not route then
-			route = _detourAround(fromPos, toPos) or { toPos }
-		end
-		return _finish(route)
-	end
-	end
-	_initRoutePlanner()
-end
--- Teleport controller lives in a separate prototype for the same reason as
--- the route planner: keep its private locals out of the main chunk's register set.
-local isTeleporting, _goBusy, _resolveSwitchPet, _lastTPOk
-do
-	local function _initTeleportController()
-local _Stats = game:GetService("Stats")
-local function _pingMs()
-	local p = LP:GetNetworkPing() * 1000
-	if type(p) == "number" and p > 0 then return p end
-	local p2 = _Stats.Network.ServerStatsItem["Data Ping"]:GetValue()
-	if type(p2) == "number" and p2 > 0 then return p2 end
-	return 0
-end
-local function _pingAdjustSpeed(spd)
-	local thresh = tonumber(_G.sabcomPingThresh) or 170
-	local capped = tonumber(_G.sabcomHighPingSpeed) or 400
-	if _pingMs() >= thresh and spd > capped then return capped end
-	return spd
-end
-
-local function _inVoid(hrp)
-	if not hrp or not hrp.Parent then return true end
-	local voidY = tonumber(_G.sabcomVoidY) or -50
-	return hrp.Position.Y < voidY
-end
-local function _waitOutOfVoid(timeout)
-	local t0 = os.clock()
-	local good = 0
-	while os.clock() - t0 < (timeout or 12) do
-		if _G.sabcomTPStop then return false end
-		local char = LP.Character
-		local hrp = char and char:FindFirstChild("HumanoidRootPart")
-		if hrp and hrp.Parent and not _inVoid(hrp) and math.abs(hrp.AssemblyLinearVelocity.Y) < 12 then
-			good += 1
-			if good >= 4 then return true end
-		else
-			good = 0
-		end
-		RunService.Heartbeat:Wait()
-	end
-	return false
-end
-
-
-isTeleporting = false; _G.SabcomIsTeleporting = false
-_goBusy = false
-
-
-local _cloneTP    = false
-local _cloneFired = false
-_lastTPOk   = false
-local _goBrGen    = 0
-
-local function _boostGrabWindow(sec)
-	sec = tonumber(sec) or 10
-	_G.SabcomGrabBoostUntil = os.clock() + sec
-	if type(_G.triggerSafePollBoost) == "function" then
-		_G.triggerSafePollBoost()
-	end
-end
-
-local function _beginTpSession()
-	if isTeleporting or _goBusy then return false end
-	isTeleporting = true
-	_G.SabcomIsTeleporting = true
-	_G.sabcomIsTeleporting = true
-	_G.__sabcomTpBusySince = os.clock()
-	return true
-end
-
-local function endTP()
-	_G.Sabcom_Step("TP: termine")
-	isTeleporting = false; _G.SabcomIsTeleporting = false
-	_G.sabcomIsTeleporting = false
-	_G.__sabcomTpBusySince = nil
-	_cloneTP = false
-	_cloneFired = false
-	_G.SabcomCloneTP = false
-	_G.SabcomCloneFired = false
-end
-
-local function _clearTpGoState()
-	isTeleporting = false
-	_G.SabcomIsTeleporting = false
-	_G.sabcomIsTeleporting = false
-	_G.__sabcomTpBusySince = nil
-	_G.sabcomTPStop = false
-	_G.SabcomTPStop = false
-	_cloneTP = false
-	_cloneFired = false
-	_G.SabcomCloneTP = false
-	_G.SabcomCloneFired = false
-	_G.sabcomStealHold = false
-	_goBusy = false
-	_goBrGen = _goBrGen + 1
-end
-_G.SabcomClearTpGoState = _clearTpGoState
-_G.SabcomIsMovementBusy = function()
-	return isTeleporting == true or _goBusy == true
-end
-
-LP.CharacterAdded:Connect(function()
-	task.defer(_clearTpGoState)
-end)
-
-
-do
-	local function killAnimate(char)
-		if not char or _G.sabcomNoAnim == false then return end
-		task.spawn(function()
-			local a = char:FindFirstChild("Animate") or char:WaitForChild("Animate", 5)
-			if a then a.Disabled = true end
-			local hum = char:FindFirstChildOfClass("Humanoid")
-			local anim = hum and hum:FindFirstChildOfClass("Animator")
-			if anim then
-				do
-					for _, t in ipairs(anim:GetPlayingAnimationTracks()) do t:Stop(0) end
-				end
-			end
-		end)
-	end
-	if LP.Character then killAnimate(LP.Character) end
-	LP.CharacterAdded:Connect(killAnimate)
-end
-
-
-_G.SabcomInstantClone = function()
-	local player = LP
-	if not player then return end
-	local playerGui = player:FindFirstChildOfClass("PlayerGui") or player:FindFirstChild("PlayerGui")
-	if not playerGui then
-		playerGui = player:WaitForChild("PlayerGui", 3)
-	end
-	if not playerGui then return end
-	local c = player.Character
-	if not c then return end
-	local h = c:FindFirstChildOfClass("Humanoid")
-	if not h then return end
-	local bp = player:FindFirstChild("Backpack")
-	local cl = (bp and bp:FindFirstChild("Quantum Cloner")) or c:FindFirstChild("Quantum Cloner")
-	if not cl then return end
-	h:UnequipTools() 
-	task.wait()
-	if cl.Parent ~= c then
-		h:EquipTool(cl)
-		task.wait()
-	end
-	local tf = playerGui:FindFirstChild("ToolsFrames")
-	local qc = tf and tf:FindFirstChild("QuantumCloner")
-	local tb = qc and qc:FindFirstChild("TeleportToClone")
-	if not tb then return end
-	_G.isCloning = true
-	cl:Activate()
-	task.wait(0.05)
-	tb.Visible = true
-	firesignal(tb.MouseButton1Click) 
-	firesignal(tb.MouseButton1Up) 
-	firesignal(tb.Activated) 
-	task.delay(0.55, function() _G.isCloning = false end)
-end
-
-local function doClone()
-	_G.Sabcom_Step("clone: lance")
-	if type(_G.SabcomInstantClone) ~= "function" then
-		_G.Sabcom_Step("clone: echec", "SabcomInstantClone indisponible")
-		return false
-	end
-	_G.SabcomInstantClone()
-	_G.Sabcom_Step("clone: SabcomInstantClone")
-	return true
-end
-
-
-
-local function goToBrainrot(petPos, opts)
-	if _goBusy then return end
-	if isTeleporting and not (type(opts) == "table" and opts.fromTp == true) then return end
-	_goBusy = true
-	_goBrGen = _goBrGen + 1
-	local myGen = _goBrGen
-	local function dead() return myGen ~= _goBrGen or _G.sabcomTPStop end
-	_boostGrabWindow(12)
-	_G.Sabcom_Step("goToBrainrot: debut", string.format("Y=%.1f", petPos and petPos.Y or -999))
-	if not petPos then _goBusy = false; return end
-	local char, hrp
-	local _t0 = os.clock()
-	repeat
-		char = LP.Character
-		hrp = char and char:FindFirstChild("HumanoidRootPart")
-		if hrp then break end
-		if dead() then _goBusy = false; return end
-		RunService.Heartbeat:Wait()
-	until os.clock() - _t0 > 2
-	if not hrp then _goBusy = false; return end
-	hrp.Anchored = false 
-	equipCarpet()
-
-	local h = petPos.Y
-	local targetY = hrp.Position.Y
-	local _isF2 = (h > 8.9 and h <= 23.15)
-	if h > 23.15 then
-		targetY = 21
-	elseif _isF2 then
-		targetY = -3.49 + 5 + 1.5
-	elseif h >= -6.9 and h <= 8.9 then
-		targetY = -3.49
-	end
-	local _to = Vector3.new(petPos.X, targetY, petPos.Z)
-	if _isF2 then
-		local idx = getClosestBaseIdx(petPos)
-		local face = (idx <= 4) and Vector3.new(-1, 0, 0) or Vector3.new(1, 0, 0)
-		local left = Vector3.new(0, 1, 0):Cross(face)
-		_to = _to + left * 1.5
-	end
-
-	if h > 8.9 then
-		local _plat = Instance.new("Part")
-		_plat.Name = "SabcomTempPlatform"
-		_plat.Size = Vector3.new(3, 1, 3)
-		_plat.Position = _to - Vector3.new(0, 5, 0)
-		_plat.Anchored = true
-		_plat.CanCollide = true
-		_plat.Transparency = 1
-		_plat.Material = Enum.Material.SmoothPlastic
-		_plat.Parent = workspace
-		task.spawn(function()
-			local _s = tick()
-			while tick() - _s < 20 do
-				if LP:GetAttribute("Stealing") or _G.sabcomTPStop or dead() then break end
-				task.wait(0.1)
-			end
-			if _plat and _plat.Parent then _plat:Destroy() end
-		end)
-	end
-
-	if dead() then _goBusy = false; return end
-
-	local _route = computeRoute(hrp.Position, _to, nil, 12)
-	if not _route or #_route == 0 then _route = { _to } end
-
-	velMoveThrough(hrp, _route, math.clamp(tonumber(_G.sabcomBrainrotSpeed) or 250, 150, 800), nil, nil)
-
-	if dead() then _goBusy = false; return end
-
-	if hrp and hrp.Parent then
-		hrp.AssemblyLinearVelocity = Vector3.zero
-		hrp.AssemblyAngularVelocity = Vector3.zero
-		if h > 8.9 then
-			local _, y = hrp.CFrame:ToEulerAnglesYXZ()
-			hrp.CFrame = CFrame.new(_to) * CFrame.Angles(0, y, 0)
-		end
-	end
-	_goBusy = false
-end
-
-local AUTO_GO_SWITCH_RANGE = 75
-
-local function _promptWorldPos(prompt)
-	if not prompt or not prompt.Parent then return nil end
-	local p = prompt.Parent
-	if p:IsA("Attachment") and p.Parent and p.Parent:IsA("BasePart") then
-		return p.WorldPosition
-	end
-	if p:IsA("BasePart") then return p.Position end
-	if p.Parent and p.Parent:IsA("BasePart") then return p.Parent.Position end
-	if p:IsA("Model") then
-		local cf = p:GetPivot()
-		if cf then return cf.Position end
-	end
-	return nil
-end
-
-function _resolveSwitchPet(pet)
-	if type(pet) ~= "table" then return nil, nil end
-	local uid = pet.uid
-	if not uid and pet.plot and pet.slot then
-		uid = tostring(pet.plot) .. "_" .. tostring(pet.slot)
-		pet.uid = uid
-	end
-	if uid then
-		local pets = scanAllPets(true)
-		if type(pets) == "table" then
-			local live = _findPetByUid(pets, uid)
-			if live then pet = live end
-		end
-		if type(_G.SabcomStealPetList) == "table" then
-			local listed = _findPetByUid(_G.SabcomStealPetList, uid)
-			if listed then
-				for k, v in pairs(listed) do
-					if pet[k] == nil then pet[k] = v end
-				end
-			end
-		end
-	end
-
-	if type(_G.SabcomFindStealPrompt) == "function" then
-		local prompt = _G.SabcomFindStealPrompt(pet)
-		local pp = _promptWorldPos(prompt)
-		if pp then
-			pet.position = pp
-			return pet, pp
-		end
-	end
-
-	if pet.model and pet.model.Parent then
-		local part = pet.model.PrimaryPart
-			or pet.model:FindFirstChild("HumanoidRootPart")
-			or pet.model:FindFirstChildWhichIsA("BasePart")
-		if part then
-			pet.position = part.Position
-			return pet, part.Position
-		end
-		local cf = pet.model:GetPivot()
-		if cf and cf.Position then
-			pet.position = cf.Position
-			return pet, cf.Position
-		end
-	end
-
-	if pet.plot and pet.slot then
-		local plots = workspace:FindFirstChild("Plots")
-		local plot = plots and plots:FindFirstChild(tostring(pet.plot))
-		if plot then
-			local model = select(1, _findPodiumModel(plot, tostring(pet.slot)))
-			if model then
-				pet.model = model
-				local cf = model:GetPivot()
-				if cf and cf.Position then
-					pet.position = cf.Position
-					return pet, cf.Position
-				end
-			end
-			if type(getPetPosition) == "function" then
-				local pos = getPetPosition(plot, tostring(pet.slot))
-				if pos then
-					pet.position = pos
-					return pet, pos
-				end
-			end
-		end
-	end
-
-	local pos = pet.position
-	if typeof(pos) == "Vector3" then
-		return pet, pos
-	end
-	return nil, nil
-end
-
-local function _petWithinGoRange(pet, range)
-	range = tonumber(range) or AUTO_GO_SWITCH_RANGE
-	local _, pos = _resolveSwitchPet(pet)
-	if not pos then return false end
-	local hrp = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
-	if not hrp then return false end
-	return (pos - hrp.Position).Magnitude <= range
-end
-
-local function _canAutoGoOnSwitch(pet)
-	if _G.SabcomAutoGoOnSwitch ~= true then return false end
-	if _G.sabcomTPStop == true or _G.SabcomTPStop == true then return false end
-	if isTeleporting or _goBusy then return false end
-	return _petWithinGoRange(pet, AUTO_GO_SWITCH_RANGE)
-end
-
-local function goToBrainrotPet(pet)
-	if isTeleporting or _goBusy then return false end
-	local resolved, pos = _resolveSwitchPet(pet)
-	if not resolved or not pos then return false end
-	_G.__sabcomChosenPet = resolved
-	task.spawn(function()
-		goToBrainrot(pos)
-	end)
-	return true
-end
-_G.SabcomGoToBrainrotPet = goToBrainrotPet
-
-_G.SabcomTryGoOnTargetSwitch = function(pet)
-	if not _canAutoGoOnSwitch(pet) then return false end
-	return goToBrainrotPet(pet) == true
-end
-
-local _VIM_TP = game:GetService("VirtualInputManager")
-
-
-local function fireGrappleBeforeTP(destino)
-	if type(_G.SabcomFireGrapple2) ~= "function" then
-		_G.Sabcom_Step("TP: grapple avant TP", "SabcomFireGrapple2 indisponible")
-		return false
-	end
-	local g = _waitGrapple(5)
-	local char = LP.Character
-	local hum = char and char:FindFirstChildOfClass("Humanoid")
-	if not char or not hum then
-		_G.Sabcom_Step("TP: grapple avant TP", "pas de perso")
-		return false
-	end
-	local justEquipped = false
-	if not char:FindFirstChild("Grapple Hook") then
-		g = g or findTool("Grapple Hook")
-		if g then
-			hum:EquipTool(g)
-			justEquipped = true
-		end
-	end
-	if justEquipped or not char:FindFirstChild("Grapple Hook") then
-		local waitS = math.max(0.05, (tonumber(_G.sabcomGrappleWaitMs) or 200) / 1000)
-			char:WaitForChild("Grapple Hook", waitS)
-		local c = LP.Character
-		if c and c ~= char then
-			char = c
-			hum = c:FindFirstChildOfClass("Humanoid")
-			local g2 = findTool("Grapple Hook")
-			if g2 and hum and not char:FindFirstChild("Grapple Hook") then
-				hum:EquipTool(g2) 
-				justEquipped = true
-				char:WaitForChild("Grapple Hook", 0.4) 
-			end
-		end
-	end
-	if justEquipped then
-		task.wait((tonumber(_G.sabcomGrappleSettleMs) or 60) / 1000)
-	end
-	local c = LP.Character
-	if not (c and c:FindFirstChild("Grapple Hook")) then
-		_G.Sabcom_Step("TP: grapple avant TP", "hook pas en main")
-		return false
-	end
-	local res = _G.SabcomFireGrapple2(destino)
-	_G.__sabcomGrapplePrimed = true
-	_G.Sabcom_Step("TP: grapple avant TP", (res) and "OK" or ("echec " .. tostring(res)))
-	RunService.Heartbeat:Wait()
-	RunService.Heartbeat:Wait()
-	return res and true or false
-end
-
-local function doVelocityTP(forceGrapple, _preScanned)
-	_G.__TP_T0 = os.clock()
-	_G.Sabcom_Step("TP: depart", "pets connus=" .. tostring(_preScanned and #_preScanned or "?"))
-
-	if not _beginTpSession() then return false end
-	_cloneTP = false
-	_cloneFired = false
-	_G.SabcomCloneTP = false
-	_G.SabcomCloneFired = false
-	_G.sabcomTPStop = false
-	if type(_G.SabcomSyncBabySharkTpGlobals) == "function" then _G.SabcomSyncBabySharkTpGlobals() end
-
-	local function _abortTp()
-		_G.sabcomStealHold = false
-		endTP()
-		return false
-	end
-
-	local char = LP.Character
-	local hrp = char and (char:FindFirstChild("HumanoidRootPart") or char.PrimaryPart)
-	local hum = char and char:FindFirstChildOfClass("Humanoid")
-	if char and (not hrp or not hum) then
-		RunService.Heartbeat:Wait()
-		char = LP.Character
-		hrp = char and (char:FindFirstChild("HumanoidRootPart") or char.PrimaryPart)
-		hum = char and char:FindFirstChildOfClass("Humanoid")
-	end
-	if not char or not hrp or not hum then return _abortTp() end
-
-	if _inVoid(hrp) or hrp.AssemblyLinearVelocity.Y < -40 then
-		_waitOutOfVoid(12)
-		if _G.sabcomTPStop then return _abortTp() end
-		char = LP.Character
-		hrp = char and char:FindFirstChild("HumanoidRootPart")
-		hum = char and char:FindFirstChildOfClass("Humanoid")
-		if not hrp or not hum then return _abortTp() end
-	end
-
-
-	local allPets = _preScanned
-	if type(allPets) ~= "table" or #allPets == 0 then
-		allPets = scanForTP()
-	end
-	if type(allPets) ~= "table" or #allPets == 0 then return _abortTp() end
-
-	local function _sameChosen(a, b)
-		if not a or not b then return false end
-		local ua, ub = _petUid(a), _petUid(b)
-		if ua and ub then return ua == ub end
-		return tostring(a.plot) == tostring(b.plot) and tostring(a.slot) == tostring(b.slot)
-	end
-	local function _refreshLocked(lock, list)
-		if not lock then return nil end
-		if type(list) == "table" then
-			for _, p in ipairs(list) do
-				if _sameChosen(p, lock) then return p end
-			end
-		end
-		return lock
-	end
-
-	local pet
-	local _pre = _G.__sabcomChosenPet
-	if _pre and _petAllowed(_pre) then
-		pet = _refreshLocked(_pre, allPets)
-	else
-		pet = _resolveTPPet(allPets)
-	end
-	if not pet then
-		for _, p in ipairs(allPets) do
-			if _petAllowed(p) then pet = p; break end
-		end
-	end
-	if pet then
-		_G.__sabcomChosenPet = pet
-	end
-
-	if not pet or not pet.position then return _abortTp() end
-
-	local petPos = pet.position
-	local petName = pet.name
-
-
-	local grappled = fireGrappleBeforeTP(petPos)
-
-	_G.sabcomStealHold = true
-	task.delay(15, function() _G.sabcomStealHold = false end)
-
-	local petY = petPos.Y
-	if TALL_PETS[petName] then petY = petPos.Y - TALL_OFFSET end
-
-	local coordTable = (petY > 23.15) and UPPER or LOWER
-
-	local closestData, skyKey = findClosest(petPos, coordTable)
-	if not closestData or not skyKey then return _abortTp() end
-
-	local destPos = closestData.coord
-
-	local _carpet
-	do
-		local _c = LP.Character
-		local _have = false
-		if _c then
-			for _, n in ipairs(CARPET_NAMES) do
-				local t = _c:FindFirstChild(n)
-				if t and t:IsA("Tool") then _have = true; _carpet = n; break end
-			end
-		end
-		if grappled then
-			if not _have then
-				task.wait(0.06)
-				task.wait(0.06)
-				local _tc = os.clock()
-				repeat
-					_carpet = equipCarpet()
-					local c = LP.Character
-					if _carpet and c and c:FindFirstChild(_carpet) then break end
-					RunService.Heartbeat:Wait()
-				until os.clock() - _tc > 0.4
-			end
-		else
-			grappled = fireGrappleBeforeTP(petPos)
-			task.wait(0.06)
-			task.wait(0.06)
-			local _tc = os.clock()
-			repeat
-				_carpet = equipCarpet()
-				local c = LP.Character
-				if _carpet and c and c:FindFirstChild(_carpet) then break end
-				RunService.Heartbeat:Wait()
-			until os.clock() - _tc > 0.4
-		end
-	end
-	vZero(hrp)
-
-	local facingDir = closestData.facing == "NORTH" and Vector3.new(0, 0, -1) or Vector3.new(0, 0, 1)
-	local function keepTPFacing(dirVec)
-		if not hrp or not hrp.Parent or not dirVec then return end
-		local d = dirVec.Unit
-		if d.Magnitude < 0.01 then return end
-		hrp.CFrame = CFrame.new(hrp.Position, hrp.Position + d)
-		hrp.AssemblyLinearVelocity = Vector3.zero
-		hrp.AssemblyAngularVelocity = Vector3.zero
-	end
-
-	local _frontApproach = false
-	do
-		local isUpper = (coordTable == UPPER)
-		local idx = getClosestBaseIdx(petPos)
-		local frontCoord, frontFace = buildFrontCandidate(idx, isUpper, hrp.Position.Z)
-		local bestCoord, bestFace = frontCoord, frontFace
-		local bestDist = (hrp.Position - frontCoord).Magnitude
-		local pickedFront = true
-
-
-		local _tb = BASES_LOW[idx]
-		local _isWest = idx <= 4
-		local _rowBlocked = false
-
-
-		local _dx, _dz = hrp.Position.X - _tb.X, hrp.Position.Z - _tb.Z
-		local _distToBase = math.sqrt(_dx * _dx + _dz * _dz)
-		local _sideRange = tonumber(_G.sabcomSideTPRange) or 100
-		if _G.sabcomPreferFrontOnRow ~= false and _distToBase > _sideRange then
-			for i = 1, 8 do
-				if i ~= idx and (i <= 4) == _isWest then
-					local bz = BASES_LOW[i].Z
-					if (bz - hrp.Position.Z) * (bz - _tb.Z) < 0 then _rowBlocked = true; break end
-				end
-			end
-		end
-
-		if not _rowBlocked then
-			for _, d in ipairs(plotSides(coordTable, idx)) do
-				local dd = (hrp.Position - d.coord).Magnitude
-				if dd < bestDist then
-					bestDist = dd
-					bestCoord = d.coord
-					bestFace = d.facing == "NORTH" and Vector3.new(0, 0, -1) or Vector3.new(0, 0, 1)
-					pickedFront = false
-				end
-			end
-		end
-		destPos = bestCoord
-		facingDir = bestFace
-		_frontApproach = pickedFront
-	end
-
-	if facingDir and facingDir.Magnitude > 0.1 then
-		local axis = facingDir.Unit
-		local toPlayer = hrp.Position - destPos
-		local sign = (axis:Dot(toPlayer) >= 0) and 1 or -1
-		destPos = destPos + axis * sign * (tonumber(_G.sabcomCloneBackoff) or 0.5)
-	end
-
-	local _route = computeRoute(hrp.Position, destPos, facingDir)
-	_G.Sabcom_Step("route calculee", "waypoints=" .. tostring(_route and #_route or 0))
-
-	local ASCEND_STEP = 10
-	local _stepped = {}
-	do
-		local prev = hrp.Position
-		for _, wp in ipairs(_route) do
-			local dy = wp.Y - prev.Y
-			if dy > ASCEND_STEP * 1.5 then
-				local n = math.ceil(dy / ASCEND_STEP)
-				for s = 1, n - 1 do
-					local t = s / n
-					_stepped[#_stepped + 1] = Vector3.new(
-						prev.X + (wp.X - prev.X) * t,
-						prev.Y + dy * t,
-						prev.Z + (wp.Z - prev.Z) * t
-					)
-				end
-			end
-			_stepped[#_stepped + 1] = wp
-			prev = wp
-		end
-	end
-	local _mainSpeed = math.clamp(tonumber(_G.TPVelocity) or 400, 200, 750)
-
-	_mainSpeed = _pingAdjustSpeed(_mainSpeed)
-
-
-	_G.Sabcom_Step("VELOCITY: demarre", "vitesse=" .. tostring(math.floor(_mainSpeed)))
-	local _hum = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
-	if _hum then pcall(function() _hum.AutoRotate = false end) end
-	local _faceConn = RunService.Heartbeat:Connect(function()
-		if not hrp or not hrp.Parent then
-			if _faceConn then _faceConn:Disconnect() end
-			return
-		end
-		hrp.CFrame = CFrame.new(hrp.Position, hrp.Position + facingDir)
-		hrp.AssemblyAngularVelocity = Vector3.zero
-	end)
-	velMoveThrough(hrp, _stepped, _mainSpeed, true, true)
-	if _faceConn then _faceConn:Disconnect() end
-	if _hum then pcall(function() _hum.AutoRotate = true end) end
-	if _G.sabcomTPStop then
-		if hrp and hrp.Parent then vZero(hrp) end
-		return _abortTp()
-	end
-
-	do
-		local above = destPos + Vector3.new(0, 16, 0)
-		local _t0 = os.clock()
-		while os.clock() - _t0 < 1.5 do
-			if not hrp or not hrp.Parent then break end
-			if LP:GetAttribute("Stealing") or _G.sabcomTPStop then break end
-			equipCarpet()
-			local d = above - hrp.Position
-			local flat = Vector3.new(d.X, 0, d.Z).Magnitude
-			if flat <= 3 and hrp.Position.Y >= destPos.Y then break end
-			if d.Y > 3 then
-				local _hum = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
-				if _hum then
-					local st = _hum:GetState()
-					if st ~= Enum.HumanoidStateType.Jumping and st ~= Enum.HumanoidStateType.Freefall then
-						_hum:ChangeState(Enum.HumanoidStateType.Jumping) 
-						_hum.Jump = true 
-					end
-				end
-			end
-			hrp.Velocity = d.Unit * math.min(320, d.Magnitude * 8)
-			hrp.AssemblyAngularVelocity = Vector3.zero
-			keepTPFacing(facingDir)
-			RunService.Heartbeat:Wait()
-		end
-	end
-
-	do
-		local _runCap = _frontApproach and (tonumber(_G.sabcomFrontRunIn) or 130) or 400
-		local _t0 = os.clock()
-		while os.clock() - _t0 < 4 do
-			if not hrp or not hrp.Parent then break end
-			if LP:GetAttribute("Stealing") or _G.sabcomTPStop then break end
-			equipCarpet()
-			local diff = destPos - hrp.Position
-			local mag = diff.Magnitude
-			if mag <= 3 then break end
-			if diff.Y > 3 then
-				local _hum = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
-				if _hum then
-					local st = _hum:GetState()
-					if st ~= Enum.HumanoidStateType.Jumping and st ~= Enum.HumanoidStateType.Freefall then
-						_hum:ChangeState(Enum.HumanoidStateType.Jumping)
-						_hum.Jump = true
-					end
-				end
-			end
-			hrp.Velocity = diff.Unit * math.min(_runCap, mag * 8)
-			hrp.AssemblyAngularVelocity = Vector3.zero
-			keepTPFacing(facingDir)
-			RunService.Heartbeat:Wait()
-		end
-	end
-
-	if hrp and hrp.Parent and not _G.sabcomTPStop then
-		local _flatOff = Vector3.new(destPos.X - hrp.Position.X, 0, destPos.Z - hrp.Position.Z).Magnitude
-		if _flatOff > 10 then
-			local CRUISE_Y = math.max(destPos.Y, hrp.Position.Y) + 40
-			local function _airborne()
-				local _hum = hrp.Parent and hrp.Parent:FindFirstChildOfClass("Humanoid")
-				if _hum then
-					local st = _hum:GetState()
-					if st ~= Enum.HumanoidStateType.Jumping and st ~= Enum.HumanoidStateType.Freefall then
-						_hum:ChangeState(Enum.HumanoidStateType.Jumping)
-						_hum.Jump = true
-					end
-				end
-			end
-			local _t0 = os.clock()
-			while os.clock() - _t0 < 2 do
-				if not hrp or not hrp.Parent or _G.sabcomTPStop or LP:GetAttribute("Stealing") then break end
-				equipCarpet()
-				local dy = CRUISE_Y - hrp.Position.Y
-				if dy <= 2 then break end
-				_airborne()
-				hrp.Velocity = Vector3.new(0, math.min(240, dy * 8), 0)
-				hrp.AssemblyAngularVelocity = Vector3.zero
-				RunService.Heartbeat:Wait()
-			end
-			_t0 = os.clock()
-			while os.clock() - _t0 < 3 do
-				if not hrp or not hrp.Parent or _G.sabcomTPStop or LP:GetAttribute("Stealing") then break end
-				equipCarpet()
-				local d = Vector3.new(destPos.X - hrp.Position.X, 0, destPos.Z - hrp.Position.Z)
-				if d.Magnitude <= 2.5 then break end
-				_airborne()
-				local lift = math.max(0, CRUISE_Y - hrp.Position.Y) * 4
-				hrp.Velocity = d.Unit * math.min(400, d.Magnitude * 8) + Vector3.new(0, lift, 0)
-				hrp.AssemblyAngularVelocity = Vector3.zero
-				RunService.Heartbeat:Wait()
-			end
-			_t0 = os.clock()
-			while os.clock() - _t0 < 2.5 do
-				if not hrp or not hrp.Parent or _G.sabcomTPStop or LP:GetAttribute("Stealing") then break end
-				equipCarpet()
-				local d = destPos - hrp.Position
-				if d.Magnitude <= 3 then break end
-				hrp.Velocity = d.Unit * math.min(200, d.Magnitude * 6)
-				hrp.AssemblyAngularVelocity = Vector3.zero
-				RunService.Heartbeat:Wait()
-			end
-		end
-	end
-
-
-	if hrp and hrp.Parent then
-		keepTPFacing(facingDir)
-	end
-	vZero(hrp)
-
-	local syncFrames = 5
-	local syncConn
-	syncConn = RunService.Heartbeat:Connect(function()
-		if not hrp or not hrp.Parent then syncConn:Disconnect(); return end
-		syncFrames = syncFrames - 1
-		hrp.CFrame = CFrame.new(destPos, destPos + facingDir)
-		hrp.AssemblyLinearVelocity = Vector3.zero
-		hrp.AssemblyAngularVelocity = Vector3.zero
-		if syncFrames <= 0 then syncConn:Disconnect() end
-	end)
-
-	for _ = 1, 5 do
-		task.wait(0.02)
-		local _hum = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid") or hum
-		if _hum and _hum.Parent and _hum.FloorMaterial ~= Enum.Material.Air then break end
-		if _G.sabcomTPStop then break end
-	end
-
-	if healConn then healConn:Disconnect() end
-	_cloneTP = true
-	_cloneFired = true
-	_G.SabcomCloneTP = true
-	_G.SabcomCloneFired = true
-	_lastTPOk = true
-
-	if _G.sabcomTPStop then _G.sabcomStealHold = false; endTP(); return end
-
-
-	do
-		local stable = 0
-		for _ = 1, 18 do
-			if _G.sabcomTPStop then break end
-			local _hrp = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
-			if not _hrp or not _hrp.Parent then break end
-			local flat = (Vector3.new(_hrp.Position.X, 0, _hrp.Position.Z) - Vector3.new(destPos.X, 0, destPos.Z)).Magnitude
-			if flat <= 3.5 and math.abs(_hrp.Position.Y - destPos.Y) <= 4 then
-				stable = stable + 1
-				if stable >= 2 then break end
-			else
-				stable = 0
-				_hrp.CFrame = CFrame.new(destPos, destPos + facingDir) 
-				_hrp.AssemblyLinearVelocity = Vector3.zero
-				_hrp.AssemblyAngularVelocity = Vector3.zero
-			end
-			RunService.Heartbeat:Wait()
-		end
-	end
-	if _G.sabcomTPStop then _G.sabcomStealHold = false; endTP(); return end
-
-	local _ahrp = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
-	local _clonePos = (_ahrp and _ahrp.Parent and _ahrp.Position) or destPos
-
-	local _clonePlat = Instance.new("Part")
-	_clonePlat.Name = "SabcomClonePlatform"
-	_clonePlat.Size = Vector3.new(12, 1, 12)
-	_clonePlat.Position = Vector3.new(_clonePos.X, _clonePos.Y - 3, _clonePos.Z)
-	_clonePlat.Anchored = true
-	_clonePlat.CanCollide = true
-	_clonePlat.Transparency = 1
-	_clonePlat.Material = Enum.Material.SmoothPlastic
-	_clonePlat.Parent = workspace
-
-	if _ahrp and _ahrp.Parent then
-		_ahrp.AssemblyLinearVelocity = Vector3.zero
-		_ahrp.AssemblyAngularVelocity = Vector3.zero
-	end
-
-	local _preClonePos, _preCloneChar
-	do
-		_preCloneChar = LP.Character
-		local _h = _preCloneChar and _preCloneChar:FindFirstChild("HumanoidRootPart")
-		_preClonePos = _h and _h.Position or destPos
-	end
-	local _charAdded = false
-	local _caConn = LP.CharacterAdded:Connect(function() _charAdded = true end)
-	local _cloneHoldConn
-	local function _releaseCloneAnchor()
-		if _cloneHoldConn then
-			_cloneHoldConn:Disconnect()
-			_cloneHoldConn = nil
-		end
-		local char = LP.Character
-		local h = char and char:FindFirstChild("HumanoidRootPart")
-		local hum = char and char:FindFirstChildOfClass("Humanoid")
-		if h then
-			h.Anchored = false
-			local bv = h:FindFirstChild("SabcomCarpetBV")
-			if bv then bv:Destroy() end
-		end
-		if hum then
-			hum.PlatformStand = false
-				hum.AutoRotate = true
-		end
-	end
-	local function _anchorForClone()
-		local char = LP.Character
-		local hum = char and char:FindFirstChildOfClass("Humanoid")
-		if not char or not hum then return end
-
-		if _cloneHoldConn then
-			_cloneHoldConn.Disconnect()
-			_cloneHoldConn = nil
-		end
-
-		local cf = CFrame.new(destPos, destPos + facingDir)
-
-		_cloneHoldConn = RunService.Heartbeat:Connect(function()
-			local currentChar = LP.Character
-			local rh = currentChar and currentChar:FindFirstChild("HumanoidRootPart")
-			if not rh then return end
-
-			rh.Anchored = true
-			rh.CFrame = cf
-			rh.AssemblyLinearVelocity = Vector3.zero
-			rh.AssemblyAngularVelocity = Vector3.zero
-
-			local h = currentChar:FindFirstChildOfClass("Humanoid")
-			if h then
-				h.PlatformStand = true
-				h.AutoRotate = false
-			end
-		end)
-	end
-
-	_G.sabcomStealHold = false
-
-	task.wait(0.3)
-
-	if not _G.sabcomTPStop then
-		doClone()
-	end
-	if _clonePlat then _clonePlat:Destroy(); _clonePlat = nil end
-
-
-	do
-		local _t0 = os.clock()
-		repeat
-			if _G.sabcomTPStop then break end
-			if _charAdded then break end
-			if LP.Character ~= _preCloneChar then break end
-			local _h = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
-			if _h then
-				local _dx = _h.Position.X - _preClonePos.X
-				local _dz = _h.Position.Z - _preClonePos.Z
-				if (_dx * _dx + _dz * _dz) > 4 then break end
-			end
-			RunService.Heartbeat:Wait()
-		until os.clock() - _t0 > 3
-	end
-	if _caConn then _caConn:Disconnect() end
-	_releaseCloneAnchor()
-
-	if _G.sabcomTPStop then endTP(); return end
-
-
-	do
-		_G.Sabcom_Step("clone: echange termine")
-		local _d = tonumber(_G.sabcomPostCloneDelay) or 0.1
-		if _d > 0 then task.wait(math.min(_d, 0.5)) end
-	end
-
-	_G._curStealSlot = tonumber(pet and pet.slot) or _G._curStealSlot
-
-	_boostGrabWindow(15)
-	goToBrainrot(petPos, { fromTp = true })
-	_VIM_TP:SendKeyEvent(true, Enum.KeyCode.C, false, game)
-		task.wait(0.05)
-		_VIM_TP:SendKeyEvent(false, Enum.KeyCode.C, false, game)
-
-	if healConn then healConn:Disconnect() end
-	endTP()
-	return true
-end
-
-local function pickTPWinner(pets)
-	if type(pets) ~= "table" then return nil, false end
-	local man = _G.SabcomManualStealUID
-	if type(man) == "string" and man ~= "" then
-		local locked = _findPetByUid(pets, man)
-		if locked and _petAllowed(locked) then
-			return locked, true
-		end
-	end
-	local mode = tostring(_G.SabcomStealMode or "priority"):lower()
-	local list = _buildStealPetList(pets, mode)
-	local winner = list[1]
-	if not winner or not _petAllowed(winner) then return nil, false end
-	local hasPriority = (_priIndexOf(winner.index) or _priIndexOf(winner.name)) ~= nil
-	return winner, hasPriority
-end
-
-
-local function _getLaunchChar()
-	local c = LP.Character
-	if not c then return nil, nil end
-	local hrp = c:FindFirstChild("HumanoidRootPart") or c.PrimaryPart
-	return c, hrp
-end
-
-
-local function _clearStaleTeleport(maxSec)
-	maxSec = tonumber(maxSec) or 25
-	if not isTeleporting then
-		_G.__sabcomTpBusySince = nil
-		return
-	end
-	local since = _G.__sabcomTpBusySince or os.clock()
-	_G.__sabcomTpBusySince = since
-	if os.clock() - since >= maxSec then
-		_G.Sabcom_Step("TP: stale clear")
-		_clearTpGoState()
-	end
-end
-
-local function launchSideTP(pets, winner)
-	_clearStaleTeleport()
-	if isTeleporting or _goBusy then return false end
-	if type(pets) ~= "table" or #pets == 0 then return false end
-	local c, hrp = _getLaunchChar()
-	if not c then return false end
-	_G.__sabcomRadarOff = true
-	_G.sabcomFreezeUntil = os.clock() + 10
-	_G.__sabcomChosenPet = winner
-	if winner then
-		_G.Sabcom_Step("cible choisie", tostring(winner.name) .. "  " .. tostring(winner.mps) .. "/s")
-	end
-	_lastTPOk = false
-	local res = doVelocityTP(false, pets)
-	if res ~= true then
-		if isTeleporting then _clearTpGoState() end
-	end
-	return res == true
-end
-
-local function runSideTPLaunch(maxWait, checkAuto)
-	local _t0 = os.clock()
-	local _gotOnce = false
-	local _tpDelay = tonumber(_G._stp_tpDelay) or tonumber(_G.TPDelay) or 0
-	local _delayed = false
-	local _readyT = nil
-	local _lastUid = nil
-	maxWait = tonumber(maxWait) or 60
-
-	while os.clock() - _t0 < maxWait do
-		if checkAuto and _G.sabcomAutoTP == false then return end
-		_clearStaleTeleport()
-		if not isTeleporting then
-			local pets = scanAllPets(true)
-			if pets and #pets > 0 then
-				if not _gotOnce then _G.Sabcom_Step("1er pet detecte", "#" .. tostring(#pets)) end
-				_gotOnce = true
-				local hasPriority = false
-				local _winner = nil
-				_winner, hasPriority = pickTPWinner(pets)
-				local uid = _winner and (_petUid(_winner) or tostring(_winner.uid or ""))
-				if not (uid and uid ~= "" and uid == _lastUid) then
-					_lastUid = uid
-					_readyT = nil
-				end
-				local _c = LP.Character
-				local _carpetOk = false
-				if _c then
-					for _, n in ipairs(CARPET_NAMES) do
-						local t = _c:FindFirstChild(n)
-						if t and t:IsA("Tool") then
-							_carpetOk = true
-							if not _G.__seqCarpet then _G.__seqCarpet = true; _G.Sabcom_Step("carpet EN MAIN") end
-							break
-						end
-					end
-				end
-				local _prioNow = hasPriority
-				if _winner and _readyT == nil then
-					_readyT = os.clock()
-				end
-				local _carpetWait = (tonumber(_G.sabcomCarpetWaitMs) or 200) / 1000
-				if not _carpetOk then equipCarpet() end
-				local _carpetGate = _carpetOk
-					or (_readyT ~= nil and (os.clock() - _readyT) >= _carpetWait)
-				local _engageBlock = _carpetEngaging and (os.clock() - _t0) < 8
-				if (not _engageBlock) and not _goBusy and _c and _carpetGate and _winner then
-					if _tpDelay > 0 and not _delayed and not _prioNow then
-						_delayed = true
-						local delayEnd = os.clock() + _tpDelay
-						while os.clock() < delayEnd do
-							if checkAuto and _G.sabcomAutoTP == false then return end
-							RunService.Heartbeat:Wait()
-						end
-						local pets2 = scanAllPets(true)
-						if type(pets2) == "table" and #pets2 > 0 then
-							pets = pets2
-							local w2, hp2 = pickTPWinner(pets2)
-							if w2 then _winner = w2; hasPriority = hp2 end
-						end
-					end
-					if launchSideTP(pets, _winner) then
-						return
-					end
-				end
-			end
-		end
-		RunService.Heartbeat:Wait()
-	end
-end
-
-local _autoTpRunning = false
-local function ensureAutoTpLoop()
-	if _autoTpRunning then return end
-	if _G.sabcomAutoTP == false then return end
-	_autoTpRunning = true
-	task.spawn(function()
-		while _G.sabcomAutoTP ~= false do
-			if _lastTPOk then break end
-			if not isTeleporting and not _goBusy then
-				runSideTPLaunch(60, true)
-			else
-				_clearStaleTeleport()
-			end
-			if _lastTPOk then break end
-			if _G.sabcomAutoTP == false then break end
-			RunService.Heartbeat:Wait()
-			RunService.Heartbeat:Wait()
-		end
-		_autoTpRunning = false
-	end)
-end
-_G.SabcomEnsureAutoTP = ensureAutoTpLoop
-
-local _manualTPBusy = false
-local function manualFullTP()
-	if _manualTPBusy then return end
-	_manualTPBusy = true
-	_G.__SabcomCancelAutoTP = true
-	_G.__sabcomChosenPet = nil
-	_G.__sabcomRadarOff = true
-	if isTeleporting or _goBusy then
-		_G.sabcomTPStop = true
-		_G.SabcomTPStop = true
-		local tWait = os.clock()
-		while (isTeleporting or _goBusy) and os.clock() - tWait < 12 do
-			RunService.Heartbeat:Wait()
-		end
-		if isTeleporting or _goBusy then
-			_clearTpGoState()
-		end
-	end
-	_G.sabcomTPStop = false
-	_G.SabcomTPStop = false
-	_G.__sabcomRadarOff = false
-	local tEng = os.clock()
-	while _carpetEngaging and os.clock() - tEng < 6 do
-		RunService.Heartbeat:Wait()
-	end
-	if type(_G.SabcomRefreshStealTarget) == "function" then
-		_G.SabcomRefreshStealTarget()
-	end
-	local pets
-	local scanned = scanAllPets()
-	pets = scanned
-	local winner = pickTPWinner(pets)
-	_G.__sabcomChosenPet = winner
-	doVelocityTP(false, pets)
-	_manualTPBusy = false
-end
-_G.sabcomStartSideTP = manualFullTP
-
 
 UIS.InputBegan:Connect(function(input, gameProcessed)
-	if gameProcessed then return end
-	if _G.SabcomCapturingKey then return end
-	if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
-	local want = _G._stp_tpKeyName
-	if type(want) ~= "string" or want == "" then want = "T" end
-	if input.KeyCode.Name == want then
-		task.spawn(function() manualFullTP() end)
-	end
+    if gameProcessed then return end
+    if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
+    if input.KeyCode == Enum.KeyCode.V then
+        task.spawn(function() pcall(doClone) end)
+    end
+    local want = _G._stp_tpKeyName
+    if type(want) ~= "string" or want == "" then want = "T" end
+    if input.KeyCode.Name == want then
+        task.spawn(function() pcall(manualFullTP) end)
+    end
 end)
 
+task.spawn(function() pcall(loadModules) pcall(loadNet) end)
 
-task.spawn(function() loadModules() end)
-
+_G.MeerkoChannelsReady = false
 
 task.spawn(function()
-	if _G.sabcomAutoTP == false then return end
-	ensureAutoTpLoop()
+    local char = LP.Character or LP.CharacterAdded:Wait()
+
+    local hrpReady, humReady = false, false
+    task.spawn(function() char:WaitForChild("HumanoidRootPart", 20); hrpReady = true end)
+    task.spawn(function() char:WaitForChild("Humanoid", 20); humReady = true end)
+    local _tw0 = os.clock()
+    while (not hrpReady or not humReady) and os.clock() - _tw0 < 20 do
+        RunService.Heartbeat:Wait()
+    end
+    pcall(loadModules); pcall(loadNet)
+    if _G.MeerkoAutoTP == false then return end
+
+    if _G.MeerkoWaitForTools ~= false and type(_G.MeerkoToolsReady) == "function" then
+        local _tt0 = os.clock()
+        local _tcap = tonumber(_G.MeerkoToolWait) or 30
+        while os.clock() - _tt0 < _tcap do
+            local ok, ready = pcall(_G.MeerkoToolsReady)
+            if ok and ready then break end
+            if _G.MeerkoAutoTP == false then return end
+            task.wait(0.2)
+        end
+    end
+    pcall(carpetEngage)
+    do
+        local _d = tonumber(_G._stp_tpDelay) or tonumber(_G.TPDelay) or 0
+        if _d > 0 then task.wait(_d) end
+    end
+
+    local _w0 = os.clock()
+    local _wMax = tonumber(_G.MeerkoAutoTPWait) or 20
+    while os.clock() - _w0 < _wMax do
+        if _G.MeerkoAutoTP == false then return end
+        if LP:GetAttribute("Stealing") == true then return end
+        local ok, pets = pcall(scanForTP)
+        if ok and pets and #pets > 0 then break end
+        task.wait(tonumber(_G.MeerkoAutoTPPoll) or 0.05)
+    end
+    pcall(doVelocityTP)
+    if _G.MeerkoScanProfile then _G.MeerkoScanProfile("normal") end
 end)
 
-LP.CharacterAdded:Connect(function()
-	if _G.sabcomAutoTP == false then return end
-	if _lastTPOk then return end
-	task.defer(function()
-		RunService.Heartbeat:Wait()
-		ensureAutoTpLoop()
-	end)
-end)
+do
+    local Players = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+    local LP = Players.LocalPlayer
+    local PG = LP:WaitForChild("PlayerGui")
 
-_G.SabcomStartSideTP = manualFullTP
-	end
-	_initTeleportController()
+    local function diag()
+        pcall(loadModules)
+        local Plots = workspace:FindFirstChild("Plots")
+        local nPlots = Plots and #Plots:GetChildren() or 0
+        local nCh, nOwn, nAl = 0,0,0
+        if Plots then
+            for _, plot in ipairs(Plots:GetChildren()) do
+                local ch = getPlotChannel(plot.Name)
+                if ch then
+                    nCh = nCh + 1
+                    if ownerInGame(ch) then nOwn = nOwn + 1 end
+                    if channelGet(ch, "AnimalList") then nAl = nAl + 1 end
+                end
+            end
+        end
+        local ok, pets = pcall(scanAllPets)
+        local nPets = (ok and pets and #pets) or 0
+        local msg = string.format("plots=%d ch=%d owner=%d animals=%d PETS=%d", nPlots, nCh, nOwn, nAl, nPets)
+        print("[TP TEST] " .. msg)
+        if nPets > 0 and pets[1] then
+            print("[TP TEST] top=", pets[1].name, pets[1].plot, pets[1].slot)
+        end
+        return nPets
+    end
+
+    local function findStealPrompt(pet)
+        if not pet then return nil end
+        if pet.plot and pet.slot then
+            local plots = workspace:FindFirstChild("Plots")
+            local plot = plots and plots:FindFirstChild(pet.plot)
+            local podiums = plot and plot:FindFirstChild("AnimalPodiums")
+            local podium = podiums and podiums:FindFirstChild(tostring(pet.slot))
+            if podium then
+                local base = podium:FindFirstChild("Base")
+                local spawn = base and base:FindFirstChild("Spawn")
+                local attach = spawn and spawn:FindFirstChild("PromptAttachment")
+                if attach then
+                    for _, p in ipairs(attach:GetChildren()) do
+                        if p:IsA("ProximityPrompt") then return p end
+                    end
+                end
+                for _, d in ipairs(podium:GetDescendants()) do
+                    if d:IsA("ProximityPrompt") then return d end
+                end
+            end
+        end
+        return nil
+    end
+
+    local InternalStealCache = {}
+    local STEAL_HOLD_DURATION = 1.3
+    local STEAL_PROXIMITY = tonumber(_G.MeerkoStealProximity) or 28
+    local _stealHoldStart, _stealHoldActive = 0, false
+    local _stealTarget, _stealArmedAt = nil, 0
+    local _lastTargetPick, _lastPickUid, _currentTargetName = 0, nil, nil
+    local _stealLastScan, _autoLastScan = 0, 0
+    local _inRangeLast = 0
+    local _armCheckAt = 0
+    local _petsCache, _petsCacheAt = nil, 0
+
+    -- one scan shared by the picker, the in-range check and the watchdog
+    local function _scanCached(now, maxAge)
+        if _petsCache and (now - _petsCacheAt) <= (maxAge or 0.15) then return _petsCache end
+        local ok, pets = pcall(scanAllPets)
+        if ok and type(pets) == "table" then
+            _petsCache, _petsCacheAt = pets, now
+            return pets
+        end
+        return nil
+    end
+
+    -- is the brainrot still on that podium, per the game's own data
+    local function _petListed(plot, slot)
+        local ch = getPlotChannel(plot)
+        local al = ch and channelGet(ch, "AnimalList")
+        if type(al) ~= "table" then return true, false end
+        local e = al[slot]
+        if e == nil then e = al[tonumber(slot) or -1] end
+        if e == nil then e = al[tostring(slot)] end
+        return e ~= nil, true
+    end
+
+    local function _prox()
+        return tonumber(_G.MeerkoStealProximity) or STEAL_PROXIMITY
+    end
+    local function _holdDur()
+        return tonumber(_G.MeerkoStealHoldDuration) or STEAL_HOLD_DURATION
+    end
+
+    -- after each attempt: did the brainrot actually leave that podium?
+    -- one in-range miss flips the method, so the next grab already uses the other one
+    local _cooldownUntil = 0
+    local function _verifyFire(pet, path, judge)
+        task.delay(tonumber(_G.MeerkoVerifyDelay) or 0.5, function()
+            if not (pet and pet.plot and pet.slot ~= nil) then return end
+            local listed, known = true, false
+            pcall(function() listed, known = _petListed(pet.plot, pet.slot) end)
+            if not known then return end
+            if not listed then
+                _G.MeerkoStealFails = 0
+                _cooldownUntil = 0
+                _G.MeerkoStealSay("steal landed (" .. tostring(path) .. ")")
+                return
+            end
+            if not judge then _cooldownUntil = 0 return end
+            if _G.MeerkoAutoSwapMethod ~= true then return end
+            _G.MeerkoStealFails = (_G.MeerkoStealFails or 0) + 1
+            if _G.MeerkoStealFails >= (tonumber(_G.MeerkoFailsBeforeSwap) or 1) then
+                _G.MeerkoStealFails = 0
+                if path == "remote" then
+                    _G.MeerkoRemoteStealOn = false
+                    _G.MeerkoStealSay("remote missed -> prompt mode")
+                else
+                    _G.MeerkoRemoteStealOn = true
+                    _G.MeerkoStealSay("prompt missed -> remote mode")
+                end
+            end
+        end)
+    end
+    local function _holdBusy()
+        if _stealHoldActive
+            and (tick() - _stealHoldStart) < (_holdDur() + (tonumber(_G.MeerkoStealRetryGap) or 0.15)) then
+            return true
+        end
+        return tick() < _cooldownUntil
+    end
+
+    local _armedPet, _armLostSince = nil, 0
+    local function _armLivePos(p)
+        if not (p and p.plot and p.slot ~= nil) then return nil end
+        local plots = workspace:FindFirstChild("Plots")
+        local plot = plots and plots:FindFirstChild(p.plot)
+        if not plot then return nil end
+        local ok, pos = pcall(getPetPosition, plot, p.slot)
+        if ok then return pos end
+        return nil
+    end
+    _G.MeerkoArmSteal = function(pet)
+        if type(pet) ~= "table" or type(pet.plot) ~= "string" or pet.slot == nil then return end
+        _armedPet = {
+            name = pet.name, index = pet.index, mps = pet.mps, _pri = pet._pri,
+            plot = pet.plot, slot = tostring(pet.slot), position = pet.position,
+        }
+        _armLostSince = 0
+        _stealTarget = _armedPet
+        _stealArmedAt = os.clock()
+        if type(pet.name) == "string" and pet.name ~= "" then _currentTargetName = pet.name end
+    end
+    _G.MeerkoDisarmSteal = function()
+        _armedPet, _armLostSince = nil, 0
+    end
+    _G.MeerkoArmedName = function() return _armedPet and _armedPet.name or nil end
+
+    local UIC = {
+        bg   = Color3.fromRGB(12, 12, 18),
+        bg2  = Color3.fromRGB(18, 18, 26),
+        card = Color3.fromRGB(24, 24, 36),
+        track = Color3.fromRGB(32, 32, 48),
+        line = Color3.fromRGB(60, 60, 80),
+        acc  = Color3.fromRGB(0, 180, 255),
+        acc2 = Color3.fromRGB(100, 210, 255),
+        txt  = Color3.fromRGB(255, 255, 255),
+        dim  = Color3.fromRGB(140, 140, 160),
+    }
+    local UIF, UIFB = Enum.Font.Gotham, Enum.Font.GothamBold
+
+    local function mk(class, parent, props)
+        local o = Instance.new(class)
+        for k, v in pairs(props or {}) do o[k] = v end
+        o.Parent = parent
+        return o
+    end
+    local function corner(o, r) mk("UICorner", o, { CornerRadius = UDim.new(0, r or 8) }) return o end
+    local function stroke(o, col) mk("UIStroke", o, { Color = col or UIC.line, Thickness = 1 }) return o end
+
+    pcall(function()
+        local _oldDbg = LP:FindFirstChild("PlayerGui")
+        _oldDbg = _oldDbg and _oldDbg:FindFirstChild("MeerkoStealDbg")
+        if _oldDbg then _oldDbg:Destroy() end
+    end)
+
+    -- This bar was the one piece of UI parented straight into PlayerGui under a
+    -- self-identifying name, so the game could both see it and name it. Prefer
+    -- the executor's hidden container; fall back to PlayerGui under a native-
+    -- looking name, and track it by reference rather than re-finding by name.
+    local stealBarSg, stealBarFill, stealBarTitle, stealBarPct, stealBarKey, stealBarCd
+    local function ensureStealBar()
+        if stealBarSg and stealBarSg.Parent then return end
+        local host = (gethui and gethui()) or PG
+        stealBarSg = mk("ScreenGui", host, {
+            Name = "hudProgressLayer", ResetOnSpawn = false,
+            IgnoreGuiInset = true, DisplayOrder = 120,
+        })
+        -- wider wrap to fit bar + two pill buttons on the right
+        local wrap = mk("Frame", stealBarSg, {
+            Name = "Wrap", AnchorPoint = Vector2.new(0.5, 1),
+            Position = UDim2.new(0.5, 0, 1, -120), Size = UDim2.fromOffset(340, 34),
+            BackgroundTransparency = 1,
+        })
+        stealBarTitle = mk("TextLabel", wrap, {
+            Size = UDim2.new(0, 200, 0, 12), Position = UDim2.fromOffset(0, 0),
+            BackgroundTransparency = 1, Font = UIFB, TextSize = 11,
+            TextColor3 = UIC.txt, TextXAlignment = Enum.TextXAlignment.Left,
+            TextTruncate = Enum.TextTruncate.AtEnd, Text = "STEAL",
+        })
+        mk("UIStroke", stealBarTitle, {
+            Color = Color3.new(0, 0, 0), Thickness = 2, Transparency = 0.55,
+        })
+        stealBarPct = mk("TextLabel", wrap, {
+            Size = UDim2.fromOffset(42, 12), Position = UDim2.new(0, 200, 0, 0),
+            BackgroundTransparency = 1, Font = UIFB, TextSize = 11,
+            TextColor3 = UIC.acc, TextXAlignment = Enum.TextXAlignment.Left, Text = "0%",
+        })
+        mk("UIStroke", stealBarPct, {
+            Color = Color3.new(0, 0, 0), Thickness = 2, Transparency = 0.55,
+        })
+        -- keybind pill (e.g. "C")
+        local keyPill = corner(mk("Frame", wrap, {
+            Size = UDim2.fromOffset(28, 18), Position = UDim2.new(0, 256, 1, -22),
+            BackgroundColor3 = Color3.fromRGB(30, 30, 38), BorderSizePixel = 0,
+        }), 4)
+        stroke(keyPill, UIC.line)
+        stealBarKey = mk("TextLabel", keyPill, {
+            Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1,
+            Font = UIFB, TextSize = 11, TextColor3 = UIC.txt, Text = "C",
+        })
+        -- cooldown pill (e.g. "2.6s")
+        local cdPill = corner(mk("Frame", wrap, {
+            Size = UDim2.fromOffset(46, 18), Position = UDim2.new(0, 290, 1, -22),
+            BackgroundColor3 = Color3.fromRGB(30, 30, 38), BorderSizePixel = 0,
+        }), 4)
+        stroke(cdPill, UIC.line)
+        stealBarCd = mk("TextLabel", cdPill, {
+            Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1,
+            Font = UIFB, TextSize = 11, TextColor3 = UIC.dim, Text = "--",
+        })
+        local track = corner(mk("Frame", wrap, {
+            Position = UDim2.new(0, 0, 1, -6), Size = UDim2.fromOffset(248, 6),
+            BackgroundColor3 = UIC.track, BackgroundTransparency = 0.25, BorderSizePixel = 0,
+        }), 3)
+        stroke(track, Color3.fromRGB(10, 8, 4))
+        stealBarFill = corner(mk("Frame", track, {
+            Size = UDim2.new(0, 0, 1, 0), BackgroundColor3 = UIC.acc, BorderSizePixel = 0,
+        }), 3)
+        mk("UIGradient", stealBarFill, {
+            Color = ColorSequence.new(UIC.acc, UIC.acc2),
+        })
+        -- update keybind label and cooldown countdown every frame
+        RunService.Heartbeat:Connect(function()
+            if not stealBarSg or not stealBarSg.Parent then return end
+            local key = tostring(_G.MeerkoNearestKey or "C")
+            if stealBarKey and stealBarKey.Parent then stealBarKey.Text = key end
+            if stealBarCd and stealBarCd.Parent then
+                local remaining = (_cooldownUntil or 0) - tick()
+                if remaining > 0.05 then
+                    stealBarCd.Text = string.format("%.1fs", remaining)
+                    stealBarCd.TextColor3 = UIC.acc
+                else
+                    stealBarCd.Text = "rdy"
+                    stealBarCd.TextColor3 = UIC.dim
+                end
+            end
+        end)
+        stealBarSg.Enabled = true
+    end
+    local function showStealBar(name, pct)
+        pcall(function()
+            ensureStealBar()
+            pct = math.clamp(tonumber(pct) or 0, 0, 1)
+            stealBarSg.Enabled = true
+            stealBarTitle.Text = name and ("STEAL  " .. tostring(name)) or "STEAL"
+            stealBarPct.Text = math.floor(pct * 100 + 0.5) .. "%"
+            stealBarFill.Size = UDim2.new(pct, 0, 1, 0)
+        end)
+    end
+    local function setStealBarPct(pct)
+        if not stealBarSg or not stealBarSg.Enabled then return end
+        pcall(function()
+            pct = math.clamp(tonumber(pct) or 0, 0, 1)
+            stealBarPct.Text = tostring(math.floor(pct * 100 + 0.5)) .. "%"
+            stealBarFill.Size = UDim2.new(pct, 0, 1, 0)
+        end)
+    end
+    local function hideStealBar()
+        pcall(function()
+            ensureStealBar()
+            stealBarSg.Enabled = true
+            stealBarTitle.Text = "STEAL"
+            stealBarPct.Text = "0%"
+            stealBarFill.Size = UDim2.new(0, 0, 1, 0)
+        end)
+    end
+    task.defer(hideStealBar)
+
+    local function buildStealCallbacks(prompt)
+        if InternalStealCache[prompt] then return end
+        if not prompt or not prompt.Parent then return end
+        local data = { holdCallbacks = {}, triggerCallbacks = {}, holdEndCallbacks = {}, ready = true }
+        local function grab(sig, into)
+            local ok, conns = pcall(getconnections, sig)
+            if ok and type(conns) == "table" then
+                for _, c in ipairs(conns) do
+                    if type(c.Function) == "function" then table.insert(into, c.Function) end
+                end
+            end
+        end
+        grab(prompt.PromptButtonHoldBegan, data.holdCallbacks)
+        grab(prompt.Triggered, data.triggerCallbacks)
+        grab(prompt.PromptButtonHoldEnded, data.holdEndCallbacks)
+        if #data.holdCallbacks > 0 or #data.triggerCallbacks > 0 or #data.holdEndCallbacks > 0 then
+            InternalStealCache[prompt] = data
+        end
+    end
+
+    local _rawFireServer = Instance.new("RemoteEvent").FireServer
+    local _reBegin, _reCommit = nil, nil
+    local _reState, _reRetryAt = {}, {}
+    local function _re(cache, hash)
+        if cache and cache.Parent then return cache end
+        local st = _reState[hash]
+        if typeof(st) == "Instance" then
+            if st.Parent then return st end
+            _reState[hash] = nil
+            st = nil
+        end
+        if st == "pending" then return nil end
+        if st == "failed" and os.clock() < (_reRetryAt[hash] or 0) then return nil end
+        _reState[hash] = "pending"
+        task.spawn(function()
+            local got
+            pcall(function()
+                if _G.MeerkoGetRemote then got = _G.MeerkoGetRemote("RemoteEvent", hash) end
+            end)
+            if typeof(got) == "Instance" then
+                _reState[hash] = got
+                _G.MeerkoStealSay("remote resolved " .. tostring(hash):sub(1, 8))
+            else
+                _reState[hash] = "failed"
+                _reRetryAt[hash] = os.clock() + (tonumber(_G.MeerkoRemoteRetry) or 5)
+                _G.MeerkoStealSay("remote resolve FAILED " .. tostring(hash):sub(1, 8))
+            end
+        end)
+        task.delay(tonumber(_G.MeerkoRemoteResolveWait) or 3, function()
+            if _reState[hash] == "pending" then
+                _reState[hash] = "failed"
+                _reRetryAt[hash] = os.clock() + (tonumber(_G.MeerkoRemoteRetry) or 5)
+                _G.MeerkoStealSay("remote resolve TIMEOUT " .. tostring(hash):sub(1, 8))
+            end
+        end)
+        return nil
+    end
+
+    local function _stealBegin()
+        _reBegin = _re(_reBegin, "f40f7d9e-2f0d-4167-b250-899273f46874")
+        if not _reBegin then return false end
+        local t = workspace:GetServerTimeNow() + 124
+        pcall(_rawFireServer, _reBegin, t, "68c86eb7-eb7e-4b4d-96ae-cf7cd847c5b0")
+        pcall(function() _rawFireServer(_reBegin, t, "07b9cc25-2a1f-4a26-a0ec-f2fab578d8bd") end)
+        return true
+    end
+
+    local function _stealCommit(plot, slot)
+        _reCommit = _re(_reCommit, "3ba148c9-7ed6-4675-93f8-9f7c356a2c54")
+        if not _reCommit then return false end
+        if type(plot) ~= "string" or slot == nil then return false end
+        local sl = tonumber(slot) or slot
+        local t = workspace:GetServerTimeNow() + 31
+        pcall(_rawFireServer, _reCommit, t, "cda5c764-d4e3-45c4-94e4-53a538347590", plot, sl)
+        pcall(function()
+            _rawFireServer(_reCommit, t, "8c852fbf-d542-4ef4-aa28-612e24db8d4a", plot, sl)
+        end)
+        return true
+    end
+    _G.MeerkoStealBegin, _G.MeerkoStealCommit = _stealBegin, _stealCommit
+
+    -- fire the same two remotes (4) does; have them resolved before the first grab
+    local _RE_BEGIN  = "f40f7d9e-2f0d-4167-b250-899273f46874"
+    local _RE_COMMIT = "3ba148c9-7ed6-4675-93f8-9f7c356a2c54"
+    local _reWarmT0 = os.clock()
+    local function _remotesReady()
+        return typeof(_reState[_RE_BEGIN]) == "Instance"
+            and typeof(_reState[_RE_COMMIT]) == "Instance"
+    end
+    task.spawn(function()
+        for _ = 1, 60 do
+            if _remotesReady() then _G.MeerkoStealSay("steal remotes ready") return end
+            _re(nil, _RE_BEGIN)
+            _re(nil, _RE_COMMIT)
+            task.wait(0.25)
+        end
+    end)
+
+    local function remoteStealAsync(pet, judge)
+        if not (pet and type(pet.plot) == "string" and pet.slot ~= nil) then return false end
+        if _holdBusy() then
+            return false
+        end
+        if not _stealBegin() then return false end
+        _stealHoldStart = tick()
+        _stealHoldActive = true
+        showStealBar(pet.name, 0)
+        task.spawn(function()
+            local hold = tonumber(_G.MeerkoStealHoldDuration) or STEAL_HOLD_DURATION
+            while true do
+                local el = tick() - _stealHoldStart
+                if el >= hold then break end
+                setStealBarPct(el / hold)
+                RunService.Heartbeat:Wait()
+            end
+            setStealBarPct(1)
+            _stealCommit(pet.plot, pet.slot)
+            _verifyFire(pet, "remote", judge)
+            _stealHoldActive = false
+            task.wait(0.2)
+            hideStealBar()
+        end)
+        task.delay(STEAL_HOLD_DURATION + 0.6, hideStealBar)
+        return true
+    end
+
+    local function executeStealAsync(prompt, petName, restoreMax)
+        if _holdBusy() then
+            return false
+        end
+        local data = InternalStealCache[prompt]
+        if not data or not data.ready then return false end
+        data.ready = false
+        _stealHoldStart = tick()
+        _stealHoldActive = true
+        pcall(function() prompt.MaxActivationDistance = math.huge end)
+        showStealBar(petName, 0)
+        task.spawn(function()
+            for _, fn in ipairs(data.holdCallbacks) do task.spawn(fn) end
+            local hold = tonumber(_G.MeerkoStealHoldDuration) or STEAL_HOLD_DURATION
+            pcall(function()
+                local hd = prompt.HoldDuration
+                if type(hd) == "number" and hd > 0 then
+                    hold = math.max(hold, hd + 0.05)
+                end
+            end)
+            while true do
+                local el = tick() - _stealHoldStart
+                if el >= hold then break end
+                setStealBarPct(el / hold)
+                RunService.Heartbeat:Wait()
+            end
+            setStealBarPct(1)
+            if prompt and prompt.Parent then
+                for _, fn in ipairs(data.triggerCallbacks) do task.spawn(fn) end
+            end
+            for _, fn in ipairs(data.holdEndCallbacks) do task.spawn(fn) end
+            _stealHoldActive = false
+            if restoreMax ~= nil then
+                pcall(function()
+                    if prompt and prompt.Parent then prompt.MaxActivationDistance = restoreMax end
+                end)
+            end
+            task.wait(0.05)
+            data.ready = true
+            task.wait(0.2)
+            hideStealBar()
+        end)
+        task.delay(STEAL_HOLD_DURATION + 0.6, hideStealBar)
+        return true
+    end
+
+    local function timeUntilCanSteal()
+        if LP:GetAttribute("Stealing") or LP:GetAttribute("IsTrading")
+            or LP:GetAttribute("IsDuelSelecting") or LP:GetAttribute("Web") then
+            return -1
+        end
+        local ragdoll = LP:GetAttribute("RagdollEndTime")
+        if ragdoll then
+            local r = ragdoll - workspace:GetServerTimeNow()
+            if r > 0 then return r end
+        end
+        return 0
+    end
+
+    local stealOn = (_G.MeerkoStealMode ~= nil)
+    local _emptyScans = 0
+    local function _fireSteal(pet)
+        if not pet then return false end
+        if _holdBusy() then _G.MeerkoStealSay("hold already running") return false end
+        local _fhrp = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
+        local _fd = (_fhrp and pet.position) and (pet.position - _fhrp.Position).Magnitude or nil
+        local _judge = (_fd ~= nil) and (_fd <= _prox() + 2) or false
+        local _cd = _holdDur() + (tonumber(_G.MeerkoVerifyDelay) or 0.5) + 0.15
+        _G.MeerkoStealSay("gates ok -> firing on " .. tostring(pet.name))
+        if _G.MeerkoRemoteStealOn ~= false then
+            if remoteStealAsync(pet, _judge) then
+                _G.MeerkoLastFire = os.clock()
+                _cooldownUntil = tick() + _cd
+                _G.MeerkoStealSay("FIRE remote -> " .. tostring(pet.name))
+                return true
+            end
+            _G.MeerkoStealSay("remote not ready -> prompt path")
+        end
+        local prompt = findStealPrompt(pet)
+        if not prompt or not prompt.Parent then
+            _G.MeerkoStealSay("no prompt at " .. tostring(pet.plot) .. "/" .. tostring(pet.slot))
+            return false
+        end
+        local oldMax
+        pcall(function() oldMax = prompt.MaxActivationDistance end)
+        pcall(function() prompt.MaxActivationDistance = math.huge end)
+        buildStealCallbacks(prompt)
+        if InternalStealCache[prompt] then
+            if executeStealAsync(prompt, pet.name, oldMax) then
+                _G.MeerkoLastFire = os.clock()
+                _cooldownUntil = tick() + _cd
+                _verifyFire(pet, "prompt", _judge)
+                _G.MeerkoStealSay("FIRE prompt-callback -> " .. tostring(pet.name))
+                return true
+            end
+            _G.MeerkoStealSay("prompt-callback not ready")
+            if oldMax ~= nil then pcall(function() prompt.MaxActivationDistance = oldMax end) end
+            return false
+        elseif fireproximityprompt then
+            pcall(function() prompt.MaxActivationDistance = math.huge end)
+            showStealBar(pet.name, 1)
+            pcall(function() fireproximityprompt(prompt) end)
+            _G.MeerkoLastFire = os.clock()
+            _cooldownUntil = tick() + (tonumber(_G.MeerkoVerifyDelay) or 0.5) + 0.5
+            _verifyFire(pet, "prompt", _judge)
+            _G.MeerkoStealSay("FIRE proximityprompt -> " .. tostring(pet.name))
+            task.delay(0.4, hideStealBar)
+            pcall(function() if oldMax ~= nil then prompt.MaxActivationDistance = oldMax end end)
+            return true
+        end
+        _G.MeerkoStealSay("no steal method available")
+        return false
+    end
+    _G.MeerkoFireSteal = _fireSteal
+    local function _stealTick()
+        _G.MeerkoTickN = (_G.MeerkoTickN or 0) + 1
+        stealOn = (_G.MeerkoStealMode ~= nil)
+        if not stealOn then _G.MeerkoStealSay("steal mode OFF") return end
+        local now = os.clock()
+        local _lockUid = _G.MeerkoStealTargetUID
+        local _lockChanged = (type(_lockUid) == "string" and _lockUid ~= "" and _lockUid ~= _lastPickUid)
+        local _needPick = (not _stealTarget) or _lockChanged or (now - _lastTargetPick) >= (tonumber(_G.MeerkoRepickGap) or 0.35)
+        if _armedPet then
+            local _lp = _armLivePos(_armedPet)
+            if _lp then
+                _armedPet.position = _lp
+                _armLostSince = 0
+            elseif _armLostSince == 0 then
+                _armLostSince = now
+            elseif now - _armLostSince > (tonumber(_G.MeerkoArmLostGrace) or 1.5) then
+                _armedPet, _armLostSince = nil, 0
+            end
+            if _armedPet and (now - _armCheckAt) >= (tonumber(_G.MeerkoArmCheckGap) or 0.5) then
+                _armCheckAt = now
+                local okL, listed = pcall(_petListed, _armedPet.plot, _armedPet.slot)
+                if okL and not listed then
+                    _G.MeerkoStealSay("armed pet gone -> repicking")
+                    _armedPet, _armLostSince = nil, 0
+                end
+            end
+            if _armedPet then
+                _stealTarget = _armedPet
+                if type(_armedPet.name) == "string" then _currentTargetName = _armedPet.name end
+                _needPick = false
+            end
+        end
+        local _scanGap = (_emptyScans >= 3) and (tonumber(_G.MeerkoStealIdleGap) or 0.3) or 0.01
+        if not LP:GetAttribute("Stealing") and _needPick and (now - _autoLastScan) >= _scanGap then
+            _autoLastScan = now
+            _lastTargetPick = now
+            local char = LP.Character
+            local hrp = char and char:FindFirstChild("HumanoidRootPart")
+            if hrp then
+                local pets = _scanCached(now, 0.05)
+                local ok = pets ~= nil
+                if ok and pets and #pets > 0 then _emptyScans = 0 else _emptyScans = _emptyScans + 1 end
+                if ok and pets and #pets > 0 then
+                    local best
+                    if type(_lockUid) == "string" and _lockUid ~= "" then
+                        for _, p in ipairs(pets) do
+                            if not p.conveyor and _petUid(p) == _lockUid then best = p break end
+                        end
+                    end
+                    if not best and _G.MeerkoStealMode == "nearest" then
+                        local myPos = hrp.Position
+                        local bestD = math.huge
+                        for _, p in ipairs(pets) do
+                            if not p.conveyor and p.position then
+                                local d = (p.position - myPos).Magnitude
+                                if d < bestD then bestD = d; best = p end
+                            end
+                        end
+                    elseif not best then
+                        for _, p in ipairs(pets) do if not p.conveyor then best = p; break end end
+                    end
+                    best = best or pets[1]
+                    if best then
+                        _stealTarget = best
+                        _stealArmedAt = now
+                        _lastPickUid = _lockUid
+                        if type(best.name) == "string" and best.name ~= "" then
+                            _currentTargetName = best.name
+                        end
+                    end
+                end
+            end
+        end
+        if _G.MeerkoStealInRangeFirst ~= false
+            and not (_armedPet and _G.MeerkoTPTargetWins ~= false)
+            and not (type(_lockUid) == "string" and _lockUid ~= "") then
+            local _c2 = LP.Character
+            local _h2 = _c2 and _c2:FindFirstChild("HumanoidRootPart")
+            if _h2 then
+                local _cur = _stealTarget
+                local _curD = (_cur and _cur.position) and (_cur.position - _h2.Position).Magnitude or math.huge
+                if _curD > _prox() and (now - _inRangeLast) >= (tonumber(_G.MeerkoInRangeGap) or 0.25) then
+                    _inRangeLast = now
+                    local _pets2 = _scanCached(now, 0.15)
+                    local _ok2 = _pets2 ~= nil
+                    if _ok2 and type(_pets2) == "table" then
+                        local _near, _nd = nil, math.huge
+                        local _mp = _h2.Position
+                        for _, p in ipairs(_pets2) do
+                            if not p.conveyor and p.position then
+                                local d = (p.position - _mp).Magnitude
+                                if d < _nd then _nd, _near = d, p end
+                            end
+                        end
+                        if _near and _nd <= _prox() then
+                            _stealTarget = _near
+                            _armedPet, _armLostSince = nil, 0
+                            _lastTargetPick = now
+                            if type(_near.name) == "string" then _currentTargetName = _near.name end
+                            _G.MeerkoStealSay(string.format("switch to in-range %s d=%.0f", tostring(_near.name), _nd))
+                        end
+                    end
+                end
+            end
+        end
+        local pet = _stealTarget
+        if not pet then _G.MeerkoStealSay("no target") return end
+
+        if now - _stealLastScan < 0.033 then _G.MeerkoThrN = (_G.MeerkoThrN or 0) + 1 return end
+        _stealLastScan = now
+        local t = timeUntilCanSteal()
+        if t == -1 then
+            if LP:GetAttribute("Stealing") then _stealTarget = nil; _armedPet, _armLostSince = nil, 0 end
+            _G.MeerkoStealSay("busy: stealing/trading/web")
+            return
+        end
+        if t > 0 and t > _holdDur() then _G.MeerkoStealSay(string.format("cooldown %.1fs", t)) return end
+        local char = LP.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        if not hrp then _G.MeerkoStealSay("no character") return end
+
+        if pet.position then
+            local toPet = pet.position - hrp.Position
+            local dist = toPet.Magnitude
+            _G.MeerkoStealTgt = string.format("%s [%s/%s] d=%.0f", tostring(pet.name), tostring(pet.plot), tostring(pet.slot), dist)
+            local hold = tonumber(_G.MeerkoStealHoldDuration) or STEAL_HOLD_DURATION
+
+            local lead = tonumber(_G.MeerkoStealLead) or 0.27
+
+            local closing = dist > 0.001 and (hrp.AssemblyLinearVelocity:Dot(toPet) / dist) or 0
+
+            local _nearBase = false
+            do
+                local _bi = getClosestBaseIdx(pet.position)
+                local _b = _bi and BASES_LOW[_bi]
+                if _b then
+                    local _bx, _bz = hrp.Position.X - _b.X, hrp.Position.Z - _b.Z
+                    if math.sqrt(_bx * _bx + _bz * _bz) <= (tonumber(_G.MeerkoCloseBaseRange) or 100) then
+                        _nearBase = true
+                    end
+                end
+            end
+
+            if _nearBase then
+                if dist > (tonumber(_G.MeerkoNearBaseStealStart) or 55) then _G.MeerkoStealSay(string.format("nearbase far d=%.0f", dist)) return end
+            elseif closing > (tonumber(_G.MeerkoFastApproach) or 150) then
+
+                if dist > (tonumber(_G.MeerkoStealLeadMax) or 223) then _G.MeerkoStealSay(string.format("lead far d=%.0f", dist)) return end
+                if (dist / closing) > hold * lead then _G.MeerkoStealSay(string.format("lead wait d=%.0f c=%.0f", dist, closing)) return end
+            elseif closing > 5 then
+
+                if dist > (tonumber(_G.MeerkoCloseProximity) or 24) then _G.MeerkoStealSay(string.format("moving far d=%.0f c=%.0f", dist, closing)) return end
+            else
+                
+                if dist > _prox() then _G.MeerkoStealSay(string.format("far d=%.0f", dist)) return end
+            end
+        end
+        _fireSteal(pet)
+    end
+    RunService.Heartbeat:Connect(function()
+        local _ok, _err = pcall(_stealTick)
+        if not _ok then _G.MeerkoStealSay("ERROR " .. tostring(_err)) end
+    end)
+
+    task.spawn(function()
+        while true do
+            task.wait(tonumber(_G.MeerkoWatchdogTick) or 0.2)
+            if _G.MeerkoStealMode ~= nil and _G.MeerkoStealWatchdog ~= false
+                and not LP:GetAttribute("Stealing")
+                and not _holdBusy()
+                and (os.clock() - (_G.MeerkoLastFire or 0)) > (tonumber(_G.MeerkoWatchdogGap) or 1.5) then
+                local c = LP.Character
+                local h = c and c:FindFirstChild("HumanoidRootPart")
+                if h then
+                    local pets = _scanCached(os.clock(), 0.15)
+                    local ok = pets ~= nil
+                    if ok and type(pets) == "table" then
+                        local near, nd = nil, math.huge
+                        local mp = h.Position
+                        for _, p in ipairs(pets) do
+                            if not p.conveyor and p.position then
+                                local d = (p.position - mp).Magnitude
+                                if d < nd then nd, near = d, p end
+                            end
+                        end
+                        if near and nd <= _prox() then
+                            _G.MeerkoStealSay(string.format("WATCHDOG in range %s d=%.0f", tostring(near.name), nd))
+                            pcall(_fireSteal, near)
+                        end
+                    end
+                end
+            end
+        end
+    end)
+
+    do
+        local function applyUnwalkAlways(char)
+            if not char then return end
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            local animator = hum and hum:FindFirstChildOfClass("Animator")
+            local animate = char:FindFirstChild("Animate")
+            if animate then animate.Disabled = true end
+            if animator then
+                local ok, tracks = pcall(function() return animator:GetPlayingAnimationTracks() end)
+                if ok and tracks then for _, t in ipairs(tracks) do pcall(function() t:Stop(0) end) end end
+            end
+        end
+        local function hook(char)
+            task.spawn(function()
+                char:WaitForChild("Humanoid", 10); task.wait(0.05)
+                for i = 1, 8 do
+                    if LP.Character ~= char then break end
+                    applyUnwalkAlways(char); task.wait(0.25)
+                end
+            end)
+        end
+        if LP.Character then hook(LP.Character) end
+        LP.CharacterAdded:Connect(hook)
+        local _unwalkLast = 0
+        RunService.Heartbeat:Connect(function()
+            local now = os.clock()
+            if now - _unwalkLast < 1.5 then return end
+            _unwalkLast = now
+            if LP.Character then applyUnwalkAlways(LP.Character) end
+        end)
+    end
+
+    local HS = game:GetService("HttpService")
+    local UIS = game:GetService("UserInputService")
+    local CFG_FILE = "SideTP.json"
+
+    local function loadCfgTable()
+        local t = {}
+        if readfile then
+            pcall(function()
+                local raw = readfile(CFG_FILE)
+                if type(raw) == "string" and #raw > 0 then
+                    local ok, d = pcall(HS.JSONDecode, HS, raw)
+                    if ok and type(d) == "table" then t = d end
+                end
+            end)
+        end
+        return t
+    end
+
+    local function saveTpSettings()
+        if not writefile then return end
+        local t = loadCfgTable()
+        t.tpVelocity = tonumber(_G.TPVelocity) or 400
+        t.climbSpeed = tonumber(_G.MeerkoClimb) or 160
+        t.goSpeed = tonumber(_G.MeerkoGoSpeed) or 200
+        t.cframeSpeed = tonumber(_G.MeerkoCFrameSpeed) or 450
+        t.walkSpeed = tonumber(_G.MeerkoWalkSpeed) or 27
+        t.landingDelay = tonumber(_G.LandingDelay) or 0.35
+        t.closeSpeed = tonumber(_G.MeerkoCloseSpeed) or 80
+        t.tpSafeMode = _G.MeerkoTPSafeMode ~= false
+        t.tpSafeSpeed = tonumber(_G.MeerkoTPSafeSpeed) or 300
+        t.tpSafeVerticalSpeed = tonumber(_G.MeerkoTPSafeVerticalSpeed) or 110
+        t.tpRetryCount = tonumber(_G.MeerkoTPRetryCount) or 2
+        t.autoTp = _G.MeerkoAutoTP ~= false
+        t.autoKickOnSteal = _G.MeerkoAutoKickOnSteal == true
+        t.kickToPS = _G.MeerkoKickToPS == true
+        t.psLink = tostring(_G.MeerkoPrivateServerLink or "")
+        t.priAlert = _G.MeerkoPriAlert == true
+        t.alertSound = tostring(_G.MeerkoAlertSound or "111786441593851")
+        t.alertMinGen = tonumber(_G.MeerkoAlertMinGen) or 80e6
+        t.walkSpeedOn = _G.MeerkoWalkSpeedOn ~= false
+        t.xray = _G.MeerkoXray ~= false
+        t.invisAuto = _G.MeerkoInvisAuto == true
+        t.invisDepth = tonumber(_G.MeerkoInvisDepth) or 4.2
+        t.invisAngle = tonumber(_G.MeerkoInvisAngle) or 180
+        t.autoSteal = stealOn
+        t.stealMode = _G.MeerkoStealMode
+        t.priorityList = _G.SHARED_PRIORITY_ITEMS
+        t.panelX = tonumber(_G._stp_panelX)
+        t.panelY = tonumber(_G._stp_panelY)
+        t.panelPos = _G._stp_pos
+        t.tgtX = tonumber(_G._meerko_tgtX)
+        t.tgtY = tonumber(_G._meerko_tgtY)
+        t.tgtW = tonumber(_G._meerko_tgtW)
+        t.tgtH = tonumber(_G._meerko_tgtH)
+        
+        if type(_G.MeerkoCloneKeyName)  == "string" then t.cloneKey  = _G.MeerkoCloneKeyName  else t.cloneKey  = nil end
+        if type(_G.MeerkoKickKeyName)   == "string" then t.kickKey   = _G.MeerkoKickKeyName   else t.kickKey   = nil end
+        if type(_G.MeerkoStopTPKeyName) == "string" then t.stopTpKey = _G.MeerkoStopTPKeyName else t.stopTpKey = nil end
+        if type(_G.MeerkoNearestKey)    == "string" then t.nearestKey= _G.MeerkoNearestKey    else t.nearestKey= nil end
+        if type(_G.MeerkoDropKeyName)   == "string" then t.dropKey   = _G.MeerkoDropKeyName   else t.dropKey   = nil end
+        if type(_G.MeerkoResetKeyName)  == "string" then t.resetKey  = _G.MeerkoResetKeyName  else t.resetKey  = nil end
+        t.antiFlash = _G.MeerkoAntiFlash ~= false
+        t.faceAway = _G.MeerkoFaceAway == true
+        t.faceAwayNearest = _G.MeerkoFaceAwayNearest == true
+        t.faceAwayDelay = tonumber(_G.MeerkoFaceAwayDelay) or 2
+        t.antiBee   = _G.MeerkoAntiBee ~= false
+        t.infJump   = _G.MeerkoInfJump ~= false
+        t.antiDie   = _G.AntiDieDisabled ~= true
+        t.carpetSpeedValue = tonumber(_G.MeerkoCarpetSpeedValue) or 140
+        t.autoBuy = _G.MeerkoAutoBuy == true
+        t.autoBuyRange = tonumber(_G.MeerkoAutoBuyRange) or 17
+        t.autoBuyHover = tonumber(_G.MeerkoAutoBuyHover) or 9
+        t.exX = tonumber(_G._meerko_exX); t.exY = tonumber(_G._meerko_exY)
+        t.fX  = tonumber(_G._meerko_fX);  t.fY  = tonumber(_G._meerko_fY)
+        t.kX  = tonumber(_G._meerko_kX);  t.kY  = tonumber(_G._meerko_kY)
+        pcall(function() writefile(CFG_FILE, HS:JSONEncode(t)) end)
+    end
+    _G.MeerkoSaveSettings = saveTpSettings  
+
+    if _G.TPVelocity == nil then _G.TPVelocity = 400 end
+    if _G.MeerkoClimb == nil then _G.MeerkoClimb = 160 end
+    if _G.MeerkoGoSpeed == nil then _G.MeerkoGoSpeed = 200 end
+    if _G.MeerkoCFrameSpeed == nil then _G.MeerkoCFrameSpeed = 450 end
+    if _G.MeerkoWalkSpeed == nil then _G.MeerkoWalkSpeed = 27 end
+    if _G.LandingDelay == nil then _G.LandingDelay = 0.35 end
+    if _G.MeerkoCloseSpeed == nil then _G.MeerkoCloseSpeed = 80 end
+    if _G.MeerkoInvisDepth == nil then _G.MeerkoInvisDepth = 4.2 end
+    if _G.MeerkoInvisAngle == nil then _G.MeerkoInvisAngle = 180 end
+
+    local TS = game:GetService("TweenService")
+    local EASE = TweenInfo.new(0.16, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local function tween(o, props) TS:Create(o, EASE, props):Play() end
+
+    local guiParent = (gethui and gethui()) or game:GetService("CoreGui") or PG
+    for _, par in ipairs({ guiParent, PG }) do
+        pcall(function()
+            local old = par:FindFirstChild("uiMainLayer")
+            if old then old:Destroy() end
+        end)
+    end
+
+    local sg = mk("ScreenGui", nil, {
+        Name = "uiMainLayer", ResetOnSpawn = false, IgnoreGuiInset = true,
+        DisplayOrder = 999999, ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+    })
+    pcall(function() sg.Parent = guiParent end)
+    if not sg.Parent then sg.Parent = PG end
+
+    sg.Enabled = false
+
+    UIS.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+        if input.KeyCode == Enum.KeyCode.LeftControl or input.KeyCode == Enum.KeyCode.RightControl then
+            sg.Enabled = not sg.Enabled
+        end
+    end)
+
+    do
+        local hudAlways = mk("ScreenGui", nil, {
+            Name = "uiHudAlways", ResetOnSpawn = false, IgnoreGuiInset = true,
+            DisplayOrder = 1000000, ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+        })
+        pcall(function() hudAlways.Parent = guiParent end)
+        if not hudAlways.Parent then hudAlways.Parent = PG end
+
+        local hdr = corner(mk("Frame", hudAlways, {
+            Name = "Bar", AnchorPoint = Vector2.new(0.5, 0),
+            Position = UDim2.new(0.5, 0, 0, 10), Size = UDim2.fromOffset(340, 26),
+            BackgroundColor3 = UIC.bg, BorderSizePixel = 0, ZIndex = 50,
+        }), 8)
+        mk("UIGradient", hdr, { Rotation = 90, Color = ColorSequence.new(UIC.card, UIC.bg) })
+        local hrim = mk("UIStroke", hdr, { Thickness = 1, Transparency = 0.15 })
+        mk("UIGradient", hrim, { Rotation = 90, Color = ColorSequence.new(UIC.acc, UIC.line) })
+
+        local function seg(x, w, txt, col, font)
+            return mk("TextLabel", hdr, {
+                Size = UDim2.fromOffset(w, 26), Position = UDim2.fromOffset(x, 0),
+                BackgroundTransparency = 1, Text = txt, Font = font, TextSize = 11,
+                TextColor3 = col, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 51,
+            })
+        end
+        local function div(x)
+            mk("Frame", hdr, {
+                Size = UDim2.fromOffset(1, 12), Position = UDim2.fromOffset(x, 7),
+                BackgroundColor3 = UIC.line, BorderSizePixel = 0, ZIndex = 51,
+            })
+        end
+        seg(12, 165, "leaked at discord.gg/Z7vPrxecnJ", UIC.acc, UIFB)
+        div(180)
+        local fpsLbl = seg(192, 60, "FPS: --", UIC.txt, UIF)
+        local pingLbl = seg(258, 80, "PING: --", UIC.txt, UIF)
+
+        local frames, since, pingItem = 0, 0, nil
+        RunService.RenderStepped:Connect(function(dt)
+            frames, since = frames + 1, since + dt
+            if since < 0.5 then return end
+            fpsLbl.Text = "FPS: " .. math.floor(frames / since + 0.5)
+            frames, since = 0, 0
+            if not pingItem then
+                pcall(function()
+                    pingItem = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]
+                end)
+            end
+            local ok, v = pcall(function() return pingItem:GetValue() end)
+            pingLbl.Text = "PING: " .. ((ok and math.floor(v + 0.5)) or "--") .. " ms"
+        end)
+    end
+
+    local W, H, RAIL, PAD = 460, 320, 130, 16
+
+    local root = mk("Frame", sg, {
+        Name = "Root", Active = true, BackgroundTransparency = 1,
+        Size = UDim2.fromOffset(W, H),
+        Position = UDim2.fromOffset(tonumber(_G._stp_panelX) or 40, tonumber(_G._stp_panelY) or 160),
+    })
+
+    local shadow = mk("Frame", root, {
+        Size = UDim2.new(1, 12, 1, 12), Position = UDim2.fromOffset(-6, -6),
+        BackgroundColor3 = Color3.fromRGB(0, 0, 0), BackgroundTransparency = 0.75,
+        ZIndex = -1, BorderSizePixel = 0,
+    })
+    corner(shadow, 20)
+
+    local card = corner(mk("Frame", root, {
+        BackgroundColor3 = UIC.bg, BorderSizePixel = 0, Size = UDim2.fromScale(1, 1), ZIndex = 1,
+    }), 20)
+    mk("UIGradient", card, {
+        Rotation = 135,
+        Color = ColorSequence.new({ColorSequenceKeypoint.new(0, UIC.bg2), ColorSequenceKeypoint.new(1, UIC.bg)}),
+    })
+    local rim = mk("UIStroke", card, { Thickness = 1.5, Transparency = 0.25, Color = UIC.acc })
+    mk("UIGradient", rim, {
+        Rotation = 135,
+        Color = ColorSequence.new({ColorSequenceKeypoint.new(0, UIC.acc), ColorSequenceKeypoint.new(1, UIC.acc2)}),
+    })
+
+    local rail = mk("Frame", card, {
+        Size = UDim2.new(0, RAIL, 1, 0), BackgroundTransparency = 1, ZIndex = 2,
+    })
+    mk("TextLabel", rail, {
+        Size = UDim2.new(1, -PAD * 2, 0, 18), Position = UDim2.fromOffset(PAD, 20),
+        BackgroundTransparency = 1, Text = "MEERKO", Font = UIFB, TextSize = 14,
+        TextColor3 = UIC.txt, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 2,
+    })
+    mk("TextLabel", rail, {
+        Size = UDim2.new(1, -PAD * 2, 0, 12), Position = UDim2.fromOffset(PAD, 40),
+        BackgroundTransparency = 1, Text = "TELEPORT", Font = UIF, TextSize = 9,
+        TextColor3 = UIC.acc, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 2,
+    })
+    mk("Frame", rail, {
+        Position = UDim2.fromOffset(PAD, 58), Size = UDim2.new(1, -PAD * 2, 0, 2),
+        BackgroundColor3 = UIC.line, BorderSizePixel = 0,
+    })
+
+    local body = mk("Frame", card, {
+        Position = UDim2.fromOffset(RAIL, 0), Size = UDim2.new(1, -RAIL, 1, 0),
+        BackgroundTransparency = 1, ZIndex = 2,
+    })
+
+    local pages, tabs = {}, {}
+    local tabOpenHook = {}
+    local function selectTab(name)
+        local _h = tabOpenHook[name]
+        if _h then tabOpenHook[name] = nil; pcall(_h) end
+        for n, p in pairs(pages) do p.Visible = (n == name) end
+        for n, t in pairs(tabs) do
+            local on = (n == name)
+            tween(t.bg, { BackgroundTransparency = on and 0 or 1 })
+            tween(t.lbl, { TextColor3 = on and UIC.txt or UIC.dim })
+            tween(t.btn, { BackgroundTransparency = on and 0.2 or 0.5 })
+        end
+    end
+
+    local function tab(name, order)
+        local b = corner(mk("TextButton", rail, {
+            Size = UDim2.new(1, -PAD * 2, 0, 32), Position = UDim2.fromOffset(PAD, 72 + (order - 1) * 38),
+            BackgroundColor3 = UIC.card, BackgroundTransparency = 0.5, Text = "",
+            AutoButtonColor = false, Active = true, ZIndex = 2,
+        }), 12)
+        local bg = mk("Frame", b, {
+            Size = UDim2.fromScale(1, 1), BackgroundColor3 = UIC.acc,
+            BackgroundTransparency = 1, BorderSizePixel = 0,
+        })
+        corner(bg, 12)
+        local lbl = mk("TextLabel", b, {
+            Size = UDim2.new(1, 0, 1, 0), Position = UDim2.fromOffset(0, 0),
+            BackgroundTransparency = 1, Text = name, Font = UIFB, TextSize = 11,
+            TextColor3 = UIC.dim, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 3,
+        })
+        mk("UIPadding", lbl, { PaddingLeft = UDim.new(0, 12) })
+        local page = mk("ScrollingFrame", body, {
+            Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1, BorderSizePixel = 0,
+            Visible = false, ScrollBarThickness = 0, ScrollBarImageColor3 = UIC.line,
+            CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y, ZIndex = 2,
+        })
+        mk("UIPadding", page, {
+            PaddingLeft = UDim.new(0, PAD), PaddingRight = UDim.new(0, PAD + 4),
+            PaddingTop = UDim.new(0, PAD + 4), PaddingBottom = UDim.new(0, PAD),
+        })
+        mk("UIListLayout", page, { Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder })
+        tabs[name], pages[name] = { btn = b, bg = bg, lbl = lbl }, page
+        b.MouseButton1Click:Connect(function() selectTab(name) end)
+        b.MouseEnter:Connect(function()
+            if not pages[name].Visible then
+                tween(b, { BackgroundTransparency = 0.3 })
+            end
+        end)
+        b.MouseLeave:Connect(function()
+            if not pages[name].Visible then
+                tween(b, { BackgroundTransparency = 0.5 })
+            end
+        end)
+        return page
+    end
+
+    local function label(parent, txt, first)
+        local l = mk("TextLabel", parent, {
+            Size = UDim2.new(1, 0, 0, first and 14 or 26), BackgroundTransparency = 1,
+            Text = string.upper(txt), Font = UIFB, TextSize = 10, TextColor3 = UIC.dim,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            TextYAlignment = Enum.TextYAlignment.Bottom, ZIndex = 2,
+        })
+        return l
+    end
+
+    local function shell(parent, h)
+        local card = corner(mk("Frame", parent, {
+            Size = UDim2.new(1, 0, 0, h), BackgroundColor3 = UIC.card,
+            BorderSizePixel = 0, Active = true, ZIndex = 2,
+        }), 12)
+        local bg = mk("Frame", card, {
+            Size = UDim2.fromScale(1, 1), BackgroundColor3 = UIC.acc,
+            BackgroundTransparency = 1, BorderSizePixel = 0,
+        })
+        corner(bg, 12)
+        return card
+    end
+
+    local function action(parent, txt, fn)
+        local card2 = shell(parent, 36)
+        local b = mk("TextButton", card2, {
+            Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1, Text = txt,
+            Font = UIFB, TextSize = 12, TextColor3 = UIC.txt,
+            Active = true, AutoButtonColor = false, ZIndex = 3,
+        })
+        b.MouseEnter:Connect(function() 
+            tween(card2:FindFirstChildOfClass("Frame"), { BackgroundTransparency = 0.3 })
+        end)
+        b.MouseLeave:Connect(function() 
+            tween(card2:FindFirstChildOfClass("Frame"), { BackgroundTransparency = 1 })
+        end)
+        b.MouseButton1Click:Connect(fn)
+    end
+
+    local function toggle(parent, txt, get, fn)
+        local card2 = shell(parent, 36)
+        local hit = mk("TextButton", card2, {
+            Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1, Text = "",
+            Active = true, AutoButtonColor = false, ZIndex = 4,
+        })
+        mk("TextLabel", card2, {
+            Size = UDim2.new(1, -70, 1, 0), Position = UDim2.fromOffset(14, 0),
+            BackgroundTransparency = 1, Text = txt, Font = UIFB, TextSize = 12,
+            TextColor3 = UIC.txt, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 3,
+        })
+        local pill = corner(mk("Frame", card2, {
+            Size = UDim2.fromOffset(40, 20), Position = UDim2.new(1, -52, 0.5, -10),
+            BackgroundColor3 = UIC.track, BorderSizePixel = 0, ZIndex = 3,
+        }), 10)
+        local knob = corner(mk("Frame", pill, {
+            Size = UDim2.fromOffset(16, 16), Position = UDim2.fromOffset(2, 2),
+            BackgroundColor3 = UIC.dim, BorderSizePixel = 0, ZIndex = 4,
+        }), 8)
+        local function paint(instant)
+            local v = get()
+            local pc = v and UIC.acc or UIC.track
+            local kc = v and UIC.txt or UIC.dim
+            local kp = UDim2.fromOffset(v and 22 or 2, 2)
+            if instant then
+                pill.BackgroundColor3, knob.BackgroundColor3, knob.Position = pc, kc, kp
+            else
+                tween(pill, { BackgroundColor3 = pc })
+                tween(knob, { BackgroundColor3 = kc, Position = kp })
+            end
+        end
+        hit.MouseButton1Click:Connect(function() fn(); paint() end)
+        paint(true)
+        return paint
+    end
+
+    local function input(parent, txt, hint, get, set)
+        local card2 = shell(parent, 52)
+        mk("TextLabel", card2, {
+            Size = UDim2.new(1, -24, 0, 12), Position = UDim2.fromOffset(14, 8),
+            BackgroundTransparency = 1, Text = txt, Font = UIF, TextSize = 11,
+            TextColor3 = UIC.dim, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 3,
+        })
+        local box = mk("TextBox", card2, {
+            Size = UDim2.new(1, -24, 0, 20), Position = UDim2.fromOffset(14, 24),
+            BackgroundTransparency = 1, Font = UIFB, TextSize = 12,
+            TextColor3 = UIC.txt, TextXAlignment = Enum.TextXAlignment.Left,
+            PlaceholderText = hint, PlaceholderColor3 = UIC.line,
+            ClearTextOnFocus = false, Text = tostring(get() or ""),
+            TextTruncate = Enum.TextTruncate.AtEnd, Active = true, ZIndex = 4,
+        })
+        box.FocusLost:Connect(function() set(box.Text) end)
+        return box
+    end
+
+    local function slider(parent, txt, min, max, get, set, step)
+        step = step or 1
+        local card2 = shell(parent, 50)
+        mk("TextLabel", card2, {
+            Size = UDim2.new(1, -76, 0, 14), Position = UDim2.fromOffset(14, 8),
+            BackgroundTransparency = 1, Text = txt, Font = UIF, TextSize = 11,
+            TextColor3 = UIC.dim, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 3,
+        })
+        local val = mk("TextLabel", card2, {
+            Size = UDim2.fromOffset(52, 14), Position = UDim2.new(1, -64, 0, 8),
+            BackgroundTransparency = 1, Font = UIFB, TextSize = 12, TextColor3 = UIC.txt,
+            TextXAlignment = Enum.TextXAlignment.Right, ZIndex = 3,
+        })
+        local track = corner(mk("TextButton", card2, {
+            Size = UDim2.new(1, -24, 0, 6), Position = UDim2.fromOffset(14, 32),
+            BackgroundColor3 = UIC.track, Text = "", AutoButtonColor = false,
+            Active = true, BorderSizePixel = 0, ZIndex = 3,
+        }), 3)
+        local fill = corner(mk("Frame", track, {
+            Size = UDim2.new(0, 0, 1, 0), BackgroundColor3 = UIC.acc,
+            BorderSizePixel = 0, ZIndex = 4,
+        }), 3)
+        local knob = corner(mk("Frame", track, {
+            Size = UDim2.fromOffset(14, 14), AnchorPoint = Vector2.new(0.5, 0.5),
+            Position = UDim2.new(0, 0, 0.5, 0), BackgroundColor3 = UIC.txt,
+            BorderSizePixel = 0, ZIndex = 5,
+        }), 7)
+
+        local function refresh()
+            local v = math.clamp(tonumber(get()) or min, min, max)
+            local rel = (v - min) / math.max(max - min, 1e-6)
+            fill.Size = UDim2.new(rel, 0, 1, 0)
+            knob.Position = UDim2.new(rel, 0, 0.5, 0)
+            val.Text = step < 1 and string.format("%.2f", v) or tostring(math.floor(v + 0.5))
+        end
+        local function applyAt(x)
+            local rel = math.clamp((x - track.AbsolutePosition.X) / math.max(track.AbsoluteSize.X, 1), 0, 1)
+            set(math.clamp(math.floor((min + (max - min) * rel) / step + 0.5) * step, min, max))
+            refresh()
+        end
+
+        local sliding = false
+        track.InputBegan:Connect(function(i)
+            if i.UserInputType == Enum.UserInputType.MouseButton1
+                or i.UserInputType == Enum.UserInputType.Touch then
+                sliding = true; tween(knob, { Size = UDim2.fromOffset(14, 14) }); applyAt(i.Position.X)
+            end
+        end)
+        UIS.InputChanged:Connect(function(i)
+            if sliding and (i.UserInputType == Enum.UserInputType.MouseMovement
+                or i.UserInputType == Enum.UserInputType.Touch) then applyAt(i.Position.X) end
+        end)
+        UIS.InputEnded:Connect(function(i)
+            if sliding and (i.UserInputType == Enum.UserInputType.MouseButton1
+                or i.UserInputType == Enum.UserInputType.Touch) then
+                sliding = false; tween(knob, { Size = UDim2.fromOffset(10, 10) }); saveTpSettings()
+            end
+        end)
+        refresh()
+    end
+
+    do
+        local dragging, dragStart, startPos, dragInput
+        card.Active = true
+        rail.Active, body.Active = true, true
+
+        local function begin(i)
+            if i.UserInputType ~= Enum.UserInputType.MouseButton1
+                and i.UserInputType ~= Enum.UserInputType.Touch then return end
+            dragging, dragStart, startPos = true, i.Position, root.Position
+            i.Changed:Connect(function()
+                if i.UserInputState == Enum.UserInputState.End and dragging then
+                    dragging = false
+                    _G._stp_panelX = root.Position.X.Offset
+                    _G._stp_panelY = root.Position.Y.Offset
+                    saveTpSettings()
+                end
+            end)
+        end
+        local function track(i)
+            if i.UserInputType == Enum.UserInputType.MouseMovement
+                or i.UserInputType == Enum.UserInputType.Touch then dragInput = i end
+        end
+        for _, o in ipairs({ card, rail, body }) do
+            o.InputBegan:Connect(begin)
+            o.InputChanged:Connect(track)
+        end
+        UIS.InputChanged:Connect(function(i)
+            if not dragging or i ~= dragInput then return end
+            local d = i.Position - dragStart
+            root.Position = UDim2.fromOffset(startPos.X.Offset + d.X, startPos.Y.Offset + d.Y)
+        end)
+    end
+
+    local home = tab("Home", 1)
+    local tune = tab("Tuning", 2)
+
+    label(home, "actions", true)
+    action(home, "MANUAL TP", function()
+        task.spawn(function()
+            if diag() == 0 then return end
+            if _G.MeerkoStartSideTP then pcall(_G.MeerkoStartSideTP)
+            else pcall(doVelocityTP, true) end
+        end)
+    end)
+
+    label(home, "general")
+    _G.MeerkoRepaintAutoTP = toggle(home, "AUTO TP",
+        function() return _G.MeerkoAutoTP ~= false end,
+        function() _G.MeerkoAutoTP = not (_G.MeerkoAutoTP ~= false); saveTpSettings() end)
+
+    label(tune, "movement", true)
+    _G.MeerkoRepaintTPSafe = toggle(tune, "TP SAFE MODE",
+        function() return _G.MeerkoTPSafeMode ~= false end,
+        function() _G.MeerkoTPSafeMode = not (_G.MeerkoTPSafeMode ~= false); saveTpSettings() end)
+    for _, s in ipairs({
+        { "TP Velocity",          200,  750, "TPVelocity",        5    },
+        { "Rise Speed",           100,  250, "MeerkoClimb",       5    },
+        { "Go To Brainrot Speed",  80,  600, "MeerkoGoSpeed",     5    },
+        { "Walk Speed",            16,   29, "MeerkoWalkSpeed",   1    },
+        { "Landing Delay",       0.05, 0.75, "LandingDelay",      0.05 },
+        { "100 Studs Base Speed",  20,  400, "MeerkoCloseSpeed",  5    },
+    }) do
+        slider(tune, s[1], s[2], s[3],
+            function() return _G[s[4]] end, function(v) _G[s[4]] = v end, s[5])
+    end
+
+    local pri = tab("Priority", 3)
+    local refreshPri
+
+    label(pri, "add animal", true)
+    do
+        local card2 = shell(pri, 36)
+        stroke(card2)
+        local box = mk("TextBox", card2, {
+            Size = UDim2.new(1, -74, 0, 24), Position = UDim2.fromOffset(10, 6),
+            BackgroundColor3 = UIC.track, BorderSizePixel = 0,
+            Font = UIF, TextSize = 12, TextColor3 = UIC.txt,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            PlaceholderText = "type a name, then Enter", PlaceholderColor3 = UIC.dim,
+            ClearTextOnFocus = false, Text = "", Active = true, ZIndex = 4,
+        })
+        corner(box, 10)
+        mk("UIPadding", box, { PaddingLeft = UDim.new(0, 8), PaddingRight = UDim.new(0, 8) })
+        local addBtn = corner(mk("TextButton", card2, {
+            Size = UDim2.fromOffset(52, 24), Position = UDim2.new(1, -60, 0, 6),
+            BackgroundColor3 = UIC.acc, Text = "ADD", Font = UIFB, TextSize = 11,
+            TextColor3 = UIC.bg, AutoButtonColor = false, Active = true, ZIndex = 4,
+        }), 12)
+        local function doAdd()
+            local name = (box.Text or ""):match("^%s*(.-)%s*$")
+            if name and name ~= "" then
+                table.insert(_G.SHARED_PRIORITY_ITEMS, name)
+                _G.MeerkoPriVersion = (_G.MeerkoPriVersion or 0) + 1
+                pcall(saveTpSettings)
+                box.Text = ""
+                if refreshPri then refreshPri() end
+            end
+        end
+        addBtn.MouseButton1Click:Connect(doAdd)
+        addBtn.MouseEnter:Connect(function() tween(addBtn, { BackgroundColor3 = UIC.txt }) end)
+        addBtn.MouseLeave:Connect(function() tween(addBtn, { BackgroundColor3 = UIC.acc }) end)
+        box.FocusLost:Connect(function(enter) if enter then doAdd() end end)
+    end
+
+    label(pri, "priority  -  top = highest")
+    local rowsHost = mk("Frame", pri, {
+        Size = UDim2.new(1, 0, 0, 0), BackgroundTransparency = 1,
+        AutomaticSize = Enum.AutomaticSize.Y, ZIndex = 2,
+    })
+    mk("UIListLayout", rowsHost, { Padding = UDim.new(0, 5), SortOrder = Enum.SortOrder.LayoutOrder })
+
+    refreshPri = function()
+        for _, c in ipairs(rowsHost:GetChildren()) do
+            if c:IsA("GuiObject") then c:Destroy() end
+        end
+        local L = _G.SHARED_PRIORITY_ITEMS
+        for i = 1, #L do
+            local nm = tostring(L[i])
+            local row = corner(mk("Frame", rowsHost, {
+                Size = UDim2.new(1, 0, 0, 30), BackgroundColor3 = UIC.card,
+                BorderSizePixel = 0, LayoutOrder = i, ZIndex = 2,
+            }), 12)
+            stroke(row)
+            mk("TextLabel", row, {
+                Size = UDim2.new(1, -104, 1, 0), Position = UDim2.fromOffset(12, 0),
+                BackgroundTransparency = 1, Text = i .. ".  " .. nm,
+                Font = UIF, TextSize = 12, TextColor3 = UIC.txt,
+                TextXAlignment = Enum.TextXAlignment.Left,
+                TextTruncate = Enum.TextTruncate.AtEnd, ZIndex = 3,
+            })
+            local function commit()
+                _G.MeerkoPriVersion = (_G.MeerkoPriVersion or 0) + 1
+                pcall(saveTpSettings)
+                refreshPri()
+            end
+            local function mini(xoff, sym, act)
+                local b = corner(mk("TextButton", row, {
+                    Size = UDim2.fromOffset(26, 22), Position = UDim2.new(1, xoff, 0.5, -11),
+                    BackgroundColor3 = UIC.track, Text = sym, Font = UIFB, TextSize = 12,
+                    TextColor3 = UIC.txt, AutoButtonColor = false, Active = true, ZIndex = 3,
+                }), 11)
+                b.MouseEnter:Connect(function() tween(b, { BackgroundColor3 = UIC.line }) end)
+                b.MouseLeave:Connect(function() tween(b, { BackgroundColor3 = UIC.track }) end)
+                b.MouseButton1Click:Connect(act)
+                return b
+            end
+            mini(-98, "\u{25B2}", function() if i > 1 then L[i], L[i - 1] = L[i - 1], L[i]; commit() end end)
+            mini(-68, "\u{25BC}", function() if i < #L then L[i], L[i + 1] = L[i + 1], L[i]; commit() end end)
+            mini(-36, "\u{2715}", function() table.remove(L, i); commit() end)
+        end
+    end
+    tabOpenHook["Priority"] = refreshPri
+
+    selectTab("Home")
+    task.delay(1.5, diag)
+end
+
+do
+    local RunService = game:GetService("RunService")
+    local Lighting   = game:GetService("Lighting")
+    local RS         = game:GetService("ReplicatedStorage")
+    local LP         = game:GetService("Players").LocalPlayer
+
+    local RAG_STATES = {
+        [Enum.HumanoidStateType.Physics]     = true,
+        [Enum.HumanoidStateType.Ragdoll]     = true,
+        [Enum.HumanoidStateType.FallingDown] = true,
+        [Enum.HumanoidStateType.GettingUp]   = true,
+    }
+    local KILL = {
+        BallSocketConstraint = true, NoCollisionConstraint = true, HingeConstraint = true,
+        BodyVelocity = true, BodyPosition = true, BodyGyro = true,
+    }
+
+    local conns, char, hum, hrp, anim, lastVel = {}, nil, nil, nil, nil, Vector3.zero
+
+    local function ragdolled()
+        return hum ~= nil and RAG_STATES[hum:GetState()] == true
+    end
+
+    local function cleanup()
+        if not char then return end
+        pcall(function()
+            for _, o in ipairs(char:GetDescendants()) do
+                if KILL[o.ClassName] then o:Destroy()
+                elseif o:IsA("Motor6D") then o.Enabled = true
+                elseif o:IsA("Attachment") and (o.Name == "A" or o.Name == "B") then o:Destroy() end
+            end
+        end)
+        if anim then
+            for _, t in pairs(anim:GetPlayingAnimationTracks()) do
+                local n = t.Animation and t.Animation.Name:lower() or ""
+                if n:find("rag") or n:find("fall") or n:find("hurt") or n:find("down") then t:Stop(0) end
+            end
+        end
+    end
+
+    local function recover()
+        hum:ChangeState(Enum.HumanoidStateType.Running)
+        cleanup()
+        pcall(function() workspace.CurrentCamera.CameraSubject = hum end)
+        pcall(function()
+            require(LP:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule", 10)):GetControls():Enable()
+        end)
+    end
+
+    local function bind(c)
+        for _, v in pairs(conns) do pcall(function() v:Disconnect() end) end
+        conns = {}
+        char = c
+        hum  = c:WaitForChild("Humanoid", 10)
+        hrp  = c:WaitForChild("HumanoidRootPart", 10)
+        anim = hum and hum:WaitForChild("Animator", 10)
+        lastVel = Vector3.zero
+        if not hum then return end
+
+        conns[#conns + 1] = hum.StateChanged:Connect(function()
+            if ragdolled() then recover() end
+        end)
+        conns[#conns + 1] = c.DescendantAdded:Connect(function()
+            if ragdolled() then cleanup() end
+        end)
+        local f = 0
+        conns[#conns + 1] = RunService.Heartbeat:Connect(function()
+            f = f + 1
+            if f < 6 then return end
+            f = 0
+            if not (ragdolled() and hrp) then return end
+            cleanup()
+            local v = hrp.AssemblyLinearVelocity
+            if (v - lastVel).Magnitude > 40 and v.Magnitude > 25 then
+                hrp.AssemblyLinearVelocity = v.Unit * math.min(v.Magnitude, 15)
+            end
+            lastVel = v
+        end)
+    end
+
+    LP.CharacterAdded:Connect(function(c) pcall(bind, c) end)
+    if LP.Character then pcall(bind, LP.Character) end
+
+    local BAD = { Blue = true, DiscoEffect = true, BeeBlur = true, ColorCorrection = true }
+    local function nuke(o) if o and o.Parent and BAD[o.Name] then pcall(function() o:Destroy() end) end end
+
+    local buzz
+    local function muteBuzz()
+        pcall(function()
+            if not (buzz and buzz.Parent) then
+                local ctl = RS:FindFirstChild("Controllers")
+                local item = ctl and ctl:FindFirstChild("ItemController")
+                local bee = item and item:FindFirstChild("BeeLauncherController")
+                local s = bee and bee:FindFirstChild("Buzzing")
+                if s and s:IsA("Sound") then buzz = s end
+            end
+            if buzz then
+                buzz.Volume = 0
+                if buzz.IsPlaying then buzz:Stop() end
+            end
+        end)
+    end
+
+    task.spawn(function()
+        LP:WaitForChild("PlayerScripts", 8)
+        _G.MeerkoBootWait()
+        Lighting.DescendantAdded:Connect(nuke)
+        do local n = 0
+            for _, o in ipairs(Lighting:GetDescendants()) do
+                n = n + 1; if n % 150 == 0 then task.wait() end
+                nuke(o)
+            end
+        end
+        muteBuzz()
+        local acc = 0
+        RunService.Heartbeat:Connect(function(dt)
+            local cam = workspace.CurrentCamera
+            if cam and math.abs(cam.FieldOfView - 20) < 0.01 then
+                cam.FieldOfView = tonumber(_G.MeerkoFOV) or 70
+            end
+            acc = acc + dt
+            if acc >= 0.5 then acc = 0; muteBuzz() end
+        end)
+    end)
 end
 
 ;(function()
-	local P = {
-		SelectedPetData = nil,
-		AllAnimalsCache = nil,
-		DisableStealSpeed = nil,
-		ListNeedsRedraw = true,
-		AdminButtonCache = {},
-		StealSpeedToggleFunc = nil,
-		_ssUpdateBtn = nil,
-		AdminProxBtn = nil,
-		BalloonedPlayers = {},
-		MobileScaleObjects = {},
-		RefreshMobileScale = nil,
-		MobileActionButtons = {},
-		RefreshMobileActionButtons = nil,
-	}
+    local C = {
+        bg   = Color3.fromRGB(7, 8, 10),
+        bg2  = Color3.fromRGB(12, 13, 16),
+        row  = Color3.fromRGB(16, 17, 20),
+        rowH = Color3.fromRGB(24, 26, 29),
+        line = Color3.fromRGB(38, 40, 44),
+        acc  = Color3.fromRGB(0, 180, 255),
+        acc2 = Color3.fromRGB(100, 210, 255),
+        txt  = Color3.fromRGB(245, 247, 250),
+        dim  = Color3.fromRGB(145, 148, 155),
+    }
+    local FB, FR = Enum.Font.GothamBold, Enum.Font.Gotham
+    local TS = game:GetService("TweenService")
+    local EASE = TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+    local function tw(o, p) TS:Create(o, EASE, p):Play() end
 
-	local _runSyncScannerTick = function(force)
-		local scanned = scanAllPets(true)
-		if type(scanned) ~= "table" then return end
-		if #scanned > 0 then
-			_G.__sabcomEarlyReady = true
-			_G.__sabcomEarlyFrames = (_G.__sabcomEarlyFrames or 0) + 1
-		end
-		local list = _buildStealPetList(scanned, _G.SabcomStealMode)
-		local sig = _stealListSig(list)
-		if sig ~= _stealListSig(_G.SabcomStealPetList) then
-			_G.SabcomStealPetList = list
-			P.AllAnimalsCache = list
-			if type(_G.SabcomOnStealList) == "function" then
-				_G.SabcomOnStealList(list)
-			end
-		end
-	end
-	_G.SabcomRunSyncScanner = _runSyncScannerTick
-	_G.SabcomForceResortList = function()
-		local scanned = scanAllPets(true)
-		if type(scanned) ~= "table" then return end
-		local list = _buildStealPetList(scanned, _G.SabcomStealMode)
-		_G.SabcomStealPetList = list
-		P.AllAnimalsCache = list
-		if type(_G.SabcomOnStealList) == "function" then
-			_G.SabcomOnStealList(list)
-		end
-	end
+    local function mk(cls, parent, props)
+        local o = Instance.new(cls)
+        for k, v in pairs(props or {}) do o[k] = v end
+        o.Parent = parent
+        return o
+    end
+    local function round(o, r) mk("UICorner", o, { CornerRadius = UDim.new(0, r or 8) }) return o end
 
-	local _scanTickLast = 0
-	RunService.Heartbeat:Connect(function()
-		local now = os.clock()
-		if now - _scanTickLast < 0.15 then return end
-		_scanTickLast = now
-		_runSyncScannerTick()
-	end)
+    local host = (gethui and gethui()) or game:GetService("CoreGui")
+        or LP:WaitForChild("PlayerGui")
+    pcall(function()
+        local old = host:FindFirstChild("uiListLayer")
+        if old then old:Destroy() end
+    end)
 
-	local function _normalizeStealPet(pet)
-		if type(pet) ~= "table" then
-			return nil
-		end
-		if pet.plot ~= nil then
-			pet.plot = tostring(pet.plot)
-		end
-		if pet.slot ~= nil then
-			pet.slot = tostring(pet.slot)
-		end
-		if pet.plot and pet.slot then
-			pet.uid = tostring(pet.plot) .. "_" .. tostring(pet.slot)
-		end
-		return pet
-	end
+    local sg = mk("ScreenGui", nil, {
+        Name = "uiListLayer", ResetOnSpawn = false,
+        IgnoreGuiInset = true, DisplayOrder = 999998,
+        ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+    })
+    pcall(function() sg.Parent = host end)
+    if not sg.Parent then sg.Parent = LP:WaitForChild("PlayerGui") end
 
-	local _intendedStealPet = function(pets)
-		pets = pets or _G.SabcomStealPetList
-		if type(pets) ~= "table" then
-			pets = {}
-		end
-		local man = _G.SabcomManualStealUID
-		if type(man) == "string" and man ~= "" then
-			local pet = _findPetByUid(pets, man)
-			if pet and _petAllowed(pet) then
-				return _normalizeStealPet(pet)
-			end
-			return nil
-		end
-		local mode = tostring(_G.SabcomStealMode or "priority"):lower()
-		if mode == "highest" then
-			mode = "value"
-		end
-		local picked = _pickPetByMode(pets, mode)
-		if picked and _petAllowed(picked) then
-			return _normalizeStealPet(picked)
-		end
-		return nil
-	end
+    -- Compact target panel: flat black, no outer rim or shadow.
+    local root = mk("Frame", sg, {
+        Name = "Root", Active = true, BackgroundColor3 = C.bg, BorderSizePixel = 0,
+        -- Wide / tall target panel to match the reference layout.
+        Size = UDim2.fromOffset(
+            tonumber(_G._meerko_tgtW) or 245,
+            tonumber(_G._meerko_tgtH) or 300
+        ),
+        Position = UDim2.fromOffset(tonumber(_G._meerko_tgtX) or 0,
+            tonumber(_G._meerko_tgtY) or 184),
+    })
 
-	local function _applyStealTarget(pet)
-		pet = _normalizeStealPet(pet)
-		if not pet then
-			return nil
-		end
-		if pet.plot and pet.slot then
-			pet.uid = tostring(pet.plot) .. "_" .. tostring(pet.slot)
-		elseif not pet.uid then
-			pet.uid = _petUid(pet)
-		end
-		_G.SabcomStealTarget = pet
-		_G.SabcomSelectedPetData = pet
-		P.SelectedPetData = pet
-		if pet.uid then
-			_G.SabcomStealTargetUID = pet.uid
-		end
-		return pet
-	end
-	_G.SabcomApplyStealTarget = _applyStealTarget
+    mk("UICorner", root, { CornerRadius = UDim.new(0, 12) })
 
-	local function _forceSetPriorityTarget(pets)
-		local best = _intendedStealPet(pets)
-		if not best then
-			_priDbg("noPriPet", "No steal-list pet found")
-			return nil
-		end
-		best = _applyStealTarget(best)
-		if best and _G.__SabcomPriTargetUid ~= best.uid then
-			_G.__SabcomPriTargetUid = best.uid
-			print("[DEBUG] Steal target SET to:", best.uid, best.name)
-			print("[DEBUG] SabcomStealTargetUID:", _G.SabcomStealTargetUID)
-		end
-		return best
-	end
+    local head = mk("TextLabel", root, {
+        Position = UDim2.fromOffset(10, 6), Size = UDim2.new(1, -46, 0, 24),
+        BackgroundTransparency = 1, Text = "TARGETS", Font = FB, TextSize = 14,
+        TextColor3 = C.txt, TextXAlignment = Enum.TextXAlignment.Left,
+    })
+    local count = mk("TextLabel", root, {
+        AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -10, 0, 7),
+        Size = UDim2.fromOffset(24, 18), BackgroundTransparency = 1,
+        Text = "0", Font = FB, TextSize = 11, TextColor3 = C.acc,
+        TextXAlignment = Enum.TextXAlignment.Right,
+    })
+    local modeContainer = mk("Frame", root, {
+        Position = UDim2.fromOffset(10, 43), Size = UDim2.new(1, -20, 0, 29),
+        BackgroundTransparency = 1,
+    })
+    mk("UIListLayout", modeContainer, {
+        Padding = UDim.new(0, 14), FillDirection = Enum.FillDirection.Horizontal,
+        HorizontalAlignment = Enum.HorizontalAlignment.Left,
+    })
+    
+    local modeButtons = {}
+    local lastModeState = nil
+    local function updateAllModes()
+        local currentState = _G.MeerkoStealMode
+        if currentState == lastModeState then return end
+        lastModeState = currentState
+        for _, btnData in ipairs(modeButtons) do
+            local on = currentState == btnData.mode
+            tw(btnData.bg, { BackgroundTransparency = on and 0 or 1 })
+            tw(btnData.btn, { TextColor3 = on and C.txt or C.dim })
+        end
+    end
+    
+    local function modeBtn(txt, mode)
+        local btnBg = mk("Frame", modeContainer, {
+            Size = UDim2.fromOffset(96, 28), BackgroundColor3 = C.row,
+            BorderSizePixel = 0, ZIndex = 1,
+        })
+        mk("UICorner", btnBg, { CornerRadius = UDim.new(0, 12) })
+        local bg = mk("Frame", btnBg, {
+            Size = UDim2.fromScale(1, 1), BackgroundColor3 = C.acc,
+            BackgroundTransparency = 1, BorderSizePixel = 0, ZIndex = 2,
+        })
+        mk("UICorner", bg, { CornerRadius = UDim.new(0, 12) })
+        local btn = mk("TextButton", btnBg, {
+            Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1,
+            Text = txt, Font = FB, TextSize = 10, TextColor3 = C.dim,
+            AutoButtonColor = false, Active = true, ZIndex = 3,
+        })
+        btn.MouseButton1Click:Connect(function()
+            if _G.MeerkoStealMode == mode then
+                _G.MeerkoStealMode = nil
+            else
+                _G.MeerkoStealMode = mode
+            end
+            stealOn = _G.MeerkoStealMode ~= nil
+            saveTpSettings()
+            updateAllModes()
+        end)
+        btn.MouseEnter:Connect(function()
+            if _G.MeerkoStealMode ~= mode then
+                tw(btnBg, { BackgroundColor3 = C.rowH })
+            end
+        end)
+        btn.MouseLeave:Connect(function()
+            if _G.MeerkoStealMode ~= mode then
+                tw(btnBg, { BackgroundColor3 = C.row })
+            end
+        end)
+        table.insert(modeButtons, { btn = btn, bg = bg, mode = mode })
+        return btn
+    end
+    modeBtn("PRIORITY", "priority")
+    modeBtn("NEAREST", "nearest")
 
-	local function _selectPriorityTarget(pets)
-		return _forceSetPriorityTarget(pets)
-	end
+    task.spawn(function()
+        while sg.Parent do
+            updateAllModes()
+            task.wait(0.2)
+        end
+    end)
 
-	local function _readLoadedStealList()
-		local list = _G.SabcomStealPetList
-		if type(list) == "table" and #list > 0 then
-			local pet = _intendedStealPet(list)
-			if _stealPetReady(pet) then
-				return list, pet
-			end
-		end
-		local scanned = scanAllPets(true)
-		if type(scanned) ~= "table" then
-			return list, nil
-		end
-		list = _buildStealPetList(scanned, _G.SabcomStealMode)
-		_G.SabcomStealPetList = list
-		P.AllAnimalsCache = list
-		return list, _intendedStealPet(list)
-	end
+    local list = mk("ScrollingFrame", root, {
+        Position = UDim2.fromOffset(7, 82), Size = UDim2.new(1, -14, 1, -88),
+        BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 0,
+        CanvasSize = UDim2.new(),
+        AutomaticCanvasSize = Enum.AutomaticSize.Y,
+    })
+    mk("UIListLayout", list, { Padding = UDim.new(0, 3), SortOrder = Enum.SortOrder.LayoutOrder })
 
-	local function _waitStealTargetReady(timeout)
-		timeout = tonumber(timeout) or 45
-		local t0 = os.clock()
-		local lastPet, lastPets
-		while os.clock() - t0 < timeout do
-			if _G.SabcomTPStop or _G.__SabcomCancelAutoTP then
-				return nil
-			end
-			local list, pet = _readLoadedStealList()
-			if type(_G.SabcomOnStealList) == "function" then
-				_G.SabcomOnStealList(list or _G.SabcomStealPetList)
-			end
-			if _stealPetReady(pet) then
-				return _applyStealTarget(pet), list
-			end
-			lastPet, lastPets = pet, list
-			RunService.Heartbeat:Wait()
-		end
-		if _stealPetReady(lastPet) then
-			return _applyStealTarget(lastPet), lastPets
-		end
-		return nil, lastPets or _G.SabcomStealPetList
-	end
+    do
+        local on, from, base, tracked
+        head.InputBegan:Connect(function(i)
+            if i.UserInputType ~= Enum.UserInputType.MouseButton1
+                and i.UserInputType ~= Enum.UserInputType.Touch then return end
+            on, from, base = true, i.Position, root.Position
+            i.Changed:Connect(function()
+                if i.UserInputState == Enum.UserInputState.End then
+                    on = false
+                    _G._meerko_tgtX = root.Position.X.Offset
+                    _G._meerko_tgtY = root.Position.Y.Offset
+                    pcall(saveTpSettings)
+                end
+            end)
+        end)
+        head.InputChanged:Connect(function(i)
+            if i.UserInputType == Enum.UserInputType.MouseMovement
+                or i.UserInputType == Enum.UserInputType.Touch then tracked = i end
+        end)
+        UIS.InputChanged:Connect(function(i)
+            if not on or i ~= tracked then return end
+            local d = i.Position - from
+            root.Position = UDim2.fromOffset(base.X.Offset + d.X, base.Y.Offset + d.Y)
+        end)
+    end
 
-	local _syncStealFlags = function()
-		local auto = _G.SabcomAutoSteal == true
-		local mode = tostring(_G.SabcomStealMode or "priority"):lower()
-		if mode == "highest" then
-			mode = "value"
-		end
-		_G.NEAREST_INSTANT_MODE = auto and mode == "nearest"
-		local pet = _intendedStealPet(_G.SabcomStealPetList)
-		if pet then
-			_applyStealTarget(pet)
-		end
-		if auto then
-			if pet then
-				P.SelectedPetData = pet
-			elseif type(_G.SabcomManualStealUID) ~= "string" or _G.SabcomManualStealUID == "" then
-				P.SelectedPetData = nil
-			end
-		else
-			P.SelectedPetData = nil
-			_G.NEAREST_INSTANT_MODE = false
-		end
-	end
-	_G.SabcomSyncNearestInstant = _syncStealFlags
-	_G.SabcomSetAutoStealRuntime = function(enabled)
-		_G.SabcomAutoSteal = enabled == true
-		_syncStealFlags()
-	end
-	_syncStealFlags()
-	_G.SabcomAfterTpLoad(function()
-		while task.wait(0.05) do
-			_syncStealFlags()
-		end
-	end)
+    -- Bottom-right resize handle: drag to change the TARGETS panel size.
+    -- Size is kept inside safe bounds and saved in globals for this session.
+    local resize = mk("TextButton", root, {
+        Name = "ResizeHandle", AnchorPoint = Vector2.new(1, 1),
+        Position = UDim2.new(1, -3, 1, -3), Size = UDim2.fromOffset(18, 18),
+        BackgroundTransparency = 1, BorderSizePixel = 0, Text = "",
+        AutoButtonColor = false, Active = true, ZIndex = 20,
+    })
+    local resizeMark = mk("Frame", resize, {
+        AnchorPoint = Vector2.new(1, 1), Position = UDim2.new(1, 0, 1, 0),
+        Size = UDim2.fromOffset(10, 2), Rotation = -45,
+        BackgroundColor3 = C.dim, BorderSizePixel = 0, ZIndex = 21,
+    })
 
+    do
+        local resizing, from, baseSize
+        resize.InputBegan:Connect(function(i)
+            if i.UserInputType ~= Enum.UserInputType.MouseButton1
+                and i.UserInputType ~= Enum.UserInputType.Touch then return end
+            resizing = true
+            from = i.Position
+            baseSize = root.AbsoluteSize
+            i.Changed:Connect(function()
+                if i.UserInputState == Enum.UserInputState.End then
+                    resizing = false
+                    _G._meerko_tgtW = root.AbsoluteSize.X
+                    _G._meerko_tgtH = root.AbsoluteSize.Y
+                    pcall(saveTpSettings)
+                end
+            end)
+        end)
+        resize.InputChanged:Connect(function(i)
+            if i.UserInputType == Enum.UserInputType.MouseMovement
+                or i.UserInputType == Enum.UserInputType.Touch then
+                tracked = i
+            end
+        end)
+        UIS.InputChanged:Connect(function(i)
+            if not resizing or i ~= tracked then return end
+            local d = i.Position - from
+            local w = math.clamp(baseSize.X + d.X, 205, 520)
+            local h = math.clamp(baseSize.Y + d.Y, 205, 700)
+            root.Size = UDim2.fromOffset(math.floor(w), math.floor(h))
+        end)
+    end
 
-	do
-		if type(fireproximityprompt) ~= "function" then
-			local g = (getgenv and getgenv()) or (getfenv and getfenv())
-			if g then
-				fireproximityprompt = g.fireproximityprompt or g.fireProximityPrompt or g.fire_proximity_prompt
-			end
-		end
-	end
-	_G.__SabcomFirePrompt = fireproximityprompt
+    local function short(n)
+        n = tonumber(n) or 0
+        if n >= 1e9 then return string.format("%.1fB", n / 1e9) end
+        if n >= 1e6 then return string.format("%.1fM", n / 1e6) end
+        if n >= 1e3 then return string.format("%.1fK", n / 1e3) end
+        return string.format("%d", n)
+    end
 
-	do
-		local CONFIG = {
-			AUTO_STEAL = false,
-			RADIUS = math.clamp(tonumber(_G.SabcomAutoGrabRadius) or 50, 10, 150),
-		}
-		local function syncAutoGrabRadius()
-			CONFIG.RADIUS = math.clamp(tonumber(_G.SabcomAutoGrabRadius) or 50, 10, 150)
-		end
-		local function getHRP()
-			local char = LP.Character
-			return char and char:FindFirstChild("HumanoidRootPart")
-		end
-		local function getTargetPetPos()
-			local selected = (P and P.SelectedPetData) or _G.SabcomStealTarget or _G.SabcomSelectedPetData
-			if type(selected) ~= "table" then return nil end
-			if type(_resolveSwitchPet) == "function" then
-				local _, pos = _resolveSwitchPet(selected)
-				if typeof(pos) == "Vector3" then return pos end
-			end
-			if typeof(selected.position) == "Vector3" then return selected.position end
-			return nil
-		end
-		local function getEffectiveGrabRadius(hrpPos)
-			local base = math.clamp(tonumber(_G.SabcomAutoGrabRadius) or 50, 10, 150)
-			if _G.SabcomAutoGrabRadiusAuto ~= true then
-				return base
-			end
-			local radius = base
-			local boostUntil = tonumber(_G.SabcomGrabBoostUntil) or 0
-			if os.clock() < boostUntil or isTeleporting or _goBusy or _G.sabcomStealHold == true then
-				radius = math.max(radius, 130)
-			end
-			local targetPos = getTargetPetPos()
-			if targetPos and typeof(hrpPos) == "Vector3" then
-				local dist = (targetPos - hrpPos).Magnitude
-				radius = math.max(radius, math.min(150, dist + 14))
-			end
-			local hrp = getHRP()
-			if hrp then
-				local spd = hrp.AssemblyLinearVelocity.Magnitude
-				radius = math.max(radius, math.min(150, spd * 0.14 + 22))
-			end
-			return math.clamp(radius, 10, 150)
-		end
-		_G.SabcomSyncAutoGrabRadius = syncAutoGrabRadius
-		_G.SabcomGetEffectiveGrabRadius = getEffectiveGrabRadius
-		local boxes = {
-			{min = Vector3.new(-337.448303, -3.898971, -122.397758), max = Vector3.new(-328.004578, -3.898971, 242.625626)},
-			{min = Vector3.new(-327.257660, -3.899109, -122.228622), max = Vector3.new(-320.600891, -3.899109, 242.612259)},
-			{min = Vector3.new(-319.783386, -3.898970, -122.227089), max = Vector3.new(-312.908325, -3.898970, 242.585617)},
-			{min = Vector3.new(-312.445648, -3.899108, -122.389832), max = Vector3.new(-305.489899, -3.899108, 242.456818)},
-			{min = Vector3.new(-305.037048, -3.898970, -122.230743), max = Vector3.new(-293.957489, -3.898970, 242.606873)},
-			{min = Vector3.new(-491.448608, -3.898972, -122.253258), max = Vector3.new(-481.811737, -3.898972, 242.615005)},
-			{min = Vector3.new(-498.971069, -3.898970, -122.382767), max = Vector3.new(-491.748840, -3.898970, 242.612061)},
-			{min = Vector3.new(-506.436737, -3.898972, -122.411476), max = Vector3.new(-499.318542, -3.898972, 242.615982)},
-			{min = Vector3.new(-513.783569, -3.898972, -122.223297), max = Vector3.new(-506.801849, -3.898972, 242.627090)},
-			{min = Vector3.new(-525.236938, -3.898972, -122.409813), max = Vector3.new(-514.265015, -3.898972, 242.608932)},
-		}
-		local trackedPrompts = {}
-		local lastFire = {}
-		local lastEnableFire = {}
-		local SAFE_POLL_RATE = 0.05
-		local SAFE_POLL_OVERRIDE_UNTIL = 0
-		function _G.getSafePollRate()
-			if os.clock() < SAFE_POLL_OVERRIDE_UNTIL then
-				return 0.27
-			end
-			return SAFE_POLL_RATE
-		end
-		function _G.triggerSafePollBoost()
-			SAFE_POLL_OVERRIDE_UNTIL = os.clock() + 3
-		end
-		local FIRE_DEBOUNCE = 0.12
-		local FIRE_BURST = 4
-		local ENABLE_BURST = 35
-		local ENABLE_DEBOUNCE = 0.00
-		local ENABLE_COOLDOWN = 0.08
+    local _CTP_TOL_X, _CTP_TOL_Z = 62, 58
+    local function _ctpFloorFromY(y)
+        if y >= -6.9 and y <= 8.9 then return 1 end
+        if y >= 11 and y <= 23.15 then return 2 end
+        if y > 23.15 then return 3 end
+        return nil
+    end
+    local function _ctpFloorFromSlot(slot, py)
+        local s = tonumber(slot)
+        if s then
+            if s >= 19 then return 3 end
+            if s >= 11 then return 2 end
+            if s >= 1 then return 1 end
+        end
+        if py then return _ctpFloorFromY(py) end
+        return nil
+    end
+    local function _ctpSameBase(petPos, myPos)
+        local pIdx = getClosestBaseIdx(petPos)
+        local mIdx = getClosestBaseIdx(myPos)
+        if pIdx ~= mIdx then return false end
+        local b = BASES_LOW[mIdx]
+        if not b then return false end
+        return math.abs(myPos.X - b.X) <= _CTP_TOL_X
+           and math.abs(myPos.Z - b.Z) <= _CTP_TOL_Z
+    end
+    local function _ctpAllowed(pet)
+        if not pet or not pet.position then return false end
+        local char = LP.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        if not hrp then return false end
+        local myPos = hrp.Position
+        if not _ctpSameBase(pet.position, myPos) then return false end
+        local myFloor = _ctpFloorFromY(myPos.Y)
+        if not myFloor then return false end
+        local tgtFloor = _ctpFloorFromSlot(pet.slot, pet.position.Y)
+        if not tgtFloor then return false end
+        local diff = tgtFloor - myFloor
+        local up = tonumber(_G.MeerkoClickTPMaxUp) or 3
+        local down = tonumber(_G.MeerkoClickTPMaxDown) or 3
+        return diff <= up and diff >= -down
+    end
 
-		local function getBoxIndex(pos)
-			for i, b in ipairs(boxes) do
-				if pos.X >= math.min(b.min.X, b.max.X) and pos.X <= math.max(b.min.X, b.max.X)
-					and pos.Z >= math.min(b.min.Z, b.max.Z) and pos.Z <= math.max(b.min.Z, b.max.Z) then
-					return i
-				end
-			end
-		end
+    local rows = {}
 
-		local function getPromptPosition(prompt)
-			local p = prompt.Parent
-			if not p then return end
-			if p:IsA("Attachment") and p.Parent then p = p.Parent end
-			if p:IsA("BasePart") then return p.Position elseif p:IsA("Model") then return p:GetPivot().Position end
-		end
+    -- Resolve icon IDs from the game's Mutation/Trait data.
+    local _iconDataCache = {}
+    local function _iconId(v)
+        if v == nil then return nil end
+        if type(v) == "number" then
+            return "rbxassetid://" .. tostring(math.floor(v))
+        end
+        if type(v) == "string" and v ~= "" then
+            if v:match("^rbxassetid://") or v:match("^rbxasset://") or v:match("^https?://") then
+                return v
+            end
+            local n = tonumber(v)
+            if n then return "rbxassetid://" .. tostring(math.floor(n)) end
+        end
+        return nil
+    end
 
-		local promptMatchesSelectedPet = function(prompt)
-			local promptUid = _promptPetUid(prompt)
-			local man = _G.SabcomManualStealUID
-			if type(man) == "string" and man ~= "" then
-				return promptUid ~= nil and tostring(promptUid) == tostring(man)
-			end
-			local selected = (P and P.SelectedPetData) or _G.SabcomStealTarget or _G.SabcomSelectedPetData
-			if type(selected) ~= "table" then return false end
-			local targetUid = selected.uid or _petUid(selected)
-			if selected.plot and selected.slot then
-				targetUid = tostring(selected.plot) .. "_" .. tostring(selected.slot)
-			end
-			if promptUid and targetUid and tostring(promptUid) == tostring(targetUid) then
-				return true
-			end
-			return false
-		end
+    local function _dataModule(name)
+        if _iconDataCache[name] ~= nil then
+            return _iconDataCache[name] or nil
+        end
+        local ok, result = pcall(function()
+            local d = RS:FindFirstChild("Datas")
+            local m = d and d:FindFirstChild(name)
+            return m and require(m)
+        end)
+        if ok and type(result) == "table" then
+            _iconDataCache[name] = result
+            return result
+        end
+        _iconDataCache[name] = false
+        return nil
+    end
 
-		local isPromptAvailable = function(prompt, hrpPos)
-			if _G.SabcomAutoSteal ~= true then return false end
-			if not prompt or not prompt.Parent or not prompt.Enabled then return false end
-			local pos = getPromptPosition(prompt)
-			if not pos then return false end
-			local plots = workspace:FindFirstChild("Plots")
-			if plots then
-				local parentPlot = prompt:FindFirstAncestorWhichIsA("Model")
-				while parentPlot and parentPlot.Parent ~= plots do parentPlot = parentPlot.Parent end
-				if parentPlot then
-					local sign = parentPlot:FindFirstChild("PlotSign")
-					if sign then
-						local gui = sign:FindFirstChildWhichIsA("SurfaceGui", true)
-						local label = gui and gui:FindFirstChildWhichIsA("TextLabel", true)
-						if label then
-							local txt = label.Text:lower()
-							if txt:find(LP.Name:lower(), 1, true) or txt:find(LP.DisplayName:lower(), 1, true) then
-								return false
-							end
-						end
-					end
-				end
-			end
-			local manLocked = type(_G.SabcomManualStealUID) == "string" and _G.SabcomManualStealUID ~= ""
-			if manLocked or _G.NEAREST_INSTANT_MODE ~= true then
-				if not promptMatchesSelectedPet(prompt) then return false end
-			end
-			return (pos - hrpPos).Magnitude <= getEffectiveGrabRadius(hrpPos)
-		end
+    local function _findIcon(data)
+        if type(data) ~= "table" then return nil end
+        for _, key in ipairs({
+            "Icon", "IconId", "IconID", "Image", "ImageId", "ImageID",
+            "Texture", "TextureId", "TextureID", "Thumbnail", "ThumbnailId",
+        }) do
+            local id = _iconId(data[key])
+            if id then return id end
+        end
+        return nil
+    end
 
-		local function canFire(prompt, debounce)
-			local t = os.clock()
-			local last = lastFire[prompt]
-			if last and (t - last) < debounce then return false end
-			lastFire[prompt] = t
-			return true
-		end
+    local function _mutationIcon(name)
+        if not name or name == "" or name == "None" then return nil end
+        local md = _dataModule("Mutations")
+        return md and _findIcon(md[name]) or nil
+    end
 
-		local function firePrompt(prompt, burst, debounce)
-			if not prompt or not prompt.Parent or not prompt.Enabled or not canFire(prompt, debounce) then return end
-			local fireFn = fireproximityprompt or _G.__SabcomFirePrompt
-			if type(fireFn) ~= "function" then return end
-			for _ = 1, burst do
-				fireFn(prompt, 0) 
-			end
-		end
+    local function _traitIcon(name)
+        if not name or name == "" then return nil end
+        local td = _dataModule("Traits")
+        return td and _findIcon(td[name]) or nil
+    end
 
-		local function trackPrompt(prompt)
-			if trackedPrompts[prompt] then return end
-			trackedPrompts[prompt] = true
-			local function tryInstantEnableFire()
-				if _G.SabcomAutoSteal ~= true then return end
-				local hrp = getHRP()
-				if hrp and isPromptAvailable(prompt, hrp.Position) then
-					CONFIG.AUTO_STEAL = true
-					local now = os.clock()
-					local le = lastEnableFire[prompt]
-					if not le or (now - le) >= ENABLE_COOLDOWN then
-						lastEnableFire[prompt] = now
-						firePrompt(prompt, ENABLE_BURST, ENABLE_DEBOUNCE)
-					end
-				end
-			end
-			task.defer(tryInstantEnableFire)
-			do
-				prompt:GetPropertyChangedSignal("Enabled"):Connect(function()
-					if prompt.Enabled then tryInstantEnableFire() end
-				end)
-			end
-			prompt.AncestryChanged:Connect(function()
-				if not prompt:IsDescendantOf(workspace) then
-					trackedPrompts[prompt] = nil
-					lastFire[prompt] = nil
-					lastEnableFire[prompt] = nil
-				end
-			end)
-		end
+    local function _clearIcons(holder)
+        for _, child in ipairs(holder:GetChildren()) do
+            if child:IsA("ImageLabel") then child:Destroy() end
+        end
+    end
 
-		local function scanBrainrotPrompts()
-			local plots = workspace:FindFirstChild("Plots")
-			if not plots then return end
-			for _, plot in ipairs(plots:GetChildren()) do
-				local podiums = plot:FindFirstChild("AnimalPodiums")
-				if podiums then
-					for _, podium in ipairs(podiums:GetChildren()) do
-						local prompt = select(1, _stealPromptForSlot(plot, podium.Name))
-						if prompt then trackPrompt(prompt) end
-					end
-				end
-			end
-		end
+    local function _addIcon(holder, image, order)
+        if not image then return end
+        mk("ImageLabel", holder, {
+            Size = UDim2.fromOffset(13, 13),
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Image = image,
+            ScaleType = Enum.ScaleType.Fit,
+            LayoutOrder = order or 1,
+        })
+    end
 
-		_G.SabcomAfterTpLoad(function()
-			scanBrainrotPrompts()
-			workspace.DescendantAdded:Connect(function(obj)
-				if obj.ClassName ~= "ProximityPrompt" then return end
-				if obj:FindFirstAncestor("AnimalPodiums") then
-					trackPrompt(obj)
-				end
-			end)
-			task.spawn(function()
-				while task.wait(2) do
-					scanBrainrotPrompts()
-				end
-			end)
-			task.spawn(function()
-				while task.wait(_G.getSafePollRate()) do
-					_G.NEAREST_INSTANT_MODE = (_G.SabcomAutoSteal == true and tostring(_G.SabcomStealMode or ""):lower() == "nearest")
-					if _G.SabcomAutoSteal == true then
-						local hrp = getHRP()
-						if not hrp then
-							CONFIG.AUTO_STEAL = false
-						else
-							local myPos = hrp.Position
-							local anyAvailable = false
-							for prompt in pairs(trackedPrompts) do
-								if isPromptAvailable(prompt, myPos) then
-									anyAvailable = true
-									if CONFIG.AUTO_STEAL then
-										firePrompt(prompt, FIRE_BURST, FIRE_DEBOUNCE)
-									end
-								end
-							end
-							CONFIG.AUTO_STEAL = anyAvailable
-						end
-					else
-						CONFIG.AUTO_STEAL = false
-					end
-				end
-			end)
-		end)
-		_G.SabcomScanBrainrotPrompts = scanBrainrotPrompts
-		_G.SabcomGetBoxIndex = getBoxIndex
-	end
+    local function rowFor(uid)
+        local r = rows[uid]
+        if r and r.card.Parent then return r end
 
-	do
-		local guiParent
-		guiParent = game:GetService("CoreGui") 
-		if guiParent then
-			local existing = guiParent:FindFirstChild("AutoStealCurrentTargetHUD")
-				if existing then existing:Destroy() end
-				local pg = LP:FindFirstChild("PlayerGui")
-				local oldPg = pg and pg:FindFirstChild("AutoStealCurrentTargetHUD")
-				if oldPg then oldPg:Destroy() end
-				if gethui then
-					local h = gethui()
-					local oldH = h and h:FindFirstChild("AutoStealCurrentTargetHUD")
-					if oldH and oldH ~= existing then oldH:Destroy() end
-				end
-			local hudGui = Instance.new("ScreenGui")
-			hudGui.Name = "AutoStealCurrentTargetHUD"
-			hudGui.ResetOnSpawn = false
-			hudGui.IgnoreGuiInset = true
-			hudGui.DisplayOrder = 998
-			hudGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-			hudGui.Parent = guiParent
-			local SKY = Color3.fromRGB(100, 160, 255)
-			local SKY2 = Color3.fromRGB(160, 210, 255)
-			local WHITE = Color3.fromRGB(240, 248, 255)
-			local TRACK = Color3.fromRGB(180, 220, 255)
-			local mobileScale = UIS.TouchEnabled and 0.7 or 1
-			local targetHud = Instance.new("Frame")
-			targetHud.Name = "CurrentTargetHUD"
-			targetHud.AnchorPoint = Vector2.new(0.5, 1)
-			targetHud.Size = UDim2.new(0, 400 * mobileScale, 0, 34 * mobileScale)
-			targetHud.Position = UDim2.new(0.5, 0, 1, -78)
-			targetHud.BackgroundTransparency = 1
-			targetHud.BorderSizePixel = 0
-			targetHud.ZIndex = 70
-			targetHud.Parent = hudGui
-			local hudName = Instance.new("TextLabel", targetHud)
-			hudName.Name = "TargetName"
-			hudName.Size = UDim2.new(1, -56 * mobileScale, 0, 16 * mobileScale)
-			hudName.Position = UDim2.fromOffset(0, 0)
-			hudName.BackgroundTransparency = 1
-			hudName.Font = Enum.Font.GothamBold
-			hudName.TextSize = 14 * mobileScale
-			hudName.TextColor3 = WHITE
-			hudName.TextStrokeColor3 = Color3.new(0, 0, 0)
-			hudName.TextStrokeTransparency = 0.25
-			hudName.TextXAlignment = Enum.TextXAlignment.Left
-			hudName.TextTruncate = Enum.TextTruncate.AtEnd
-			hudName.ZIndex = 72
-			hudName.Text = "STEAL ..."
-			local hudPercent = Instance.new("TextLabel", targetHud)
-			hudPercent.Name = "Percent"
-			hudPercent.Size = UDim2.new(0, 52 * mobileScale, 0, 16 * mobileScale)
-			hudPercent.Position = UDim2.new(1, -52 * mobileScale, 0, 0)
-			hudPercent.BackgroundTransparency = 1
-			hudPercent.Font = Enum.Font.GothamBold
-			hudPercent.TextSize = 14 * mobileScale
-			hudPercent.TextColor3 = SKY
-			hudPercent.TextStrokeColor3 = Color3.new(0, 0, 0)
-			hudPercent.TextStrokeTransparency = 0.25
-			hudPercent.TextXAlignment = Enum.TextXAlignment.Right
-			hudPercent.ZIndex = 74
-			hudPercent.Text = "0%"
-			local hudProgressBg = Instance.new("Frame", targetHud)
-			hudProgressBg.Name = "ProgressBg"
-			hudProgressBg.Size = UDim2.new(1, 0, 0, 7 * mobileScale)
-			hudProgressBg.Position = UDim2.fromOffset(0, 20 * mobileScale)
-			hudProgressBg.BackgroundColor3 = TRACK
-			hudProgressBg.BackgroundTransparency = 0.12
-			hudProgressBg.BorderSizePixel = 0
-			hudProgressBg.ZIndex = 72
-			Instance.new("UICorner", hudProgressBg).CornerRadius = UDim.new(0, 2)
-			local hudProgressBgStroke = Instance.new("UIStroke", hudProgressBg)
-			hudProgressBgStroke.Color = Color3.fromRGB(120, 180, 255)
-			hudProgressBgStroke.Thickness = 1
-			hudProgressBgStroke.Transparency = 0.15
-			local hudProgressFill = Instance.new("Frame", hudProgressBg)
-			hudProgressFill.Name = "ProgressFill"
-			hudProgressFill.Size = UDim2.new(0, 0, 1, 0)
-			hudProgressFill.BackgroundColor3 = SKY
-			hudProgressFill.BorderSizePixel = 0
-			hudProgressFill.ZIndex = 73
-			Instance.new("UICorner", hudProgressFill).CornerRadius = UDim.new(0, 2)
-			local hudProgressFillGradient = Instance.new("UIGradient", hudProgressFill)
-			hudProgressFillGradient.Color = ColorSequence.new({
-				ColorSequenceKeypoint.new(0, SKY),
-				ColorSequenceKeypoint.new(1, SKY2),
-			})
-			local function _stealHudName()
-				local status = _G.Sabcom_StealStatus or {}
-				if status.target and status.target.name and tostring(status.target.name) ~= "" then
-					return tostring(status.target.name)
-				end
-				local p = _G.SabcomStealTarget
-				if type(p) == "table" and p.name and tostring(p.name) ~= "" then
-					return tostring(p.name)
-				end
-				return "..."
-			end
-			RunService.RenderStepped:Connect(function()
-				local nm = _stealHudName()
-				hudName.Text = "STEAL " .. nm
-				hudProgressFill.BackgroundColor3 = SKY
-				if LP:GetAttribute("Stealing") then
-					hudProgressFill.Size = UDim2.new(1, 0, 1, 0)
-					hudPercent.Text = "100%"
-					return
-				end
-				local status = _G.Sabcom_StealStatus or {}
-				if status.active then
-					local p = math.clamp((tick() - (status.start or 0)) / (status.duration or 1.3), 0, 1)
-					hudProgressFill.Size = UDim2.new(p, 0, 1, 0)
-					hudPercent.Text = math.floor(p * 100) .. "%"
-				else
-					hudProgressFill.Size = UDim2.new(0, 0, 1, 0)
-					hudPercent.Text = "0%"
-				end
-			end)
-			_G.SabcomHubStealHud = true
-			_G.SabcomStealBarFill = hudProgressFill
-			_G.SabcomStealBarName = hudName
-			_G.SabcomStealBar = targetHud
-		end
-	end
+        local card = mk("Frame", list, {
+            Size = UDim2.new(1, 0, 0, 38), BackgroundColor3 = C.row,
+            BorderSizePixel = 0, Active = true,
+        })
+        mk("UICorner", card, { CornerRadius = UDim.new(0, 4) })
 
-	do
-		local wG = Instance.new("Frame")
-		wG.Size = UDim2.new(0, 0, 1, 0)
-		wG.BackgroundTransparency = 0
-		local TweenService = game:GetService("TweenService")
-		local barTween
-		RunService.Heartbeat:Connect(function()
-			if _G.SabcomHubStealHud then return end
-			local fill = _G.SabcomStealBarFill
-			if fill then
-				fill.Size = wG.Size
-				fill.BackgroundTransparency = wG.BackgroundTransparency
-			end
-		end)
-		local MG = setmetatable({}, {
-			__newindex = function(_, k, v)
-				if k == "Text" then
-					if _G.SabcomHubStealHud then return end
-					local lbl = _G.SabcomStealBarName
-					if lbl then lbl.Text = v end
-				end
-			end,
-			__index = function()
-				return ""
-			end,
-		})
+        local idx = mk("TextLabel", card, {
+            Position = UDim2.fromOffset(7, 0), Size = UDim2.fromOffset(14, 38),
+            BackgroundTransparency = 1, Text = "1", Font = FR, TextSize = 9,
+            TextColor3 = C.dim, TextXAlignment = Enum.TextXAlignment.Center,
+            TextYAlignment = Enum.TextYAlignment.Center, ZIndex = 2,
+        })
 
-		local PromptMemoryCache = {}
-		local InternalStealCache = {}
-		local STEAL_HOLD_DURATION = 1.3
-		local STEAL_PROXIMITY = 60
-		local _stealHoldStart = 0
-		local _stealHoldActive = false
-		local iG, OG = 1, nil
+        local bg = mk("Frame", card, {
+            Size = UDim2.fromScale(1, 1), BackgroundColor3 = C.acc,
+            BackgroundTransparency = 1, BorderSizePixel = 0,
+        })
+        
 
-		local function _pushFlags()
-			_syncStealFlags()
-		end
+        local bar = nil
 
-		local function buildStealCallbacks(prompt)
-			if InternalStealCache[prompt] then return end
-			if not prompt or not prompt.Parent then return end
-			local data = { holdCallbacks = {}, triggerCallbacks = {}, holdEndCallbacks = {}, ready = true }
-			local function grab(sig, into)
-				local conns = getconnections(sig)
-				if type(conns) == "table" then
-					for _, c in ipairs(conns) do
-						if type(c.Function) == "function" then table.insert(into, c.Function) end
-					end
-				end
-			end
-			grab(prompt.PromptButtonHoldBegan, data.holdCallbacks)
-			grab(prompt.Triggered, data.triggerCallbacks)
-			grab(prompt.PromptButtonHoldEnded, data.holdEndCallbacks)
-			if #data.holdCallbacks > 0 or #data.triggerCallbacks > 0 or #data.holdEndCallbacks > 0 then
-				InternalStealCache[prompt] = data
-			end
-		end
+        local nm = mk("TextLabel", card, {
+            Position = UDim2.fromOffset(28, 4), Size = UDim2.new(1, -100, 0, 15),
+            BackgroundTransparency = 1, Font = FB, TextSize = 11, TextColor3 = C.txt,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            TextTruncate = Enum.TextTruncate.AtEnd, Text = "", ZIndex = 2,
+        })
 
-		local STEAL_STAGE_FRAC = 0.8
-		local STEAL_ARRIVE_DIST = 14
+        local iconHolder = mk("Frame", card, {
+            Position = UDim2.fromOffset(28, 20), Size = UDim2.new(1, -100, 0, 14),
+            BackgroundTransparency = 1, ZIndex = 2,
+        })
+        mk("UIListLayout", iconHolder, {
+            FillDirection = Enum.FillDirection.Horizontal,
+            HorizontalAlignment = Enum.HorizontalAlignment.Left,
+            VerticalAlignment = Enum.VerticalAlignment.Center,
+            Padding = UDim.new(0, 2),
+            SortOrder = Enum.SortOrder.LayoutOrder,
+        })
 
-		local function _stealPromptPos(prompt)
-			if not prompt or not prompt.Parent then return nil end
-			local p = prompt.Parent
-			if p:IsA("Attachment") and p.Parent then p = p.Parent end
-			if p:IsA("BasePart") then return p.Position end
-			if p:IsA("Model") then return p:GetPivot().Position end
-			return nil
-		end
+        local sub = mk("TextLabel", card, {
+            AnchorPoint = Vector2.new(1, 0.5),
+            Position = UDim2.new(1, -9, 0, 19),
+            Size = UDim2.fromOffset(72, 16),
+            BackgroundTransparency = 1, Font = FB, TextSize = 10, TextColor3 = C.acc,
+            TextXAlignment = Enum.TextXAlignment.Right, Text = "", ZIndex = 2,
+        })
 
-		local function _atBrainrotPrompt(prompt)
-			local char = LP.Character
-			local hrp = char and char:FindFirstChild("HumanoidRootPart")
-			local pos = _stealPromptPos(prompt)
-			if not hrp or not pos then return false end
-			return (hrp.Position - pos).Magnitude <= STEAL_ARRIVE_DIST
-		end
+        local hit = mk("TextButton", card, {
+            Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1, Text = "",
+            AutoButtonColor = false, Active = true, ZIndex = 3,
+        })
 
-		local function _releaseStealHold(prompt, data, trigger)
-			if not prompt or not prompt.Parent then
-				for _, fn in ipairs(data.holdEndCallbacks) do task.spawn(fn) end
-				return
-			end
-			if trigger then
-				for _, fn in ipairs(data.triggerCallbacks) do task.spawn(fn) end
-			end
-			do
-				if prompt.InputHoldEnd then prompt:InputHoldEnd() end
-			end
-			for _, fn in ipairs(data.holdEndCallbacks) do task.spawn(fn) end
-		end
+        r = {
+            card = card, bg = bg, bar = bar, idx = idx, name = nm, sub = sub,
+            icons = iconHolder, hit = hit, lastLocked = false,
+        }
+        rows[uid] = r
+        return r
+    end
 
-		local function executeStealAsync(prompt)
-			local data = InternalStealCache[prompt]
-			if not data or not data.ready then return false end
-			if _stealHoldActive and (tick() - _stealHoldStart) < (STEAL_HOLD_DURATION + 1) then
-				return false
-			end
-			data.ready = false
-			_stealHoldStart = tick()
-			_stealHoldActive = true
-			local holdDur = tonumber(_G.SabcomStealHoldDuration) or STEAL_HOLD_DURATION
-			local stageSteal = _G.SabcomAutoGrabRadiusAuto == true
-			local stageFrac = STEAL_STAGE_FRAC
-			_G.Sabcom_StealStatus = _G.Sabcom_StealStatus or {}
-			_G.Sabcom_StealStatus.active = true
-			_G.Sabcom_StealStatus.start = _stealHoldStart
-			_G.Sabcom_StealStatus.duration = holdDur
-			task.spawn(function()
-				for _, fn in ipairs(data.holdCallbacks) do task.spawn(fn) end
-				do
-					if prompt.InputHoldBegin then prompt:InputHoldBegin() end
-				end
-				if barTween then barTween:Cancel() end
-				wG.Size = UDim2.new(0, 0, 1, 0)
-				wG.BackgroundTransparency = 0
+    task.spawn(function()
+        local _pd = tonumber(_G.MeerkoPanelStartDelay) or 0
+        if _pd > 0 then task.wait(_pd) end
+        local _filled = false
+        local _panelT0 = os.clock()
+        while sg.Parent do
+            local _pw = os.clock()
+            while _filled
+                and (_G.MeerkoStealHold or (_G.MeerkoIsTeleporting and _G.MeerkoIsTeleporting()))
+                and os.clock() - _pw < (tonumber(_G.MeerkoPanelPauseMax) or 3) do
+                task.wait(0.2)
+            end
+            local ok, pets = pcall(scanAllPets)
+            if ok and type(pets) == "table" then
+                local seen = {}
+                for i, p in ipairs(pets) do
+                    if not p.conveyor then
+                        local uid = _petUid(p)
+                        seen[uid] = true
+                        local r = rowFor(uid)
+                        r.pet = p
+                        r.card.LayoutOrder = i
+                        if r.idx then r.idx.Text = tostring(i) end
+                        r.name.Text = tostring(p.name or "?")
+                        r.sub.Text = "$" .. short(p.mps or 0) .. "/s"
 
-				local firstWait = stageSteal and (holdDur * stageFrac) or holdDur
-				local firstGoal = stageSteal and stageFrac or 1
-				barTween = TweenService:Create(
-					wG,
-					TweenInfo.new(firstWait, Enum.EasingStyle.Linear),
-					{ Size = UDim2.new(firstGoal, 0, 1, 0) }
-				)
-				barTween:Play()
-				if firstWait > 0 then task.wait(firstWait) end
+                        -- Mutation + Traits: icons only, shown below the brainrot name.
+                        _clearIcons(r.icons)
+                        local _io = 0
+                        local _mi = _mutationIcon(p.mutation)
+                        if _mi then
+                            _io = _io + 1
+                            _addIcon(r.icons, _mi, _io)
+                        end
+                        if type(p.traits) == "table" then
+                            for _, tr in ipairs(p.traits) do
+                                local _ti = _traitIcon(tr)
+                                if _ti then
+                                    _io = _io + 1
+                                    _addIcon(r.icons, _ti, _io)
+                                end
+                            end
+                        end
+                        local locked = (_G.MeerkoStealTargetUID == uid)
+                        if locked ~= r.lastLocked then
+                            r.lastLocked = locked
+                            tw(r.bg, { BackgroundTransparency = 1 })
+                            -- No left accent bar.
+                            tw(r.card, { BackgroundColor3 = C.row })
+                        end
+                        if not r.wired then
+                            r.wired = true
+                            local myUid = uid
+                            local _crow = r
+                            r.hit.MouseButton1Click:Connect(function()
+                                if _G.MeerkoStealTargetUID == myUid then
+                                    _G.MeerkoStealTargetUID = nil
+                                    _G.MeerkoStealTarget = nil
+                                else
+                                    _G.MeerkoStealTargetUID = myUid
+                                    local pet = _crow.pet
+                                    do
+                                        local okS, fresh = pcall(scanAllPets)
+                                        if okS and type(fresh) == "table" then
+                                            for _, fp in ipairs(fresh) do
+                                                if _petUid(fp) == myUid then pet = fp break end
+                                            end
+                                        end
+                                    end
+                                    if pet and pet.position and not isTeleporting
+                                        and not _G.MeerkoClickTPBusy
+                                        and _ctpAllowed(pet) then
+                                        _G.MeerkoClickTPBusy = true
+                                        isTeleporting = true
+                                        if _G.MeerkoArmSteal then pcall(_G.MeerkoArmSteal, pet) end
+                                        task.spawn(function()
+                                            pcall(function()
+                                                goToBrainrot(pet.position, pet.slot)
+                                            end)
+                                            isTeleporting = false
+                                            _G.MeerkoClickTPBusy = false
+                                        end)
+                                    end
+                                end
+                            end)
+                            r.hit.MouseEnter:Connect(function()
+                                if _G.MeerkoStealTargetUID ~= myUid then
+                                    tw(r.card, { BackgroundColor3 = C.rowH })
+                                end
+                            end)
+                            r.hit.MouseLeave:Connect(function()
+                                if _G.MeerkoStealTargetUID ~= myUid then
+                                    tw(r.card, { BackgroundColor3 = C.row })
+                                end
+                            end)
+                        end
+                    end
+                end
+                local n = 0
+                for uid, r in pairs(rows) do
+                    if seen[uid] then n = n + 1
+                    else r.card:Destroy() rows[uid] = nil end
+                end
+                count.Text = tostring(n)
+                if n > 0 then _filled = true end
+            end
+            if not _filled and (os.clock() - _panelT0) < (tonumber(_G.MeerkoPanelRush) or 10) then
+                task.wait(tonumber(_G.MeerkoPanelRushGap) or 0.05)
+            else
+                task.wait(tonumber(_G.MeerkoPanelScanGap) or 0.4)
+            end
+        end
+    end)
 
-				if stageSteal and not _atBrainrotPrompt(prompt) then
-					if _G.Sabcom_StealStatus then
-						_G.Sabcom_StealStatus.start = tick() - holdDur * stageFrac
-						_G.Sabcom_StealStatus.duration = holdDur
-					end
-					local deadline = tick() + 22
-					while tick() < deadline do
-						if not prompt or not prompt.Parent then break end
-						if LP:GetAttribute("Stealing") then break end
-						if _G.sabcomTPStop then break end
-						if _atBrainrotPrompt(prompt) then break end
-						task.wait(0.05)
-					end
-				end
-
-				local remain = stageSteal and (holdDur * (1 - stageFrac)) or 0
-				if remain > 0 then
-					if _G.Sabcom_StealStatus then
-						_G.Sabcom_StealStatus.start = tick() - holdDur * stageFrac
-						_G.Sabcom_StealStatus.duration = holdDur
-					end
-					if barTween then barTween:Cancel() end
-					wG.Size = UDim2.new(stageFrac, 0, 1, 0)
-					barTween = TweenService:Create(
-						wG,
-						TweenInfo.new(remain, Enum.EasingStyle.Linear),
-						{ Size = UDim2.new(1, 0, 1, 0) }
-					)
-					barTween:Play()
-					task.wait(remain)
-				end
-
-				local ok = prompt and prompt.Parent and (not stageSteal or _atBrainrotPrompt(prompt) or LP:GetAttribute("Stealing"))
-				_releaseStealHold(prompt, data, ok)
-				_stealHoldActive = false
-				if _G.Sabcom_StealStatus then _G.Sabcom_StealStatus.active = false end
-				task.wait(0.05)
-				data.ready = true
-			end)
-			return true
-		end
-
-		local findStealPrompt = function(pet)
-			if not pet then return nil end
-			if pet.prompt and pet.prompt.Parent then return pet.prompt end
-			local uid = pet.uid or (pet.plot and pet.slot and (tostring(pet.plot) .. "_" .. tostring(pet.slot)))
-			local cached = uid and PromptMemoryCache[uid]
-			if cached and cached.Parent then return cached end
-			if pet.plot and pet.slot then
-				local plots = workspace:FindFirstChild("Plots")
-				local plot = plots and plots:FindFirstChild(tostring(pet.plot))
-				local podiums = plot and plot:FindFirstChild("AnimalPodiums")
-				local podium = podiums and podiums:FindFirstChild(tostring(pet.slot))
-				if podium then
-					local base = podium:FindFirstChild("Base")
-					local spawn = base and base:FindFirstChild("Spawn")
-					local attach = spawn and spawn:FindFirstChild("PromptAttachment")
-					if attach then
-						for _, p in ipairs(attach:GetChildren()) do
-							if p:IsA("ProximityPrompt") then
-								if uid then PromptMemoryCache[uid] = p end
-								return p
-							end
-						end
-					end
-					for _, d in ipairs(podium:GetDescendants()) do
-						if d:IsA("ProximityPrompt") then
-							if uid then PromptMemoryCache[uid] = d end
-							return d
-						end
-					end
-				end
-			end
-			if pet.model and pet.model.Parent then
-				for _, d in ipairs(pet.model:GetDescendants()) do
-					if d:IsA("ProximityPrompt") then return d end
-				end
-			end
-			return nil
-		end
-
-		local function _petStillExists(sel, pets)
-			if not sel or type(pets) ~= "table" then return nil end
-			for _, p in ipairs(pets) do
-				if p and p.plot == sel.plot and tostring(p.slot) == tostring(sel.slot) then return p end
-			end
-			return nil
-		end
-
-		local autoGrab = function(prompt)
-			if not prompt or not prompt.Parent or not prompt.Enabled then return false end
-			local fireFn = fireproximityprompt or _G.__SabcomFirePrompt
-			if type(fireFn) ~= "function" then return false end
-			local now = os.clock()
-			if now - (tonumber(_G.__SabcomPriBurstAt) or 0) < 0.08 then return false end
-			_G.__SabcomPriBurstAt = now
-			for _ = 1, 35 do fireFn(prompt, 0) end
-			return true
-		end
-
-		local function timeUntilCanSteal()
-			if LP:GetAttribute("Stealing") or LP:GetAttribute("IsTrading")
-				or LP:GetAttribute("IsDuelSelecting") or LP:GetAttribute("Web") then
-				return -1
-			end
-			return 0
-		end
-
-		local _stealLastScan = 0
-		RunService.Heartbeat:Connect(function()
-			if not _G.__sabcomRestReady then return end
-			if _G.SabcomAutoSteal ~= true then return end
-			local man = _G.SabcomManualStealUID
-			local pet = _intendedStealPet(_G.SabcomStealPetList)
-			if type(pet) ~= "table" then
-				pet = _G.SabcomStealTarget or _G.SabcomSelectedPetData or (P and P.SelectedPetData)
-			end
-			if type(pet) ~= "table" or not _petAllowed(pet) then return end
-			if type(man) == "string" and man ~= "" then
-				local uid = (pet.plot and pet.slot and (tostring(pet.plot) .. "_" .. tostring(pet.slot))) or tostring(pet.uid or "")
-				if uid ~= man then return end
-			end
-			local now = os.clock()
-			if now - _stealLastScan < 0.067 then return end
-			_stealLastScan = now
-			local t = timeUntilCanSteal()
-			if t == -1 then return end
-			if t > 0 and t > STEAL_HOLD_DURATION then return end
-			local char = LP.Character
-			local hrp = char and char:FindFirstChild("HumanoidRootPart")
-			if not hrp then return end
-			local prompt = findStealPrompt(pet)
-			if not prompt or not prompt.Parent then return end
-			local pp = prompt.Parent
-			local ppPos = (pp and pp:IsA("BasePart") and pp.Position)
-				or (pp and pp.Parent and pp.Parent:IsA("BasePart") and pp.Parent.Position)
-				or (pp and pp:IsA("Attachment") and pp.Parent and pp.Parent:IsA("BasePart") and pp.Parent.Position)
-			if ppPos and (hrp.Position - ppPos).Magnitude > STEAL_PROXIMITY then return end
-			local oldMax
-			oldMax = prompt.MaxActivationDistance 
-			prompt.MaxActivationDistance = math.huge 
-			autoGrab(prompt)
-			buildStealCallbacks(prompt)
-			if InternalStealCache[prompt] then
-				executeStealAsync(prompt)
-			end
-			if oldMax ~= nil then prompt.MaxActivationDistance = oldMax end
-			MG.Text = string.format("%s - %s", pet.name or "Unknown", pet.genText or pet.mpsText or "")
-		end)
-
-		local _promptCache = PromptMemoryCache
-		local _stealTarget = nil
-		local hl
-
-		local function _clearPromptCache(plotName)
-			if plotName then
-				local prefix = tostring(plotName) .. "_"
-				for uid in pairs(_promptCache) do
-					if string.sub(tostring(uid), 1, #prefix) == prefix then
-						_promptCache[uid] = nil
-					end
-				end
-			else
-				table.clear(_promptCache)
-			end
-		end
-
-		local function _watchPlotSign(plot)
-			if not plot or plot:GetAttribute("SabcomPlotWatch") then return end
-			plot:SetAttribute("SabcomPlotWatch", true)
-			task.spawn(function()
-				local sign = plot:WaitForChild("PlotSign", 15)
-				if not sign then return end
-				local function onSignChange()
-					_bustScanCache()
-					_clearPromptCache(plot.Name)
-					if type(_G.SabcomRefreshStealTarget) == "function" then
-						task.defer(_G.SabcomRefreshStealTarget)
-					end
-				end
-				local gui = sign:FindFirstChildWhichIsA("SurfaceGui", true)
-				local label = gui and gui:FindFirstChildWhichIsA("TextLabel", true)
-				if label then
-					label:GetPropertyChangedSignal("Text"):Connect(onSignChange)
-				end
-				sign.DescendantAdded:Connect(function(ch)
-					if ch:IsA("TextLabel") then
-						ch:GetPropertyChangedSignal("Text"):Connect(onSignChange)
-					end
-				end)
-			end)
-		end
-
-		local plotsFolder = workspace:FindFirstChild("Plots")
-		if plotsFolder then
-			for _, plot in ipairs(plotsFolder:GetChildren()) do
-				_watchPlotSign(plot)
-			end
-			plotsFolder.ChildAdded:Connect(function(plot)
-				_bustScanCache()
-				_watchPlotSign(plot)
-				task.delay(0.35, function()
-					if type(_G.SabcomRefreshStealTarget) == "function" then
-						_G.SabcomRefreshStealTarget()
-					end
-				end)
-			end)
-		end
-
-		Players.PlayerAdded:Connect(function()
-			_bustScanCache()
-			_clearPromptCache()
-			if type(_G.triggerSafePollBoost) == "function" then _G.triggerSafePollBoost() end
-			for _, delay in ipairs({ 0.35, 1, 2.5, 5 }) do
-				task.delay(delay, function()
-					if type(_G.SabcomRefreshStealTarget) == "function" then
-						_G.SabcomRefreshStealTarget()
-					end
-				end)
-			end
-		end)
-
-		local function _samePet(a, b)
-			if not a or not b then return false end
-			return tostring(a.plot) == tostring(b.plot) and tostring(a.slot) == tostring(b.slot)
-		end
-
-		local function _setHighlight(pet)
-			if hl and hl.Parent then
-				if pet and pet.model and hl.Parent == pet.model then return end
-				hl:Destroy() 
-				hl = nil
-			end
-			if not pet or not pet.model or not pet.model.Parent then return end
-			local h = Instance.new("Highlight")
-			h.Name = "SabcomStealHL"
-			h.FillColor = Color3.fromRGB(200, 200, 200)
-			h.OutlineColor = Color3.fromRGB(255, 255, 255)
-			h.FillTransparency = 0.7
-			h.OutlineTransparency = 0.2
-			h.Adornee = pet.model
-			h.Parent = pet.model
-			hl = h
-		end
-
-		local function armSteal(pet)
-			pet = _normalizeStealPet(pet)
-			_stealTarget = pet
-			_G.SabcomStealTarget = pet
-			_G.SabcomSelectedPetData = pet
-			P.SelectedPetData = pet
-			if pet and pet.uid then
-				_G.SabcomStealTargetUID = pet.uid
-			end
-			_setHighlight(pet)
-			_G.Sabcom_StealStatus = _G.Sabcom_StealStatus or {}
-			_G.Sabcom_StealStatus.target = pet
-			_G.Sabcom_StealStatus.active = false
-			if pet then
-				MG.Text = string.format("%s - %s", pet.name or "Unknown", pet.genText or pet.mpsText or "")
-			end
-			if type(_G.SabcomOnStealTarget) == "function" then _G.SabcomOnStealTarget(pet) end
-		end
-		local function disarmSteal()
-			_stealTarget = nil
-			_G.SabcomStealTarget = nil
-			_G.SabcomSelectedPetData = nil
-			P.SelectedPetData = nil
-			_setHighlight(nil)
-			wG.Size = UDim2.new(0, 0, 1, 0)
-			_G.Sabcom_StealStatus = _G.Sabcom_StealStatus or {}
-			_G.Sabcom_StealStatus.target = nil
-			_G.Sabcom_StealStatus.active = false
-		end
-		_G.sabcomArmSteal = armSteal
-		_G.sabcomDisarmSteal = disarmSteal
-		_G.SabcomArmSteal = function()
-			_G.SabcomAutoSteal = true
-			if _G.SabcomSetAutoStealRuntime then _G.SabcomSetAutoStealRuntime(true) end
-		end
-		_G.SabcomDisarmSteal = function()
-			_G.SabcomAutoSteal = false
-			if _G.SabcomSetAutoStealRuntime then _G.SabcomSetAutoStealRuntime(false) end
-			disarmSteal()
-		end
-		_G.SabcomFindStealPrompt = findStealPrompt
-		_G.SabcomExecuteStealAsync = executeStealAsync
-		_G.SabcomBuildStealCallbacks = buildStealCallbacks
-
-		local function _updateStealTarget(pets)
-			_pushFlags()
-			if type(pets) ~= "table" then
-				local scanned = scanAllPets(true)
-				pets = _buildStealPetList(scanned, _G.SabcomStealMode)
-			end
-			local best = _intendedStealPet(pets)
-			if best then
-				best = _applyStealTarget(best)
-				for idx, pet in ipairs(pets) do
-					if _samePet(pet, best) then
-						iG = idx
-						OG = _petUid(best)
-						best.uid = OG
-						break
-					end
-				end
-				if _G.SabcomAutoSteal == true then
-					if not _samePet(best, _stealTarget) then
-						armSteal(best)
-					end
-				elseif _stealTarget then
-					_stealTarget = nil
-					_setHighlight(nil)
-					wG.Size = UDim2.new(0, 0, 1, 0)
-				end
-			elseif type(_G.SabcomManualStealUID) == "string" and _G.SabcomManualStealUID ~= "" then
-				return
-			elseif _stealTarget then
-				disarmSteal()
-			end
-		end
-
-		local function _refreshList()
-			local pets = scanAllPets(true)
-			if type(pets) ~= "table" then
-				_G.SabcomStealPetList = {}
-				P.AllAnimalsCache = {}
-				if type(_G.SabcomOnStealList) == "function" then _G.SabcomOnStealList({}, _stealTarget) end
-				return {}
-			end
-			local list = _buildStealPetList(pets, _G.SabcomStealMode)
-			_G.SabcomStealPetList = list
-			P.AllAnimalsCache = list
-			if type(_G.SabcomOnStealList) == "function" then _G.SabcomOnStealList(list, _stealTarget) end
-			return list
-		end
-
-		task.spawn(function()
-			while not _G.__sabcomRestReady do task.wait(0.05) end
-			while true do
-				task.wait(0.25)
-				do
-					if type(_G.SabcomPaintStealList) == "function" then _G.SabcomPaintStealList() end
-				end
-			end
-		end)
-
-		_G.SabcomRefreshStealTarget = function()
-			local pets = _refreshList()
-			if type(pets) ~= "table" or #pets == 0 then
-				local scanned = scanAllPets(true)
-				if type(scanned) == "table" then
-					pets = _buildStealPetList(scanned, _G.SabcomStealMode)
-					_G.SabcomStealPetList = pets
-					P.AllAnimalsCache = pets
-				end
-			end
-			_updateStealTarget(pets)
-		end
-		_G.SabcomSetStealMode = function(mode)
-			mode = tostring(mode or "priority"):lower()
-			if mode ~= "nearest" then mode = "priority" end
-			_G.SabcomManualStealUID = nil
-			if type(_G.SabcomClearTPSync) == "function" then _G.SabcomClearTPSync() end
-			_G.SabcomStealMode = mode
-			_G.SabcomTPMode = mode
-			if type(_G.SabcomSyncNearestInstant) == "function" then _G.SabcomSyncNearestInstant() end
-			task.defer(function()
-				if type(_G.SabcomRefreshStealTarget) == "function" then _G.SabcomRefreshStealTarget() end
-				if type(_G.SabcomPaintTgtMode) == "function" then _G.SabcomPaintTgtMode() end
-				if type(_G.SabcomPaintStealList) == "function" then _G.SabcomPaintStealList() end
-			end)
-		end
-
-		task.spawn(function()
-			while not _G.__sabcomRestReady do task.wait(0.05) end
-			while task.wait(0.25) do
-				if _G.sabcomIsTeleporting == true or _G.SabcomIsTeleporting == true then
-					continue
-				end
-				do
-					local pets = _refreshList()
-					if not LP:GetAttribute("Stealing") then
-						_updateStealTarget(pets)
-					end
-				end
-			end
-		end)
-
-		task.defer(function()
-			while not _G.__sabcomRestReady do task.wait(0.05) end
-			_bustScanCache()
-			_G.SabcomRefreshStealTarget()
-		end)
-	end
+    _G.MeerkoToggleTargets = function() sg.Enabled = not sg.Enabled end
 end)()
-
-
-task.spawn(function()
-	_G.AntiDieDisabled = false
-	do
-		local _conn, _diedConn, _hbConn
-
-		local _hardened = nil
-		local _hardenRaw = (function(hum)
-			if hum.BreakJointsOnDeath then hum.BreakJointsOnDeath = false end
-			if hum.RequiresNeck then hum.RequiresNeck = false end
-			hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
-			hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
-			hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
-			hum:SetStateEnabled(Enum.HumanoidStateType.Physics, false)
-		end)
-		local _harden = (function(hum)
-			if _hardened == hum then return end
-			_hardenRaw(hum)
-			_hardened = hum
-		end)
-		local _revive = (function(hum)
-			hum.Health = hum.MaxHealth 
-			hum:ChangeState(Enum.HumanoidStateType.Running) 
-		end)
-		local _bind = (function()
-			local char = LP.Character
-			local hum = char and char:FindFirstChildOfClass("Humanoid")
-			if not hum then return end
-			_harden(hum)
-			if _conn then _conn:Disconnect()  end
-			if _diedConn then _diedConn:Disconnect()  end
-			if _hbConn then _hbConn:Disconnect()  end
-			_conn = hum:GetPropertyChangedSignal("Health"):Connect((function()
-				if _G.AntiDieDisabled then return end
-				if hum.Health <= 0 then _revive(hum) end
-			end))
-			_diedConn = hum.Died:Connect((function()
-				if _G.AntiDieDisabled then return end
-				_revive(hum)
-			end))
-			local _lastHarden = 0
-
-			local _adAlive = true
-			_hbConn = { Disconnect = function() _adAlive = false end }
-			local _adTick = (function()
-				if _G.AntiDieDisabled or not hum or not hum.Parent then return end
-				local now = os.clock()
-				if now - _lastHarden >= 0.5 then _lastHarden = now; _harden(hum) end
-				if hum.Health <= 0 then _revive(hum) end
-
-				if _G.SabcomTPHealLock and hum.Health < hum.MaxHealth then
-					hum.Health = hum.MaxHealth 
-				end
-				local state = hum:GetState()
-				if state == Enum.HumanoidStateType.Dead or state == Enum.HumanoidStateType.Ragdoll
-					or state == Enum.HumanoidStateType.FallingDown then
-					hum:ChangeState(Enum.HumanoidStateType.Running) 
-				end
-			end)
-			task.spawn(function()
-				while _adAlive do
-					task.wait(tonumber(_G.SabcomAntiDieHz) or 0.1)
-					_adTick()
-				end
-			end)
-		end)
-		_bind()
-		LP.CharacterAdded:Connect(function(char)
-			local hum = char:WaitForChild("Humanoid", 5)
-			if hum then _harden(hum) end
-			task.wait(0.1)
-			_bind()
-		end)
-	end
-
-	do
-		local antiRagdollConnections = {}
-		local antiRagdollCharacter, antiRagdollHumanoid, antiRagdollRootPart, antiRagdollAnimator
-		local lastVelocity = Vector3.new(0, 0, 0)
-		local velocityChangeThreshold = 40
-		local velocityMagnitudeThreshold = 25
-		local maxVelocity = 15
-
-		local function isFlyingCarpetActive()
-			if not antiRagdollCharacter then return false end
-			local tool = antiRagdollCharacter:FindFirstChildWhichIsA("Tool")
-			if not tool then return false end
-			local hrp = antiRagdollCharacter:FindFirstChild("HumanoidRootPart")
-			if hrp then
-				for _, obj in ipairs(hrp:GetChildren()) do
-					if obj:IsA("BodyVelocity") or obj:IsA("BodyPosition") or obj:IsA("BodyGyro") then
-						return true
-					end
-				end
-			end
-			return false
-		end
-
-		local function isRagdolled()
-			if not antiRagdollHumanoid then return false end
-			local state = antiRagdollHumanoid:GetState()
-			return state == Enum.HumanoidStateType.Physics
-				or state == Enum.HumanoidStateType.Ragdoll
-				or state == Enum.HumanoidStateType.FallingDown
-				or state == Enum.HumanoidStateType.GettingUp
-		end
-
-		local function enableAntiRagdollControls()
-			local ps = LP:FindFirstChild("PlayerScripts")
-				local PlayerModule = ps and ps:FindFirstChild("PlayerModule")
-				if not PlayerModule then return end
-				require(PlayerModule):GetControls():Enable()
-			
-		end
-
-		local function cleanupRagdoll()
-			if not antiRagdollCharacter then return end
-			local carpetEquipped = isFlyingCarpetActive()
-			local function processChildren(parent)
-				for _, obj in ipairs(parent:GetChildren()) do
-					if obj:IsA("BallSocketConstraint") or obj:IsA("NoCollisionConstraint") or obj:IsA("HingeConstraint")
-						or (obj:IsA("Attachment") and (obj.Name == "A" or obj.Name == "B")) then
-						obj:Destroy() 
-					elseif obj:IsA("BodyVelocity") or obj:IsA("BodyPosition") or obj:IsA("BodyGyro") then
-						if not carpetEquipped then obj:Destroy() end
-					elseif obj:IsA("Motor6D") then
-						obj.Enabled = true
-					elseif obj:IsA("BasePart") then
-						for _, child in ipairs(obj:GetChildren()) do
-							if child:IsA("BallSocketConstraint") or child:IsA("NoCollisionConstraint") or child:IsA("HingeConstraint") or child:IsA("Motor6D") then
-								if child:IsA("Motor6D") then
-									child.Enabled = true
-								else
-									child:Destroy()
-								end
-							elseif child:IsA("Attachment") and (child.Name == "A" or child.Name == "B") then
-								child:Destroy()
-							end
-						end
-					end
-				end
-			end
-			processChildren(antiRagdollCharacter) 
-			if antiRagdollAnimator then
-				for _, track in pairs(antiRagdollAnimator:GetPlayingAnimationTracks()) do
-					local animName = track.Animation and track.Animation.Name:lower() or ""
-					if animName:find("rag") or animName:find("fall") or animName:find("hurt") or animName:find("down") then
-						track:Stop(0)
-					end
-				end
-			end
-		end
-
-		local function setupAntiRagdollCharacter(char)
-			antiRagdollCharacter = char
-			antiRagdollHumanoid = char:WaitForChild("Humanoid", 10)
-			antiRagdollRootPart = char:WaitForChild("HumanoidRootPart", 10)
-			antiRagdollAnimator = antiRagdollHumanoid and antiRagdollHumanoid:WaitForChild("Animator", 10)
-			lastVelocity = Vector3.new(0, 0, 0)
-		end
-
-		local function clearAntiRagdollConnections()
-			for _, c in pairs(antiRagdollConnections) do
-				c:Disconnect() 
-			end
-			antiRagdollConnections = {}
-		end
-
-		local function setupAntiRagdollConnections()
-			clearAntiRagdollConnections()
-			if not antiRagdollHumanoid or not antiRagdollRootPart then return end
-			table.insert(antiRagdollConnections, antiRagdollHumanoid.StateChanged:Connect(function()
-				if isRagdolled() then
-					if not isFlyingCarpetActive() then
-						antiRagdollHumanoid:ChangeState(Enum.HumanoidStateType.Running) 
-					end
-					cleanupRagdoll()
-					workspace.CurrentCamera.CameraSubject = antiRagdollHumanoid 
-					enableAntiRagdollControls()
-				end
-			end))
-			local impulsePath = RS:FindFirstChild("Packages")
-				impulsePath = impulsePath and impulsePath:FindFirstChild("Net")
-				impulsePath = impulsePath and impulsePath:FindFirstChild("RE/CombatService/ApplyImpulse")
-				if impulsePath then
-					table.insert(antiRagdollConnections, impulsePath.OnClientEvent:Connect(function()
-						if isRagdolled() and antiRagdollRootPart then
-							antiRagdollRootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
-						end
-					end))
-				end
-			
-			table.insert(antiRagdollConnections, antiRagdollCharacter.DescendantAdded:Connect(function()
-				if isRagdolled() then cleanupRagdoll() end
-			end))
-			table.insert(antiRagdollConnections, RunService.Heartbeat:Connect(function()
-				if not isRagdolled() or not antiRagdollRootPart then return end
-				cleanupRagdoll()
-				local velocity = antiRagdollRootPart.AssemblyLinearVelocity
-				if (velocity - lastVelocity).Magnitude > velocityChangeThreshold
-					and velocity.Magnitude > velocityMagnitudeThreshold then
-					antiRagdollRootPart.AssemblyLinearVelocity = velocity.Unit * math.min(velocity.Magnitude, maxVelocity)
-				end
-				lastVelocity = velocity
-			end))
-			enableAntiRagdollControls()
-			cleanupRagdoll()
-		end
-
-		LP.CharacterAdded:Connect(function(char)
-			clearAntiRagdollConnections()
-			antiRagdollCharacter = nil
-			antiRagdollHumanoid = nil
-			antiRagdollRootPart = nil
-			antiRagdollAnimator = nil
-			local humanoid = char:WaitForChild("Humanoid", 10)
-			local rootPart = char:WaitForChild("HumanoidRootPart", 10)
-			if not humanoid or not rootPart then return end
-			task.wait(0.2)
-			setupAntiRagdollCharacter(char)
-			setupAntiRagdollConnections()
-		end)
-		if LP.Character then
-			task.spawn(function()
-				setupAntiRagdollCharacter(LP.Character)
-				setupAntiRagdollConnections()
-			end)
-		end
-	end
-
-	do
-		local Lighting = game:GetService("Lighting")
-		local ab = {
-			connections = {},
-			originalMoveFunction = nil,
-			controlsProtected = false,
-			badLightingNames = { Blue = true, DiscoEffect = true, BeeBlur = true, ColorCorrection = true },
-		}
-		local function nuke(obj)
-			if not obj or not obj.Parent then return end
-			if ab.badLightingNames[obj.Name] then
-				obj:Destroy()
-			end
-		end
-		local function protectControls()
-			if ab.controlsProtected then return end
-			do
-				local PlayerScripts = LP:FindFirstChild("PlayerScripts")
-				local PlayerModule = PlayerScripts and PlayerScripts:FindFirstChild("PlayerModule")
-				if not PlayerModule then return end
-				local Controls = require(PlayerModule):GetControls()
-				if not Controls then return end
-				if not ab.originalMoveFunction then ab.originalMoveFunction = Controls.moveFunction end
-				local function protectedMoveFunction(self, moveVector, relativeToCamera)
-					if ab.originalMoveFunction then ab.originalMoveFunction(self, moveVector, relativeToCamera) end
-				end
-				table.insert(ab.connections, RunService.Heartbeat:Connect(function()
-					if _G._isTpMoving then return end
-					if Controls.moveFunction ~= protectedMoveFunction then
-						Controls.moveFunction = protectedMoveFunction
-					end
-				end))
-				Controls.moveFunction = protectedMoveFunction
-				ab.controlsProtected = true
-			end
-		end
-		local _beeScript, _beeNext = nil, 0
-		local blockBuzzingSound = function()
-			do
-				if not _beeScript or not _beeScript.Parent then
-					local now = os.clock()
-					if now < _beeNext then return end
-					_beeNext = now + 2
-					local ps = LP:FindFirstChild("PlayerScripts")
-					_beeScript = ps and ps:FindFirstChild("Bee")
-				end
-				if not _beeScript then return end
-				local buzzing = _beeScript:FindFirstChild("Buzzing")
-				if buzzing and buzzing:IsA("Sound") then
-					buzzing:Stop()
-					buzzing.Volume = 0
-				end
-			end
-		end
-		protectControls()
-		task.spawn(function()
-			for _ = 1, 20 do
-				if ab.controlsProtected then return end
-				protectControls()
-				task.wait(0.25)
-			end
-		end)
-		_G.SabcomAfterTpLoad(function()
-			do
-				for _, inst in ipairs(Lighting:GetDescendants()) do nuke(inst) end
-			end
-			table.insert(ab.connections, Lighting.DescendantAdded:Connect(nuke))
-			table.insert(ab.connections, RunService.Heartbeat:Connect(blockBuzzingSound))
-		end)
-	end
-
-	do
-		local xrayOriginal = setmetatable({}, { __mode = "k" })
-		local xrayConns = {}
-		local xrayLoopId = 0
-		local XRAY_ALPHA = 0.5
-		local XRAY_FOLDERS = { "Base", "PlotSign", "FriendPanel", "Cash", "Laser", "Decorations", "Skin", "Unlock", "Purchases" }
-		local function setTransparency(instance, alpha, loopId)
-			if not instance or loopId ~= xrayLoopId then return end
-			local function apply(obj)
-				if not obj:IsA("BasePart") then return end
-				if xrayOriginal[obj] == nil then
-					xrayOriginal[obj] = (obj.Transparency == alpha) and 0 or obj.Transparency
-				end
-				local orig = xrayOriginal[obj]
-				if orig < 1 then
-					local target = orig + (1 - orig) * alpha
-					if math.abs(obj.Transparency - target) > 0.01 then obj.Transparency = target end
-				end
-			end
-			apply(instance)
-			for i, child in ipairs(instance:GetDescendants()) do
-				apply(child)
-				if i % 400 == 0 then
-					if loopId ~= xrayLoopId then return end
-				end
-			end
-		end
-		local function trackSubtree(root, alpha, loopId)
-			if not root or loopId ~= xrayLoopId then return end
-			setTransparency(root, alpha, loopId)
-			xrayConns[#xrayConns + 1] = root.DescendantAdded:Connect(function(obj)
-				if loopId == xrayLoopId then setTransparency(obj, alpha, loopId) end
-			end)
-		end
-		local function processPlot(plot, alpha, loopId)
-			if not plot or loopId ~= xrayLoopId then return end
-			for _, fname in ipairs(XRAY_FOLDERS) do
-				trackSubtree(plot:FindFirstChild(fname), alpha, loopId)
-			end
-			xrayConns[#xrayConns + 1] = plot.ChildAdded:Connect(function(child)
-				if loopId ~= xrayLoopId then return end
-				for _, fname in ipairs(XRAY_FOLDERS) do
-					if child.Name == fname then trackSubtree(child, alpha, loopId); break end
-				end
-			end)
-			local podiums = plot:FindFirstChild("AnimalPodiums")
-			if not podiums then return end
-			local function processPodium(podium)
-				for _, child in ipairs(podium:GetChildren()) do
-					if child.Name == "Claim" then
-						trackSubtree(child, alpha, loopId)
-					elseif child.Name == "Base" then
-						trackSubtree(child:FindFirstChild("Decorations"), alpha, loopId)
-					elseif child:IsA("Model") and child.Name ~= "Decorations" then
-						trackSubtree(child, alpha, loopId)
-					end
-				end
-			end
-			for _, podium in ipairs(podiums:GetChildren()) do processPodium(podium) end
-			xrayConns[#xrayConns + 1] = podiums.ChildAdded:Connect(function(podium)
-				if loopId == xrayLoopId then processPodium(podium) end
-			end)
-		end
-		local function enableXray()
-			for _, c in ipairs(xrayConns) do
-				if typeof(c) == "RBXScriptConnection" then c:Disconnect() end
-			end
-			xrayConns = {}
-			xrayLoopId = xrayLoopId + 1
-			local id = xrayLoopId
-			local plotsFolder = workspace:FindFirstChild("Plots")
-			if not plotsFolder then return end
-			for _, plot in ipairs(plotsFolder:GetChildren()) do
-				if id ~= xrayLoopId then return end
-				processPlot(plot, XRAY_ALPHA, id)
-			end
-			xrayConns[#xrayConns + 1] = plotsFolder.ChildAdded:Connect(function(plot)
-				if id == xrayLoopId then processPlot(plot, XRAY_ALPHA, id) end
-			end)
-		end
-		local function disableXray()
-			for _, c in ipairs(xrayConns) do
-				if typeof(c) == "RBXScriptConnection" then c:Disconnect() end
-			end
-			xrayConns = {}
-			xrayLoopId = xrayLoopId + 1
-			local snapshot = xrayOriginal
-			xrayOriginal = setmetatable({}, { __mode = "k" })
-			for obj, orig in pairs(snapshot) do
-				if obj:IsA("BasePart") then obj.Transparency = orig end 
-			end
-		end
-		_G.SabcomEnableXray = enableXray
-		_G.SabcomDisableXray = disableXray
-		local function applyXrayIfEnabled()
-			if _G.SabcomXray ~= true then return false end
-			local plotsFolder = workspace:FindFirstChild("Plots")
-			if plotsFolder then
-				enableXray()
-				return true
-			end
-			return false
-		end
-		local xrayRetrying = false
-		local function startXrayRetry()
-			if _G.SabcomXray ~= true then return end
-			if applyXrayIfEnabled() then return end
-			if xrayRetrying then return end
-			xrayRetrying = true
-			task.spawn(function()
-				local t0 = os.clock()
-				local childConn
-				childConn = workspace.ChildAdded:Connect(function(ch)
-					if ch.Name == "Plots" and _G.SabcomXray == true then
-						enableXray()
-					end
-				end)
-				while _G.SabcomXray == true and os.clock() - t0 < 45 do
-					if applyXrayIfEnabled() then break end
-					task.wait(0.25)
-				end
-				if childConn then childConn:Disconnect() end
-				xrayRetrying = false
-			end)
-		end
-		_G.SabcomApplyXrayIfEnabled = applyXrayIfEnabled
-		_G.SabcomStartXrayRetry = startXrayRetry
-		if _G.SabcomXray == true then
-			startXrayRetry()
-			_G.SabcomAfterTpLoad(function()
-				if _G.SabcomXray == true then startXrayRetry() end
-			end)
-		end
-	end
-
-	do
-		local clonerefFn = cloneref or function(o) return o end
-		local TurretPlayers = clonerefFn(game:GetService("Players"))
-		local TurretWorkspace = clonerefFn(game:GetService("Workspace"))
-		local turretLp = LP
-		local autoTurretEnabled = false
-		local turretConns = {}
-		local turretLoopRunning = false
-		local turretAttackBusy = setmetatable({}, { __mode = "k" })
-		local turretAttackQueued = setmetatable({}, { __mode = "k" })
-		local turretAttackCD = setmetatable({}, { __mode = "k" })
-		local turretAttackActive = false
-		local TURRET_RETRY_DELAY = 0.3
-		local function isEnemyTurret(obj)
-			if not obj or not obj:IsA("BasePart") then return false end
-			local ownerId = obj.Name:match("^Sentry_(%d+)$")
-			return ownerId ~= nil and ownerId ~= tostring(turretLp.UserId)
-		end
-		local function setTurretNoClip(turret)
-			if not isEnemyTurret(turret) then return end
-			turret.CanCollide = false 
-		end
-		local function getTurretTimeLabel(turret)
-			if not turret or not turret.Parent then return nil end
-			local sf = turret:FindFirstChild("SetupFrame")
-			local mf = sf and sf:FindFirstChild("MainFrame")
-			local lbl = mf and mf:FindFirstChild("Time")
-			if lbl and lbl:IsA("TextLabel") then return lbl end
-			return nil
-		end
-		local function shouldAttackTurret(turret)
-			if not turretLp then return false end
-			if turretLp:GetAttribute("Stealing") ~= nil then return false end
-			if not isEnemyTurret(turret) then return false end
-			setTurretNoClip(turret)
-			local lbl = getTurretTimeLabel(turret)
-			if not lbl then return false end
-			local text = lbl.Text
-						text = tostring(text or ""):gsub("^%s+", ""):gsub("%s+$", "")
-			return text ~= "" and string.find(text, "^%d+s!$") ~= nil
-		end
-		local function bringTurretInFront(turret, hrp)
-			if not turret or not hrp then return end
-			local fwd = hrp.CFrame.LookVector
-			local pos = hrp.Position + fwd * 4 + Vector3.new(0, 1.2, 0)
-			local cf = CFrame.lookAt(pos, pos + fwd)
-			hrp.Velocity = Vector3.zero
-				turret.RotVelocity = Vector3.zero
-			
-			turret.CFrame = cf 
-		end
-		local function attackTurret(turret)
-			local now = os.clock()
-			if turretAttackBusy[turret] or turretAttackQueued[turret]
-				or turretAttackActive or not shouldAttackTurret(turret) then return end
-			if (turretAttackCD[turret] or 0) > now then return end
-			turretAttackQueued[turret] = true
-			turretAttackCD[turret] = now + TURRET_RETRY_DELAY
-			task.spawn(function()
-				turretAttackQueued[turret] = nil
-				if turretAttackActive or turretAttackBusy[turret]
-					or not shouldAttackTurret(turret) then return end
-				turretAttackActive = true
-				turretAttackBusy[turret] = true
-				local attempts = 0
-					while attempts < 12 and autoTurretEnabled do
-						if not turret or not turret.Parent or not shouldAttackTurret(turret) then break end
-						local char = turretLp.Character
-						local hrp = char and char:FindFirstChild("HumanoidRootPart")
-						local hum = char and char:FindFirstChildOfClass("Humanoid")
-						if not hrp or not hum or hum.Health <= 0 then break end
-						local dist = (turret.Position - hrp.Position).Magnitude
-						if dist > 220 then break end
-						setTurretNoClip(turret)
-						bringTurretInFront(turret, hrp)
-						if not turret or not turret.Parent or not shouldAttackTurret(turret) then break end
-						local bp = turretLp:FindFirstChild("Backpack")
-						local bat = char:FindFirstChild("Bat") or (bp and bp:FindFirstChild("Bat"))
-						if bat and bat.Parent ~= char then
-							hum:EquipTool(bat) 
-						end
-						bat = char:FindFirstChild("Bat") or bat
-						if bat then bat:Activate()  end
-						task.wait(0.03)
-						if turret and turret.Parent and shouldAttackTurret(turret) then
-							setTurretNoClip(turret)
-							bringTurretInFront(turret, hrp)
-						end
-						attempts = attempts + 1
-						task.wait(0.09)
-					end
-				
-				turretAttackBusy[turret] = nil
-				turretAttackActive = false
-			end)
-		end
-		local function disconnectTurretAll()
-			for _, c in ipairs(turretConns) do c:Disconnect()  end
-			turretConns = {}
-		end
-		local function startAutoTurret()
-			disconnectTurretAll()
-			table.insert(turretConns, TurretWorkspace.DescendantAdded:Connect(function(obj)
-				if isEnemyTurret(obj) then setTurretNoClip(obj) end
-				if autoTurretEnabled and shouldAttackTurret(obj) then
-					task.defer(attackTurret, obj)
-				end
-			end))
-			if not turretLoopRunning then
-				turretLoopRunning = true
-				task.spawn(function()
-					while autoTurretEnabled do
-						task.wait(0.4)
-						for _, obj in ipairs(TurretWorkspace:GetChildren()) do
-							if isEnemyTurret(obj) then setTurretNoClip(obj) end
-							if autoTurretEnabled and shouldAttackTurret(obj) then attackTurret(obj) end
-						end
-					end
-					turretLoopRunning = false
-				end)
-			end
-		end
-		_G.SabcomSetAutoTurret = function(state)
-			autoTurretEnabled = state == true
-			if autoTurretEnabled then startAutoTurret() else disconnectTurretAll() end
-		end
-		if _G.SabcomAutoTurret == true then
-			_G.SabcomAfterTpLoad(function()
-				if _G.SabcomAutoTurret == true then _G.SabcomSetAutoTurret(true) end
-			end)
-		end
-	end
-
-do
-local function SabcomRunLoadOptimizer()
-	if _G.__SabcomLoadOptActive then return end
-	_G.__SabcomLoadOptActive = true
-
-	local hooks, fxOff, animOff, animSnaps, gfxSnaps, saOff = {}, {}, {}, {}, {}, {}
-	local restore, restored = {}, false
-	local T0 = os.clock()
-	local PLAY_FPS = tonumber(_G.SabcomPlayFps) or 9999
-	local function log(msg)
-		if _G.SabcomLoaderQuiet then return end
-		pcall(print, ("[SABCOM] %.2fs | %s"):format(os.clock() - T0, msg))
-	end
-
-	local stopped = false
-	local function fullStop()
-		if stopped then return end
-		stopped = true
-		_G.__SabcomLoadOptActive = false
-		for _, c in ipairs(hooks) do c:Disconnect() end
-		table.clear(hooks)
-		for _, o in ipairs(fxOff) do
-			if o.Parent then pcall(function() o.Enabled = true end) end
-		end
-		table.clear(fxOff)
-		for o, prev in pairs(animSnaps) do
-			if o.Parent then
-				pcall(function()
-					if o:IsA("Animation") then
-						o.AnimationId = prev
-					elseif o:IsA("Script") or o:IsA("LocalScript") then
-						o.Disabled = prev
-					end
-				end)
-			end
-		end
-		table.clear(animSnaps)
-		table.clear(animOff)
-		for o, snap in pairs(gfxSnaps) do
-			if o.Parent then
-				for k, v in pairs(snap) do
-					if k ~= "Parent" then pcall(function() o[k] = v end) end
-				end
-			elseif snap.Parent and o:IsA("SurfaceAppearance") then
-				pcall(function() o.Parent = snap.Parent end)
-			end
-		end
-		table.clear(gfxSnaps)
-		table.clear(saOff)
-		if not restored then
-			restored = true
-			for i = #restore, 1, -1 do pcall(restore[i]) end
-			table.clear(restore)
-		end
-		if setfpscap then pcall(setfpscap, PLAY_FPS) end
-		log("stopped (manual)")
-		_G.SabcomStopLoadOptimizer = nil
-	end
-	_G.SabcomStopLoadOptimizer = fullStop
-
-local Players         = game:GetService("Players")
-local ContentProvider = game:GetService("ContentProvider")
-local RunService      = game:GetService("RunService")
-local Workspace       = game:GetService("Workspace")
-local Lighting        = game:GetService("Lighting")
-
-pcall(function() game:GetService("ReplicatedFirst"):RemoveDefaultLoadingScreen() end)
-
-if setfpscap then pcall(setfpscap, PLAY_FPS) end
-
-if _G.SabcomUltimateFps == nil then _G.SabcomUltimateFps = true end
-local ULTIMATE = _G.SabcomUltimateFps ~= false
-
-if setfflag then
-	local flags = {
-		DebugForceAllTextures1x1 = "True",
-		RomRenderTextureScale = "10",
-		DFIntTextureQualityOverride = "0",
-		FIntRenderShadowIntensity = "0",
-		FIntRenderLocalLightUpdatesMax = "1",
-		FIntRenderLocalLightUpdatesMin = "1",
-		FIntRenderLocalLightFadeInMs = "0",
-		DFIntCSGLevelOfDetailSwitchingDistance = "0",
-		DFIntCSGLevelOfDetailSwitchingDistanceL12 = "0",
-		DFIntCSGLevelOfDetailSwitchingDistanceL23 = "0",
-		DFIntCSGLevelOfDetailSwitchingDistanceL34 = "0",
-		FFlagDebugSkipMeshVoxelizer = "True",
-		FIntTerrainArraySliceSize = "0",
-		DFIntMaxFrameBufferSize = "1",
-		FFlagNewLightAttenuation = "False",
-		DFFlagDebugPauseVoxelizer = "True",
-		FIntSimWidgetKeyboardMoveTime = "0",
-		DFIntTextureCompositorActiveJobs = "1",
-		FIntRenderGrassDetailStrands = "0",
-	}
-	if ULTIMATE then
-		flags.FIntRenderMeshOptimize = "1"
-		flags.DFIntCullFactorPixelThresholdMainView = "2147483647"
-		flags.DFIntCullFactorPixelThresholdShadowMapHighQuality = "2147483647"
-		flags.DFIntCullFactorPixelThresholdShadowMapLowQuality = "2147483647"
-		flags.FIntRenderMaxShadowAtlasUsageBeforeDownscale = "0"
-		flags.FIntRenderShadowmapBias = "0"
-		flags.DFIntTaskSchedulerTargetFps = tostring(PLAY_FPS)
-		flags.FIntDebugForceMSAASamples = "0"
-		flags.DFIntMaxProcessPacketsPerStep = "1"
-	end
-	for k, v in pairs(flags) do pcall(setfflag, k, v) end
-end
-
-local LP = Players.LocalPlayer
-while not LP do
-	task.wait()
-	LP = Players.LocalPlayer
-end
-
-local MAX_LOAD  = tonumber(_G.SabcomMaxLoad) or 20
-local READY_AT  = nil
-
-local function keep(fn) restore[#restore + 1] = fn end
-if _G.SabcomKeepLowGraphics == nil then _G.SabcomKeepLowGraphics = true end
-local function keepGfx(fn)
-	if _G.SabcomKeepLowGraphics ~= false then return end
-	restore[#restore + 1] = fn
-end
-
-local function restoreAll(reason)
-	if restored then return end
-	restored = true
-	for i = #restore, 1, -1 do pcall(restore[i]) end
-	table.clear(restore)
-	if setfpscap then pcall(setfpscap, PLAY_FPS) end
-	log("restored (" .. tostring(reason) .. ")")
-end
-
-task.delay(MAX_LOAD, function() restoreAll("timeout") end)
-if LP.OnTeleport then
-	pcall(function()
-		LP.OnTeleport:Connect(function() restoreAll("teleport") end)
-	end)
-end
-
-pcall(function()
-	for _, name in ipairs({ "SabcomLoaderUI", "MeerkoLoaderUI" }) do
-		local pg = LP:FindFirstChildOfClass("PlayerGui")
-		if pg then
-			local old = pg:FindFirstChild(name)
-			if old then old:Destroy() end
-		end
-		pcall(function()
-			local core = game:GetService("CoreGui")
-			local old = core:FindFirstChild(name)
-			if old then old:Destroy() end
-		end)
-	end
-end)
-
-pcall(function()
-	local ok, s = pcall(settings)
-	if ok and s then
-		local r = s.Rendering
-		local prev = r.QualityLevel
-		r.QualityLevel = Enum.QualityLevel.Level01
-		keepGfx(function() r.QualityLevel = prev end)
-		if ULTIMATE then
-			pcall(function()
-				local prevMesh = r.MeshPartDetailLevel
-				r.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level01
-				keepGfx(function() r.MeshPartDetailLevel = prevMesh end)
-			end)
-			pcall(function()
-				r.EagerBulkExecution = true
-			end)
-		end
-	end
-end)
-
-pcall(function()
-	if not ULTIMATE then return end
-	local ugs = UserSettings():GetService("UserGameSettings")
-	local snap = {
-		SavedQualityLevel = ugs.SavedQualityLevel,
-		GraphicsQualityLevel = ugs.GraphicsQualityLevel,
-	}
-	ugs.SavedQualityLevel = Enum.SavedQualitySetting.QualityLevel1
-	pcall(function() ugs.GraphicsQualityLevel = 1 end)
-	keepGfx(function()
-		for k, v in pairs(snap) do pcall(function() ugs[k] = v end) end
-	end)
-end)
-
-pcall(function()
-	if not ULTIMATE then return end
-	local cam = Workspace.CurrentCamera
-	if not cam then return end
-	local snap = {
-		FieldOfView = cam.FieldOfView,
-	}
-	pcall(function() cam.FieldOfView = math.clamp(cam.FieldOfView, 60, 70) end)
-	keepGfx(function()
-		for k, v in pairs(snap) do pcall(function() cam[k] = v end) end
-	end)
-end)
-
-pcall(function()
-	local effects = {}
-	for _, o in ipairs(Lighting:GetDescendants()) do
-		if o:IsA("PostEffect") or o:IsA("Atmosphere") then
-			if o.Enabled ~= false then
-				effects[#effects + 1] = o
-				o.Enabled = false
-			end
-		end
-	end
-	keepGfx(function()
-		for _, o in ipairs(effects) do
-			pcall(function() o.Enabled = true end)
-		end
-	end)
-
-	local snap = {
-		GlobalShadows = Lighting.GlobalShadows,
-		FogEnd = Lighting.FogEnd,
-		FogStart = Lighting.FogStart,
-		EnvironmentDiffuseScale = Lighting.EnvironmentDiffuseScale,
-		EnvironmentSpecularScale = Lighting.EnvironmentSpecularScale,
-		Brightness = Lighting.Brightness,
-		Technology = Lighting.Technology,
-		GlobalIllumination = Lighting.GlobalIllumination,
-	}
-	Lighting.GlobalShadows = false
-	Lighting.EnvironmentDiffuseScale = 0
-	Lighting.EnvironmentSpecularScale = 0
-	Lighting.FogStart = 0
-	Lighting.FogEnd = tonumber(_G.SabcomLoadFog) or (ULTIMATE and 180 or 260)
-	if ULTIMATE then
-		pcall(function() Lighting.Technology = Enum.Technology.Legacy end)
-		pcall(function() Lighting.GlobalIllumination = Enum.GlobalIllumination.Disabled end)
-		Lighting.Brightness = 2
-		for _, child in ipairs(Lighting:GetChildren()) do
-			if child:IsA("Sky") then
-				pcall(function() child.SkyboxBk = "" child.SkyboxDn = "" child.SkyboxFt = ""
-					child.SkyboxLf = "" child.SkyboxRt = "" child.SkyboxUp = "" end)
-			end
-		end
-	end
-	keepGfx(function()
-		for k, v in pairs(snap) do pcall(function() Lighting[k] = v end) end
-	end)
-end)
-
-pcall(function()
-	local ter = Workspace:FindFirstChildOfClass("Terrain")
-	if not ter then return end
-	local snap = {
-		Decoration = ter.Decoration,
-		WaterWaveSize = ter.WaterWaveSize,
-		WaterReflectance = ter.WaterReflectance,
-		WaterTransparency = ter.WaterTransparency,
-	}
-	ter.Decoration = false
-	ter.WaterWaveSize = 0
-	ter.WaterReflectance = 0
-	ter.WaterTransparency = 1
-	keepGfx(function()
-		for k, v in pairs(snap) do pcall(function() ter[k] = v end) end
-	end)
-end)
-
-local HIDE   = { Avatar = true, ProfilePicture = true, SettingsButton = true }
-local FRIED  = Color3.fromRGB(255, 110, 40)
-local SMOOTH = Enum.Material.SmoothPlastic
-
-local FX = {
-	ParticleEmitter = true, Trail = true, Beam = true,
-	Smoke = true, Fire = true, Sparkles = true,
-}
-local FX_ULT = {
-	Highlight = true, PointLight = true, SpotLight = true,
-	SurfaceLight = true, Explosion = true,
-}
-
-local PRELOAD = _G.SabcomPreload == true
-local PROPS = {
-	MeshPart    = { "MeshId", "TextureID" },
-	SpecialMesh = { "MeshId", "TextureId" },
-	Decal       = { "Texture" },
-	Texture     = { "Texture" },
-}
-
-local ids, nIds, seen = {}, 0, {}
-
-local function snapGfx(o, key, val)
-	if gfxSnaps[o] == nil then gfxSnaps[o] = {} end
-	if gfxSnaps[o][key] == nil then gfxSnaps[o][key] = val end
-end
-
-local function ultimatePart(o)
-	if not ULTIMATE or not o:IsA("BasePart") then return end
-	snapGfx(o, "CastShadow", o.CastShadow)
-	snapGfx(o, "Reflectance", o.Reflectance)
-	o.CastShadow = false
-	o.Reflectance = 0
-	-- RenderFidelity write removed: engine locks it during Run-Time on SolidModel/CSG variants and spams warnings
-
-end
-
-local function ultimateSurfaceAppearance(o)
-	if not ULTIMATE or not o:IsA("SurfaceAppearance") then return end
-	if gfxSnaps[o] == nil then gfxSnaps[o] = { Parent = o.Parent } end
-	saOff[#saOff + 1] = o
-	pcall(function() o.Parent = nil end)
-end
-
-local function stopAnimator(animator)
-	if not animator or not animator.Parent then return end
-	pcall(function()
-		for _, track in ipairs(animator:GetPlayingAnimationTracks()) do
-			track:Stop(0)
-		end
-	end)
-end
-
-local function killAnimationObject(o)
-	if o:IsA("Animation") then
-		-- do not blank AnimationId: breaks NPC scripts (Sammy, Fisherman, Los Traders, MoodAnimation, etc.)
-		-- perf gain comes from stopping Animator tracks below, not from nuking asset ids
-		return
-	end
-	if o:IsA("Animator") then
-		stopAnimator(o)
-		return
-	end
-	if o.Name == "Animate" and (o:IsA("Script") or o:IsA("LocalScript")) then
-		if animSnaps[o] == nil then
-			animSnaps[o] = o.Disabled
-		end
-		o.Disabled = true
-		return
-	end
-	if o:IsA("Humanoid") then
-		local animator = o:FindFirstChildOfClass("Animator")
-		if animator then stopAnimator(animator) end
-		pcall(function() o:ChangeState(Enum.HumanoidStateType.Running) end)
-	end
-end
-
-local function touchAnim(o)
-	if o:IsA("Animation") or o:IsA("Animator") or o.Name == "Animate" then
-		killAnimationObject(o)
-		animOff[#animOff + 1] = o
-		return
-	end
-	if o:IsA("Humanoid") then
-		killAnimationObject(o)
-		animOff[#animOff + 1] = o
-	end
-end
-
-local function harvest(o)
-	local props = PROPS[o.ClassName]
-	if not props then return end
-	for i = 1, #props do
-		local id = o[props[i]]
-		if type(id) == "string" and #id > 0 and not seen[id] then
-			local b = id:byte(1)
-			if b == 114 or b == 104 then
-				seen[id] = true
-				nIds = nIds + 1
-				ids[nIds] = id
-			end
-		end
-	end
-end
-
-local function touch3D(o)
-	local c = o.ClassName
-	if c == "MeshPart" then
-		o.TextureID = ""
-		o.Material = SMOOTH
-		ultimatePart(o)
-	elseif c == "SpecialMesh" then
-		o.TextureId = ""
-		if ULTIMATE then
-			snapGfx(o, "MeshId", o.MeshId)
-			o.MeshId = ""
-		end
-	elseif c == "SurfaceAppearance" then
-		ultimateSurfaceAppearance(o)
-		return
-	elseif c == "Decal" or c == "Texture" then
-		o.Texture = ""
-		if ULTIMATE then
-			pcall(function() o.Transparency = 1 end)
-		end
-	elseif FX[c] or (ULTIMATE and FX_ULT[c]) then
-		if o.Enabled then
-			fxOff[#fxOff + 1] = o
-			o.Enabled = false
-		end
-		return
-	elseif o:IsA("BasePart") then
-		o.Material = SMOOTH
-		ultimatePart(o)
-	else
-		touchAnim(o)
-		return
-	end
-	if PRELOAD then harvest(o) end
-end
-
-local function touch2D(o)
-	local c = o.ClassName
-	if c == "ImageLabel" or c == "ImageButton" then
-		o.ResampleMode = Enum.ResamplerMode.Pixelated
-		o.ImageColor3 = FRIED
-	elseif HIDE[o.Name] then
-		o.Visible = false
-	end
-end
-
-local function sweep(list, fn)
-	local total, i = #list, 1
-	local budgetMs = tonumber(_G.SabcomSweepMs) or 6
-	while i <= total do
-		local t = os.clock()
-		local ok = pcall(function()
-			while i <= total do
-				fn(list[i])
-				i = i + 1
-				if (os.clock() - t) * 1000 >= budgetMs then break end
-			end
-		end)
-		if not ok then i = i + 1 end
-		RunService.Heartbeat:Wait()
-	end
-	return total
-end
-
-task.spawn(function()
-	local count = sweep(Workspace:GetDescendants(), touch3D)
-	hooks[#hooks + 1] = Workspace.DescendantAdded:Connect(function(o)
-		if stopped then return end
-		pcall(touch3D, o)
-	end)
-	log("world swept: " .. count .. (ULTIMATE and " (ultimate fps)" or ""))
-end)
-
-task.spawn(function()
-	local count = sweep(Players:GetPlayers(), function(plr)
-		local char = plr.Character
-		if char then
-			for _, d in ipairs(char:GetDescendants()) do pcall(touchAnim, d) end
-			pcall(touchAnim, char)
-		end
-		hooks[#hooks + 1] = plr.CharacterAdded:Connect(function(char)
-			task.defer(function()
-				for _, d in ipairs(char:GetDescendants()) do pcall(touchAnim, d) end
-				pcall(touchAnim, char)
-			end)
-			hooks[#hooks + 1] = char.DescendantAdded:Connect(function(o) pcall(touchAnim, o) end)
-		end)
-	end)
-	hooks[#hooks + 1] = Players.PlayerAdded:Connect(function(plr)
-		hooks[#hooks + 1] = plr.CharacterAdded:Connect(function(char)
-			task.defer(function()
-				for _, d in ipairs(char:GetDescendants()) do pcall(touchAnim, d) end
-				pcall(touchAnim, char)
-			end)
-			hooks[#hooks + 1] = char.DescendantAdded:Connect(function(o) pcall(touchAnim, o) end)
-		end)
-	end)
-	log("animations stripped: " .. tostring(count) .. " players")
-end)
-
-local _animBeat = 0
-hooks[#hooks + 1] = RunService.Heartbeat:Connect(function()
-	if stopped then return end
-	_animBeat = _animBeat + 1
-	if _animBeat % 3 ~= 0 then return end
-	for _, plr in ipairs(Players:GetPlayers()) do
-		local char = plr.Character
-		if char then
-			local hum = char:FindFirstChildOfClass("Humanoid")
-			if hum then
-				local animator = hum:FindFirstChildOfClass("Animator")
-				if animator then stopAnimator(animator) end
-			end
-		end
-	end
-end)
-
-if _G.SabcomFryUI ~= false then
-	task.spawn(function()
-		local pg = LP:FindFirstChildOfClass("PlayerGui") or LP:WaitForChild("PlayerGui", 10)
-		if not pg then return end
-		sweep(pg:GetDescendants(), touch2D)
-		hooks[#hooks + 1] = pg.DescendantAdded:Connect(function(o) pcall(touch2D, o) end)
-	end)
-end
-
-if ULTIMATE then
-	pcall(function()
-		if _G.SabcomUltimateMute ~= false then
-			local SoundService = game:GetService("SoundService")
-			local snap = { Volume = SoundService.Volume }
-			SoundService.Volume = 0
-			keepGfx(function() SoundService.Volume = snap.Volume end)
-		end
-	end)
-	task.spawn(function()
-		for _, plr in ipairs(Players:GetPlayers()) do
-			if plr ~= LP and plr.Character then
-				local hum = plr.Character:FindFirstChildOfClass("Humanoid")
-				if hum then pcall(function() hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None end) end
-			end
-		end
-		hooks[#hooks + 1] = Players.PlayerAdded:Connect(function(plr)
-			plr.CharacterAdded:Connect(function(char)
-				local hum = char:WaitForChild("Humanoid", 5)
-				if hum and plr ~= LP then
-					pcall(function() hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None end)
-				end
-			end)
-		end)
-	end)
-	log("ultimate fps boost active")
-end
-
-keepGfx(function()
-	for _, c in ipairs(hooks) do c:Disconnect() end
-	table.clear(hooks)
-	for _, o in ipairs(fxOff) do
-		if o.Parent then pcall(function() o.Enabled = true end) end
-	end
-	table.clear(fxOff)
-	for o, prev in pairs(animSnaps) do
-		if o.Parent then
-			pcall(function()
-				if o:IsA("Animation") then
-					o.AnimationId = prev
-				elseif o:IsA("Script") or o:IsA("LocalScript") then
-					o.Disabled = prev
-				end
-			end)
-		end
-	end
-	table.clear(animSnaps)
-	table.clear(animOff)
-	for o, snap in pairs(gfxSnaps) do
-		if o.Parent then
-			for k, v in pairs(snap) do
-				if k ~= "Parent" then pcall(function() o[k] = v end) end
-			end
-		elseif snap.Parent and o:IsA("SurfaceAppearance") then
-			pcall(function() o.Parent = snap.Parent end)
-		end
-	end
-	table.clear(gfxSnaps)
-	table.clear(saOff)
-end)
-
-local MARK = { game = false, char = false }
-
-task.spawn(function()
-	if not game:IsLoaded() then game.Loaded:Wait() end
-	MARK.game = true
-end)
-
-task.spawn(function()
-	local ch = LP.Character or LP.CharacterAdded:Wait()
-	ch:WaitForChild("HumanoidRootPart", 20)
-	MARK.char = true
-end)
-
-for _, d in ipairs({ 0.3, 1.5 }) do
-	task.delay(d, function()
-		pcall(function()
-			local cam = Workspace.CurrentCamera
-			if cam and cam.CameraType ~= Enum.CameraType.Custom then
-				cam.CameraType = Enum.CameraType.Custom
-				local ch = LP.Character
-				if ch then cam.CameraSubject = ch:FindFirstChildOfClass("Humanoid") end
-			end
-		end)
-	end)
-end
-
-task.spawn(function()
-	while not (MARK.game and MARK.char) and (os.clock() - T0) < MAX_LOAD do
-		RunService.Heartbeat:Wait()
-	end
-	READY_AT = os.clock() - T0
-	log(("ready in %.2fs"):format(READY_AT))
-	restoreAll("ready")
-
-	if PRELOAD and nIds > 0 then
-		local total, cursor = nIds, 1
-		local workers = tonumber(_G.SabcomPreloadWorkers) or 4
-		local chunk = math.max(12, math.ceil(total / (workers * 2)))
-		for _ = 1, workers do
-			task.spawn(function()
-				while true do
-					local s = cursor
-					if s > total then return end
-					cursor = math.min(s + chunk, total + 1)
-					pcall(ContentProvider.PreloadAsync, ContentProvider,
-						table.move(ids, s, cursor - 1, 1, {}))
-				end
-			end)
-		end
-		log("preloading " .. total .. " assets")
-	end
-end)
-end
-
-	_G.SabcomRunLoadOptimizer = SabcomRunLoadOptimizer
-	_G.SabcomSetLoadOptimizer = function(v)
-		if v then
-			SabcomRunLoadOptimizer()
-		elseif type(_G.SabcomStopLoadOptimizer) == "function" then
-			_G.SabcomStopLoadOptimizer()
-		end
-	end
-	if _G.SabcomLoadOptimizer == true then
-		task.defer(function()
-			_G.SabcomSetLoadOptimizer(true)
-		end)
-	end
-end
-do
-	local GuiService = game:GetService("GuiService")
-	local CoreGui = game:GetService("CoreGui")
-	local on = false
-	local conns = {}
-	local lastClose = 0
-	local FULL_NEEDLES = {
-		"full", "this experience is full", "this game is full",
-		"the experience is full", "the game is full", "server is full",
-		"servers are full", "unable to join", "couldn't join", "could not join",
-	}
-
-	local function disc()
-		for _, c in ipairs(conns) do
-			if typeof(c) == "RBXScriptConnection" then c:Disconnect() end
-		end
-		conns = {}
-	end
-
-	local function isFullError(text)
-		if type(text) ~= "string" or text == "" then return false end
-		local lower = string.lower(text)
-		for i = 1, #FULL_NEEDLES do
-			if string.find(lower, FULL_NEEDLES[i], 1, true) then return true end
-		end
-		return false
-	end
-
-	local function clickPromptButtons(root)
-		do
-			for _, d in ipairs(root:GetDescendants()) do
-				if d:IsA("TextButton") or d:IsA("ImageButton") then
-					do
-						if firesignal then
-							firesignal(d.MouseButton1Click)
-							firesignal(d.Activated)
-						end
-					end
-					d.MouseButton1Click:Fire()
-					d.Activated:Fire()
-				end
-			end
-		end
-	end
-
-	local function overlayLooksFull(overlay)
-		if not overlay then return false end
-		local blob = ""
-		do
-			for _, d in ipairs(overlay:GetDescendants()) do
-				if d:IsA("TextLabel") or d:IsA("TextButton") then
-					blob = blob .. " " .. (d.Text or "")
-				end
-			end
-		end
-		return isFullError(blob)
-	end
-
-	local function closeFullError()
-		local now = os.clock()
-		if now - lastClose < 0.15 then return end
-		local msg = ""
-		msg = GuiService:GetErrorMessage() or ""
-		local promptGui = CoreGui:FindFirstChild("RobloxPromptGui")
-		local overlay = promptGui and promptGui:FindFirstChild("promptOverlay")
-		local overlayFull = overlayLooksFull(overlay)
-		if not isFullError(msg) and not overlayFull then return end
-		lastClose = now
-		GuiService:ClearError()
-		if overlay then clickPromptButtons(overlay) end
-	end
-
-	local function enable()
-		if on then return end
-		on = true
-		disc()
-		conns[#conns + 1] = GuiService.ErrorMessageChanged:Connect(function()
-			task.defer(closeFullError)
-		end)
-		task.spawn(function()
-			local promptGui = CoreGui:FindFirstChild("RobloxPromptGui")
-				or CoreGui:WaitForChild("RobloxPromptGui", 60)
-			if not promptGui then return end
-			local overlay = promptGui:FindFirstChild("promptOverlay")
-				or promptGui:WaitForChild("promptOverlay", 15)
-			if not overlay then return end
-			conns[#conns + 1] = overlay.ChildAdded:Connect(function()
-				task.wait(0.05)
-				closeFullError()
-			end)
-			conns[#conns + 1] = overlay.DescendantAdded:Connect(function(d)
-				if d:IsA("TextLabel") or d:IsA("TextButton") then
-					task.wait(0.05)
-					closeFullError()
-				end
-			end)
-		end)
-		conns[#conns + 1] = LP.OnTeleport:Connect(function(state)
-			if state == Enum.TeleportState.Failed then
-				task.defer(closeFullError)
-			end
-		end)
-		task.defer(closeFullError)
-		print("[error fix] watching for server-full errors")
-	end
-
-	local function disable()
-		on = false
-		disc()
-	end
-
-	_G.SabcomSetErrorFix = function(v)
-		if v then enable() else disable() end
-	end
-end
-
-	do
-		local Lighting = game:GetService("Lighting")
-		local conns = {}
-		local on = false
-		local function disc()
-			for _, c in ipairs(conns) do
-				if typeof(c) == "RBXScriptConnection" then c:Disconnect() end
-			end
-			conns = {}
-		end
-		local function protected(obj)
-			if not obj then return true end
-			if obj:IsA("ScreenGui") or obj:FindFirstAncestorOfClass("ScreenGui") then return true end
-			if obj:FindFirstAncestor("AnimalPodiums") then return true end
-			local m = obj:FindFirstAncestorOfClass("Model")
-			if m and Players:GetPlayerFromCharacter(m) then return true end
-			if obj:IsA("Tool") or obj:FindFirstAncestorOfClass("Tool") then return true end
-			if obj:IsA("ProximityPrompt") then return true end
-			return false
-		end
-		local function strip(obj)
-			if protected(obj) then return end
-			if obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam")
-					or obj:IsA("Smoke") or obj:IsA("Fire") or obj:IsA("Sparkles") then
-					obj.Enabled = false
-				elseif obj:IsA("BloomEffect") or obj:IsA("BlurEffect") or obj:IsA("SunRaysEffect")
-					or obj:IsA("DepthOfFieldEffect") or obj:IsA("ColorCorrectionEffect") then
-					obj.Enabled = false
-				elseif obj:IsA("Atmosphere") or obj:IsA("Clouds") then
-					obj:Destroy()
-				elseif obj:IsA("Texture") or obj:IsA("Decal") then
-					if not (obj.Name == "face" and obj.Parent and obj.Parent.Name == "Head") then
-						obj:Destroy()
-					end
-				elseif obj:IsA("PointLight") or obj:IsA("SpotLight") or obj:IsA("SurfaceLight") then
-					obj.Enabled = false
-				elseif obj:IsA("BasePart") then
-					obj.CastShadow = false
-					obj.Material = Enum.Material.Plastic
-					obj.Reflectance = 0
-				end
-		end
-		local function lightingOn()
-			do
-				Lighting.GlobalShadows = false
-				Lighting.FogEnd = 9e9
-				Lighting.FogStart = 9e9
-				Lighting.EnvironmentDiffuseScale = 0
-				Lighting.EnvironmentSpecularScale = 0
-				Lighting.Brightness = 1.5
-				Lighting.Ambient = Color3.fromRGB(70, 70, 70)
-				for _, v in ipairs(Lighting:GetChildren()) do
-					if v:IsA("PostEffect") then v.Enabled = false
-					elseif v:IsA("Atmosphere") or v:IsA("Clouds") then v:Destroy() end
-				end
-	end
-			do
-				settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
-			end
-			setfpscap(999)
-		end
-		local function lightingOff()
-			Lighting.GlobalShadows = true
-				Lighting.FogEnd = 100000
-				Lighting.EnvironmentDiffuseScale = 1
-				Lighting.EnvironmentSpecularScale = 1
-			settings().Rendering.QualityLevel = Enum.QualityLevel.Automatic
-		end
-		local function enable()
-			if on then return end
-			on = true
-			disc()
-			lightingOn()
-			task.spawn(function()
-				local desc = workspace:GetDescendants()
-				for i, obj in ipairs(desc) do
-					if not on then return end
-					strip(obj)
-					if i % 80 == 0 then task.wait() end
-				end
-			end)
-			conns[#conns + 1] = workspace.DescendantAdded:Connect(function(obj)
-				if on then strip(obj) end
-			end)
-			conns[#conns + 1] = Lighting.DescendantAdded:Connect(function(obj)
-				if not on then return end
-				if obj:IsA("PostEffect") then obj.Enabled = false
-				elseif obj:IsA("Atmosphere") or obj:IsA("Clouds") then obj:Destroy() end
-			end)
-		end
-		local function disable()
-			on = false
-			disc()
-			lightingOff()
-		end
-		_G.SabcomSetSuperOptimizer = function(v)
-			if v then enable() else disable() end
-		end
-	end
-
-	do
-		local fired = false
-		local watchConns = {}
-		local function extractCode(s)
-			s = tostring(s or ""):gsub("^%s+", ""):gsub("%s+$", "")
-			if s == "" then return "" end
-			return s:match("[?&]privateServerLinkCode=([^&]+)")
-				or s:match("[?&]linkCode=([^&]+)")
-				or s:match("[?&]code=([^&]+)")
-				or s
-		end
-		-- NOTE: privateServerLinkCode (from URL) != reservedServerAccessCode (from ReserveServer).
-		-- TeleportToPrivateServer needs a RESERVED code (server-side only), a linkCode causes
-		-- a silent teleport failure and the black-screen we were seeing.
-		-- Only ExperienceService:LaunchExperience accepts a linkCode client-side.
-		local function kickToPs()
-			local code = extractCode(_G.SabcomPSCode)
-			if type(code) ~= "string" or code == "" then return false end
-			local launched = false
-			pcall(function()
-				game:GetService("ExperienceService"):LaunchExperience({
-					placeId = game.PlaceId,
-					linkCode = code,
-				})
-				launched = true
-			end)
-			return launched
-		end
-		local function doKick(fromSteal)
-			if fromSteal and _G.SabcomKickToPS ~= false then
-				task.delay(0.2, function()
-					local launched = kickToPs()
-					-- Always terminate the old session -- otherwise LaunchExperience opens
-					-- the new client but the old one hangs with a black transition overlay.
-					-- Give the new client ~1.5s to spawn/register before killing this one.
-					if launched then
-						task.delay(1.5, function()
-							pcall(function() LP:Kick("") end)
-							pcall(function() game:Shutdown() end)
-						end)
-					else
-						pcall(function() game:Shutdown() end)
-						pcall(function() LP:Kick("") end)
-					end
-				end)
-				return
-			end
-			pcall(function() game:Shutdown() end)
-			pcall(function() LP:Kick("") end)
-		end
-		local function stopWatch()
-			for _, c in ipairs(watchConns) do
-				if typeof(c) == "RBXScriptConnection" then c:Disconnect() end
-			end
-			watchConns = {}
-		end
-		local function checkText(t)
-			if _G.SabcomAutoKick ~= true or fired then return end
-			if string.find(string.lower(tostring(t or "")), "you stole", 1, true) then
-				fired = true
-				doKick(true)
-			end
-		end
-		local function hookObj(obj)
-			if not (obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox")) then return end
-			checkText(obj.Text)
-			watchConns[#watchConns + 1] = obj:GetPropertyChangedSignal("Text"):Connect(function()
-				checkText(obj.Text)
-			end)
-		end
-		local function watchRoot(root)
-			if not root then return end
-			for _, obj in ipairs(root:GetDescendants()) do hookObj(obj) end
-			watchConns[#watchConns + 1] = root.DescendantAdded:Connect(hookObj)
-		end
-		local function startWatch()
-			stopWatch()
-			fired = false
-			local pg = LP:FindFirstChild("PlayerGui")
-			if not pg then return end
-			for _, g in ipairs(pg:GetChildren()) do watchRoot(g) end
-			watchConns[#watchConns + 1] = pg.ChildAdded:Connect(watchRoot)
-		end
-		_G.SabcomDoKick = function(fromSteal)
-			fired = false
-			doKick(fromSteal == true)
-		end
-		_G.SabcomSetAutoKick = function(on)
-			if on then startWatch() else stopWatch(); fired = false end
-		end
-		if _G.SabcomAutoKick == true then
-			_G.SabcomAfterTpLoad(function()
-				if _G.SabcomAutoKick == true then startWatch() end
-			end)
-		end
-	end
-
-	do
-		local Cam = workspace.CurrentCamera
-		local RecoveryInProgress = false
-		local animPlaying = false
-		local tracks, folderConnections = {}, {}
-		local clone, oldRoot, hip, connection
-		local serverGhosts = {}
-		local lastLagbackTime, lagbackCallCount, lagbackWindowStart = 0, 0, 0
-		local errorOrbActive = false
-		local _invisToggleCooldown = 0
-
-		local function clearAllGhosts()
-			for _, g in pairs(serverGhosts) do if g and g.Parent then g:Destroy() end  end
-			serverGhosts = {}
-			lagbackCallCount = 0
-			lastLagbackTime = 0
-			errorOrbActive = false
-			if Cam then
-					for _, c in pairs(Cam:GetChildren()) do
-						if c.Name == "LagbackGhost" then c:Destroy() end
-					end
-				end
-			
-		end
-		local function createServerGhost(position)
-			if errorOrbActive then return end
-			local now = tick()
-			if now - lastLagbackTime < 0.05 then return end
-			lastLagbackTime = now
-			if now - lagbackWindowStart > 1 then lagbackCallCount = 0; lagbackWindowStart = now end
-			lagbackCallCount = lagbackCallCount + 1
-			if lagbackCallCount >= 7 then errorOrbActive = true; return end
-			for _, g in pairs(serverGhosts) do if g and g.Parent then g:Destroy() end end
-			serverGhosts = {}
-			local ghost = Instance.new("Part")
-			ghost.Name = "LagbackGhost"
-			ghost.Shape = Enum.PartType.Ball
-			ghost.Size = Vector3.new(3, 3, 3)
-			ghost.Color = Color3.fromRGB(151, 133, 234)
-			ghost.Material = Enum.Material.Glass
-			ghost.Transparency = 0.3
-			ghost.CanCollide = false
-			ghost.Anchored = true
-			ghost.CastShadow = false
-			ghost.Position = position + Vector3.new(0, 5, 0)
-			ghost.Parent = Cam
-			serverGhosts[#serverGhosts + 1] = ghost
-		end
-		local function removeFolders()
-			local pf = workspace:FindFirstChild(LP.Name)
-			if not pf then return end
-			local dr = pf:FindFirstChild("DoubleRig")
-			if dr then
-				local rr = dr:FindFirstChild("HumanoidRootPart") or dr:FindFirstChildWhichIsA("BasePart")
-				if rr then createServerGhost(rr.Position) end
-				dr:Destroy()
-			end
-			local cs = pf:FindFirstChild("Constraints")
-			if cs then cs:Destroy() end
-			folderConnections[#folderConnections + 1] = pf.ChildAdded:Connect(function(child)
-				if child.Name == "DoubleRig" then
-					task.defer(function()
-						local rr = child:FindFirstChild("HumanoidRootPart") or child:FindFirstChildWhichIsA("BasePart")
-						if rr then createServerGhost(rr.Position) end
-						child:Destroy()
-					end)
-				elseif child.Name == "Constraints" then
-					child:Destroy()
-				end
-			end)
-		end
-		local function doClone()
-			local character = LP.Character
-			if not (character and character:FindFirstChild("Humanoid") and character.Humanoid.Health > 0) then return false end
-			hip = character.Humanoid.HipHeight
-			oldRoot = character:FindFirstChild("HumanoidRootPart")
-			if not oldRoot or not oldRoot.Parent then return false end
-			for _, c in pairs(oldRoot:GetChildren()) do
-				if c:IsA("Attachment") and (c.Name:find("Beam") or c.Name:find("Attach")) then c:Destroy() end
-			end
-			for _, c in pairs(oldRoot:GetChildren()) do
-				if c:IsA("Beam") then c:Destroy() end
-			end
-			local tmp = Instance.new("Model")
-			tmp.Parent = game
-			character.Parent = tmp
-			clone = oldRoot:Clone()
-			clone.Parent = character
-			oldRoot.Parent = Cam
-			clone.CFrame = oldRoot.CFrame
-			character.PrimaryPart = clone
-			character.Parent = workspace
-			for _, v in pairs(character:GetDescendants()) do
-				if v:IsA("Weld") or v:IsA("Motor6D") then
-					if v.Part0 == oldRoot then v.Part0 = clone end
-					if v.Part1 == oldRoot then v.Part1 = clone end
-				end
-			end
-			tmp:Destroy()
-			clone.LocalTransparencyModifier = 1 
-			return true
-		end
-		local function revertClone()
-			local character = LP.Character
-			if not oldRoot or not oldRoot:IsDescendantOf(workspace) or not character or character.Humanoid.Health <= 0 then return end
-			local tmp = Instance.new("Model")
-			tmp.Parent = game
-			character.Parent = tmp
-			oldRoot.Parent = character
-			character.PrimaryPart = oldRoot
-			character.Parent = workspace
-			oldRoot.CanCollide = true
-			for _, v in pairs(character:GetDescendants()) do
-				if v:IsA("Weld") or v:IsA("Motor6D") then
-					if v.Part0 == clone then v.Part0 = oldRoot end
-					if v.Part1 == clone then v.Part1 = oldRoot end
-				end
-			end
-			if clone then
-				local p = clone.CFrame
-				clone:Destroy()
-				clone = nil
-				oldRoot.CFrame = p
-			end
-			oldRoot = nil
-			if character and character.Humanoid then character.Humanoid.HipHeight = hip end
-			for _, part in ipairs(character:GetDescendants()) do
-					if part:IsA("BasePart") then part.LocalTransparencyModifier = 0 end
-				end
-			
-			clearAllGhosts()
-		end
-		local function animationTrickery()
-			local character = LP.Character
-			if not (character and character:FindFirstChild("Humanoid") and character.Humanoid.Health > 0) then return end
-			local anim = Instance.new("Animation")
-			anim.AnimationId = "http://www.roblox.com/asset/?id=18537363391"
-			local humanoid = character.Humanoid
-			local animator = humanoid:FindFirstChild("Animator") or Instance.new("Animator", humanoid)
-			local animTrack = animator:LoadAnimation(anim)
-			animTrack.Priority = Enum.AnimationPriority.Action4
-			animTrack:Play(0, 1, 0)
-			anim:Destroy()
-			tracks[#tracks + 1] = animTrack
-			animTrack.Stopped:Connect(function() if animPlaying then animationTrickery() end end)
-			task.delay(0, function()
-				animTrack.TimePosition = 0.7
-				task.delay(0.3, function() if animTrack then animTrack:AdjustSpeed(math.huge) end end)
-			end)
-		end
-		local invisTurnOff, invisTurnOn
-		invisTurnOff = function()
-			clearAllGhosts()
-			if not animPlaying then return end
-			local character = LP.Character
-			local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-			animPlaying = false
-			_G.invisibleStealEnabled = false
-			for _, t in pairs(tracks) do t:Stop(0)  end
-			tracks = {}
-			if connection then connection:Disconnect(); connection = nil end
-			for _, c in ipairs(folderConnections) do if c then c:Disconnect() end end
-			folderConnections = {}
-			revertClone()
-			clearAllGhosts()
-			if humanoid then
-				local animator = humanoid:FindFirstChildOfClass("Animator")
-					if animator then
-						for _, track in ipairs(animator:GetPlayingAnimationTracks()) do
-							if track.Priority == Enum.AnimationPriority.Action4 or track.Priority == Enum.AnimationPriority.Action3 then
-								track:Stop(0)
-							end
-						end
-					end
-					humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
-					task.defer(function()
-						if humanoid and humanoid.Parent then humanoid:ChangeState(Enum.HumanoidStateType.Running) end
-					end)
-				
-			end
-			_invisToggleCooldown = tick()
-			if type(_G.SabcomPaintInvisToggles) == "function" then _G.SabcomPaintInvisToggles() end
-		end
-		invisTurnOn = function()
-			if animPlaying then return end
-			local character = LP.Character
-			if not character then return end
-			local humanoid = character:FindFirstChildOfClass("Humanoid")
-			if not humanoid then return end
-			animPlaying = true
-			_G.invisibleStealEnabled = true
-			tracks = {}
-			removeFolders()
-			if not doClone() then
-				animPlaying = false
-				_G.invisibleStealEnabled = false
-				if type(_G.SabcomPaintInvisToggles) == "function" then _G.SabcomPaintInvisToggles() end
-				return
-			end
-			task.wait(0.05)
-			animationTrickery()
-			local lastSetPosition, skipFrames = nil, 5
-			connection = RunService.PreSimulation:Connect(function()
-				if not (character and character:FindFirstChild("Humanoid") and character.Humanoid.Health > 0 and oldRoot) then return end
-				local root = character.PrimaryPart or character:FindFirstChild("HumanoidRootPart")
-				if not root then return end
-				if skipFrames > 0 then
-					skipFrames = skipFrames - 1
-					lastSetPosition = nil
-				elseif lastSetPosition then
-					local jumpDist = (oldRoot.Position - lastSetPosition).Magnitude
-					if jumpDist > 6 and not RecoveryInProgress and LP:GetAttribute("Stealing") then
-						lastSetPosition = nil
-						createServerGhost(oldRoot.Position)
-						if _G.AutoRecoverLagback ~= false then
-							RecoveryInProgress = true
-							task.spawn(function()
-								invisTurnOff()
-								task.wait(0.6)
-								if LP:GetAttribute("Stealing") then invisTurnOn() end
-								RecoveryInProgress = false
-							end)
-						end
-					end
-				end
-				if clone then
-					clone.CanCollide = true
-					clone.LocalTransparencyModifier = 1
-				end
-				if oldRoot and oldRoot.Parent then
-					for _, c in pairs(oldRoot:GetChildren()) do
-						if c:IsA("Attachment") or c:IsA("Beam") then c:Destroy() end
-					end
-					local sa = (tonumber(_G.SinkSliderValue) or 7) * 0.5
-					local cf = root.CFrame - Vector3.new(0, sa, 0)
-					oldRoot.CFrame = cf * CFrame.Angles(math.rad(tonumber(_G.InvisStealAngle) or 225), 0, 0)
-					oldRoot.AssemblyLinearVelocity = root.AssemblyLinearVelocity
-					oldRoot.CanCollide = false
-					lastSetPosition = oldRoot.Position
-				end
-			end)
-			if type(_G.SabcomPaintInvisToggles) == "function" then _G.SabcomPaintInvisToggles() end
-		end
-		local function forceToggle()
-			if animPlaying then invisTurnOff() else invisTurnOn() end
-		end
-		_G.toggleInvisibleSteal = function()
-			if (tick() - _invisToggleCooldown) < 0.3 then return end
-			forceToggle()
-		end
-		_G._forceInvisToggle = forceToggle
-		_G.SabcomInvisOff = invisTurnOff
-		_G.SabcomInvisOn = invisTurnOn
-		_G.invisibleStealEnabled = false
-		LP.CharacterAdded:Connect(function()
-			clearAllGhosts()
-			RecoveryInProgress = false
-			do
-				if Cam then
-					for _, c in pairs(Cam:GetChildren()) do
-						if c:IsA("BasePart") and c.Name == "HumanoidRootPart" then c:Destroy() end
-					end
-				end
-			end
-			if oldRoot then oldRoot:Destroy() ; oldRoot = nil end
-			if clone then clone:Destroy() ; clone = nil end
-			animPlaying = false
-			_G.invisibleStealEnabled = false
-			if connection then connection:Disconnect(); connection = nil end
-			if type(_G.SabcomPaintInvisToggles) == "function" then _G.SabcomPaintInvisToggles() end
-		end)
-		_G.SabcomAfterTpLoad(function()
-			local wasStealing, autoEnabled = false, false
-			while true do
-				task.wait(0.15)
-				if _G.AutoInvisDuringSteal ~= true then
-					if autoEnabled and animPlaying then forceToggle(); autoEnabled = false end
-					wasStealing = LP:GetAttribute("Stealing")
-				else
-					local isStealing = LP:GetAttribute("Stealing")
-					if isStealing and not wasStealing and not animPlaying then
-						task.defer(function()
-							if LP:GetAttribute("Stealing") and not animPlaying then
-								forceToggle()
-								autoEnabled = true
-							end
-						end)
-					end
-					if not isStealing and autoEnabled and animPlaying then
-						task.wait(0.3)
-						if not LP:GetAttribute("Stealing") then
-							forceToggle()
-							autoEnabled = false
-						end
-					end
-					wasStealing = isStealing
-				end
-			end
-		end)
-	end
-
-	local _BLOCKING_MACHINE_TYPES = {
-		Fuse     = true,
-		Duel     = true,
-		Trade    = true,
-		Crafting = true,
-	}
-	local function _SabcomIsFusing(animalData)
-		if type(animalData) ~= "table" then return false end
-		local m = animalData.Machine
-		if type(m) ~= "table" then return false end
-		return _BLOCKING_MACHINE_TYPES[m.Type] == true
-	end
-
-	local secure_call
-	do
-		local LAYERS = 2
-		local TEMPLATE do
-			local lines = {
-				"return function(__renv, __func, ...)",
-				"    setfenv(0, __renv)",
-				("    local function l%d(...) return __func(...) end"):format(LAYERS),
-			}
-			for c = LAYERS - 1, 1, -1 do
-				lines[#lines + 1] = ("    local function l%d(...) return l%d(...) end"):format(c, c + 1)
-			end
-			lines[#lines + 1] = "    return l1(...)"
-			lines[#lines + 1] = "end"
-			TEMPLATE = table.concat(lines, string.char(10))
-		end
-		local _gti = getthreadidentity or get_thread_identity or getidentity
-		local _sti = setthreadidentity or set_thread_identity or setidentity
-		local _sentinel, _senv
-		secure_call = (function(func, mask, ...)
-			if type(func) ~= "function" or typeof(mask) ~= "Instance" then return nil end
-			if not (_gti and _sti and getrenv and loadstring and setfenv) then return nil end
-			local renv = getrenv()
-			if not _sentinel then
-				local env = getsenv(mask)
-								if type(env) ~= "table" then
-					env = setmetatable({ script = mask, _G = {}, shared = {} }, { __index = renv, __newindex = renv })
-				end
-				local loader = loadstring(TEMPLATE, "=" .. mask:GetFullName())
-				if not loader then return nil end
-				setfenv(loader, env)
-				_sentinel, _senv = loader(), env
-			end
-			local level = _gti()
-			local changed = {}
-			local snap = debug.getupvalues(func)
-			if type(snap) == "table" then
-				for i, v in pairs(snap) do
-					if typeof(v) == "Instance" and v:IsA("LuaSourceContainer") then
-						debug.setupvalue(func, i, mask)
-						changed[i] = v
-					end
-				end
-			end
-			_sti(2)
-			local co, args = coroutine.create(_sentinel), table.pack(renv, func, ...)
-			local response, err
-			while true do
-				local r = table.pack(coroutine.resume(co, table.unpack(args, 1, args.n)))
-				if not r[1] then err = r[2] break end
-				if coroutine.status(co) == "dead" then
-					response = table.pack(table.unpack(r, 2, r.n)) break
-				end
-				args = table.pack(coroutine.yield(table.unpack(r, 2, r.n)))
-			end
-			_sti(level)
-			for i, orig in pairs(changed) do debug.setupvalue(func, i, orig) end
-			if err or not response then return nil end
-			return table.unpack(response, 1, response.n)
-		end)
-	end
-	_G.secure_call = secure_call
-
-	local _sc_mask
-	local _sc_getMask = (function()
-		if _sc_mask and _sc_mask.Parent then return _sc_mask end
-		local c = RS:FindFirstChild("Controllers") or RS:WaitForChild("Controllers", 1)
-		_sc_mask = c and (c:FindFirstChild("PlotController") or c:WaitForChild("PlotController", 1))
-		return _sc_mask
-	end)
-	_G.SabcomGetMask = _sc_getMask
-end)
-
-task.defer(function()
-	local guiParent
-	guiParent = game:GetService("CoreGui")
-	if guiParent then
-		local saveTpSettings = _G.SabcomSaveConfig or function() end
-		do
-			for _, name in ipairs({ "SabcomUI", "TPStealTestUI" }) do
-				local old = guiParent:FindFirstChild(name)
-				if old then old:Destroy() end
-				local pg = LP:FindFirstChild("PlayerGui")
-				local oldPg = pg and pg:FindFirstChild(name)
-				if oldPg then oldPg:Destroy() end
-				if gethui then
-					local h = gethui()
-					local oldH = h and h:FindFirstChild(name)
-					if oldH and oldH ~= old then oldH:Destroy() end
-				end
-			end
-		end
-
-		local F, FB = Enum.Font.Gotham, Enum.Font.GothamBold
-		local bg = Color3.fromRGB(240, 248, 255)
-		local btnC = Color3.fromRGB(220, 235, 255)
-		local accent = Color3.fromRGB(80, 160, 255)
-		local onC = accent
-		local tx = Color3.fromRGB(20, 40, 80)
-		local mute = Color3.fromRGB(100, 140, 180)
-		local strokeC = Color3.fromRGB(140, 190, 255)
-		local onTx = Color3.fromRGB(240, 250, 255)
-		local cardC = Color3.fromRGB(230, 242, 255)
-		local cute = Color3.fromRGB(120, 180, 255)
-		local glowStrokes, essenceGrads = {}, {}
-		local themedPanels, themedBtns = {}, {}
-		local applyGuiTheme
-		local function parseGuiAsset(raw)
-			local s = tostring(raw or ""):gsub("%s+", "")
-			if s == "" then return "" end
-			local n = s:match("(%d+)")
-			if not n or n == "0" then return "" end
-			return "rbxassetid://" .. n
-		end
-		local function rebuildGuiPalette()
-			local h = math.clamp(tonumber(_G.SabcomGuiHue) or 210, 0, 360) / 360
-			accent = Color3.fromHSV(h, 0.58, 1)
-			onC = accent
-			bg = Color3.fromHSV(h, 0.10, 1)
-			btnC = Color3.fromHSV(h, 0.20, 1)
-			cardC = Color3.fromHSV(h, 0.14, 1)
-			strokeC = Color3.fromHSV(h, 0.32, 1)
-			cute = Color3.fromHSV(h, 0.42, 1)
-			mute = Color3.fromHSV(h, 0.28, 0.62)
-			tx = Color3.fromHSV(h, 0.52, 0.30)
-			onTx = Color3.fromHSV(h, 0.06, 1)
-		end
-		rebuildGuiPalette()
-
-		local sg = Instance.new("ScreenGui")
-		sg.Name = "SabcomUI"
-		sg.ResetOnSpawn = false
-		sg.IgnoreGuiInset = true
-		sg.DisplayOrder = 80
-		sg.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-		sg.Parent = guiParent
-
-		local function mk(cls, par, props)
-			local i = Instance.new(cls)
-			if par then i.Parent = par end
-			if props then for k, v in pairs(props) do i[k] = v end end
-			return i
-		end
-		local function corner(i, r)
-			mk("UICorner", i, {CornerRadius = UDim.new(0, r or 14)})
-			return i
-		end
-		local function stroke(i)
-			if i.BackgroundTransparency < 0.04 then i.BackgroundTransparency = 0.04 end
-			themedPanels[#themedPanels + 1] = i
-			mk("UIStroke", i, {Name = "GlowIn", Color = strokeC, Thickness = 1.1, Transparency = 1})
-			mk("UIGradient", i, {
-				Color = ColorSequence.new({
-					ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-					ColorSequenceKeypoint.new(0.55, Color3.fromRGB(220, 240, 255)),
-					ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 220, 255)),
-				}),
-				Rotation = 108,
-			})
-			return i
-		end
-		local function btn(par, txt, sz, pos)
-			local b = mk("TextButton", par, {
-				Size = sz, Position = pos, BackgroundColor3 = btnC, BorderSizePixel = 0,
-				Text = txt, Font = FB, TextSize = 12, TextColor3 = tx, AutoButtonColor = false,
-			})
-			corner(b, 10)
-			mk("UIStroke", b, {Name = "ThemeStroke", Color = strokeC, Thickness = 1, Transparency = 0.5})
-			themedBtns[#themedBtns + 1] = b
-			return b
-		end
-		applyGuiTheme = function()
-			rebuildGuiPalette()
-			local asset = parseGuiAsset(_G.SabcomGuiBgAsset)
-			local mid = bg:Lerp(Color3.new(1, 1, 1), 0.35)
-			local deep = accent:Lerp(bg, 0.55)
-			local seq = ColorSequence.new({
-				ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
-				ColorSequenceKeypoint.new(0.55, mid),
-				ColorSequenceKeypoint.new(1, deep),
-			})
-			for i = 1, #themedPanels do
-				local f = themedPanels[i]
-				if f and f.Parent then
-					f.BackgroundColor3 = bg
-					local edge = f:FindFirstChild("GlowIn")
-					if edge and edge:IsA("UIStroke") then edge.Color = strokeC; edge.Transparency = 1 end
-					local drop = f:FindFirstChild("Drop")
-					if drop and drop:IsA("GuiObject") then drop:Destroy() end
-					local grad = f:FindFirstChildOfClass("UIGradient")
-					if grad then grad.Color = seq end
-					local img = f:FindFirstChild("ThemeBg")
-					if not img then
-						img = mk("ImageLabel", f, {
-							Name = "ThemeBg", BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1),
-							ScaleType = Enum.ScaleType.Crop, BorderSizePixel = 0, ZIndex = f.ZIndex,
-							Active = false,
-						})
-						img.Interactable = false
-						corner(img, 14)
-					end
-					img.Image = asset
-					img.Visible = asset ~= ""
-					img.ImageTransparency = 0.22
-					if asset ~= "" then
-						f.BackgroundTransparency = 0.18
-					elseif f.BackgroundTransparency < 0.04 then
-						f.BackgroundTransparency = 0.04
-					end
-				end
-			end
-			for i = 1, #themedBtns do
-				local b = themedBtns[i]
-				if b and b.Parent then
-					if b.BackgroundColor3 ~= onC then
-						b.BackgroundColor3 = btnC
-						b.TextColor3 = tx
-					end
-					local st = b:FindFirstChild("ThemeStroke")
-					if st and st:IsA("UIStroke") then st.Color = strokeC end
-				end
-			end
-		end
-		local cam = workspace.CurrentCamera
-			if cam then
-				local f = cam:FindFirstChild("SabcomGuiBlur")
-				if f then f:Destroy() end
-			end
-			local old = game:GetService("Lighting"):FindFirstChild("SabcomUIBlur")
-			if old then old:Destroy() end
-		local function drag(handle, frame, save)
-			handle.Active = true
-			handle.InputBegan:Connect(function(input)
-				if _G.SabcomLockUi then return end
-				if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then return end
-				local s, x, y = input.Position, frame.Position.X.Offset, frame.Position.Y.Offset
-				local mv, en
-				local function stop()
-					if mv then mv:Disconnect() end
-					if en then en:Disconnect() end
-					if save then save(frame) end
-				end
-				mv = UIS.InputChanged:Connect(function(m)
-					if m.UserInputType ~= Enum.UserInputType.MouseMovement and m.UserInputType ~= Enum.UserInputType.Touch then return end
-					local d = m.Position - s
-					frame.Position = UDim2.fromOffset(x + d.X, y + d.Y)
-				end)
-				en = UIS.InputEnded:Connect(function(e)
-					if e.UserInputType == Enum.UserInputType.MouseButton1 or e.UserInputType == Enum.UserInputType.Touch then stop() end
-				end)
-			end)
-		end
-		local function bindPanelDrag(handle, frame, gX, gY)
-			drag(handle, frame, function(fr)
-				_G[gX] = fr.Position.X.Offset
-				_G[gY] = fr.Position.Y.Offset
-				saveTpSettings()
-			end)
-		end
-		local function resize(handle, frame, minW, minH, save)
-			handle.Active = true
-			handle.InputBegan:Connect(function(input)
-				if _G.SabcomLockUi then return end
-				if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then return end
-				local s = input.Position
-				local startSize = frame.Size
-				local mv, en
-				local function stop()
-					if mv then mv:Disconnect() end
-					if en then en:Disconnect() end
-					if save then save(frame) end
-				end
-				mv = UIS.InputChanged:Connect(function(m)
-					if m.UserInputType ~= Enum.UserInputType.MouseMovement and m.UserInputType ~= Enum.UserInputType.Touch then return end
-					local newW = math.max(minW, startSize.X.Offset + (m.Position.X - s.X))
-					local newH = math.max(minH, startSize.Y.Offset + (m.Position.Y - s.Y))
-					frame.Size = UDim2.fromOffset(newW, newH)
-				end)
-				en = UIS.InputEnded:Connect(function(e)
-					if e.UserInputType == Enum.UserInputType.MouseButton1 or e.UserInputType == Enum.UserInputType.Touch then stop() end
-				end)
-			end)
-		end
-		local function slider(label, min, max, step, getV, setV, parent)
-			parent = parent or gearF
-			local row = mk("Frame", parent, {Size = UDim2.new(1, -4, 0, 26), BackgroundTransparency = 1})
-			local lab = mk("TextLabel", row, {
-				BackgroundTransparency = 1, Size = UDim2.new(0.72, 0, 0, 14), Font = F, TextSize = 11,
-				TextColor3 = tx, TextXAlignment = Enum.TextXAlignment.Left, Text = label,
-			})
-			local val = mk("TextLabel", row, {
-				BackgroundTransparency = 1, Size = UDim2.new(0.28, 0, 0, 14), Position = UDim2.new(0.72, 0, 0, 0),
-				Font = F, TextSize = 11, TextColor3 = mute, TextXAlignment = Enum.TextXAlignment.Right, Text = "",
-			})
-			local bar = mk("TextButton", row, {
-				Position = UDim2.fromOffset(0, 16), Size = UDim2.new(1, 0, 0, 7),
-				BackgroundColor3 = cardC, BorderSizePixel = 0, Text = "", AutoButtonColor = false,
-			})
-			corner(bar, 4)
-			local fill = mk("Frame", bar, {Size = UDim2.new(0, 0, 1, 0), BackgroundColor3 = onC, BorderSizePixel = 0})
-			corner(fill, 4)
-			local knob = mk("Frame", fill, {
-				AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, 0, 0.5, 0),
-				Size = UDim2.fromOffset(12, 12), BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-				BorderSizePixel = 0, ZIndex = 2,
-			})
-			corner(knob, 6)
-			mk("UIStroke", knob, {Color = accent, Thickness = 1.2, Transparency = 0.15})
-			local function fmt(v)
-				if v >= 1000000 then return string.format("%.1fM", v / 1000000) end
-				if v >= 10000 then return string.format("%.0fk", v / 1000) end
-				if step < 1 then return string.format("%.2f", v) end
-				return tostring(math.floor(v + 0.5))
-			end
-			local function paint()
-				local v = tonumber(getV()) or min
-				local t = math.clamp((v - min) / (max - min), 0, 1)
-				fill.Size = UDim2.new(t, 0, 1, 0)
-				val.Text = fmt(v)
-			end
-			bar.MouseButton1Down:Connect(function()
-				local function apply(x)
-					local t = math.clamp(x / math.max(1, bar.AbsoluteSize.X), 0, 1)
-					local v = min + t * (max - min)
-					v = math.floor(v / step + 0.5) * step
-					setV(v)
-					paint()
-					saveTpSettings()
-				end
-				apply(UIS:GetMouseLocation().X - bar.AbsolutePosition.X)
-				local mv, en
-				mv = UIS.InputChanged:Connect(function(m)
-					if m.UserInputType == Enum.UserInputType.MouseMovement then
-						apply(m.Position.X - bar.AbsolutePosition.X)
-					end
-				end)
-				en = UIS.InputEnded:Connect(function(e)
-					if e.UserInputType == Enum.UserInputType.MouseButton1 then
-						if mv then mv:Disconnect() end
-						if en then en:Disconnect() end
-					end
-				end)
-			end)
-			paint()
-		end
-		local function pillTog(parent, label, getOn, setOn)
-			local row = mk("Frame", parent, {Size = UDim2.new(1, -4, 0, 22), BackgroundTransparency = 1})
-			mk("TextLabel", row, {
-				BackgroundTransparency = 1, Size = UDim2.new(1, -44, 1, 0), Font = F, TextSize = 11,
-				TextColor3 = tx, TextXAlignment = Enum.TextXAlignment.Left, Text = label,
-			})
-			local track = mk("TextButton", row, {
-				Size = UDim2.fromOffset(38, 20), Position = UDim2.new(1, -38, 0.5, -10),
-				BackgroundColor3 = cardC, BorderSizePixel = 0, Text = "", AutoButtonColor = false,
-			})
-			corner(track, 10)
-			mk("UIStroke", track, {Color = strokeC, Thickness = 1, Transparency = 0.4})
-			local knob = mk("Frame", track, {
-				Size = UDim2.fromOffset(16, 16), Position = UDim2.fromOffset(2, 2),
-				BackgroundColor3 = Color3.fromRGB(255, 255, 255), BorderSizePixel = 0,
-			})
-			corner(knob, 8)
-			mk("UIStroke", knob, {Color = Color3.fromRGB(230, 190, 210), Thickness = 1, Transparency = 0.35})
-			local function paint()
-				local onv = getOn()
-				track.BackgroundColor3 = onv and onC or btnC
-				knob.Position = onv and UDim2.fromOffset(20, 2) or UDim2.fromOffset(2, 2)
-			end
-			track.MouseButton1Click:Connect(function()
-				setOn(not getOn())
-				paint()
-				saveTpSettings()
-			end)
-			paint()
-			return paint
-		end
-		local function tog(parent, label, getOn, setOn)
-			local paint = pillTog(parent, label, getOn, setOn)
-			return nil, paint
-		end
-		local function togGear(parent, label, getOn, setOn, onGear)
-			local row = mk("Frame", parent, {Size = UDim2.new(1, -4, 0, 22), BackgroundTransparency = 1})
-			mk("TextLabel", row, {
-				BackgroundTransparency = 1, Size = UDim2.new(1, -68, 1, 0), Font = F, TextSize = 11,
-				TextColor3 = tx, TextXAlignment = Enum.TextXAlignment.Left, Text = label,
-			})
-			local track = mk("TextButton", row, {
-				Size = UDim2.fromOffset(38, 20), Position = UDim2.new(1, -66, 0.5, -10),
-				BackgroundColor3 = cardC, BorderSizePixel = 0, Text = "", AutoButtonColor = false,
-			})
-			corner(track, 10)
-			mk("UIStroke", track, {Color = strokeC, Thickness = 1, Transparency = 0.4})
-			local knob = mk("Frame", track, {
-				Size = UDim2.fromOffset(16, 16), Position = UDim2.fromOffset(2, 2),
-				BackgroundColor3 = Color3.fromRGB(255, 255, 255), BorderSizePixel = 0,
-			})
-			corner(knob, 8)
-			mk("UIStroke", knob, {Color = Color3.fromRGB(230, 190, 210), Thickness = 1, Transparency = 0.35})
-			local function paint()
-				local onv = getOn()
-				track.BackgroundColor3 = onv and onC or btnC
-				knob.Position = onv and UDim2.fromOffset(20, 2) or UDim2.fromOffset(2, 2)
-			end
-			track.MouseButton1Click:Connect(function()
-				setOn(not getOn())
-				paint()
-				saveTpSettings()
-			end)
-			paint()
-			local gear = btn(row, "\u{2699}", UDim2.fromOffset(26, 22), UDim2.new(1, -26, 0, 0))
-			gear.TextSize = 14
-			gear.AutoButtonColor = false
-			gear.MouseButton1Click:Connect(function()
-				if onGear then onGear() end
-			end)
-			return nil, paint
-		end
-		local function keyBindRow(parent, label, getN, setN)
-			local row = mk("Frame", parent, {Size = UDim2.new(1, -4, 0, 26), BackgroundTransparency = 1})
-			mk("TextLabel", row, {
-				BackgroundTransparency = 1, Size = UDim2.new(1, -62, 1, 0), Font = F, TextSize = 11,
-				TextColor3 = tx, TextXAlignment = Enum.TextXAlignment.Left, Text = label,
-			})
-			local k = btn(row, tostring(getN() or ""), UDim2.fromOffset(56, 24), UDim2.new(1, -56, 0, 1))
-			k.MouseButton1Click:Connect(function()
-				k.Text = "..."
-				_G.SabcomCapturingKey = true
-				local conn
-				conn = UIS.InputBegan:Connect(function(input)
-					if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
-					conn:Disconnect()
-					_G.SabcomCapturingKey = false
-					setN(input.KeyCode.Name)
-					k.Text = input.KeyCode.Name
-					if type(_G.SabcomSaveConfigNow) == "function" then
-						_G.SabcomSaveConfigNow()
-					else
-						saveTpSettings()
-					end
-				end)
-			end)
-		end
-
-		local akPaintMain, akPaintSteal
-		local faPaintMain, faPaintSteal
-		local ivPaintMain, ivPaintSteal
-		local wsPaintPanel, wsPaintSteal
-		local fovPaintPanel, fovPaintSteal
-		local abPaintMain, abPaintSteal, abPaintPanel
-		local tgt, extras, priOpenBtn, priPanel
-		local guiHidden = false
-		local miniUi, miniBody
-		local akPanel, abPanel, psPanel, faPanel, ivPanel, wsPanel, fovPanel
-		local function miniHasOpen()
-			local list = {akPanel, wsPanel, fovPanel, abPanel, ivPanel, psPanel}
-			for i = 1, #list do
-				local p = list[i]
-				if p and p.Visible then return true end
-			end
-			return false
-		end
-		local function layoutCompactTools()
-			if not miniUi then return end
-			if not tonumber(_G._stp_toolX) or not tonumber(_G._stp_toolY) then
-				local x = tgt and tgt.Position.X.Offset or 16
-				local th = tgt and (tgt.AbsoluteSize.Y > 1 and tgt.AbsoluteSize.Y or tgt.Size.Y.Offset) or 258
-				_G._stp_toolX = x
-				_G._stp_toolY = tgt and (tgt.Position.Y.Offset + th + 6) or 348
-			end
-			miniUi.Position = UDim2.fromOffset(_G._stp_toolX, _G._stp_toolY)
-			miniUi.Visible = (not guiHidden) and miniHasOpen()
-		end
-		local AK_H, PS_H = 56, 50
-		local AB_H = 74
-		local IV_H = 188
-		local WS_H = 52
-		local FOV_H = 52
-		local faSearch, faList, faRefreshList
-		local paintInvisSteal, paintInvisIv
-		local gearF
-		local function setInvisGui(v)
-			_G.SabcomInvisGui = v and true or false
-			if ivPanel then ivPanel.Visible = _G.SabcomInvisGui == true end
-			if ivPaintMain then ivPaintMain() end
-			if ivPaintSteal then ivPaintSteal() end
-			layoutCompactTools()
-		end
-		local function setFaceAwayGui(v)
-			_G.SabcomFaceAwayGui = v and true or false
-			if faPanel then faPanel.Visible = _G.SabcomFaceAwayGui == true end
-			if faPaintMain then faPaintMain() end
-			if faPaintSteal then faPaintSteal() end
-		end
-		local function setFaceAway(on)
-			_G.SabcomFaceAway = on and true or false
-			if type(_G.SabcomSetFaceAway) == "function" then _G.SabcomSetFaceAway(on) end
-			saveTpSettings()
-		end
-		local function setAutoBuyGui(v)
-			_G.SabcomAutoBuyGui = v and true or false
-			if abPanel then abPanel.Visible = _G.SabcomAutoBuyGui == true end
-			if abPaintMain then abPaintMain() end
-			if abPaintSteal then abPaintSteal() end
-			layoutCompactTools()
-		end
-		local function setAutoKickGui(v)
-			_G.SabcomAutoKickGui = v and true or false
-			if akPanel then akPanel.Visible = _G.SabcomAutoKickGui == true end
-			if not v and psPanel then psPanel.Visible = false end
-			if akPaintMain then akPaintMain() end
-			if akPaintSteal then akPaintSteal() end
-			layoutCompactTools()
-		end
-		local function setWalkSpeedGui(v)
-			_G.SabcomWalkSpeedGui = v and true or false
-			if wsPanel then wsPanel.Visible = _G.SabcomWalkSpeedGui ~= false end
-			layoutCompactTools()
-		end
-		local function setFovGui(v)
-			_G.SabcomFovGui = v and true or false
-			if fovPanel then fovPanel.Visible = _G.SabcomFovGui ~= false end
-			layoutCompactTools()
-		end
-		local function syncInvisToggle(wantOn)
-			local on = _G.invisibleStealEnabled == true
-			if wantOn == on then return end
-			if type(_G.toggleInvisibleSteal) == "function" then
-				_G.toggleInvisibleSteal()
-			end
-		end
-		local function paintAllInvisToggles()
-			if paintInvisSteal then paintInvisSteal() end
-			if paintInvisIv then paintInvisIv() end
-		end
-		_G.SabcomPaintInvisToggles = paintAllInvisToggles
-
-		RunService.Heartbeat:Connect(function()
-			local t = os.clock()
-			local pulse = 0.34 + math.sin(t * 1.4) * 0.05
-			for i = 1, #glowStrokes do
-				local s = glowStrokes[i]
-				if s and s.Parent then s.Transparency = pulse end
-			end
-		end)
-
-		local wm = mk("Frame", sg, {
-			AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0, 10),
-			Size = UDim2.fromOffset(268, 52), BackgroundColor3 = bg,
-			BackgroundTransparency = 0.02, BorderSizePixel = 0, ZIndex = 120,
-		})
-		corner(wm, 16)
-		stroke(wm)
-		local wmMark = mk("Frame", wm, {
-			Position = UDim2.fromOffset(10, 10), Size = UDim2.fromOffset(32, 32),
-			BackgroundColor3 = onC, BorderSizePixel = 0, ZIndex = 122,
-		})
-		corner(wmMark, 10)
-		mk("TextLabel", wmMark, {
-			BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1),
-			Font = Enum.Font.GothamBlack, TextSize = 16, TextColor3 = onTx, Text = "S", ZIndex = 123,
-		})
-		mk("TextLabel", wm, {
-			BackgroundTransparency = 1, Size = UDim2.new(1, -56, 0, 18), Position = UDim2.fromOffset(50, 8),
-			Font = Enum.Font.GothamBlack, TextSize = 15, TextColor3 = tx, Text = "Sabcom - leaked by haz", ZIndex = 122,
-			TextXAlignment = Enum.TextXAlignment.Left,
-		})
-		mk("TextLabel", wm, {
-			BackgroundTransparency = 1, Size = UDim2.new(1, -56, 0, 14), Position = UDim2.fromOffset(50, 28),
-			Font = F, TextSize = 11, TextColor3 = mute, Text = "dsc.gg/hazhub", ZIndex = 122,
-			TextXAlignment = Enum.TextXAlignment.Left,
-		})
-
-		local extrasHidden = _G.SabcomAutoCloseGui == true
-		local extrasBtn, extrasLbl, extrasStroke
-		local openBtn = mk("TextButton", sg, {
-			AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0, 72),
-			Size = UDim2.fromOffset(152, 36), BackgroundColor3 = bg,
-			BackgroundTransparency = 0.04, BorderSizePixel = 0, Text = "", AutoButtonColor = false,
-			Visible = false, ZIndex = 130,
-		})
-		mk("UICorner", openBtn, {CornerRadius = UDim.new(1, 0)})
-		local openStroke = mk("UIStroke", openBtn, {Color = accent, Thickness = 1.6, Transparency = 0.12})
-		glowStrokes[#glowStrokes + 1] = openStroke
-		local openLbl = mk("TextLabel", openBtn, {
-			Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1, BorderSizePixel = 0,
-			Text = "OPEN GUI", Font = Enum.Font.GothamBlack, TextSize = 16,
-			TextColor3 = Color3.fromRGB(100, 180, 255),
-			TextStrokeColor3 = Color3.fromRGB(160, 210, 255),
-			TextStrokeTransparency = 0.45, ZIndex = 132,
-		})
-		openBtn.MouseEnter:Connect(function()
-			openLbl.TextColor3 = Color3.fromRGB(70, 150, 255)
-			openStroke.Transparency = 0.02
-		end)
-		openBtn.MouseLeave:Connect(function()
-			openLbl.TextColor3 = Color3.fromRGB(100, 180, 255)
-			openStroke.Transparency = 0.12
-		end)
-		local function paintOpenGuiBtn()
-			if not extrasBtn then return end
-			local closed = extrasHidden == true
-			extrasLbl.Text = closed and "OPEN GUI" or "EXTRAS"
-			extrasLbl.TextColor3 = closed and Color3.fromRGB(70, 150, 255) or tx
-			extrasLbl.TextStrokeTransparency = closed and 0.4 or 0.75
-			extrasStroke.Transparency = closed and 0.06 or 0.32
-			extrasBtn.BackgroundTransparency = closed and 0.02 or 0.12
-			extrasBtn.BackgroundColor3 = closed and cute or btnC
-		end
-		local function setExtrasHidden(v)
-			extrasHidden = v and true or false
-			if extras then extras.Visible = (not guiHidden) and (not extrasHidden) end
-			paintOpenGuiBtn()
-		end
-		local function setGuiHidden(v)
-			guiHidden = v and true or false
-			_G.SabcomGuiHidden = guiHidden
-			if extras then extras.Visible = (not guiHidden) and (not extrasHidden) end
-			if faPanel then faPanel.Visible = (not guiHidden) and (_G.SabcomFaceAwayGui == true) end
-			if priPanel and guiHidden then priPanel.Visible = false end
-			if stealInfo then stealInfo.Visible = not guiHidden end
-			openBtn.Visible = guiHidden
-			if extrasBtn then extrasBtn.Visible = not guiHidden end
-			paintOpenGuiBtn()
-			layoutCompactTools()
-		end
-		_G.SabcomSetGuiHidden = setGuiHidden
-		_G.SabcomToggleGui = function()
-			setGuiHidden(not guiHidden)
-		end
-		openBtn.MouseButton1Click:Connect(function()
-			setGuiHidden(false)
-		end)
-
-		local stealInfo = mk("Frame", sg, {
-			AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -12, 0, 72),
-			Size = UDim2.fromOffset(276, 104), BackgroundColor3 = bg, BackgroundTransparency = 0.02,
-			BorderSizePixel = 0, ZIndex = 118, Active = true,
-		})
-		corner(stealInfo, 16)
-		stroke(stealInfo)
-		mk("TextLabel", stealInfo, {
-			Position = UDim2.fromOffset(14, 8), Size = UDim2.new(1, -24, 0, 12),
-			BackgroundTransparency = 1, Font = FB, TextSize = 10, TextColor3 = mute,
-			TextXAlignment = Enum.TextXAlignment.Left, Text = "STEAL TARGET", ZIndex = 119,
-		})
-		local stealIconBg = mk("Frame", stealInfo, {
-			Position = UDim2.fromOffset(10, 22), Size = UDim2.fromOffset(68, 68),
-			BackgroundColor3 = cardC, BackgroundTransparency = 0.04,
-			BorderSizePixel = 0, ZIndex = 119,
-		})
-		corner(stealIconBg, 12)
-		mk("UIStroke", stealIconBg, {Color = accent, Thickness = 1.1, Transparency = 0.25})
-		local stealIconVp = mk("ViewportFrame", stealIconBg, {
-			Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1, BorderSizePixel = 0,
-			Ambient = Color3.fromRGB(200, 230, 255), LightColor = Color3.fromRGB(220, 240, 255),
-			LightDirection = Vector3.new(-1, -1, -1), ZIndex = 120,
-		})
-		corner(stealIconVp, 12)
-		local stealTargetName = mk("TextLabel", stealInfo, {
-			Position = UDim2.fromOffset(88, 22), Size = UDim2.new(1, -100, 0, 20),
-			BackgroundTransparency = 1, Font = FB, TextSize = 13, TextColor3 = onC,
-			TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd,
-			Text = "No target", ZIndex = 119,
-		})
-		local stealTargetStat = mk("TextLabel", stealInfo, {
-			Position = UDim2.fromOffset(88, 44), Size = UDim2.new(1, -100, 0, 16),
-			BackgroundTransparency = 1, Font = F, TextSize = 11, TextColor3 = tx,
-			TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd,
-			Text = "", ZIndex = 119,
-		})
-		local stealTargetOwner = mk("TextLabel", stealInfo, {
-			Position = UDim2.fromOffset(88, 64), Size = UDim2.new(1, -100, 0, 16),
-			BackgroundTransparency = 1, Font = F, TextSize = 10, TextColor3 = mute,
-			TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd,
-			Text = "", ZIndex = 119,
-		})
-
-		local _stealIconKey, _animalsMod
-		local function _getAnimalsMod()
-			if type(_animalsMod) == "table" then return _animalsMod end
-			local sh = RS:FindFirstChild("Shared")
-			local an = sh and sh:FindFirstChild("Animals")
-			if not an then return nil end
-			local mod = require(an)
-			if type(mod) == "table" then _animalsMod = mod end
-			return _animalsMod
-		end
-		local function _clearStealIcon()
-			_stealIconKey = nil
-			stealIconVp.CurrentCamera = nil
-			for _, c in ipairs(stealIconVp:GetChildren()) do
-				c:Destroy()
-			end
-		end
-		local function _fitStealIcon(model)
-			if not model then return end
-			local cam = stealIconVp.CurrentCamera
-			if not (cam and cam.Parent) then
-				cam = Instance.new("Camera")
-				cam.Parent = stealIconVp
-				stealIconVp.CurrentCamera = cam
-			end
-			cam.FieldOfView = 28
-			local minv, maxv
-			for _, d in ipairs(model:GetDescendants()) do
-				if d:IsA("BasePart") and d.Transparency < 0.92 and d.Size.Magnitude > 0.08 then
-					local cf, hs = d.CFrame, d.Size * 0.5
-					for _, ox in ipairs({ -1, 1 }) do
-						for _, oy in ipairs({ -1, 1 }) do
-							for _, oz in ipairs({ -1, 1 }) do
-								local p = cf * Vector3.new(hs.X * ox, hs.Y * oy, hs.Z * oz)
-								if not minv then
-									minv, maxv = p, p
-								else
-									minv = Vector3.new(math.min(minv.X, p.X), math.min(minv.Y, p.Y), math.min(minv.Z, p.Z))
-									maxv = Vector3.new(math.max(maxv.X, p.X), math.max(maxv.Y, p.Y), math.max(maxv.Z, p.Z))
-								end
-							end
-						end
-					end
-				end
-			end
-			local center, size
-			if minv then
-				center = (minv + maxv) * 0.5
-				size = maxv - minv
-			else
-				local cf, bb
-				cf, bb = model:GetBoundingBox()
-				
-				if not cf then return end
-				center, size = cf.Position, bb
-			end
-			local half = math.max(size.X, size.Y, 0.2) * 0.5
-			local dist = (half / math.tan(math.rad(cam.FieldOfView) * 0.5)) * 1.08
-			dist = math.max(dist, size.Z * 0.55)
-			local dir = Vector3.new(0.42, 0.22, 1).Unit
-			cam.CFrame = CFrame.lookAt(center + dir * dist, center)
-		end
-		local function _showStealIcon(pet)
-			local key = pet and tostring(pet.index or pet.name or "")
-			if key == "" or key == "?" then
-				_clearStealIcon()
-				return
-			end
-			if _stealIconKey == key then return end
-			_clearStealIcon()
-			_stealIconKey = key
-
-			local clone
-			local src = pet.model
-			if typeof(src) == "Instance" and src.Parent then
-				clone = src:Clone() 
-			end
-			if not clone then
-				local mod = _getAnimalsMod()
-				if mod then
-					if type(mod.GetAnimatedModel) == "function" then
-						local m = mod.GetAnimatedModel(mod, key)
-						if typeof(m) == "Instance" then
-							clone = m:Clone() 
-						end
-					end
-					if not clone and type(mod.AttachOnViewport) == "function" then
-						mod.AttachOnViewport(mod, key, stealIconVp, true)
-						if #stealIconVp:GetChildren() > 0 then return end
-					end
-				end
-			end
-			if not clone then return end
-			for _, d in ipairs(clone:GetDescendants()) do
-				if d:IsA("Script") or d:IsA("LocalScript") or d:IsA("Highlight") then
-					d:Destroy()
-				elseif d:IsA("BasePart") then
-					d.Anchored = true
-				end
-			end
-			local wm = Instance.new("WorldModel")
-			wm.Parent = stealIconVp
-			clone.Parent = wm
-			_fitStealIcon(clone)
-		end
-
-		local paintBar = function()
-			local pet = _G.SabcomStealTarget
-			if type(pet) ~= "table" then
-				local list = _G.SabcomStealPetList
-				if type(list) == "table" and list[1] then pet = list[1] end
-			end
-			if type(pet) ~= "table" then
-				stealTargetName.Text = "No target"
-				stealTargetStat.Text = ""
-				stealTargetOwner.Text = ""
-				_clearStealIcon()
-				return
-			end
-			local genTxt = pet.genText or ""
-			if genTxt == "" and _G.SabcomEnsurePetGen then
-				_, genTxt = _G.SabcomEnsurePetGen(pet)
-			end
-			if genTxt == "" then genTxt = tostring(pet.mps or "") .. "/s" end
-			stealTargetName.Text = tostring(pet.name or "?")
-			stealTargetStat.Text = genTxt
-			stealTargetOwner.Text = tostring(pet.owner or "Unknown")
-			_showStealIcon(pet)
-		end
-		tgt = mk("Frame", sg, {
-			Size = UDim2.fromOffset(256, 268),
-			Position = UDim2.fromOffset(tonumber(_G._stp_stealX) or 16, tonumber(_G._stp_stealY) or 80),
-			BackgroundColor3 = bg, BackgroundTransparency = 0.02, BorderSizePixel = 0, Active = true,
-		})
-		corner(tgt, 16)
-		stroke(tgt)
-		if applyGuiTheme then applyGuiTheme() end
-		local tgtH = mk("TextButton", tgt, {
-			Size = UDim2.new(1, -118, 0, 28), BackgroundTransparency = 1,
-			Text = "", AutoButtonColor = false,
-		})
-		mk("TextLabel", tgtH, {
-			BackgroundTransparency = 1, Size = UDim2.fromOffset(78, 28), Position = UDim2.fromOffset(10, 0),
-			Font = FB, TextSize = 13, TextColor3 = tx, TextXAlignment = Enum.TextXAlignment.Left, Text = "TARGETS",
-		})
-		local tgtCountLbl = mk("TextLabel", tgtH, {
-			BackgroundTransparency = 1, Size = UDim2.fromOffset(36, 28), Position = UDim2.fromOffset(86, 0),
-			Font = FB, TextSize = 13, TextColor3 = mute, TextXAlignment = Enum.TextXAlignment.Left, Text = "0",
-		})
-		extrasBtn = mk("TextButton", tgt, {
-			AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -8, 0, 2),
-			Size = UDim2.fromOffset(104, 24), BackgroundColor3 = cute,
-			BackgroundTransparency = 0.02, BorderSizePixel = 0, Text = "", AutoButtonColor = false,
-			Active = true, ZIndex = 8,
-		})
-		mk("UICorner", extrasBtn, {CornerRadius = UDim.new(1, 0)})
-		extrasStroke = mk("UIStroke", extrasBtn, {Color = accent, Thickness = 1.5, Transparency = 0.08})
-		glowStrokes[#glowStrokes + 1] = extrasStroke
-		extrasLbl = mk("TextLabel", extrasBtn, {
-			Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1, BorderSizePixel = 0,
-			Text = "OPEN GUI", Font = Enum.Font.GothamBlack, TextSize = 12,
-			TextColor3 = Color3.fromRGB(70, 150, 255),
-			TextStrokeColor3 = Color3.fromRGB(160, 210, 255),
-			TextStrokeTransparency = 0.4, ZIndex = 9,
-		})
-		extrasBtn.MouseEnter:Connect(function()
-			extrasLbl.TextColor3 = Color3.fromRGB(50, 130, 255)
-			extrasStroke.Transparency = 0.02
-		end)
-		extrasBtn.MouseLeave:Connect(function()
-			paintOpenGuiBtn()
-		end)
-		extrasBtn.MouseButton1Click:Connect(function()
-			setExtrasHidden(not extrasHidden)
-		end)
-		paintOpenGuiBtn()
-
-		mk("Frame", tgt, {
-			Size = UDim2.new(1, -20, 0, 1), Position = UDim2.fromOffset(10, 28),
-			BackgroundColor3 = onC, BackgroundTransparency = 0.35, BorderSizePixel = 0,
-		})
-		drag(tgtH, tgt, function(fr)
-			_G._stp_stealX, _G._stp_stealY = fr.Position.X.Offset, fr.Position.Y.Offset
-			saveTpSettings()
-		end)
-		local tgtModeRow = mk("Frame", tgt, {
-			Size = UDim2.new(1, -16, 0, 26), Position = UDim2.fromOffset(8, 36),
-			BackgroundTransparency = 1,
-		})
-		local tgtPriBtn = btn(tgtModeRow, "PRIORITY", UDim2.new(0.5, -3, 1, 0), UDim2.new(0, 0, 0, 0))
-		local tgtNearBtn = btn(tgtModeRow, "NEAREST", UDim2.new(0.5, -3, 1, 0), UDim2.new(0.5, 3, 0, 0))
-		tgtPriBtn.TextSize = 11
-		tgtNearBtn.TextSize = 11
-		tgtPriBtn.AutoButtonColor = false
-		tgtNearBtn.AutoButtonColor = false
-		corner(tgtPriBtn, 8)
-		corner(tgtNearBtn, 8)
-		local tgtScroll = mk("ScrollingFrame", tgt, {
-			Position = UDim2.fromOffset(8, 90), Size = UDim2.new(1, -16, 1, -98),
-			BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 4,
-			AutomaticCanvasSize = Enum.AutomaticSize.Y, CanvasSize = UDim2.fromOffset(0, 0),
-		})
-		mk("UIListLayout", tgtScroll, {Padding = UDim.new(0, 6)})
-		local lastSig = ""
-		local paintList
-		local function paintTgtMode()
-			local mode = tostring(_G.SabcomStealMode or "priority"):lower()
-			if mode == "highest" then mode = "value" end
-			local priOn = mode ~= "nearest"
-			tgtPriBtn.BackgroundColor3 = priOn and onC or btnC
-			tgtPriBtn.TextColor3 = priOn and onTx or mute
-			tgtNearBtn.BackgroundColor3 = (mode == "nearest") and onC or btnC
-			tgtNearBtn.TextColor3 = (mode == "nearest") and onTx or mute
-		end
-		local function setTgtMode(m)
-			m = tostring(m or "priority"):lower()
-			if m ~= "nearest" then m = "priority" end
-			_G.SabcomManualStealUID = nil
-			if type(_G.SabcomClearTPSync) == "function" then _G.SabcomClearTPSync() end
-			_G.SabcomStealMode = m
-			_G.SabcomTPMode = m
-			if type(_G.SabcomSyncNearestInstant) == "function" then _G.SabcomSyncNearestInstant() end
-			if type(_G.SabcomForceResortList) == "function" then _G.SabcomForceResortList() end
-			if type(_G.SabcomRefreshStealTarget) == "function" then _G.SabcomRefreshStealTarget() end
-			saveTpSettings()
-			paintTgtMode()
-			lastSig = ""
-			if paintList then paintList() end
-		end
-		tgtPriBtn.MouseButton1Click:Connect(function() setTgtMode("priority") end)
-		tgtNearBtn.MouseButton1Click:Connect(function() setTgtMode("nearest") end)
-		local autoGoBtn = btn(tgt, "AUTO GO ON SWITCH", UDim2.new(1, -16, 0, 22), UDim2.fromOffset(8, 64))
-		autoGoBtn.TextSize = 10
-		autoGoBtn.AutoButtonColor = false
-		corner(autoGoBtn, 8)
-		local function paintAutoGoBtn()
-			local on = _G.SabcomAutoGoOnSwitch == true
-			autoGoBtn.BackgroundColor3 = on and onC or btnC
-			autoGoBtn.TextColor3 = on and onTx or mute
-		end
-		autoGoBtn.MouseButton1Click:Connect(function()
-			_G.SabcomAutoGoOnSwitch = not (_G.SabcomAutoGoOnSwitch == true)
-			paintAutoGoBtn()
-			saveTpSettings()
-		end)
-		paintAutoGoBtn()
-
-		_G.SabcomPaintTgtMode = paintTgtMode
-		paintList = function()
-			local pets = _G.SabcomStealPetList
-			if type(pets) ~= "table" then pets = {} end
-			local mode = tostring(_G.SabcomStealMode or "priority"):lower()
-			if mode == "highest" then mode = "value" end
-			tgtCountLbl.Text = tostring(#pets)
-			paintTgtMode()
-			local selUid = _G.SabcomManualStealUID
-			if type(selUid) ~= "string" or selUid == "" then
-				local sel = _G.SabcomStealTarget
-				if sel and sel.plot and sel.slot then
-					selUid = tostring(sel.plot) .. "_" .. tostring(sel.slot)
-				elseif sel and sel.uid then
-					selUid = tostring(sel.uid)
-				end
-			end
-			local sig = mode .. "#" .. tostring(selUid) .. "#" .. tostring(#pets)
-			if pets[1] then sig = sig .. tostring(pets[1].name) .. tostring(pets[1].mps) end
-			if sig == lastSig then return end
-			lastSig = sig
-			for _, ch in ipairs(tgtScroll:GetChildren()) do
-				if ch:IsA("GuiObject") and not ch:IsA("UIListLayout") then ch:Destroy() end
-			end
-			for i, pet in ipairs(pets) do
-				if i > 14 then break end
-				local uid = tostring(pet.plot) .. "_" .. tostring(pet.slot)
-				local gen
-				if _G.SabcomEnsurePetGen then
-					_, gen = _G.SabcomEnsurePetGen(pet)
-				else
-					gen = pet.genText or tostring(pet.mps or "")
-				end
-				local mut = tostring(pet.mutation or "")
-				if mut == "None" then mut = "" end
-				local subTxt = tostring(gen or "")
-				if mut ~= "" then
-					subTxt = (subTxt ~= "" and (subTxt .. "  " .. mut) or mut)
-				end
-				if subTxt == "" then subTxt = "#" .. i end
-				local selected = selUid and selUid == uid
-				local row = mk("TextButton", tgtScroll, {
-					Size = UDim2.new(1, -4, 0, 46), BackgroundColor3 = cardC, BorderSizePixel = 0,
-					Text = "", AutoButtonColor = false,
-				})
-				corner(row, 10)
-				local accentBar = mk("Frame", row, {
-					Size = UDim2.fromOffset(3, 22), Position = UDim2.new(0, 8, 0.5, -11),
-					BackgroundColor3 = selected and onC or Color3.fromRGB(255, 255, 255),
-					BorderSizePixel = 0,
-				})
-				corner(accentBar, 2)
-				mk("TextLabel", row, {
-					BackgroundTransparency = 1, Position = UDim2.fromOffset(18, 6),
-					Size = UDim2.new(1, -26, 0, 18), Font = FB, TextSize = 13, TextColor3 = tx,
-					TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd,
-					Text = tostring(pet.name or "?"),
-				})
-				mk("TextLabel", row, {
-					BackgroundTransparency = 1, Position = UDim2.fromOffset(18, 24),
-					Size = UDim2.new(1, -26, 0, 16), Font = F, TextSize = 11, TextColor3 = mute,
-					TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd,
-					Text = subTxt,
-				})
-				row.MouseButton1Click:Connect(function()
-					if _G.SabcomManualStealUID == uid then
-						_G.SabcomManualStealUID = nil
-						if type(_G.SabcomClearTPSync) == "function" then
-							_G.SabcomClearTPSync()
-						end
-					else
-						_G.SabcomManualStealUID = uid
-						pet.uid = uid
-						_G.SabcomStealTargetUID = uid
-						_G.SabcomTPSyncActive = true
-						_G.SabcomApplyStealTarget(pet)
-						if type(_G.sabcomArmSteal) == "function" then
-							_G.sabcomArmSteal(pet)
-						end
-						task.defer(function()
-							if type(_G.SabcomTryGoOnTargetSwitch) == "function" then
-								_G.SabcomTryGoOnTargetSwitch(pet)
-							end
-						end)
-					end
-					lastSig = ""
-					paintList()
-				end)
-			end
-		end
-		_G.SabcomOnStealList = function() paintList(); paintBar() end
-		_G.SabcomOnStealTarget = function() paintList(); paintBar() end
-		_G.SabcomPaintStealList = paintList
-		_G.SabcomPaintStealBar = paintBar
-		paintTgtMode()
-		paintList()
-		paintBar()
-		_G.__sabcomRestReady = true
-		_G.__sabcomTpGuiReady = true
-		if _G.SabcomLoadOptimizer == true and type(_G.SabcomSetLoadOptimizer) == "function" then
-			task.defer(function() _G.SabcomSetLoadOptimizer(true) end)
-		end
-		if _G.SabcomErrorFix == true and type(_G.SabcomSetErrorFix) == "function" then
-			task.defer(function() _G.SabcomSetErrorFix(true) end)
-		end
-		task.defer(function()
-			if _G.SabcomXray == true then
-				if type(_G.SabcomStartXrayRetry) == "function" then
-					_G.SabcomStartXrayRetry()
-				elseif type(_G.SabcomApplyXrayIfEnabled) == "function" then
-					_G.SabcomApplyXrayIfEnabled()
-				end
-			end
-		end)
-
-		local extrasBuilt = false
-		local function ensureExtras()
-			if extrasBuilt then return extras end
-			extrasBuilt = true
-			extras = mk("Frame", sg, {
-				Name = "Extras",
-				Size = UDim2.fromOffset(256, 368),
-				Position = UDim2.fromOffset(
-					tonumber(_G._stp_exX) or ((tonumber(_G._stp_stealX) or 16) + 268),
-					tonumber(_G._stp_exY) or (tonumber(_G._stp_stealY) or 80)
-				),
-				BackgroundColor3 = bg, BackgroundTransparency = 0.02, BorderSizePixel = 0, Active = true,
-				Visible = (not guiHidden) and (not extrasHidden), ClipsDescendants = false,
-			})
-			corner(extras, 16)
-			stroke(extras)
-			local exHead = mk("TextButton", extras, {
-				Size = UDim2.new(1, 0, 0, 24), BackgroundTransparency = 1,
-				Text = "", AutoButtonColor = false,
-			})
-			mk("TextLabel", exHead, {
-				BackgroundTransparency = 1, Size = UDim2.new(1, -12, 1, 0), Position = UDim2.fromOffset(10, 0),
-				Font = FB, TextSize = 12, TextColor3 = tx, TextXAlignment = Enum.TextXAlignment.Left,
-				Text = "SABCOM - HAZ",
-			})
-			drag(exHead, extras, function(fr)
-				_G._stp_exX, _G._stp_exY = fr.Position.X.Offset, fr.Position.Y.Offset
-				saveTpSettings()
-			end)
-			mk("Frame", extras, {
-				Size = UDim2.new(1, -20, 0, 1), Position = UDim2.fromOffset(10, 24),
-				BackgroundColor3 = onC, BackgroundTransparency = 0.4, BorderSizePixel = 0,
-			})
-			local tabRow = mk("Frame", extras, {
-				Size = UDim2.new(1, -16, 0, 22), Position = UDim2.fromOffset(8, 30),
-				BackgroundTransparency = 1,
-			})
-			local featTab = btn(tabRow, "FEATURES", UDim2.new(0.5, -3, 1, 0), UDim2.new(0, 0, 0, 0))
-			local bindTab = btn(tabRow, "KEYBINDS", UDim2.new(0.5, -3, 1, 0), UDim2.new(0.5, 3, 0, 0))
-			featTab.TextSize = 10
-			bindTab.TextSize = 10
-			featTab.AutoButtonColor = false
-			bindTab.AutoButtonColor = false
-			featTab.BackgroundTransparency = 1
-			bindTab.BackgroundTransparency = 1
-			local featU = mk("Frame", featTab, {
-				AnchorPoint = Vector2.new(0.5, 1), Position = UDim2.new(0.5, 0, 1, 0),
-				Size = UDim2.new(0.72, 0, 0, 2), BackgroundColor3 = onC, BorderSizePixel = 0,
-			})
-			local bindU = mk("Frame", bindTab, {
-				AnchorPoint = Vector2.new(0.5, 1), Position = UDim2.new(0.5, 0, 1, 0),
-				Size = UDim2.new(0.72, 0, 0, 2), BackgroundColor3 = onC, BorderSizePixel = 0, Visible = false,
-			})
-			local featPage = mk("ScrollingFrame", extras, {
-				Position = UDim2.fromOffset(8, 56), Size = UDim2.new(1, -16, 1, -96),
-				BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 3,
-				CanvasSize = UDim2.fromOffset(0, 0), AutomaticCanvasSize = Enum.AutomaticSize.Y,
-				Visible = true,
-			})
-			mk("UIListLayout", featPage, {Padding = UDim.new(0, 5), SortOrder = Enum.SortOrder.LayoutOrder})
-			mk("UIPadding", featPage, {PaddingTop = UDim.new(0, 4), PaddingBottom = UDim.new(0, 10)})
-			local bindPage = mk("ScrollingFrame", extras, {
-				Position = UDim2.fromOffset(8, 56), Size = UDim2.new(1, -16, 1, -96),
-				BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 3,
-				CanvasSize = UDim2.fromOffset(0, 0), AutomaticCanvasSize = Enum.AutomaticSize.Y,
-				Visible = false,
-			})
-			mk("UIListLayout", bindPage, {Padding = UDim.new(0, 4), SortOrder = Enum.SortOrder.LayoutOrder})
-			mk("UIPadding", bindPage, {PaddingTop = UDim.new(0, 2), PaddingBottom = UDim.new(0, 6)})
-			local extrasTab = "features"
-			local function paintTabs()
-				featTab.TextColor3 = extrasTab == "features" and tx or mute
-				bindTab.TextColor3 = extrasTab == "keybinds" and tx or mute
-				featU.Visible = extrasTab == "features"
-				bindU.Visible = extrasTab == "keybinds"
-				featPage.Visible = extrasTab == "features"
-				bindPage.Visible = extrasTab == "keybinds"
-			end
-			featTab.MouseButton1Click:Connect(function() extrasTab = "features"; paintTabs() end)
-			bindTab.MouseButton1Click:Connect(function() extrasTab = "keybinds"; paintTabs() end)
-			paintTabs()
-			local function section(parent, title, accentCol)
-				accentCol = accentCol or mute
-				local wrap = mk("Frame", parent, {Size = UDim2.new(1, -4, 0, 20), BackgroundTransparency = 1})
-				local chip = mk("Frame", wrap, {
-					Size = UDim2.new(1, 0, 0, 18), BackgroundColor3 = cardC, BorderSizePixel = 0,
-				})
-				corner(chip, 8)
-				mk("Frame", chip, {
-					Size = UDim2.fromOffset(3, 10), Position = UDim2.fromOffset(6, 4),
-					BackgroundColor3 = accentCol == mute and onC or accentCol, BorderSizePixel = 0,
-				})
-				mk("TextLabel", chip, {
-					BackgroundTransparency = 1,
-					Size = UDim2.new(1, -16, 1, 0),
-					Position = UDim2.fromOffset(14, 0),
-					Font = FB, TextSize = 10,
-					TextColor3 = accentCol == mute and mute or accentCol, TextXAlignment = Enum.TextXAlignment.Left, Text = string.upper(tostring(title)),
-				})
-			end
-			local function actionRow(parent, a, fa, b, fb)
-				local row = mk("Frame", parent, {Size = UDim2.new(1, -4, 0, 24), BackgroundTransparency = 1})
-				local ba = btn(row, a, UDim2.new(0.5, -3, 1, 0), UDim2.new(0, 0, 0, 0))
-				local bb = btn(row, b, UDim2.new(0.5, -3, 1, 0), UDim2.new(0.5, 3, 0, 0))
-				ba.TextSize = 11
-				bb.TextSize = 11
-				ba.MouseButton1Click:Connect(fa)
-				bb.MouseButton1Click:Connect(fb)
-				return ba, bb
-			end
-			gearF = featPage
-			section(featPage, "MOVE")
-			_, wsPaintSteal = togGear(featPage, "walk speed", function() return _G.SabcomWalkSpeedOn == true end, function(v)
-				if type(_G.SabcomSetWalkSpeed) == "function" then
-					_G.SabcomSetWalkSpeed(v)
-				else
-					_G.SabcomWalkSpeedOn = v and true or false
-				end
-			end, function()
-				setWalkSpeedGui(not (_G.SabcomWalkSpeedGui ~= false))
-			end)
-			_, fovPaintSteal = togGear(featPage, "fov", function() return _G.SabcomFovOn == true end, function(v)
-				if type(_G.SabcomSetFov) == "function" then
-					_G.SabcomSetFov(v)
-				else
-					_G.SabcomFovOn = v and true or false
-				end
-			end, function()
-				setFovGui(not (_G.SabcomFovGui ~= false))
-			end)
-			local _, paintFloat = tog(featPage, "float", function() return _G.SabcomFloat == true end, function(v)
-				if type(_G.SabcomSetFloat) == "function" then
-					_G.SabcomSetFloat(v)
-				else
-					_G.SabcomFloat = v and true or false
-				end
-			end)
-			_G.SabcomPaintFloat = paintFloat
-			local _, paintInfJump = tog(featPage, "infinity jump", function() return _G.SabcomInfJump == true end, function(v)
-				if type(_G.SabcomSetInfJump) == "function" then
-					_G.SabcomSetInfJump(v)
-				else
-					_G.SabcomInfJump = v and true or false
-				end
-			end)
-			_G.SabcomPaintInfJump = paintInfJump
-			_G.SabcomPaintWalkSpeed = function()
-				if wsPaintSteal then wsPaintSteal() end
-				if wsPaintPanel then wsPaintPanel() end
-			end
-			_G.SabcomPaintFov = function()
-				if fovPaintSteal then fovPaintSteal() end
-				if fovPaintPanel then fovPaintPanel() end
-			end
-			section(featPage, "AUTO GRAB", onC)
-			pillTog(featPage, "auto adjust radius", function() return _G.SabcomAutoGrabRadiusAuto == true end, function(v)
-				_G.SabcomAutoGrabRadiusAuto = v and true or false
-				if type(_G.SabcomSaveConfigNow) == "function" then _G.SabcomSaveConfigNow() end
-			end)
-
-			slider("auto grab radius", 10, 150, 1, function()
-				return tonumber(_G.SabcomAutoGrabRadius) or 50
-			end, function(v)
-				_G.SabcomAutoGrabRadius = math.clamp(tonumber(v) or 50, 10, 150)
-				if type(_G.SabcomSyncAutoGrabRadius) == "function" then
-					_G.SabcomSyncAutoGrabRadius()
-				end
-			end, featPage)
-			pillTog(featPage, "auto steal", function() return _G.SabcomAutoSteal == true end, function(v)
-				_G.SabcomAutoSteal = v and true or false
-				if type(_G.SabcomSetAutoStealRuntime) == "function" then
-					_G.SabcomSetAutoStealRuntime(_G.SabcomAutoSteal)
-				end
-				if type(_G.SabcomSyncNearestInstant) == "function" then _G.SabcomSyncNearestInstant() end
-			end)
-			_, akPaintSteal = togGear(featPage, "auto kick", function() return _G.SabcomAutoKick == true end, function(v)
-				_G.SabcomAutoKick = v and true or false
-				if type(_G.SabcomSetAutoKick) == "function" then _G.SabcomSetAutoKick(v) end
-			end, function()
-				setAutoKickGui(not (_G.SabcomAutoKickGui == true))
-			end)
-			section(featPage, "INVIS")
-			pillTog(featPage, "auto invis on steal", function() return _G.AutoInvisDuringSteal == true end, function(v)
-				_G.AutoInvisDuringSteal = v and true or false
-			end)
-			_, paintInvisSteal = tog(featPage, "invis", function() return _G.invisibleStealEnabled == true end, function(v)
-				syncInvisToggle(v)
-			end)
-			_, ivPaintSteal = tog(featPage, "invis gui", function() return _G.SabcomInvisGui == true end, setInvisGui)
-			slider("invis depth", 0, 20, 0.5, function() return tonumber(_G.SinkSliderValue) or 7 end, function(v) _G.SinkSliderValue = v end, featPage)
-			slider("invis rotation", 0, 360, 5, function() return tonumber(_G.InvisStealAngle) or 225 end, function(v) _G.InvisStealAngle = v end, featPage)
-			section(featPage, "TP")
-			pillTog(featPage, "auto tp", function() return _G.SabcomAutoTP ~= false end, function(v)
-				_G.SabcomAutoTP = v and true or false
-				_G.sabcomAutoTP = v and true or false
-				if type(_G.SabcomSyncBabySharkTpGlobals) == "function" then _G.SabcomSyncBabySharkTpGlobals() end
-				if v then
-					_lastTPOk = false
-					if type(_G.SabcomEnsureAutoTP) == "function" then _G.SabcomEnsureAutoTP() end
-				end
-			end)
-			actionRow(featPage, "manual tp", function()
-				task.spawn(function()
-					if type(_G.SabcomStartSideTP) == "function" then _G.SabcomStartSideTP() end
-				end)
-			end, "reset", function()
-				if type(_G.SabcomInstantReset) == "function" then _G.SabcomInstantReset() end
-			end)
-			do
-				local row = mk("Frame", featPage, {Size = UDim2.new(1, -4, 0, 24), BackgroundTransparency = 1})
-				mk("TextLabel", row, {
-					BackgroundTransparency = 1, Size = UDim2.new(0, 62, 1, 0), Font = F, TextSize = 11,
-					TextColor3 = tx, TextXAlignment = Enum.TextXAlignment.Left, Text = "tp item :",
-				})
-				local nameBtn = btn(row, currentCarpetTool(), UDim2.new(1, -66, 1, 0), UDim2.new(0, 64, 0, 0))
-				nameBtn.TextSize = 11
-				nameBtn.TextTruncate = Enum.TextTruncate.AtEnd
-				nameBtn.MouseButton1Click:Connect(function()
-					nameBtn.Text = cycleCarpetTool()
-					if type(_G.SabcomSaveConfigNow) == "function" then
-						_G.SabcomSaveConfigNow()
-					else
-						saveTpSettings()
-					end
-				end)
-			end
-			slider("min gen", 0, 50000000, 100000, function() return tonumber(_G.SabcomMinGen) or 0 end, function(v) _G.SabcomMinGen = v end, featPage)
-			slider("velocity", 200, 750, 5, function() return _G.TPVelocity end, function(v) _G.TPVelocity = v end, featPage)
-			slider("climb", 100, 800, 5, function() return _G.SabcomClimb end, function(v) _G.SabcomClimb = v end, featPage)
-			slider("go speed", 80, 800, 5, function() return _G.SabcomGoSpeed end, function(v) _G.SabcomGoSpeed = v; _G.SabcomBrainrotSpeed = v end, featPage)
-			slider("close speed", 20, 250, 5, function() return _G.SabcomCloseSpeed end, function(v) _G.SabcomCloseSpeed = v end, featPage)
-			slider("landing delay", 0.15, 0.75, 0.05, function() return _G.LandingDelay end, function(v) _G.LandingDelay = v end, featPage)
-			slider("tp delay", 0, 5, 0.05, function()
-				return tonumber(_G._stp_tpDelay) or tonumber(_G.TPDelay) or 0
-			end, function(v)
-				_G._stp_tpDelay = v
-				_G.TPDelay = v
-			end, featPage)
-			slider("boost window", 1, 60, 1, function() return _G.SabcomBoostWindow end, function(v) _G.SabcomBoostWindow = v end, featPage)
-			slider("post clone delay", 0, 0.5, 0.05, function() return _G.SabcomPostCloneDelay end, function(v)
-				_G.SabcomPostCloneDelay = math.clamp(tonumber(v) or 0.1, 0, 0.5)
-				_G.sabcomPostCloneDelay = _G.SabcomPostCloneDelay
-			end, featPage)
-		section(featPage, "ESP")
-		pillTog(featPage, "esp player", function() return _G.SabcomEspPlayer == true end, function(v)
-			if type(_G.SabcomSetEspPlayer) == "function" then
-				_G.SabcomSetEspPlayer(v)
-			else
-				_G.SabcomEspPlayer = v and true or false
-			end
-		end)
-		pillTog(featPage, "brainrot esp", function() return _G.SabcomBrainrotEsp == true end, function(v)
-			if type(_G.SabcomSetBrainrotEsp) == "function" then
-				_G.SabcomSetBrainrotEsp(v)
-			else
-				_G.SabcomBrainrotEsp = v and true or false
-			end
-			_G.SabcomSaveConfig()
-		end)
-		pillTog(featPage, "line to base", function() return _G.SabcomLineToBase == true end, function(v)
-			if type(_G.SabcomSetLineToBase) == "function" then
-				_G.SabcomSetLineToBase(v)
-			else
-				_G.SabcomLineToBase = v and true or false
-			end
-		end)
-		pillTog(featPage, "line to brainrot", function() return _G.SabcomLineToBrainrot == true end, function(v)
-			if type(_G.SabcomSetLineToBrainrot) == "function" then
-				_G.SabcomSetLineToBrainrot(v)
-			else
-				_G.SabcomLineToBrainrot = v and true or false
-			end
-		end)
-		section(featPage, "UI")
-		pillTog(featPage, "auto close gui", function() return _G.SabcomAutoCloseGui == true end, function(v)
-			_G.SabcomAutoCloseGui = v and true or false
-			if v then setExtrasHidden(true) end
-		end)
-		pillTog(featPage, "lock position", function() return _G.SabcomLockUi == true end, function(v)
-			_G.SabcomLockUi = v and true or false
-		end)
-		do
-			local swatch = mk("Frame", featPage, {Size = UDim2.new(1, -4, 0, 18), BackgroundTransparency = 1})
-			mk("TextLabel", swatch, {
-				BackgroundTransparency = 1, Size = UDim2.new(1, -28, 1, 0), Font = F, TextSize = 11,
-				TextColor3 = tx, TextXAlignment = Enum.TextXAlignment.Left, Text = "gui color",
-			})
-			local chip = mk("Frame", swatch, {
-				Size = UDim2.fromOffset(22, 14), Position = UDim2.new(1, -22, 0.5, -7),
-				BackgroundColor3 = onC, BorderSizePixel = 0,
-			})
-			corner(chip, 6)
-			slider("hue", 0, 360, 1, function()
-				return tonumber(_G.SabcomGuiHue) or 210
-			end, function(v)
-				_G.SabcomGuiHue = math.clamp(tonumber(v) or 210, 0, 360)
-				if applyGuiTheme then applyGuiTheme() end
-				chip.BackgroundColor3 = onC
-			end, featPage)
-			local assetRow = mk("Frame", featPage, {Size = UDim2.new(1, -4, 0, 48), BackgroundTransparency = 1})
-			mk("TextLabel", assetRow, {
-				BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 14), Font = F, TextSize = 11,
-				TextColor3 = tx, TextXAlignment = Enum.TextXAlignment.Left, Text = "background asset id",
-			})
-			local box = mk("TextBox", assetRow, {
-				Size = UDim2.new(1, -52, 0, 26), Position = UDim2.fromOffset(0, 16),
-				BackgroundColor3 = btnC, BorderSizePixel = 0,
-				Font = F, TextSize = 11, TextColor3 = tx, PlaceholderText = "rbxassetid or numbers",
-				PlaceholderColor3 = mute, ClearTextOnFocus = false,
-				Text = tostring(_G.SabcomGuiBgAsset or ""),
-			})
-			corner(box, 8)
-			mk("UIStroke", box, {Color = strokeC, Thickness = 1, Transparency = 0.45})
-			local applyBtn = btn(assetRow, "set", UDim2.fromOffset(48, 26), UDim2.new(1, -48, 0, 16))
-			local function commitAsset()
-				local parsed = parseGuiAsset(box.Text)
-				_G.SabcomGuiBgAsset = parsed
-				box.Text = parsed
-				if applyGuiTheme then applyGuiTheme() end
-				saveTpSettings()
-			end
-			applyBtn.MouseButton1Click:Connect(commitAsset)
-			box.FocusLost:Connect(function(enter)
-				if enter then commitAsset() else commitAsset() end
-			end)
-		end
-
-			section(featPage, "MORE")
-			pillTog(featPage, "direct path", function() return _G.SabcomDirect ~= false end, function(v) _G.SabcomDirect = v and true or false end)
-			pillTog(featPage, "jump once", function() return _G.SabcomJumpOnce ~= false end, function(v) _G.SabcomJumpOnce = v and true or false end)
-			pillTog(featPage, "prefer front", function() return _G.SabcomPreferFrontOnRow ~= false end, function(v) _G.SabcomPreferFrontOnRow = v and true or false end)
-			pillTog(featPage, "x ray", function() return _G.SabcomXray == true end, function(v)
-				_G.SabcomXray = v and true or false
-				if v then
-					if type(_G.SabcomStartXrayRetry) == "function" then
-						_G.SabcomStartXrayRetry()
-					elseif type(_G.SabcomApplyXrayIfEnabled) == "function" then
-						_G.SabcomApplyXrayIfEnabled()
-					elseif type(_G.SabcomEnableXray) == "function" then
-						_G.SabcomEnableXray()
-					end
-				else
-					if type(_G.SabcomDisableXray) == "function" then _G.SabcomDisableXray() end
-				end
-			end)
-			pillTog(featPage, "auto turret", function() return _G.SabcomAutoTurret == true end, function(v)
-				_G.SabcomAutoTurret = v and true or false
-				if type(_G.SabcomSetAutoTurret) == "function" then
-					_G.SabcomSetAutoTurret(_G.SabcomAutoTurret)
-				end
-			end)
-			pillTog(featPage, "auto recover", function() return _G.AutoRecoverLagback ~= false end, function(v) _G.AutoRecoverLagback = v and true or false end)
-			_, faPaintSteal = tog(featPage, "face away", function() return _G.SabcomFaceAwayGui == true end, setFaceAwayGui)
-			local _, paintCarpet = tog(featPage, "carpet speed", function() return _G.SabcomCarpetSpeed == true end, function(v)
-				if type(_G.SabcomSetCarpetSpeed) == "function" then
-					_G.SabcomSetCarpetSpeed(v)
-				else
-					_G.SabcomCarpetSpeed = v and true or false
-				end
-			end)
-			_G.SabcomPaintCarpetSpeed = paintCarpet
-			section(featPage, "OPTIMIZER")
-			pillTog(featPage, "load optimizer", function() return _G.SabcomLoadOptimizer == true end, function(v)
-				_G.SabcomLoadOptimizer = v and true or false
-				if type(_G.SabcomSetLoadOptimizer) == "function" then
-					_G.SabcomSetLoadOptimizer(_G.SabcomLoadOptimizer)
-				end
-			end)
-			pillTog(featPage, "error fix", function() return _G.SabcomErrorFix == true end, function(v)
-				_G.SabcomErrorFix = v and true or false
-				if type(_G.SabcomSetErrorFix) == "function" then
-					_G.SabcomSetErrorFix(_G.SabcomErrorFix)
-				end
-			end)
-			local _, paintAutoBuy = togGear(featPage, "auto buy", function() return _G.SabcomAutoBuy == true end, function(v)
-				if type(_G.SabcomSetAutoBuy) == "function" then
-					_G.SabcomSetAutoBuy(v)
-				else
-					_G.SabcomAutoBuy = v and true or false
-				end
-			end, function()
-				setAutoBuyGui(not (_G.SabcomAutoBuyGui == true))
-			end)
-			abPaintSteal = paintAutoBuy
-			_G.SabcomPaintAutoBuy = function()
-				if abPaintSteal then abPaintSteal() end
-				if abPaintPanel then abPaintPanel() end
-			end
-
-			local foot = mk("Frame", extras, {
-				Size = UDim2.new(1, -16, 0, 24), Position = UDim2.new(0, 8, 1, -32),
-				BackgroundTransparency = 1,
-			})
-			local kickBtn
-			kickBtn, priOpenBtn = actionRow(foot, "kick", function()
-				if type(_G.SabcomDoKick) == "function" then _G.SabcomDoKick(true) end
-			end, "edit priority", function()
-				if type(_G.SabcomTogglePriorityList) == "function" then
-					_G.SabcomTogglePriorityList()
-				end
-			end)
-			kickBtn.Size = UDim2.new(0.5, -3, 1, 0)
-			priOpenBtn.Size = UDim2.new(0.5, -3, 1, 0)
-			kickBtn.BackgroundTransparency = 1
-			kickBtn.TextColor3 = onC
-			kickBtn.Font = FB
-
-			keyBindRow(bindPage, "hide gui", function() return _G._stp_hideGuiKeyName or "RightShift" end, function(v) _G._stp_hideGuiKeyName = v end)
-			keyBindRow(bindPage, "manual tp", function() return _G._stp_tpKeyName or "T" end, function(v) _G._stp_tpKeyName = v end)
-			keyBindRow(bindPage, "instant reset", function() return _G._stp_resetKeyName or "X" end, function(v) _G._stp_resetKeyName = v end)
-			keyBindRow(bindPage, "instant clone", function() return _G._stp_cloneKeyName or "C" end, function(v) _G._stp_cloneKeyName = v end)
-			keyBindRow(bindPage, "drop brainrot", function() return _G._stp_dropKeyName or "B" end, function(v) _G._stp_dropKeyName = v end)
-			keyBindRow(bindPage, "invis key", function() return _G._stp_invisKeyName or "U" end, function(v) _G._stp_invisKeyName = v end)
-			keyBindRow(bindPage, "float", function() return _G._stp_floatKeyName or "Z" end, function(v) _G._stp_floatKeyName = v end)
-			keyBindRow(bindPage, "infinity jump", function() return _G._stp_infJumpKeyName or "G" end, function(v) _G._stp_infJumpKeyName = v end)
-			keyBindRow(bindPage, "carpet speed key", function() return _G._stp_carpetSpeedKeyName or "Q" end, function(v) _G._stp_carpetSpeedKeyName = v end)
-			keyBindRow(bindPage, "auto buy", function() return _G._stp_autoBuyKeyName or "K" end, function(v) _G._stp_autoBuyKeyName = v end)
-			keyBindRow(bindPage, "walk speed", function() return _G._stp_walkSpeedKeyName or "V" end, function(v) _G._stp_walkSpeedKeyName = v end)
-			keyBindRow(bindPage, "kick", function() return _G._stp_kickKeyName or "P" end, function(v) _G._stp_kickKeyName = v end)
-
-
-			local function buildRestGuis()
-				miniUi = mk("Frame", sg, {
-					Name = "MiniUI",
-					Size = UDim2.fromOffset(188, 0),
-					AutomaticSize = Enum.AutomaticSize.Y,
-					Position = UDim2.fromOffset(
-						tonumber(_G._stp_toolX) or 16,
-						tonumber(_G._stp_toolY) or ((tonumber(_G._stp_stealY) or 80) + 274)
-					),
-					BackgroundColor3 = bg, BackgroundTransparency = 0.02, BorderSizePixel = 0,
-					Active = true, Visible = false,
-				})
-				corner(miniUi, 12)
-				stroke(miniUi)
-				local miniHead = mk("TextButton", miniUi, {
-					Size = UDim2.new(1, 0, 0, 20), BackgroundTransparency = 1,
-					Text = "", AutoButtonColor = false,
-				})
-				mk("TextLabel", miniHead, {
-					BackgroundTransparency = 1, Size = UDim2.new(1, -12, 1, 0), Position = UDim2.fromOffset(8, 0),
-					Font = FB, TextSize = 11, TextColor3 = tx, TextXAlignment = Enum.TextXAlignment.Left,
-					Text = "MINI UI",
-				})
-				mk("Frame", miniUi, {
-					Size = UDim2.new(1, -14, 0, 1), Position = UDim2.fromOffset(7, 20),
-					BackgroundColor3 = onC, BackgroundTransparency = 0.4, BorderSizePixel = 0,
-				})
-				miniBody = mk("Frame", miniUi, {
-					Position = UDim2.fromOffset(5, 22), Size = UDim2.new(1, -10, 0, 0),
-					AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1,
-				})
-				mk("UIListLayout", miniBody, {Padding = UDim.new(0, 2), SortOrder = Enum.SortOrder.LayoutOrder})
-				mk("UIPadding", miniBody, {PaddingBottom = UDim.new(0, 4)})
-				drag(miniHead, miniUi, function(fr)
-					_G._stp_toolX = fr.Position.X.Offset
-					_G._stp_toolY = fr.Position.Y.Offset
-					saveTpSettings()
-				end)
-				local function miniSection(title, h, open)
-					local fr = mk("Frame", miniBody, {
-						Size = UDim2.new(1, 0, 0, h), BackgroundColor3 = cardC,
-						BackgroundTransparency = 0.12, BorderSizePixel = 0, Visible = open == true,
-					})
-					corner(fr, 7)
-					local body = mk("Frame", fr, {
-						Position = UDim2.fromOffset(3, 3), Size = UDim2.new(1, -6, 1, -6),
-						BackgroundTransparency = 1,
-					})
-					mk("UIListLayout", body, {Padding = UDim.new(0, 2), SortOrder = Enum.SortOrder.LayoutOrder})
-					return fr, body
-				end
-				local akBody
-				akPanel, akBody = miniSection("auto kick", AK_H, _G.SabcomAutoKickGui == true)
-				togGear(akBody, "auto kick", function() return _G.SabcomAutoKick == true end, function(v)
-					_G.SabcomAutoKick = v and true or false
-					if type(_G.SabcomSetAutoKick) == "function" then _G.SabcomSetAutoKick(v) end
-				end, function()
-					if psPanel then
-						psPanel.Visible = not psPanel.Visible
-						layoutCompactTools()
-					end
-				end)
-				do
-					local row = mk("Frame", akBody, {Size = UDim2.new(1, -2, 0, 20), BackgroundTransparency = 1})
-					local rejoinBtn = btn(row, "rejoin", UDim2.new(0.5, -2, 1, 0), UDim2.new(0, 0, 0, 0))
-					local kickBtn = btn(row, "kick", UDim2.new(0.5, -2, 1, 0), UDim2.new(0.5, 2, 0, 0))
-					rejoinBtn.TextSize = 10
-					kickBtn.TextSize = 10
-					rejoinBtn.MouseButton1Click:Connect(function()
-						game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, LP)
-					end)
-					kickBtn.MouseButton1Click:Connect(function()
-						if type(_G.SabcomDoKick) == "function" then _G.SabcomDoKick(true) end
-					end)
-				end
-
-				local abBody
-				abPanel, abBody = miniSection("auto buy", AB_H, _G.SabcomAutoBuyGui == true)
-				_, abPaintPanel = tog(abBody, "auto buy", function() return _G.SabcomAutoBuy == true end, function(v)
-					if type(_G.SabcomSetAutoBuy) == "function" then
-						_G.SabcomSetAutoBuy(v)
-					else
-						_G.SabcomAutoBuy = v and true or false
-					end
-				end)
-				slider("radius", 5, 50, 1, function()
-					return tonumber(_G.SabcomAutoBuyRange) or 17
-				end, function(v)
-					_G.SabcomAutoBuyRange = math.clamp(tonumber(v) or 17, 5, 50)
-				end, abBody)
-				do
-					local keyRow = mk("Frame", abBody, {Size = UDim2.new(1, -2, 0, 20), BackgroundTransparency = 1})
-					mk("TextLabel", keyRow, {
-						BackgroundTransparency = 1, Size = UDim2.new(1, -62, 1, 0), Font = F, TextSize = 11,
-						TextColor3 = tx, TextXAlignment = Enum.TextXAlignment.Left, Text = "keybind",
-					})
-					local k = btn(keyRow, tostring(_G._stp_autoBuyKeyName or "K"), UDim2.fromOffset(48, 20), UDim2.new(1, -48, 0, 0))
-					k.MouseButton1Click:Connect(function()
-						k.Text = "..."
-						_G.SabcomCapturingKey = true
-						local conn
-						conn = UIS.InputBegan:Connect(function(input)
-							if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
-							conn:Disconnect()
-							_G.SabcomCapturingKey = false
-							_G._stp_autoBuyKeyName = input.KeyCode.Name
-							k.Text = input.KeyCode.Name
-							if type(_G.SabcomSaveConfigNow) == "function" then
-								_G.SabcomSaveConfigNow()
-							else
-								saveTpSettings()
-							end
-						end)
-					end)
-				end
-
-				local psBody
-				psPanel, psBody = miniSection("private server", PS_H, false)
-				tog(psBody, "kick to ps", function() return _G.SabcomKickToPS ~= false end, function(v)
-					_G.SabcomKickToPS = v and true or false
-				end)
-				local psBox = mk("TextBox", psBody, {
-					Size = UDim2.new(1, -2, 0, 22), BackgroundColor3 = btnC, BorderSizePixel = 0,
-					Font = F, TextSize = 11, TextColor3 = tx, PlaceholderText = "ps code or link",
-					PlaceholderColor3 = mute, Text = tostring(_G.SabcomPSCode or ""), ClearTextOnFocus = false,
-				})
-				corner(psBox, 7)
-				psBox.FocusLost:Connect(function()
-					_G.SabcomPSCode = tostring(psBox.Text or ""):gsub("^%s+", ""):gsub("%s+$", "")
-					saveTpSettings()
-				end)
-
-				local wsBody
-				wsPanel, wsBody = miniSection("walk speed", WS_H, _G.SabcomWalkSpeedGui ~= false)
-				do
-					local row = mk("Frame", wsBody, {Size = UDim2.new(1, -2, 0, 20), BackgroundTransparency = 1})
-					mk("TextLabel", row, {
-						BackgroundTransparency = 1, Size = UDim2.new(1, -100, 1, 0), Font = F, TextSize = 11,
-						TextColor3 = tx, TextXAlignment = Enum.TextXAlignment.Left, Text = "keybind",
-					})
-					local k = btn(row, tostring(_G._stp_walkSpeedKeyName or "V"), UDim2.fromOffset(56, 24), UDim2.new(1, -96, 0, 1))
-					k.MouseButton1Click:Connect(function()
-						k.Text = "..."
-						_G.SabcomCapturingKey = true
-						local conn
-						conn = UIS.InputBegan:Connect(function(input)
-							if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
-							conn:Disconnect()
-							_G.SabcomCapturingKey = false
-							_G._stp_walkSpeedKeyName = input.KeyCode.Name
-							k.Text = input.KeyCode.Name
-							if type(_G.SabcomSaveConfigNow) == "function" then
-								_G.SabcomSaveConfigNow()
-							else
-								saveTpSettings()
-							end
-						end)
-					end)
-					local track = mk("TextButton", row, {
-						Size = UDim2.fromOffset(36, 18), Position = UDim2.new(1, -36, 0.5, -9),
-						BackgroundColor3 = btnC, BorderSizePixel = 0, Text = "", AutoButtonColor = false,
-					})
-					corner(track, 9)
-					local knob = mk("Frame", track, {
-						Size = UDim2.fromOffset(14, 14), Position = UDim2.fromOffset(2, 2),
-						BackgroundColor3 = Color3.fromRGB(255, 255, 255), BorderSizePixel = 0,
-					})
-					corner(knob, 7)
-					local function paint()
-						local onv = _G.SabcomWalkSpeedOn == true
-						track.BackgroundColor3 = onv and onC or btnC
-						knob.Position = onv and UDim2.fromOffset(20, 2) or UDim2.fromOffset(2, 2)
-					end
-					track.MouseButton1Click:Connect(function()
-						local want = not (_G.SabcomWalkSpeedOn == true)
-						if type(_G.SabcomSetWalkSpeed) == "function" then
-							_G.SabcomSetWalkSpeed(want)
-						else
-							_G.SabcomWalkSpeedOn = want
-						end
-						paint()
-						saveTpSettings()
-					end)
-					paint()
-					wsPaintPanel = paint
-				end
-				slider("walk speed", 16, 100, 1, function() return tonumber(_G.SabcomWalkSpeed) or 16 end, function(v)
-					_G.SabcomWalkSpeed = math.clamp(tonumber(v) or 16, 16, 100)
-				end, wsBody)
-
-				local fovBody
-				fovPanel, fovBody = miniSection("fov", FOV_H, _G.SabcomFovGui ~= false)
-				_, fovPaintPanel = tog(fovBody, "fov", function() return _G.SabcomFovOn == true end, function(v)
-					if type(_G.SabcomSetFov) == "function" then
-						_G.SabcomSetFov(v)
-					else
-						_G.SabcomFovOn = v and true or false
-					end
-				end)
-				slider("fov", 70, 120, 1, function() return tonumber(_G.SabcomFov) or 70 end, function(v)
-					_G.SabcomFov = math.clamp(tonumber(v) or 70, 70, 120)
-					if _G.SabcomFovOn == true then
-						local cam = workspace.CurrentCamera
-						if cam then cam.FieldOfView = _G.SabcomFov end
-					end
-				end, fovBody)
-
-				local ivBody
-				ivPanel, ivBody = miniSection("invis steal", IV_H, _G.SabcomInvisGui == true)
-				_, paintInvisIv = tog(ivBody, "invis", function() return _G.invisibleStealEnabled == true end, function(v)
-					syncInvisToggle(v)
-					saveTpSettings()
-				end)
-				do
-					local keyRow = mk("Frame", ivBody, {Size = UDim2.new(1, -2, 0, 20), BackgroundTransparency = 1})
-					mk("TextLabel", keyRow, {
-						BackgroundTransparency = 1, Size = UDim2.new(1, -62, 1, 0), Font = F, TextSize = 11,
-						TextColor3 = tx, TextXAlignment = Enum.TextXAlignment.Left, Text = "invis key",
-					})
-					local k = btn(keyRow, tostring(_G._stp_invisKeyName or "U"), UDim2.fromOffset(48, 20), UDim2.new(1, -48, 0, 0))
-					k.MouseButton1Click:Connect(function()
-						k.Text = "..."
-						_G.SabcomCapturingKey = true
-						local conn
-						conn = UIS.InputBegan:Connect(function(input)
-							if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
-							conn:Disconnect()
-							_G.SabcomCapturingKey = false
-							_G._stp_invisKeyName = input.KeyCode.Name
-							k.Text = input.KeyCode.Name
-							if type(_G.SabcomSaveConfigNow) == "function" then
-								_G.SabcomSaveConfigNow()
-							else
-								saveTpSettings()
-							end
-						end)
-					end)
-				end
-				slider("depth", 0, 20, 0.5, function() return tonumber(_G.SinkSliderValue) or 7 end, function(v) _G.SinkSliderValue = v end, ivBody)
-				slider("rotation", 0, 360, 5, function() return tonumber(_G.InvisStealAngle) or 225 end, function(v) _G.InvisStealAngle = v end, ivBody)
-				tog(ivBody, "auto invis", function() return _G.AutoInvisDuringSteal == true end, function(v) _G.AutoInvisDuringSteal = v and true or false end)
-				tog(ivBody, "auto recover", function() return _G.AutoRecoverLagback ~= false end, function(v) _G.AutoRecoverLagback = v and true or false end)
-				do
-					local runBtn = btn(ivBody, "toggle invis", UDim2.new(1, -2, 0, 20), UDim2.new())
-					runBtn.MouseButton1Click:Connect(function()
-						if type(_G.toggleInvisibleSteal) == "function" then
-							_G.toggleInvisibleSteal()
-							saveTpSettings()
-						end
-					end)
-				end
-
-				local function setFaPlayer(name)
-					_G.SabcomFaceAwayTarget = tostring(name or "")
-					saveTpSettings()
-					if faRefreshList then faRefreshList() end
-				end
-				faPanel = mk("Frame", sg, {
-					Size = UDim2.fromOffset(tonumber(_G._stp_faW) or 220, tonumber(_G._stp_faH) or 300),
-					Position = UDim2.fromOffset(tonumber(_G._stp_faX) or 240, tonumber(_G._stp_faY) or 80),
-					BackgroundColor3 = bg, BorderSizePixel = 0, Active = true,
-					Visible = _G.SabcomFaceAwayGui == true,
-				})
-				corner(faPanel, 14)
-				stroke(faPanel)
-				local faResize = mk("Frame", faPanel, {
-					AnchorPoint = Vector2.new(1, 1), Position = UDim2.new(1, -2, 1, -2),
-					Size = UDim2.fromOffset(18, 18), BackgroundColor3 = btnC,
-					BorderSizePixel = 0, BackgroundTransparency = 0.12, ZIndex = 200,
-				})
-				corner(faResize, 6)
-				mk("UIStroke", faResize, {Color = strokeC, Thickness = 1, Transparency = 0.45})
-				resize(faResize, faPanel, 210, 220, function(fr)
-					_G._stp_faW = fr.Size.X.Offset
-					_G._stp_faH = fr.Size.Y.Offset
-					saveTpSettings()
-				end)
-				local faHeader = mk("TextButton", faPanel, {
-					Size = UDim2.new(1, 0, 0, 22), BackgroundTransparency = 1,
-					Text = "", AutoButtonColor = false,
-				})
-				mk("TextLabel", faHeader, {
-					BackgroundTransparency = 1, Size = UDim2.new(1, -12, 1, 0), Position = UDim2.fromOffset(10, 0),
-					Font = FB, TextSize = 12, TextColor3 = tx, TextXAlignment = Enum.TextXAlignment.Left,
-					Text = "face away",
-				})
-				mk("Frame", faPanel, {
-					Size = UDim2.new(1, -16, 0, 1), Position = UDim2.fromOffset(8, 22),
-					BackgroundColor3 = onC, BackgroundTransparency = 0.4, BorderSizePixel = 0,
-				})
-				bindPanelDrag(faHeader, faPanel, "_stp_faX", "_stp_faY")
-				local faBody = mk("Frame", faPanel, {
-					Position = UDim2.fromOffset(6, 26), Size = UDim2.new(1, -12, 1, -32),
-					BackgroundTransparency = 1, ClipsDescendants = true,
-				})
-				mk("UIListLayout", faBody, {Padding = UDim.new(0, 4), SortOrder = Enum.SortOrder.LayoutOrder})
-				tog(faBody, "face away", function() return _G.SabcomFaceAway == true end, setFaceAway)
-				local function paintFaModeRow(row, active)
-					row.BackgroundColor3 = active and onC or btnC
-					row.TextColor3 = active and onTx or tx
-					row.TextStrokeTransparency = active and 0.8 or 1
-					row.BorderSizePixel = 0
-					row.BackgroundTransparency = 0.08
-					row.Size = UDim2.new(1, -4, 0, 24)
-					row.TextXAlignment = Enum.TextXAlignment.Center
-					local cornerObj = row:FindFirstChildOfClass("UICorner")
-					if cornerObj then cornerObj:Destroy() end
-					mk("UICorner", row, {CornerRadius = UDim.new(0, 4)})
-				end
-				local faModeRows = {}
-				local function setFaMode(kind, value)
-					if kind == "baseowner" then
-						_G.SabcomFaceAwayBaseOwner = value and true or false
-						_G.SabcomFaceAwayNearest = false
-					elseif kind == "nearest" then
-						_G.SabcomFaceAwayNearest = value and true or false
-						_G.SabcomFaceAwayBaseOwner = false
-					elseif kind == "click" then
-						_G.SabcomFaceAwayClick = value and true or false
-					end
-					saveTpSettings()
-					paintFaModeRow(faModeRows.baseowner, _G.SabcomFaceAwayBaseOwner == true)
-					paintFaModeRow(faModeRows.nearest, _G.SabcomFaceAwayNearest == true)
-					paintFaModeRow(faModeRows.click, _G.SabcomFaceAwayClick == true)
-				end
-				faModeRows.baseowner = btn(faBody, "base owner", UDim2.new(1, -4, 0, 24), UDim2.new())
-				faModeRows.baseowner.TextXAlignment = Enum.TextXAlignment.Center
-				faModeRows.baseowner.TextSize = 12
-				faModeRows.baseowner.Font = Enum.Font.GothamBlack
-				mk("UICorner", faModeRows.baseowner, {CornerRadius = UDim.new(0, 4)})
-				faModeRows.baseowner.MouseButton1Click:Connect(function() setFaMode("baseowner", true) end)
-				faModeRows.nearest = btn(faBody, "nearest", UDim2.new(1, -4, 0, 24), UDim2.new())
-				faModeRows.nearest.TextXAlignment = Enum.TextXAlignment.Center
-				faModeRows.nearest.TextSize = 12
-				faModeRows.nearest.Font = Enum.Font.GothamBlack
-				mk("UICorner", faModeRows.nearest, {CornerRadius = UDim.new(0, 4)})
-				faModeRows.nearest.MouseButton1Click:Connect(function() setFaMode("nearest", true) end)
-				faModeRows.click = btn(faBody, "click to face", UDim2.new(1, -4, 0, 24), UDim2.new())
-				faModeRows.click.TextXAlignment = Enum.TextXAlignment.Center
-				faModeRows.click.TextSize = 11
-				faModeRows.click.Font = Enum.Font.GothamBold
-				mk("UICorner", faModeRows.click, {CornerRadius = UDim.new(0, 4)})
-				faModeRows.click.MouseButton1Click:Connect(function() setFaMode("click", not (_G.SabcomFaceAwayClick == true)) end)
-				paintFaModeRow(faModeRows.baseowner, _G.SabcomFaceAwayBaseOwner == true)
-				paintFaModeRow(faModeRows.nearest, _G.SabcomFaceAwayNearest == true)
-				paintFaModeRow(faModeRows.click, _G.SabcomFaceAwayClick == true)
-				local faDivider = mk("Frame", faBody, {
-					Size = UDim2.new(1, -6, 0, 1), BackgroundColor3 = onC,
-					BackgroundTransparency = 0.5, BorderSizePixel = 0,
-				})
-				faList = mk("ScrollingFrame", faBody, {
-					Size = UDim2.new(1, -4, 0, 156), BackgroundTransparency = 1, BorderSizePixel = 0,
-					ScrollBarThickness = 0, ScrollBarImageTransparency = 1, CanvasSize = UDim2.fromOffset(0, 0),
-					AutomaticCanvasSize = Enum.AutomaticSize.Y,
-				})
-				mk("UIListLayout", faList, {Padding = UDim.new(0, 4), SortOrder = Enum.SortOrder.LayoutOrder})
-				faRefreshList = function()
-					for _, ch in ipairs(faList:GetChildren()) do
-						if ch:IsA("TextButton") then ch:Destroy() end
-					end
-					local rows = {}
-					for _, p in ipairs(Players:GetPlayers()) do
-						if p ~= LP then rows[#rows + 1] = p end
-					end
-					table.sort(rows, function(a, b) return a.DisplayName:lower() < b.DisplayName:lower() end)
-					for _, p in ipairs(rows) do
-						local line = p.DisplayName
-						if #line > 28 then line = string.sub(line, 1, 25) .. "..." end
-						local row = btn(faList, line, UDim2.new(1, -4, 0, 28), UDim2.new())
-						row.TextXAlignment = Enum.TextXAlignment.Center
-						row.TextSize = 11
-						row.Font = Enum.Font.GothamBold
-						mk("UICorner", row, {CornerRadius = UDim.new(0, 4)})
-						if _G.SabcomFaceAwayTarget == p.Name then
-							row.BackgroundColor3 = onC
-							row.TextColor3 = onTx
-						end
-						row.MouseButton1Click:Connect(function()
-							if _G.SabcomFaceAwayClick == true then
-								setFaPlayer(p.Name)
-							end
-						end)
-					end
-				end
-				Players.PlayerAdded:Connect(function() task.defer(faRefreshList) end)
-				Players.PlayerRemoving:Connect(function(p)
-					if _G.SabcomFaceAwayTarget == p.Name then
-						setFaPlayer("")
-					else
-						task.defer(faRefreshList)
-					end
-				end)
-				faRefreshList()
-				if _G.SabcomFaceAway == true and type(_G.SabcomSetFaceAway) == "function" then _G.SabcomSetFaceAway(true) end
-			end
-
-			local pri = mk("Frame", sg, {
-				Size = UDim2.fromOffset(240, 210),
-				Position = UDim2.fromOffset(tonumber(_G._stp_priX) or 300, tonumber(_G._stp_priY) or 80),
-				BackgroundColor3 = bg, BorderSizePixel = 0, Visible = false, Active = true,
-			})
-			corner(pri, 10)
-			stroke(pri)
-			local priH = mk("TextButton", pri, {
-				Size = UDim2.new(1, 0, 0, 22), BackgroundTransparency = 1,
-				Text = "edit priority", Font = FB, TextSize = 12, TextColor3 = tx, AutoButtonColor = false,
-			})
-			bindPanelDrag(priH, pri, "_stp_priX", "_stp_priY")
-			local priScroll = mk("ScrollingFrame", pri, {
-				Position = UDim2.fromOffset(6, 24), Size = UDim2.new(1, -12, 1, -56),
-				BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 4,
-				AutomaticCanvasSize = Enum.AutomaticSize.Y, CanvasSize = UDim2.fromOffset(0, 0),
-			})
-			mk("UIListLayout", priScroll, {Padding = UDim.new(0, 3)})
-			local addBox = mk("TextBox", pri, {
-				Position = UDim2.new(0, 6, 1, -28), Size = UDim2.new(1, -40, 0, 22),
-				BackgroundColor3 = btnC, BorderSizePixel = 0, Font = F, TextSize = 12,
-				TextColor3 = tx, PlaceholderText = "add name", Text = "",
-			})
-			corner(addBox, 6)
-			local addBtn = btn(pri, "+", UDim2.fromOffset(24, 22), UDim2.new(1, -30, 1, -28))
-			local function priCopy()
-				local t = {}
-				local src = _G.SHARED_PRIORITY_ITEMS
-				if type(src) == "table" then for i, v in ipairs(src) do t[i] = v end end
-				return t
-			end
-			local function priCommit(t)
-				_G.SHARED_PRIORITY_ITEMS = t
-				_G._stp_priorityCfg = t
-				if type(_G.SabcomInvalidatePriMap) == "function" then _G.SabcomInvalidatePriMap() end
-				if type(_G.SabcomBustScanCache) == "function" then _G.SabcomBustScanCache() end
-				if type(_G.SabcomForceResortList) == "function" then _G.SabcomForceResortList() end
-				if type(_G.SabcomSaveConfigNow) == "function" then
-					_G.SabcomSaveConfigNow()
-				else
-					saveTpSettings()
-				end
-				if type(_G.SabcomRefreshStealTarget) == "function" then _G.SabcomRefreshStealTarget() end
-			end
-			local function refreshPri()
-				for _, ch in ipairs(priScroll:GetChildren()) do
-					if ch:IsA("Frame") then ch:Destroy() end
-				end
-				local t = priCopy()
-				for i, name in ipairs(t) do
-					local row = mk("Frame", priScroll, {Size = UDim2.new(1, -4, 0, 20), BackgroundTransparency = 1})
-					mk("TextLabel", row, {
-						BackgroundTransparency = 1, Size = UDim2.new(1, -72, 1, 0), Font = F, TextSize = 11,
-						TextColor3 = tx, TextXAlignment = Enum.TextXAlignment.Left, Text = tostring(name),
-					})
-					local up = btn(row, "^", UDim2.fromOffset(20, 18), UDim2.new(1, -62, 0, 1))
-					local dn = btn(row, "v", UDim2.fromOffset(20, 18), UDim2.new(1, -40, 0, 1))
-					local dl = btn(row, "x", UDim2.fromOffset(20, 18), UDim2.new(1, -18, 0, 1))
-					up.MouseButton1Click:Connect(function()
-						if i <= 1 then return end
-						t[i], t[i - 1] = t[i - 1], t[i]
-						priCommit(t)
-						refreshPri()
-					end)
-					dn.MouseButton1Click:Connect(function()
-						if i >= #t then return end
-						t[i], t[i + 1] = t[i + 1], t[i]
-						priCommit(t)
-						refreshPri()
-					end)
-					dl.MouseButton1Click:Connect(function()
-						table.remove(t, i)
-						priCommit(t)
-						refreshPri()
-					end)
-				end
-			end
-			addBtn.MouseButton1Click:Connect(function()
-				local n = tostring(addBox.Text or ""):gsub("^%s+", ""):gsub("%s+$", "")
-				if n == "" then return end
-				local t = priCopy()
-				t[#t + 1] = n
-				priCommit(t)
-				addBox.Text = ""
-				refreshPri()
-			end)
-			local function togglePri()
-				refreshPri()
-				pri.Visible = not pri.Visible
-			end
-			_G.SabcomOpenPriorityList = function() refreshPri(); pri.Visible = true end
-			_G.SabcomTogglePriorityList = togglePri
-
-			buildRestGuis()
-			if applyGuiTheme then applyGuiTheme() end
-			layoutCompactTools()
-			priPanel = pri
-			if extrasHidden or guiHidden then extras.Visible = false end
-			if guiHidden then setGuiHidden(true) end
-			paintOpenGuiBtn()
-			return extras
-		end
-		task.defer(ensureExtras)
-	end
-end)
-
-task.spawn(function()
-	local function instantReset()
-		_G.SabcomTPStop = true
-		_G.sabcomTPStop = true
-		do
-			if type(_G.SabcomInvisOff) == "function" then
-				_G.SabcomInvisOff()
-			elseif _G.invisibleStealEnabled == true and type(_G.toggleInvisibleSteal) == "function" then
-				_G.toggleInvisibleSteal()
-			end
-		end
-		if type(_G.SabcomPaintInvisToggles) == "function" then
-			_G.SabcomPaintInvisToggles()
-		end
-		do
-			local char = LP.Character
-			local hum = char and char:FindFirstChildOfClass("Humanoid")
-			if hum then hum:UnequipTools() end
-			if char then
-				local bp = LP:FindFirstChild("Backpack")
-				for _, t in ipairs(char:GetChildren()) do
-					if t:IsA("Tool") then
-						if bp then t.Parent = bp else t:Destroy() end
-					end
-				end
-			end
-		end
-		local player = game.Players.LocalPlayer
-		local character = player and player.Character
-		local root = character and character:FindFirstChild("HumanoidRootPart")
-		if not root then return end
-		local n = math.max(1, math.floor(tonumber(_G.SabcomResetRepeats) or 1))
-		local d = tonumber(_G.SabcomResetDelay) or 0.05
-		for i = 1, n do
-			character = player.Character
-			root = character and character:FindFirstChild("HumanoidRootPart")
-			if not root then break end
-			root.CFrame = root.CFrame + Vector3.new(0, 60000, 0)
-			task.wait(d)
-			character = player.Character
-			root = character and character:FindFirstChild("HumanoidRootPart")
-			if not root then break end
-			root.CFrame = root.CFrame + Vector3.new(0, -30000, 0)
-			if i < n then task.wait(d) end
-		end
-	end
-	_G.SabcomInstantReset = instantReset
-
-	UIS.InputBegan:Connect(function(input, gameProcessed)
-		if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
-		if _G.SabcomCapturingKey then return end
-		if gameProcessed then
-			local box
-			box = UIS:GetFocusedTextBox() 
-			if box then return end
-		end
-		local name = input.KeyCode.Name
-		local hideWant = _G._stp_hideGuiKeyName
-		if type(hideWant) ~= "string" or hideWant == "" then hideWant = "RightShift" end
-		if name == hideWant then
-			if type(_G.SabcomToggleGui) == "function" then _G.SabcomToggleGui() end
-			return
-		end
-		local resetWant = _G._stp_resetKeyName
-		if type(resetWant) ~= "string" or resetWant == "" then resetWant = "X" end
-		if name == resetWant then
-			task.spawn(function() instantReset() end)
-			return
-		end
-		local cloneWant = _G._stp_cloneKeyName
-		if type(cloneWant) ~= "string" or cloneWant == "" then cloneWant = "C" end
-		if name == cloneWant then
-			task.spawn(function()
-				if type(_G.SabcomInstantClone) == "function" then
-					_G.SabcomInstantClone()
-				end
-			end)
-			return
-		end
-		local dropWant = _G._stp_dropKeyName
-		if type(dropWant) ~= "string" or dropWant == "" then dropWant = "B" end
-		if name == dropWant then
-			task.spawn(function()
-				if type(_G.SabcomDropBrainrot) == "function" then
-					_G.SabcomDropBrainrot()
-				end
-			end)
-			return
-		end
-		local invWant = _G._stp_invisKeyName
-		if type(invWant) ~= "string" or invWant == "" then invWant = "U" end
-		if name == invWant and type(_G.toggleInvisibleSteal) == "function" then
-			task.spawn(function() _G.toggleInvisibleSteal() end)
-			return
-		end
-		local floatWant = _G._stp_floatKeyName
-		if type(floatWant) ~= "string" or floatWant == "" then floatWant = "Z" end
-		if name == floatWant and type(_G.toggleFloat) == "function" then
-			task.spawn(function() _G.toggleFloat() end)
-			return
-		end
-		local infWant = _G._stp_infJumpKeyName
-		if type(infWant) ~= "string" or infWant == "" then infWant = "G" end
-		if name == infWant and type(_G.toggleInfJump) == "function" then
-			task.spawn(function() _G.toggleInfJump() end)
-			return
-		end
-		local carpetWant = _G._stp_carpetSpeedKeyName
-		if type(carpetWant) ~= "string" or carpetWant == "" then carpetWant = "Q" end
-		if name == carpetWant and type(_G.toggleCarpetSpeed) == "function" then
-			task.spawn(function() _G.toggleCarpetSpeed() end)
-			return
-		end
-		local buyWant = _G._stp_autoBuyKeyName
-		if type(buyWant) ~= "string" or buyWant == "" then buyWant = "K" end
-		if name == buyWant and type(_G.toggleAutoBuy) == "function" then
-			task.spawn(function() _G.toggleAutoBuy() end)
-			return
-		end
-		local wsWant = _G._stp_walkSpeedKeyName
-		if type(wsWant) ~= "string" or wsWant == "" then wsWant = "V" end
-		if name == wsWant and type(_G.toggleWalkSpeed) == "function" then
-			task.spawn(function() _G.toggleWalkSpeed() end)
-			return
-		end
-		local kickWant = _G._stp_kickKeyName
-		if type(kickWant) ~= "string" or kickWant == "" then kickWant = "P" end
-		if name == kickWant and type(_G.SabcomDoKick) == "function" then
-			task.spawn(function() _G.SabcomDoKick(true) end)
-			return
-		end
-	end)
-
-	loadModules()
-
-	do
-		local fa = { conn = nil, autoRot = nil, stealing = false, locked = nil, cache = nil, lastTarget = 0 }
-		local function hrpOf(p)
-			local c = p and p.Character
-			return c and c:FindFirstChild("HumanoidRootPart") or nil
-		end
-		local function ownerFromPlot(plot)
-			local sign = plot:FindFirstChild("PlotSign")
-			if not sign then return nil end
-			local gui = sign:FindFirstChildWhichIsA("SurfaceGui", true)
-			if not gui then return nil end
-			local label = gui:FindFirstChildWhichIsA("TextLabel", true)
-			if not label then return nil end
-			local text = label.Text
-			if not text or text == "" or text:lower():find("empty") then return nil end
-			return text:match("^(.+)'s Base$") or text
-		end
-		local function baseOwnerPlayer()
-			local plots = workspace:FindFirstChild("Plots")
-			local me = hrpOf(LP)
-			if not plots or not me then return nil end
-			local bestPlot, bestDist = nil, math.huge
-			for _, plot in ipairs(plots:GetChildren()) do
-				local sign = plot:FindFirstChild("PlotSign")
-				local pos = sign and ((sign:IsA("BasePart") and sign.Position) or (sign.PrimaryPart and sign.PrimaryPart.Position))
-				if pos then
-					local d = (me.Position - pos).Magnitude
-					if d < bestDist then bestDist, bestPlot = d, plot end
-				end
-			end
-			if not bestPlot then return nil end
-			local ownerName = ownerFromPlot(bestPlot)
-			if not ownerName then return nil end
-			for _, p in ipairs(Players:GetPlayers()) do
-				if p ~= LP and (p.Name == ownerName or p.DisplayName == ownerName) then return p end
-			end
-			return nil
-		end
-		local function nearestPlayer()
-			local me = hrpOf(LP)
-			if not me then return nil end
-			local best, bd = nil, math.huge
-			for _, p in ipairs(Players:GetPlayers()) do
-				if p ~= LP then
-					local h = hrpOf(p)
-					if h then
-						local d = (h.Position - me.Position).Magnitude
-						if d < bd then bd, best = d, p end
-					end
-				end
-			end
-			return best
-		end
-		local function currentTarget()
-			local tgt = tostring(_G.SabcomFaceAwayTarget or "")
-			if tgt ~= "" then
-				local p = Players:FindFirstChild(tgt)
-				if p then return p end
-			end
-			if _G.SabcomFaceAwayNearest == true then return nearestPlayer() end
-			if _G.SabcomFaceAwayBaseOwner == true then
-				if fa.stealing then
-					if fa.locked and fa.locked.Parent then return fa.locked end
-					local d = baseOwnerPlayer()
-					if d then fa.locked = d; return d end
-					return nil
-				end
-				return baseOwnerPlayer()
-			end
-			return nil
-		end
-		local function releaseRotate()
-			local hum = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
-			if hum and fa.autoRot ~= nil then hum.AutoRotate = fa.autoRot end
-			fa.autoRot = nil
-		end
-		local function faceAwayFrom(pos)
-			local char = LP.Character
-			local hrp = char and char:FindFirstChild("HumanoidRootPart")
-			local hum = char and char:FindFirstChildOfClass("Humanoid")
-			if not hrp then return end
-			if hum and fa.autoRot == nil then
-				fa.autoRot = hum.AutoRotate
-				hum.AutoRotate = false 
-			end
-			local dir = pos - hrp.Position
-			dir = Vector3.new(dir.X, 0, dir.Z)
-			if dir.Magnitude < 0.05 then return end
-			hrp.CFrame = CFrame.lookAt(hrp.Position, hrp.Position - dir.Unit * 10)
-		end
-		local function stopFaceAway()
-			if fa.conn then fa.conn:Disconnect(); fa.conn = nil end
-			releaseRotate()
-			fa.stealing = false
-			fa.locked = nil
-			fa.cache = nil
-		end
-		local function startFaceAway()
-			stopFaceAway()
-			fa.conn = RunService.Heartbeat:Connect(function()
-				if _G.SabcomFaceAway ~= true then return end
-				local stealing = LP:GetAttribute("Stealing") == true
-				if stealing ~= fa.stealing then
-					fa.stealing = stealing
-					if not stealing then
-						releaseRotate()
-						fa.locked = nil
-					end
-				end
-				local now = os.clock()
-				if now - fa.lastTarget >= 0.25 then
-					fa.lastTarget = now
-					fa.cache = currentTarget()
-				end
-				if fa.stealing and fa.cache then
-					local th = hrpOf(fa.cache)
-					if th then faceAwayFrom(th.Position) end
-				end
-			end)
-		end
-		_G.SabcomSetFaceAway = function(on)
-			if on then startFaceAway() else stopFaceAway() end
-		end
-		if _G.SabcomFaceAway == true then startFaceAway() end
-	end
-end)
