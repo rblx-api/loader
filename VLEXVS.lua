@@ -6006,11 +6006,11 @@ local _mobileBtnBase = math.floor((tonumber(_G.SoundMobileButtonScale) or 1) * 5
 local miniBtnSize = math.floor(_mobileBtnBase * 0.70)
 if miniBtnSize < 52 then miniBtnSize = 52 end
 if miniBtnSize > 84 then miniBtnSize = 84 end
-local miniW, miniH = 260, 76
+local miniW, miniH = 360, 100
 MiniFrame.Size = UDim2.new(0, miniW, 0, miniH)
-local MINI_DEFAULT_POSITION = UDim2.new(0, 20, 0.5, -miniH / 2)
+local MINI_DEFAULT_POSITION = UDim2.new(0, 70, 0.5, -miniH / 2)
 MiniFrame.Position = savedMiniPositionTable and tableToUDim2(savedMiniPositionTable, MINI_DEFAULT_POSITION) or MINI_DEFAULT_POSITION
-MiniFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+MiniFrame.BackgroundColor3 = Color3.fromRGB(5, 5, 7)
 MiniFrame.BackgroundTransparency = 0
 MiniFrame.BorderSizePixel = 0
 MiniFrame.Text = ""
@@ -6022,24 +6022,32 @@ MiniFrame.Visible = false
 MiniFrame.Active = true
 MiniFrame.ZIndex = 100
 MiniFrame.Parent = Gui
-corner(MiniFrame, 10)
+corner(MiniFrame, 30)
+local MiniShade = Instance.new("UIGradient")
+MiniShade.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 20, 23)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(3, 3, 5)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(12, 12, 15))
+})
+MiniShade.Rotation = 90
+MiniShade.Parent = MiniFrame
 local MiniSoundStroke = Instance.new("UIStroke")
-MiniSoundStroke.Color = Color3.fromRGB(135, 135, 145)
-MiniSoundStroke.Thickness = 2.4
-MiniSoundStroke.Transparency = 0
+MiniSoundStroke.Color = Color3.fromRGB(110, 12, 20)
+MiniSoundStroke.Thickness = 2.2
+MiniSoundStroke.Transparency = 0.05
 MiniSoundStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 MiniSoundStroke.Parent = MiniFrame
 local MiniAvatar = Instance.new("ImageLabel")
 MiniAvatar.Name = "MiniAvatar"
-MiniAvatar.BackgroundColor3 = Color3.fromRGB(12, 12, 14)
+MiniAvatar.BackgroundColor3 = Color3.fromRGB(10, 10, 12)
 MiniAvatar.BorderSizePixel = 0
-MiniAvatar.Size = UDim2.new(0, 52, 0, 52)
-MiniAvatar.Position = UDim2.new(0, 10, 0.5, -26)
+MiniAvatar.Size = UDim2.new(0, 66, 0, 60)
+MiniAvatar.Position = UDim2.new(0, 36, 0.5, -30)
 MiniAvatar.ScaleType = Enum.ScaleType.Crop
 MiniAvatar.ZIndex = 102
 MiniAvatar.Parent = MiniFrame
-corner(MiniAvatar, 8)
-stroke(MiniAvatar, Color3.fromRGB(150, 150, 160), 1.5, 0.05)
+corner(MiniAvatar, 13)
+stroke(MiniAvatar, Color3.fromRGB(190, 20, 30), 1.8, 0.05)
 task.spawn(function()
 local ok, url = pcall(function()
 return Players:GetUserThumbnailAsync(LP.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
@@ -6048,37 +6056,37 @@ if ok and url and MiniAvatar.Parent then MiniAvatar.Image = url end
 end)
 local MiniDivider = Instance.new("Frame")
 MiniDivider.Name = "MiniDivider"
-MiniDivider.BackgroundColor3 = Color3.fromRGB(125, 125, 135)
+MiniDivider.BackgroundColor3 = Color3.fromRGB(105, 12, 20)
 MiniDivider.BorderSizePixel = 0
-MiniDivider.Size = UDim2.new(0, 2, 0, 52)
-MiniDivider.Position = UDim2.new(0, 72, 0.5, -26)
+MiniDivider.Size = UDim2.new(0, 2, 0, 60)
+MiniDivider.Position = UDim2.new(0, 95, 0.5, -30)
 MiniDivider.ZIndex = 102
 MiniDivider.Parent = MiniFrame
 local MiniLabel = Instance.new("TextLabel")
 MiniLabel.Name = "MiniLabel"
 MiniLabel.BackgroundTransparency = 1
-MiniLabel.Size = UDim2.new(1, -82, 1, -8)
-MiniLabel.Position = UDim2.new(0, 78, 0, 4)
-MiniLabel.Text = "VLEX"
-MiniLabel.TextColor3 = Color3.fromRGB(255, 20, 30)
-MiniLabel.TextStrokeColor3 = Color3.fromRGB(45, 45, 50)
-MiniLabel.TextStrokeTransparency = 0
+MiniLabel.Size = UDim2.new(1, -125, 0, 44)
+MiniLabel.Position = UDim2.new(0, 105, 0.5, -31)
+MiniLabel.Text = "VLEX.VS"
+MiniLabel.TextColor3 = Color3.fromRGB(255, 35, 45)
+MiniLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+MiniLabel.TextStrokeTransparency = 0.12
 MiniLabel.Font = Enum.Font.GothamBlack
-MiniLabel.TextSize = 48
+MiniLabel.TextSize = 39
 MiniLabel.TextXAlignment = Enum.TextXAlignment.Center
-MiniLabel.TextYAlignment = Enum.TextYAlignment.Center
-MiniLabel.TextScaled = true
 MiniLabel.ZIndex = 102
 MiniLabel.Parent = MiniFrame
 local MiniSubLabel = Instance.new("TextLabel")
 MiniSubLabel.Name = "MiniSubLabel"
 MiniSubLabel.BackgroundTransparency = 1
-MiniSubLabel.Size = UDim2.new(1, -82, 0, 1)
-MiniSubLabel.Position = UDim2.new(0, 78, 0.5, 0)
-MiniSubLabel.Text = ""
-MiniSubLabel.TextColor3 = Color3.fromRGB(160, 160, 170)
+MiniSubLabel.Size = UDim2.new(1, -125, 0, 24)
+MiniSubLabel.Position = UDim2.new(0, 105, 0.5, 18)
+MiniSubLabel.Text = "menu"
+MiniSubLabel.TextColor3 = Color3.fromRGB(145, 145, 150)
+MiniSubLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+MiniSubLabel.TextStrokeTransparency = 0.25
 MiniSubLabel.Font = Enum.Font.GothamMedium
-MiniSubLabel.TextSize = 1
+MiniSubLabel.TextSize = 18
 MiniSubLabel.TextXAlignment = Enum.TextXAlignment.Center
 MiniSubLabel.ZIndex = 102
 MiniSubLabel.Parent = MiniFrame
@@ -6326,7 +6334,7 @@ corner(HeaderBar, 14)
 stroke(HeaderBar, Color3.fromRGB(45, 45, 50), 1.0, 0.3)
 local TitleAccent = Instance.new("Frame")
 TitleAccent.Name = "TitleAccent"
-TitleAccent.BackgroundColor3 = Color3.fromRGB(255, 25, 40)
+TitleAccent.BackgroundColor3 = Color3.fromRGB(240, 240, 245)
 TitleAccent.BorderSizePixel = 0
 TitleAccent.Size = UDim2.new(0, 3, 0, 28)
 TitleAccent.Position = UDim2.new(0, 12, 0.5, -14)
@@ -6338,10 +6346,8 @@ Title.Name = "Title"
 Title.BackgroundTransparency = 1
 Title.Size = UDim2.new(0, 200, 0, 20)
 Title.Position = UDim2.new(0, 24, 0, 10)
-Title.Text = "VLEX.VS"
-Title.TextColor3 = Color3.fromRGB(255, 30, 45)
-Title.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-Title.TextStrokeTransparency = 0.15
+Title.Text = "Sound HUB"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextStrokeTransparency = 1
 Title.Font = Enum.Font.GothamBlack
 Title.TextSize = 16
