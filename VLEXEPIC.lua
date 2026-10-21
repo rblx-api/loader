@@ -6454,10 +6454,10 @@ Close.AutoButtonColor = false
 Close.ZIndex = 12
 Close.Parent = Main
 corner(Close, 999)
-stroke(Close, Color3.fromRGB(168, 85, 247), 1.5, 0.25)
+stroke(Close, Color3.fromRGB(110, 110, 110), 1.5, 0.25)
 local LockBtn = Instance.new("TextButton")
 LockBtn.Name = "LockBtn"
-LockBtn.BackgroundColor3 = Color3.fromRGB(24, 12, 38)
+LockBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 LockBtn.BorderSizePixel = 0
 LockBtn.Text = "UNLOCKED"
 LockBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -6470,7 +6470,7 @@ LockBtn.ZIndex = 12
 LockBtn.Parent = HeaderBar
 corner(LockBtn, 999)
 local LockBtnStroke = Instance.new("UIStroke")
-LockBtnStroke.Color = Color3.fromRGB(168, 85, 247)
+LockBtnStroke.Color = Color3.fromRGB(110, 110, 110)
 LockBtnStroke.Thickness = 1.0
 LockBtnStroke.Transparency = 0.25
 LockBtnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
@@ -6481,14 +6481,14 @@ LockBtn.Text = locked and "LOCKED" or "UNLOCKED"
 LockBtn.Size = UDim2.new(0, 72, 0, 28)
 LockBtn.Position = UDim2.new(1, -118, 0.5, -14)
 if locked then
-LockBtn.BackgroundColor3 = Color3.fromRGB(112, 55, 170)
+LockBtn.BackgroundColor3 = Color3.fromRGB(65, 65, 65)
 LockBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-LockBtnStroke.Color = Color3.fromRGB(192, 132, 252)
+LockBtnStroke.Color = Color3.fromRGB(255, 255, 255)
 LockBtnStroke.Transparency = 0.1
 else
-LockBtn.BackgroundColor3 = Color3.fromRGB(24, 12, 38)
+LockBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 LockBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
-LockBtnStroke.Color = Color3.fromRGB(168, 85, 247)
+LockBtnStroke.Color = Color3.fromRGB(110, 110, 110)
 LockBtnStroke.Transparency = 0.25
 end
 end
@@ -6999,7 +6999,7 @@ button.ZIndex = 7
 button.Parent = row
 local track = Instance.new("Frame")
 track.Name = "Track"
-track.BackgroundColor3 = default and Color3.fromRGB(147, 51, 234) or Color3.fromRGB(43, 20, 66)
+track.BackgroundColor3 = default and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(75, 75, 75)
 track.BackgroundTransparency = 0
 track.Size = UDim2.new(0, 44, 0, 22)
 track.Position = UDim2.new(1, -54, 0.5, -11)
@@ -7007,10 +7007,10 @@ track.BorderSizePixel = 0
 track.ZIndex = 5
 track.Parent = button
 corner(track, 999)
-stroke(track, Color3.fromRGB(168, 85, 247), 2, 0.12)
+stroke(track, Color3.fromRGB(110, 110, 110), 2, 0.12)
 local circle = Instance.new("Frame")
 circle.Name = "Knob"
-circle.BackgroundColor3 = default and Color3.fromRGB(233, 213, 255) or Color3.fromRGB(192, 132, 252)
+circle.BackgroundColor3 = default and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(255, 255, 255)
 circle.Size = UDim2.new(0, 18, 0, 18)
 circle.Position = default and UDim2.new(1, -20, 0.5, -9) or UDim2.new(0, 2, 0.5, -9)
 circle.BorderSizePixel = 0
@@ -7023,21 +7023,21 @@ local state = default and true or false
 local function setVisual(on)
 state = on and true or false
 tween(track, {
-BackgroundColor3 = state and Color3.fromRGB(147, 51, 234) or Color3.fromRGB(43, 20, 66),
+BackgroundColor3 = state and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(75, 75, 75),
 })
 tween(circle, {
 Position = state and UDim2.new(1, -20, 0.5, -9) or UDim2.new(0, 2, 0.5, -9),
-BackgroundColor3 = state and Color3.fromRGB(233, 213, 255) or Color3.fromRGB(192, 132, 252),
+BackgroundColor3 = state and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(150, 150, 150),
 })
 if circleStroke then
 tween(circleStroke, {
-Color = Color3.fromRGB(192, 132, 252),
+Color = state and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(120, 120, 120),
 Transparency = state and 0.15 or 0.4,
 })
 end
 if rowStroke then
 tween(rowStroke, {
-Color = state and Color3.fromRGB(192, 132, 252) or COLORS.strokeSoft,
+Color = state and Color3.fromRGB(255, 255, 255) or COLORS.strokeSoft,
 Transparency = state and 0.2 or 0.38,
 })
 end
@@ -7069,7 +7069,7 @@ button.ZIndex = 7
 button.Parent = row
 local track = Instance.new("Frame")
 track.Name = "Track"
-track.BackgroundColor3 = default and Color3.fromRGB(147, 51, 234) or Color3.fromRGB(43, 20, 66)
+track.BackgroundColor3 = default and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(75, 75, 75)
 track.BackgroundTransparency = 0
 track.Size = UDim2.new(0, 44, 0, 22)
 track.Position = UDim2.new(1, -54, 0.5, -11)
@@ -7077,10 +7077,10 @@ track.BorderSizePixel = 0
 track.ZIndex = 5
 track.Parent = button
 corner(track, 999)
-stroke(track, Color3.fromRGB(168, 85, 247), 2, 0.12)
+stroke(track, Color3.fromRGB(110, 110, 110), 2, 0.12)
 local circle = Instance.new("Frame")
 circle.Name = "Knob"
-circle.BackgroundColor3 = default and Color3.fromRGB(233, 213, 255) or Color3.fromRGB(192, 132, 252)
+circle.BackgroundColor3 = default and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(255, 255, 255)
 circle.Size = UDim2.new(0, 18, 0, 18)
 circle.Position = default and UDim2.new(1, -20, 0.5, -9) or UDim2.new(0, 2, 0.5, -9)
 circle.BorderSizePixel = 0
@@ -7092,21 +7092,21 @@ local rowStroke = row:FindFirstChildOfClass("UIStroke")
 local function setVisual(on)
 local state = on and true or false
 tween(track, {
-BackgroundColor3 = state and Color3.fromRGB(147, 51, 234) or Color3.fromRGB(43, 20, 66),
+BackgroundColor3 = state and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(75, 75, 75),
 })
 tween(circle, {
 Position = state and UDim2.new(1, -20, 0.5, -9) or UDim2.new(0, 2, 0.5, -9),
-BackgroundColor3 = state and Color3.fromRGB(233, 213, 255) or Color3.fromRGB(192, 132, 252),
+BackgroundColor3 = state and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(150, 150, 150),
 })
 if circleStroke then
 tween(circleStroke, {
-Color = Color3.fromRGB(192, 132, 252),
+Color = state and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(120, 120, 120),
 Transparency = state and 0.15 or 0.4,
 })
 end
 if rowStroke then
 tween(rowStroke, {
-Color = state and Color3.fromRGB(192, 132, 252) or COLORS.strokeSoft,
+Color = state and Color3.fromRGB(255, 255, 255) or COLORS.strokeSoft,
 Transparency = state and 0.2 or 0.38,
 })
 end
