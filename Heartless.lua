@@ -71,16 +71,16 @@ pcall(function()
 
 end)
 -- Exported from Faulmor
--- title: 4KTDUELS
+-- title: heartlees
 -- format: faulmor.own-source
 -- exported_at: 2026-10-08T01:26:21.053Z
 
 
-if _G.RivalHubRunning then
-    warn("[4KTDUELS] Instancia previa detectada. Se recomienda rejoin si hay comportamiento errático.")
+if _G.heartleesRunning then
+    warn("[heartlees] Instancia previa detectada. Se recomienda rejoin si hay comportamiento errático.")
 end
-_G.RivalHubRunning = false
-_G.__RivalHubMainOriginalPos = nil
+_G.heartleesRunning = false
+_G.__heartleesMainOriginalPos = nil
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -100,46 +100,46 @@ if not LP then
     if _lpConn then _lpConn:Disconnect() end
 end
 if not LP then
-    warn("[4KTDUELS] LocalPlayer no disponible en 15s. Abortando.")
+    warn("[heartlees] LocalPlayer no disponible en 15s. Abortando.")
     return
 end
 
 local pgui = LP:WaitForChild("PlayerGui", 20)
 if not pgui then
-    warn("[4KTDUELS] PlayerGui no cargó en 20s. Abortando.")
+    warn("[heartlees] PlayerGui no cargó en 20s. Abortando.")
     return
 end
 
 local camera = Workspace.CurrentCamera
 
-_G.RivalHubRunning = true
-_G.RivalHubSession = (_G.RivalHubSession or 0) + 1
-local _mySession = _G.RivalHubSession
+_G.heartleesRunning = true
+_G.heartleesSession = (_G.heartleesSession or 0) + 1
+local _mySession = _G.heartleesSession
 
-local RIVALHUB_LANGUAGE = "en"
+local HEARTLEES_LANGUAGE = "en"
 
-local RIVALHUB_TRANSLATIONS = {
+local HEARTLEES_TRANSLATIONS = {
     es = { ["RESET ALL SETTINGS"]="RESTABLECER TODO", ["SETTINGS RESET"]="AJUSTES RESTABLECIDOS", ["CONFIRM?"]="¿CONFIRMAR?", ["ERROR"]="ERROR", ["RESET"]="RESTABLECER", ["Keybinds"]="TECLAS", ["Carry Mode"]="MODO CARGAR", ["Lagger Mode"]="MODO LAG", ["Auto Left"]="AUTO IZQUIERDA", ["Auto Right"]="AUTO DERECHA", ["Auto Bat"]="AUTO BATE", ["TP Down"]="TP ABAJO", ["Drop Brainrot"]="SOLTAR BRAINROT", ["Hide GUI"]="OCULTAR MENÚ", ["Normal Speed"]="VELOCIDAD NORMAL", ["Carry Speed"]="VELOCIDAD CARGAR", ["Current Mode"]="MODO ACTUAL", ["ACTIVATE"]="ACTIVAR" },
     pt = { ["RESET ALL SETTINGS"]="REDEFINIR TUDO", ["SETTINGS RESET"]="CONFIGURAÇÕES REDEFINIDAS", ["CONFIRM?"]="CONFIRMAR?", ["ERROR"]="ERRO", ["RESET"]="REDEFINIR", ["Keybinds"]="TECLAS", ["Carry Mode"]="MODO CARREGAR", ["Auto Left"]="AUTO ESQUERDA", ["Auto Right"]="AUTO DIREITA", ["Hide GUI"]="OCULTAR MENU", ["Normal Speed"]="VELOCIDADE NORMAL", ["Carry Speed"]="VELOCIDADE CARREGAR", ["ACTIVATE"]="ATIVAR" },
     fr = { ["RESET ALL SETTINGS"]="RÉINITIALISER", ["SETTINGS RESET"]="PARAMÈTRES RÉINITIALISÉS", ["CONFIRM?"]="CONFIRMER ?", ["ERROR"]="ERREUR", ["RESET"]="RÉINITIALISER", ["Keybinds"]="RACCOURCIS", ["Carry Mode"]="MODE PORTER", ["Auto Left"]="AUTO GAUCHE", ["Auto Right"]="AUTO DROITE", ["Hide GUI"]="MASQUER LE MENU", ["Normal Speed"]="VITESSE NORMALE", ["Carry Speed"]="VITESSE PORTER", ["ACTIVATE"]="ACTIVER" },
     de = { ["RESET ALL SETTINGS"]="ALLES ZURÜCKSETZEN", ["SETTINGS RESET"]="EINSTELLUNGEN ZURÜCKGESETZT", ["CONFIRM?"]="BESTÄTIGEN?", ["ERROR"]="FEHLER", ["RESET"]="ZURÜCKSETZEN", ["Keybinds"]="TASTEN", ["Carry Mode"]="TRAGEMODUS", ["Auto Left"]="AUTO LINKS", ["Auto Right"]="AUTO RECHTS", ["Hide GUI"]="MENÜ AUSBLENDEN", ["Normal Speed"]="NORMALE GESCHWINDIGKEIT", ["Carry Speed"]="TRAGEGESCHWINDIGKEIT", ["ACTIVATE"]="AKTIVIEREN" },
 }
 
-local function localizeRivalHubInterface(root)
-    local dictionary = RIVALHUB_TRANSLATIONS[RIVALHUB_LANGUAGE]
+local function localizeheartleesInterface(root)
+    local dictionary = HEARTLEES_TRANSLATIONS[HEARTLEES_LANGUAGE]
     if not dictionary or not root then return end
     for _, object in ipairs(root:GetDescendants()) do
         if object:IsA("TextLabel") or object:IsA("TextButton") then
-            local source = object:GetAttribute("RivalHubSourceText") or object.Text
-            object:SetAttribute("RivalHubSourceText", source)
+            local source = object:GetAttribute("heartleesSourceText") or object.Text
+            object:SetAttribute("heartleesSourceText", source)
             local translated = dictionary[source]
             if translated then object.Text = translated end
         end
     end
 end
 
-local function rivalHubTranslate(source)
-    local dictionary = RIVALHUB_TRANSLATIONS[RIVALHUB_LANGUAGE]
+local function heartleesTranslate(source)
+    local dictionary = HEARTLEES_TRANSLATIONS[HEARTLEES_LANGUAGE]
     return (dictionary and dictionary[source]) or source
 end
 
@@ -192,8 +192,8 @@ local State = {
     bypassBatEnabled = false,
     bypassBatSpeed = BYPASS_AIMBOT_SPEED,
 }
-CONFIG_FILE = "RivalHub_" .. tostring(LP.UserId) .. ".json"
-POSITION_FILE = "RivalHub_Positions_" .. tostring(LP.UserId) .. ".json"
+CONFIG_FILE = "heartlees_" .. tostring(LP.UserId) .. ".json"
+POSITION_FILE = "heartlees_Positions_" .. tostring(LP.UserId) .. ".json"
 BAT_V2_HIT_DIST = 4.5
 _isDraggingButton = false
 
@@ -272,7 +272,7 @@ function _bgDownloadThumb(id)
     if not imageUrl then return nil end
     local bytes = _bgHttpGet(imageUrl)
     if not bytes or #bytes < 100 then return nil end
-    local path = "RivalHub_bg_" .. id .. ".png"
+    local path = "heartlees_bg_" .. id .. ".png"
     local okW = pcall(writefile, path, bytes)
     if not okW then return nil end
     local okA, asset = pcall(getAsset, path)
@@ -346,7 +346,7 @@ function _bgAsset(id)
                 if okD and custom then resolved = custom; loadedOk = true end
             end
             if not loadedOk then
-                warn("[RivalHub] La imagen de fondo " .. id .. " no carga (privada, sin aprobar o no es una imagen).")
+                warn("[heartlees] La imagen de fondo " .. id .. " no carga (privada, sin aprobar o no es una imagen).")
             end
 
             _bgAssetCache[id] = resolved
@@ -428,20 +428,20 @@ local COLOR_THEMES = {
     ["Gray"] = Color3.fromRGB(185, 115, 255),
 }
 
-RIVAL_TITLE_THEMES = {
+HEARTLEES_TITLE_THEMES = {
     ["Purple"] = { color = Color3.fromRGB(190, 125, 255), stroke = nil },
     ["White"]  = { color = Color3.fromRGB(255, 255, 255), stroke = nil },
     ["Black"]  = { color = Color3.fromRGB(0, 0, 0),       stroke = Color3.fromRGB(255, 255, 255) },
     ["Silver"] = { color = Color3.fromRGB(255, 255, 255), stroke = nil },
 }
-currentRivalTitleTheme = "White"
+currentHeartleesTitleTheme = "White"
 scriptLogoRef = nil
-rivalTitleSelectorLabel = nil
+heartleesTitleSelectorLabel = nil
 
-function applyRivalTitleTheme(themeName, noSave)
-    local t = RIVAL_TITLE_THEMES[themeName]
+function applyHeartleesTitleTheme(themeName, noSave)
+    local t = HEARTLEES_TITLE_THEMES[themeName]
     if not t then return end
-    currentRivalTitleTheme = themeName
+    currentHeartleesTitleTheme = themeName
     if scriptLogoRef and scriptLogoRef.Parent then
         local old = scriptLogoRef:FindFirstChildOfClass("UIGradient")
         if old then old:Destroy() end
@@ -453,8 +453,8 @@ function applyRivalTitleTheme(themeName, noSave)
             scriptLogoRef.TextStrokeTransparency = 1
         end
     end
-    if rivalTitleSelectorLabel then
-        rivalTitleSelectorLabel.Text = themeName
+    if heartleesTitleSelectorLabel then
+        heartleesTitleSelectorLabel.Text = themeName
     end
     if not noSave and saveAllSettings then pcall(saveAllSettings) end
 end
@@ -465,7 +465,7 @@ selectedColor = COLOR_THEMES["Gray"]
 function getThemeColor() return selectedColor end
 ESP_ORANGE = Color3.fromRGB(180, 95, 255)
 
-function rivalHubGradient(c)
+function heartleesGradient(c)
     return ColorSequence.new({
         ColorSequenceKeypoint.new(0.00, c:Lerp(Color3.new(1,1,1), 0.55)),
         ColorSequenceKeypoint.new(0.45, c),
@@ -473,7 +473,7 @@ function rivalHubGradient(c)
     })
 end
 
-function rivalHubGradientSoft(c)
+function heartleesGradientSoft(c)
     return ColorSequence.new({
         ColorSequenceKeypoint.new(0.00, c:Lerp(Color3.new(1,1,1), 0.75)),
         ColorSequenceKeypoint.new(0.50, c:Lerp(Color3.new(1,1,1), 0.25)),
@@ -481,7 +481,7 @@ function rivalHubGradientSoft(c)
     })
 end
 
-function rivalHubGradientDark(c)
+function heartleesGradientDark(c)
     return ColorSequence.new({
         ColorSequenceKeypoint.new(0.00, c:Lerp(Color3.fromRGB(0,0,0), 0.35)),
         ColorSequenceKeypoint.new(0.55, c:Lerp(Color3.fromRGB(0,0,0), 0.65)),
@@ -489,14 +489,14 @@ function rivalHubGradientDark(c)
     })
 end
 
-function applyRivalHubGradientToLabel(label, c)
+function applyheartleesGradientToLabel(label, c)
     if not label then return end
     local grad = label:FindFirstChildOfClass("UIGradient")
     if not grad then
         grad = Instance.new("UIGradient", label)
     end
     grad.Rotation = 0
-    grad.Color = rivalHubGradient(c)
+    grad.Color = heartleesGradient(c)
 end
 
 local _lastThemeUpdate = 0
@@ -580,7 +580,7 @@ function updateAllUIThemeColors(color)
     if gui then
         searchAndUpdateText(gui)
         for _, child in ipairs(gui:GetDescendants()) do
-            if child:GetAttribute("RivalHubThemeText") == true and child:IsA("TextLabel") then
+            if child:GetAttribute("heartleesThemeText") == true and child:IsA("TextLabel") then
                 child.TextColor3 = color
             end
         end
@@ -592,7 +592,7 @@ function updateAllUIThemeColors(color)
             tab.BackgroundColor3 = color
             tab.BackgroundTransparency = 0.15
             local tg = tab:FindFirstChild("TabBgGrad")
-            if tg then tg.Color = rivalHubGradient(color) end
+            if tg then tg.Color = heartleesGradient(color) end
         else
             tab.TextColor3 = Color3.fromRGB(150, 150, 165)
             tab.BackgroundColor3 = Color3.fromRGB(26, 26, 34)
@@ -603,7 +603,7 @@ function updateAllUIThemeColors(color)
         local s = tab:FindFirstChild("TabStroke")
         if s then s.Color = color end
     end
-    if _G.__RivalHubRefreshESPTheme then pcall(_G.__RivalHubRefreshESPTheme, color) end
+    if _G.__heartleesRefreshESPTheme then pcall(_G.__heartleesRefreshESPTheme, color) end
     if main then
         local titleFrame = main:FindFirstChild("Frame")
         if titleFrame then
@@ -619,11 +619,11 @@ function updateAllUIThemeColors(color)
         colorSelectorLabel.TextColor3 = color
     end
 
-    if _G._rivalHubStealSlide then
-        _G._rivalHubStealSlide.BackgroundColor3 = color
-        local sg = _G._rivalHubStealSlide:FindFirstChildOfClass("UIGradient")
-        if sg then sg.Color = rivalHubGradient(color) end
-        local ss = _G._rivalHubStealSlide:FindFirstChildOfClass("UIStroke")
+    if _G._heartleesStealSlide then
+        _G._heartleesStealSlide.BackgroundColor3 = color
+        local sg = _G._heartleesStealSlide:FindFirstChildOfClass("UIGradient")
+        if sg then sg.Color = heartleesGradient(color) end
+        local ss = _G._heartleesStealSlide:FindFirstChildOfClass("UIStroke")
         if ss then ss.Color = color end
     end
 
@@ -719,8 +719,8 @@ local function applyBody(char)
                     w.Part0 = orig
                     w.Part1 = c
                     w.Parent = c
-                    if orig:GetAttribute("RivalHubOutfitOriginalTransparency") == nil then
-                        orig:SetAttribute("RivalHubOutfitOriginalTransparency", orig.Transparency)
+                    if orig:GetAttribute("heartleesOutfitOriginalTransparency") == nil then
+                        orig:SetAttribute("heartleesOutfitOriginalTransparency", orig.Transparency)
                     end
                     orig.Transparency = 1
                     total = total + 1
@@ -877,10 +877,10 @@ local function clearPreviousOutfitAssets(char)
         local headForFace = char:FindFirstChild("Head")
         local f = headForFace and headForFace:FindFirstChild("face")
         if f then
-            local otr = f:GetAttribute("RivalHubOriginalFaceTransparency")
+            local otr = f:GetAttribute("heartleesOriginalFaceTransparency")
             if otr ~= nil then
                 pcall(function() f.Transparency = otr end)
-                f:SetAttribute("RivalHubOriginalFaceTransparency", nil)
+                f:SetAttribute("heartleesOriginalFaceTransparency", nil)
             end
         end
     end
@@ -897,15 +897,15 @@ local function clearPreviousOutfitAssets(char)
     end
     for _, part in ipairs(char:GetDescendants()) do
         if part:IsA("BasePart") then
-            local originalTransparency = part:GetAttribute("RivalHubOutfitOriginalTransparency")
+            local originalTransparency = part:GetAttribute("heartleesOutfitOriginalTransparency")
             if originalTransparency ~= nil then
                 part.Transparency = originalTransparency
-                part:SetAttribute("RivalHubOutfitOriginalTransparency", nil)
+                part:SetAttribute("heartleesOutfitOriginalTransparency", nil)
             end
-            local originalLocalTransparency = part:GetAttribute("RivalHubOutfitOriginalLocalTransparency")
+            local originalLocalTransparency = part:GetAttribute("heartleesOutfitOriginalLocalTransparency")
             if originalLocalTransparency ~= nil then
                 part.LocalTransparencyModifier = originalLocalTransparency
-                part:SetAttribute("RivalHubOutfitOriginalLocalTransparency", nil)
+                part:SetAttribute("heartleesOutfitOriginalLocalTransparency", nil)
             end
         end
     end
@@ -918,24 +918,24 @@ local function clearPreviousOutfitAssets(char)
         bc.Parent = char
     end
     local head = char:FindFirstChild("Head")
-    if head and head:IsA("MeshPart") and head:GetAttribute("RivalHubOutfitModifiedMeshPart") then
+    if head and head:IsA("MeshPart") and head:GetAttribute("heartleesOutfitModifiedMeshPart") then
         pcall(function()
-            head.MeshId = head:GetAttribute("RivalHubOutfitOriginalMeshId") or ""
-            head.TextureID = head:GetAttribute("RivalHubOutfitOriginalTextureId") or ""
+            head.MeshId = head:GetAttribute("heartleesOutfitOriginalMeshId") or ""
+            head.TextureID = head:GetAttribute("heartleesOutfitOriginalTextureId") or ""
         end)
-        head:SetAttribute("RivalHubOutfitModifiedMeshPart", nil)
-        head:SetAttribute("RivalHubOutfitOriginalMeshId", nil)
-        head:SetAttribute("RivalHubOutfitOriginalTextureId", nil)
+        head:SetAttribute("heartleesOutfitModifiedMeshPart", nil)
+        head:SetAttribute("heartleesOutfitOriginalMeshId", nil)
+        head:SetAttribute("heartleesOutfitOriginalTextureId", nil)
     elseif head then
         local specialMesh = head:FindFirstChildWhichIsA("SpecialMesh")
-        if specialMesh and specialMesh:GetAttribute("RivalHubOutfitCreatedMesh") then
+        if specialMesh and specialMesh:GetAttribute("heartleesOutfitCreatedMesh") then
             specialMesh:Destroy()
-        elseif specialMesh and specialMesh:GetAttribute("RivalHubOutfitModifiedMesh") then
-            specialMesh.MeshId = specialMesh:GetAttribute("RivalHubOutfitOriginalMeshId") or ""
-            specialMesh.TextureId = specialMesh:GetAttribute("RivalHubOutfitOriginalTextureId") or ""
-            specialMesh:SetAttribute("RivalHubOutfitModifiedMesh", nil)
-            specialMesh:SetAttribute("RivalHubOutfitOriginalMeshId", nil)
-            specialMesh:SetAttribute("RivalHubOutfitOriginalTextureId", nil)
+        elseif specialMesh and specialMesh:GetAttribute("heartleesOutfitModifiedMesh") then
+            specialMesh.MeshId = specialMesh:GetAttribute("heartleesOutfitOriginalMeshId") or ""
+            specialMesh.TextureId = specialMesh:GetAttribute("heartleesOutfitOriginalTextureId") or ""
+            specialMesh:SetAttribute("heartleesOutfitModifiedMesh", nil)
+            specialMesh:SetAttribute("heartleesOutfitOriginalMeshId", nil)
+            specialMesh:SetAttribute("heartleesOutfitOriginalTextureId", nil)
         end
     end
 end
@@ -1011,21 +1011,21 @@ local function applyNoOutfit(char)
         if item:IsA("Accessory") then
             for _, part in ipairs(item:GetDescendants()) do
                 if part:IsA("BasePart") then
-                    local original = part:GetAttribute("RivalHubOriginalTransparency")
-                    if original ~= nil then part.Transparency = original; part:SetAttribute("RivalHubOriginalTransparency", nil) end
-                    local originalLocal = part:GetAttribute("RivalHubOriginalLocalTransparency")
-                    if originalLocal ~= nil then part.LocalTransparencyModifier = originalLocal; part:SetAttribute("RivalHubOriginalLocalTransparency", nil) end
+                    local original = part:GetAttribute("heartleesOriginalTransparency")
+                    if original ~= nil then part.Transparency = original; part:SetAttribute("heartleesOriginalTransparency", nil) end
+                    local originalLocal = part:GetAttribute("heartleesOriginalLocalTransparency")
+                    if originalLocal ~= nil then part.LocalTransparencyModifier = originalLocal; part:SetAttribute("heartleesOriginalLocalTransparency", nil) end
                 end
             end
         elseif item:IsA("Shirt") then
-            local original = item:GetAttribute("RivalHubOriginalTemplate")
-            if original ~= nil then item.ShirtTemplate = original; item:SetAttribute("RivalHubOriginalTemplate", nil) end
+            local original = item:GetAttribute("heartleesOriginalTemplate")
+            if original ~= nil then item.ShirtTemplate = original; item:SetAttribute("heartleesOriginalTemplate", nil) end
         elseif item:IsA("Pants") then
-            local original = item:GetAttribute("RivalHubOriginalTemplate")
-            if original ~= nil then item.PantsTemplate = original; item:SetAttribute("RivalHubOriginalTemplate", nil) end
+            local original = item:GetAttribute("heartleesOriginalTemplate")
+            if original ~= nil then item.PantsTemplate = original; item:SetAttribute("heartleesOriginalTemplate", nil) end
         elseif item:IsA("ShirtGraphic") then
-            local original = item:GetAttribute("RivalHubOriginalGraphic")
-            if original ~= nil then item.Graphic = original; item:SetAttribute("RivalHubOriginalGraphic", nil) end
+            local original = item:GetAttribute("heartleesOriginalGraphic")
+            if original ~= nil then item.Graphic = original; item:SetAttribute("heartleesOriginalGraphic", nil) end
         end
     end
 end
@@ -1680,7 +1680,7 @@ table.insert(state.visuals, holder)
 return added
 end
 local assetInfoCache = {}
-local ASSET_INFO_CACHE_FILE="RivalHubAvatarAssets.json"
+local ASSET_INFO_CACHE_FILE="heartleesAvatarAssets.json"
 pcall(function()
 if isfile and readfile and isfile(ASSET_INFO_CACHE_FILE) then
 local decoded=HttpService:JSONDecode(readfile(ASSET_INFO_CACHE_FILE))
@@ -2173,7 +2173,7 @@ function VX7A.apply(index)
     if index == 0 then VX7A.stop() return end
     local m = VX7A.load()
     if not m or type(m.apply) ~= "function" then
-        warn("[4KTDUELS] No se pudo cargar el modulo de avatares VX7 (loadstring no disponible).")
+        warn("[heartlees] No se pudo cargar el modulo de avatares VX7 (loadstring no disponible).")
         VX7A.setLabel()
         return
     end
@@ -2197,9 +2197,9 @@ end
 
 pcall(function()
     LP.CharacterAdded:Connect(function()
-        if _G.RivalHubSession ~= _mySession or VX7A.index == 0 then return end
+        if _G.heartleesSession ~= _mySession or VX7A.index == 0 then return end
         task.delay(1.5, function()
-            if _G.RivalHubSession == _mySession and VX7A.index ~= 0 then VX7A.apply(VX7A.index) end
+            if _G.heartleesSession == _mySession and VX7A.index ~= 0 then VX7A.apply(VX7A.index) end
         end)
     end)
 end)
@@ -2304,9 +2304,9 @@ local function applyHeadlessKorblox(char)
     pcall(function() LP.CharacterAvatarType = Enum.AvatarType.R6 end)
     local head = char:FindFirstChild("Head")
     if head then
-        if head:GetAttribute("RivalHubOutfitOriginalTransparency") == nil then
-            head:SetAttribute("RivalHubOutfitOriginalTransparency", head.Transparency)
-            head:SetAttribute("RivalHubOutfitOriginalLocalTransparency", head.LocalTransparencyModifier)
+        if head:GetAttribute("heartleesOutfitOriginalTransparency") == nil then
+            head:SetAttribute("heartleesOutfitOriginalTransparency", head.Transparency)
+            head:SetAttribute("heartleesOutfitOriginalLocalTransparency", head.LocalTransparencyModifier)
         end
         head.Transparency = 1
         head.CanCollide = false
@@ -2326,9 +2326,9 @@ local function applyHeadlessKorblox(char)
                 if (p0 and p0.Name == "Head") or (p1 and p1.Name == "Head") then
                     for _, part in ipairs(v:GetDescendants()) do
                         if part:IsA("BasePart") then
-                            if part:GetAttribute("RivalHubOutfitOriginalTransparency") == nil then
-                                part:SetAttribute("RivalHubOutfitOriginalTransparency", part.Transparency)
-                                part:SetAttribute("RivalHubOutfitOriginalLocalTransparency", part.LocalTransparencyModifier)
+                            if part:GetAttribute("heartleesOutfitOriginalTransparency") == nil then
+                                part:SetAttribute("heartleesOutfitOriginalTransparency", part.Transparency)
+                                part:SetAttribute("heartleesOutfitOriginalLocalTransparency", part.LocalTransparencyModifier)
                             end
                             part.Transparency = 1
                             part.LocalTransparencyModifier = 1
@@ -2346,8 +2346,8 @@ local function applyHeadlessKorblox(char)
         for _, partName in ipairs(rightLegConfig.partsToHide) do
             local limb = char:FindFirstChild(partName)
             if limb and limb:IsA("BasePart") then
-                if limb:GetAttribute("RivalHubOutfitOriginalTransparency") == nil then
-                    limb:SetAttribute("RivalHubOutfitOriginalTransparency", limb.Transparency)
+                if limb:GetAttribute("heartleesOutfitOriginalTransparency") == nil then
+                    limb:SetAttribute("heartleesOutfitOriginalTransparency", limb.Transparency)
                 end
                 limb.Transparency = 1
             end
@@ -2380,8 +2380,8 @@ function applyBubbleKorbloxHeadless(char)
         for _, partName in ipairs({"RightUpperLeg", "RightLowerLeg", "RightFoot"}) do
             local limb = char:FindFirstChild(partName)
             if limb and limb:IsA("BasePart") then
-                if limb:GetAttribute("RivalHubOutfitOriginalTransparency") == nil then
-                    limb:SetAttribute("RivalHubOutfitOriginalTransparency", limb.Transparency)
+                if limb:GetAttribute("heartleesOutfitOriginalTransparency") == nil then
+                    limb:SetAttribute("heartleesOutfitOriginalTransparency", limb.Transparency)
                 end
                 limb.Transparency = 1
             end
@@ -2404,16 +2404,16 @@ function applyBubbleKorbloxHeadless(char)
     end
     local head = char:FindFirstChild("Head")
     if head and head:IsA("BasePart") then
-        if head:GetAttribute("RivalHubOutfitOriginalTransparency") == nil then
-            head:SetAttribute("RivalHubOutfitOriginalTransparency", head.Transparency)
-            head:SetAttribute("RivalHubOutfitOriginalLocalTransparency", head.LocalTransparencyModifier)
+        if head:GetAttribute("heartleesOutfitOriginalTransparency") == nil then
+            head:SetAttribute("heartleesOutfitOriginalTransparency", head.Transparency)
+            head:SetAttribute("heartleesOutfitOriginalLocalTransparency", head.LocalTransparencyModifier)
         end
         head.Transparency = 1
         head.LocalTransparencyModifier = 1
         local face = head:FindFirstChild("face")
         if face and face:IsA("Decal") then
-            if face:GetAttribute("RivalHubOriginalFaceTransparency") == nil then
-                face:SetAttribute("RivalHubOriginalFaceTransparency", face.Transparency)
+            if face:GetAttribute("heartleesOriginalFaceTransparency") == nil then
+                face:SetAttribute("heartleesOriginalFaceTransparency", face.Transparency)
             end
             face.Transparency = 1
         end
@@ -2430,22 +2430,22 @@ function applyOutfitByIndex(index)
         if item:IsA("Accessory") and item.Name:sub(1, #TAG) ~= TAG then
             for _, part in ipairs(item:GetDescendants()) do
                 if part:IsA("BasePart") then
-                    if part:GetAttribute("RivalHubOriginalTransparency") == nil then
-                        part:SetAttribute("RivalHubOriginalTransparency", part.Transparency)
-                        part:SetAttribute("RivalHubOriginalLocalTransparency", part.LocalTransparencyModifier)
+                    if part:GetAttribute("heartleesOriginalTransparency") == nil then
+                        part:SetAttribute("heartleesOriginalTransparency", part.Transparency)
+                        part:SetAttribute("heartleesOriginalLocalTransparency", part.LocalTransparencyModifier)
                     end
                     part.Transparency = 1
                     part.LocalTransparencyModifier = 1
                 end
             end
         elseif item:IsA("Shirt") then
-            if item:GetAttribute("RivalHubOriginalTemplate") == nil then item:SetAttribute("RivalHubOriginalTemplate", item.ShirtTemplate) end
+            if item:GetAttribute("heartleesOriginalTemplate") == nil then item:SetAttribute("heartleesOriginalTemplate", item.ShirtTemplate) end
             item.ShirtTemplate = ""
         elseif item:IsA("Pants") then
-            if item:GetAttribute("RivalHubOriginalTemplate") == nil then item:SetAttribute("RivalHubOriginalTemplate", item.PantsTemplate) end
+            if item:GetAttribute("heartleesOriginalTemplate") == nil then item:SetAttribute("heartleesOriginalTemplate", item.PantsTemplate) end
             item.PantsTemplate = ""
         elseif item:IsA("ShirtGraphic") then
-            if item:GetAttribute("RivalHubOriginalGraphic") == nil then item:SetAttribute("RivalHubOriginalGraphic", item.Graphic) end
+            if item:GetAttribute("heartleesOriginalGraphic") == nil then item:SetAttribute("heartleesOriginalGraphic", item.Graphic) end
             item.Graphic = ""
         end
     end
@@ -2477,10 +2477,10 @@ function applyOutfitByIndex(index)
     local done = false
     if head:IsA("MeshPart") then
         done = pcall(function()
-            if not head:GetAttribute("RivalHubOutfitModifiedMeshPart") then
-                head:SetAttribute("RivalHubOutfitOriginalMeshId", head.MeshId)
-                head:SetAttribute("RivalHubOutfitOriginalTextureId", head.TextureID)
-                head:SetAttribute("RivalHubOutfitModifiedMeshPart", true)
+            if not head:GetAttribute("heartleesOutfitModifiedMeshPart") then
+                head:SetAttribute("heartleesOutfitOriginalMeshId", head.MeshId)
+                head:SetAttribute("heartleesOutfitOriginalTextureId", head.TextureID)
+                head:SetAttribute("heartleesOutfitModifiedMeshPart", true)
             end
             head.MeshId = cfg.headMesh
             head.TextureID = cfg.headTexture or ""
@@ -2490,11 +2490,11 @@ function applyOutfitByIndex(index)
         local sm = head:FindFirstChildWhichIsA("SpecialMesh")
         if not sm then
             sm = Instance.new("SpecialMesh")
-            sm:SetAttribute("RivalHubOutfitCreatedMesh", true)
-        elseif not sm:GetAttribute("RivalHubOutfitModifiedMesh") then
-            sm:SetAttribute("RivalHubOutfitOriginalMeshId", sm.MeshId)
-            sm:SetAttribute("RivalHubOutfitOriginalTextureId", sm.TextureId)
-            sm:SetAttribute("RivalHubOutfitModifiedMesh", true)
+            sm:SetAttribute("heartleesOutfitCreatedMesh", true)
+        elseif not sm:GetAttribute("heartleesOutfitModifiedMesh") then
+            sm:SetAttribute("heartleesOutfitOriginalMeshId", sm.MeshId)
+            sm:SetAttribute("heartleesOutfitOriginalTextureId", sm.TextureId)
+            sm:SetAttribute("heartleesOutfitModifiedMesh", true)
         end
         sm.Parent = head
         sm.MeshType = Enum.MeshType.FileMesh
@@ -2588,28 +2588,28 @@ uiScaleValue = 80
 uiStealScale = 100
 
 -- Imagen de perfil compartida por toda la interfaz.
-RIVALHUB_PROFILE_IMAGE = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(LP.UserId) .. "&w=150&h=150"
-RIVALHUB_PROFILE_IMAGE_REFS = {}
-function setRivalHubProfileImage(image)
+HEARTLEES_PROFILE_IMAGE = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(LP.UserId) .. "&w=150&h=150"
+HEARTLEES_PROFILE_IMAGE_REFS = {}
+function setheartleesProfileImage(image)
     if type(image) ~= "string" or image == "" then return end
-    RIVALHUB_PROFILE_IMAGE = image
-    for i = #RIVALHUB_PROFILE_IMAGE_REFS, 1, -1 do
-        local ref = RIVALHUB_PROFILE_IMAGE_REFS[i]
+    HEARTLEES_PROFILE_IMAGE = image
+    for i = #HEARTLEES_PROFILE_IMAGE_REFS, 1, -1 do
+        local ref = HEARTLEES_PROFILE_IMAGE_REFS[i]
         if ref and ref.Parent then
             ref.Image = image
         else
-            table.remove(RIVALHUB_PROFILE_IMAGE_REFS, i)
+            table.remove(HEARTLEES_PROFILE_IMAGE_REFS, i)
         end
     end
 end
-function registerRivalHubProfileImage(ref)
+function registerheartleesProfileImage(ref)
     if not ref then return end
-    table.insert(RIVALHUB_PROFILE_IMAGE_REFS, ref)
-    ref.Image = RIVALHUB_PROFILE_IMAGE
+    table.insert(HEARTLEES_PROFILE_IMAGE_REFS, ref)
+    ref.Image = HEARTLEES_PROFILE_IMAGE
 end
-_G.__RivalHubSetProfileImage = function(image)
+_G.__heartleesSetProfileImage = function(image)
     -- Todos los destinos reciben exactamente la imagen seleccionada en el perfil principal.
-    setRivalHubProfileImage(image)
+    setheartleesProfileImage(image)
 end
 espEnabled = false
 espLineEnabled = false
@@ -2758,8 +2758,8 @@ function isLowLaggerSpeedActive()
 end
 
 function isCarryingBrainrotForSpeed()
-    if _G.__RivalHubIsCarryingBrainrot then
-        local ok, value = pcall(_G.__RivalHubIsCarryingBrainrot)
+    if _G.__heartleesIsCarryingBrainrot then
+        local ok, value = pcall(_G.__heartleesIsCarryingBrainrot)
         if ok then return value == true end
     end
     return false
@@ -2786,7 +2786,7 @@ function getSpeedModeName()
     else return "NORMAL" end
 end
 
-local _s2VelState = _G.__RivalHubSpeedHookState
+local _s2VelState = _G.__heartleesSpeedHookState
 if type(_s2VelState) ~= "table" then
     _s2VelState = {
         hooked = false,
@@ -2794,7 +2794,7 @@ if type(_s2VelState) ~= "table" then
         root = nil,
         v = _V3zero,
     }
-    _G.__RivalHubSpeedHookState = _s2VelState
+    _G.__heartleesSpeedHookState = _s2VelState
 end
 local _velChecked = _s2VelState.velChecked
 local _hookedVelParts = {}
@@ -2908,7 +2908,7 @@ local function _applyVelocitySpeed(dir, speed, hrp)
         hrp.AssemblyLinearVelocity = _V3new(unit.X * speed, verticalVelocity, unit.Z * speed)
         local visibleSpeed = math.min(speed, 20)
         _s2VelState.v = _V3new(unit.X * visibleSpeed, verticalVelocity, unit.Z * visibleSpeed)
-        _G.__RivalHubLiveSpeed = { t = os.clock(), v = speed }
+        _G.__heartleesLiveSpeed = { t = os.clock(), v = speed }
     else
         _s2VelState.v = _V3new(0, verticalVelocity, 0)
         hrp.AssemblyLinearVelocity = _V3new(0, verticalVelocity, 0)
@@ -3507,7 +3507,7 @@ _G._VynxTPDownIsAutoOn = function() return false end
 --  FLOAT (portado de Lust Hub)
 --=========================================================
 do
-    local old = rawget(_G, "__RivalHubFloat")
+    local old = rawget(_G, "__heartleesFloat")
     if type(old) == "table" then
         local wasOn = old.running == true or old.conn ~= nil
         old.running = false
@@ -3518,7 +3518,7 @@ do
     end
 end
 
-_G.__RivalHubFloat = {
+_G.__heartleesFloat = {
     RISE = 17, RATE = 55, CYCLE = 2.5, PAUSE = 0.5, SAMPLE = 0.08, PIT_MARGIN = 15,
     conn = nil, thread = nil, running = false, locked = false,
     targetY = nil, baseY = nil, baseGround = nil,
@@ -3526,21 +3526,21 @@ _G.__RivalHubFloat = {
     cycleToken = 0, _params = nil,
 }
 
-function _G.__RivalHubFloat.getHRP()
+function _G.__heartleesFloat.getHRP()
     local c = LP.Character
     if not c then return nil, nil end
     return c:FindFirstChild("HumanoidRootPart"), c:FindFirstChildOfClass("Humanoid")
 end
 
-function _G.__RivalHubFloat.arm()
+function _G.__heartleesFloat.arm()
     if _G.__CrystalAntiDieSource then pcall(_G.__CrystalAntiDieSource, "float", true) end
 end
-function _G.__RivalHubFloat.release()
+function _G.__heartleesFloat.release()
     if _G.__CrystalAntiDieSource then pcall(_G.__CrystalAntiDieSource, "float", false) end
 end
 
-function _G.__RivalHubFloat.findGround(char, hrp)
-    local FLOAT = _G.__RivalHubFloat
+function _G.__heartleesFloat.findGround(char, hrp)
+    local FLOAT = _G.__heartleesFloat
     local params = FLOAT._params
     if not params then
         params = RaycastParams.new()
@@ -3576,15 +3576,15 @@ function _G.__RivalHubFloat.findGround(char, hrp)
     return nil, half
 end
 
-function _G.__RivalHubFloat.isSafeGround(g)
-    local FLOAT = _G.__RivalHubFloat
+function _G.__heartleesFloat.isSafeGround(g)
+    local FLOAT = _G.__heartleesFloat
     if not g then return false end
     if FLOAT.baseGround and g < FLOAT.baseGround - FLOAT.PIT_MARGIN then return false end
     return true
 end
 
-function _G.__RivalHubFloat.groundTP()
-    local FLOAT = _G.__RivalHubFloat
+function _G.__heartleesFloat.groundTP()
+    local FLOAT = _G.__heartleesFloat
     local char = LP.Character
     if not char then return end
     local hrp = char:FindFirstChild("HumanoidRootPart")
@@ -3628,8 +3628,8 @@ function _G.__RivalHubFloat.groundTP()
     end
 end
 
-function _G.__RivalHubFloat.startLoop()
-    local FLOAT = _G.__RivalHubFloat
+function _G.__heartleesFloat.startLoop()
+    local FLOAT = _G.__heartleesFloat
     if FLOAT.conn then return end
     FLOAT.locked = false
     FLOAT.targetY = nil
@@ -3694,8 +3694,8 @@ function _G.__RivalHubFloat.startLoop()
     end)
 end
 
-function _G.__RivalHubFloat.stopLoop(tpDown)
-    local FLOAT = _G.__RivalHubFloat
+function _G.__heartleesFloat.stopLoop(tpDown)
+    local FLOAT = _G.__heartleesFloat
     if FLOAT.conn then
         pcall(function() FLOAT.conn:Disconnect() end)
         FLOAT.conn = nil
@@ -3703,8 +3703,8 @@ function _G.__RivalHubFloat.stopLoop(tpDown)
     if tpDown then pcall(FLOAT.groundTP) end
 end
 
-function _G.__RivalHubFloat.waitGrounded(timeout)
-    local FLOAT = _G.__RivalHubFloat
+function _G.__heartleesFloat.waitGrounded(timeout)
+    local FLOAT = _G.__heartleesFloat
     local deadline = os.clock() + (timeout or 3)
     while os.clock() < deadline do
         if not FLOAT.running then return end
@@ -3719,8 +3719,8 @@ function _G.__RivalHubFloat.waitGrounded(timeout)
     end
 end
 
-function _G.__RivalHubFloat.spawnCycle()
-    local FLOAT = _G.__RivalHubFloat
+function _G.__heartleesFloat.spawnCycle()
+    local FLOAT = _G.__heartleesFloat
     if FLOAT.thread then pcall(task.cancel, FLOAT.thread); FLOAT.thread = nil end
     FLOAT.cycleToken = FLOAT.cycleToken + 1
     local token = FLOAT.cycleToken
@@ -3736,8 +3736,8 @@ function _G.__RivalHubFloat.spawnCycle()
     end)
 end
 
-function _G.__RivalHubFloat.enable()
-    local FLOAT = _G.__RivalHubFloat
+function _G.__heartleesFloat.enable()
+    local FLOAT = _G.__heartleesFloat
     if FLOAT.running then return end
     FLOAT.running = true
     FLOAT.arm()
@@ -3745,8 +3745,8 @@ function _G.__RivalHubFloat.enable()
     FLOAT.spawnCycle()
 end
 
-function _G.__RivalHubFloat.disable()
-    local FLOAT = _G.__RivalHubFloat
+function _G.__heartleesFloat.disable()
+    local FLOAT = _G.__heartleesFloat
     if not FLOAT.running then return end
     FLOAT.running = false
     FLOAT.cycleToken = FLOAT.cycleToken + 1
@@ -3757,22 +3757,22 @@ function _G.__RivalHubFloat.disable()
     FLOAT.release()
 end
 
-function _G.__RivalHubFloatToggle()
-    local F = _G.__RivalHubFloat
+function _G.__heartleesFloatToggle()
+    local F = _G.__heartleesFloat
     if F.running then F.disable() else F.enable() end
-    if _G.__RivalHubFloatSetVisual then pcall(_G.__RivalHubFloatSetVisual, F.running) end
+    if _G.__heartleesFloatSetVisual then pcall(_G.__heartleesFloatSetVisual, F.running) end
     if mobSetFloat then pcall(mobSetFloat, F.running) end
 end
 
-function _G.__RivalHubFloatIsRunning()
-    return _G.__RivalHubFloat.running == true
+function _G.__heartleesFloatIsRunning()
+    return _G.__heartleesFloat.running == true
 end
 
 --=========================================================
 --  AUTO CARRY (portado de Lust Hub: On Pick Up + Soft Steal)
 --=========================================================
 do
-    local old = rawget(_G, "__RivalHubAutoCarryStop")
+    local old = rawget(_G, "__heartleesAutoCarryStop")
     if type(old) == "function" then pcall(old) end
 
     _G._VynxAutoSpeedRange = tonumber(_G._VynxAutoSpeedRange) or 12
@@ -3803,7 +3803,7 @@ do
         if mobSetCarry then pcall(mobSetCarry, speedMode == true) end
         if mobSetLagger1 then pcall(mobSetLagger1, laggerToggled == true) end
         if mobSetLagger2 then pcall(mobSetLagger2, laggerCarryToggled == true) end
-        if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+        if _G.__heartleesApplySpeedNow then pcall(_G.__heartleesApplySpeedNow) end
     end
 
     local function isWeaponName(value)
@@ -3843,7 +3843,7 @@ do
         return false
     end
 
-    _G.__RivalHubIsCarryingBrainrot = function()
+    _G.__heartleesIsCarryingBrainrot = function()
         return isCarrying(LP.Character)
     end
 
@@ -3990,11 +3990,11 @@ do
         soft.armed   = true
     end)
 
-    _G.__RivalHubAutoCarryStop = function()
+    _G.__heartleesAutoCarryStop = function()
         stopAutoCarry()
         pcall(function() charConn:Disconnect() end)
     end
-    _G.__RivalHubAutoCarryRestore = restore
+    _G.__heartleesAutoCarryRestore = restore
     startAutoCarry()
 end
 
@@ -4464,7 +4464,7 @@ local _antiFlingState = {
 local _ANTI_FLING_DRIVE_GRACE = 0.3
 
 local function _afHubSpeedLive()
-    local live = _G.__RivalHubLiveSpeed
+    local live = _G.__heartleesLiveSpeed
     if type(live) ~= "table" then return false end
     local stamp, speed = tonumber(live.t), tonumber(live.v)
     if not stamp or not speed or speed <= 0 then return false end
@@ -4473,7 +4473,7 @@ end
 
 local function _afOwnMoverActive()
     if autoBatEnabled or (State and State.bypassBatEnabled)
-       or (_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2()) then return true end
+       or (_G.__heartleesIsBatV2 and _G.__heartleesIsBatV2()) then return true end
     if autoLeftEnabled or autoRightEnabled then return true end
     return false
 end
@@ -4549,7 +4549,7 @@ local function createESP()
         esp.Tracer.ZIndex = 2
     end
 
-    esp.Highlight.Name = "RivalHubESP_Highlight"
+    esp.Highlight.Name = "heartleesESP_Highlight"
     esp.Highlight.FillColor = currentFill
     esp.Highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
     esp.Highlight.FillTransparency = 0.12
@@ -4563,7 +4563,7 @@ local function createESP()
     pcall(function() esp.Highlight.Parent = parentGui end)
 
     local nameBillboard = Instance.new("BillboardGui")
-    nameBillboard.Name = "RivalHubESP_Name"
+    nameBillboard.Name = "heartleesESP_Name"
     nameBillboard.Size = UDim2.new(0, 170, 0, 28)
     nameBillboard.StudsOffset = Vector3.new(0, 1.3, 0)
     nameBillboard.AlwaysOnTop = true
@@ -4608,7 +4608,7 @@ local function createESP()
     return esp
 end
 
-_G.__RivalHubRefreshESPTheme = function(accent, outlineColor)
+_G.__heartleesRefreshESPTheme = function(accent, outlineColor)
     local fillColor, lineColor = getESPThemeColors(accent)
     for _, data in pairs(espActivePlayers) do
         if type(data) == "table" and data.esp then
@@ -4747,7 +4747,7 @@ local _espLineState = { scanElapsed = math.huge, targetRoot = nil }
 local function ensureESPLineGui()
     if _espLineGui and _espLineGui.Parent then return end
     _espLineGui = Instance.new("ScreenGui")
-    _espLineGui.Name = "RivalHubESPLine"
+    _espLineGui.Name = "heartleesESPLine"
     _espLineGui.IgnoreGuiInset = true
     _espLineGui.ResetOnSpawn = false
     _espLineGui.DisplayOrder = 1000
@@ -5092,13 +5092,13 @@ end
 function setupSpeedIndicator(char)
     local head = char:WaitForChild("Head", 5)
     if not head then return end
-    local oldBB = head:FindFirstChild("RivalHubSpeedIndicator")
+    local oldBB = head:FindFirstChild("heartleesSpeedIndicator")
     if oldBB then oldBB:Destroy() end
     local oldDiscord = head:FindFirstChild("DiscordText")
     if oldDiscord then oldDiscord:Destroy() end
 
     local bb = Instance.new("BillboardGui", head)
-    bb.Name = "RivalHubSpeedIndicator"
+    bb.Name = "heartleesSpeedIndicator"
     bb.Size = UDim2.fromOffset(200, 30)
     bb.StudsOffset = Vector3.new(0, 3.2, 0)
     bb.AlwaysOnTop = true
@@ -5136,7 +5136,7 @@ function setupSpeedIndicator(char)
     dLabel.Name = "DiscordLabel"
     dLabel.Size = UDim2.new(1, 0, 1, 0)
     dLabel.BackgroundTransparency = 1
-    dLabel.Text = "discord.gg/4KTDUELS"
+    dLabel.Text = "discord.gg/heartlees"
     dLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     dLabel.Font = Enum.Font.GothamBlack
     dLabel.TextSize = 16
@@ -5207,7 +5207,7 @@ function toggleCarryMode()
         laggerToggled = false; laggerCarryToggled = false; speedMode = true
     else speedMode = not speedMode end
     resetMovementState()
-    if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+    if _G.__heartleesApplySpeedNow then pcall(_G.__heartleesApplySpeedNow) end
 end
 
 function selectLaggerProfile(profile)
@@ -5225,7 +5225,7 @@ function selectLaggerProfile(profile)
         lowLaggerSpeedEnabled = chooseLow
     end
     resetMovementState()
-    if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+    if _G.__heartleesApplySpeedNow then pcall(_G.__heartleesApplySpeedNow) end
     task.defer(function() pcall(saveAllSettings) end)
 end
 
@@ -5233,13 +5233,13 @@ function toggleLaggerMode()
     if laggerCarryToggled then laggerCarryToggled = false end
     speedMode = false; laggerToggled = not laggerToggled
     resetMovementState()
-    if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+    if _G.__heartleesApplySpeedNow then pcall(_G.__heartleesApplySpeedNow) end
 end
 function toggleLaggerCarryMode()
     if laggerToggled then laggerToggled = false end
     speedMode = false; laggerCarryToggled = not laggerCarryToggled
     resetMovementState()
-    if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+    if _G.__heartleesApplySpeedNow then pcall(_G.__heartleesApplySpeedNow) end
 end
 
 function toggleLaggerCycle()
@@ -5257,7 +5257,7 @@ function toggleLaggerCycle()
         laggerCarryToggled = false
     end
     resetMovementState()
-    if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+    if _G.__heartleesApplySpeedNow then pcall(_G.__heartleesApplySpeedNow) end
 end
 
 function stopAutoLeft()
@@ -5775,7 +5775,7 @@ end
 local circleConnection = nil
 local circleSafetyConn = nil
 
-local function getRivalHubAimbotBat(char)
+local function getheartleesAimbotBat(char)
     local equipped = char and char:FindFirstChildOfClass("Tool")
     if equipped then
         local name = equipped.Name:lower()
@@ -5793,7 +5793,7 @@ local function getRivalHubAimbotBat(char)
     return nil
 end
 
-local function getRivalHubRenderCFrame(root)
+local function getheartleesRenderCFrame(root)
     if not root then return nil end
     local ok, rendered = pcall(root.GetRenderCFrame, root)
     return ok and rendered or root.CFrame
@@ -5819,7 +5819,7 @@ local adaptBP = {
     attachment = nil,
     respawnConn = nil,
 }
-_G.__RivalHubBubbleAimbotState = adaptBP
+_G.__heartleesBubbleAimbotState = adaptBP
 
 local function adaptBPClean(root)
     if not root then return end
@@ -6236,12 +6236,12 @@ function enableBatV2Mode()
     -- Exclusión mutua: apagar normal y bypass antes de Bat V2/V3.
     disableAutoBat()
     disableBypassBat()
-    if _G.__RivalHubStartBatV2 then pcall(_G.__RivalHubStartBatV2) end
+    if _G.__heartleesStartBatV2 then pcall(_G.__heartleesStartBatV2) end
     if mobSetBatV2 then mobSetBatV2(true) end
 end
 
 function disableBatV2Mode()
-    if _G.__RivalHubStopBatV2 then pcall(_G.__RivalHubStopBatV2) end
+    if _G.__heartleesStopBatV2 then pcall(_G.__heartleesStopBatV2) end
     if mobSetBatV2 then mobSetBatV2(false) end
 end
 
@@ -6431,9 +6431,9 @@ function stopMedusaCounter()
     Conns.anchor = {}
 end
 
--- ===== MEDUSA SKINS (portado de GROK GOOD DUELS) =====
+-- ===== MEDUSA SKINS (portado de heartlees) =====
 do
-    _G.RivalMedusaSkinAssets = {
+    _G.heartleesMedusaSkinAssets = {
         Skull = {
             mesh = "rbxassetid://2050312704", tex = "rbxassetid://2050313393",
             scale = Vector3.new(1, 1, 1),
@@ -6445,7 +6445,7 @@ do
             c0 = CFrame.new(0, 0, -0.8) * CFrame.Angles(math.rad(330), math.rad(180), 0),
         },
     }
-    _G.RivalMedusaSkin = _G.RivalMedusaSkin or "Default"
+    _G.heartleesMedusaSkin = _G.heartleesMedusaSkin or "Default"
 
     local function isMedusaTool(tool)
         if not tool or not tool:IsA("Tool") then return false end
@@ -6456,14 +6456,14 @@ do
     local function clearReplica(tool)
         local handle = tool and tool:FindFirstChild("Handle")
         if not handle then return end
-        local rep = handle:FindFirstChild("RivalMedusaReplica")
+        local rep = handle:FindFirstChild("heartleesMedusaReplica")
         if rep then pcall(function() rep:Destroy() end) end
         -- restaurar visibilidad original
         for _, d in ipairs(tool:GetDescendants()) do
-            if d:GetAttribute("RivalMedusaHidden") ~= nil then
-                local orig = d:GetAttribute("RivalMedusaHidden")
+            if d:GetAttribute("heartleesMedusaHidden") ~= nil then
+                local orig = d:GetAttribute("heartleesMedusaHidden")
                 pcall(function() d.Transparency = orig end)
-                pcall(function() d:SetAttribute("RivalMedusaHidden", nil) end)
+                pcall(function() d:SetAttribute("heartleesMedusaHidden", nil) end)
             end
         end
     end
@@ -6471,11 +6471,11 @@ do
     local function hideOriginal(tool)
         for _, d in ipairs(tool:GetDescendants()) do
             if (d:IsA("BasePart") or d:IsA("Decal") or d:IsA("Texture"))
-                and not d:FindFirstAncestor("RivalMedusaReplica")
-                and not d:FindFirstAncestor("ShelMedusaBombSkin") then
+                and not d:FindFirstAncestor("heartleesMedusaReplica")
+                and not d:FindFirstAncestor("heartleesMedusaBombSkin") then
                 pcall(function()
-                    if d:GetAttribute("RivalMedusaHidden") == nil then
-                        d:SetAttribute("RivalMedusaHidden", d.Transparency)
+                    if d:GetAttribute("heartleesMedusaHidden") == nil then
+                        d:SetAttribute("heartleesMedusaHidden", d.Transparency)
                     end
                     d.Transparency = 1
                 end)
@@ -6484,10 +6484,10 @@ do
     end
 
     local function buildReplica(tool, key)
-        local data = _G.RivalMedusaSkinAssets[key]
+        local data = _G.heartleesMedusaSkinAssets[key]
         local handle = tool:FindFirstChild("Handle")
         if not data or not handle then return end
-        local cur = handle:FindFirstChild("RivalMedusaReplica")
+        local cur = handle:FindFirstChild("heartleesMedusaReplica")
         if cur and cur:GetAttribute("SkinKey") == key then
             hideOriginal(tool) -- mantener oculto el original
             for _, d in ipairs(cur:GetDescendants()) do
@@ -6501,7 +6501,7 @@ do
         clearReplica(tool)
         hideOriginal(tool)
         local m = Instance.new("Model")
-        m.Name = "RivalMedusaReplica"
+        m.Name = "heartleesMedusaReplica"
         m:SetAttribute("SkinKey", key)
         local p = Instance.new("Part")
         p.Name = "MainPart"
@@ -6525,7 +6525,7 @@ do
     end
 
     function _G.RivalApplyMedusaSkin()
-        local sk = _G.RivalMedusaSkin or "Default"
+        local sk = _G.heartleesMedusaSkin or "Default"
         local containers = {}
         if LP.Character then table.insert(containers, LP.Character) end
         local bp = LP:FindFirstChildOfClass("Backpack")
@@ -6544,11 +6544,11 @@ do
     end
 
     function _G.RivalSetMedusaSkin(choice)
-        if choice ~= "Default" and not _G.RivalMedusaSkinAssets[choice] then choice = "Default" end
-        _G.RivalMedusaSkin = choice
+        if choice ~= "Default" and not _G.heartleesMedusaSkinAssets[choice] then choice = "Default" end
+        _G.heartleesMedusaSkin = choice
         pcall(_G.RivalApplyMedusaSkin)
-        if _G.ShelMedusaSkin and _G.ShelMedusaSkin.apply then
-            pcall(_G.ShelMedusaSkin.apply)   -- quita / pone la bomba (Default)
+        if _G.heartleesMedusaSkin and _G.heartleesMedusaSkin.apply then
+            pcall(_G.heartleesMedusaSkin.apply)   -- quita / pone la bomba (Default)
         end
         if choice ~= "Default" then pcall(_G.RivalApplyMedusaSkin) end
     end
@@ -6556,7 +6556,7 @@ do
     -- reaplicar cuando aparece/equipa la medusa o respawnea el personaje
     task.spawn(function()
         while true do
-            if (_G.RivalMedusaSkin or "Default") ~= "Default" then
+            if (_G.heartleesMedusaSkin or "Default") ~= "Default" then
                 pcall(_G.RivalApplyMedusaSkin)
             end
             task.wait(0.6)
@@ -6900,7 +6900,7 @@ local function _alIsProtectedVisual(object)
         end
         local name = parent.Name or ""
         if name:match("^Crystal") or name:match("^Eclipse") or name:match("^ESP_")
-            or name:match("^BloodHounds") or name:match("^RivalHub") then
+            or name:match("^BloodHounds") or name:match("^heartlees") then
             return true
         end
         parent = parent.Parent
@@ -7673,10 +7673,10 @@ local function drag(f, dragZoneHeight)
     end)
 end
 
-_G.__RivalHubSpeedEngine = _G.__RivalHubSpeedEngine or { started = false, conn = nil }
-_G.__RivalHubSpeedEngine.signal = nil
+_G.__heartleesSpeedEngine = _G.__heartleesSpeedEngine or { started = false, conn = nil }
+_G.__heartleesSpeedEngine.signal = nil
 do
-    _G.__RivalHubSpeedEngine.signal = RunService.RenderStepped
+    _G.__heartleesSpeedEngine.signal = RunService.RenderStepped
 end
 
 local function _spd_isRagdollState(hum)
@@ -7711,22 +7711,22 @@ local function _spd_resetMovement()
 end
 
 local function _spd_stop()
-    if _G.__RivalHubSpeedEngine.conn then
-        _G.__RivalHubSpeedEngine.conn:Disconnect()
-        _G.__RivalHubSpeedEngine.conn = nil
+    if _G.__heartleesSpeedEngine.conn then
+        _G.__heartleesSpeedEngine.conn:Disconnect()
+        _G.__heartleesSpeedEngine.conn = nil
     end
     _spd_resetMovement()
 end
 
 local function _spd_start()
     _spd_stop()
-    _G.__RivalHubSpeedEngine.started = true
-    _G.__RivalHubSpeedEngine.acc = 0
+    _G.__heartleesSpeedEngine.started = true
+    _G.__heartleesSpeedEngine.acc = 0
 
-    _G.__RivalHubSpeedEngine.conn = _G.__RivalHubSpeedEngine.signal:Connect(function(dt)
-        _G.__RivalHubSpeedEngine.acc = (_G.__RivalHubSpeedEngine.acc or 0) + (dt or 0)
-        if _G.__RivalHubSpeedEngine.acc < 0.016 then return end
-        _G.__RivalHubSpeedEngine.acc = 0
+    _G.__heartleesSpeedEngine.conn = _G.__heartleesSpeedEngine.signal:Connect(function(dt)
+        _G.__heartleesSpeedEngine.acc = (_G.__heartleesSpeedEngine.acc or 0) + (dt or 0)
+        if _G.__heartleesSpeedEngine.acc < 0.016 then return end
+        _G.__heartleesSpeedEngine.acc = 0
 
         local character = LP.Character
         local humanoid = character and character:FindFirstChildOfClass("Humanoid")
@@ -7735,7 +7735,7 @@ local function _spd_start()
         if autoBatEnabled or (State and State.bypassBatEnabled)
            or autoLeftEnabled or autoRightEnabled
            or dropActive or _G.IsDropping
-           or (_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2()) then
+           or (_G.__heartleesIsBatV2 and _G.__heartleesIsBatV2()) then
             _spd_resetMovement()
             return
         end
@@ -7778,9 +7778,9 @@ local function _spd_refresh()
     _spd_start()
 end
 
-_G.__RivalHubRefreshSpeedEngine = _spd_refresh
-_G.__RivalHubStopSpeedEngine = _spd_stop
-_G.__RivalHubApplySpeedNow = _spd_applyNow
+_G.__heartleesRefreshSpeedEngine = _spd_refresh
+_G.__heartleesStopSpeedEngine = _spd_stop
+_G.__heartleesApplySpeedNow = _spd_applyNow
 
 pcall(_spd_start)
 
@@ -7830,7 +7830,7 @@ function setupMovementAndIndicators(char)
         local hrp = char2:FindFirstChild("HumanoidRootPart")
         if not hum or not hrp then return end
         if not autoBatEnabled and not (State and State.bypassBatEnabled)
-           and not (_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2())
+           and not (_G.__heartleesIsBatV2 and _G.__heartleesIsBatV2())
            and not autoLeftEnabled and not autoRightEnabled then
             if _isRagdollState(hum) then
                 lastMoveDir = _V3zero
@@ -7861,7 +7861,7 @@ function disableAllAimbots()
         if mobSetAutoBat then mobSetAutoBat(false) end
     end
     if State.bypassBatEnabled then disableBypassBat() end
-    if _G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() then disableBatV2Mode() end
+    if _G.__heartleesIsBatV2 and _G.__heartleesIsBatV2() then disableBatV2Mode() end
 end
 
 function stopAllBackgroundTasks()
@@ -7873,8 +7873,8 @@ function stopAllBackgroundTasks()
     if stretchFovConn then stretchFovConn:Disconnect(); stretchFovConn = nil end
     if AntiRagdollV1.isRunning() then AntiRagdollV1.stop() end
     if AntiRagdollV2.Enabled then stopAntiRagdollV2() end
-    if _G.__RivalHubFloat and _G.__RivalHubFloat.running then pcall(_G.__RivalHubFloat.disable) end
-    if _G.__RivalHubAutoCarryStop then pcall(_G.__RivalHubAutoCarryStop) end
+    if _G.__heartleesFloat and _G.__heartleesFloat.running then pcall(_G.__heartleesFloat.disable) end
+    if _G.__heartleesAutoCarryStop then pcall(_G.__heartleesAutoCarryStop) end
     if antiDieEnabled then AntiDieModule.stop() end
     if antiBatEnabled then stopAntiBat() end
     if antiFlingEnabled then stopAntiFling() end
@@ -7886,7 +7886,7 @@ function stopAllBackgroundTasks()
     disableBypassBat()
     stopAutoLeft()
     stopAutoRight()
-    if _G.__RivalHubStopBatV2 then pcall(_G.__RivalHubStopBatV2) end
+    if _G.__heartleesStopBatV2 then pcall(_G.__heartleesStopBatV2) end
     if TPBatState and TPBatState.enabled and tpBatSetEnabled then pcall(tpBatSetEnabled, false) end
     if unwalkEnabled then stopUnwalk() end
     if antiLagEnabled then disableAntiLag() end
@@ -7909,10 +7909,10 @@ function stopAllBackgroundTasks()
     lastDropTime = 0
     medusaDebounce = false
     medusaLastUsed = 0
-    if _G.__RivalHubStopSpeedEngine then pcall(_G.__RivalHubStopSpeedEngine) end
+    if _G.__heartleesStopSpeedEngine then pcall(_G.__heartleesStopSpeedEngine) end
 end
 
-local _rivalHubSaveState = {
+local _heartleesSaveState = {
     lastAt = 0,
     queued = false,
     writing = false,
@@ -7920,7 +7920,7 @@ local _rivalHubSaveState = {
     revision = 0,
     retryCount = 0,
 }
-local function resolveRivalHubFileApi()
+local function resolveheartleesFileApi()
     local env = (type(getgenv) == "function" and getgenv()) or _G
     local synApi = rawget(env, "syn") or rawget(_G, "syn")
     local readCandidates = {rawget(env, "readfile"), synApi and synApi.readfile, rawget(_G, "readfile")}
@@ -7931,14 +7931,14 @@ local function resolveRivalHubFileApi()
     return readFn, writeFn
 end
 
-local function rivalHubFileExists(path)
-    local readFn = resolveRivalHubFileApi()
+local function heartleesFileExists(path)
+    local readFn = resolveheartleesFileApi()
     if not readFn then return false end
     local ok, data = pcall(readFn, path)
     return ok and type(data) == "string"
 end
 
-local function resetRivalHubConfigFiles()
+local function resetheartleesConfigFiles()
     local env = (type(getgenv) == "function" and getgenv()) or _G
     local synApi = rawget(env, "syn") or rawget(_G, "syn")
     local deleteCandidates = {rawget(env, "delfile"), rawget(env, "deletefile"), synApi and synApi.delfile, rawget(_G, "delfile"), rawget(_G, "deletefile")}
@@ -7946,11 +7946,11 @@ local function resetRivalHubConfigFiles()
     for _, fn in ipairs(deleteCandidates) do
         if type(fn) == "function" then deleteFn = fn; break end
     end
-    local _, writeFn = resolveRivalHubFileApi()
+    local _, writeFn = resolveheartleesFileApi()
     local paths = {
         CONFIG_FILE, CONFIG_FILE .. ".backup",
         "Fresh_" .. tostring(LP.UserId) .. ".json",
-        "Rival_" .. tostring(LP.UserId) .. ".json",
+        "heartlees_" .. tostring(LP.UserId) .. ".json",
         "BloodHounds_" .. tostring(LP.UserId) .. ".json",
     }
     for _, path in ipairs(paths) do
@@ -7962,16 +7962,16 @@ local function resetRivalHubConfigFiles()
         end
     end
     _lastSavedJSON = nil
-    _rivalHubSaveState.dirty = true
+    _heartleesSaveState.dirty = true
 end
 
 -- La configuración general se reinicia al ejecutar, pero las posiciones del menú
 -- se guardan aparte para que el menú vuelva al mismo sitio en la siguiente ejecución.
 function savePersistentPositions()
-    local _, writeFn = resolveRivalHubFileApi()
+    local _, writeFn = resolveheartleesFileApi()
     if not writeFn or not HS then return false end
     local pos = {}
-    local baseMain = (main and main.Position) or _G.__RivalHubMainOriginalPos
+    local baseMain = (main and main.Position) or _G.__heartleesMainOriginalPos
     if baseMain then
         pos.main = {XScale = baseMain.X.Scale, XOffset = baseMain.X.Offset, YScale = baseMain.Y.Scale, YOffset = baseMain.Y.Offset}
     elseif savedMainPosition then
@@ -7993,8 +7993,8 @@ function savePersistentPositions()
 end
 
 function loadPersistentPositions()
-    local readFn = resolveRivalHubFileApi()
-    if not readFn or not rivalHubFileExists(POSITION_FILE) or not HS then return false end
+    local readFn = resolveheartleesFileApi()
+    if not readFn or not heartleesFileExists(POSITION_FILE) or not HS then return false end
     local ok, data = pcall(function() return HS:JSONDecode(readFn(POSITION_FILE)) end)
     if not ok or type(data) ~= "table" then return false end
     local function num(v, fallback)
@@ -8033,7 +8033,7 @@ function buildConfigTable()
         autoSteal = CONFIG.AUTO_STEAL_ENABLED,
         autoBat = autoBatEnabled, autoLeft = autoLeftEnabled, autoRight = autoRightEnabled,
         medusaCounter = medusaCounterEnabled, batCounter = batCounterEnabled,
-        medusaSkin = _G.RivalMedusaSkin or "Default",
+        medusaSkin = _G.heartleesMedusaSkin or "Default",
         batCounterV2 = batCounterV2Enabled, unwalkEnabled = unwalkEnabled,
         laggerToggled = laggerToggled, laggerCarryToggled = laggerCarryToggled,
         carryMode = speedMode, batAimbotSpeed = BAT_AIMBOT_SPEED,
@@ -8065,15 +8065,15 @@ function buildConfigTable()
         backgroundImageTransparency = backgroundImageTransparency,
         backgroundMode = backgroundMode, floatingButtonScale = floatingButtonScale,
         outfitIndex = currentOutfitIndex, themeColor = currentColorTheme,
-        rivalTitleTheme = currentRivalTitleTheme,
+        heartleesTitleTheme = currentHeartleesTitleTheme,
         infiniteJumpEnabled = InfiniteJump.enabled == true,
         infiniteJumpMode = InfiniteJump.mode == "manual" and "manual" or "hold",
         autoStealMode = autoStealMode == "V2" and "V2" or "V1",
-        batV2 = _G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() or false,
-        batVersion = (_G.__RivalHubBatVersion == "v3") and "v3" or "v2",
+        batV2 = _G.__heartleesIsBatV2 and _G.__heartleesIsBatV2() or false,
+        batVersion = (_G.__heartleesBatVersion == "v3") and "v3" or "v2",
     }
     if main then
-        local basePos = _G.__RivalHubMainOriginalPos or main.Position
+        local basePos = _G.__heartleesMainOriginalPos or main.Position
         config.mainPosition = {
             XScale = basePos.X.Scale,
             XOffset = basePos.X.Offset,
@@ -8101,12 +8101,12 @@ function buildConfigTable()
     return config
 end
 
-local function scheduleRivalHubSave(delaySeconds)
-    if _rivalHubSaveState.queued then return end
-    _rivalHubSaveState.queued = true
+local function scheduleheartleesSave(delaySeconds)
+    if _heartleesSaveState.queued then return end
+    _heartleesSaveState.queued = true
     task.delay(delaySeconds or 0.25, function()
-        _rivalHubSaveState.queued = false
-        if _G.RivalHubRunning and not _isResetting and not _isLoading then
+        _heartleesSaveState.queued = false
+        if _G.heartleesRunning and not _isResetting and not _isLoading then
             pcall(saveAllSettings, true)
         end
     end)
@@ -8120,41 +8120,41 @@ function saveAllSettings(force)
     config.userId = LP.UserId
     local encodedOk, canonicalJSON = pcall(function() return HS:JSONEncode(config) end)
     if not encodedOk then
-        warn("[4KTDUELS Save] Could not encode settings.")
+        warn("[heartlees Save] Could not encode settings.")
         return false
     end
-    if not force and canonicalJSON == _lastSavedJSON and not _rivalHubSaveState.dirty then
+    if not force and canonicalJSON == _lastSavedJSON and not _heartleesSaveState.dirty then
         return true
     end
-    _rivalHubSaveState.dirty = true
+    _heartleesSaveState.dirty = true
 
-    if _rivalHubSaveState.writing then
-        scheduleRivalHubSave(0.25)
+    if _heartleesSaveState.writing then
+        scheduleheartleesSave(0.25)
         return true
     end
-    if not force and _tick() - _rivalHubSaveState.lastAt < 0.25 then
-        scheduleRivalHubSave(0.25)
+    if not force and _tick() - _heartleesSaveState.lastAt < 0.25 then
+        scheduleheartleesSave(0.25)
         return true
     end
 
-    local readFn, writeFn = resolveRivalHubFileApi()
+    local readFn, writeFn = resolveheartleesFileApi()
     if not readFn or not writeFn then
-        warn("[4KTDUELS Save] Executor file API is unavailable.")
-        scheduleRivalHubSave(1)
+        warn("[heartlees Save] Executor file API is unavailable.")
+        scheduleheartleesSave(1)
         return false
     end
 
-    _rivalHubSaveState.writing = true
-    _rivalHubSaveState.revision = _rivalHubSaveState.revision + 1
+    _heartleesSaveState.writing = true
+    _heartleesSaveState.revision = _heartleesSaveState.revision + 1
     local writeConfig = config
-    writeConfig.revision = _rivalHubSaveState.revision
+    writeConfig.revision = _heartleesSaveState.revision
     writeConfig.savedAt = os.time()
     local json = HS:JSONEncode(writeConfig)
     local ok = false
 
     for attempt = 1, 3 do
         local attemptOk = pcall(function()
-            if rivalHubFileExists(CONFIG_FILE) then
+            if heartleesFileExists(CONFIG_FILE) then
                 local previous = readFn(CONFIG_FILE)
                 if type(previous) == "string" then writeFn(CONFIG_FILE .. ".backup", previous) end
             end
@@ -8170,12 +8170,12 @@ function saveAllSettings(force)
         if attempt < 3 then task.wait(0.1 * attempt) end
     end
 
-    _rivalHubSaveState.writing = false
+    _heartleesSaveState.writing = false
     if ok then
-        _rivalHubSaveState.lastAt = _tick()
-        _rivalHubSaveState.retryCount = 0
+        _heartleesSaveState.lastAt = _tick()
+        _heartleesSaveState.retryCount = 0
         _lastSavedJSON = canonicalJSON
-        _rivalHubSaveState.dirty = false
+        _heartleesSaveState.dirty = false
         local latestOk, latest = pcall(function()
             local latestConfig = buildConfigTable()
             latestConfig.configVersion = 2
@@ -8183,20 +8183,20 @@ function saveAllSettings(force)
             return HS:JSONEncode(latestConfig)
         end)
         if not latestOk or latest ~= _lastSavedJSON then
-            _rivalHubSaveState.dirty = true
-            scheduleRivalHubSave(0.25)
+            _heartleesSaveState.dirty = true
+            scheduleheartleesSave(0.25)
         end
     else
-        _rivalHubSaveState.retryCount = _rivalHubSaveState.retryCount + 1
-        warn("[4KTDUELS Save] Write or verification failed; will retry.")
-        scheduleRivalHubSave(math.min(2, 0.5 * _rivalHubSaveState.retryCount))
+        _heartleesSaveState.retryCount = _heartleesSaveState.retryCount + 1
+        warn("[heartlees Save] Write or verification failed; will retry.")
+        scheduleheartleesSave(math.min(2, 0.5 * _heartleesSaveState.retryCount))
     end
     return ok
 end
 
 task.spawn(function()
     task.wait(5)
-    while _G.RivalHubRunning do
+    while _G.heartleesRunning do
         task.wait(2)
         if gui and main and not _isLoading then
             -- Guardado periódico completo: menú principal, keybinds, botones flotantes y posiciones.
@@ -8213,11 +8213,11 @@ pcall(function()
 end)
 
 do
-    local readFn, writeFn = resolveRivalHubFileApi()
+    local readFn, writeFn = resolveheartleesFileApi()
     if readFn and writeFn then
         local legacyPaths = {
             "Fresh_"       .. tostring(LP.UserId) .. ".json",
-            "Rival_"       .. tostring(LP.UserId) .. ".json",
+            "heartlees_"       .. tostring(LP.UserId) .. ".json",
             "BloodHounds_" .. tostring(LP.UserId) .. ".json",
         }
         local okNew, _ = pcall(readFn, CONFIG_FILE)
@@ -8226,7 +8226,7 @@ do
                 local okOld, old = pcall(readFn, oldPath)
                 if okOld and type(old) == "string" and #old > 0 then
                     pcall(writeFn, CONFIG_FILE, old)
-                    warn("[4KTDUELS] Config migrada de " .. oldPath .. " a " .. CONFIG_FILE)
+                    warn("[heartlees] Config migrada de " .. oldPath .. " a " .. CONFIG_FILE)
                     break
                 end
             end
@@ -8235,8 +8235,8 @@ do
 end
 
 function loadAllSettings()
-    local readFn = resolveRivalHubFileApi()
-    if not readFn or not rivalHubFileExists(CONFIG_FILE) then return false end
+    local readFn = resolveheartleesFileApi()
+    if not readFn or not heartleesFileExists(CONFIG_FILE) then return false end
     local success, data = pcall(function() return HS:JSONDecode(readFn(CONFIG_FILE)) end)
     if not success or type(data) ~= "table" then return false end
     _isLoading = true
@@ -8285,7 +8285,7 @@ function loadAllSettings()
     else
         antiRagdollMode = data.antiRagdoll and "v2" or "off"
     end
-    _G.__RivalHubBatVersion = (data.batVersion == "v3") and "v3" or "v2"
+    _G.__heartleesBatVersion = (data.batVersion == "v3") and "v3" or "v2"
     antiDieEnabled = boolOr(data.antiDieEnabled, false)
     antiBatEnabled = boolOr(data.antiBat, false)
     antiFlingEnabled = boolOr(data.antiFling, false)
@@ -8299,7 +8299,7 @@ function loadAllSettings()
     medusaCounterEnabled = boolOr(data.medusaCounter, false)
     if type(data.medusaSkin) == "string" and _G.RivalSetMedusaSkin then
         _G.RivalSetMedusaSkin(data.medusaSkin)
-        if _G.RivalMedusaSkinRefreshUI then pcall(_G.RivalMedusaSkinRefreshUI) end
+        if _G.heartleesMedusaSkinRefreshUI then pcall(_G.heartleesMedusaSkinRefreshUI) end
     end
     batCounterEnabled = boolOr(data.batCounter, false)
     batCounterV2Enabled = boolOr(data.batCounterV2, false)
@@ -8330,9 +8330,9 @@ function loadAllSettings()
     selectedColor = COLOR_THEMES[currentColorTheme]
     task.defer(function() updateAllUIThemeColors(selectedColor) end)
 
-    local savedTitleTheme = data.rivalTitleTheme == "Orange" and "Purple" or data.rivalTitleTheme
-    if savedTitleTheme and RIVAL_TITLE_THEMES[savedTitleTheme] then
-        task.defer(function() applyRivalTitleTheme(savedTitleTheme) end)
+    local savedTitleTheme = data.heartleesTitleTheme == "Orange" and "Purple" or data.heartleesTitleTheme
+    if savedTitleTheme and HEARTLEES_TITLE_THEMES[savedTitleTheme] then
+        task.defer(function() applyHeartleesTitleTheme(savedTitleTheme) end)
     end
 
     skyTheme = data.skyTheme or "Off"
@@ -8396,7 +8396,7 @@ function loadAllSettings()
     end
     if data.autoCarryEnabled ~= nil then autoCarryEnabled = data.autoCarryEnabled == true end
     if data.autoCarryMode == "On Pick Up" or data.autoCarryMode == "Soft Steal" then autoCarryMode = data.autoCarryMode end
-    if _G.__RivalHubAutoCarryRefresh then pcall(_G.__RivalHubAutoCarryRefresh) end
+    if _G.__heartleesAutoCarryRefresh then pcall(_G.__heartleesAutoCarryRefresh) end
     if data.bodyLockRange ~= nil then
         bodyLockRange = _clamp(num(data.bodyLockRange, 20), 5, 200)
         if bodyLockRangeBox then bodyLockRangeBox.Text = tostring(bodyLockRange) end
@@ -8459,9 +8459,9 @@ function loadAllSettings()
         task.defer(function()
             if autoBatEnabled then startNormalBatAimbot() end
         end)
-    elseif data.batV2 == true and _G.__RivalHubStartBatV2 then
+    elseif data.batV2 == true and _G.__heartleesStartBatV2 then
         task.defer(function()
-            pcall(_G.__RivalHubStartBatV2)
+            pcall(_G.__heartleesStartBatV2)
             if mobSetBatV2 then mobSetBatV2(true) end
         end)
     end
@@ -8505,7 +8505,7 @@ function forceResetUI()
     safeSet(setAntiRagVisual, false)
     safeSet(infJumpSetVisual, false)
     safeSet(mobSetBatV2, false)
-    if _G.__RivalHubStopBatV2 then pcall(_G.__RivalHubStopBatV2) end
+    if _G.__heartleesStopBatV2 then pcall(_G.__heartleesStopBatV2) end
     disableVividGraphics()
     disablePotatoGraphics()
     applyHideButtons(false)
@@ -8519,8 +8519,8 @@ function forceResetUI()
     safeSet(mobSetCarry, false)
     safeSet(mobSetLagger1, false)
     safeSet(mobSetLagger2, false)
-    if _G.__RivalHubFloat and _G.__RivalHubFloat.running then _G.__RivalHubFloat.disable() end
-    safeSet(_G.__RivalHubFloatSetVisual, false)
+    if _G.__heartleesFloat and _G.__heartleesFloat.running then _G.__heartleesFloat.disable() end
+    safeSet(_G.__heartleesFloatSetVisual, false)
     safeSet(mobSetFloat, false)
     refreshSpeedModeLabel()
     updateProgressBarVisibility()
@@ -8593,7 +8593,7 @@ function resetToFactoryDefaults()
         if antiDieEnabled then AntiDieModule.stop() end
         if antiBatEnabled and stopAntiBat then stopAntiBat() end
         if antiFlingEnabled and stopAntiFling then stopAntiFling() end
-        if _G.__RivalHubStopBatV2 then pcall(_G.__RivalHubStopBatV2) end
+        if _G.__heartleesStopBatV2 then pcall(_G.__heartleesStopBatV2) end
         stopUnwalk()
         InfiniteJump.stop()
         InfiniteJump.setMode("hold")
@@ -8622,7 +8622,7 @@ function resetToFactoryDefaults()
         CONFIG.PRIME_RANGE = 60
         speedMode = false; laggerToggled = false; laggerCarryToggled = false
         antiRagdollMode = "off"; antiDieEnabled = false
-        _G.__RivalHubBatVersion = "v2"
+        _G.__heartleesBatVersion = "v2"
         antiBatEnabled = false
         antiFlingEnabled = false
         medusaCounterEnabled = false; batCounterEnabled = false; batCounterV2Enabled = false
@@ -8631,7 +8631,7 @@ function resetToFactoryDefaults()
         uiLocked = false; mobileButtonsLocked = false
         CONFIG.AUTO_STEAL_ENABLED = false
         autoStealMode = "V1"
-        if _G._rivalHubStealModeSetter then pcall(_G._rivalHubStealModeSetter, "V1") end
+        if _G._heartleesStealModeSetter then pcall(_G._heartleesStealModeSetter, "V1") end
         BAT_AIMBOT_SPEED = 58
         BYPASS_AIMBOT_SPEED = BAT_AIMBOT_SPEED
         if State then State.bypassBatSpeed = BYPASS_AIMBOT_SPEED end
@@ -8643,17 +8643,17 @@ function resetToFactoryDefaults()
         espEnabled = false; espLineEnabled = false; vividGraphicsEnabled = false; hideButtonsEnabled = false
         bodyLockEnabled = false; bodyLockRange = 20
         autoCarryEnabled = false; autoCarryMode = "On Pick Up"
-        if _G.__RivalHubAutoCarryRestore then pcall(_G.__RivalHubAutoCarryRestore) end
-        if _G.__RivalHubAutoCarryRefresh then pcall(_G.__RivalHubAutoCarryRefresh) end
+        if _G.__heartleesAutoCarryRestore then pcall(_G.__heartleesAutoCarryRestore) end
+        if _G.__heartleesAutoCarryRefresh then pcall(_G.__heartleesAutoCarryRefresh) end
         backgroundIndex = 1; backgroundImageTransparency = 0.06; backgroundMode = "Background 1"
         floatingButtonScale = 1
         currentAnimPack = "Off"; stopAnimPack()
         currentOutfitIndex = 1
         pcall(VX7A.stop)
         currentColorTheme = "Gray"; selectedColor = COLOR_THEMES["Gray"]
-        currentRivalTitleTheme = "White"
-        applyRivalTitleTheme("White")
-        if main then main.Position = UDim2.new(0, 12, 0.5, -210); _G.__RivalHubMainOriginalPos = main.Position end
+        currentHeartleesTitleTheme = "White"
+        applyHeartleesTitleTheme("White")
+        if main then main.Position = UDim2.new(0, 12, 0.5, -210); _G.__heartleesMainOriginalPos = main.Position end
         for key, val in pairs(DEFAULT_KB) do
             if KB[key] then KB[key].kb = val.kb; KB[key].gp = val.gp end
         end
@@ -8661,7 +8661,7 @@ function resetToFactoryDefaults()
         savedMainPosition = nil
         savedProgressBarPos = nil
         savedMiniButtonPos = nil
-        _G.__RivalHubMainOriginalPos = main and main.Position or UDim2.new(0, 12, 0.5, -210)
+        _G.__heartleesMainOriginalPos = main and main.Position or UDim2.new(0, 12, 0.5, -210)
         pcall(savePersistentPositions)
         forceResetUI()
         updateProgressBarVisibility()
@@ -8893,7 +8893,7 @@ end)
 --  FIN TP BAT
 --=========================================================
 
-RivalHubMusicLibrary={
+heartleesMusicLibrary={
     {artist="LAJA",songs={
         {name="LAJA - SETEADORA",url="https://file.garden/anQAxCXXiQfEPX90/LAJA-SETEADORA(Video%20Oficial)%20Shot.Bycheckthefootage%20%23spanishdrill%20-%20LAJA.mp3"},
         {name="LAJA - GRRRMOSTWANTED",url="https://file.garden/anQAxCXXiQfEPX90/LAJA-GRRRMOSTWANTED(Video%20Oficial)Shot.By@checkthefootage%20%23spanishdrill.mp3"},
@@ -8925,11 +8925,11 @@ RivalHubMusicLibrary={
     {artist="Artista Desconocido",songs={{name="Desconocido - Beretta",url="https://file.garden/anQAxCXXiQfEPX90/Beretta%20-%20video%20oficial.mp3"}}},
 }
 
-RivalHubMusicSound = nil
-RivalHubActiveSong = nil
-RivalHubMusicToken = 0
+heartleesMusicSound = nil
+heartleesActiveSong = nil
+heartleesMusicToken = 0
 
-function RivalHubAudioFileExists(path)
+function heartleesAudioFileExists(path)
     local env = (type(getgenv) == "function" and getgenv()) or _G
     local check = (env and env.isfile) or isfile or (syn and syn.isfile)
     if type(check) ~= "function" then return false end
@@ -8937,7 +8937,7 @@ function RivalHubAudioFileExists(path)
     return ok and result == true
 end
 
-function RivalHubValidAudio(data)
+function heartleesValidAudio(data)
     if type(data) ~= "string" or #data < 2048 then return false end
     local header = data:sub(1, 256):lower()
     return not (header:find("<html", 1, true) or header:find("<!doctype", 1, true)
@@ -8945,7 +8945,7 @@ function RivalHubValidAudio(data)
         or header:find("error", 1, true))
 end
 
-function RivalHubDownloadAudio(url, path)
+function heartleesDownloadAudio(url, path)
     local env = (type(getgenv) == "function" and getgenv()) or _G
     local save = (env and env.writefile) or writefile or (syn and syn.writefile)
     if type(save) ~= "function" then return false, "writefile no está disponible" end
@@ -8961,7 +8961,7 @@ function RivalHubDownloadAudio(url, path)
         if ok and type(response) == "table" then
             local code = tonumber(response.StatusCode or response.Status or response.status_code) or 0
             local body = response.Body or response.body
-            if (code == 0 or (code >= 200 and code < 300)) and RivalHubValidAudio(body) then
+            if (code == 0 or (code >= 200 and code < 300)) and heartleesValidAudio(body) then
                 data = body
             else
                 lastError = "respuesta HTTP inválida (" .. tostring(code) .. ")"
@@ -8972,7 +8972,7 @@ function RivalHubDownloadAudio(url, path)
     end
     if not data then
         local ok, result = pcall(function() return game:HttpGet(url, true) end)
-        if ok and RivalHubValidAudio(result) then data = result
+        if ok and heartleesValidAudio(result) then data = result
         elseif not ok then lastError = tostring(result) end
     end
     if not data then return false, lastError or "no se pudo descargar el audio" end
@@ -8981,62 +8981,62 @@ function RivalHubDownloadAudio(url, path)
     return true
 end
 
-function RivalHubStopMusic()
-    RivalHubMusicToken = RivalHubMusicToken + 1
-    if RivalHubMusicSound then
-        pcall(function() RivalHubMusicSound:Stop(); RivalHubMusicSound:Destroy() end)
-        RivalHubMusicSound = nil
+function heartleesStopMusic()
+    heartleesMusicToken = heartleesMusicToken + 1
+    if heartleesMusicSound then
+        pcall(function() heartleesMusicSound:Stop(); heartleesMusicSound:Destroy() end)
+        heartleesMusicSound = nil
     end
-    RivalHubActiveSong = nil
+    heartleesActiveSong = nil
 end
 
-function RivalHubPlayMusic(song, button)
+function heartleesPlayMusic(song, button)
     if not song or type(song.url) ~= "string" then return end
-    if RivalHubActiveSong == song then
-        RivalHubStopMusic()
+    if heartleesActiveSong == song then
+        heartleesStopMusic()
         if button then button.Text = "PLAY" end
         return
     end
-    RivalHubStopMusic()
-    local myToken = RivalHubMusicToken
-    RivalHubActiveSong = song
+    heartleesStopMusic()
+    local myToken = heartleesMusicToken
+    heartleesActiveSong = song
     if button then button.Text = "..." end
     task.spawn(function()
-        local fileName = "4KT_BloodHoundsMusic_" .. tostring(song.name):gsub("[^%w]+", "_") .. ".mp3"
+        local fileName = "heartlees_BloodHoundsMusic_" .. tostring(song.name):gsub("[^%w]+", "_") .. ".mp3"
         local env = (type(getgenv) == "function" and getgenv()) or _G
         local assetFunction = (env and env.getcustomasset) or getcustomasset or getsynasset
             or (syn and syn.getcustomasset) or (syn and syn.getsynasset)
         if type(assetFunction) ~= "function" then
-            warn("[4KT MUSIC] se necesita getcustomasset o getsynasset")
-            if RivalHubActiveSong == song then RivalHubActiveSong = nil; if button then button.Text = "ERR" end end
+            warn("[heartlees MUSIC] se necesita getcustomasset o getsynasset")
+            if heartleesActiveSong == song then heartleesActiveSong = nil; if button then button.Text = "ERR" end end
             return
         end
-        if not RivalHubAudioFileExists(fileName) then
-            local downloaded, err = RivalHubDownloadAudio(song.url, fileName)
+        if not heartleesAudioFileExists(fileName) then
+            local downloaded, err = heartleesDownloadAudio(song.url, fileName)
             if not downloaded then
-                warn("[4KT MUSIC] " .. song.name .. ": " .. tostring(err))
-                if RivalHubActiveSong == song then RivalHubActiveSong = nil; if button then button.Text = "ERR" end end
+                warn("[heartlees MUSIC] " .. song.name .. ": " .. tostring(err))
+                if heartleesActiveSong == song then heartleesActiveSong = nil; if button then button.Text = "ERR" end end
                 return
             end
         end
-        if myToken ~= RivalHubMusicToken or RivalHubActiveSong ~= song then return end
+        if myToken ~= heartleesMusicToken or heartleesActiveSong ~= song then return end
         local ok, assetId = pcall(assetFunction, fileName)
         if not ok or type(assetId) ~= "string" or assetId == "" then
-            warn("[4KT MUSIC] no se pudo crear el asset local para " .. song.name)
-            if RivalHubActiveSong == song then RivalHubActiveSong = nil; if button then button.Text = "ERR" end end
+            warn("[heartlees MUSIC] no se pudo crear el asset local para " .. song.name)
+            if heartleesActiveSong == song then heartleesActiveSong = nil; if button then button.Text = "ERR" end end
             return
         end
         local sound = Instance.new("Sound")
-        sound.Name = "4KTBloodHoundsMusic"
+        sound.Name = "heartleesBloodHoundsMusic"
         sound.SoundId = assetId
         sound.Volume = 1
         sound.Looped = true
         sound.Parent = game:GetService("SoundService")
-        RivalHubMusicSound = sound
+        heartleesMusicSound = sound
         pcall(function()
             game:GetService("ContentProvider"):PreloadAsync({sound})
         end)
-        if myToken ~= RivalHubMusicToken or RivalHubActiveSong ~= song then
+        if myToken ~= heartleesMusicToken or heartleesActiveSong ~= song then
             pcall(function() sound:Destroy() end)
             return
         end
@@ -9055,7 +9055,7 @@ function buildGui()
     local INP = Color3.fromRGB(15,15,15)
     local GUI_W, GUI_H = 320, 420
 
-    local GUI_NAMES = {"RivalHub", "4KTDUELS", "RivalHubMobilePanel", "4KTDUELS_FloatingPanel", "RivalHubSpeedIndicator", "RivalHubBootErrors"}
+    local GUI_NAMES = {"heartlees", "heartleesMobilePanel", "heartlees_FloatingPanel", "heartleesSpeedIndicator", "heartleesBootErrors"}
 
     local _okCg, _coreGui = pcall(function() return game:GetService("CoreGui") end)
     local _pgOld = LP:FindFirstChild("PlayerGui")
@@ -9071,7 +9071,7 @@ function buildGui()
     end
 
     gui = Instance.new("ScreenGui")
-    gui.Name = "4KTDUELS"
+    gui.Name = "heartlees"
     gui.ResetOnSpawn = false
     gui.DisplayOrder = 10
     gui.IgnoreGuiInset = true
@@ -9099,7 +9099,7 @@ function buildGui()
     Instance.new("UICorner", scriptHeader).CornerRadius = UDim.new(0, 8)
 
     local headerImage = Instance.new("ImageLabel", scriptHeader)
-    headerImage.Name = "4KTDUELS_HeaderImage"
+    headerImage.Name = "heartlees_HeaderImage"
     headerImage.Size = UDim2.new(1, 0, 1, 0)
     headerImage.Position = UDim2.new(0, 0, 0, 0)
     headerImage.BackgroundTransparency = 1
@@ -9134,7 +9134,7 @@ function buildGui()
     usernameLbl.ZIndex = 9
 
     scriptLogoRef = displayNameLbl
-    pcall(applyRivalTitleTheme, currentRivalTitleTheme, true)
+    pcall(applyHeartleesTitleTheme, currentHeartleesTitleTheme, true)
 
     local bgImage = Instance.new("ImageLabel", main)
     bgImage.Name = "BackgroundImage"
@@ -9172,7 +9172,7 @@ function buildGui()
     end)
 
     miniBtn = Instance.new("TextButton", gui)
-    miniBtn.Name = "4KTDUELS_Minimized"
+    miniBtn.Name = "heartlees_Minimized"
     miniBtn.Size = UDim2.new(0, 96, 0, 32)
     miniBtn.Position = savedMiniButtonPos and UDim2.new(savedMiniButtonPos.XScale, savedMiniButtonPos.XOffset, savedMiniButtonPos.YScale, savedMiniButtonPos.YOffset) or UDim2.new(0, 12, 0.5, -16)
     do
@@ -9190,11 +9190,11 @@ function buildGui()
     miniBtn.ClipsDescendants = true
     Instance.new("UICorner", miniBtn).CornerRadius = UDim.new(0, 4)
     local miniBrand = Instance.new("TextLabel", miniBtn)
-    miniBrand.Name = "4KTDUELS_Brand"
+    miniBrand.Name = "heartlees_Brand"
     miniBrand.Size = UDim2.new(1, -8, 1, 0)
     miniBrand.Position = UDim2.new(0, 4, 0, 0)
     miniBrand.BackgroundTransparency = 1
-    miniBrand.Text = "4KT DUELS"
+    miniBrand.Text = "heartlees"
     miniBrand.Visible = false -- El título adaptable de abajo es el único rótulo visible.
     miniBrand.TextColor3 = Color3.fromRGB(255, 255, 255)
     miniBrand.Font = Enum.Font.GothamBold
@@ -9211,7 +9211,7 @@ function buildGui()
     local function loadVabedoFont()
         local getAsset = getcustomasset or getsynasset
         if type(writefile) ~= "function" or type(getAsset) ~= "function" then return nil end
-        local ttfName, jsonName = "RivalHub_Vabedo.ttf", "RivalHub_Vabedo.json"
+        local ttfName, jsonName = "heartlees_Vabedo.ttf", "heartlees_Vabedo.json"
         local okAll, result = pcall(function()
             local need = true
             if type(isfile) == "function" then
@@ -9254,12 +9254,12 @@ function buildGui()
     end
 
     local miniTitle = Instance.new("TextLabel", miniBtn)
-    miniTitle.Name = "RivalHubTitle"
+    miniTitle.Name = "heartleesTitle"
     miniTitle.Size = UDim2.new(1, -12, 1, -6)
     miniTitle.AnchorPoint = Vector2.new(0.5, 0.5)
     miniTitle.Position = UDim2.new(0.5, 0, 0.5, 0)
     miniTitle.BackgroundTransparency = 1
-    miniTitle.Text = "4KTDUELS"
+    miniTitle.Text = "heartlees"
     miniTitle.Font = Enum.Font.GothamBlack
     miniTitle.TextScaled = true
     miniTitle.TextWrapped = false
@@ -9281,13 +9281,13 @@ function buildGui()
 
     local _mainAnimating = false
     local mainOriginalPos = main.Position
-    _G.__RivalHubMainOriginalPos = mainOriginalPos
+    _G.__heartleesMainOriginalPos = mainOriginalPos
     -- Arrastre del menú principal desde el encabezado, también con Lock UI activo.
     drag(main, 78)
     main:GetPropertyChangedSignal("Position"):Connect(function()
         if not _mainAnimating then
             mainOriginalPos = main.Position
-            _G.__RivalHubMainOriginalPos = mainOriginalPos
+            _G.__heartleesMainOriginalPos = mainOriginalPos
         end
     end)
 
@@ -9422,7 +9422,7 @@ function buildGui()
 
         local tabBgGrad = Instance.new("UIGradient", btn)
         tabBgGrad.Name = "TabBgGrad"
-        tabBgGrad.Color = rivalHubGradient(getThemeColor())
+        tabBgGrad.Color = heartleesGradient(getThemeColor())
         tabBgGrad.Rotation = 0
 
         local tabStroke = Instance.new("UIStroke", btn)
@@ -9491,7 +9491,7 @@ function buildGui()
                 label.ZIndex = 8
             end
             addMusicHeader("Music")
-            for _, group in ipairs(RivalHubMusicLibrary or {}) do
+            for _, group in ipairs(heartleesMusicLibrary or {}) do
                 addMusicHeader(group.artist or "Unknown")
                 for _, song in ipairs(group.songs or {}) do
                     musicOrder = musicOrder + 1
@@ -9531,7 +9531,7 @@ function buildGui()
                     playStroke.Color = getThemeColor()
                     playStroke.Thickness = 1
                     playBtn.MouseButton1Click:Connect(function()
-                        pcall(RivalHubPlayMusic, song, playBtn)
+                        pcall(heartleesPlayMusic, song, playBtn)
                     end)
                 end
             end
@@ -9616,7 +9616,7 @@ function buildGui()
         accent.ZIndex = 8
         Instance.new("UICorner", accent).CornerRadius = UDim.new(1, 0)
         local accentGrad = Instance.new("UIGradient", accent)
-        accentGrad.Color = rivalHubGradient(getThemeColor())
+        accentGrad.Color = heartleesGradient(getThemeColor())
         accentGrad.Rotation = 90
 
         local l = Instance.new("TextLabel", f)
@@ -9750,7 +9750,7 @@ function buildGui()
     local function mkToggle(page, txt, cb)
         local row = mkRow(page, 42)
         local toggleTitle = mkLabel(row, txt)
-        toggleTitle:SetAttribute("RivalHubThemeText", true)
+        toggleTitle:SetAttribute("heartleesThemeText", true)
         toggleTitle.TextColor3 = getThemeColor()
         local pill, dot = mkPill(row, 62)
         local on = false
@@ -10050,13 +10050,13 @@ function buildGui()
         normalBox = mkBox(row, NS, 52, 116, function(v)
             if v == v and v > 0 and v < math.huge then
                 NS = v
-                if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+                if _G.__heartleesApplySpeedNow then pcall(_G.__heartleesApplySpeedNow) end
             end
         end)
         carryBox = mkBox(row, CS, 52, 58, function(v)
             if v == v and v > 0 and v < math.huge then
                 CS = v
-                if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+                if _G.__heartleesApplySpeedNow then pcall(_G.__heartleesApplySpeedNow) end
             end
         end)
         normalBox.TextSize = 14
@@ -10073,13 +10073,13 @@ function buildGui()
         laggerBox = mkBox(row, LAGGER_SPEED, 52, 116, function(v)
             if v == v and v > 0 and v < math.huge then
                 LAGGER_SPEED = v
-                if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+                if _G.__heartleesApplySpeedNow then pcall(_G.__heartleesApplySpeedNow) end
             end
         end)
         lagger2Box = mkBox(row, LAGGER_CARRY_SPEED, 52, 58, function(v)
             if v == v and v > 0 and v < math.huge then
                 LAGGER_CARRY_SPEED = v
-                if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+                if _G.__heartleesApplySpeedNow then pcall(_G.__heartleesApplySpeedNow) end
             end
         end)
     end
@@ -10092,13 +10092,13 @@ function buildGui()
         laggerLowBox = mkBox(row, LAGGER_LOW_SPEED, 52, 116, function(v)
             if v == v and v > 0 and v < math.huge then
                 LAGGER_LOW_SPEED = v
-                if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+                if _G.__heartleesApplySpeedNow then pcall(_G.__heartleesApplySpeedNow) end
             end
         end)
         laggerLow2Box = mkBox(row, LAGGER_LOW_CARRY_SPEED, 52, 58, function(v)
             if v == v and v > 0 and v < math.huge then
                 LAGGER_LOW_CARRY_SPEED = v
-                if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+                if _G.__heartleesApplySpeedNow then pcall(_G.__heartleesApplySpeedNow) end
             end
         end)
         laggerBox.TextSize = 14
@@ -10137,14 +10137,14 @@ function buildGui()
         local sv, refresh = mkToggleSelector(speedPage, "Auto Carry",
             function(on)
                 autoCarryEnabled = on
-                if not on and _G.__RivalHubAutoCarryRestore then pcall(_G.__RivalHubAutoCarryRestore) end
+                if not on and _G.__heartleesAutoCarryRestore then pcall(_G.__heartleesAutoCarryRestore) end
             end,
             { { "On Pick Up", "STEAL" }, { "Soft Steal", "BASE AUTO CAR" } },
             function() return autoCarryMode end,
             function(key) autoCarryMode = key end)
         sv(autoCarryEnabled == true)
-        _G.__RivalHubAutoCarrySetVisual = sv
-        _G.__RivalHubAutoCarryRefresh = function() sv(autoCarryEnabled == true); refresh() end
+        _G.__heartleesAutoCarrySetVisual = sv
+        _G.__heartleesAutoCarryRefresh = function() sv(autoCarryEnabled == true); refresh() end
     end
 
     mkSect(speedPage, "Auto")
@@ -10160,8 +10160,8 @@ function buildGui()
     end)
 
     mkSect(combatPage, "Float")
-    _G.__RivalHubFloatSetVisual = mkToggle(combatPage, "Float", function(on)
-        if on then _G.__RivalHubFloat.enable() else _G.__RivalHubFloat.disable() end
+    _G.__heartleesFloatSetVisual = mkToggle(combatPage, "Float", function(on)
+        if on then _G.__heartleesFloat.enable() else _G.__heartleesFloat.disable() end
         if mobSetFloat then mobSetFloat(on) end
     end)
 
@@ -10269,19 +10269,19 @@ function buildGui()
                 pcall(saveAllSettings, true)
             end,
             { { "v2", "Bat V2" }, { "v3", "Bat V3" } },
-            function() return (_G.__RivalHubBatVersion == "v3") and "v3" or "v2" end,
+            function() return (_G.__heartleesBatVersion == "v3") and "v3" or "v2" end,
             function(key)
-                if _G.__RivalHubSetBatVersion then
-                    _G.__RivalHubSetBatVersion(key)
+                if _G.__heartleesSetBatVersion then
+                    _G.__heartleesSetBatVersion(key)
                 else
-                    _G.__RivalHubBatVersion = key
+                    _G.__heartleesBatVersion = key
                 end
                 refresh()
                 pcall(saveAllSettings, true)
             end)
-        _G.__RivalHubBatSetVisual = sv
+        _G.__heartleesBatSetVisual = sv
         _G.updateBatVersionUI = function(ver) refresh() end
-        sv(_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() or false)
+        sv(_G.__heartleesIsBatV2 and _G.__heartleesIsBatV2() or false)
         refresh()
     end
 
@@ -10536,16 +10536,16 @@ function buildGui()
         leftBtn.AutoButtonColor = false
         leftBtn.ZIndex = 9
         Instance.new("UICorner", leftBtn).CornerRadius = UDim.new(0, 6)
-        rivalTitleSelectorLabel = Instance.new("TextLabel", container)
-        rivalTitleSelectorLabel.Size = UDim2.new(0, 80, 0, 26)
-        rivalTitleSelectorLabel.Position = UDim2.new(0.5, -40, 0.5, -13)
-        rivalTitleSelectorLabel.BackgroundTransparency = 1
-        rivalTitleSelectorLabel.Text = currentRivalTitleTheme
-        rivalTitleSelectorLabel.TextColor3 = WHITE
-        rivalTitleSelectorLabel.Font = Enum.Font.GothamBold
-        rivalTitleSelectorLabel.TextSize = 12
-        rivalTitleSelectorLabel.TextXAlignment = Enum.TextXAlignment.Center
-        rivalTitleSelectorLabel.ZIndex = 9
+        heartleesTitleSelectorLabel = Instance.new("TextLabel", container)
+        heartleesTitleSelectorLabel.Size = UDim2.new(0, 80, 0, 26)
+        heartleesTitleSelectorLabel.Position = UDim2.new(0.5, -40, 0.5, -13)
+        heartleesTitleSelectorLabel.BackgroundTransparency = 1
+        heartleesTitleSelectorLabel.Text = currentHeartleesTitleTheme
+        heartleesTitleSelectorLabel.TextColor3 = WHITE
+        heartleesTitleSelectorLabel.Font = Enum.Font.GothamBold
+        heartleesTitleSelectorLabel.TextSize = 12
+        heartleesTitleSelectorLabel.TextXAlignment = Enum.TextXAlignment.Center
+        heartleesTitleSelectorLabel.ZIndex = 9
         local rightBtn = Instance.new("TextButton", container)
         rightBtn.Size = UDim2.new(0, 28, 0, 26)
         rightBtn.Position = UDim2.new(1, -28, 0.5, -13)
@@ -10564,12 +10564,12 @@ function buildGui()
         local function cycleRivalTitle(dir)
             local idx = 1
             for i, name in ipairs(RIVAL_THEME_LIST) do
-                if name == currentRivalTitleTheme then idx = i; break end
+                if name == currentHeartleesTitleTheme then idx = i; break end
             end
             local newIdx = idx + dir
             if newIdx < 1 then newIdx = #RIVAL_THEME_LIST end
             if newIdx > #RIVAL_THEME_LIST then newIdx = 1 end
-            applyRivalTitleTheme(RIVAL_THEME_LIST[newIdx])
+            applyHeartleesTitleTheme(RIVAL_THEME_LIST[newIdx])
         end
         leftBtn.MouseButton1Click:Connect(function() cycleRivalTitle(-1) end)
         rightBtn.MouseButton1Click:Connect(function() cycleRivalTitle(1) end)
@@ -10685,10 +10685,10 @@ function buildGui()
 
     do
         local setBrHeldVisual = mkToggle(visualPage, "Brainrot Transparente (Mano)", function(on)
-            if _G.RHBrainrotTransparency then _G.RHBrainrotTransparency.SetHeld(on) end
+            if _G.heartleesBrainrotTransparency then _G.heartleesBrainrotTransparency.SetHeld(on) end
         end)
         local setBrBaseVisual = mkToggle(visualPage, "Brainrot Transparente (Base)", function(on)
-            if _G.RHBrainrotTransparency then _G.RHBrainrotTransparency.SetBase(on) end
+            if _G.heartleesBrainrotTransparency then _G.heartleesBrainrotTransparency.SetBase(on) end
         end)
         setBrHeldVisual(true)
         setBrBaseVisual(true)
@@ -10714,7 +10714,7 @@ function buildGui()
             end)
         setInstaGrab = sv
         autoStealModeBtn = setmetatable({}, { __newindex = function(_, k) if k == "Text" then refresh() end end })
-        _G._rivalHubStealModeSetter = function() refresh() end
+        _G._heartleesStealModeSetter = function() refresh() end
     end
     do
         local row = mkRow(visualPage, 42)
@@ -10840,7 +10840,7 @@ function buildGui()
     end
 
     pbFrame = Instance.new("Frame", gui)
-    pbFrame.Name = "RivalHubAutoStealHud"
+    pbFrame.Name = "heartleesAutoStealHud"
     pbFrame.Size = UDim2.new(0, 300, 0, 38)
     pbFrame.Position = savedProgressBarPos and UDim2.new(savedProgressBarPos.XScale, savedProgressBarPos.XOffset, savedProgressBarPos.YScale, savedProgressBarPos.YOffset) or UDim2.new(0.5, -150, 1, -88)
     pbFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -11031,7 +11031,7 @@ do
         swingCooldown = 0.30,
         lastSwingAt = 0,
     }
-    _G.__RivalHubBatV2 = V2
+    _G.__heartleesBatV2 = V2
 
     local function cleanMovers(root)
         if not root then return end
@@ -11141,7 +11141,7 @@ do
         handle.LocalTransparencyModifier = 1
 
         local loaf = Instance.new("Part")
-        loaf.Name = "RivalHubBreadBat"
+        loaf.Name = "heartleesBreadBat"
         loaf.Size = Vector3.new(0.78, 0.78, 1.55)
         loaf.Shape = Enum.PartType.Cylinder
         loaf.Color = Color3.fromRGB(214, 153, 73)
@@ -11160,7 +11160,7 @@ do
         table.insert(breadVisualParts, loaf)
 
         local crust = Instance.new("Part")
-        crust.Name = "RivalHubBreadCrust"
+        crust.Name = "heartleesBreadCrust"
         crust.Size = Vector3.new(0.84, 0.84, 1.48)
         crust.Shape = Enum.PartType.Cylinder
         crust.Color = Color3.fromRGB(156, 91, 36)
@@ -11580,8 +11580,8 @@ do
         V3.reset()
         V3.st.lastActivationTime = 0
         V3.conn = RunService.RenderStepped:Connect(function(dt)
-            if _mySession ~= _G.RivalHubSession then
-                if _G.__RivalHubStopBatV2 then pcall(_G.__RivalHubStopBatV2) end
+            if _mySession ~= _G.heartleesSession then
+                if _G.__heartleesStopBatV2 then pcall(_G.__heartleesStopBatV2) end
                 return
             end
             pcall(V3.loop, dt)
@@ -11617,7 +11617,7 @@ do
     -- ============================================================
     -- SELECTOR V2 / V3 (el boton flotante usa la version elegida)
     -- ============================================================
-    _G.__RivalHubBatVersion = (_G.__RivalHubBatVersion == "v3") and "v3" or "v2"
+    _G.__heartleesBatVersion = (_G.__heartleesBatVersion == "v3") and "v3" or "v2"
     local BatCtl = {}
 
     function BatCtl.isOn()
@@ -11634,7 +11634,7 @@ do
         if State.bypassBatEnabled and disableBypassBat then disableBypassBat() end
         if V3.enabled then V3.stop() end
         if V2.enabled then stopBatV2() end
-        if _G.__RivalHubBatVersion == "v3" then
+        if _G.__heartleesBatVersion == "v3" then
             V3.start()
         else
             startBatV2()
@@ -11645,17 +11645,17 @@ do
         ver = (ver == "v3") and "v3" or "v2"
         local wasOn = BatCtl.isOn()
         if wasOn then BatCtl.stop() end
-        _G.__RivalHubBatVersion = ver
+        _G.__heartleesBatVersion = ver
         if _G.updateBatVersionUI then pcall(_G.updateBatVersionUI, ver) end
-        if _G.__RivalHubRefreshBatLabel then pcall(_G.__RivalHubRefreshBatLabel) end
+        if _G.__heartleesRefreshBatLabel then pcall(_G.__heartleesRefreshBatLabel) end
         if wasOn then BatCtl.start() end
         if saveAllSettings then pcall(saveAllSettings) end
     end
 
-    _G.__RivalHubStartBatV2 = BatCtl.start
-    _G.__RivalHubStopBatV2  = BatCtl.stop
-    _G.__RivalHubIsBatV2    = BatCtl.isOn
-    _G.__RivalHubSetBatVersion = BatCtl.setVersion
+    _G.__heartleesStartBatV2 = BatCtl.start
+    _G.__heartleesStopBatV2  = BatCtl.stop
+    _G.__heartleesIsBatV2    = BatCtl.isOn
+    _G.__heartleesSetBatVersion = BatCtl.setVersion
 
     LP.CharacterAdded:Connect(function()
         task.wait(0.5)
@@ -11674,7 +11674,7 @@ end
 function createMobilePanel()
     _floatingBackgroundImages = {}
     local panel = Instance.new("ScreenGui")
-    panel.Name = "4KTDUELS_FloatingPanel"
+    panel.Name = "heartlees_FloatingPanel"
     panel.ResetOnSpawn = false
     panel.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     panel.DisplayOrder = 20
@@ -11691,7 +11691,7 @@ function createMobilePanel()
     local PANEL_H = BTN_H * ROWS + (GAP + 10) * (ROWS - 1)
 
     local container = Instance.new("Frame", panel)
-    container.Name = "4KTDUELS_FloatingButtons"
+    container.Name = "heartlees_FloatingButtons"
     container.Size = UDim2.new(0, PANEL_W, 0, PANEL_H)
     container.Position = UDim2.new(1, -(PANEL_W + 12), 0.5, -PANEL_H / 2)
     container.BackgroundTransparency = 1
@@ -11909,7 +11909,7 @@ function createMobilePanel()
                     speedMode = false; setActive(false)
                 end
                 refreshSpeedModeLabel()
-                if _G.__RivalHubApplySpeedNow then pcall(_G.__RivalHubApplySpeedNow) end
+                if _G.__heartleesApplySpeedNow then pcall(_G.__heartleesApplySpeedNow) end
             end
         elseif name == "Lagger1" then
             callback = function(setActive)
@@ -11925,15 +11925,15 @@ function createMobilePanel()
             end
         elseif name == "BatV2" then
             callback = function(setActive)
-                if _G.__RivalHubIsBatV2() then disableBatV2Mode() else enableBatV2Mode() end
-                setActive(_G.__RivalHubIsBatV2() == true)
-                if _G.__RivalHubBatSetVisual then pcall(_G.__RivalHubBatSetVisual, _G.__RivalHubIsBatV2() == true) end
+                if _G.__heartleesIsBatV2() then disableBatV2Mode() else enableBatV2Mode() end
+                setActive(_G.__heartleesIsBatV2() == true)
+                if _G.__heartleesBatSetVisual then pcall(_G.__heartleesBatSetVisual, _G.__heartleesIsBatV2() == true) end
             end
         end
         if name == "Float" then
             callback = function(setActive)
-                if _G.__RivalHubFloatToggle then _G.__RivalHubFloatToggle() end
-                setActive(_G.__RivalHubFloatIsRunning and _G.__RivalHubFloatIsRunning() or false)
+                if _G.__heartleesFloatToggle then _G.__heartleesFloatToggle() end
+                setActive(_G.__heartleesFloatIsRunning and _G.__heartleesFloatIsRunning() or false)
             end
         end
         local setActive = createButton(name, text, i-1, true, callback)
@@ -11950,13 +11950,13 @@ function createMobilePanel()
 
     end
 
-    _G.__RivalHubRefreshBatLabel = function()
+    _G.__heartleesRefreshBatLabel = function()
         local b = buttons.BatV2
         if b and b.label then
-            b.label.Text = (_G.__RivalHubBatVersion == "v3") and "BAT\nV3" or "BAT\nV2"
+            b.label.Text = (_G.__heartleesBatVersion == "v3") and "BAT\nV3" or "BAT\nV2"
         end
     end
-    pcall(_G.__RivalHubRefreshBatLabel)
+    pcall(_G.__heartleesRefreshBatLabel)
 
     if buttons.AutoBat and buttons.AutoBat.setActive then buttons.AutoBat.setActive(autoBatEnabled) end
     if buttons.AutoLeft and buttons.AutoLeft.setActive then buttons.AutoLeft.setActive(autoLeftEnabled) end
@@ -11965,17 +11965,17 @@ function createMobilePanel()
     if buttons.Lagger1 and buttons.Lagger1.setActive then buttons.Lagger1.setActive(laggerToggled) end
     if buttons.Lagger2 and buttons.Lagger2.setActive then buttons.Lagger2.setActive(laggerCarryToggled) end
     if buttons.BatV2 and buttons.BatV2.setActive then
-        buttons.BatV2.setActive(_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() or false)
+        buttons.BatV2.setActive(_G.__heartleesIsBatV2 and _G.__heartleesIsBatV2() or false)
     end
     if buttons.Float and buttons.Float.setActive then
-        buttons.Float.setActive(_G.__RivalHubFloatIsRunning and _G.__RivalHubFloatIsRunning() or false)
+        buttons.Float.setActive(_G.__heartleesFloatIsRunning and _G.__heartleesFloatIsRunning() or false)
     end
 
     -- Sincronizar de inmediato Auto Grab con la imagen/fondo elegido en el menú principal.
     -- Esto también se ejecuta al recrear el panel después de cambiar de partida.
     pcall(applyBackgroundMode, backgroundMode)
 
-    -- La cuadrícula de 4KTDUELS permanece fija en el lado derecho.
+    -- La cuadrícula de heartlees permanece fija en el lado derecho.
     container.Position = UDim2.new(1, -(PANEL_W + 12), 0.5, -PANEL_H / 2)
     return btnContainer
 end
@@ -12191,8 +12191,8 @@ function updateUIFromLoaded()
 
     if uiLocked and setLockUIVisual then setLockUIVisual(true) end
 
-    if _G.updateBatVersionUI then pcall(_G.updateBatVersionUI, _G.__RivalHubBatVersion or "v2") end
-    if _G.__RivalHubRefreshBatLabel then pcall(_G.__RivalHubRefreshBatLabel) end
+    if _G.updateBatVersionUI then pcall(_G.updateBatVersionUI, _G.__heartleesBatVersion or "v2") end
+    if _G.__heartleesRefreshBatLabel then pcall(_G.__heartleesRefreshBatLabel) end
 
     if antiRagdollMode == "v1" or antiRagdollMode == "v2" then
         if _G.updateAntiRagdollUI then _G.updateAntiRagdollUI(antiRagdollMode) end
@@ -12296,7 +12296,7 @@ function updateUIFromLoaded()
     if mobSetCarry then mobSetCarry(speedMode) end
     if mobSetLagger1 then mobSetLagger1(laggerToggled) end
     if mobSetLagger2 then mobSetLagger2(laggerCarryToggled) end
-    if mobSetBatV2 then mobSetBatV2(_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() or false) end
+    if mobSetBatV2 then mobSetBatV2(_G.__heartleesIsBatV2 and _G.__heartleesIsBatV2() or false) end
 
     if bodyLockEnabled and bodyLockSetVisual then
         if _blSuppressCount == 0 then
@@ -12325,14 +12325,14 @@ local _bootErrors = {}
 pcall(loadPersistentPositions)
 
 local function _bootSection(name, fn)
-    print("[4KTDUELS Boot] Iniciando:", name)
+    print("[heartlees Boot] Iniciando:", name)
     local ok, err = pcall(fn)
     if not ok then
-        print("[4KTDUELS Boot] FALLÓ:", name, tostring(err))
+        print("[heartlees Boot] FALLÓ:", name, tostring(err))
         table.insert(_bootErrors, {name = name, err = tostring(err)})
-        warn("[4KTDUELS Boot] Error en '" .. name .. "': " .. tostring(err))
+        warn("[heartlees Boot] Error en '" .. name .. "': " .. tostring(err))
     else
-        print("[4KTDUELS Boot] OK:", name)
+        print("[heartlees Boot] OK:", name)
     end
     return ok
 end
@@ -12359,9 +12359,9 @@ if gui and main then
         end)
     end
 
-    _bootSection("localizeRivalHubInterface", function()
-        if gui then localizeRivalHubInterface(gui) end
-        if MobilePanel then localizeRivalHubInterface(MobilePanel) end
+    _bootSection("localizeheartleesInterface", function()
+        if gui then localizeheartleesInterface(gui) end
+        if MobilePanel then localizeheartleesInterface(MobilePanel) end
     end)
 
     if LP.Character then
@@ -12384,12 +12384,12 @@ if gui and main then
                 local env = (getgenv and getgenv()) or _G
                 local writeFn = env.writefile or (syn and syn.writefile)
                 if type(writeFn) == "function" then
-                    local log = "[4KTDUELS Boot Errors] " .. os.date("%Y-%m-%d %H:%M:%S") .. "\n"
+                    local log = "[heartlees Boot Errors] " .. os.date("%Y-%m-%d %H:%M:%S") .. "\n"
                     for _, e in ipairs(_bootErrors) do
                         log = log .. e.name .. ": " .. e.err .. "\n"
                     end
-                    pcall(writeFn, "RivalHub_boot_errors.txt", log)
-                    warn("[4KTDUELS] Errores escritos a RivalHub_boot_errors.txt")
+                    pcall(writeFn, "heartlees_boot_errors.txt", log)
+                    warn("[heartlees] Errores escritos a heartlees_boot_errors.txt")
                 end
             end)
         end)
@@ -12397,7 +12397,7 @@ if gui and main then
         task.defer(function()
             pcall(function()
                 local errGui = Instance.new("ScreenGui")
-                errGui.Name = "RivalHubBootErrors"
+                errGui.Name = "heartleesBootErrors"
                 errGui.ResetOnSpawn = false
                 errGui.DisplayOrder = 999
                 local okCg, cg = pcall(function() return game:GetService("CoreGui") end)
@@ -12420,7 +12420,7 @@ if gui and main then
                 title.Size = UDim2.new(1, -20, 0, 24)
                 title.Position = UDim2.new(0, 10, 0, 8)
                 title.BackgroundTransparency = 1
-                title.Text = "⚠ 4KTDUELS: " .. #_bootErrors .. " sección(es) fallaron"
+                title.Text = "⚠ heartlees: " .. #_bootErrors .. " sección(es) fallaron"
                 title.TextColor3 = Color3.fromRGB(255, 100, 110)
                 title.Font = Enum.Font.GothamBold
                 title.TextSize = 13
@@ -12482,7 +12482,7 @@ if gui and main then
         end)
     end
 else
-    warn("[4KTDUELS Boot] Fatal: buildGui falló. El script no puede continuar.")
+    warn("[heartlees Boot] Fatal: buildGui falló. El script no puede continuar.")
 end
 
 if LP and LP.CharacterAdded then
@@ -12583,12 +12583,12 @@ UIS.InputBegan:Connect(function(input, gpe)
         return
     end
     if kbMatch(KB.BatV2, kc) then
-        if _G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() then
+        if _G.__heartleesIsBatV2 and _G.__heartleesIsBatV2() then
             disableBatV2Mode()
         else
             enableBatV2Mode()
         end
-        if mobSetBatV2 then mobSetBatV2(_G.__RivalHubIsBatV2 and _G.__RivalHubIsBatV2() or false) end
+        if mobSetBatV2 then mobSetBatV2(_G.__heartleesIsBatV2 and _G.__heartleesIsBatV2() or false) end
         pcall(saveAllSettings, true)
         return
     end
@@ -12639,7 +12639,7 @@ UIS.InputBegan:Connect(function(input, gpe)
         return
     end
     if kbMatch(KB.Float, kc) then
-        if _G.__RivalHubFloatToggle then _G.__RivalHubFloatToggle() end
+        if _G.__heartleesFloatToggle then _G.__heartleesFloatToggle() end
         return
     end
     if kbMatch(KB.GuiHide, kc) then
@@ -12843,7 +12843,7 @@ do
     end
     cleanAllNormalBats()
     task.spawn(function()
-        while _G.RivalHubRunning do
+        while _G.heartleesRunning do
             pcall(cleanAllNormalBats)
             task.wait(0.05)
         end
@@ -12867,10 +12867,10 @@ do
     end
 
     local function removeBombSkin(tool)
-        local f = tool:FindFirstChild("ShelMedusaBombSkin")
+        local f = tool:FindFirstChild("heartleesMedusaBombSkin")
         if f then f:Destroy() end
-        if tool:GetAttribute("ShelMedusaBombSkin") then
-            tool:SetAttribute("ShelMedusaBombSkin", nil)
+        if tool:GetAttribute("heartleesMedusaBombSkin") then
+            tool:SetAttribute("heartleesMedusaBombSkin", nil)
             for _, obj in ipairs(tool:GetDescendants()) do
                 if obj:IsA("BasePart") then obj.LocalTransparencyModifier = 0 end
             end
@@ -12880,14 +12880,14 @@ do
     local function applyMedusaSkin(tool)
         if not isMedusaSkinTool(tool) then return end
         -- La bomba es la skin "Default"; con Skull / Golden Eagle se quita
-        if (_G.RivalMedusaSkin or "Default") ~= "Default" then
+        if (_G.heartleesMedusaSkin or "Default") ~= "Default" then
             removeBombSkin(tool)
             return
         end
-        if tool:GetAttribute("ShelMedusaBombSkin") and tool:FindFirstChild("ShelMedusaBombSkin") then return end
+        if tool:GetAttribute("heartleesMedusaBombSkin") and tool:FindFirstChild("heartleesMedusaBombSkin") then return end
         local handle = tool:FindFirstChild("Handle") or tool:FindFirstChildWhichIsA("BasePart", true)
         if not handle or not handle:IsA("BasePart") then return end
-        tool:SetAttribute("ShelMedusaBombSkin", true)
+        tool:SetAttribute("heartleesMedusaBombSkin", true)
 
         -- solo se oculta lo visual; los sonidos de la medusa NO se tocan
         for _, obj in ipairs(tool:GetDescendants()) do
@@ -12897,7 +12897,7 @@ do
         end
 
         local bomb = Instance.new("Folder")
-        bomb.Name = "ShelMedusaBombSkin"
+        bomb.Name = "heartleesMedusaBombSkin"
         bomb.Parent = tool
 
         local function block(name, size, color, offset, shape, material)
@@ -12933,11 +12933,11 @@ do
         block("BombFuse", Vector3.new(0.14, 0.48, 0.14), fuse, CFrame.new(0, 1.03, 0), Enum.PartType.Cylinder, Enum.Material.Neon)
         block("BombSpark", Vector3.new(0.24, 0.24, 0.24), Color3.fromRGB(255, 235, 100), CFrame.new(0, 1.34, 0), Enum.PartType.Ball, Enum.Material.Neon)
 
-        if not tool:GetAttribute("ShelMedusaDescHook") then
-            tool:SetAttribute("ShelMedusaDescHook", true)
+        if not tool:GetAttribute("heartleesMedusaDescHook") then
+            tool:SetAttribute("heartleesMedusaDescHook", true)
             tool.DescendantAdded:Connect(function(obj)
-                if (_G.RivalMedusaSkin or "Default") ~= "Default" then return end
-                if obj:FindFirstAncestor("ShelMedusaBombSkin") then return end
+                if (_G.heartleesMedusaSkin or "Default") ~= "Default" then return end
+                if obj:FindFirstAncestor("heartleesMedusaBombSkin") then return end
                 if obj:IsA("BasePart") then obj.LocalTransparencyModifier = 1 end
             end)
         end
@@ -12948,8 +12948,8 @@ do
         for _, child in ipairs(container:GetChildren()) do
             if child:IsA("Tool") then task.defer(applyMedusaSkin, child) end
         end
-        if not container:GetAttribute("ShelMedusaSkinWatch") then
-            container:SetAttribute("ShelMedusaSkinWatch", true)
+        if not container:GetAttribute("heartleesMedusaSkinWatch") then
+            container:SetAttribute("heartleesMedusaSkinWatch", true)
             container.ChildAdded:Connect(function(child)
                 if not child:IsA("Tool") then return end
                 task.wait()
@@ -12976,7 +12976,7 @@ do
         while task.wait(1) do scanSkinTools() end
     end)
 
-    _G.ShelMedusaSkin = {apply = scanSkinTools}
+    _G.heartleesMedusaSkin = {apply = scanSkinTools}
 end
 -- ============================================================
 
@@ -12987,7 +12987,7 @@ do
     local LPl = game:GetService("Players").LocalPlayer
     local ALPHA_HELD = 0.85
     local ALPHA_BASE = 0.7
-    local ATTR = "RHBrOrigT"
+    local ATTR = "heartleesBrOrigT"
     local state = {held = true, base = true, heldDirty = false, baseDirty = false}
 
     local BODY = {
@@ -13001,7 +13001,7 @@ do
     local function isMedusaPiece(inst)
         local cur = inst
         while cur and cur ~= workspace and cur ~= game do
-            if cur.Name == "RivalMedusaReplica" or cur.Name == "ShelMedusaBombSkin"
+            if cur.Name == "heartleesMedusaReplica" or cur.Name == "heartleesMedusaBombSkin"
                 or cur.Name:lower():find("medusa", 1, true) then
                 return true
             end
@@ -13040,11 +13040,11 @@ do
 
     -- Xray INVISIBLE: no aplica ningun resaltado de color, solo transparencia.
     local function setXray(root, on)
-        local hl = root:FindFirstChild("RHBrXray")
+        local hl = root:FindFirstChild("heartleesBrXray")
         if on then
             if not hl then
                 hl = Instance.new("Highlight")
-                hl.Name = "RHBrXray"
+                hl.Name = "heartleesBrXray"
                 hl.Adornee = root
                 hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
                 hl.FillColor = Color3.fromRGB(175, 80, 255)
@@ -13188,7 +13188,7 @@ do
             lastBase[o] = true
             if on and not printed[o] then
                 printed[o] = true
-                pcall(function() print("[4KTDUELS] Brainrot base transparente:", o:GetFullName()) end)
+                pcall(function() print("[heartlees] Brainrot base transparente:", o:GetFullName()) end)
             end
         end
         for o in pairs(lastBase) do
@@ -13199,7 +13199,7 @@ do
         end
     end
 
-    _G.RHBrainrotTransparency = {
+    _G.heartleesBrainrotTransparency = {
         SetHeld = function(v) state.held = v and true or false; state.heldDirty = true end,
         SetBase = function(v) state.base = v and true or false; state.baseDirty = true end,
     }
