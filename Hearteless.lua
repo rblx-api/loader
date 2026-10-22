@@ -12150,14 +12150,17 @@ fn44()
 								end
 
 								tbl54.addAtmosphere()
-								local instance2 = Instance.new(v77[145])
+								local instance2 = Instance.new(v77[134])
 								instance2.Name = "IntroBanner"
-								instance2.BackgroundTransparency = v77[69]
-								instance2.Image = "rbxassetid://135088241492683"
-								instance2.ImageColor3 = Color3.fromRGB(255, v77[51], 255)
+								instance2.BackgroundTransparency = 1
+								instance2.Text = "hearteless"
+								instance2.TextColor3 = Color3.fromRGB(255, v77[51], 255)
 								instance2:SetAttribute("_NoAdaptTheme", true)
-								instance2.ImageTransparency = 1
-								instance2.ScaleType = Enum.ScaleType.Fit
+								instance2.TextTransparency = 1
+								instance2.Font = Enum.Font.GothamBlack
+								instance2.TextSize = flag28 and 36 or 72
+								instance2.TextXAlignment = Enum.TextXAlignment.Center
+								instance2.TextYAlignment = Enum.TextYAlignment.Center
 								instance2.AnchorPoint = Vector2.new(0.5, 0.5)
 								instance2.Position = UDim2.new(0.5, 0, 0.42, 0)
 								instance2.Size = flag28 and UDim2.new(0.38, 0, v77[164], 78) or UDim2.new(0.92, 0, 0, 170)
@@ -12510,7 +12513,7 @@ fn44()
 
 									local tweenInfo = TweenInfo.new(0.42, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 									TweenService:Create(frame2, tweenInfo, { BackgroundTransparency = v77[69] }):Play()
-									TweenService:Create(instance2, tweenInfo, { ImageTransparency = 1 }):Play()
+									TweenService:Create(instance2, tweenInfo, { TextTransparency = 1 }):Play()
 
 									if adaptCurrentIntroVariant == "gojo" then
 										if tbl54.scale then
@@ -12617,7 +12620,7 @@ fn44()
 									frame2.Visible = true
 									TweenService:Create(frame2, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { BackgroundTransparency = 0.5 }):Play()
 									TweenService:Create(blurEffect, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { Size = 10 }):Play()
-									TweenService:Create(instance2, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { ImageTransparency = 0 }):Play()
+									TweenService:Create(instance2, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { TextTransparency = 0 }):Play()
 
 									if adaptCurrentIntroVariant == "wheel" then
 										TweenService:Create(imageLabel, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { ImageTransparency = 0 }):Play()
@@ -13337,13 +13340,17 @@ fn44()
 							instance3.Parent = frame2
 							fn56(instance3, 14)
 							local instance4
-							instance4 = Instance.new(v77[145])
+							instance4 = Instance.new(v77[134])
 							instance4.Name = "LogoAsset"
 							instance4.BackgroundTransparency = 1
-							instance4.Image = "rbxassetid://135088241492683"
-							instance4.ScaleType = Enum.ScaleType.Fit
-							instance4.Size = UDim2.new(v77[164], v77[137], 0, 150)
-							instance4.Position = UDim2.new(v77[11], -150, 0, -18)
+							instance4.Text = "hearteless"
+							instance4.TextColor3 = tbl37.accent
+							instance4.TextSize = 42
+							instance4.Font = Enum.Font.GothamBlack
+							instance4.TextXAlignment = Enum.TextXAlignment.Center
+							instance4.TextYAlignment = Enum.TextYAlignment.Center
+							instance4.Size = UDim2.new(v77[164], v77[137], 0, 56)
+							instance4.Position = UDim2.new(v77[11], -150, 0, 10)
 							instance4.ZIndex = 2
 							instance4.Parent = frame2
 
@@ -20438,7 +20445,7 @@ fn44()
 										local accent = flag30 and tbl37.accent or Color3.fromRGB(v77[51], 255, 255)
 										local color2 = fn90(tbl37.accent, Color3.fromRGB(v77[51], 255, 255)) and Color3.fromRGB(0, 0, v77[164]) or tbl37.accent
 										instance3.ImageColor3 = accent
-										instance4.ImageColor3 = _G._AdaptInvertUI and color2 or tbl37.accent
+										instance4.TextColor3 = _G._AdaptInvertUI and color2 or tbl37.accent
 										imageButton.ImageColor3 = _G._AdaptInvertUI and color2 or Color3.fromRGB(255, 255, 255)
 
 										if _G._AdaptBtnImages then
@@ -20778,7 +20785,7 @@ fn44()
 
 											frame3.BackgroundColor3 = flag31 and Color3.fromRGB(255, 255, v77[51]) or Color3.fromRGB(0, 0, 0)
 											imageButton.ImageColor3 = flag31 and color2 or Color3.fromRGB(v77[51], 255, 255)
-											instance4.ImageColor3 = flag31 and color2 or tbl37.accent
+											instance4.TextColor3 = flag31 and color2 or tbl37.accent
 											fn69()
 											fn91()
 											adaptApplyImageTheme()
