@@ -71,7 +71,7 @@ pcall(function()
 
 end)
 -- Exported from Faulmor
--- title: heartlees
+-- title: hearteless
 -- format: faulmor.own-source
 -- exported_at: 2026-10-08T01:26:21.053Z
 
@@ -200,8 +200,8 @@ _isDraggingButton = false
 backgroundIndex = 1
 backgroundImages = {"78418040549415", "86952050926223", "91411557607071", "130901785905213", "88139170832911"}
 
-backgroundImageTransparency = 0.06
-backgroundMode = "Background 1"
+backgroundImageTransparency = 1
+backgroundMode = "None"
 backgroundSelectorLabel = nil
 miniBackgroundImage = nil
 autoGrabBackgroundImage = nil
@@ -377,29 +377,30 @@ function applyBackgroundMode(mode)
     end
 
     if main then
+        -- Fondo del menú principal siempre negro sólido (sin imagen)
         main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        local _curBgId = tostring(backgroundImages[backgroundIndex])
-        main.BackgroundTransparency = 1
+        main.BackgroundTransparency = 0
         local bgImage = main:FindFirstChild("BackgroundImage")
         if bgImage then
-            bgImage.Image = _bgAsset(backgroundImages[backgroundIndex])
-            bgImage.ImageTransparency = backgroundMode == "None" and 1 or backgroundImageTransparency
+            bgImage.Image = ""
+            bgImage.ImageTransparency = 1
         end
     end
     if miniBackgroundImage then
-        miniBackgroundImage.Image = _bgAsset(backgroundImages[backgroundIndex])
-        miniBackgroundImage.ImageTransparency = backgroundMode == "None" and 1 or math.clamp(backgroundImageTransparency + 0.25, 0, 1)
+        -- Mini botón mantiene imagen (no se tocan los botones)
+        miniBackgroundImage.Image = _bgAsset(backgroundImages[backgroundIndex] or backgroundImages[1])
+        miniBackgroundImage.ImageTransparency = math.clamp(0.06 + 0.25, 0, 1)
     end
-    if backgroundSelectorLabel then backgroundSelectorLabel.Text = backgroundDisplayName(backgroundMode) end
-    -- Primero actualiza todos los botones flotantes con el recurso seleccionado.
-    local floatingBg = _bgAsset(backgroundImages[backgroundIndex])
+    if backgroundSelectorLabel then backgroundSelectorLabel.Text = "Ninguno" end
+    -- Botones flotantes mantienen su imagen original (no se cambian)
+    local floatingBg = _bgAsset(backgroundImages[backgroundIndex] or backgroundImages[1])
     for i = #_floatingBackgroundImages, 1, -1 do
         local bg = _floatingBackgroundImages[i]
         if not bg or not bg.Parent then
             table.remove(_floatingBackgroundImages, i)
         else
             bg.Image = floatingBg
-            bg.ImageTransparency = backgroundMode == "None" and 1 or backgroundImageTransparency
+            bg.ImageTransparency = 0.06
         end
     end
     -- Auto Grab copia directamente la imagen de un botón flotante real.
@@ -414,7 +415,7 @@ function applyBackgroundMode(mode)
             end
         end
         autoGrabBackgroundImage.Image = (floatingSource and floatingSource.Image) or floatingBg
-        autoGrabBackgroundImage.ImageTransparency = backgroundMode == "None" and 1 or backgroundImageTransparency
+        autoGrabBackgroundImage.ImageTransparency = 0.06
     end
 end
 
@@ -425,7 +426,7 @@ task.spawn(function()
 end)
 
 local COLOR_THEMES = {
-    ["Gray"] = Color3.fromRGB(185, 115, 255),
+    ["Gray"] = Color3.fromRGB(255, 255, 255),
 }
 
 HEARTLEES_TITLE_THEMES = {
@@ -463,7 +464,7 @@ currentColorTheme = "Gray"
 selectedColor = COLOR_THEMES["Gray"]
 
 function getThemeColor() return selectedColor end
-ESP_ORANGE = Color3.fromRGB(180, 95, 255)
+ESP_ORANGE = Color3.fromRGB(255, 255, 255)
 
 function heartleesGradient(c)
     return ColorSequence.new({
@@ -524,7 +525,7 @@ function updateAllUIThemeColors(color)
 
     if pbFrame then
         local border = pbFrame:FindFirstChild("OuterStroke")
-        if border then border.Color = Color3.fromRGB(195, 130, 255) end
+        if border then border.Color = Color3.fromRGB(255, 255, 255) end
         local fpsNeon = pbFrame:FindFirstChild("FPSNeon", true)
         if fpsNeon then fpsNeon.TextColor3 = color end
         local pingNeon = pbFrame:FindFirstChild("PingNeon", true)
@@ -557,7 +558,7 @@ function updateAllUIThemeColors(color)
                         })
                     end
                 elseif child.Name == "SpeedLabel" then
-                    local purple = Color3.fromRGB(170, 70, 255)
+                    local purple = Color3.fromRGB(255, 255, 255)
                     local white = Color3.fromRGB(255, 255, 255)
                     child.TextColor3 = purple
                     local grad = child:FindFirstChildOfClass("UIGradient")
@@ -630,14 +631,14 @@ function updateAllUIThemeColors(color)
     if miniBtn then
         local stroke = miniBtn:FindFirstChildOfClass("UIStroke")
         if stroke then
-            stroke.Color = Color3.fromRGB(185, 100, 255)
+            stroke.Color = Color3.fromRGB(255, 255, 255)
             stroke.Transparency = 0.05
         end
         local rim = miniBtn:FindFirstChild("Rim")
         if rim then
             local rimStroke = rim:FindFirstChildOfClass("UIStroke")
             if rimStroke then
-                rimStroke.Color = Color3.fromRGB(185, 100, 255)
+                rimStroke.Color = Color3.fromRGB(255, 255, 255)
                 rimStroke.Transparency = 0.05
             end
         end
@@ -4874,7 +4875,7 @@ function startESPLine()
     end)
 end
 
-ENEMY_SPEED_COLOR = Color3.fromRGB(180, 95, 255)
+ENEMY_SPEED_COLOR = Color3.fromRGB(255, 255, 255)
 
 function _enemySpeedDrop(player)
     local old = enemySpeedLabels[player]
@@ -5111,7 +5112,7 @@ function setupSpeedIndicator(char)
     speedLabel.Position = UDim2.new(0, 0, 0, 0)
     speedLabel.BackgroundTransparency = 1
     speedLabel.Text = "0.0  -  " .. getSpeedModeName()
-    speedLabel.TextColor3 = Color3.fromRGB(170, 70, 255)
+    speedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     speedLabel.Font = Enum.Font.GothamBlack
     speedLabel.TextSize = 22
     speedLabel.TextXAlignment = Enum.TextXAlignment.Center
@@ -5122,7 +5123,7 @@ function setupSpeedIndicator(char)
     slStroke.Color = Color3.fromRGB(255, 255, 255)
     slStroke.Thickness = 1.8
     slStroke.Transparency = 0.05
-    applyShimmerToText(speedLabel, 0.9, Color3.fromRGB(170, 70, 255))
+    applyShimmerToText(speedLabel, 0.9, Color3.fromRGB(255, 255, 255))
 
     local dbb = Instance.new("BillboardGui", head)
     dbb.Name = "DiscordText"
@@ -5145,7 +5146,7 @@ function setupSpeedIndicator(char)
     dLabel.TextStrokeTransparency = 0
     dLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
     local dStroke = Instance.new("UIStroke", dLabel)
-    dStroke.Color = Color3.fromRGB(170, 70, 255)
+    dStroke.Color = Color3.fromRGB(255, 255, 255)
     dStroke.Thickness = 1.4
     dStroke.Transparency = 0.1
 end
@@ -8409,15 +8410,9 @@ function loadAllSettings()
     if State then State.bypassBatSpeed = BYPASS_AIMBOT_SPEED end
 
     backgroundIndex = _clamp(num(data.backgroundIndex, 1), 1, math.max(#backgroundImages, 1))
-    backgroundImageTransparency = _clamp(num(data.backgroundImageTransparency, 0.06), 0, 0.12)
-    local savedBackgroundMode = type(data.backgroundMode) == "string" and data.backgroundMode or ("Background " .. tostring(backgroundIndex))
-    local savedBackgroundIndex = tonumber(string.match(savedBackgroundMode, "^Background%s+(%d+)$"))
-    if savedBackgroundIndex and savedBackgroundIndex >= 1 and savedBackgroundIndex <= #backgroundImages then
-        backgroundIndex = savedBackgroundIndex
-        backgroundMode = "Background " .. tostring(savedBackgroundIndex)
-    else
-        backgroundMode = "Background " .. tostring(backgroundIndex)
-    end
+    backgroundImageTransparency = 1
+    -- Menú siempre con fondo negro sólido
+    backgroundMode = "None"
 
     floatingButtonScale = _clamp(num(data.floatingButtonScale, 1), 0.5, 2)
 
@@ -8645,7 +8640,7 @@ function resetToFactoryDefaults()
         autoCarryEnabled = false; autoCarryMode = "On Pick Up"
         if _G.__heartleesAutoCarryRestore then pcall(_G.__heartleesAutoCarryRestore) end
         if _G.__heartleesAutoCarryRefresh then pcall(_G.__heartleesAutoCarryRefresh) end
-        backgroundIndex = 1; backgroundImageTransparency = 0.06; backgroundMode = "Background 1"
+        backgroundIndex = 1; backgroundImageTransparency = 1; backgroundMode = "None"
         floatingButtonScale = 1
         currentAnimPack = "Off"; stopAnimPack()
         currentOutfitIndex = 1
@@ -9083,7 +9078,7 @@ function buildGui()
     main.Size = UDim2.new(0, GUI_W, 0, GUI_H)
     main.Position = savedMainPosition and UDim2.new(savedMainPosition.XScale, savedMainPosition.XOffset, savedMainPosition.YScale, savedMainPosition.YOffset) or UDim2.new(0, 12, 0.5, -210)
     main.BackgroundColor3 = Color3.fromRGB(0,0,0)
-    main.BackgroundTransparency = 1
+    main.BackgroundTransparency = 0
     main.BorderSizePixel = 0
     main.Active = true
     main.ClipsDescendants = true
@@ -9103,23 +9098,30 @@ function buildGui()
     headerImage.Size = UDim2.new(1, 0, 1, 0)
     headerImage.Position = UDim2.new(0, 0, 0, 0)
     headerImage.BackgroundTransparency = 1
-    headerImage.Image = "rbxassetid://129421984812930"
-    headerImage.ImageTransparency = 0
+    headerImage.Image = ""
+    headerImage.ImageTransparency = 1
+    headerImage.Visible = false
     headerImage.ScaleType = Enum.ScaleType.Fit
     headerImage.ZIndex = 8
     headerImage.ClipsDescendants = true
     Instance.new("UICorner", headerImage).CornerRadius = UDim.new(0, 8)
 
     local displayNameLbl = Instance.new("TextLabel", scriptHeader)
-    displayNameLbl.Size = UDim2.new(1, -96, 1, 0)
-    displayNameLbl.Position = UDim2.new(0, 48, 0, 0)
+    displayNameLbl.Size = UDim2.new(1, -16, 1, 0)
+    displayNameLbl.Position = UDim2.new(0, 8, 0, 0)
     displayNameLbl.BackgroundTransparency = 1
-    displayNameLbl.Text = ""
+    displayNameLbl.Text = "hearteless"
     displayNameLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
     displayNameLbl.Font = Enum.Font.GothamBlack
-    displayNameLbl.TextSize = 24
+    displayNameLbl.TextSize = 22
+    displayNameLbl.TextScaled = true
     displayNameLbl.TextXAlignment = Enum.TextXAlignment.Center
     displayNameLbl.ZIndex = 9
+    do
+        local lim = Instance.new("UITextSizeConstraint", displayNameLbl)
+        lim.MaxTextSize = 24
+        lim.MinTextSize = 14
+    end
 
     local usernameLbl = Instance.new("TextLabel", scriptHeader)
     usernameLbl.Size = UDim2.new(1, 0, 0, 1)
@@ -9141,8 +9143,8 @@ function buildGui()
     bgImage.Size = UDim2.new(1, 0, 1, 0)
     bgImage.Position = UDim2.new(0, 0, 0, 0)
     bgImage.BackgroundTransparency = 1
-    bgImage.Image = _bgAsset(backgroundImages[backgroundIndex])
-    bgImage.ImageTransparency = backgroundMode == "None" and 1 or backgroundImageTransparency
+    bgImage.Image = ""
+    bgImage.ImageTransparency = 1
     bgImage.ScaleType = Enum.ScaleType.Crop
     bgImage.ZIndex = 0
     bgImage.ClipsDescendants = true
@@ -9194,7 +9196,7 @@ function buildGui()
     miniBrand.Size = UDim2.new(1, -8, 1, 0)
     miniBrand.Position = UDim2.new(0, 4, 0, 0)
     miniBrand.BackgroundTransparency = 1
-    miniBrand.Text = "heartlees"
+    miniBrand.Text = "hearteless"
     miniBrand.Visible = false -- El título adaptable de abajo es el único rótulo visible.
     miniBrand.TextColor3 = Color3.fromRGB(255, 255, 255)
     miniBrand.Font = Enum.Font.GothamBold
@@ -9259,7 +9261,7 @@ function buildGui()
     miniTitle.AnchorPoint = Vector2.new(0.5, 0.5)
     miniTitle.Position = UDim2.new(0.5, 0, 0.5, 0)
     miniTitle.BackgroundTransparency = 1
-    miniTitle.Text = "heartlees"
+    miniTitle.Text = "hearteless"
     miniTitle.Font = Enum.Font.GothamBlack
     miniTitle.TextScaled = true
     miniTitle.TextWrapped = false
@@ -10872,7 +10874,7 @@ function buildGui()
     pbCorner.CornerRadius = UDim.new(0, 0)
     local pbStroke = Instance.new("UIStroke", pbFrame)
     pbStroke.Name = "OuterStroke"
-    pbStroke.Color = Color3.fromRGB(170, 70, 255)
+    pbStroke.Color = Color3.fromRGB(255, 255, 255)
     pbStroke.Thickness = 1.5
     pbStroke.Transparency = 0.18
 
@@ -10950,7 +10952,7 @@ function buildGui()
     stealTrack.ZIndex = 506
     Instance.new("UICorner", stealTrack).CornerRadius = UDim.new(0, 0)
     local trackStroke = Instance.new("UIStroke", stealTrack)
-    trackStroke.Color = Color3.fromRGB(170, 70, 255)
+    trackStroke.Color = Color3.fromRGB(255, 255, 255)
     trackStroke.Transparency = 0.15
     trackStroke.Thickness = 1
 
