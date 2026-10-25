@@ -1,6 +1,8 @@
 --[[
     RAPTURE DUEL - Script completo v8.0.61
-    CAMBIOS v8.0.61:
+    CAMBIOS v8.0.62:
+    - Visual: nueva sección ESP con ESP PLAYER (contorno blanco y miniatura) y ESP LINE
+    - Quitadas las opciones visuales Bat Skin, Speed Display y Show Speed de la interfaz
     - Botones flotantes (Platform, Bat Bypass, Insta Reset, TP Bat) sin borde negro
     - Platform muestra fondo morado al activarse (ya visible sin el borde)
     - Bat Bypass auto-equipa el bat y quita cualquier otra herramienta en mano
@@ -518,8 +520,7 @@ function playArrowSoundRT()
 end
 
 function playTabSoundRT()
-    if soundTabEnabled == false then return end
-    _sfxPlay("arrow", {volume = 0.6})
+    -- Silencio intencional al cambiar de categoría.
 end
 
 _G.RapturePlayUISound = playUISound
@@ -3381,10 +3382,10 @@ local function espCreateBox(char)
     local h = Instance.new("Highlight")
     h.Name = "RaptureESPBox"
     h.Adornee = char
-    h.FillColor = getThemeColor()
-    h.OutlineColor = Color3.fromRGB(0, 0, 0)
-    h.FillTransparency = 0.7
-    h.OutlineTransparency = 0.1
+    h.FillColor = Color3.fromRGB(255, 255, 255)
+    h.OutlineColor = Color3.fromRGB(255, 255, 255)
+    h.FillTransparency = 1
+    h.OutlineTransparency = 0
     h.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
     h.Parent = char
     return h
@@ -3392,29 +3393,42 @@ end
 
 local function espCreateBillboard(plr, char)
     if not char then return end
-    local head = char:FindFirstChild("Head")
-    if not head then return end
-    local old = head:FindFirstChild("RaptureESPAvatar")
+    -- Colocar la miniatura circular en el centro del personaje, no encima de la cabeza.
+    local anchor = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChild("UpperTorso") or char:FindFirstChild("Torso") or char:FindFirstChild("Head")
+    if not anchor then return end
+    local old = char:FindFirstChild("RaptureESPAvatar", true)
     if old then old:Destroy() end
     local bb = Instance.new("BillboardGui")
     bb.Name = "RaptureESPAvatar"
-    bb.Size = UDim2.new(0, 80, 0, 60)
-    bb.StudsOffset = Vector3.new(0, 2.5, 0)
+    bb.Size = UDim2.new(0, 52, 0, 52)
+    bb.StudsOffset = Vector3.new(0, 0, 0)
     bb.AlwaysOnTop = true
-    bb.Parent = head
-    local container = Instance.new("Frame", bb)
-    container.Size = UDim2.new(1, 0, 1, 0)
-    container.BackgroundTransparency = 1
-    local name = Instance.new("TextLabel", container)
-    name.Size = UDim2.new(1, 0, 0, 20)
-    name.Position = UDim2.new(0, 0, 0, 0)
-    name.BackgroundTransparency = 1
-    name.Text = plr.DisplayName or plr.Name
-    name.TextColor3 = getThemeColor()
-    name.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-    name.TextStrokeTransparency = 0.3
-    name.Font = Enum.Font.GothamBold
-    name.TextSize = 12
+    bb.LightInfluence = 0
+    bb.MaxDistance = 2500
+    bb.Parent = anchor
+
+    local avatar = Instance.new("ImageLabel")
+    avatar.Name = "SkinThumbnail"
+    avatar.AnchorPoint = Vector2.new(0.5, 0.5)
+    avatar.Position = UDim2.new(0.5, 0, 0.5, 0)
+    avatar.Size = UDim2.new(1, 0, 1, 0)
+    avatar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    avatar.BackgroundTransparency = 0.05
+    avatar.BorderSizePixel = 0
+    avatar.Image = ""
+    avatar.ScaleType = Enum.ScaleType.Crop
+    avatar.Parent = bb
+    Instance.new("UICorner", avatar).CornerRadius = UDim.new(1, 0)
+    local outline = Instance.new("UIStroke", avatar)
+    outline.Color = Color3.fromRGB(255, 255, 255)
+    outline.Thickness = 2
+    outline.Transparency = 0
+    task.spawn(function()
+        local ok, imageUrl = pcall(function()
+            return Players:GetUserThumbnailAsync(plr.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
+        end)
+        if ok and avatar and avatar.Parent then avatar.Image = imageUrl end
+    end)
     return bb
 end
 
@@ -3471,7 +3485,12 @@ function startESP()
             end
         end
         for plr, hl in pairs(espHighlightCache) do
-            if hl and hl.Parent then hl.FillColor = accent end
+            if hl and hl.Parent then
+                hl.FillColor = Color3.fromRGB(255, 255, 255)
+                hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+                hl.FillTransparency = 1
+                hl.OutlineTransparency = 0
+            end
         end
         for plr, billboard in pairs(espBillboardCache) do
             if billboard and billboard.Parent then
@@ -6406,6 +6425,15 @@ do
         if skAnimConn then skAnimConn:Disconnect(); skAnimConn = nil end
         skCurrentAnimPack = "Off"
     end
+    _G._RaptureSetAnimationPack = function(packName)
+        local char = LP.Character
+        if not char then return end
+        if packName == "Off" then
+            skStopAnimPack()
+            return
+        end
+        if ANIM_PACKS[packName] then skApplyAnimPack(char, packName) end
+    end
 
     local function skLoadAsset(assetId)
         assetId = tonumber(assetId)
@@ -7111,7 +7139,7 @@ function buildGui()
         btn.BackgroundColor3 = Color3.fromRGB(22, 22, 28)
         btn.BackgroundTransparency = 0.15
         btn.BorderSizePixel = 0
-        btn.Text = name
+        btn.Text = (name == "Config") and "SETTING" or string.upper(name)
         btn.TextColor3 = TAB_INACT
         btn.Font = Enum.Font.GothamBlack
         btn.TextSize = 11
@@ -7165,44 +7193,6 @@ function buildGui()
         end)
         table.insert(tabButtonsLocal, btn)
 
-        -- Permite reordenar categorías arrastrándolas horizontalmente.
-        local tabDragStartX = nil
-        local tabDragStartOrder = nil
-        local tabDidMove = false
-        btn.InputBegan:Connect(function(inp)
-            if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
-                tabDragStartX = inp.Position.X
-                tabDragStartOrder = btn.LayoutOrder
-                tabDidMove = false
-            end
-        end)
-        UIS.InputChanged:Connect(function(inp)
-            if tabDragStartX == nil then return end
-            if inp.UserInputType ~= Enum.UserInputType.MouseMovement and inp.UserInputType ~= Enum.UserInputType.Touch then return end
-            local dx = inp.Position.X - tabDragStartX
-            if math.abs(dx) > 12 then tabDidMove = true end
-            if not tabDidMove then return end
-            local centerX = btn.AbsolutePosition.X + btn.AbsoluteSize.X / 2
-            for _, other in ipairs(tabButtonsLocal) do
-                if other ~= btn then
-                    local otherCenter = other.AbsolutePosition.X + other.AbsoluteSize.X / 2
-                    if (dx > 0 and centerX < otherCenter and inp.Position.X >= otherCenter)
-                    or (dx < 0 and centerX > otherCenter and inp.Position.X <= otherCenter) then
-                        local order = btn.LayoutOrder
-                        btn.LayoutOrder = other.LayoutOrder
-                        other.LayoutOrder = order
-                        centerX = btn.AbsolutePosition.X + btn.AbsoluteSize.X / 2
-                    end
-                end
-            end
-        end)
-        btn.InputEnded:Connect(function(inp)
-            if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
-                tabDragStartX = nil
-                tabDragStartOrder = nil
-                tabDidMove = false
-            end
-        end)
     end
     tabButtons = tabButtonsLocal
     contentPages = contentPagesLocal
@@ -7243,6 +7233,15 @@ function buildGui()
         l.TextStrokeTransparency = 0.5
         l.ZIndex = 8
         return l
+    end
+    local function mkSectionHeader(page, title)
+        local row = mkRow(page, 30)
+        row.Name = title .. "SectionHeader"
+        row.BackgroundColor3 = Color3.fromRGB(24, 15, 38)
+        local label = mkLabel(row, string.upper(title))
+        label.TextColor3 = PURPLE_LIGHT
+        label.Size = UDim2.new(1, -20, 1, 0)
+        return row
     end
     local function mkPill(row, offset)
         local pill = Instance.new("Frame", row)
@@ -7724,6 +7723,36 @@ function buildGui()
         sectionTitle.TextXAlignment = Enum.TextXAlignment.Center
     end
     local combatPage = contentPages["Combat"]
+    -- Seccion BAT dentro de COMBAT
+    do
+        local section = mkRow(combatPage, 34)
+        section.Name = "CombatBatSection"
+        section.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+        local sectionTitle = mkLabel(section, "BAT")
+        sectionTitle.Size = UDim2.new(1, -24, 1, 0)
+        sectionTitle.Font = Enum.Font.GothamBlack
+        sectionTitle.TextSize = 14
+        sectionTitle.TextXAlignment = Enum.TextXAlignment.Center
+    end
+    batDesyncTpSetVisual = mkToggle(combatPage, "TP BAT", function(on)
+        if on then if not batDesyncTpEnabled then toggleBatDesyncTp() end
+        else if batDesyncTpEnabled then toggleBatDesyncTp() end end
+        task.defer(saveAllSettings)
+    end)
+    autoBatSetVisual = mkToggle(combatPage, "Bat Aimbot", function(on)
+        if on then enableAutoBat() else disableAutoBat() end
+        if mobSetAutoBat then mobSetAutoBat(on) end
+        task.defer(saveAllSettings)
+    end)
+    do local row = mkRow(combatPage); mkLabel(row, "Bat Aimbot Speed"); batSpeedBox = mkBox(row, BAT_AIMBOT_SPEED, 50, 60, function(v) if v > 0 and v <= 200 then BAT_AIMBOT_SPEED = v end end) end
+    batBypassSetVisual = mkToggle(combatPage, "Bat Bypass", function(on)
+        if on then
+            if not _G._RaptureBatBypass.enabled then _G.RaptureStartBatBypass() end
+        else
+            if _G._RaptureBatBypass.enabled then _G.RaptureStopBatBypass() end
+        end
+        task.defer(saveAllSettings)
+    end)
     setSyncAfterHitVisual = mkToggle(combatPage, "Synchronize After Hit", function(on)
         syncAfterHitEnabled = on
         if on then
@@ -7733,6 +7762,18 @@ function buildGui()
         end
         task.defer(saveAllSettings)
     end)
+
+    -- COUNTERS queda inmediatamente debajo de BAT
+    do
+        local section = mkRow(combatPage, 34)
+        section.Name = "CombatCountersSection"
+        section.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+        local sectionTitle = mkLabel(section, "COUNTERS")
+        sectionTitle.Size = UDim2.new(1, -24, 1, 0)
+        sectionTitle.Font = Enum.Font.GothamBlack
+        sectionTitle.TextSize = 14
+        sectionTitle.TextXAlignment = Enum.TextXAlignment.Center
+    end
     setBatCounterVisual = mkToggle(combatPage, "Bat Counter", function(on)
         batCounterEnabled = on
         if on then startBatCounter() else stopBatCounter() end
@@ -7750,7 +7791,7 @@ function buildGui()
         wrapper.Name = "TpDownWrapper"
         wrapper.Size = UDim2.new(1, -4, 0, 40)
         wrapper.BackgroundTransparency = 1
-        wrapper.LayoutOrder = getNextOrder(combatPage)
+        wrapper.LayoutOrder = 2
         wrapper.ClipsDescendants = true
         wrapper.ZIndex = 7
 
@@ -8004,19 +8045,13 @@ function buildGui()
             setAntiRagdollVersion(newV)
             if saveAmbitiousConfig then pcall(saveAmbitiousConfig) end
         end)
-    setInstaGrab = mkToggle(combatPage, "Auto Steal", function(on)
-        CONFIG.AUTO_STEAL_ENABLED = on
-        if on then pcall(startAutoSteal) else stopAutoSteal() end
-        updateProgressBarVisibility()
-    end)
-    do local row = mkRow(combatPage); mkLabel(row, "Steal Radius"); radInput = mkBox(row, CONFIG.STEAL_RANGE, 50, 60, function(v) if v and v >= 5 and v <= 300 then CONFIG.STEAL_RANGE = _floor(v+0.5); Steal.StealRadius = CONFIG.STEAL_RANGE; saveAllSettings() end end) end
-    bodyLockSetVisual = mkToggle(combatPage, "Body Lock", function(on)
+    bodyLockSetVisual = mkToggle(playerPage, "Body Lock", function(on)
         bodyLockEnabled = on
         if on then startBodyLock() else stopBodyLock() end
         task.defer(saveAllSettings)
     end)
     do
-        local row = mkRow(combatPage)
+        local row = mkRow(playerPage)
         mkLabel(row, "Body Lock Range")
         bodyLockRangeBox = mkBox(row, bodyLockRange, 50, 60, function(v)
             if v and v > 0 then
@@ -8025,7 +8060,7 @@ function buildGui()
             end
         end)
     end
-    spinSetVisual = mkToggle(combatPage, "Spin", function(on)
+    spinSetVisual = mkToggle(playerPage, "Spin", function(on)
         if on then
             if spinAutoBrainrotEnabled then
                 spinAutoBrainrotEnabled = false
@@ -8040,7 +8075,7 @@ function buildGui()
         task.defer(saveAllSettings)
     end)
     do
-        local row = mkRow(combatPage)
+        local row = mkRow(playerPage)
         mkLabel(row, "Speed Spin")
         spinSpeedBox = mkBox(row, spinSpeed, 50, 60, function(v)
             if v and v > 0 then
@@ -8049,7 +8084,7 @@ function buildGui()
             end
         end)
     end
-    spinAutoBrainrotSetVisual = mkToggle(combatPage, "Spin Auto Brainrot", function(on)
+    spinAutoBrainrotSetVisual = mkToggle(playerPage, "Spin Auto Brainrot", function(on)
         if on then
             if spinEnabled then
                 spinEnabled = false
@@ -8064,25 +8099,45 @@ function buildGui()
         end
         task.defer(saveAllSettings)
     end)
-    autoBatSetVisual = mkToggle(movementPage, "Bat Aimbot", function(on)
-        if on then enableAutoBat() else disableAutoBat() end
-        if mobSetAutoBat then mobSetAutoBat(on) end
-        task.defer(saveAllSettings)
-    end)
-    do local row = mkRow(movementPage); mkLabel(row, "Bat Aimbot Speed"); batSpeedBox = mkBox(row, BAT_AIMBOT_SPEED, 50, 60, function(v) if v > 0 and v <= 200 then BAT_AIMBOT_SPEED = v end end) end
-    batBypassSetVisual = mkToggle(movementPage, "Bat Bypass", function(on)
+    setUnwalkVisual = mkToggle(playerPage, "Unwalk", function(on)
+        unwalkEnabled = on
         if on then
-            if not _G._RaptureBatBypass.enabled then _G.RaptureStartBatBypass() end
+            startUnwalk()
         else
-            if _G._RaptureBatBypass.enabled then _G.RaptureStopBatBypass() end
+            stopUnwalk()
         end
         task.defer(saveAllSettings)
     end)
-    batDesyncTpSetVisual = mkToggle(movementPage, "TP BAT", function(on)
-        if on then if not batDesyncTpEnabled then toggleBatDesyncTp() end
-        else if batDesyncTpEnabled then toggleBatDesyncTp() end end
+
+    -- Sección STEAL debajo de todas las opciones de PLAYER.
+    do
+        local section = mkRow(movementPage, 34)
+        section.Name = "MovementStealSection"
+        section.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+        local sectionTitle = mkLabel(section, "STEAL")
+        sectionTitle.Size = UDim2.new(1, -24, 1, 0)
+        sectionTitle.Font = Enum.Font.GothamBlack
+        sectionTitle.TextSize = 14
+        sectionTitle.TextXAlignment = Enum.TextXAlignment.Center
+    end
+    setInstaGrab = mkToggle(movementPage, "Auto Steal", function(on)
+        CONFIG.AUTO_STEAL_ENABLED = on
+        if on then pcall(startAutoSteal) else stopAutoSteal() end
+        updateProgressBarVisibility()
         task.defer(saveAllSettings)
     end)
+    do
+        local row = mkRow(movementPage)
+        mkLabel(row, "Steal Radius")
+        radInput = mkBox(row, CONFIG.STEAL_RANGE, 50, 60, function(v)
+            if v and v >= 5 and v <= 300 then
+                CONFIG.STEAL_RANGE = _floor(v + 0.5)
+                Steal.StealRadius = CONFIG.STEAL_RANGE
+                if radInput then radInput.Text = tostring(CONFIG.STEAL_RANGE) end
+                saveAllSettings()
+            end
+        end)
+    end
     dropBrainrotSetVisual = mkToggle(movementPage, "Drop Brainrot", function(on)
         if on then executeDropWithToggle(function(v) dropBrainrotSetVisual(v); if mobSetDropBR then mobSetDropBR(v) end end) end
     end)
@@ -8098,13 +8153,262 @@ function buildGui()
         if mobSetAutoRight then mobSetAutoRight(on) end
         task.defer(saveAllSettings)
     end)
+
+    -- Orden fijo de secciones: PLAYER siempre arriba y BUTTONS siempre al final.
+    do
+        local buttonOrder = {
+            ["TP DOWN"] = 21,
+            ["Drop Brainrot"] = 26,
+            ["Auto Left"] = 27,
+            ["Auto Right"] = 28,
+        }
+        local playerOrder = {
+            ["Ragdoll Countdown"] = 2,
+            ["Anti Die"] = 3,
+            ["Infinite Jump"] = 4,
+            ["Anti Fling"] = 5,
+            ["Anti Ragdoll"] = 6,
+            ["Anti Ragdoll Version"] = 7,
+            ["Body Lock"] = 8,
+            ["Body Lock Range"] = 9,
+            ["Spin"] = 10,
+            ["Speed Spin"] = 11,
+            ["Spin Auto Brainrot"] = 12,
+            ["Unwalk"] = 13,
+            ["Auto Steal"] = 15,
+            ["Steal Radius"] = 16,
+        }
+        local buttonHeader = movementPage:FindFirstChild("MovementButtonsSection")
+        local playerHeader = movementPage:FindFirstChild("MovementPlayerSection")
+        local stealHeader = movementPage:FindFirstChild("MovementStealSection")
+        if playerHeader then playerHeader.LayoutOrder = 1 end
+        if stealHeader then stealHeader.LayoutOrder = 14 end
+        if buttonHeader then buttonHeader.LayoutOrder = 20 end
+        for _, child in ipairs(movementPage:GetChildren()) do
+            if child:IsA("GuiObject") then
+                if child.Name == "TpDownWrapper" then
+                    child.LayoutOrder = buttonOrder["TP DOWN"]
+                else
+                    local foundText = nil
+                    for _, descendant in ipairs(child:GetDescendants()) do
+                        if descendant:IsA("TextLabel") then
+                            local txt = descendant.Text
+                            if buttonOrder[txt] or playerOrder[txt] then
+                                foundText = txt
+                                break
+                            end
+                        end
+                    end
+                    if foundText then
+                        child.LayoutOrder = buttonOrder[foundText] or playerOrder[foundText]
+                    end
+                end
+            end
+        end
+    end
+
     local visualPage = contentPages["Visual"]
 
-    if _G._RaptureBatSkinUIBuild then
-        _G._RaptureBatSkinUIBuild(visualPage, mkRow, mkLabel)
+
+    -- OPTIMIZATION section: use standard toggle rows (no expandable arrows).
+    do
+        local optimizationHeader = mkRow(visualPage, 38)
+        local optimizationTitle = mkLabel(optimizationHeader, "OPTIMIZATION")
+        if optimizationTitle and optimizationTitle:IsA("TextLabel") then
+            optimizationTitle.Size = UDim2.new(1, -20, 1, 0)
+            optimizationTitle.TextXAlignment = Enum.TextXAlignment.Center
+            optimizationTitle.Font = Enum.Font.GothamBlack
+            optimizationTitle.TextSize = 14
+        end
     end
+
+    setXrayBaseVisual = mkToggle(visualPage, "X-Ray", function(on)
+        xrayBaseEnabled = on
+        if _G._XrayBaseSet then _G._XrayBaseSet(on) end
+        task.defer(saveAllSettings)
+    end)
+    setXrayBrainrotVisual = mkToggle(visualPage, "X-Ray Brainrot", function(on)
+        xrayBrainrotEnabled = on
+        if _G._XrayBrainrotSet then _G._XrayBrainrotSet(on) end
+        task.defer(saveAllSettings)
+    end)
+    setAntiLagVisual = mkToggle(visualPage, "Anti Lag", function(on)
+        if on then enableAntiLag() else disableAntiLag() end
+        task.defer(saveAllSettings)
+    end)
+
+    -- Speed Display and Show Speed controls removed from the Visual page as requested.
+    do
+        local espHeader = mkRow(visualPage, 38)
+        local espTitle = mkLabel(espHeader, "ESP")
+        if espTitle and espTitle:IsA("TextLabel") then
+            espTitle.Size = UDim2.new(1, -20, 1, 0)
+            espTitle.TextXAlignment = Enum.TextXAlignment.Center
+            espTitle.Font = Enum.Font.GothamBlack
+            espTitle.TextSize = 14
+        end
+    end
+    setESPVisual = mkToggle(visualPage, "ESP PLAYER", function(on)
+        if on then startESP() else stopESP() end
+        task.defer(saveAllSettings)
+    end)
+
+    local espLineEnabled = false
+    local espLineObjects = {}
+    local espLineConn = nil
+    local function clearESPLines()
+        if espLineConn then espLineConn:Disconnect(); espLineConn = nil end
+        for plr, line in pairs(espLineObjects) do pcall(function() line:Remove() end); espLineObjects[plr] = nil end
+    end
+    local function setESPLines(on)
+        espLineEnabled = on
+        clearESPLines()
+        if not on then return end
+        if not Drawing or not Drawing.new then return end
+        for _, plr in ipairs(Players:GetPlayers()) do
+            if plr ~= LP then
+                local ok, line = pcall(function() return Drawing.new("Line") end)
+                if ok and line then
+                    line.Thickness = 1.5
+                    line.Color = Color3.fromRGB(255, 255, 255)
+                    line.Transparency = 1
+                    line.Visible = false
+                    espLineObjects[plr] = line
+                end
+            end
+        end
+        espLineConn = RunService.RenderStepped:Connect(function()
+            local camera = workspace.CurrentCamera
+            if not camera then return end
+            local viewport = camera.ViewportSize
+            local origin = Vector2.new(viewport.X / 2, viewport.Y)
+            for plr, line in pairs(espLineObjects) do
+                local char = plr.Character
+                local root = char and char:FindFirstChild("HumanoidRootPart")
+                if root then
+                    local pos, visible = camera:WorldToViewportPoint(root.Position)
+                    line.From = origin
+                    line.To = Vector2.new(pos.X, pos.Y)
+                    line.Color = Color3.fromRGB(255, 255, 255)
+                    line.Visible = visible and pos.Z > 0
+                else
+                    line.Visible = false
+                end
+            end
+        end)
+    end
+    setESPLinesVisual = mkToggle(visualPage, "ESP LINE", function(on)
+        setESPLines(on)
+        task.defer(saveAllSettings)
+    end)
+    Conns.espLinePlayerAdded = Players.PlayerAdded:Connect(function(plr)
+        if espLineEnabled and plr ~= LP and Drawing and Drawing.new then
+            local ok, line = pcall(function() return Drawing.new("Line") end)
+            if ok and line then line.Thickness = 1.5; line.Color = Color3.fromRGB(255,255,255); line.Visible = false; espLineObjects[plr] = line end
+        end
+    end)
+    Conns.espLinePlayerRemoving = Players.PlayerRemoving:Connect(function(plr)
+        local line = espLineObjects[plr]
+        if line then pcall(function() line:Remove() end); espLineObjects[plr] = nil end
+    end)
+
+    do
+        local cameraHeader = mkRow(visualPage, 38)
+        local cameraTitle = mkLabel(cameraHeader, "CAMARA")
+        if cameraTitle and cameraTitle:IsA("TextLabel") then
+            cameraTitle.Size = UDim2.new(1, -20, 1, 0)
+            cameraTitle.TextXAlignment = Enum.TextXAlignment.Center
+            cameraTitle.Font = Enum.Font.GothamBlack
+            cameraTitle.TextSize = 14
+        end
+    end
+    setFovVisual = mkToggle(visualPage, "FOV", function(on)
+        if on then enableCustomFov() else disableCustomFov() end
+        task.defer(saveAllSettings)
+    end)
+    if setFovVisual then setFovVisual(fovEnabled) end
+    do
+        local row = mkRow(visualPage)
+        mkLabel(row, "FOV Value")
+        local fovBox = mkBox(row, fovValue, 50, 60, function(v)
+            if v and v >= 20 and v <= 120 then
+                fovValue = _floor(v + 0.5)
+                if not fovEnabled then enableCustomFov(); if setFovVisual then setFovVisual(true) end end
+                local cam = workspace.CurrentCamera
+                if cam then pcall(function() cam.FieldOfView = fovValue end) end
+                saveAllSettings()
+            end
+        end)
+        fovSliderSet = function(val) if fovBox then fovBox.Text = tostring(val) end end
+    end
+    do
+        local row = mkRow(visualPage, 40)
+        mkLabel(row, "Stretch Rez")
+        local stretchPill, stretchDot = mkPill(row, 10)
+        local stretchOn = stretchEnabled
+        local function setStretch(s)
+            stretchOn = s
+            animPill(stretchPill, stretchDot, s)
+            if s then enableStretch() else disableStretch() end
+            stretchEnabled = s
+            task.defer(saveAllSettings)
+        end
+        animPill(stretchPill, stretchDot, stretchOn)
+        local stretchClk = Instance.new("TextButton", stretchPill)
+        stretchClk.Size = UDim2.new(1,0,1,0)
+        stretchClk.BackgroundTransparency = 1
+        stretchClk.Text = ""
+        stretchClk.ZIndex = 10
+        stretchClk.MouseButton1Click:Connect(function()
+            playToggleSound()
+            setStretch(not stretchOn)
+        end)
+        _G.stretchToggleSetter = setStretch
+    end
+    do
+        local row = mkRow(visualPage)
+        mkLabel(row, "Stretch Value")
+        stretchValueBox = mkBox(row, stretchValue, 50, 60, function(v)
+            if v and v >= 0.3 and v <= 1.5 then
+                stretchValue = v
+                if stretchEnabled then disableStretch(); enableStretch() end
+                saveAllSettings()
+            end
+        end)
+    end
+    -- EDIT section is intentionally the last section in the Visual category.
+    do
+        local editHeader = mkRow(visualPage, 38)
+        editHeader.Name = "VisualEditSection"
+        local editTitle = mkLabel(editHeader, "EDIT")
+        if editTitle and editTitle:IsA("TextLabel") then
+            editTitle.Size = UDim2.new(1, -20, 1, 0)
+            editTitle.TextXAlignment = Enum.TextXAlignment.Center
+            editTitle.Font = Enum.Font.GothamBlack
+            editTitle.TextSize = 14
+        end
+    end
+
     if _G._RaptureSkinUIBuild then
         _G._RaptureSkinUIBuild(visualPage, mkRow, mkLabel)
+    end
+
+    do
+        local row = mkRow(visualPage, 44)
+        mkLabel(row, "Background Image")
+        local btn = Instance.new("TextButton", row)
+        btn.Size = UDim2.new(0, 80, 0, 24)
+        btn.Position = UDim2.new(1, -92, 0.5, -12)
+        btn.BackgroundColor3 = Color3.fromRGB(18, 14, 24)
+        btn.BackgroundTransparency = 0.3
+        btn.BorderSizePixel = 0
+        btn.Text = "PICK"
+        btn.TextColor3 = getThemeColor()
+        btn.Font = Enum.Font.GothamBlack
+        btn.TextSize = 10
+        btn.ZIndex = 8
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 12)
+        btn.Activated:Connect(function() openImagePicker() end)
     end
 
     do
@@ -8192,535 +8496,93 @@ function buildGui()
     end
 
     do
-        local xrayBaseWrapper = Instance.new("Frame", visualPage)
-        xrayBaseWrapper.Name = "XrayBaseWrapper"
-        xrayBaseWrapper.Size = UDim2.new(1, -4, 0, 40)
-        xrayBaseWrapper.BackgroundTransparency = 1
-        xrayBaseWrapper.LayoutOrder = getNextOrder(visualPage)
-        xrayBaseWrapper.ClipsDescendants = true
-        xrayBaseWrapper.ZIndex = 7
-
-        local header = Instance.new("Frame", xrayBaseWrapper)
-        header.Size = UDim2.new(1, 0, 0, 40)
-        header.BackgroundColor3 = ROW_BG
-        header.BackgroundTransparency = 0.05
-        header.BorderSizePixel = 0
-        header.ZIndex = 8
-        Instance.new("UICorner", header).CornerRadius = UDim.new(0, 10)
-        local hdrStroke = Instance.new("UIStroke", header)
-        hdrStroke.Color = BLACK_STROKE
-        hdrStroke.Thickness = BTN_STROKE_THICKNESS
-        hdrStroke.Transparency = 0.2
-        local hdrLabel = Instance.new("TextLabel", header)
-        hdrLabel.Size = UDim2.new(1, -60, 1, 0)
-        hdrLabel.Position = UDim2.new(0, 12, 0, 0)
-        hdrLabel.BackgroundTransparency = 1
-        hdrLabel.Text = "X-Ray (Base)"
-        hdrLabel.TextColor3 = WHITE
-        hdrLabel.Font = Enum.Font.GothamBold
-        hdrLabel.TextSize = 12
-        hdrLabel.TextXAlignment = Enum.TextXAlignment.Left
-        hdrLabel.ZIndex = 9
-        local arrow = Instance.new("TextButton", header)
-        arrow.Name = "Arrow"
-        arrow.Size = UDim2.new(0, 30, 0, 30)
-        arrow.Position = UDim2.new(1, -36, 0.5, -15)
-        arrow.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
-        arrow.BackgroundTransparency = 0.25
-        arrow.BorderSizePixel = 0
-        arrow.Text = "v"
-        arrow.TextColor3 = WHITE
-        arrow.Font = Enum.Font.GothamBold
-        arrow.TextSize = 14
-        arrow.AutoButtonColor = false
-        arrow.ZIndex = 10
-        Instance.new("UICorner", arrow).CornerRadius = UDim.new(0, 8)
-        local arrowStroke = Instance.new("UIStroke", arrow)
-        arrowStroke.Color = PURPLE_LIGHT
-        arrowStroke.Thickness = BTN_STROKE_THICKNESS
-        arrowStroke.Transparency = 0.35
-
-        local holder = Instance.new("Frame", xrayBaseWrapper)
-        holder.Size = UDim2.new(1, 0, 0, 0)
-        holder.Position = UDim2.new(0, 0, 0, 42)
-        holder.BackgroundTransparency = 1
-        holder.ClipsDescendants = true
-        holder.Visible = false
-        holder.ZIndex = 7
-
-        local innerPage = Instance.new("Frame", holder)
-        innerPage.Size = UDim2.new(1, 0, 1, 0)
-        innerPage.BackgroundTransparency = 1
-        innerPage.ZIndex = 8
-
-        local xrayBaseToggleRow = Instance.new("Frame", innerPage)
-        xrayBaseToggleRow.Size = UDim2.new(1, 0, 0, 40)
-        xrayBaseToggleRow.BackgroundColor3 = ROW_BG
-        xrayBaseToggleRow.BackgroundTransparency = 0.05
-        xrayBaseToggleRow.BorderSizePixel = 0
-        xrayBaseToggleRow.ZIndex = 9
-        Instance.new("UICorner", xrayBaseToggleRow).CornerRadius = UDim.new(0, 10)
-        local xrayBaseToggleLbl = Instance.new("TextLabel", xrayBaseToggleRow)
-        xrayBaseToggleLbl.Size = UDim2.new(0.6, 0, 1, 0)
-        xrayBaseToggleLbl.Position = UDim2.new(0, 12, 0, 0)
-        xrayBaseToggleLbl.BackgroundTransparency = 1
-        xrayBaseToggleLbl.Text = "Activar X-Ray Base"
-        xrayBaseToggleLbl.TextColor3 = WHITE
-        xrayBaseToggleLbl.Font = Enum.Font.GothamBold
-        xrayBaseToggleLbl.TextSize = 12
-        xrayBaseToggleLbl.TextXAlignment = Enum.TextXAlignment.Left
-        xrayBaseToggleLbl.ZIndex = 10
-        local xrayBasePill, xrayBaseDot = mkPillVision(xrayBaseToggleRow, 10)
-        local xrayBaseOn = xrayBaseEnabled
-        local function setXrayBasePill(s)
-            xrayBaseOn = s
-            animPillVision(xrayBasePill, xrayBaseDot, s)
-        end
-        setXrayBasePill(xrayBaseOn)
-        local xrayBaseClk = Instance.new("TextButton", xrayBasePill)
-        xrayBaseClk.Size = UDim2.new(1,0,1,0)
-        xrayBaseClk.BackgroundTransparency = 1
-        xrayBaseClk.Text = ""
-        xrayBaseClk.AutoButtonColor = false
-        xrayBaseClk.ZIndex = 10
-        xrayBaseClk.MouseButton1Click:Connect(function()
-            playToggleSound()
-            xrayBaseOn = not xrayBaseOn
-            setXrayBasePill(xrayBaseOn)
-            xrayBaseEnabled = xrayBaseOn
-            if _G._XrayBaseSet then _G._XrayBaseSet(xrayBaseOn) end
-            if setXrayBaseVisual then setXrayBaseVisual(xrayBaseOn) end
-            task.defer(saveAllSettings)
-        end)
-        setXrayBaseVisual = function(s) setXrayBasePill(s) end
-
-        local expanded = false
-        local contentHeight = 40
-        arrow.MouseButton1Click:Connect(function()
-            playArrowSound()
-            expanded = not expanded
-            if expanded then
-                holder.Visible = true
-                TS:Create(holder, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Size = UDim2.new(1, 0, 0, contentHeight) }):Play()
-                TS:Create(xrayBaseWrapper, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Size = UDim2.new(1, -4, 0, 40 + contentHeight + 2) }):Play()
-                TS:Create(arrow, TweenInfo.new(0.2), { Rotation = 180 }):Play()
-            else
-                TS:Create(holder, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { Size = UDim2.new(1, 0, 0, 0) }):Play()
-                TS:Create(xrayBaseWrapper, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { Size = UDim2.new(1, -4, 0, 40) }):Play()
-                TS:Create(arrow, TweenInfo.new(0.2), { Rotation = 0 }):Play()
-                task.delay(0.22, function()
-                    if not expanded then holder.Visible = false end
-                end)
-            end
-        end)
-    end
-
-    do
-        local xrayBrainWrapper = Instance.new("Frame", visualPage)
-        xrayBrainWrapper.Name = "XrayBrainWrapper"
-        xrayBrainWrapper.Size = UDim2.new(1, -4, 0, 40)
-        xrayBrainWrapper.BackgroundTransparency = 1
-        xrayBrainWrapper.LayoutOrder = getNextOrder(visualPage)
-        xrayBrainWrapper.ClipsDescendants = true
-        xrayBrainWrapper.ZIndex = 7
-
-        local header = Instance.new("Frame", xrayBrainWrapper)
-        header.Size = UDim2.new(1, 0, 0, 40)
-        header.BackgroundColor3 = ROW_BG
-        header.BackgroundTransparency = 0.05
-        header.BorderSizePixel = 0
-        header.ZIndex = 8
-        Instance.new("UICorner", header).CornerRadius = UDim.new(0, 10)
-        local hdrStroke = Instance.new("UIStroke", header)
-        hdrStroke.Color = BLACK_STROKE
-        hdrStroke.Thickness = BTN_STROKE_THICKNESS
-        hdrStroke.Transparency = 0.2
-        local hdrLabel = Instance.new("TextLabel", header)
-        hdrLabel.Size = UDim2.new(1, -60, 1, 0)
-        hdrLabel.Position = UDim2.new(0, 12, 0, 0)
-        hdrLabel.BackgroundTransparency = 1
-        hdrLabel.Text = "X-Ray (Brainrot)"
-        hdrLabel.TextColor3 = WHITE
-        hdrLabel.Font = Enum.Font.GothamBold
-        hdrLabel.TextSize = 12
-        hdrLabel.TextXAlignment = Enum.TextXAlignment.Left
-        hdrLabel.ZIndex = 9
-        local arrow = Instance.new("TextButton", header)
-        arrow.Name = "Arrow"
-        arrow.Size = UDim2.new(0, 30, 0, 30)
-        arrow.Position = UDim2.new(1, -36, 0.5, -15)
-        arrow.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
-        arrow.BackgroundTransparency = 0.25
-        arrow.BorderSizePixel = 0
-        arrow.Text = "v"
-        arrow.TextColor3 = WHITE
-        arrow.Font = Enum.Font.GothamBold
-        arrow.TextSize = 14
-        arrow.AutoButtonColor = false
-        arrow.ZIndex = 10
-        Instance.new("UICorner", arrow).CornerRadius = UDim.new(0, 8)
-        local arrowStroke = Instance.new("UIStroke", arrow)
-        arrowStroke.Color = PURPLE_LIGHT
-        arrowStroke.Thickness = BTN_STROKE_THICKNESS
-        arrowStroke.Transparency = 0.35
-
-        local holder = Instance.new("Frame", xrayBrainWrapper)
-        holder.Size = UDim2.new(1, 0, 0, 0)
-        holder.Position = UDim2.new(0, 0, 0, 42)
-        holder.BackgroundTransparency = 1
-        holder.ClipsDescendants = true
-        holder.Visible = false
-        holder.ZIndex = 7
-
-        local innerPage = Instance.new("Frame", holder)
-        innerPage.Size = UDim2.new(1, 0, 1, 0)
-        innerPage.BackgroundTransparency = 1
-        innerPage.ZIndex = 8
-
-        local xrayBrainToggleRow = Instance.new("Frame", innerPage)
-        xrayBrainToggleRow.Size = UDim2.new(1, 0, 0, 40)
-        xrayBrainToggleRow.BackgroundColor3 = ROW_BG
-        xrayBrainToggleRow.BackgroundTransparency = 0.05
-        xrayBrainToggleRow.BorderSizePixel = 0
-        xrayBrainToggleRow.ZIndex = 9
-        Instance.new("UICorner", xrayBrainToggleRow).CornerRadius = UDim.new(0, 10)
-        local xrayBrainToggleLbl = Instance.new("TextLabel", xrayBrainToggleRow)
-        xrayBrainToggleLbl.Size = UDim2.new(0.6, 0, 1, 0)
-        xrayBrainToggleLbl.Position = UDim2.new(0, 12, 0, 0)
-        xrayBrainToggleLbl.BackgroundTransparency = 1
-        xrayBrainToggleLbl.Text = "Activar X-Ray Brainrot"
-        xrayBrainToggleLbl.TextColor3 = WHITE
-        xrayBrainToggleLbl.Font = Enum.Font.GothamBold
-        xrayBrainToggleLbl.TextSize = 12
-        xrayBrainToggleLbl.TextXAlignment = Enum.TextXAlignment.Left
-        xrayBrainToggleLbl.ZIndex = 10
-        local xrayBrainPill, xrayBrainDot = mkPillVision(xrayBrainToggleRow, 10)
-        local xrayBrainOn = xrayBrainrotEnabled
-        local function setXrayBrainPill(s)
-            xrayBrainOn = s
-            animPillVision(xrayBrainPill, xrayBrainDot, s)
-        end
-        setXrayBrainPill(xrayBrainOn)
-        local xrayBrainClk = Instance.new("TextButton", xrayBrainPill)
-        xrayBrainClk.Size = UDim2.new(1,0,1,0)
-        xrayBrainClk.BackgroundTransparency = 1
-        xrayBrainClk.Text = ""
-        xrayBrainClk.AutoButtonColor = false
-        xrayBrainClk.ZIndex = 10
-        xrayBrainClk.MouseButton1Click:Connect(function()
-            playToggleSound()
-            xrayBrainOn = not xrayBrainOn
-            setXrayBrainPill(xrayBrainOn)
-            xrayBrainrotEnabled = xrayBrainOn
-            if _G._XrayBrainrotSet then _G._XrayBrainrotSet(xrayBrainOn) end
-            if setXrayBrainrotVisual then setXrayBrainrotVisual(xrayBrainOn) end
-            task.defer(saveAllSettings)
-        end)
-        setXrayBrainrotVisual = function(s) setXrayBrainPill(s) end
-
-        local expanded = false
-        local contentHeight = 40
-        arrow.MouseButton1Click:Connect(function()
-            playArrowSound()
-            expanded = not expanded
-            if expanded then
-                holder.Visible = true
-                TS:Create(holder, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Size = UDim2.new(1, 0, 0, contentHeight) }):Play()
-                TS:Create(xrayBrainWrapper, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Size = UDim2.new(1, -4, 0, 40 + contentHeight + 2) }):Play()
-                TS:Create(arrow, TweenInfo.new(0.2), { Rotation = 180 }):Play()
-            else
-                TS:Create(holder, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { Size = UDim2.new(1, 0, 0, 0) }):Play()
-                TS:Create(xrayBrainWrapper, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { Size = UDim2.new(1, -4, 0, 40) }):Play()
-                TS:Create(arrow, TweenInfo.new(0.2), { Rotation = 0 }):Play()
-                task.delay(0.22, function()
-                    if not expanded then holder.Visible = false end
-                end)
-            end
-        end)
-    end
-
-    do
-        local wrapper = Instance.new("Frame", visualPage)
-        wrapper.Name = "SpeedDisplayWrapper"
-        wrapper.Size = UDim2.new(1, -4, 0, 40)
-        wrapper.BackgroundTransparency = 1
-        wrapper.LayoutOrder = getNextOrder(visualPage)
-        wrapper.ClipsDescendants = true
-        wrapper.ZIndex = 7
-
-        local header = Instance.new("Frame", wrapper)
-        header.Size = UDim2.new(1, 0, 0, 40)
-        header.BackgroundColor3 = ROW_BG
-        header.BackgroundTransparency = 0.05
-        header.BorderSizePixel = 0
-        header.ZIndex = 8
-        Instance.new("UICorner", header).CornerRadius = UDim.new(0, 10)
-        local hStroke = Instance.new("UIStroke", header)
-        hStroke.Color = BLACK_STROKE
-        hStroke.Thickness = BTN_STROKE_THICKNESS
-        hStroke.Transparency = 0.2
-        registerNeonSweep(header)
-
-        local hLabel = Instance.new("TextLabel", header)
-        hLabel.Size = UDim2.new(1, -180, 1, 0)
-        hLabel.Position = UDim2.new(0, 12, 0, 0)
-        hLabel.BackgroundTransparency = 1
-        hLabel.Text = "Speed Display"
-        hLabel.TextColor3 = WHITE
-        hLabel.Font = Enum.Font.GothamBold
-        hLabel.TextSize = 12
-        hLabel.TextXAlignment = Enum.TextXAlignment.Left
-        hLabel.ZIndex = 9
-
-        local hValue = Instance.new("TextLabel", header)
-        hValue.Size = UDim2.new(0, 110, 1, 0)
-        hValue.Position = UDim2.new(1, -146, 0, 0)
-        hValue.BackgroundTransparency = 1
-        hValue.Text = speedDisplayMode or "Speed and Mode"
-        hValue.TextColor3 = PURPLE_LIGHT
-        hValue.Font = Enum.Font.GothamBold
-        hValue.TextSize = 10
-        hValue.TextXAlignment = Enum.TextXAlignment.Right
-        hValue.ZIndex = 9
-
-        local hArrow = Instance.new("TextButton", header)
-        hArrow.Name = "Arrow"
-        hArrow.Size = UDim2.new(0, 30, 0, 30)
-        hArrow.Position = UDim2.new(1, -36, 0.5, -15)
-        hArrow.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
-        hArrow.BackgroundTransparency = 0.25
-        hArrow.BorderSizePixel = 0
-        hArrow.Text = "v"
-        hArrow.TextColor3 = WHITE
-        hArrow.Font = Enum.Font.GothamBold
-        hArrow.TextSize = 14
-        hArrow.AutoButtonColor = false
-        hArrow.ZIndex = 10
-        Instance.new("UICorner", hArrow).CornerRadius = UDim.new(0, 8)
-        local hArrowStroke = Instance.new("UIStroke", hArrow)
-        hArrowStroke.Color = PURPLE_LIGHT
-        hArrowStroke.Thickness = BTN_STROKE_THICKNESS
-        hArrowStroke.Transparency = 0.35
-
-        local holder = Instance.new("Frame", wrapper)
-        holder.Name = "OptionsHolder"
-        holder.Size = UDim2.new(1, 0, 0, 0)
-        holder.Position = UDim2.new(0, 0, 0, 42)
-        holder.BackgroundTransparency = 1
-        holder.ClipsDescendants = true
-        holder.Visible = false
-        holder.ZIndex = 7
-
-        local optionsBox = Instance.new("Frame", holder)
-        optionsBox.Size = UDim2.new(1, 0, 0, 42)
-        optionsBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        optionsBox.BackgroundTransparency = 0.15
-        optionsBox.BorderSizePixel = 0
-        optionsBox.ZIndex = 8
-        Instance.new("UICorner", optionsBox).CornerRadius = UDim.new(0, 10)
-
-        local bgFrame = Instance.new("Frame", optionsBox)
-        bgFrame.Size = UDim2.new(1, -16, 1, -8)
-        bgFrame.Position = UDim2.new(0, 8, 0, 4)
-        bgFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        bgFrame.BackgroundTransparency = 0.2
-        bgFrame.BorderSizePixel = 0
-        bgFrame.ClipsDescendants = true
-        bgFrame.ZIndex = 9
-        Instance.new("UICorner", bgFrame).CornerRadius = UDim.new(0, 14)
-        local bgStroke = Instance.new("UIStroke", bgFrame)
-        bgStroke.Color = BLACK_STROKE
-        bgStroke.Thickness = BTN_STROKE_THICKNESS
-        bgStroke.Transparency = 0.32
-
-        local optionList = { "Speed Only", "Mode Only", "Speed and Mode" }
-        local optionBtns = {}
-        local optionTexts = {}
-        local segW = 1 / #optionList
-
-        local function applyTheme(newColor)
-            for j, btn in ipairs(optionBtns) do
-                if optionList[j] == (speedDisplayMode or "Speed and Mode") then
-                    btn.BackgroundColor3 = newColor
-                end
-            end
-            hValue.TextColor3 = newColor
-            hArrowStroke.Color = newColor
-            bgStroke.Color = newColor
-        end
-
-        local function refresh()
-            for j, btn in ipairs(optionBtns) do
-                local sel = (optionList[j] == (speedDisplayMode or "Speed and Mode"))
-                btn.BackgroundColor3 = sel and PURPLE_HOT or INACTIVE_BG
-                local st = btn:FindFirstChildOfClass("UIStroke")
-                if st then
-                    st.Color = sel and PURPLE_HOT or BLACK_STROKE
-                    st.Transparency = sel and 0.1 or 0.6
-                    st.Thickness = BTN_STROKE_THICKNESS
-                end
-                optionTexts[j].TextColor3 = INACTIVE_TXT
-            end
-            hValue.Text = speedDisplayMode or "Speed and Mode"
-            updateSpeedDisplayText()
-        end
-
-        for i, opt in ipairs(optionList) do
-            local optBtn = Instance.new("TextButton", bgFrame)
-            optBtn.Name = "Opt_" .. tostring(i)
-            optBtn.AnchorPoint = Vector2.new(0.5, 0.5)
-            optBtn.Size = UDim2.new(segW, -4, 1, -8)
-            optBtn.Position = UDim2.new(segW * (i - 0.5), 0, 0.5, 0)
-            optBtn.BackgroundColor3 = INACTIVE_BG
-            optBtn.BackgroundTransparency = 0
-            optBtn.BorderSizePixel = 0
-            optBtn.Text = ""
-            optBtn.AutoButtonColor = false
-            optBtn.ZIndex = 10
-            Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 13)
-            local optStroke = Instance.new("UIStroke", optBtn)
-            optStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-            optStroke.Color = BLACK_STROKE
-            optStroke.Thickness = BTN_STROKE_THICKNESS
-            optStroke.Transparency = 0.6
-            optStroke.Parent = optBtn
-            local optLbl = Instance.new("TextLabel", optBtn)
-            optLbl.AnchorPoint = Vector2.new(0.5, 0.5)
-            optLbl.Size = UDim2.new(1, 0, 1, 0)
-            optLbl.Position = UDim2.new(0.5, 0, 0.5, 0)
-            optLbl.BackgroundTransparency = 1
-            optLbl.Text = opt
-            optLbl.TextColor3 = INACTIVE_TXT
-            optLbl.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-            optLbl.TextStrokeTransparency = 0.4
-            optLbl.TextSize = 10
-            optLbl.Font = Enum.Font.GothamBlack
-            optLbl.TextXAlignment = Enum.TextXAlignment.Center
-            optLbl.ZIndex = 11
-            optLbl.Parent = optBtn
-            optionBtns[i] = optBtn
-            optionTexts[i] = optLbl
-
-            optBtn.MouseButton1Click:Connect(function()
-                speedDisplayMode = opt
-                refresh()
-                if saveAllSettings then pcall(saveAllSettings) end
+        local row = mkRow(visualPage, 44)
+        mkLabel(row, "Animations")
+        local btn = Instance.new("TextButton", row)
+        btn.Size = UDim2.new(0, 80, 0, 24)
+        btn.Position = UDim2.new(1, -92, 0.5, -12)
+        btn.BackgroundColor3 = Color3.fromRGB(18, 14, 24)
+        btn.BackgroundTransparency = 0.3
+        btn.BorderSizePixel = 0
+        btn.Text = "PICK"
+        btn.TextColor3 = getThemeColor()
+        btn.Font = Enum.Font.GothamBlack
+        btn.TextSize = 10
+        btn.ZIndex = 8
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 12)
+        btn.Activated:Connect(function()
+            -- Small picker matching the Background Image picker style.
+            pcall(function()
+                local old = CoreGui:FindFirstChild("RaptureAnimationsPicker")
+                if old then old:Destroy() end
             end)
-        end
-
-        table.insert(_G._RaptureDynamicSliders, { applyThemeColor = applyTheme })
-        applyTheme(PURPLE_LIGHT)
-        refresh()
-
-        _G._RaptureSpeedDisplayRefresh = refresh
-
-        local expanded = false
-        hArrow.MouseButton1Click:Connect(function()
-            playArrowSound()
-            expanded = not expanded
-            if expanded then
-                holder.Visible = true
-                TS:Create(holder, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Size = UDim2.new(1, 0, 0, 42) }):Play()
-                TS:Create(wrapper, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Size = UDim2.new(1, -4, 0, 84) }):Play()
-                TS:Create(hArrow, TweenInfo.new(0.2), { Rotation = 180 }):Play()
-            else
-                TS:Create(holder, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { Size = UDim2.new(1, 0, 0, 0) }):Play()
-                TS:Create(wrapper, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { Size = UDim2.new(1, -4, 0, 40) }):Play()
-                TS:Create(hArrow, TweenInfo.new(0.2), { Rotation = 0 }):Play()
-                task.delay(0.22, function() if not expanded then holder.Visible = false end end)
+            local gui = Instance.new("ScreenGui")
+            gui.Name = "RaptureAnimationsPicker"
+            gui.ResetOnSpawn = false
+            gui.IgnoreGuiInset = true
+            gui.DisplayOrder = 401
+            if not pcall(function() gui.Parent = CoreGui end) then gui.Parent = LP:WaitForChild("PlayerGui") end
+            local frame = Instance.new("Frame", gui)
+            frame.Size = UDim2.new(0, 300, 0, 250)
+            frame.Position = UDim2.new(0.5, -150, 0.5, -125)
+            frame.BackgroundColor3 = Color3.fromRGB(12, 10, 16)
+            frame.BorderSizePixel = 0
+            Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 14)
+            local stroke = Instance.new("UIStroke", frame)
+            stroke.Color = Color3.fromRGB(60, 50, 75)
+            stroke.Thickness = 1.8
+            local title = Instance.new("TextLabel", frame)
+            title.Size = UDim2.new(1, -48, 0, 34)
+            title.Position = UDim2.new(0, 12, 0, 4)
+            title.BackgroundTransparency = 1
+            title.Text = "ANIMATIONS"
+            title.TextColor3 = Color3.fromRGB(255, 255, 255)
+            title.Font = Enum.Font.GothamBlack
+            title.TextSize = 14
+            title.TextXAlignment = Enum.TextXAlignment.Left
+            local close = Instance.new("TextButton", frame)
+            close.Size = UDim2.new(0, 28, 0, 28)
+            close.Position = UDim2.new(1, -34, 0, 7)
+            close.BackgroundColor3 = Color3.fromRGB(28, 26, 36)
+            close.BorderSizePixel = 0
+            close.Text = "X"
+            close.TextColor3 = Color3.fromRGB(255, 255, 255)
+            close.Font = Enum.Font.GothamBlack
+            close.TextSize = 14
+            Instance.new("UICorner", close).CornerRadius = UDim.new(0, 8)
+            close.Activated:Connect(function() gui:Destroy() end)
+            local list = Instance.new("ScrollingFrame", frame)
+            list.Size = UDim2.new(1, -16, 1, -48)
+            list.Position = UDim2.new(0, 8, 0, 42)
+            list.BackgroundTransparency = 1
+            list.BorderSizePixel = 0
+            list.ScrollBarThickness = 4
+            list.CanvasSize = UDim2.new(0, 0, 0, 0)
+            local layout = Instance.new("UIListLayout", list)
+            layout.Padding = UDim.new(0, 6)
+            layout.SortOrder = Enum.SortOrder.LayoutOrder
+            for i, name in ipairs({"Off", "Zombie", "Elder", "Vampire"}) do
+                local choice = Instance.new("TextButton", list)
+                choice.Size = UDim2.new(1, -8, 0, 36)
+                choice.BackgroundColor3 = Color3.fromRGB(20, 18, 26)
+                choice.BorderSizePixel = 0
+                choice.Text = string.upper(name)
+                choice.TextColor3 = getThemeColor()
+                choice.Font = Enum.Font.GothamBlack
+                choice.TextSize = 12
+                choice.LayoutOrder = i
+                Instance.new("UICorner", choice).CornerRadius = UDim.new(0, 8)
+                choice.Activated:Connect(function()
+                    if _G._RaptureSetAnimationPack then pcall(_G._RaptureSetAnimationPack, name) end
+                    gui:Destroy()
+                end)
             end
+            task.defer(function() list.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 8) end)
         end)
-
-        speedDisplayRefresh = refresh
     end
 
-    setShowSpeedVisual = mkToggle(visualPage, "Show Speed", function(on)
-        showSpeedLabel = on
-        if speedLabel then
-            speedLabel.Visible = on
-            if on then
-                updateSpeedDisplayText()
-            else
-                speedLabel.Text = ""
-            end
-        end
-        task.defer(saveAllSettings)
-    end)
-    if setShowSpeedVisual then setShowSpeedVisual(showSpeedLabel) end
-    if speedLabel then
-        speedLabel.Visible = showSpeedLabel
-        if showSpeedLabel then updateSpeedDisplayText() else speedLabel.Text = "" end
-    end
-
-    setUnwalkVisual = mkToggle(visualPage, "Unwalk", function(on)
-        unwalkEnabled = on
-        if on then
-            startUnwalk()
-        else
-            stopUnwalk()
-        end
-        task.defer(saveAllSettings)
-    end)
-
-    setESPVisual = mkToggle(visualPage, "ESP Players", function(on)
-        if on then startESP() else stopESP() end
-        task.defer(saveAllSettings)
-    end)
-
-    setAntiLagVisual = mkToggle(visualPage, "Anti Lag", function(on)
-        if on then enableAntiLag() else disableAntiLag() end
-        task.defer(saveAllSettings)
-    end)
-    do
-        local row = mkRow(visualPage, 40)
-        mkLabel(row, "Stretch Rez")
-        local stretchPill, stretchDot = mkPill(row, 10)
-        local stretchOn = false
-        local function setStretch(s)
-            stretchOn = s
-            animPill(stretchPill, stretchDot, s)
-            if s then enableStretch() else disableStretch() end
-            stretchEnabled = s
-            task.defer(saveAllSettings)
-        end
-        local stretchClk = Instance.new("TextButton", stretchPill)
-        stretchClk.Size = UDim2.new(1,0,1,0)
-        stretchClk.BackgroundTransparency = 1
-        stretchClk.Text = ""
-        stretchClk.ZIndex = 10
-        stretchClk.MouseButton1Click:Connect(function()
-            playToggleSound()
-            setStretch(not stretchOn)
-        end)
-        _G.stretchToggleSetter = setStretch
-    end
-    do local row = mkRow(visualPage); mkLabel(row, "Stretch Value"); stretchValueBox = mkBox(row, stretchValue, 50, 60, function(v) if v and v >= 0.3 and v <= 1.5 then stretchValue = v; if stretchEnabled then disableStretch(); enableStretch() end; saveAllSettings() end end) end
-    setFovVisual = mkToggle(visualPage, "FOV", function(on)
-        if on then enableCustomFov() else disableCustomFov() end
-        task.defer(saveAllSettings)
-    end)
-    if setFovVisual then setFovVisual(fovEnabled) end
-    do
-        local row = mkRow(visualPage)
-        mkLabel(row, "FOV Value")
-        local fovBox = mkBox(row, fovValue, 50, 60, function(v)
-            if v and v >= 20 and v <= 120 then
-                fovValue = _floor(v + 0.5)
-                if not fovEnabled then enableCustomFov(); if setFovVisual then setFovVisual(true) end end
-                local cam = workspace.CurrentCamera
-                if cam then pcall(function() cam.FieldOfView = fovValue end) end
-                saveAllSettings()
-            end
-        end)
-        fovSliderSet = function(val) if fovBox then fovBox.Text = tostring(val) end end
-    end
-    local customSoundsSetVisual = mkToggle(visualPage, "Custom Sounds", function(on)
-        customSoundsEnabled = on
-        if _G.RaptureCustomSounds then _G.RaptureCustomSounds.setEnabled(on) end
-        task.defer(saveAllSettings)
-    end)
-    setCustomSoundsVisual = customSoundsSetVisual
     local configPage = contentPages["Config"]
+    mkSectionHeader(configPage, "GUI")
     uiScaleBox = mkStepRow(configPage, "UI Scale",
         function() return uiScaleValue end,
         function(v)
@@ -8739,235 +8601,12 @@ function buildGui()
             floatingButtonScale = v / 100
             applyFloatingButtonScale()
         end, 50, 200, 1)
-    do
-        local row = mkRow(configPage, 44)
-        mkLabel(row, "Background Image")
-        local btn = Instance.new("TextButton", row)
-        btn.Size = UDim2.new(0, 80, 0, 24)
-        btn.Position = UDim2.new(1, -92, 0.5, -12)
-        btn.BackgroundColor3 = Color3.fromRGB(18, 14, 24)
-        btn.BackgroundTransparency = 0.3
-        btn.BorderSizePixel = 0
-        btn.Text = "PICK"
-        btn.TextColor3 = getThemeColor()
-        btn.Font = Enum.Font.GothamBlack
-        btn.TextSize = 10
-        btn.ZIndex = 8
-        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 12)
-        btn.Activated:Connect(function() openImagePicker() end)
-    end
-
+    mkSectionHeader(configPage, "INTRO")
     skipIntroToggleSet = mkToggle(configPage, "Skip Intro", function(on)
         skipIntroEnabled = on
         task.defer(saveAllSettings)
     end)
     if skipIntroToggleSet then skipIntroToggleSet(skipIntroEnabled) end
-
-    do
-        local wrapper = Instance.new("Frame", configPage)
-        wrapper.Name = "SoundEffectsWrapper"
-        wrapper.Size = UDim2.new(1, -4, 0, 40)
-        wrapper.BackgroundTransparency = 1
-        wrapper.LayoutOrder = getNextOrder(configPage)
-        wrapper.ClipsDescendants = true
-        wrapper.ZIndex = 7
-
-        local header = Instance.new("Frame", wrapper)
-        header.Size = UDim2.new(1, 0, 0, 40)
-        header.BackgroundColor3 = ROW_BG
-        header.BackgroundTransparency = 0.05
-        header.BorderSizePixel = 0
-        header.ZIndex = 8
-        Instance.new("UICorner", header).CornerRadius = UDim.new(0, 10)
-        local hStroke = Instance.new("UIStroke", header)
-        hStroke.Color = BLACK_STROKE
-        hStroke.Thickness = BTN_STROKE_THICKNESS
-        hStroke.Transparency = 0.2
-        registerNeonSweep(header)
-
-        local hLabel = Instance.new("TextLabel", header)
-        hLabel.Size = UDim2.new(1, -60, 1, 0)
-        hLabel.Position = UDim2.new(0, 12, 0, 0)
-        hLabel.BackgroundTransparency = 1
-        hLabel.Text = "Sound Effects"
-        hLabel.TextColor3 = WHITE
-        hLabel.Font = Enum.Font.GothamBold
-        hLabel.TextSize = 12
-        hLabel.TextXAlignment = Enum.TextXAlignment.Left
-        hLabel.ZIndex = 9
-
-        local hArrow = Instance.new("TextButton", header)
-        hArrow.Name = "Arrow"
-        hArrow.Size = UDim2.new(0, 30, 0, 30)
-        hArrow.Position = UDim2.new(1, -36, 0.5, -15)
-        hArrow.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
-        hArrow.BackgroundTransparency = 0.25
-        hArrow.BorderSizePixel = 0
-        hArrow.Text = "v"
-        hArrow.TextColor3 = WHITE
-        hArrow.Font = Enum.Font.GothamBold
-        hArrow.TextSize = 14
-        hArrow.AutoButtonColor = false
-        hArrow.ZIndex = 10
-        Instance.new("UICorner", hArrow).CornerRadius = UDim.new(0, 8)
-        local hArrowStroke = Instance.new("UIStroke", hArrow)
-        hArrowStroke.Color = PURPLE_LIGHT
-        hArrowStroke.Thickness = BTN_STROKE_THICKNESS
-        hArrowStroke.Transparency = 0.35
-
-        local holder = Instance.new("Frame", wrapper)
-        holder.Name = "OptionsHolder"
-        holder.Size = UDim2.new(1, 0, 0, 0)
-        holder.Position = UDim2.new(0, 0, 0, 42)
-        holder.BackgroundTransparency = 1
-        holder.ClipsDescendants = true
-        holder.Visible = false
-        holder.ZIndex = 7
-
-        local innerScroll = Instance.new("ScrollingFrame", holder)
-        innerScroll.Size = UDim2.new(1, 0, 1, 0)
-        innerScroll.BackgroundTransparency = 1
-        innerScroll.BorderSizePixel = 0
-        innerScroll.ClipsDescendants = true
-        innerScroll.ScrollBarThickness = 3
-        innerScroll.ScrollBarImageColor3 = getThemeColor()
-        innerScroll.ScrollBarImageTransparency = 0.35
-        innerScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-        innerScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
-        innerScroll.ScrollingDirection = Enum.ScrollingDirection.Y
-        innerScroll.ZIndex = 8
-
-        local innerLayout = Instance.new("UIListLayout", innerScroll)
-        innerLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        innerLayout.Padding = UDim.new(0, 6)
-        innerLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-
-        local innerPad = Instance.new("UIPadding", innerScroll)
-        innerPad.PaddingLeft = UDim.new(0, 6)
-        innerPad.PaddingRight = UDim.new(0, 6)
-        innerPad.PaddingTop = UDim.new(0, 6)
-        innerPad.PaddingBottom = UDim.new(0, 6)
-
-        local soundOptions = {
-            { key = "buttons", label = "Sound Buttons" },
-            { key = "tab",     label = "Sound Tab" },
-            { key = "toggle",  label = "Sound Toggle" },
-            { key = "arrow",   label = "Sound Arrow" },
-        }
-
-        local soundGetters = {
-            buttons = function() return soundButtonsEnabled end,
-            tab     = function() return soundTabEnabled end,
-            toggle  = function() return soundToggleEnabled end,
-            arrow   = function() return soundArrowEnabled end,
-        }
-        local soundSetters = {
-            buttons = function(v)
-                soundButtonsEnabled = v
-                if v == false then stopAllSoundsOfType("button") end
-            end,
-            tab = function(v)
-                soundTabEnabled = v
-                if v == false then stopAllSoundsOfType("arrow") end
-            end,
-            toggle = function(v)
-                soundToggleEnabled = v
-                if v == false then stopAllSoundsOfType("toggle") end
-            end,
-            arrow = function(v)
-                soundArrowEnabled = v
-                if v == false then stopAllSoundsOfType("arrow") end
-            end,
-        }
-
-        local soundPillRefs = {}
-
-        for i, entry in ipairs(soundOptions) do
-            local row = Instance.new("Frame", innerScroll)
-            row.Name = "SoundRow_" .. entry.key
-            row.Size = UDim2.new(1, -6, 0, 30)
-            row.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-            row.BackgroundTransparency = 0.05
-            row.BorderSizePixel = 0
-            row.LayoutOrder = i
-            row.ZIndex = 9
-            Instance.new("UICorner", row).CornerRadius = UDim.new(0, 8)
-            local rowStroke = Instance.new("UIStroke", row)
-            rowStroke.Color = BLACK_STROKE
-            rowStroke.Thickness = BTN_STROKE_THICKNESS
-            rowStroke.Transparency = 0.25
-
-            local lbl = Instance.new("TextLabel", row)
-            lbl.Size = UDim2.new(1, -60, 1, 0)
-            lbl.Position = UDim2.new(0, 10, 0, 0)
-            lbl.BackgroundTransparency = 1
-            lbl.Text = entry.label
-            lbl.TextColor3 = WHITE
-            lbl.Font = Enum.Font.GothamBold
-            lbl.TextSize = 10
-            lbl.TextXAlignment = Enum.TextXAlignment.Left
-            lbl.ZIndex = 10
-
-            local pill, dot = mkPillVision(row, 10)
-            local isOn = soundGetters[entry.key]()
-            local function sv(state)
-                animPillVision(pill, dot, state)
-                soundSetters[entry.key](state)
-                task.defer(saveAllSettings)
-            end
-            local clk = Instance.new("TextButton", pill)
-            clk.Size = UDim2.new(1, 0, 1, 0)
-            clk.BackgroundTransparency = 1
-            clk.Text = ""
-            clk.AutoButtonColor = false
-            clk.ZIndex = 11
-            clk.MouseButton1Click:Connect(function()
-                playToggleSound()
-                isOn = not isOn
-                sv(isOn)
-            end)
-            sv(isOn)
-
-            soundPillRefs[entry.key] = { setVisual = sv, get = soundGetters[entry.key] }
-
-            if entry.key == "buttons" then setSoundButtonsVisual = sv
-            elseif entry.key == "tab" then setSoundTabVisual = sv
-            elseif entry.key == "toggle" then setSoundToggleVisual = sv
-            elseif entry.key == "arrow" then setSoundArrowVisual = sv
-            end
-        end
-
-        _refreshSoundListVisuals = function()
-            for key, ref in pairs(soundPillRefs) do
-                pcall(function() ref.setVisual(ref.get()) end)
-            end
-        end
-
-        task.defer(function()
-            if innerScroll and innerScroll.Parent then
-                innerScroll.CanvasSize = UDim2.new(0, 0, 0, innerLayout.AbsoluteContentSize.Y + 12)
-            end
-        end)
-
-        local expanded = false
-        local contentHeight = #soundOptions * 30 + (#soundOptions - 1) * 6 + 12
-
-        hArrow.MouseButton1Click:Connect(function()
-            playArrowSound()
-            expanded = not expanded
-            if expanded then
-                holder.Visible = true
-                TS:Create(holder, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Size = UDim2.new(1, 0, 0, contentHeight) }):Play()
-                TS:Create(wrapper, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Size = UDim2.new(1, -4, 0, 40 + contentHeight + 2) }):Play()
-                TS:Create(hArrow, TweenInfo.new(0.2), { Rotation = 180 }):Play()
-            else
-                TS:Create(holder, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { Size = UDim2.new(1, 0, 0, 0) }):Play()
-                TS:Create(wrapper, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.In), { Size = UDim2.new(1, -4, 0, 40) }):Play()
-                TS:Create(hArrow, TweenInfo.new(0.2), { Rotation = 0 }):Play()
-                task.delay(0.22, function() if not expanded then holder.Visible = false end end)
-            end
-        end)
-    end
 
     local hideMobileMasterSetVisual = mkToggle(configPage, "Hide Mobile Buttons", function(on)
         _G._RaptureHideMobileButtons = on
@@ -9175,15 +8814,45 @@ function buildGui()
         end)
     end
 
+    mkSectionHeader(configPage, "GUARD")
     do
+        local saveRow = mkRow(configPage, 40)
+        local saveBtn = Instance.new("TextButton", saveRow)
+        saveBtn.Name = "SaveConfigButton"
+        saveBtn.Size = UDim2.new(1, -8, 0.85, 0)
+        saveBtn.Position = UDim2.new(0, 4, 0.07, 0)
+        saveBtn.BackgroundColor3 = Color3.fromRGB(28, 145, 70)
+        saveBtn.BorderSizePixel = 0
+        saveBtn.Text = "SAVE CONFIG"
+        saveBtn.TextColor3 = WHITE
+        saveBtn.Font = Enum.Font.GothamBold
+        saveBtn.TextSize = 12
+        saveBtn.ZIndex = 8
+        Instance.new("UICorner", saveBtn).CornerRadius = UDim.new(0, 10)
+        local saveBusy = false
+        saveBtn.Activated:Connect(function()
+            if saveBusy then return end
+            saveBusy = true
+            local ok = pcall(saveAllSettings)
+            saveBtn.Text = ok and "CONFIG SAVED" or "SAVE FAILED"
+            saveBtn.BackgroundColor3 = ok and Color3.fromRGB(28, 145, 70) or Color3.fromRGB(170, 35, 45)
+            task.delay(1.5, function()
+                if saveBtn and saveBtn.Parent then
+                    saveBtn.Text = "SAVE CONFIG"
+                    saveBtn.BackgroundColor3 = Color3.fromRGB(28, 145, 70)
+                end
+                saveBusy = false
+            end)
+        end)
+
         local row = mkRow(configPage, 40)
         local delBtn = Instance.new("TextButton", row)
         delBtn.Size = UDim2.new(1, -8, 0.85, 0)
         delBtn.Position = UDim2.new(0, 4, 0.07, 0)
-        delBtn.BackgroundColor3 = Color3.fromRGB(30,30,35)
+        delBtn.BackgroundColor3 = Color3.fromRGB(150, 35, 45)
         delBtn.BackgroundTransparency = 0.3
         delBtn.BorderSizePixel = 0
-        delBtn.Text = "DELETE CONFIG"
+        delBtn.Text = "RESET CONFIG"
         delBtn.TextColor3 = WHITE
         delBtn.Font = Enum.Font.GothamBold
         delBtn.TextSize = 12
@@ -9199,7 +8868,7 @@ function buildGui()
                 task.delay(2, function()
                     if delBtn and delBtn.Parent and deleteState == 1 then
                         deleteState = 0
-                        delBtn.Text = "DELETE CONFIG"
+                        delBtn.Text = "RESET CONFIG"
                     end
                 end)
             elseif deleteState == 1 then
@@ -9247,7 +8916,7 @@ function buildGui()
                     refreshSpeedModeLabel()
                 end)
                 delBtn.Text = "DELETED"
-                task.delay(1.5, function() if delBtn and delBtn.Parent then delBtn.Text = "DELETE CONFIG"; delDebounce = false; deleteState = 0 end end)
+                task.delay(1.5, function() if delBtn and delBtn.Parent then delBtn.Text = "RESET CONFIG"; delDebounce = false; deleteState = 0 end end)
             end
         end)
     end
