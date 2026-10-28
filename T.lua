@@ -2,13 +2,11 @@
 local Players = game:GetService('Players'); local player = Players.LocalPlayer; local TweenService = game:GetService('TweenService'); local Lighting = game:GetService('Lighting');
 local M = {}
 -- ============================================================
--- INTRO SAFIRA TOP 1 HUB  (pura GUI, SIN VideoFrame)
--- Recrea el video de 5s: textos morados, barra de progreso, estrellas y Skip.
--- AUDIO: sube https://files.catbox.moe/n08l19.mp3 a Roblox como Audio
--- y pega el ID abajo. Se reproduce del segundo 20 al 25.
+-- INTRO SAFIRA HUB  (estilo Metro Duels + Song 4)
 -- ============================================================
-M.INTRO_MUSIC_ID = "rbxassetid://1234567890" -- <-- PON AQUÍ EL ID DEL MP3 subido a Roblox
-M.INTRO_MUSIC_TITLE = "Audio de la intro SAFIRA HUB"
+M.INTRO_MUSIC_ID = "https://files.catbox.moe/fvms23.mp3" -- Song 4
+M.INTRO_MUSIC_TITLE = "Song 4"
+M.INTRO_DURATION = 13
 _G.PrimeHubFeKlan = M
 
 local function playCinematicIntro()
@@ -18,9 +16,11 @@ local function playCinematicIntro()
     _G.PrimeHubIntroDoneCallbacks = _G.PrimeHubIntroDoneCallbacks or {}
 
     local introSound = nil
+    local introActive = true
 
     local function finishIntro()
         if _G.PrimeHubIntroFinished then return end
+        introActive = false
         _G.PrimeHubIntroActive = false
         _G.PrimeHubIntroFinished = true
         _G.PrimeHubForceMobileVisible = true
@@ -39,28 +39,69 @@ local function playCinematicIntro()
         local starterGui = game:GetService("StarterGui")
         local TweenService = game:GetService("TweenService")
         local SoundService = game:GetService("SoundService")
+        local TS = TweenService
         pcall(function() starterGui:SetCore("TopbarEnabled", false) end)
 
-        -- ===== AUDIO: segundos 20 → 25 del MP3 =====
-        pcall(function()
-            if M.INTRO_MUSIC_ID and M.INTRO_MUSIC_ID ~= "rbxassetid://1234567890" then
-                introSound = Instance.new("Sound")
-                introSound.Name = "SAFIRAIntroSFX"
-                introSound.SoundId = M.INTRO_MUSIC_ID
-                introSound.Volume = 0.85
-                introSound.TimePosition = 20
-                introSound.Looped = false
-                introSound.Parent = SoundService
-                introSound:Play()
-                -- Cortar exactamente a los 5 segundos (20→25)
-                task.delay(5, function()
-                    if introSound and introSound.Parent then
-                        pcall(function() introSound:Stop() end)
-                        pcall(function() introSound:Destroy() end)
-                        introSound = nil
+        -- ===== AUDIO: Song 4 (fvms23.mp3) — descarga como Metro (HttpGet + getcustomasset) =====
+        local INTRO_SECS = tonumber(M.INTRO_DURATION) or 13
+        local INTRO_URL = (M.INTRO_MUSIC_ID and M.INTRO_MUSIC_ID ~= "" and M.INTRO_MUSIC_ID) or "https://files.catbox.moe/fvms23.mp3"
+        local INTRO_FILE = "SafiraHubIntroSong4.mp3"
+        task.spawn(function()
+            local soundId = nil
+            -- 1) Intentar cache local / descarga (igual que Metro)
+            pcall(function()
+                if type(isfile) == "function" and type(getcustomasset) == "function" then
+                    if isfile(INTRO_FILE) then
+                        soundId = getcustomasset(INTRO_FILE)
+                    end
+                end
+            end)
+            if not soundId then
+                pcall(function()
+                    if type(writefile) == "function" and type(getcustomasset) == "function" then
+                        local data = nil
+                        pcall(function() data = game:HttpGet(INTRO_URL) end)
+                        if (not data or #data == 0) and type(http_request) == "function" then
+                            local res = http_request({Url = INTRO_URL, Method = "GET"})
+                            if res and res.Body then data = res.Body end
+                        end
+                        if (not data or #data == 0) and type(request) == "function" then
+                            local res = request({Url = INTRO_URL, Method = "GET"})
+                            if res and res.Body then data = res.Body end
+                        end
+                        if data and #data > 0 then
+                            writefile(INTRO_FILE, data)
+                            soundId = getcustomasset(INTRO_FILE)
+                        end
                     end
                 end)
             end
+            -- 2) Fallback: URL directa (algunos executors la aceptan)
+            if not soundId or soundId == "" then
+                soundId = INTRO_URL
+            end
+            introSound = Instance.new("Sound")
+            introSound.Name = "SAFIRAIntroSong4"
+            introSound.SoundId = tostring(soundId)
+            introSound.Volume = 1
+            introSound.TimePosition = 0
+            introSound.Looped = false
+            introSound.Parent = SoundService
+            -- Esperar a que cargue antes de reproducir
+            local loadStart = tick()
+            while introSound and introSound.Parent and (not introSound.IsLoaded) and (tick() - loadStart < 12) do
+                task.wait(0.05)
+            end
+            if introSound and introSound.Parent then
+                pcall(function() introSound:Play() end)
+            end
+            task.delay(INTRO_SECS, function()
+                if introSound and introSound.Parent then
+                    pcall(function() introSound:Stop() end)
+                    pcall(function() introSound:Destroy() end)
+                    introSound = nil
+                end
+            end)
         end)
 
         local pg = player:FindFirstChild("PlayerGui") or player:WaitForChild("PlayerGui", 5)
@@ -69,161 +110,17 @@ local function playCinematicIntro()
         local old = pg:FindFirstChild("SAFIRAHUBIntro")
         if old then old:Destroy() end
 
-        local screenGui = Instance.new("ScreenGui")
-        screenGui.Name = "SAFIRAHUBIntro"
-        screenGui.ResetOnSpawn = false
-        screenGui.IgnoreGuiInset = true
-        screenGui.DisplayOrder = 1000
-        screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-        screenGui.Parent = pg
+        local introGui = Instance.new("ScreenGui")
+        introGui.Name = "SAFIRAHUBIntro"
+        introGui.ResetOnSpawn = false
+        introGui.IgnoreGuiInset = true
+        introGui.DisplayOrder = 1000
+        introGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        introGui.Parent = pg
 
-        -- Fondo negro
-        local bg = Instance.new("Frame")
-        bg.Name = "Background"
-        bg.Size = UDim2.fromScale(1, 1)
-        bg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        bg.BorderSizePixel = 0
-        bg.Parent = screenGui
-
-        -- Estrellas
-        local starsFolder = Instance.new("Folder")
-        starsFolder.Name = "Stars"
-        starsFolder.Parent = bg
-
-        local function createStar(x, y, size, transparency)
-            local star = Instance.new("Frame")
-            star.Size = UDim2.fromOffset(size, size)
-            star.Position = UDim2.fromScale(x, y)
-            star.AnchorPoint = Vector2.new(0.5, 0.5)
-            star.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            star.BackgroundTransparency = transparency or 0.3
-            star.BorderSizePixel = 0
-            star.Parent = starsFolder
-            local corner = Instance.new("UICorner")
-            corner.CornerRadius = UDim.new(1, 0)
-            corner.Parent = star
-            return star
-        end
-
-        math.randomseed(os.clock() * 1000)
-        for i = 1, 90 do
-            createStar(math.random(), math.random(), math.random(1, 3), math.random(25, 75) / 100)
-        end
-
-        local purple = Color3.fromRGB(180, 80, 255)
-
-        -- SAFIRA
-        local titleSafira = Instance.new("TextLabel")
-        titleSafira.Name = "SAFIRA"
-        titleSafira.Size = UDim2.new(1, 0, 0, 70)
-        titleSafira.Position = UDim2.new(0, 0, 0.28, 0)
-        titleSafira.BackgroundTransparency = 1
-        titleSafira.Text = "SAFIRA"
-        titleSafira.Font = Enum.Font.GothamBlack
-        titleSafira.TextSize = 64
-        titleSafira.TextColor3 = purple
-        titleSafira.TextTransparency = 1
-        titleSafira.TextStrokeTransparency = 0.55
-        titleSafira.TextStrokeColor3 = Color3.fromRGB(90, 0, 160)
-        titleSafira.Parent = bg
-
-        -- TOP 1
-        local titleTop = Instance.new("TextLabel")
-        titleTop.Name = "TOP1"
-        titleTop.Size = UDim2.new(1, 0, 0, 70)
-        titleTop.Position = UDim2.new(0, 0, 0.40, 0)
-        titleTop.BackgroundTransparency = 1
-        titleTop.Text = "TOP 1"
-        titleTop.Font = Enum.Font.GothamBlack
-        titleTop.TextSize = 64
-        titleTop.TextColor3 = purple
-        titleTop.TextTransparency = 1
-        titleTop.TextStrokeTransparency = 0.55
-        titleTop.TextStrokeColor3 = Color3.fromRGB(90, 0, 160)
-        titleTop.Parent = bg
-
-        -- HUB (aparece más tarde)
-        local titleHub = Instance.new("TextLabel")
-        titleHub.Name = "HUB"
-        titleHub.Size = UDim2.new(1, 0, 0, 60)
-        titleHub.Position = UDim2.new(0, 0, 0.52, 0)
-        titleHub.BackgroundTransparency = 1
-        titleHub.Text = "HUB"
-        titleHub.Font = Enum.Font.GothamBlack
-        titleHub.TextSize = 56
-        titleHub.TextColor3 = purple
-        titleHub.TextTransparency = 1
-        titleHub.TextStrokeTransparency = 0.55
-        titleHub.TextStrokeColor3 = Color3.fromRGB(90, 0, 160)
-        titleHub.Parent = bg
-
-        -- Porcentaje
-        local percentLabel = Instance.new("TextLabel")
-        percentLabel.Name = "Percent"
-        percentLabel.Size = UDim2.new(1, 0, 0, 28)
-        percentLabel.Position = UDim2.new(0, 0, 0.64, 0)
-        percentLabel.BackgroundTransparency = 1
-        percentLabel.Text = "0%"
-        percentLabel.Font = Enum.Font.GothamBold
-        percentLabel.TextSize = 20
-        percentLabel.TextColor3 = purple
-        percentLabel.TextTransparency = 1
-        percentLabel.Parent = bg
-
-        -- Barra fondo
-        local barBg = Instance.new("Frame")
-        barBg.Name = "BarBg"
-        barBg.Size = UDim2.new(0.35, 0, 0, 4)
-        barBg.Position = UDim2.new(0.325, 0, 0.685, 0)
-        barBg.BackgroundColor3 = Color3.fromRGB(60, 30, 90)
-        barBg.BackgroundTransparency = 1
-        barBg.BorderSizePixel = 0
-        barBg.Parent = bg
-        Instance.new("UICorner", barBg).CornerRadius = UDim.new(1, 0)
-
-        -- Barra relleno
-        local barFill = Instance.new("Frame")
-        barFill.Name = "BarFill"
-        barFill.Size = UDim2.new(0, 0, 1, 0)
-        barFill.BackgroundColor3 = purple
-        barFill.BorderSizePixel = 0
-        barFill.Parent = barBg
-        Instance.new("UICorner", barFill).CornerRadius = UDim.new(1, 0)
-
-        -- Créditos
-        local credits = Instance.new("TextLabel")
-        credits.Name = "Credits"
-        credits.Size = UDim2.new(1, 0, 0, 22)
-        credits.Position = UDim2.new(0, 0, 0.72, 0)
-        credits.BackgroundTransparency = 1
-        credits.Text = "By Leo  •  https://discord.gg/pMJzYKryX"
-        credits.Font = Enum.Font.Gotham
-        credits.TextSize = 14
-        credits.TextColor3 = Color3.fromRGB(220, 220, 230)
-        credits.TextTransparency = 1
-        credits.Parent = bg
-
-        -- Botón Skip (igual que en el video)
-        local skipBtn = Instance.new("TextButton")
-        skipBtn.Name = "SkipButton"
-        skipBtn.Size = UDim2.fromOffset(80, 32)
-        skipBtn.Position = UDim2.new(1, -100, 0, 20)
-        skipBtn.BackgroundColor3 = Color3.fromRGB(130, 60, 220)
-        skipBtn.Text = "Skip"
-        skipBtn.Font = Enum.Font.GothamBold
-        skipBtn.TextSize = 16
-        skipBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        skipBtn.BorderSizePixel = 0
-        skipBtn.AutoButtonColor = true
-        skipBtn.ZIndex = 5
-        skipBtn.Parent = bg
-        Instance.new("UICorner", skipBtn).CornerRadius = UDim.new(0, 8)
-
-        local skipped = false
         local function cleanupAndFinish()
-            if skipped then return end
-            skipped = true
-            -- Parar el audio de la intro al saltar o terminar
+            if not introActive then return end
+            introActive = false
             if introSound then
                 pcall(function() introSound:Stop() end)
                 pcall(function() introSound:Destroy() end)
@@ -231,70 +128,257 @@ local function playCinematicIntro()
             end
             pcall(function()
                 local fadeInfo = TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-                TweenService:Create(bg, fadeInfo, {BackgroundTransparency = 1}):Play()
-                for _, child in ipairs(bg:GetDescendants()) do
+                for _, child in ipairs(introGui:GetDescendants()) do
                     if child:IsA("TextLabel") or child:IsA("TextButton") then
-                        TweenService:Create(child, fadeInfo, {TextTransparency = 1, BackgroundTransparency = 1}):Play()
-                    elseif child:IsA("Frame") and child ~= bg then
-                        TweenService:Create(child, fadeInfo, {BackgroundTransparency = 1}):Play()
+                        TS:Create(child, fadeInfo, {TextTransparency = 1, BackgroundTransparency = 1}):Play()
+                    elseif child:IsA("Frame") then
+                        TS:Create(child, fadeInfo, {BackgroundTransparency = 1}):Play()
                     end
                 end
             end)
-            task.delay(0.4, function()
-                if screenGui and screenGui.Parent then screenGui:Destroy() end
+            task.delay(0.45, function()
+                if introGui and introGui.Parent then introGui:Destroy() end
                 pcall(function() starterGui:SetCore("TopbarEnabled", true) end)
                 finishIntro()
             end)
         end
 
-        skipBtn.Activated:Connect(cleanupAndFinish)
+        -- Fondo oscuro estilo Metro
+        local darkBg = Instance.new("Frame")
+        darkBg.Size = UDim2.new(1, 0, 1, 0)
+        darkBg.BackgroundColor3 = Color3.fromRGB(8, 8, 10)
+        darkBg.BackgroundTransparency = 1
+        darkBg.BorderSizePixel = 0
+        darkBg.ZIndex = 1
+        darkBg.Parent = introGui
 
-        -- Tocar en cualquier lado también salta
-        local fullSkip = Instance.new("TextButton")
-        fullSkip.Name = "FullSkip"
-        fullSkip.Size = UDim2.fromScale(1, 1)
-        fullSkip.BackgroundTransparency = 1
-        fullSkip.Text = ""
-        fullSkip.ZIndex = 1
-        fullSkip.Parent = bg
-        fullSkip.Activated:Connect(cleanupAndFinish)
+        local bgGrad = Instance.new("UIGradient")
+        bgGrad.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(42, 42, 46)),
+            ColorSequenceKeypoint.new(0.45, Color3.fromRGB(18, 18, 20)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 12))
+        })
+        bgGrad.Rotation = 90
+        bgGrad.Parent = darkBg
 
-        -- ========== ANIMACIÓN (imita el video de ~5s) ==========
-        task.spawn(function()
-            if skipped then return end
+        -- Skip button (estilo Metro / galaxy)
+        local skipBtn = Instance.new("TextButton")
+        skipBtn.Name = "SkipIntro"
+        skipBtn.AnchorPoint = Vector2.new(1, 0)
+        skipBtn.Position = UDim2.new(1, -22, 0, 22)
+        skipBtn.Size = UDim2.new(0, 104, 0, 34)
+        skipBtn.BackgroundColor3 = Color3.fromRGB(180, 80, 255)
+        skipBtn.BackgroundTransparency = 0
+        skipBtn.BorderSizePixel = 0
+        skipBtn.Text = "SKIP INTRO"
+        skipBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+        skipBtn.TextSize = 11
+        skipBtn.Font = Enum.Font.GothamBlack
+        skipBtn.AutoButtonColor = false
+        skipBtn.ZIndex = 80
+        skipBtn.Parent = introGui
+        Instance.new("UICorner", skipBtn).CornerRadius = UDim.new(0, 10)
 
-            local fadeIn = TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-            TweenService:Create(titleSafira, fadeIn, {TextTransparency = 0}):Play()
-            task.wait(0.12)
-            if skipped then return end
-            TweenService:Create(titleTop, fadeIn, {TextTransparency = 0}):Play()
-            task.wait(0.08)
-            if skipped then return end
-            TweenService:Create(percentLabel, fadeIn, {TextTransparency = 0}):Play()
-            TweenService:Create(credits, fadeIn, {TextTransparency = 0}):Play()
-            TweenService:Create(barBg, fadeIn, {BackgroundTransparency = 0.25}):Play()
+        local grad = Instance.new("UIGradient")
+        grad.Rotation = 0
+        grad.Transparency = NumberSequence.new(0)
+        grad.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
+            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
+            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
+        })
+        grad.Parent = skipBtn
 
-            -- Progreso 0 → 100%
-            local startTime = tick()
-            local duration = 2.15
-            while not skipped do
-                local t = math.clamp((tick() - startTime) / duration, 0, 1)
-                percentLabel.Text = math.floor(t * 100) .. "%"
-                barFill.Size = UDim2.new(t, 0, 1, 0)
-                if t >= 1 then break end
-                task.wait()
+        local function shiftHue(color, offset)
+            local r, g, b = color.R, color.G, color.B
+            local maxc = math.max(r, g, b)
+            local minc = math.min(r, g, b)
+            local h, s, v = 0, 0, maxc
+            local d = maxc - minc
+            s = (maxc == 0) and 0 or d / maxc
+            if maxc ~= minc then
+                if maxc == r then
+                    h = (g - b) / d + (g < b and 6 or 0)
+                elseif maxc == g then
+                    h = (b - r) / d + 2
+                else
+                    h = (r - g) / d + 4
+                end
+                h = h / 6
             end
-            if skipped then return end
+            h = (h + offset) % 1
+            if s == 0 then return Color3.new(v, v, v) end
+            local i = math.floor(h * 6)
+            local f = h * 6 - i
+            local p = v * (1 - s)
+            local q = v * (1 - f * s)
+            local t = v * (1 - (1 - f) * s)
+            local rr, gg, bb = v, t, p
+            if i == 0 then rr, gg, bb = v, t, p
+            elseif i == 1 then rr, gg, bb = q, v, p
+            elseif i == 2 then rr, gg, bb = p, v, t
+            elseif i == 3 then rr, gg, bb = p, q, v
+            elseif i == 4 then rr, gg, bb = t, p, v
+            else rr, gg, bb = v, p, q end
+            return Color3.new(rr, gg, bb)
+        end
 
-            percentLabel.Text = "100%"
-            barFill.Size = UDim2.new(1, 0, 1, 0)
+        task.spawn(function()
+            local hueOffset = 0
+            while introActive and skipBtn and skipBtn.Parent do
+                hueOffset = (hueOffset + 0.012) % 1
+                local c1 = shiftHue(Color3.fromRGB(220, 100, 255), hueOffset)
+                local c2 = shiftHue(Color3.fromRGB(120, 60, 220), hueOffset)
+                local c3 = shiftHue(Color3.fromRGB(40, 20, 150), hueOffset)
+                grad.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0.00, c1),
+                    ColorSequenceKeypoint.new(0.50, c2),
+                    ColorSequenceKeypoint.new(1.00, c3),
+                })
+                task.wait(0.05)
+            end
+        end)
+
+        skipBtn.MouseButton1Click:Connect(cleanupAndFinish)
+
+        -- Centro / título estilo Metro
+        local center = Instance.new("Frame")
+        center.AnchorPoint = Vector2.new(0.5, 0.5)
+        center.Position = UDim2.new(0.5, 0, 0.5, 0)
+        center.Size = UDim2.new(0, 660, 0, 250)
+        center.BackgroundTransparency = 1
+        center.ZIndex = 40
+        center.Parent = introGui
+
+        local lineTop = Instance.new("Frame")
+        lineTop.AnchorPoint = Vector2.new(0.5, 0)
+        lineTop.Position = UDim2.new(0.5, 0, 0, 58)
+        lineTop.Size = UDim2.new(0, 0, 0, 2)
+        lineTop.BackgroundColor3 = Color3.fromRGB(180, 80, 255)
+        lineTop.BackgroundTransparency = 0
+        lineTop.BorderSizePixel = 0
+        lineTop.ZIndex = 41
+        lineTop.Parent = center
+        local lineTopGrad = Instance.new("UIGradient")
+        lineTopGrad.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
+            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
+            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
+        })
+        lineTopGrad.Parent = lineTop
+
+        local lineBot = Instance.new("Frame")
+        lineBot.AnchorPoint = Vector2.new(0.5, 1)
+        lineBot.Position = UDim2.new(0.5, 0, 1, -8)
+        lineBot.Size = UDim2.new(0, 0, 0, 2)
+        lineBot.BackgroundColor3 = Color3.fromRGB(180, 80, 255)
+        lineBot.BackgroundTransparency = 0
+        lineBot.BorderSizePixel = 0
+        lineBot.ZIndex = 41
+        lineBot.Parent = center
+        local lineBotGrad = Instance.new("UIGradient")
+        lineBotGrad.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
+            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
+            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
+        })
+        lineBotGrad.Parent = lineBot
+
+        local titleShadow = Instance.new("TextLabel")
+        titleShadow.Size = UDim2.new(1, 0, 0, 86)
+        titleShadow.Position = UDim2.new(0, 4, 0, 83)
+        titleShadow.BackgroundTransparency = 1
+        titleShadow.Text = "SAFIRA HUB"
+        titleShadow.TextColor3 = Color3.fromRGB(0, 0, 0)
+        titleShadow.Font = Enum.Font.GothamBlack
+        titleShadow.TextSize = 72
+        titleShadow.TextTransparency = 1
+        titleShadow.TextStrokeTransparency = 1
+        titleShadow.ZIndex = 42
+        titleShadow.Parent = center
+
+        local title = Instance.new("TextLabel")
+        title.Size = UDim2.new(1, 0, 0, 86)
+        title.Position = UDim2.new(0, 0, 0, 78)
+        title.BackgroundTransparency = 1
+        title.Text = "SAFIRA HUB"
+        title.TextColor3 = Color3.fromRGB(245, 245, 245)
+        title.Font = Enum.Font.GothamBlack
+        title.TextSize = 72
+        title.TextTransparency = 1
+        title.TextStrokeTransparency = 1
+        title.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+        title.ZIndex = 43
+        title.Parent = center
+
+        local titleGrad = Instance.new("UIGradient")
+        titleGrad.Rotation = 0
+        titleGrad.Transparency = NumberSequence.new(0)
+        titleGrad.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
+            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(180, 120, 255)),
+            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(120, 60, 220)),
+        })
+        titleGrad.Parent = title
+
+        local subtitle = Instance.new("TextLabel")
+        subtitle.Size = UDim2.new(1, 0, 0, 26)
+        subtitle.Position = UDim2.new(0, 0, 0, 169)
+        subtitle.BackgroundTransparency = 1
+        subtitle.Text = "By Leo  •  https://discord.gg/pMJzYKryX"
+        subtitle.TextColor3 = Color3.fromRGB(200, 160, 255)
+        subtitle.Font = Enum.Font.GothamMedium
+        subtitle.TextSize = 19
+        subtitle.TextTransparency = 1
+        subtitle.ZIndex = 43
+        subtitle.Parent = center
+
+        -- Animación (estilo Metro)
+        task.spawn(function()
+            TS:Create(darkBg, TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
+            task.wait(0.25)
+            if not introActive then return end
+
+            TS:Create(lineTop, TweenInfo.new(0.45, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0, 500, 0, 2)}):Play()
+            TS:Create(lineBot, TweenInfo.new(0.45, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0, 500, 0, 2)}):Play()
 
             task.wait(0.12)
-            if skipped then return end
-            TweenService:Create(titleHub, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+            if not introActive then return end
+            TS:Create(titleShadow, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {TextTransparency = 0.35, TextStrokeTransparency = 1}):Play()
+            TS:Create(title, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {TextTransparency = 0, TextStrokeTransparency = 0.18}):Play()
 
-            task.wait(1.85)
-            if not skipped then
+            task.wait(0.42)
+            if not introActive then return end
+            TS:Create(subtitle, TweenInfo.new(0.42), {TextTransparency = 0}):Play()
+
+            for i = 1, 3 do
+                if not introActive then break end
+                TS:Create(title, TweenInfo.new(0.06), {TextColor3 = Color3.fromRGB(185, 185, 185)}):Play()
+                task.wait(0.06)
+                TS:Create(title, TweenInfo.new(0.06), {TextColor3 = Color3.fromRGB(245, 245, 245)}):Play()
+                task.wait(0.06)
+            end
+
+            task.wait(3.05)
+            if not introActive then return end
+
+            TS:Create(center, TweenInfo.new(0.55, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 0)}):Play()
+            TS:Create(title, TweenInfo.new(0.36), {TextTransparency = 1, TextStrokeTransparency = 1}):Play()
+            TS:Create(titleShadow, TweenInfo.new(0.36), {TextTransparency = 1}):Play()
+            TS:Create(subtitle, TweenInfo.new(0.32), {TextTransparency = 1}):Play()
+            TS:Create(lineTop, TweenInfo.new(0.32, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 2)}):Play()
+            TS:Create(lineBot, TweenInfo.new(0.32, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 2)}):Play()
+            TS:Create(darkBg, TweenInfo.new(0.75), {BackgroundTransparency = 1}):Play()
+
+            task.wait(0.85)
+            if introGui and introGui.Parent then introGui:Destroy() end
+            pcall(function() starterGui:SetCore("TopbarEnabled", true) end)
+            finishIntro()
+        end)
+
+        -- Auto-finish de seguridad a los INTRO_SECS
+        task.delay(INTRO_SECS + 1, function()
+            if not _G.PrimeHubIntroFinished then
                 cleanupAndFinish()
             end
         end)
@@ -443,80 +527,179 @@ function M.CandyApplyCustomSky(mode)
     end
 end
 M.PACKS = {
+    ["Zombie"] = {
+        WalkAnim = 616168032,
+        RunAnim  = 616163682,
+        JumpAnim = 616161997,
+        FallAnim = 616157476,
+        ClimbAnim = 616156119,
+        Swim     = 616165109,
+        SwimIdle = 616166655,
+        Animation1 = 616158929,
+        Animation2 = 616160636,
+    },
+    ["Ninja"] = {
+        WalkAnim = 656121766,
+        RunAnim  = 656118852,
+        JumpAnim = 656117878,
+        FallAnim = 656115606,
+        ClimbAnim = 656114359,
+        Swim     = 656117400,
+        SwimIdle = 656117400,
+        Animation1 = 656117400,
+        Animation2 = 656117400,
+    },
+    ["Knight"] = {
+        WalkAnim = 657552124,
+        RunAnim  = 657564596,
+        JumpAnim = 658409194,
+        FallAnim = 657600338,
+        ClimbAnim = 658360781,
+        Swim     = 657595757,
+        SwimIdle = 657595757,
+        Animation1 = 657595757,
+        Animation2 = 657595757,
+    },
+    ["Elder"] = {
+        WalkAnim = 845403856,
+        RunAnim  = 845386501,
+        JumpAnim = 845398858,
+        FallAnim = 845397673,
+        ClimbAnim = 845392038,
+        Swim     = 845397899,
+        SwimIdle = 845397899,
+        Animation1 = 845397899,
+        Animation2 = 845397899,
+    },
+    ["Levitate"] = {
+        WalkAnim = 616013216,
+        RunAnim  = 616013216,
+        JumpAnim = 616008936,
+        FallAnim = 616005863,
+        ClimbAnim = 616003713,
+        Swim     = 616006778,
+        SwimIdle = 616006778,
+        Animation1 = 616006778,
+        Animation2 = 616006778,
+    },
+    ["Astronaut"] = {
+        WalkAnim = 891636393,
+        RunAnim  = 891636393,
+        JumpAnim = 891627522,
+        FallAnim = 891617961,
+        ClimbAnim = 891609353,
+        Swim     = 891621366,
+        SwimIdle = 891621366,
+        Animation1 = 891621366,
+        Animation2 = 891621366,
+    },
+    ["Pirate"] = {
+        WalkAnim = 750785693,
+        RunAnim  = 750783738,
+        JumpAnim = 750782230,
+        FallAnim = 750780242,
+        ClimbAnim = 750779899,
+        Swim     = 750781874,
+        SwimIdle = 750781874,
+        Animation1 = 750781874,
+        Animation2 = 750781874,
+    },
+    ["Toy"] = {
+        WalkAnim = 782843345,
+        RunAnim  = 782842708,
+        JumpAnim = 782847020,
+        FallAnim = 782846423,
+        ClimbAnim = 782843869,
+        Swim     = 782841498,
+        SwimIdle = 782841498,
+        Animation1 = 782841498,
+        Animation2 = 782841498,
+    },
+    ["Vampire"] = {
+        WalkAnim = 1083462077,
+        RunAnim  = 1083455352,
+        JumpAnim = 1083455352,
+        FallAnim = 1083443587,
+        ClimbAnim = 1083439238,
+        Swim     = 1083445855,
+        SwimIdle = 1083445855,
+        Animation1 = 1083445855,
+        Animation2 = 1083445855,
+    },
+    ["Werewolf"] = {
+        WalkAnim = 1083178339,
+        RunAnim  = 1083216690,
+        JumpAnim = 1083218792,
+        FallAnim = 1083189019,
+        ClimbAnim = 1083182000,
+        Swim     = 1083195517,
+        SwimIdle = 1083195517,
+        Animation1 = 1083195517,
+        Animation2 = 1083195517,
+    },
+    ["Stylish"] = {
+        WalkAnim = 616146177,
+        RunAnim  = 616140816,
+        JumpAnim = 616139451,
+        FallAnim = 616134815,
+        ClimbAnim = 616133594,
+        Swim     = 616136790,
+        SwimIdle = 616136790,
+        Animation1 = 616136790,
+        Animation2 = 616136790,
+    },
     ["Adidas Sports"] = {
         WalkAnim = 18537392113,
         RunAnim  = 18537384940,
         JumpAnim = 18537380791,
         FallAnim = 18537367238,
-        SwimIdle = 18537387180,
+        ClimbAnim = 18537363391,
         Swim     = 18537389531,
+        SwimIdle = 18537387180,
         Animation1 = 18537376492,
         Animation2 = 18537371272,
-        ClimbAnim = 18537363391,
     },
     ["Adidas Community"] = {
         WalkAnim = 122150855457006,
         RunAnim  = 82598234841035,
         JumpAnim = 75290611992385,
         FallAnim = 98600215928904,
-        SwimIdle = 109346520324160,
+        ClimbAnim = 88763136693023,
         Swim     = 133308483266208,
+        SwimIdle = 109346520324160,
         Animation1 = 122257458498464,
         Animation2 = 102357151005774,
-        ClimbAnim = 88763136693023,
     },
     ["Adidas Aura"] = {
         WalkAnim = 83842218823011,
         RunAnim  = 118320322718866,
         JumpAnim = 109996626521204,
         FallAnim = 95603166884636,
-        SwimIdle = 94922130551805,
+        ClimbAnim = 97824616490448,
         Swim     = 134530128383903,
+        SwimIdle = 94922130551805,
         Animation1 = 110211186840347,
         Animation2 = 114191137265065,
-        ClimbAnim = 97824616490448,
     },
     ["Wicked Popular"] = {
         WalkAnim = 92072849924640,
-        RunAnim = 72301599441680,
+        RunAnim  = 72301599441680,
         JumpAnim = 104325245285198,
         FallAnim = 121152442762481,
-        Animation1 = 118832222982049,
         ClimbAnim = 131326830509784,
+        Swim     = 99384245425157,
         SwimIdle = 113199415118199,
-        Swim = 99384245425157,
+        Animation1 = 118832222982049,
         Animation2 = 76049494037641,
     },
-    Elder = {
-        WalkAnim = 10921111375,
-        RunAnim  = 10921104374,
-        JumpAnim = 10921107367,
-        FallAnim = 10921105765,
-        SwimIdle = 10921110146,
-        Swim     = 10921108971,
-        ClimbAnim = 10921100400,
-        Animation1 = 10921101664,
-        Animation2 = 10921102574,
-    },
-    Zombie = {
-        WalkAnim = 10921355261,
-        RunAnim  = 616163682,
-        JumpAnim = 10921351278,
-        FallAnim = 10921350320,
-        SwimIdle = 10921353442,
-        Swim     = 10921352344,
-        Animation1 = 10921344533,
-        Animation2 = 10921345304,
-        ClimbAnim = 10921343576,
-    },
-    Mage = {
+    ["Mage"] = {
         WalkAnim = 10921152678,
         RunAnim  = 10921148209,
         JumpAnim = 10921149743,
         FallAnim = 10921148939,
-        SwimIdle = 10921151661,
-        Swim     = 10921150788,
         ClimbAnim = 10921143404,
+        Swim     = 10921150788,
+        SwimIdle = 10921151661,
         Animation1 = 10921144709,
         Animation2 = 10921145797,
     },
@@ -525,143 +708,69 @@ M.PACKS = {
         RunAnim  = 81024476153754,
         JumpAnim = 116936326516985,
         FallAnim = 92294537340807,
-        SwimIdle = 98854111361360,
-        Swim     = 134591743181628,
         ClimbAnim = 119377220967554,
+        Swim     = 134591743181628,
+        SwimIdle = 98854111361360,
         Animation1 = 133806214992291,
         Animation2 = 94970088341563,
     },
-    Astronaut = {
-        WalkAnim = 10921046031,
-        RunAnim  = 10921039308,
-        JumpAnim = 10921042494,
-        FallAnim = 10921040576,
-        SwimIdle = 10921045006,
-        Swim     = 10921044000,
-        ClimbAnim = 10921032124,
-        Animation1 = 10921034824,
-        Animation2 = 10921036806,
-    },
-    ['Wicked "Dancing Through Life"'] = {
-        WalkAnim = 73718308412641,
-        RunAnim  = 135515454877967,
-        JumpAnim = 78508480717326,
-        FallAnim = 78147885297412,
-        SwimIdle = 129183123083281,
-        Swim     = 110657013921774,
-        ClimbAnim = 129447497744818,
-        Animation1 = 92849173543269,
-        Animation2 = 132238900951109,
-    },
-    Werewolf = {
-        WalkAnim = 10921342074,
-        RunAnim  = 10921336997,
-        JumpAnim = nil,
-        FallAnim = 10921337907,
-        SwimIdle = 10921341319,
-        Swim     = 10921340419,
-        ClimbAnim = 10921329322,
-        Animation1 = 10921330408,
-        Animation2 = 10921333667,
-    },
-    Superhero = {
+    ["Superhero"] = {
         WalkAnim = 10921298616,
         RunAnim  = 10921291831,
         JumpAnim = 10921294559,
         FallAnim = 10921293373,
-        SwimIdle = 10921297391,
-        Swim     = 10921295495,
         ClimbAnim = 10921286911,
+        Swim     = 10921295495,
+        SwimIdle = 10921297391,
         Animation1 = 10921288909,
         Animation2 = 10921290167,
     },
-    Toy = {
-        WalkAnim = 10921312010,
-        RunAnim  = 10921306285,
-        JumpAnim = 10921308158,
-        FallAnim = 10921307241,
-        SwimIdle = 10921310341,
-        Swim     = 10921309319,
-        ClimbAnim = 10921300839,
-        Animation1 = 10921301576,
-        Animation2 = nil,
+    ["Robot"] = {
+        WalkAnim = 616095330,
+        RunAnim  = 616091570,
+        JumpAnim = 616090535,
+        FallAnim = 616087089,
+        ClimbAnim = 616086039,
+        Swim     = 616092998,
+        SwimIdle = 616094091,
+        Animation1 = 616088211,
+        Animation2 = 616089559,
     },
-    ["No Boundaries"] = {
-        WalkAnim = 18747074203,
-        RunAnim  = 18747070484,
-        JumpAnim = 18747069148,
-        FallAnim = 18747062535,
-        SwimIdle = 18747071682,
-        Swim     = 18747073181,
-        ClimbAnim = 18747060903,
-        Animation1 = 18747067405,
-        Animation2 = 18747063918,
+    ["Levitation"] = {
+        WalkAnim = 616013216,
+        RunAnim  = 616010382,
+        JumpAnim = 616008936,
+        FallAnim = 616005863,
+        ClimbAnim = 616003713,
+        Swim     = 616011509,
+        SwimIdle = 616012453,
+        Animation1 = 616006778,
+        Animation2 = 616008087,
     },
-    NFL = {
-        WalkAnim = 110358958299415,
-        RunAnim  = 117333533048078,
-        JumpAnim = 119846112151352,
-        FallAnim = 129773241321032,
-        SwimIdle = 79090109939093,
-        Swim     = 132697394189921,
-        ClimbAnim = 134630013742019,
-        Animation1 = 92080889861410,
-        Animation2 = 74451233229259,
+    ["Bubbly"] = {
+        WalkAnim = 910034870,
+        RunAnim  = 910025107,
+        JumpAnim = 910016857,
+        FallAnim = 910001910,
+        ClimbAnim = 909997997,
+        Swim     = 910028158,
+        SwimIdle = 910030921,
+        Animation1 = 910004836,
+        Animation2 = 910009958,
     },
-    ["Amazon Unboxed"] = {
-        WalkAnim = 90478085024465,
-        RunAnim  = 134824450619865,
-        JumpAnim = 121454505477205,
-        FallAnim = 94788218468396,
-        SwimIdle = 129126268464847,
-        Swim     = 105962919001086,
-        ClimbAnim = 121145883950231,
-        Animation1 = 98281136301627,
-        Animation2 = nil,
-    },
-    Vampire = {
-        WalkAnim = 10921326949,
-        RunAnim  = 10921320299,
-        JumpAnim = 10921322186,
-        FallAnim = 10921321317,
-        SwimIdle = 10921325443,
-        Swim     = 10921324408,
-        ClimbAnim = 10921314188,
-        Animation1 = 10921315373,
-        Animation2 = nil,
-    },
-    Ninja = {
-        Run=656118852, Walk=656121766, Jump=656117878, Fall=656115606,
-        Swim=656119721, SwimIdle=656121397, Climb=656114359,
-        Idle={656117400,656118341,886742569}
-    },
-    Robot = {
-        Run=616091570, Walk=616095330, Jump=616090535, Fall=616087089,
-        Swim=616092998, SwimIdle=616094091, Climb=616086039,
-        Idle={616088211,616089559,885531463}
-    },
-    Levitation = {
-        Run=616010382, Walk=616013216, Jump=616008936, Fall=616005863,
-        Swim=616011509, SwimIdle=616012453, Climb=616003713,
-        Idle={616006778,616008087,886862142}
-    },
-    Stylish = {
-        Run=616140816, Walk=616146177, Jump=616139451, Fall=616134815,
-        Swim=616143378, SwimIdle=616144772, Climb=616133594,
-        Idle={616136790,616138447,886888594}
-    },
-    Bubbly = {
-        Run=910025107, Walk=910034870, Jump=910016857, Fall=910001910,
-        Swim=910028158, SwimIdle=910030921, Climb=909997997,
-        Idle={910004836,910009958,1018536639}
-    },
-    Cartoon = {
-        Run=742638842, Walk=742640026, Jump=742637942, Fall=742637151,
-        Swim=742639220, SwimIdle=742639812, Climb=742636889,
-        Idle={742637544,742638445,885477856}
+    ["Cartoon"] = {
+        WalkAnim = 742640026,
+        RunAnim  = 742638842,
+        JumpAnim = 742637942,
+        FallAnim = 742637151,
+        ClimbAnim = 742636889,
+        Swim     = 742639220,
+        SwimIdle = 742639812,
+        Animation1 = 742637544,
+        Animation2 = 742638445,
     },
 }
-M.animPack = "Mage"
+M.animPack = "Off"
 M.animPackEnabled = true
 M.savedAnimate = nil
 M.headlessEnabled = false
@@ -859,6 +968,8 @@ M.infJumpEnabled = false
 M.infJumpMode = "hold"
 M.medusaCounterEnabled = false
 M.batCounterEnabled = false
+M.antiBatEnabled = false
+M.antiBatConn = nil
 M.unwalkEnabled = false
 M.medusaDebounce = false
 M.medusaLastUsed = 0
@@ -951,8 +1062,8 @@ M._bypassGodDiedConn = nil
 M._bypassGodCharConn = nil
 M.bypassPrevAutoRotate = nil
 M.bypassHitCD = false
-M.bypassSwingCD = 0.35
-M.bypassHitDist = 8
+M.bypassSwingCD = 0.08
+M.bypassHitDist = 5.2
 M._bypassTarget = nil
 
 M._savedButtonPositions = {}
@@ -2182,6 +2293,124 @@ function M.startBatCounter()
     end)
 end
 function M.stopBatCounter() if M.Conns.batCounter then M.Conns.batCounter:Disconnect();M.Conns.batCounter=nil end;M.batCounterDebounce=false end
+-- Anti Bat (ELITE, optimizado): mismo efecto, sin lag
+-- - Solo pulsa si hay rival con bat/slap cerca
+-- - Sin RenderStepped:Wait() (era la causa principal del lag)
+-- - Scan de amenazas cada ~0.12s en vez de cada frame
+M.ANTI_BAT_FORCE_X = 1000
+M.ANTI_BAT_FORCE_Z = 1000
+M.ANTI_BAT_RANGE = 22
+M._antiBatPhase = 0          -- 0 idle apply, 1 restore
+M._antiBatSavedXZ = Vector3.zero
+M._antiBatThreat = false
+M._antiBatThreatAcc = 0
+function M.startAntiBat()
+    if M.antiBatConn then return end
+    M.antiBatEnabled = true
+    M._antiBatPhase = 0
+    M._antiBatThreat = false
+    M._antiBatThreatAcc = 0
+    M.antiBatConn = RunService.Heartbeat:Connect(function(dt)
+        if not M.antiBatEnabled then return end
+        local char = player.Character
+        if not char then return end
+        local root = char:FindFirstChild("HumanoidRootPart")
+        if not root then return end
+        -- no interferir si estás congelado / ragdoll
+        if root.Anchored then
+            M._antiBatPhase = 0
+            return
+        end
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if hum then
+            local st = hum:GetState()
+            if st == Enum.HumanoidStateType.Physics or st == Enum.HumanoidStateType.Ragdoll
+                or st == Enum.HumanoidStateType.FallingDown or st == Enum.HumanoidStateType.Dead then
+                M._antiBatPhase = 0
+                return
+            end
+        end
+        -- refrescar amenaza solo cada ~0.12s (barato)
+        M._antiBatThreatAcc = (M._antiBatThreatAcc or 0) + (dt or 0.016)
+        if M._antiBatThreatAcc >= 0.12 then
+            M._antiBatThreatAcc = 0
+            local hasThreat = false
+            if M._enemyHasBatNearby then
+                hasThreat = M._enemyHasBatNearby(root, M.ANTI_BAT_RANGE or 22) == true
+            else
+                local range = M.ANTI_BAT_RANGE or 22
+                for _, plr in ipairs(Players:GetPlayers()) do
+                    if plr ~= player and plr.Character then
+                        local tr = plr.Character:FindFirstChild("HumanoidRootPart")
+                        local th = plr.Character:FindFirstChildOfClass("Humanoid")
+                        if tr and th and th.Health > 0 and (tr.Position - root.Position).Magnitude <= range then
+                            local tool = plr.Character:FindFirstChildOfClass("Tool")
+                            if tool then
+                                local n = tool.Name:lower()
+                                if n:find("bat") or n:find("slap") then
+                                    hasThreat = true
+                                    break
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+            M._antiBatThreat = hasThreat
+        end
+        if not M._antiBatThreat then
+            M._antiBatPhase = 0
+            return
+        end
+        local fx = M.ANTI_BAT_FORCE_X or 1000
+        local fz = M.ANTI_BAT_FORCE_Z or 1000
+        if M._antiBatPhase == 0 then
+            -- frame A: guardar y aplicar impulso (equivalente al pulse de Elite)
+            M._antiBatSavedXZ = Vector3.new(root.Velocity.X, 0, root.Velocity.Z)
+            root.Velocity = Vector3.new(fx, root.Velocity.Y, fz)
+            M._antiBatPhase = 1
+        else
+            -- frame B: restaurar movimiento (sin Wait, sin lag)
+            local saved = M._antiBatSavedXZ or Vector3.zero
+            root.Velocity = Vector3.new(saved.X, root.Velocity.Y, saved.Z)
+            M._antiBatPhase = 0
+        end
+    end)
+end
+function M.stopAntiBat()
+    M.antiBatEnabled = false
+    M._antiBatPhase = 0
+    M._antiBatThreat = false
+    if M.antiBatConn then
+        M.antiBatConn:Disconnect()
+        M.antiBatConn = nil
+    end
+end
+
+-- Helper: detecta rival con bat/slap cerca (usado por Anti Bat optimizado)
+function M._enemyHasBatNearby(root, range)
+    if not root then return false end
+    range = range or M.ANTI_BAT_RANGE or 22
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= player and plr.Character then
+            local tr = plr.Character:FindFirstChild("HumanoidRootPart")
+            local hum = plr.Character:FindFirstChildOfClass("Humanoid")
+            if tr and hum and hum.Health > 0 then
+                if (tr.Position - root.Position).Magnitude <= range then
+                    local tool = plr.Character:FindFirstChildOfClass("Tool")
+                    if tool then
+                        local n = tool.Name:lower()
+                        if n:find("bat") or n:find("slap") then
+                            return true, tr
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return false, nil
+end
+
 
 -- ==================== BAT COUNTER V2 (CLEAN) ====================
 M.batCounterV2Enabled = M.batCounterV2Enabled == true
@@ -2732,6 +2961,7 @@ function M.restoreCharacterMovement(char)
 end
 
 function M.startBypassAimbot()
+    -- Bat Bypass estilo ELITE FAMILY (BloodHounds / Clean Bat V2)
     if M.safeModeTryStart and not M.safeModeTryStart() then return end
     if M.bypassAimbotConn then
         pcall(function() M.bypassAimbotConn:Disconnect() end)
@@ -2743,6 +2973,7 @@ function M.startBypassAimbot()
     if M._tpCharConn then pcall(function() M._tpCharConn:Disconnect() end); M._tpCharConn = nil end
     if _forceAimbotOffForTP then pcall(_forceAimbotOffForTP) end
 
+    -- No pelear con Bat V2 al mismo tiempo
     if M.batV2Enabled and M.stopBatV2 then
         pcall(function()
             M.stopBatV2()
@@ -2751,172 +2982,141 @@ function M.startBypassAimbot()
             if M.setBatV2Visual then M.setBatV2Visual(false) end
         end)
     end
+    if M.autoLeftEnabled then
+        M.autoLeftEnabled = false
+        if M.stopAutoLeft then pcall(M.stopAutoLeft) end
+    end
+    if M.autoRightEnabled then
+        M.autoRightEnabled = false
+        if M.stopAutoRight then pcall(M.stopAutoRight) end
+    end
 
-    -- Luckbroom-style predictive bypass: estimate target velocity, compensate for ping,
-    -- predict jumps/quick turns, then follow and swing when within range.
     M.bypassAimbotEnabled = true
-    M._adaptTpBatCooldown = false
-    local state = {
-        target = nil, lastPos = nil, velocity = Vector3.zero,
-        smoothVelocity = Vector3.zero, acceleration = {}, airborne = {},
-        previousDirection = nil, lastDirectionChange = 0,
-        airborneTime = 0, lastSwing = 0, swingLocked = false,
-    }
-    local cfg = {
-        followSpeed = tonumber(M.bypassAimbotSpeed) or tonumber(M.BYPASS_AIMBOT_SPEED) or 55,
-        activateDistance = 13, minFollowDistance = 1, predictionTime = 0.242,
-        predictAhead = 3, maxVelocityChange = 150, smoothing = 0.2,
-        maxHorizontalVelocity = 80, serverTick = 1/60,
-        minPing = 0.03, maxPing = 0.25, accelWeight = 0.3,
-        turnWindow = 0.12, quickTurn = 1.5, gravity = 196.2,
-        airFactor = 0.8, minAirTime = 0.08, swingCooldown = 0.08,
-    }
-    local function average(list)
-        if #list == 0 then return Vector3.zero end
-        local sum = Vector3.zero
-        for _, v in ipairs(list) do sum = sum + v end
-        return sum / #list
-    end
-    local function push(list, value, max)
-        list[#list + 1] = value
-        if #list > max then table.remove(list, 1) end
-    end
-    local function findTarget(myRoot)
-        local nearest, distance = nil, math.huge
-        for _, p in ipairs(Players:GetPlayers()) do
-            if p ~= player and p.Character then
-                local tr = p.Character:FindFirstChild("HumanoidRootPart")
-                local th = p.Character:FindFirstChildOfClass("Humanoid")
-                if tr and th and th.Health > 0 then
-                    local d = (tr.Position - myRoot.Position).Magnitude
-                    if d < distance then nearest, distance = tr, d end
-                end
+    M._bypassHitCD = false
+    -- Defaults alineados a Elite Family Bat bypass
+    if M.AUTO_BAT_V2_DIST == nil then M.AUTO_BAT_V2_DIST = 1.0 end
+    if M.AUTO_BAT_V2_HEIGHT == nil then M.AUTO_BAT_V2_HEIGHT = 1.5 end
+    if M.AUTO_BAT_V2_V_OFF == nil then M.AUTO_BAT_V2_V_OFF = 0.0 end
+    if M.AUTO_BAT_V2_HIT_DIST == nil then M.AUTO_BAT_V2_HIT_DIST = 4.5 end
+    if M.AUTO_BAT_V2_SWING_CD == nil then M.AUTO_BAT_V2_SWING_CD = 0.08 end
+    if M.autoBatV2SwingEnabled == nil then M.autoBatV2SwingEnabled = true end
+
+    local function findAnyTool()
+        local c = player.Character
+        if c then
+            for _, v in ipairs(c:GetChildren()) do
+                if v:IsA("Tool") then return v end
             end
-        end
-        return nearest, distance
-    end
-    local function findBat()
-        if M._bypassFindBat then
-            local ok, bat = pcall(M._bypassFindBat)
-            if ok and bat then return bat end
-        end
-        local char = player.Character
-        if not char then return nil end
-        local tool = char:FindFirstChildOfClass("Tool")
-        if tool then
-            local n = tool.Name:lower()
-            if n:find("bat") or n:find("slap") then return tool end
         end
         local bp = player:FindFirstChildOfClass("Backpack")
         if bp then
-            for _, t in ipairs(bp:GetChildren()) do
-                if t:IsA("Tool") and (t.Name:lower():find("bat") or t.Name:lower():find("slap")) then return t end
+            for _, v in ipairs(bp:GetChildren()) do
+                if v:IsA("Tool") then return v end
             end
         end
         return nil
     end
-    local function swing()
-        local now = tick()
-        if state.swingLocked or now - state.lastSwing < cfg.swingCooldown then return end
-        state.swingLocked, state.lastSwing = true, now
-        pcall(function()
-            local char = player.Character
-            local bat = findBat()
-            local hum = char and char:FindFirstChildOfClass("Humanoid")
-            if bat and char and bat.Parent ~= char and hum then hum:EquipTool(bat) end
-            if bat then
-                bat:Activate()
-                local remote = bat:FindFirstChildWhichIsA("RemoteEvent")
-                if remote then remote:FireServer() end
+
+    local function getClosestPlayer()
+        local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        if not hrp then return nil, math.huge end
+        local hpos = hrp.Position
+        local closest, bestDist = nil, math.huge
+        for _, p in ipairs(Players:GetPlayers()) do
+            if p ~= player then
+                local c = p.Character
+                if c then
+                    local tr = c:FindFirstChild("HumanoidRootPart")
+                    local ph = c:FindFirstChildOfClass("Humanoid")
+                    if tr and ph and ph.Health > 0 then
+                        local d = (hpos - tr.Position).Magnitude
+                        if d < bestDist then
+                            bestDist = d
+                            closest = p
+                        end
+                    end
+                end
             end
-            if M._adaptTpBatTryHit then M._adaptTpBatTryHit() end
-        end)
-        task.delay(cfg.swingCooldown, function() state.swingLocked = false end)
+        end
+        return closest, bestDist
     end
 
-    M.bypassAimbotConn = RunService.RenderStepped:Connect(function(dt)
+    local function tryHit()
+        if M._bypassHitCD then return end
+        if M.autoBatV2SwingEnabled == false then return end
+        M._bypassHitCD = true
+        local char = player.Character
+        if char then
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            local tool = findAnyTool()
+            if tool then
+                if tool.Parent ~= char and hum then
+                    pcall(function() hum:EquipTool(tool) end)
+                end
+                local remote = tool:FindFirstChildOfClass("RemoteEvent")
+                if remote then
+                    pcall(function() remote:FireServer() end)
+                else
+                    pcall(function() tool:Activate() end)
+                end
+            end
+        end
+        task.delay(tonumber(M.AUTO_BAT_V2_SWING_CD) or 0.08, function()
+            M._bypassHitCD = false
+        end)
+    end
+
+    M.bypassAimbotConn = RunService.Heartbeat:Connect(function()
         if not M.bypassAimbotEnabled then return end
         local char = player.Character
-        local root = char and char:FindFirstChild("HumanoidRootPart")
-        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if not char then return end
+        local root = char:FindFirstChild("HumanoidRootPart")
+        local hum = char:FindFirstChildOfClass("Humanoid")
         if not root or not hum or hum.Health <= 0 then return end
-        local target = findTarget(root)
-        if not target or not target.Parent then state.target = nil; state.lastPos = nil; return end
-        local targetChar = target.Parent
-        local targetHum = targetChar:FindFirstChildOfClass("Humanoid")
-        if not targetHum or targetHum.Health <= 0 then return end
-        if state.target ~= target then
-            state.target, state.lastPos = target, nil
-            state.velocity, state.smoothVelocity = Vector3.zero, Vector3.zero
-            state.acceleration, state.airborne = {}, {}
-            state.previousDirection, state.airborneTime = nil, 0
-        end
-        local ping = 0.1
-        pcall(function()
-            ping = math.clamp(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue()/1000, cfg.minPing, cfg.maxPing)
-        end)
-        local pos = target.Position
-        local step = math.max(dt or 1/60, 1/240)
-        if state.lastPos then
-            local instant = (pos - state.lastPos) / step
-            local delta = instant - state.velocity
-            if delta.Magnitude > cfg.maxVelocityChange then instant = state.velocity + delta.Unit * cfg.maxVelocityChange end
-            local horizontal = Vector3.new(instant.X, 0, instant.Z)
-            if horizontal.Magnitude > cfg.maxHorizontalVelocity then
-                horizontal = horizontal.Unit * cfg.maxHorizontalVelocity
-                instant = Vector3.new(horizontal.X, instant.Y, horizontal.Z)
+
+        local speed = math.clamp(tonumber(M.bypassAimbotSpeed) or tonumber(M.AUTO_BAT_V2_SPEED) or 60, 10, 200)
+        local followDist = tonumber(M.AUTO_BAT_V2_DIST) or 1.0
+        local height = (tonumber(M.AUTO_BAT_V2_HEIGHT) or 1.5) + (tonumber(M.AUTO_BAT_V2_V_OFF) or 0)
+        local hitDist = tonumber(M.AUTO_BAT_V2_HIT_DIST) or 4.5
+
+        local target = getClosestPlayer()
+        if target and target.Character then
+            local targetRoot = target.Character:FindFirstChild("HumanoidRootPart")
+            if targetRoot then
+                local targetVel = targetRoot.AssemblyLinearVelocity or targetRoot.Velocity
+                local moveDir = (targetVel.Magnitude > 0.1) and targetVel.Unit or targetRoot.CFrame.LookVector
+                local offset = moveDir * followDist + Vector3.new(0, height, 0)
+                local desiredPos = targetRoot.Position + offset
+                local toTarget = desiredPos - root.Position
+                if toTarget.Magnitude > 0.5 then
+                    local moveVec = toTarget.Unit * speed
+                    root.AssemblyLinearVelocity = Vector3.new(moveVec.X, moveVec.Y, moveVec.Z)
+                else
+                    root.AssemblyLinearVelocity = root.AssemblyLinearVelocity * 0.95
+                    if root.AssemblyLinearVelocity.Magnitude < 1 then
+                        root.AssemblyLinearVelocity = Vector3.zero
+                    end
+                end
+                local distToTarget = (root.Position - targetRoot.Position).Magnitude
+                if distToTarget <= hitDist then
+                    tryHit()
+                end
             end
-            push(state.acceleration, (instant - state.velocity) / step, 4)
-            state.velocity = instant
-            state.smoothVelocity = state.smoothVelocity:Lerp(instant, cfg.smoothing)
-        end
-        state.lastPos = pos
-        local inAir = targetHum.FloorMaterial == Enum.Material.Air
-        state.airborneTime = inAir and (state.airborneTime + step) or 0
-        if inAir and state.airborneTime >= cfg.minAirTime then push(state.airborne, state.velocity, 6)
-        elseif not inAir then state.airborne = {} end
-        local velocity = state.smoothVelocity
-        if inAir and #state.airborne > 0 then
-            local avg = average(state.airborne)
-            velocity = Vector3.new(avg.X, state.velocity.Y, avg.Z) * cfg.airFactor
-        end
-        local horizontal = Vector3.new(state.velocity.X, 0, state.velocity.Z)
-        local quick = false
-        if horizontal.Magnitude > 5 then
-            local dir = horizontal.Unit
-            if state.previousDirection and state.previousDirection:Dot(dir) < 0.5 then
-                quick = tick() - state.lastDirectionChange < cfg.turnWindow
-                state.lastDirectionChange = tick()
-            end
-            state.previousDirection = dir
-        end
-        local delay = ping + cfg.serverTick
-        if quick then delay = delay * cfg.quickTurn end
-        local predicted = pos + velocity * delay + average(state.acceleration) * (delay * delay * 0.5 * cfg.accelWeight)
-        predicted = predicted + velocity * cfg.predictionTime
-        if inAir then predicted = predicted + Vector3.new(0, -0.5 * cfg.gravity * cfg.predictionTime * cfg.predictionTime, 0) end
-        local hv = Vector3.new(velocity.X, 0, velocity.Z)
-        if hv.Magnitude > 1 then predicted = predicted + hv.Unit * cfg.predictAhead end
-        local direction = predicted - root.Position
-        if direction.Magnitude > 0.01 then
-            local cross = root.CFrame.LookVector:Cross(direction.Unit)
-            root.AssemblyAngularVelocity = cross.Magnitude > 0.01 and cross.Unit * math.asin(math.clamp(cross.Magnitude, -1, 1)) * 80 or Vector3.zero
-        end
-        if (pos - root.Position).Magnitude <= cfg.activateDistance then swing() end
-        if direction.Magnitude > cfg.minFollowDistance then
-            root.AssemblyLinearVelocity = direction.Unit * cfg.followSpeed
         else
-            root.AssemblyLinearVelocity = Vector3.new(0, root.AssemblyLinearVelocity.Y * 0.5, 0)
+            root.AssemblyLinearVelocity = root.AssemblyLinearVelocity * 0.9
+            if root.AssemblyLinearVelocity.Magnitude < 1 then
+                root.AssemblyLinearVelocity = Vector3.zero
+            end
         end
     end)
-    if M.setBypassVisual then M.setBypassVisual(true) end
-    if M.mobBtnRefs and M.mobBtnRefs.bypass then M.mobBtnRefs.bypass(true) end
-    if M.mobBtnRefs and M.mobBtnRefs.tpBat then M.mobBtnRefs.tpBat(true) end
+
+    if M.setBypassVisual then pcall(M.setBypassVisual, true) end
+    if M.mobBtnRefs and M.mobBtnRefs.bypass then pcall(M.mobBtnRefs.bypass, true) end
 end
 
 function M.stopBypassAimbot()
     M.bypassAimbotEnabled = false
-    M._adaptTpBatCooldown = false
+    M._bypassHitCD = false
     if M.bypassAimbotConn then pcall(function() M.bypassAimbotConn:Disconnect() end); M.bypassAimbotConn = nil end
     if M._blessTpBatConn then pcall(function() M._blessTpBatConn:Disconnect() end); M._blessTpBatConn = nil end
     if M._tpShieldConn then pcall(function() M._tpShieldConn:Disconnect() end); M._tpShieldConn = nil end
@@ -2927,7 +3127,10 @@ function M.stopBypassAimbot()
     local hum = char and char:FindFirstChildOfClass("Humanoid")
     if hum then pcall(function() hum.AutoRotate = true end) end
     if root then
-        pcall(function() root.AssemblyAngularVelocity = Vector3.zero end)
+        pcall(function()
+            root.AssemblyLinearVelocity = Vector3.zero
+            root.AssemblyAngularVelocity = Vector3.zero
+        end)
         if sethiddenproperty then pcall(function() sethiddenproperty(root, "PhysicsRepRootPart", root) end) end
     end
     if M.restoreCharacterMovement then pcall(function() M.restoreCharacterMovement(char) end) end
@@ -3605,17 +3808,27 @@ function M.stopHoldInfJump()
     end
 end
 function M.startUnwalk()
-    if M.unwalkEnabled ~= true or M._unwalkOffLock == true or M.animPackEnabled ~= true then return end
+    -- Unwalk ON: quita Animate -> pose estática (sin animación de caminar)
+    M.unwalkEnabled = true
     M._unwalkOffLock = false
-    local c=player.Character;if not c then return end;local hum=c:FindFirstChildOfClass("Humanoid")
-    if hum then for _,t in ipairs(hum:GetPlayingAnimationTracks()) do t:Stop() end end
-    local anim=c:FindFirstChild("Animate")
+    local c = player.Character
+    if not c then return end
+    local hum = c:FindFirstChildOfClass("Humanoid")
+    if hum then
+        for _, t in ipairs(hum:GetPlayingAnimationTracks()) do
+            pcall(function() t:Stop(0) end)
+        end
+    end
+    local anim = c:FindFirstChild("Animate")
     if anim then
-        if not M.unwalkSavedAnimate then M.unwalkSavedAnimate=anim:Clone() end
-        anim:Destroy()
+        if not M.unwalkSavedAnimate then
+            pcall(function() M.unwalkSavedAnimate = anim:Clone() end)
+        end
+        pcall(function() anim:Destroy() end)
     end
 end
 function M.stopUnwalk()
+    -- Unwalk OFF: restaura Animate y se vuelven a ver las animaciones
     M.unwalkEnabled = false
     M._unwalkOffLock = true
     local c = player.Character
@@ -3626,18 +3839,43 @@ function M.stopUnwalk()
             pcall(function() track:Stop(0) end)
         end
     end
+    -- Si ya hay Animate, no lo destruyas; solo recrea si falta
     local currentAnimate = c:FindFirstChild("Animate")
-    if currentAnimate then currentAnimate:Destroy() end
-    local saved = M.unwalkSavedAnimate or M.savedAnimate
-    if saved then
-        local restoredAnimate = saved:Clone()
-        restoredAnimate.Disabled = true
-        restoredAnimate.Parent = c
-        task.wait(0.06)
-        if restoredAnimate.Parent then restoredAnimate.Disabled = false end
+    if not currentAnimate then
+        local restored = false
+        local saved = M.unwalkSavedAnimate or M.savedAnimate
+        if saved then
+            local ok, restoredAnimate = pcall(function()
+                local a = saved:Clone()
+                a.Disabled = true
+                a.Parent = c
+                return a
+            end)
+            if ok and restoredAnimate then
+                task.wait(0.06)
+                if restoredAnimate.Parent then restoredAnimate.Disabled = false end
+                restored = true
+            end
+        end
+        if not restored then
+            pcall(function()
+                local starter = game:GetService("StarterPlayer"):FindFirstChild("StarterCharacterScripts")
+                local def = starter and starter:FindFirstChild("Animate")
+                if def then
+                    local a = def:Clone()
+                    a.Parent = c
+                else
+                    M.restoreOriginalAnimate(c)
+                end
+            end)
+        end
     end
     M.unwalkSavedAnimate = nil
-    if c and not c:FindFirstChild("Animate") then M.restoreOriginalAnimate(c) end
+    if M.animPackEnabled and M.animPack and M.animPack ~= "Off" and M.animPack ~= "None" and M.PACKS[M.animPack] then
+        task.defer(function()
+            if not M.unwalkEnabled then pcall(function() M.applyAnimPack(M.animPack) end) end
+        end)
+    end
 end
 function M.hasBrainrotInHand()
     local char = player.Character
@@ -4742,7 +4980,7 @@ function M.buildMobileButtons()
     local startX = vp.X - (cols * size + gap) - pad
     local defs = {
         {"autoLeft", "AUTO\nLEFT", true}, {"autoRight", "AUTO\nRIGHT", true},
-        {"batAimbot", "BAT\nAIMBOT", true}, {"tpBat", "TP\nBAT", true},
+        {"batAimbot", "BAT\nAIMBOT", true}, {"tpBat", "BAT\nBYPASS", true},
         {"batV2", "BAT\nV2", true},
         {"carrySpeed", "CARRY\nSPEED", true},
         {"drop", "DROP\nBR", false}, {"tpDown", "TP\nDOWN", false},
@@ -4899,19 +5137,12 @@ function M.buildMobileButtons()
         btn:SetAttribute("BtnKey", key)
         btn.Parent = holder
 
-        local pumpkin = Instance.new("TextLabel")
-        pumpkin.Name = "PumpkinButtonDecoration"
-        pumpkin.Size = UDim2.new(0, math.max(18, math.floor(size * 0.28)), 0, math.max(18, math.floor(size * 0.28)))
-        pumpkin.Position = UDim2.new(1, -math.max(22, math.floor(size * 0.30)), 0, 2)
-        pumpkin.BackgroundTransparency = 1
-        pumpkin.Text = "🎃"
-        pumpkin.TextColor3 = Color3.fromRGB(255, 154, 32)
-        pumpkin.TextStrokeColor3 = Color3.fromRGB(65, 8, 82)
-        pumpkin.TextStrokeTransparency = 0.05
-        pumpkin.TextScaled = true
-        pumpkin.Font = Enum.Font.GothamBlack
-        pumpkin.ZIndex = 103
-        pumpkin.Parent = holder
+        -- Botón independiente: solo activa/desactiva; la velocidad se ajusta en la interfaz.
+        if key == "tpBat" then
+            M.bypassAimbotSpeed = math.clamp(tonumber(M.bypassAimbotSpeed) or 55, 10, 150)
+            btn.Text = "BAT\nBYPASS"
+            btn.TextSize = 12
+        end
 
         makeMobileButtonMovable(holder, btn)
 
@@ -5040,7 +5271,7 @@ end
 M.colorScheme = "Purple"
     PrimeHubFeKlanConfig.Theme = "Purple"
 M.toggleLayoutPos = M.toggleLayoutPos or "Low" -- Low | High
-M.customBgId = "131828154911144"
+M.customBgId = "117847334953566"
 M.customBgOpacity = 0
 M.mobBtnBgId = 0
 
@@ -5062,7 +5293,8 @@ function M.bgImageUriThumbAlt(id)
     return string.format("rbxthumb://type=Asset&id=%d&w=420&h=420", n)
 end
 M.MENU_BG_IDS = {
-    "101866560269754", -- fondo azul restaurado del panel Keybinds
+    "117847334953566", -- fondo SAFIRA (pedido)
+    "101866560269754", -- fondo azul
     "107416548769490", -- fondo morado
     "104853451207790", -- fondo rosa
     "128737402834585", -- fondo verde
@@ -5196,6 +5428,8 @@ local function loadPrimeHubFeKlanConfig()
         if d.infiniteJump~=nil then M.infJumpEnabled=d.infiniteJump end
         if d.medusaCounter~=nil then M.medusaCounterEnabled=d.medusaCounter end
         if d.batCounter~=nil then M.batCounterEnabled=d.batCounter end
+        if d.antiBat~=nil then M.antiBatEnabled=d.antiBat==true end
+        -- Unwalk NUNCA se restaura al cargar: al re-ejecutar el script siempre arranca OFF
         M.unwalkEnabled = false
         M._unwalkOffLock = true
         if d.antiLag~=nil then M.antiLagEnabled=d.antiLag end
@@ -5232,6 +5466,7 @@ local function loadPrimeHubFeKlanConfig()
         if d.autoBat~=nil then M.autoBatEnabled=d.autoBat==true end
         if d.batAimbotEnabled~=nil then M.batAimbotEnabled=d.batAimbotEnabled==true; if d.batAimbotEnabled then M.autoBatEnabled=true end end
         if d.batCounter~=nil then M.batCounterEnabled=d.batCounter==true end
+        if d.antiBat~=nil then M.antiBatEnabled=d.antiBat==true end
         if d.batCounterV2~=nil then M.batCounterV2Enabled=d.batCounterV2==true end
         if d.bypassAimbotEnabled~=nil then M.bypassAimbotEnabled=d.bypassAimbotEnabled==true end
         if d.zenonetopAimOn~=nil then M._zenonetopAimOn=d.zenonetopAimOn==true end
@@ -5289,12 +5524,15 @@ local function loadPrimeHubFeKlanConfig()
         if type(d.skyTheme)=="string" and M.CANDY_SKY_PRESETS and M.CANDY_SKY_PRESETS[d.skyTheme] then M.currentSkyTheme=d.skyTheme end
         if d.speedESPEnabled~=nil then M.speedESPEnabled=d.speedESPEnabled end
         if type(d.animPack)=="string" then M.animPack=d.animPack end
-        if type(d.batSkinName)=="string" then M.batSkinName=d.batSkinName end
+        if type(d.batSkinName)=="string" then M.batSkinName=(d.batSkinName=="Katana" and "Katana" or "Off") end
+        if d.customSoundsEnabled~=nil then M.customSoundsEnabled=d.customSoundsEnabled==true end
         if type(d.characterSkinName)=="string" then M.characterSkinName=d.characterSkinName end
         if d.headlessEnabled~=nil then M.headlessEnabled=d.headlessEnabled end
         if d.korbloxEnabled~=nil then M.korbloxEnabled=d.korbloxEnabled end
         if d.bypassAimbotEnabled~=nil then M.bypassAimbotEnabled=d.bypassAimbotEnabled==true end
         if d.animPackEnabled~=nil then M.animPackEnabled=d.animPackEnabled end
+        M.unwalkEnabled = false
+        M._unwalkOffLock = true
         if d.primeHubSkinEnabled~=nil then M.primeHubSkinEnabled=d.primeHubSkinEnabled==true end
         if d.primeHubKawatanEnabled~=nil then M.primeHubKawatanEnabled=d.primeHubKawatanEnabled==true end
         if d.primeHubHeadHidden~=nil then M.primeHubHeadHidden=d.primeHubHeadHidden==true end
@@ -5417,6 +5655,7 @@ function savePrimeHubFeKlanConfig()
         autoBat = M.autoBatEnabled == true,
         batAimbotEnabled = (M.batAimbotEnabled == true) or (M.autoBatEnabled == true),
         batCounter = M.batCounterEnabled == true,
+        antiBat = M.antiBatEnabled == true,
         batCounterV2 = M.batCounterV2Enabled == true,
         bypassAimbotEnabled = M.bypassAimbotEnabled == true,
         zenonetopAimOn = M._zenonetopAimOn ~= false,
@@ -5450,6 +5689,7 @@ function savePrimeHubFeKlanConfig()
         infiniteJump = M.infJumpEnabled == true,
         medusaCounter = M.medusaCounterEnabled == true,
         batCounter = M.batCounterEnabled == true,
+        antiBat = M.antiBatEnabled == true,
         autoSwing = M.autoSwingEnabled == true,
         autoSwingEnabled = M.autoSwingEnabled == true,
         antiRagdollMode = M.antiRagdollMode or "V1",
@@ -5467,6 +5707,7 @@ function savePrimeHubFeKlanConfig()
         menuBgIndex = tonumber(M.menuBgIndex) or 1,
         customBgId = tostring(M.customBgId or ""),
         batSkinName = tostring(M.batSkinName or "Off"),
+        customSoundsEnabled = M.customSoundsEnabled == true,
         characterSkinName = tostring(M.characterSkinName or "Off"),
         antiVoidEnabled = M.antiVoidEnabled == true,
         bodyLockEnabled = M.bodyLockEnabled == true,
@@ -5487,6 +5728,7 @@ function savePrimeHubFeKlanConfig()
         mobileButtonPositions = btnPos,
         animPack = M.animPack,
         animPackEnabled = M.animPackEnabled == true,
+        unwalkEnabled = M.unwalkEnabled == true,
         headlessEnabled = M.headlessEnabled == true,
         primeHubHeadHidden = M.primeHubHeadHidden ~= false,
         skyTheme = M.currentSkyTheme,
@@ -7695,7 +7937,7 @@ function M.applyMenuBackground(index)
         -- thumb es el más fiable en ImageLabel de GUI
         local uri = string.format("rbxthumb://type=Asset&id=%s&w=768&h=432", id)
         M.bgImageRef.Image = uri
-        M.bgImageRef.ImageTransparency = 1
+        M.bgImageRef.ImageTransparency = 0.15
         M.bgImageRef.ScaleType = Enum.ScaleType.Crop
         M.bgImageRef.Visible = true
         M.bgImageRef.ZIndex = 0
@@ -8762,7 +9004,7 @@ function M.buildPCKeyStatusPanel()
     list.Parent = panel
 
     local entries = {
-        {"TP Bat", "BatTP", function() return M.bypassAimbotEnabled == true end},
+        {"Bat Bypass", "BatTP", function() return M.bypassAimbotEnabled == true end},
         {"Bat Aimbot", "AutoBat", function() return M.autoBatEnabled == true end},
         {"Drop Brainrot", "DropBrainrot", function() return M.dropActive == true end},
         {"Auto Left", "AutoLeft", function() return M.autoLeftEnabled == true end},
@@ -8920,35 +9162,10 @@ function M.buildGui()
         BgImg.Visible = true
     end
     BgImg.ScaleType = Enum.ScaleType.Crop
-    BgImg.ImageTransparency = 0
+    BgImg.ImageTransparency = 0.15
     BgImg.ZIndex = 0
     BgImg.Parent = BgCont
     guiCorner(BgImg, 18)
-    BgImg.ImageTransparency = 1
-    local pumpkinBackdrop = Instance.new("TextLabel")
-    pumpkinBackdrop.Name = "HalloweenPumpkinBackdrop"
-    pumpkinBackdrop.Size = UDim2.new(1.35, 0, 1.35, 0)
-    pumpkinBackdrop.Position = UDim2.new(0.5, 0, 0.56, 0)
-    pumpkinBackdrop.AnchorPoint = Vector2.new(0.5, 0.5)
-    pumpkinBackdrop.BackgroundTransparency = 1
-    pumpkinBackdrop.Text = "🎃"
-    pumpkinBackdrop.TextColor3 = Color3.fromRGB(255, 116, 22)
-    pumpkinBackdrop.TextTransparency = 0.18
-    pumpkinBackdrop.TextStrokeColor3 = Color3.fromRGB(74, 8, 92)
-    pumpkinBackdrop.TextStrokeTransparency = 0.1
-    pumpkinBackdrop.Font = Enum.Font.GothamBlack
-    pumpkinBackdrop.TextScaled = true
-    pumpkinBackdrop.ZIndex = 1
-    pumpkinBackdrop.Parent = BgCont
-    local pumpkinGlow = Instance.new("Frame")
-    pumpkinGlow.Name = "HalloweenPumpkinShade"
-    pumpkinGlow.Size = UDim2.fromScale(1, 1)
-    pumpkinGlow.BackgroundColor3 = Color3.fromRGB(18, 5, 25)
-    pumpkinGlow.BackgroundTransparency = 0.38
-    pumpkinGlow.BorderSizePixel = 0
-    pumpkinGlow.ZIndex = 0
-    pumpkinGlow.Parent = BgCont
-    guiCorner(pumpkinGlow, 18)
     M.bgImageRef = BgImg
     task.defer(function()
         if M.applyMenuBackground then M.applyMenuBackground(M.menuBgIndex or 1) end
@@ -9650,30 +9867,19 @@ function M.buildGui()
         if on then M.startBatCounterV2() else M.stopBatCounterV2() end
         savePrimeHubFeKlanConfig()
     end)
-    uiExpandableVersionToggle(PMech, "TP Bat", M.bypassAimbotEnabled == true, {"V1", "V2"}, M.tpBatVersion or "V1",
-        function(on, version)
-            M.tpBatVersion = tostring(version or M.tpBatVersion or "V1")
-            M.bypassAimbotEnabled = on == true
-            if on then
-                if M.batV2Enabled then M.disableBatV2() end
-                M.startBypassAimbot()
-            else
-                M.stopBypassAimbot()
-            end
+    uiToggleRow(PMech, "Anti Bat", M.antiBatEnabled == true, function(on)
+        M.antiBatEnabled = on == true
+        if on then M.startAntiBat() else M.stopAntiBat() end
+        savePrimeHubFeKlanConfig()
+    end)
+    -- Velocidad del Bat Bypass: se ajusta desde la interfaz, no desde el botón flotante.
+    if uiNumberRow then
+        uiNumberRow(PMech, "Bat Bypass Speed", M.bypassAimbotSpeed or 55, 10, 150, function(v)
+            M.bypassAimbotSpeed = math.clamp(tonumber(v) or 55, 10, 150)
             savePrimeHubFeKlanConfig()
-        end,
-        function(version, isOn)
-            M.tpBatVersion = tostring(version or "V1")
-            if M.notify then pcall(function() M.notify("TP Bat: " .. M.tpBatVersion) end) end
-            -- If TP Bat is running, restart so the new distance threshold applies
-            if isOn or M.bypassAimbotEnabled then
-                M.stopBypassAimbot()
-                M.bypassAimbotEnabled = true
-                M.startBypassAimbot()
-            end
-            savePrimeHubFeKlanConfig()
-        end
-    )
+        end)
+    end
+    -- Bat Bypass is activated/deactivated from its standalone mobile button.
     do
         local _, setBatV2Vis = uiToggleRow(PMech, "Bat V2", M.batV2Enabled == true, function(on)
             if on then M.enableBatV2() else M.disableBatV2() end
@@ -10026,42 +10232,693 @@ function M.buildGui()
     end)
     task.defer(function() end)
 
+
+-- ============================================================
+-- CUSTOM SOUNDS (from Elite Family)
+-- Bat -> katana slash   |   Medusa -> gunshot
+-- ============================================================
+M.customSoundsEnabled = M.customSoundsEnabled == true
+do
+    local SOUNDS = {
+        Bat    = { id = "rbxassetid://111808555599832", skip = 0 },
+        Medusa = { id = "rbxassetid://3102797479", doublePlay = true, delay = 0.5 },
+    }
+    local CT_ITEMS = {
+        { key = "Bat", match = function(n) n = n:lower(); return n:find("bat") ~= nil or n:find("slap") ~= nil end },
+        { key = "Medusa", match = function(n) return n:lower():find("medusa") ~= nil end },
+    }
+    local function matchItem(inst)
+        if not (inst:IsA("Tool") or inst:IsA("Model") or inst:IsA("Accessory") or inst:IsA("BasePart")) then return nil end
+        for _, item in ipairs(CT_ITEMS) do
+            if item.match(inst.Name) then return item end
+        end
+        return nil
+    end
+    local hooked = setmetatable({}, { __mode = "k" })
+    local enabled = false
+    local tracked = setmetatable({}, { __mode = "k" })
+    local watchers = setmetatable({}, { __mode = "k" })
+    local pendingHandle = setmetatable({}, { __mode = "k" })
+
+    local function playCustom(entry)
+        local cs = entry.sound
+        if not cs or not cs.Parent then return end
+        local d = entry.data
+        if entry.timer then pcall(task.cancel, entry.timer); entry.timer = nil end
+        pcall(function()
+            cs:Stop()
+            cs.TimePosition = d.skip or 0
+            cs.Volume = 1
+            cs:Play()
+        end)
+        if d.doublePlay and d.delay then
+            entry.timer = task.delay(d.delay, function()
+                entry.timer = nil
+                if not enabled then return end
+                if cs and cs.Parent then
+                    pcall(function()
+                        cs:Stop()
+                        cs.TimePosition = d.skip or 0
+                        cs.Volume = 1
+                        cs:Play()
+                    end)
+                end
+            end)
+        end
+    end
+
+    local function hookSound(entry, snd)
+        if not snd:IsA("Sound") then return end
+        if snd.Name == "CustomSound" then return end
+        if hooked[snd] then return end
+        if entry.muted[snd] ~= nil then return end
+        entry.muted[snd] = snd.Volume
+        hooked[snd] = true
+        local function trigger()
+            if not enabled then return end
+            if snd.IsPlaying or snd.Playing then
+                pcall(function() snd.Volume = 0 end)
+                playCustom(entry)
+            end
+        end
+        pcall(function()
+            if snd.IsPlaying or snd.Playing then
+                snd.Volume = 0
+            end
+        end)
+        local c1 = snd:GetPropertyChangedSignal("Playing"):Connect(function()
+            if not enabled then return end
+            if snd.Playing then
+                pcall(function() snd.Volume = 0 end)
+                playCustom(entry)
+            end
+        end)
+        local c2 = nil
+        pcall(function()
+            c2 = snd:GetPropertyChangedSignal("IsPlaying"):Connect(function()
+                if not enabled then return end
+                if snd.IsPlaying then
+                    pcall(function() snd.Volume = 0 end)
+                    playCustom(entry)
+                end
+            end)
+        end)
+        local c3 = snd.Played:Connect(function()
+            if not enabled then return end
+            pcall(function() snd.Volume = 0 end)
+            playCustom(entry)
+        end)
+        entry.conns = entry.conns or {}
+        table.insert(entry.conns, c1)
+        if c2 then table.insert(entry.conns, c2) end
+        table.insert(entry.conns, c3)
+    end
+
+    local function ensureCustomSound(tool, data)
+        local handle = tool:FindFirstChild("Handle")
+        if not handle then
+            if not pendingHandle[tool] then
+                pendingHandle[tool] = tool.ChildAdded:Connect(function(ch)
+                    if ch.Name == "Handle" then
+                        pcall(function() pendingHandle[tool]:Disconnect() end)
+                        pendingHandle[tool] = nil
+                        if enabled then
+                            local item = matchItem(tool)
+                            if item then
+                                local entry = tracked[tool]
+                                if not entry then
+                                    entry = { data = SOUNDS[item.key], muted = {}, conns = {} }
+                                    tracked[tool] = entry
+                                end
+                                ensureCustomSound(tool, entry.data)
+                                for _, d in ipairs(tool:GetDescendants()) do
+                                    if d:IsA("Sound") then hookSound(entry, d) end
+                                end
+                            end
+                        end
+                    end
+                end)
+            end
+            return
+        end
+        local entry = tracked[tool]
+        if not entry then
+            entry = { data = data, muted = {}, conns = {} }
+            tracked[tool] = entry
+        end
+        local cs = handle:FindFirstChild("CustomSound")
+        if not cs then
+            cs = Instance.new("Sound")
+            cs.Name = "CustomSound"
+            cs.SoundId = data.id
+            cs.Volume = 1
+            cs.Looped = false
+            cs.Parent = handle
+        else
+            cs.SoundId = data.id
+        end
+        entry.sound = cs
+        entry.data = data
+        for _, d in ipairs(tool:GetDescendants()) do
+            if d:IsA("Sound") and d.Name ~= "CustomSound" then
+                hookSound(entry, d)
+            end
+        end
+        if not entry.descConn then
+            entry.descConn = tool.DescendantAdded:Connect(function(d)
+                if not enabled then return end
+                if d:IsA("Sound") and d.Name ~= "CustomSound" then
+                    hookSound(entry, d)
+                end
+            end)
+        end
+    end
+
+    local function teardown(tool)
+        local entry = tracked[tool]
+        if not entry then return end
+        if entry.timer then pcall(task.cancel, entry.timer); entry.timer = nil end
+        if entry.descConn then pcall(function() entry.descConn:Disconnect() end); entry.descConn = nil end
+        if entry.conns then
+            for _, c in ipairs(entry.conns) do pcall(function() c:Disconnect() end) end
+            entry.conns = {}
+        end
+        for snd, vol in pairs(entry.muted) do
+            pcall(function() if snd and snd.Parent then snd.Volume = vol end end)
+        end
+        entry.muted = {}
+        if entry.sound then
+            pcall(function() entry.sound:Stop(); entry.sound:Destroy() end)
+            entry.sound = nil
+        end
+        tracked[tool] = nil
+        hooked = setmetatable({}, { __mode = "k" })
+    end
+
+    local function watchContainer(container)
+        if not container or watchers[container] then return end
+        local function tryHook(inst)
+            local item = matchItem(inst)
+            if not item then return end
+            ensureCustomSound(inst, SOUNDS[item.key])
+        end
+        for _, ch in ipairs(container:GetChildren()) do tryHook(ch) end
+        watchers[container] = container.ChildAdded:Connect(function(ch)
+            if not enabled then return end
+            tryHook(ch)
+        end)
+    end
+
+    local function unwatch(container)
+        local c = watchers[container]
+        if c then pcall(function() c:Disconnect() end); watchers[container] = nil end
+    end
+
+    local function restoreBatMedusaVolumes(root)
+        if not root then return end
+        for _, obj in ipairs(root:GetDescendants()) do
+            if obj:IsA("Tool") or obj:IsA("Model") then
+                local item = matchItem(obj)
+                if item then
+                    for _, snd in ipairs(obj:GetDescendants()) do
+                        if snd:IsA("Sound") and snd.Name ~= "CustomSound" then
+                            pcall(function() if snd.Volume == 0 then snd.Volume = 1 end end)
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    local function watchAll()
+        if not player then return end
+        watchContainer(player.Character)
+        watchContainer(player:FindFirstChildOfClass("Backpack"))
+        if not M._customSoundCharConn then
+            M._customSoundCharConn = player.CharacterAdded:Connect(function(char)
+                if not enabled then return end
+                task.wait(0.2)
+                watchContainer(char)
+            end)
+        end
+    end
+
+    M.setCustomSoundsEnabled = function(on)
+        on = on and true or false
+        enabled = on
+        M.customSoundsEnabled = on
+        if on then
+            if player then
+                restoreBatMedusaVolumes(player.Character)
+                restoreBatMedusaVolumes(player:FindFirstChildOfClass("Backpack"))
+            end
+            watchAll()
+        else
+            for tool, entry in pairs(tracked) do
+                if entry.timer then pcall(task.cancel, entry.timer); entry.timer = nil end
+                if entry.sound then pcall(function() entry.sound:Stop() end) end
+                teardown(tool)
+            end
+            for _, c in pairs(pendingHandle) do pcall(function() c:Disconnect() end) end
+            table.clear(pendingHandle)
+            for container in pairs(watchers) do unwatch(container) end
+            local function removeLoose(root)
+                if not root then return end
+                for _, obj in ipairs(root:GetDescendants()) do
+                    if obj:IsA("Sound") and obj.Name == "CustomSound" then
+                        pcall(function() obj:Stop(); obj:Destroy() end)
+                    end
+                end
+                restoreBatMedusaVolumes(root)
+            end
+            if player then
+                removeLoose(player.Character)
+                removeLoose(player:FindFirstChildOfClass("Backpack"))
+            end
+        end
+    end
+    M.isCustomSoundsEnabled = function() return enabled end
+end
+
+
     -- SAFIRA HUB skin center: cosmetic-only local presets for the character and bat.
     M.batSkinName = M.batSkinName or "Off"
     M.characterSkinName = M.characterSkinName or "Off"
     M._primeBatSkinOriginals = M._primeBatSkinOriginals or {}
     M._primeCharacterOriginals = M._primeCharacterOriginals or {}
-    function M.applyPrimeBatSkin(name)
-        name = tostring(name or "Off")
-        M.batSkinName = name
-        local colors = {
-            Pumpkin = {Color3.fromRGB(255, 126, 20), Color3.fromRGB(92, 14, 120)},
-            Shadow = {Color3.fromRGB(24, 18, 35), Color3.fromRGB(145, 55, 255)},
-            Candy = {Color3.fromRGB(255, 75, 180), Color3.fromRGB(60, 220, 255)},
-        }
-        local pair = colors[name]
-        local char = player.Character
-        local bp = player:FindFirstChildOfClass("Backpack")
-        local containers = {char, bp}
-        for _, container in ipairs(containers) do
-            if container then
-                for _, tool in ipairs(container:GetChildren()) do
-                    if tool:IsA("Tool") and (tool.Name:lower():find("bat") or tool.Name:lower():find("slap")) then
-                        for _, obj in ipairs(tool:GetDescendants()) do
-                            if obj:IsA("BasePart") then
-                                if not M._primeBatSkinOriginals[obj] then M._primeBatSkinOriginals[obj] = {Color=obj.Color, Material=obj.Material} end
-                                if pair then
-                                    obj.Color = pair[1]
-                                    obj.Material = Enum.Material.Neon
-                                else
-                                    local original = M._primeBatSkinOriginals[obj]
-                                    obj.Color, obj.Material = original.Color, original.Material
-                                end
-                            end
+    -- Katana skin controller (from Elite Family / Bloody Katana)
+    do
+        local function createKatanaSkinController()
+            local InsertService = game:GetService("InsertService")
+            local katanaColors = {
+                red = Color3.new(0.784314, 0, 0),
+                red2 = Color3.new(1, 0, 0.392157),
+                gold = Color3.new(1, 0.843137, 0),
+            }
+            local state = {
+                Skin = "KATANA",
+                LastBat = nil,
+                LastAppliedSkin = nil,
+                ExactTemplates = {},
+                ExactTemplateSearched = {},
+                ExactAssetIds = { KATANA = "126653333198410" },
+                Original = {},
+            }
+            local function findBat()
+                local char = player.Character
+                if char then
+                    local bat = char:FindFirstChild("Bat")
+                    if bat and bat:IsA("Tool") then return bat end
+                    for _, t in ipairs(char:GetChildren()) do
+                        if t:IsA("Tool") and t.Name:lower():find("bat") then return t end
+                    end
+                end
+                local bp = player:FindFirstChildOfClass("Backpack")
+                if bp then
+                    local bat = bp:FindFirstChild("Bat")
+                    if bat and bat:IsA("Tool") then return bat end
+                    for _, t in ipairs(bp:GetChildren()) do
+                        if t:IsA("Tool") and t.Name:lower():find("bat") then return t end
+                    end
+                end
+                return nil
+            end
+            local function configureVisualPart(part)
+                if not part or not part:IsA("BasePart") then return end
+                part.Anchored = false
+                part.CanCollide = false
+                part.CanTouch = false
+                part.CanQuery = false
+                part.Massless = true
+            end
+            local function weldToHandle(part1, part0)
+                if not part1 or not part0 then return end
+                configureVisualPart(part1)
+                local w = Instance.new("Weld")
+                w.Part0 = part0
+                w.Part1 = part1
+                w.C0 = CFrame.new(0, 0, 0)
+                w.Parent = part1
+            end
+            local function cacheOriginalBatState(batTool)
+                if not batTool then return end
+                state.Original[batTool] = state.Original[batTool] or {}
+                local orig = state.Original[batTool]
+                local handle = batTool:FindFirstChild("Handle")
+                if handle and handle:IsA("BasePart") and not orig.Handle then
+                    orig.Handle = {
+                        Transparency = handle.Transparency,
+                        Color = handle.Color,
+                        Material = handle.Material,
+                        Size = handle.Size,
+                    }
+                    local mesh = handle:FindFirstChildOfClass("SpecialMesh") or handle:FindFirstChildOfClass("Mesh")
+                    if mesh then
+                        orig.Mesh = { MeshId = mesh.MeshId, TextureId = mesh.TextureId, Scale = mesh.Scale }
+                    end
+                end
+                local slash = batTool:FindFirstChild("Slash") or (handle and handle:FindFirstChild("Slash"))
+                if slash and slash:IsA("Sound") and not orig.SlashSoundId then
+                    orig.SlashSoundId = slash.SoundId
+                end
+            end
+            local function setBatHandleHidden(batTool, hidden)
+                local handle = batTool and batTool:FindFirstChild("Handle")
+                if not handle or not handle:IsA("BasePart") then return end
+                if hidden then
+                    handle.Transparency = 1
+                    handle.LocalTransparencyModifier = 1
+                    handle.CastShadow = false
+                    local mesh = handle:FindFirstChildOfClass("SpecialMesh")
+                    if mesh then
+                        if not (state.Original[batTool] and state.Original[batTool].Mesh) then
+                            state.Original[batTool] = state.Original[batTool] or {}
+                            state.Original[batTool].Mesh = { MeshId = mesh.MeshId, TextureId = mesh.TextureId, Scale = mesh.Scale }
                         end
+                        mesh.Scale = Vector3.new(0.001, 0.001, 0.001)
+                    end
+                    -- Ocultar también MeshParts hijos del handle
+                    for _, d in ipairs(handle:GetDescendants()) do
+                        if d:IsA("BasePart") then
+                            d.Transparency = 1
+                            d.LocalTransparencyModifier = 1
+                        elseif d:IsA("Decal") or d:IsA("Texture") then
+                            d.Transparency = 1
+                        end
+                    end
+                else
+                    local orig = state.Original[batTool] and state.Original[batTool].Handle
+                    handle.Transparency = (orig and orig.Transparency) or 0
+                    handle.LocalTransparencyModifier = 0
+                    handle.CastShadow = true
+                    if orig then
+                        if orig.Color then handle.Color = orig.Color end
+                        if orig.Material then handle.Material = orig.Material end
+                    end
+                    local mesh = handle:FindFirstChildOfClass("SpecialMesh")
+                    local om = state.Original[batTool] and state.Original[batTool].Mesh
+                    if mesh and om then
+                        mesh.MeshId = om.MeshId
+                        mesh.TextureId = om.TextureId
+                        mesh.Scale = om.Scale
                     end
                 end
             end
+            local function setBatSlashSound(batTool, soundId)
+                local handle = batTool and batTool:FindFirstChild("Handle")
+                local slash = batTool:FindFirstChild("Slash") or (handle and handle:FindFirstChild("Slash"))
+                if slash and slash:IsA("Sound") then
+                    if not soundId then
+                        soundId = state.Original[batTool] and state.Original[batTool].SlashSoundId or slash.SoundId
+                    end
+                    slash.SoundId = soundId
+                end
+            end
+            local function clearKatanaVisuals(batTool)
+                if not batTool then return end
+                for _, name in ipairs({"FlowerSkin_KatanaRealistic", "FlowerSkin_AssetKatana", "PrimeKatanaModel"}) do
+                    local obj = batTool:FindFirstChild(name)
+                    if obj then pcall(function() obj:Destroy() end) end
+                end
+            end
+            local function addKatanaRedEffects(parent)
+                local att = Instance.new("Attachment")
+                att.Name = "KatanaGlowAtt"
+                att.Parent = parent
+                local pe = Instance.new("ParticleEmitter")
+                pe.Name = "KatanaRedParticles"
+                pe.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, katanaColors.red2),
+                    ColorSequenceKeypoint.new(1, katanaColors.red),
+                })
+                pe.Size = NumberSequence.new({
+                    NumberSequenceKeypoint.new(0, 0.15),
+                    NumberSequenceKeypoint.new(1, 0),
+                })
+                pe.Lifetime = NumberRange.new(1, 2)
+                pe.Rate = 12
+                pe.Speed = NumberRange.new(0.2, 0.6)
+                pe.Parent = att
+            end
+            local function createProceduralKatana(batTool)
+                clearKatanaVisuals(batTool)
+                local handle = batTool:FindFirstChild("Handle")
+                if not handle then return false end
+                local model = Instance.new("Model")
+                model.Name = "PrimeKatanaModel"
+                model.Parent = batTool
+                local function createPart(name, size, cf, color, material)
+                    local p = Instance.new("Part")
+                    p.Name = name
+                    p.Size = size
+                    p.Color = color
+                    p.Material = material or Enum.Material.Metal
+                    p.Anchored = false
+                    p.CanCollide = false
+                    p.CanTouch = false
+                    p.CanQuery = false
+                    p.Massless = true
+                    p.CFrame = handle.CFrame * cf
+                    p.Parent = model
+                    local w = Instance.new("Weld")
+                    w.Part0 = handle
+                    w.Part1 = p
+                    w.C0 = cf
+                    w.Parent = p
+                    return p
+                end
+                -- Empuñadura en la mano (abajo) y hoja hacia arriba
+                createPart("Hilt", Vector3.new(0.16, 0.85, 0.16), CFrame.new(0, 0.05, 0), Color3.fromRGB(30, 30, 35), Enum.Material.SmoothPlastic)
+                createPart("Pommel", Vector3.new(0.2, 0.14, 0.2), CFrame.new(0, -0.42, 0), katanaColors.red, Enum.Material.Neon)
+                createPart("Guard", Vector3.new(0.55, 0.12, 0.35), CFrame.new(0, 0.52, 0), katanaColors.gold, Enum.Material.Neon)
+                local blade = createPart("Blade", Vector3.new(0.18, 2.8, 0.08), CFrame.new(0, 2.0, 0), Color3.fromRGB(220, 220, 230), Enum.Material.Metal)
+                createPart("GoldAccent", Vector3.new(0.5, 0.12, 0.08), CFrame.new(0, 0.55, 0), katanaColors.gold, Enum.Material.Neon)
+                addKatanaRedEffects(blade)
+                model.PrimaryPart = blade
+                return true
+            end
+            local function loadAssetSkinTemplate(skinName)
+                local assetId = state.ExactAssetIds[skinName]
+                if not assetId or assetId == "" then return nil end
+                local ok, res = pcall(function()
+                    return game:GetObjects("rbxassetid://" .. tostring(assetId))
+                end)
+                if ok and type(res) == "table" and #res > 0 then
+                    return res[1]
+                end
+                ok, res = pcall(function()
+                    return InsertService:LoadAsset(tonumber(assetId))
+                end)
+                if ok and res then
+                    local model = res:FindFirstChildWhichIsA("Model") or res:FindFirstChildWhichIsA("BasePart") or res
+                    return model
+                end
+                return nil
+            end
+            local function applyExactSkinTemplate(batTool, skinName)
+                local template = state.ExactTemplates[skinName]
+                if not template and not state.ExactTemplateSearched[skinName] then
+                    state.ExactTemplateSearched[skinName] = true
+                    template = loadAssetSkinTemplate(skinName)
+                    if template then state.ExactTemplates[skinName] = template end
+                end
+                if not template then return false end
+                clearKatanaVisuals(batTool)
+                local handle = batTool:FindFirstChild("Handle")
+                if not handle or not handle:IsA("BasePart") then return false end
+
+                local folder = Instance.new("Folder")
+                folder.Name = "FlowerSkin_KatanaRealistic"
+                folder.Parent = batTool
+
+                local clone = template:Clone()
+                for _, d in ipairs(clone:GetDescendants()) do
+                    if d:IsA("Script") or d:IsA("LocalScript") then pcall(function() d:Destroy() end) end
+                end
+
+                local skinModel
+                if clone:IsA("Model") then
+                    clone.Name = "FlowerSkin_AssetKatana"
+                    clone.Parent = folder
+                    skinModel = clone
+                elseif clone:IsA("BasePart") then
+                    skinModel = Instance.new("Model")
+                    skinModel.Name = "FlowerSkin_AssetKatana"
+                    skinModel.Parent = folder
+                    clone.Parent = skinModel
+                else
+                    local part = clone:FindFirstChildWhichIsA("BasePart", true)
+                    if not part then folder:Destroy(); return false end
+                    skinModel = Instance.new("Model")
+                    skinModel.Name = "FlowerSkin_AssetKatana"
+                    skinModel.Parent = folder
+                    for _, ch in ipairs(clone:GetChildren()) do ch.Parent = skinModel end
+                    pcall(function() clone:Destroy() end)
+                end
+
+                local firstPart = nil
+                local allParts = {}
+                for _, d in ipairs(skinModel:GetDescendants()) do
+                    if d:IsA("BasePart") then
+                        firstPart = firstPart or d
+                        configureVisualPart(d)
+                        table.insert(allParts, d)
+                    end
+                end
+                if skinModel:IsA("BasePart") then
+                    firstPart = firstPart or skinModel
+                    configureVisualPart(skinModel)
+                    table.insert(allParts, skinModel)
+                end
+                if not firstPart then folder:Destroy(); return false end
+                if skinModel:IsA("Model") then
+                    skinModel.PrimaryPart = skinModel.PrimaryPart or firstPart
+                end
+
+                -- Buscar la empuñadura real del mesh (Handle/Hilt/Grip/Pommel)
+                local gripPart = skinModel:FindFirstChild("Handle", true)
+                    or skinModel:FindFirstChild("Hilt", true)
+                    or skinModel:FindFirstChild("Grip", true)
+                    or skinModel:FindFirstChild("Pommel", true)
+                    or skinModel:FindFirstChild("Handle2", true)
+
+                -- 1) Poner el modelo en el Handle del bate
+                pcall(function()
+                    if skinModel:IsA("Model") then
+                        skinModel:PivotTo(handle.CFrame)
+                    else
+                        firstPart.CFrame = handle.CFrame
+                    end
+                end)
+
+                -- 2) Si hay empuñadura, desplazar para que ESA parte coincida con la mano
+                if gripPart and gripPart:IsA("BasePart") and gripPart ~= handle then
+                    local delta = handle.CFrame * gripPart.CFrame:Inverse()
+                    pcall(function()
+                        if skinModel:IsA("Model") then
+                            skinModel:PivotTo(delta * skinModel:GetPivot())
+                        else
+                            for _, p in ipairs(allParts) do
+                                p.CFrame = delta * p.CFrame
+                            end
+                        end
+                    end)
+                else
+                    -- Sin empuñadura nombrada: alinear el extremo inferior del mesh a la mano
+                    local ok, bbCf, bbSize = pcall(function()
+                        if skinModel:IsA("Model") then
+                            return skinModel:GetBoundingBox()
+                        end
+                        return firstPart.CFrame, firstPart.Size
+                    end)
+                    if ok and bbCf and bbSize then
+                        -- Eje más largo = hoja; el extremo -axis queda en la mano
+                        local sx, sy, sz = bbSize.X, bbSize.Y, bbSize.Z
+                        local shift
+                        if sy >= sx and sy >= sz then
+                            shift = CFrame.new(0, sy * 0.5, 0) -- extremo -Y a la mano
+                        elseif sx >= sy and sx >= sz then
+                            shift = CFrame.new(sx * 0.5, 0, 0)
+                        else
+                            shift = CFrame.new(0, 0, sz * 0.5)
+                        end
+                        pcall(function()
+                            if skinModel:IsA("Model") then
+                                skinModel:PivotTo(handle.CFrame * shift)
+                            else
+                                firstPart.CFrame = handle.CFrame * shift
+                            end
+                        end)
+                    end
+                end
+
+                -- Soldar todo al Handle (misma posición relativa que acabamos de fijar)
+                for _, p in ipairs(allParts) do
+                    local existing = p:FindFirstChild("FlowerSkin_AssetWeld")
+                    if existing then pcall(function() existing:Destroy() end) end
+                    local w = Instance.new("WeldConstraint")
+                    w.Name = "FlowerSkin_AssetWeld"
+                    w.Part0 = handle
+                    w.Part1 = p
+                    w.Parent = p
+                end
+
+                local weaponPart = skinModel:FindFirstChild("SharpParts", true)
+                    or skinModel:FindFirstChild("WeaponPart", true)
+                    or skinModel:FindFirstChild("Handle", true)
+                    or firstPart
+                if weaponPart and not weaponPart:FindFirstChild("FlowerSkin_ExtraRedVFX") then
+                    addKatanaRedEffects(weaponPart)
+                end
+                return true
+            end
+            return {
+                State = state,
+                ApplySkin = function(skinName)
+                    local lastBat = findBat()
+                    if not lastBat then
+                        state.LastBat = nil
+                        state.LastAppliedSkin = nil
+                        return false
+                    end
+                    cacheOriginalBatState(lastBat)
+                    clearKatanaVisuals(lastBat)
+                    setBatHandleHidden(lastBat, false)
+                    setBatSlashSound(lastBat, nil)
+                    if skinName == "NONE" or skinName == "Off" then
+                        state.LastBat = lastBat
+                        state.LastAppliedSkin = "NONE"
+                        return true
+                    end
+                    setBatHandleHidden(lastBat, true)
+                    setBatSlashSound(lastBat, "rbxassetid://111808555599832")
+                    if not applyExactSkinTemplate(lastBat, "KATANA") then
+                        createProceduralKatana(lastBat)
+                    end
+                    local handle = lastBat:FindFirstChild("Handle")
+                    if handle then
+                        local fire = handle:FindFirstChildOfClass("Fire")
+                        if fire then
+                            fire.Enabled = true
+                            fire.Color = katanaColors.red
+                            fire.SecondaryColor = katanaColors.red2
+                        end
+                    end
+                    state.LastBat = lastBat
+                    state.LastAppliedSkin = "KATANA"
+                    return true
+                end,
+                FindBat = findBat,
+            }
+        end
+        M.katanaSkinController = createKatanaSkinController()
+        task.spawn(function()
+            while task.wait(0.5) do
+                if M.batSkinName == "Katana" and M.katanaSkinController then
+                    local bat = M.katanaSkinController.FindBat and M.katanaSkinController.FindBat()
+                    local st = M.katanaSkinController.State
+                    if bat and (bat ~= st.LastBat or st.LastAppliedSkin ~= "KATANA") then
+                        pcall(function() M.katanaSkinController.ApplySkin("KATANA") end)
+                    end
+                end
+            end
+        end)
+    end
+
+    function M.applyPrimeBatSkin(name)
+        name = tostring(name or "Off")
+        M.batSkinName = name
+        -- Always clear katana visuals first when switching away / reapplying
+        if M.katanaSkinController then
+            if name == "Katana" then
+                pcall(function() M.katanaSkinController.ApplySkin("KATANA") end)
+            else
+                pcall(function() M.katanaSkinController.ApplySkin("NONE") end)
+            end
+        end
+        if name ~= "Katana" and name ~= "Off" then
+            name = "Off"
+            M.batSkinName = "Off"
         end
         if M.saveConfig then pcall(M.saveConfig) end
     end
@@ -10113,8 +10970,13 @@ function M.buildGui()
 
     local PAnim = CategoryRefs.contents["Animations"]
     uiSectionHeader(PAnim, "SKINS")
-    uiChoiceRow(PAnim, "Bat Skin", {"Off", "Pumpkin", "Shadow", "Candy"}, table.find({"Off", "Pumpkin", "Shadow", "Candy"}, M.batSkinName) or 1, function(v)
+    uiChoiceRow(PAnim, "Bat Skin", {"Off", "Katana"}, table.find({"Off", "Katana"}, M.batSkinName) or 1, function(v)
         M.applyPrimeBatSkin(v)
+    end)
+    uiToggleRow(PAnim, "Custom Sounds (Bat/Medusa)", M.customSoundsEnabled == true, function(on)
+        M.customSoundsEnabled = on == true
+        if M.setCustomSoundsEnabled then M.setCustomSoundsEnabled(M.customSoundsEnabled) end
+        if M.saveConfig then pcall(M.saveConfig) end
     end)
     uiChoiceRow(PAnim, "Character Skin", {"Off", "Halloween", "Shadow", "Headless", "Korblox"}, table.find({"Off", "Halloween", "Shadow", "Headless", "Korblox"}, M.characterSkinName) or 1, function(v)
         M.applyPrimeCharacterSkin(v)
@@ -10130,31 +10992,41 @@ function M.buildGui()
         savePrimeHubFeKlanConfig()
     end)
     uiSectionHeader(PAnim, "ANIMATIONS")
+    uiToggleRow(PAnim, "Unwalk", M.unwalkEnabled == true, function(on)
+        if on then
+            M.startUnwalk()
+        else
+            M.stopUnwalk()
+        end
+        if M.setUnwalkVisual then pcall(M.setUnwalkVisual, M.unwalkEnabled) end
+        savePrimeHubFeKlanConfig()
+    end)
     uiToggleRow(PAnim, "Animations Enabled", M.animPackEnabled == true, function(on)
         M.animPackEnabled = on == true
         if M.animPackEnabled then
-            M.applyAnimPack(M.animPack or "None")
+            if M.unwalkEnabled then
+                -- Unwalk tiene prioridad: sin Animate
+            elseif M.animPack and M.animPack ~= "Off" and M.PACKS[M.animPack] then
+                M.applyAnimPack(M.animPack)
+            else
+                M.resetAnimations(player.Character)
+            end
         else
-            M.unwalkEnabled = false
-            M._unwalkOffLock = true
-            M.stopUnwalk()
-            M.resetAnimations(player.Character)
+            if not M.unwalkEnabled then
+                M.resetAnimations(player.Character)
+            end
         end
         savePrimeHubFeKlanConfig()
     end)
     if M.applyAnimPack then
-        uiChoiceRow(PAnim, "Animation Pack", {"None", "Adidas Sports", "Adidas Community", "Adidas Aura", "Wicked Popular", "Elder", "Zombie", "Mage", "Catwalk Glam", "Astronaut", "Werewolf", "Superhero", "Toy", "No Boundaries", "NFL", "Amazon Unboxed", "Vampire", "Ninja", "Robot", "Levitation", "Stylish", "Bubbly", "Unwalk"}, table.find({"None", "Adidas Sports", "Adidas Community", "Adidas Aura", "Wicked Popular", "Elder", "Zombie", "Mage", "Catwalk Glam", "Astronaut", "Werewolf", "Superhero", "Toy", "No Boundaries", "NFL", "Amazon Unboxed", "Vampire", "Ninja", "Robot", "Levitation", "Stylish", "Bubbly", "Unwalk"}, M.animPack or "Mage") or 8, function(v)
+        uiChoiceRow(PAnim, "Animation Pack", {"Off", "Zombie", "Ninja", "Knight", "Elder", "Levitate", "Astronaut", "Pirate", "Toy", "Vampire", "Werewolf", "Stylish", "Adidas Sports", "Adidas Community", "Adidas Aura", "Wicked Popular", "Mage", "Catwalk Glam", "Superhero", "Robot", "Levitation", "Bubbly", "Cartoon"}, table.find({"Off", "Zombie", "Ninja", "Knight", "Elder", "Levitate", "Astronaut", "Pirate", "Toy", "Vampire", "Werewolf", "Stylish", "Adidas Sports", "Adidas Community", "Adidas Aura", "Wicked Popular", "Mage", "Catwalk Glam", "Superhero", "Robot", "Levitation", "Bubbly", "Cartoon"}, M.animPack or "Off") or 1, function(v)
             M.animPack = v
-            if v == "Unwalk" then
-                M.animPackEnabled = true
-                M.unwalkEnabled = true
-                M._unwalkOffLock = false
-                M.startUnwalk()
-            else
-                M.unwalkEnabled = false
-                M._unwalkOffLock = true
-                M.stopUnwalk()
-                if M.animPackEnabled then M.applyAnimPack(v) end
+            if M.unwalkEnabled then
+                -- Mantener Unwalk; el pack se aplicará al desactivar Unwalk
+            elseif v == "Off" or v == "None" then
+                M.resetAnimations(player.Character)
+            elseif M.animPackEnabled then
+                M.applyAnimPack(v)
             end
             savePrimeHubFeKlanConfig()
         end)
@@ -10353,7 +11225,7 @@ uiSectionHeader(PUtil, "MOBILE")
     end)
     uiKeybindRow(PKB, "Carry Speed", M.KB.SpeedNormal, function() return M.manualCarryActive == true or M.carrySpeedActive == true end)
     uiKeybindRow(PKB, "Bat Aimbot", M.KB.AutoBat, function() return M.autoBatEnabled == true end)
-    uiKeybindRow(PKB, "Bat TP", M.KB.BatTP, function() return M.bypassAimbotEnabled == true end)
+    uiKeybindRow(PKB, "Bat Bypass", M.KB.BatTP, function() return M.bypassAimbotEnabled == true end)
     uiKeybindRow(PKB, "Bat V2", M.KB.BatV2, function() return M.batV2Enabled == true end)
     uiKeybindRow(PKB, "Drop Brainrot", M.KB.DropBrainrot, function() return M.dropActive == true end)
     uiSectionHeader(PKB, "OTHER KEYBINDS")
@@ -10512,6 +11384,8 @@ function M.resetAllSettings()
     M.infJumpMode = "hold"
     M.medusaCounterEnabled = false
     M.batCounterEnabled = false
+    M.antiBatEnabled = false
+    if M.stopAntiBat then pcall(M.stopAntiBat) end
     M.unwalkEnabled = false
         M.medusaDebounce = false
     M.medusaLastUsed = 0
@@ -10545,7 +11419,7 @@ function M.resetAllSettings()
     M.perButtonDragEnabled = true
     M.lineESPEnabled = false
     M.speedESPEnabled = false
-    M.animPack = "Mage"
+    M.animPack = "Off"
     M.headlessEnabled = false
     M.korbloxEnabled = false
     M.primeHubSkinEnabled = false
@@ -10618,6 +11492,7 @@ _G.PrimeHubIntroFinished = false
 _G.PrimeHubForceMobileVisible = false
 _G.PrimeHubIntroDoneCallbacks = {}
 pcall(savePrimeHubFeKlanConfig)
+-- Al ejecutar el script: Unwalk siempre OFF y animaciones restauradas
 M.unwalkEnabled = false
 M._unwalkOffLock = true
 if player.Character then
@@ -10693,8 +11568,7 @@ task.defer(function()
     if M.infJumpEnabled then M.startHoldInfJump() end
     if M.medusaCounterEnabled then M.setupMedusa(player.Character) end
     if M.batCounterEnabled then M.startBatCounter() end
-    M.unwalkEnabled = false
-    M._unwalkOffLock = true
+    if M.antiBatEnabled then M.startAntiBat() end
     task.wait(0.05)
     if M.autoBatEnabled then M.queueAutoBatStart() end
     if M.autoLeftEnabled then M.startAutoLeft() end
@@ -10709,7 +11583,18 @@ task.defer(function()
     if M.stretchRezEnabled then M.enableStretchRez() end
     if M.removeAccEnabled then M.startRemoveAcc() end
     task.wait(0.08)
-    if M.animPackEnabled and M.animPack and M.PACKS[M.animPack] then
+    if M.customSoundsEnabled and M.setCustomSoundsEnabled then pcall(function() M.setCustomSoundsEnabled(true) end) end
+    if M.batSkinName and M.batSkinName ~= "Off" and M.applyPrimeBatSkin then pcall(function() M.applyPrimeBatSkin(M.batSkinName) end) end
+    -- Unwalk solo se activa manualmente desde el toggle, nunca al cargar
+    M.unwalkEnabled = false
+    M._unwalkOffLock = true
+    if player.Character then
+        local anim = player.Character:FindFirstChild("Animate")
+        if not anim then
+            pcall(function() M.restoreOriginalAnimate(player.Character) end)
+        end
+    end
+    if M.animPackEnabled and M.animPack and M.animPack ~= "Off" and M.PACKS[M.animPack] then
         M.applyAnimPack(M.animPack)
     elseif player.Character then
         M.resetAnimations(player.Character)
@@ -10727,8 +11612,7 @@ task.defer(function()
         if M.nukeOptimiserEnabled and M.enableNukeOptimizer then pcall(M.enableNukeOptimizer) end
         if M.graphicsBajosEnabled then pcall(M.enableGraphicsBajos) end
         if M.antiDieEnabled then pcall(M.enableAntiDie) end
-        M.unwalkEnabled = false
-        M._unwalkOffLock = true
+        -- no reactivar Unwalk al final del boot
         if M.antiSummerBaseEnabled then pcall(M.enableAntiSummerBase) end
         if M.stretchRezEnabled then pcall(M.enableStretchRez) end
         if M.antiKickEnabled then pcall(M.enableAntiKick) end
@@ -10738,6 +11622,7 @@ task.defer(function()
         if M.bodyLockEnabled and M.startBodyLock then pcall(M.startBodyLock) end
         if M.antiRagdollEnabled and M.startAntiRagdoll then pcall(M.startAntiRagdoll) end
         if M.batCounterEnabled and M.startBatCounter then pcall(M.startBatCounter) end
+        if M.antiBatEnabled and M.startAntiBat then pcall(M.startAntiBat) end
         if M.medusaCounterEnabled and M.setupMedusa then pcall(function() M.setupMedusa(player.Character) end) end
         if M.autoBatEnabled and M.queueAutoBatStart then pcall(M.queueAutoBatStart) end
         if M.bypassAimbotEnabled and M.startBypassAimbot then pcall(M.startBypassAimbot) end
@@ -10771,10 +11656,11 @@ player.CharacterAdded:Connect(function(char)
     M.setupRagdollTriggers()
     if M.medusaCounterEnabled then M.setupMedusa(char) end
     if M.batCounterEnabled then M.startBatCounter() end
-    M.unwalkEnabled = false
-    M._unwalkOffLock = true
-    M.stopUnwalk()
-    if M.animPackEnabled and M.animPack and M.PACKS[M.animPack] then
+    if M.antiBatEnabled then M.startAntiBat() end
+    if M.unwalkEnabled == true then
+        task.wait(0.25)
+        M.startUnwalk()
+    elseif M.animPackEnabled and M.animPack and M.animPack ~= "Off" and M.PACKS[M.animPack] then
         task.wait(0.2)
         M.applyAnimPack(M.animPack)
     else
@@ -10859,8 +11745,13 @@ local function _voidApplyVelocitySpeed(speed)
         s = (M.getActiveMoveSpeed and M.getActiveMoveSpeed()) or 16
     end
     s = tonumber(s) or 16
-    -- Mismo método exacto que Lagger Carry: solo root.Velocity
-    root.Velocity = Vector3.new(u.X * s, root.Velocity.Y, u.Z * s)
+    -- Misma velocidad original; se aplica también en AssemblyLinearVelocity para que no se quede inmóvil
+    local y = root.Velocity.Y
+    pcall(function() y = root.AssemblyLinearVelocity.Y end)
+    root.Velocity = Vector3.new(u.X * s, y, u.Z * s)
+    pcall(function()
+        root.AssemblyLinearVelocity = Vector3.new(u.X * s, y, u.Z * s)
+    end)
 end
 
 local function destroySpeedObjects()
@@ -10878,16 +11769,18 @@ M._getOrMakeLV = function() return nil end
 M._speedLVSet = function(hrp, x, z)
     if not hrp then return end
     local y = 0
-    pcall(function() y = hrp.Velocity.Y end)
+    pcall(function() y = hrp.AssemblyLinearVelocity.Y end)
     pcall(function()
         hrp.Velocity = Vector3.new(x, y, z)
+        hrp.AssemblyLinearVelocity = Vector3.new(x, y, z)
     end)
 end
 M._speedLVClear = function(hrp)
     if not hrp then return end
     pcall(function()
-        local y = hrp.Velocity.Y
+        local y = hrp.AssemblyLinearVelocity.Y
         hrp.Velocity = Vector3.new(0, y, 0)
+        hrp.AssemblyLinearVelocity = Vector3.new(0, y, 0)
     end)
     local lv = hrp:FindFirstChild("_RHSpeedLV")
     if lv then pcall(function() lv:Destroy() end) end
