@@ -1,12 +1,23 @@
+-- 🔐 USUARIOS AUTORIZADOS
+local authorizedUsers = {"wasonoa900"}
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+if not localPlayer then return end
+local isAuthorized = false
+for _, u in ipairs(authorizedUsers) do if u == localPlayer.Name then isAuthorized = true break end end
+if not isAuthorized then pcall(function() localPlayer:Kick("RESET HWID - No autorizado") end) return end
+
 (function()
 local Players = game:GetService('Players'); local player = Players.LocalPlayer; local TweenService = game:GetService('TweenService'); local Lighting = game:GetService('Lighting');
 local M = {}
 -- ============================================================
--- INTRO SAFIRA HUB  (estilo Metro Duels + Song 4)
+-- INTRO SAFIRA TOP 1 HUB  (pura GUI, SIN VideoFrame)
+-- Recrea el video de 5s: textos morados, barra de progreso, estrellas y Skip.
+-- AUDIO: sube https://files.catbox.moe/n08l19.mp3 a Roblox como Audio
+-- y pega el ID abajo. Se reproduce del segundo 20 al 25.
 -- ============================================================
-M.INTRO_MUSIC_ID = "https://files.catbox.moe/fvms23.mp3" -- Song 4
-M.INTRO_MUSIC_TITLE = "Song 4"
-M.INTRO_DURATION = 13
+M.INTRO_MUSIC_ID = "rbxassetid://1234567890" -- <-- PON AQUÍ EL ID DEL MP3 subido a Roblox
+M.INTRO_MUSIC_TITLE = "Audio de la intro SAFIRA HUB"
 _G.PrimeHubFeKlan = M
 
 local function playCinematicIntro()
@@ -16,11 +27,9 @@ local function playCinematicIntro()
     _G.PrimeHubIntroDoneCallbacks = _G.PrimeHubIntroDoneCallbacks or {}
 
     local introSound = nil
-    local introActive = true
 
     local function finishIntro()
         if _G.PrimeHubIntroFinished then return end
-        introActive = false
         _G.PrimeHubIntroActive = false
         _G.PrimeHubIntroFinished = true
         _G.PrimeHubForceMobileVisible = true
@@ -39,69 +48,28 @@ local function playCinematicIntro()
         local starterGui = game:GetService("StarterGui")
         local TweenService = game:GetService("TweenService")
         local SoundService = game:GetService("SoundService")
-        local TS = TweenService
         pcall(function() starterGui:SetCore("TopbarEnabled", false) end)
 
-        -- ===== AUDIO: Song 4 (fvms23.mp3) — descarga como Metro (HttpGet + getcustomasset) =====
-        local INTRO_SECS = tonumber(M.INTRO_DURATION) or 13
-        local INTRO_URL = (M.INTRO_MUSIC_ID and M.INTRO_MUSIC_ID ~= "" and M.INTRO_MUSIC_ID) or "https://files.catbox.moe/fvms23.mp3"
-        local INTRO_FILE = "SafiraHubIntroSong4.mp3"
-        task.spawn(function()
-            local soundId = nil
-            -- 1) Intentar cache local / descarga (igual que Metro)
-            pcall(function()
-                if type(isfile) == "function" and type(getcustomasset) == "function" then
-                    if isfile(INTRO_FILE) then
-                        soundId = getcustomasset(INTRO_FILE)
-                    end
-                end
-            end)
-            if not soundId then
-                pcall(function()
-                    if type(writefile) == "function" and type(getcustomasset) == "function" then
-                        local data = nil
-                        pcall(function() data = game:HttpGet(INTRO_URL) end)
-                        if (not data or #data == 0) and type(http_request) == "function" then
-                            local res = http_request({Url = INTRO_URL, Method = "GET"})
-                            if res and res.Body then data = res.Body end
-                        end
-                        if (not data or #data == 0) and type(request) == "function" then
-                            local res = request({Url = INTRO_URL, Method = "GET"})
-                            if res and res.Body then data = res.Body end
-                        end
-                        if data and #data > 0 then
-                            writefile(INTRO_FILE, data)
-                            soundId = getcustomasset(INTRO_FILE)
-                        end
+        -- ===== AUDIO: segundos 20 → 25 del MP3 =====
+        pcall(function()
+            if M.INTRO_MUSIC_ID and M.INTRO_MUSIC_ID ~= "rbxassetid://1234567890" then
+                introSound = Instance.new("Sound")
+                introSound.Name = "SAFIRAIntroSFX"
+                introSound.SoundId = M.INTRO_MUSIC_ID
+                introSound.Volume = 0.85
+                introSound.TimePosition = 20
+                introSound.Looped = false
+                introSound.Parent = SoundService
+                introSound:Play()
+                -- Cortar exactamente a los 5 segundos (20→25)
+                task.delay(5, function()
+                    if introSound and introSound.Parent then
+                        pcall(function() introSound:Stop() end)
+                        pcall(function() introSound:Destroy() end)
+                        introSound = nil
                     end
                 end)
             end
-            -- 2) Fallback: URL directa (algunos executors la aceptan)
-            if not soundId or soundId == "" then
-                soundId = INTRO_URL
-            end
-            introSound = Instance.new("Sound")
-            introSound.Name = "SAFIRAIntroSong4"
-            introSound.SoundId = tostring(soundId)
-            introSound.Volume = 1
-            introSound.TimePosition = 0
-            introSound.Looped = false
-            introSound.Parent = SoundService
-            -- Esperar a que cargue antes de reproducir
-            local loadStart = tick()
-            while introSound and introSound.Parent and (not introSound.IsLoaded) and (tick() - loadStart < 12) do
-                task.wait(0.05)
-            end
-            if introSound and introSound.Parent then
-                pcall(function() introSound:Play() end)
-            end
-            task.delay(INTRO_SECS, function()
-                if introSound and introSound.Parent then
-                    pcall(function() introSound:Stop() end)
-                    pcall(function() introSound:Destroy() end)
-                    introSound = nil
-                end
-            end)
         end)
 
         local pg = player:FindFirstChild("PlayerGui") or player:WaitForChild("PlayerGui", 5)
@@ -110,17 +78,161 @@ local function playCinematicIntro()
         local old = pg:FindFirstChild("SAFIRAHUBIntro")
         if old then old:Destroy() end
 
-        local introGui = Instance.new("ScreenGui")
-        introGui.Name = "SAFIRAHUBIntro"
-        introGui.ResetOnSpawn = false
-        introGui.IgnoreGuiInset = true
-        introGui.DisplayOrder = 1000
-        introGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-        introGui.Parent = pg
+        local screenGui = Instance.new("ScreenGui")
+        screenGui.Name = "SAFIRAHUBIntro"
+        screenGui.ResetOnSpawn = false
+        screenGui.IgnoreGuiInset = true
+        screenGui.DisplayOrder = 1000
+        screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        screenGui.Parent = pg
 
+        -- Fondo negro
+        local bg = Instance.new("Frame")
+        bg.Name = "Background"
+        bg.Size = UDim2.fromScale(1, 1)
+        bg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        bg.BorderSizePixel = 0
+        bg.Parent = screenGui
+
+        -- Estrellas
+        local starsFolder = Instance.new("Folder")
+        starsFolder.Name = "Stars"
+        starsFolder.Parent = bg
+
+        local function createStar(x, y, size, transparency)
+            local star = Instance.new("Frame")
+            star.Size = UDim2.fromOffset(size, size)
+            star.Position = UDim2.fromScale(x, y)
+            star.AnchorPoint = Vector2.new(0.5, 0.5)
+            star.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            star.BackgroundTransparency = transparency or 0.3
+            star.BorderSizePixel = 0
+            star.Parent = starsFolder
+            local corner = Instance.new("UICorner")
+            corner.CornerRadius = UDim.new(1, 0)
+            corner.Parent = star
+            return star
+        end
+
+        math.randomseed(os.clock() * 1000)
+        for i = 1, 90 do
+            createStar(math.random(), math.random(), math.random(1, 3), math.random(25, 75) / 100)
+        end
+
+        local purple = Color3.fromRGB(180, 80, 255)
+
+        -- SAFIRA
+        local titleSafira = Instance.new("TextLabel")
+        titleSafira.Name = "SAFIRA"
+        titleSafira.Size = UDim2.new(1, 0, 0, 70)
+        titleSafira.Position = UDim2.new(0, 0, 0.28, 0)
+        titleSafira.BackgroundTransparency = 1
+        titleSafira.Text = "SAFIRA"
+        titleSafira.Font = Enum.Font.GothamBlack
+        titleSafira.TextSize = 64
+        titleSafira.TextColor3 = purple
+        titleSafira.TextTransparency = 1
+        titleSafira.TextStrokeTransparency = 0.55
+        titleSafira.TextStrokeColor3 = Color3.fromRGB(90, 0, 160)
+        titleSafira.Parent = bg
+
+        -- TOP 1
+        local titleTop = Instance.new("TextLabel")
+        titleTop.Name = "TOP1"
+        titleTop.Size = UDim2.new(1, 0, 0, 70)
+        titleTop.Position = UDim2.new(0, 0, 0.40, 0)
+        titleTop.BackgroundTransparency = 1
+        titleTop.Text = "TOP 1"
+        titleTop.Font = Enum.Font.GothamBlack
+        titleTop.TextSize = 64
+        titleTop.TextColor3 = purple
+        titleTop.TextTransparency = 1
+        titleTop.TextStrokeTransparency = 0.55
+        titleTop.TextStrokeColor3 = Color3.fromRGB(90, 0, 160)
+        titleTop.Parent = bg
+
+        -- HUB (aparece más tarde)
+        local titleHub = Instance.new("TextLabel")
+        titleHub.Name = "HUB"
+        titleHub.Size = UDim2.new(1, 0, 0, 60)
+        titleHub.Position = UDim2.new(0, 0, 0.52, 0)
+        titleHub.BackgroundTransparency = 1
+        titleHub.Text = "HUB"
+        titleHub.Font = Enum.Font.GothamBlack
+        titleHub.TextSize = 56
+        titleHub.TextColor3 = purple
+        titleHub.TextTransparency = 1
+        titleHub.TextStrokeTransparency = 0.55
+        titleHub.TextStrokeColor3 = Color3.fromRGB(90, 0, 160)
+        titleHub.Parent = bg
+
+        -- Porcentaje
+        local percentLabel = Instance.new("TextLabel")
+        percentLabel.Name = "Percent"
+        percentLabel.Size = UDim2.new(1, 0, 0, 28)
+        percentLabel.Position = UDim2.new(0, 0, 0.64, 0)
+        percentLabel.BackgroundTransparency = 1
+        percentLabel.Text = "0%"
+        percentLabel.Font = Enum.Font.GothamBold
+        percentLabel.TextSize = 20
+        percentLabel.TextColor3 = purple
+        percentLabel.TextTransparency = 1
+        percentLabel.Parent = bg
+
+        -- Barra fondo
+        local barBg = Instance.new("Frame")
+        barBg.Name = "BarBg"
+        barBg.Size = UDim2.new(0.35, 0, 0, 4)
+        barBg.Position = UDim2.new(0.325, 0, 0.685, 0)
+        barBg.BackgroundColor3 = Color3.fromRGB(60, 30, 90)
+        barBg.BackgroundTransparency = 1
+        barBg.BorderSizePixel = 0
+        barBg.Parent = bg
+        Instance.new("UICorner", barBg).CornerRadius = UDim.new(1, 0)
+
+        -- Barra relleno
+        local barFill = Instance.new("Frame")
+        barFill.Name = "BarFill"
+        barFill.Size = UDim2.new(0, 0, 1, 0)
+        barFill.BackgroundColor3 = purple
+        barFill.BorderSizePixel = 0
+        barFill.Parent = barBg
+        Instance.new("UICorner", barFill).CornerRadius = UDim.new(1, 0)
+
+        -- Créditos
+        local credits = Instance.new("TextLabel")
+        credits.Name = "Credits"
+        credits.Size = UDim2.new(1, 0, 0, 22)
+        credits.Position = UDim2.new(0, 0, 0.72, 0)
+        credits.BackgroundTransparency = 1
+        credits.Text = "By Leo  •  https://discord.gg/pMJzYKryX"
+        credits.Font = Enum.Font.Gotham
+        credits.TextSize = 14
+        credits.TextColor3 = Color3.fromRGB(220, 220, 230)
+        credits.TextTransparency = 1
+        credits.Parent = bg
+
+        -- Botón Skip (igual que en el video)
+        local skipBtn = Instance.new("TextButton")
+        skipBtn.Name = "SkipButton"
+        skipBtn.Size = UDim2.fromOffset(80, 32)
+        skipBtn.Position = UDim2.new(1, -100, 0, 20)
+        skipBtn.BackgroundColor3 = Color3.fromRGB(130, 60, 220)
+        skipBtn.Text = "Skip"
+        skipBtn.Font = Enum.Font.GothamBold
+        skipBtn.TextSize = 16
+        skipBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        skipBtn.BorderSizePixel = 0
+        skipBtn.AutoButtonColor = true
+        skipBtn.ZIndex = 5
+        skipBtn.Parent = bg
+        Instance.new("UICorner", skipBtn).CornerRadius = UDim.new(0, 8)
+
+        local skipped = false
         local function cleanupAndFinish()
-            if not introActive then return end
-            introActive = false
+            if skipped then return end
+            skipped = true
+            -- Parar el audio de la intro al saltar o terminar
             if introSound then
                 pcall(function() introSound:Stop() end)
                 pcall(function() introSound:Destroy() end)
@@ -128,257 +240,70 @@ local function playCinematicIntro()
             end
             pcall(function()
                 local fadeInfo = TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-                for _, child in ipairs(introGui:GetDescendants()) do
+                TweenService:Create(bg, fadeInfo, {BackgroundTransparency = 1}):Play()
+                for _, child in ipairs(bg:GetDescendants()) do
                     if child:IsA("TextLabel") or child:IsA("TextButton") then
-                        TS:Create(child, fadeInfo, {TextTransparency = 1, BackgroundTransparency = 1}):Play()
-                    elseif child:IsA("Frame") then
-                        TS:Create(child, fadeInfo, {BackgroundTransparency = 1}):Play()
+                        TweenService:Create(child, fadeInfo, {TextTransparency = 1, BackgroundTransparency = 1}):Play()
+                    elseif child:IsA("Frame") and child ~= bg then
+                        TweenService:Create(child, fadeInfo, {BackgroundTransparency = 1}):Play()
                     end
                 end
             end)
-            task.delay(0.45, function()
-                if introGui and introGui.Parent then introGui:Destroy() end
+            task.delay(0.4, function()
+                if screenGui and screenGui.Parent then screenGui:Destroy() end
                 pcall(function() starterGui:SetCore("TopbarEnabled", true) end)
                 finishIntro()
             end)
         end
 
-        -- Fondo oscuro estilo Metro
-        local darkBg = Instance.new("Frame")
-        darkBg.Size = UDim2.new(1, 0, 1, 0)
-        darkBg.BackgroundColor3 = Color3.fromRGB(8, 8, 10)
-        darkBg.BackgroundTransparency = 1
-        darkBg.BorderSizePixel = 0
-        darkBg.ZIndex = 1
-        darkBg.Parent = introGui
+        skipBtn.Activated:Connect(cleanupAndFinish)
 
-        local bgGrad = Instance.new("UIGradient")
-        bgGrad.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(42, 42, 46)),
-            ColorSequenceKeypoint.new(0.45, Color3.fromRGB(18, 18, 20)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 12))
-        })
-        bgGrad.Rotation = 90
-        bgGrad.Parent = darkBg
+        -- Tocar en cualquier lado también salta
+        local fullSkip = Instance.new("TextButton")
+        fullSkip.Name = "FullSkip"
+        fullSkip.Size = UDim2.fromScale(1, 1)
+        fullSkip.BackgroundTransparency = 1
+        fullSkip.Text = ""
+        fullSkip.ZIndex = 1
+        fullSkip.Parent = bg
+        fullSkip.Activated:Connect(cleanupAndFinish)
 
-        -- Skip button (estilo Metro / galaxy)
-        local skipBtn = Instance.new("TextButton")
-        skipBtn.Name = "SkipIntro"
-        skipBtn.AnchorPoint = Vector2.new(1, 0)
-        skipBtn.Position = UDim2.new(1, -22, 0, 22)
-        skipBtn.Size = UDim2.new(0, 104, 0, 34)
-        skipBtn.BackgroundColor3 = Color3.fromRGB(180, 80, 255)
-        skipBtn.BackgroundTransparency = 0
-        skipBtn.BorderSizePixel = 0
-        skipBtn.Text = "SKIP INTRO"
-        skipBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
-        skipBtn.TextSize = 11
-        skipBtn.Font = Enum.Font.GothamBlack
-        skipBtn.AutoButtonColor = false
-        skipBtn.ZIndex = 80
-        skipBtn.Parent = introGui
-        Instance.new("UICorner", skipBtn).CornerRadius = UDim.new(0, 10)
-
-        local grad = Instance.new("UIGradient")
-        grad.Rotation = 0
-        grad.Transparency = NumberSequence.new(0)
-        grad.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
-            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
-            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
-        })
-        grad.Parent = skipBtn
-
-        local function shiftHue(color, offset)
-            local r, g, b = color.R, color.G, color.B
-            local maxc = math.max(r, g, b)
-            local minc = math.min(r, g, b)
-            local h, s, v = 0, 0, maxc
-            local d = maxc - minc
-            s = (maxc == 0) and 0 or d / maxc
-            if maxc ~= minc then
-                if maxc == r then
-                    h = (g - b) / d + (g < b and 6 or 0)
-                elseif maxc == g then
-                    h = (b - r) / d + 2
-                else
-                    h = (r - g) / d + 4
-                end
-                h = h / 6
-            end
-            h = (h + offset) % 1
-            if s == 0 then return Color3.new(v, v, v) end
-            local i = math.floor(h * 6)
-            local f = h * 6 - i
-            local p = v * (1 - s)
-            local q = v * (1 - f * s)
-            local t = v * (1 - (1 - f) * s)
-            local rr, gg, bb = v, t, p
-            if i == 0 then rr, gg, bb = v, t, p
-            elseif i == 1 then rr, gg, bb = q, v, p
-            elseif i == 2 then rr, gg, bb = p, v, t
-            elseif i == 3 then rr, gg, bb = p, q, v
-            elseif i == 4 then rr, gg, bb = t, p, v
-            else rr, gg, bb = v, p, q end
-            return Color3.new(rr, gg, bb)
-        end
-
+        -- ========== ANIMACIÓN (imita el video de ~5s) ==========
         task.spawn(function()
-            local hueOffset = 0
-            while introActive and skipBtn and skipBtn.Parent do
-                hueOffset = (hueOffset + 0.012) % 1
-                local c1 = shiftHue(Color3.fromRGB(220, 100, 255), hueOffset)
-                local c2 = shiftHue(Color3.fromRGB(120, 60, 220), hueOffset)
-                local c3 = shiftHue(Color3.fromRGB(40, 20, 150), hueOffset)
-                grad.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0.00, c1),
-                    ColorSequenceKeypoint.new(0.50, c2),
-                    ColorSequenceKeypoint.new(1.00, c3),
-                })
-                task.wait(0.05)
+            if skipped then return end
+
+            local fadeIn = TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+            TweenService:Create(titleSafira, fadeIn, {TextTransparency = 0}):Play()
+            task.wait(0.12)
+            if skipped then return end
+            TweenService:Create(titleTop, fadeIn, {TextTransparency = 0}):Play()
+            task.wait(0.08)
+            if skipped then return end
+            TweenService:Create(percentLabel, fadeIn, {TextTransparency = 0}):Play()
+            TweenService:Create(credits, fadeIn, {TextTransparency = 0}):Play()
+            TweenService:Create(barBg, fadeIn, {BackgroundTransparency = 0.25}):Play()
+
+            -- Progreso 0 → 100%
+            local startTime = tick()
+            local duration = 2.15
+            while not skipped do
+                local t = math.clamp((tick() - startTime) / duration, 0, 1)
+                percentLabel.Text = math.floor(t * 100) .. "%"
+                barFill.Size = UDim2.new(t, 0, 1, 0)
+                if t >= 1 then break end
+                task.wait()
             end
-        end)
+            if skipped then return end
 
-        skipBtn.MouseButton1Click:Connect(cleanupAndFinish)
-
-        -- Centro / título estilo Metro
-        local center = Instance.new("Frame")
-        center.AnchorPoint = Vector2.new(0.5, 0.5)
-        center.Position = UDim2.new(0.5, 0, 0.5, 0)
-        center.Size = UDim2.new(0, 660, 0, 250)
-        center.BackgroundTransparency = 1
-        center.ZIndex = 40
-        center.Parent = introGui
-
-        local lineTop = Instance.new("Frame")
-        lineTop.AnchorPoint = Vector2.new(0.5, 0)
-        lineTop.Position = UDim2.new(0.5, 0, 0, 58)
-        lineTop.Size = UDim2.new(0, 0, 0, 2)
-        lineTop.BackgroundColor3 = Color3.fromRGB(180, 80, 255)
-        lineTop.BackgroundTransparency = 0
-        lineTop.BorderSizePixel = 0
-        lineTop.ZIndex = 41
-        lineTop.Parent = center
-        local lineTopGrad = Instance.new("UIGradient")
-        lineTopGrad.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
-            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
-            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
-        })
-        lineTopGrad.Parent = lineTop
-
-        local lineBot = Instance.new("Frame")
-        lineBot.AnchorPoint = Vector2.new(0.5, 1)
-        lineBot.Position = UDim2.new(0.5, 0, 1, -8)
-        lineBot.Size = UDim2.new(0, 0, 0, 2)
-        lineBot.BackgroundColor3 = Color3.fromRGB(180, 80, 255)
-        lineBot.BackgroundTransparency = 0
-        lineBot.BorderSizePixel = 0
-        lineBot.ZIndex = 41
-        lineBot.Parent = center
-        local lineBotGrad = Instance.new("UIGradient")
-        lineBotGrad.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
-            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(120, 60, 220)),
-            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 20, 150)),
-        })
-        lineBotGrad.Parent = lineBot
-
-        local titleShadow = Instance.new("TextLabel")
-        titleShadow.Size = UDim2.new(1, 0, 0, 86)
-        titleShadow.Position = UDim2.new(0, 4, 0, 83)
-        titleShadow.BackgroundTransparency = 1
-        titleShadow.Text = "SAFIRA HUB"
-        titleShadow.TextColor3 = Color3.fromRGB(0, 0, 0)
-        titleShadow.Font = Enum.Font.GothamBlack
-        titleShadow.TextSize = 72
-        titleShadow.TextTransparency = 1
-        titleShadow.TextStrokeTransparency = 1
-        titleShadow.ZIndex = 42
-        titleShadow.Parent = center
-
-        local title = Instance.new("TextLabel")
-        title.Size = UDim2.new(1, 0, 0, 86)
-        title.Position = UDim2.new(0, 0, 0, 78)
-        title.BackgroundTransparency = 1
-        title.Text = "SAFIRA HUB"
-        title.TextColor3 = Color3.fromRGB(245, 245, 245)
-        title.Font = Enum.Font.GothamBlack
-        title.TextSize = 72
-        title.TextTransparency = 1
-        title.TextStrokeTransparency = 1
-        title.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-        title.ZIndex = 43
-        title.Parent = center
-
-        local titleGrad = Instance.new("UIGradient")
-        titleGrad.Rotation = 0
-        titleGrad.Transparency = NumberSequence.new(0)
-        titleGrad.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(220, 100, 255)),
-            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(180, 120, 255)),
-            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(120, 60, 220)),
-        })
-        titleGrad.Parent = title
-
-        local subtitle = Instance.new("TextLabel")
-        subtitle.Size = UDim2.new(1, 0, 0, 26)
-        subtitle.Position = UDim2.new(0, 0, 0, 169)
-        subtitle.BackgroundTransparency = 1
-        subtitle.Text = "By Leo  •  https://discord.gg/pMJzYKryX"
-        subtitle.TextColor3 = Color3.fromRGB(200, 160, 255)
-        subtitle.Font = Enum.Font.GothamMedium
-        subtitle.TextSize = 19
-        subtitle.TextTransparency = 1
-        subtitle.ZIndex = 43
-        subtitle.Parent = center
-
-        -- Animación (estilo Metro)
-        task.spawn(function()
-            TS:Create(darkBg, TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
-            task.wait(0.25)
-            if not introActive then return end
-
-            TS:Create(lineTop, TweenInfo.new(0.45, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0, 500, 0, 2)}):Play()
-            TS:Create(lineBot, TweenInfo.new(0.45, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0, 500, 0, 2)}):Play()
+            percentLabel.Text = "100%"
+            barFill.Size = UDim2.new(1, 0, 1, 0)
 
             task.wait(0.12)
-            if not introActive then return end
-            TS:Create(titleShadow, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {TextTransparency = 0.35, TextStrokeTransparency = 1}):Play()
-            TS:Create(title, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {TextTransparency = 0, TextStrokeTransparency = 0.18}):Play()
+            if skipped then return end
+            TweenService:Create(titleHub, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 
-            task.wait(0.42)
-            if not introActive then return end
-            TS:Create(subtitle, TweenInfo.new(0.42), {TextTransparency = 0}):Play()
-
-            for i = 1, 3 do
-                if not introActive then break end
-                TS:Create(title, TweenInfo.new(0.06), {TextColor3 = Color3.fromRGB(185, 185, 185)}):Play()
-                task.wait(0.06)
-                TS:Create(title, TweenInfo.new(0.06), {TextColor3 = Color3.fromRGB(245, 245, 245)}):Play()
-                task.wait(0.06)
-            end
-
-            task.wait(3.05)
-            if not introActive then return end
-
-            TS:Create(center, TweenInfo.new(0.55, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 0)}):Play()
-            TS:Create(title, TweenInfo.new(0.36), {TextTransparency = 1, TextStrokeTransparency = 1}):Play()
-            TS:Create(titleShadow, TweenInfo.new(0.36), {TextTransparency = 1}):Play()
-            TS:Create(subtitle, TweenInfo.new(0.32), {TextTransparency = 1}):Play()
-            TS:Create(lineTop, TweenInfo.new(0.32, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 2)}):Play()
-            TS:Create(lineBot, TweenInfo.new(0.32, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 2)}):Play()
-            TS:Create(darkBg, TweenInfo.new(0.75), {BackgroundTransparency = 1}):Play()
-
-            task.wait(0.85)
-            if introGui and introGui.Parent then introGui:Destroy() end
-            pcall(function() starterGui:SetCore("TopbarEnabled", true) end)
-            finishIntro()
-        end)
-
-        -- Auto-finish de seguridad a los INTRO_SECS
-        task.delay(INTRO_SECS + 1, function()
-            if not _G.PrimeHubIntroFinished then
+            task.wait(1.85)
+            if not skipped then
                 cleanupAndFinish()
             end
         end)
@@ -1035,10 +960,8 @@ M._bypassGodDiedConn = nil
 M._bypassGodCharConn = nil
 M.bypassPrevAutoRotate = nil
 M.bypassHitCD = false
-M.bypassSwingCD = 0.07
-M.bypassHitDist = 4.6
-M.bypassAimbotSpeed = M.bypassAimbotSpeed or 60
-M.AUTO_BAT_V2_DIST = 0.85
+M.bypassSwingCD = 0.35
+M.bypassHitDist = 8
 M._bypassTarget = nil
 
 M._savedButtonPositions = {}
@@ -3693,27 +3616,17 @@ function M.stopHoldInfJump()
     end
 end
 function M.startUnwalk()
-    -- Unwalk ON: quita Animate -> pose estática (sin animación de caminar)
-    M.unwalkEnabled = true
+    if M.unwalkEnabled ~= true or M._unwalkOffLock == true or M.animPackEnabled ~= true then return end
     M._unwalkOffLock = false
-    local c = player.Character
-    if not c then return end
-    local hum = c:FindFirstChildOfClass("Humanoid")
-    if hum then
-        for _, t in ipairs(hum:GetPlayingAnimationTracks()) do
-            pcall(function() t:Stop(0) end)
-        end
-    end
-    local anim = c:FindFirstChild("Animate")
+    local c=player.Character;if not c then return end;local hum=c:FindFirstChildOfClass("Humanoid")
+    if hum then for _,t in ipairs(hum:GetPlayingAnimationTracks()) do t:Stop() end end
+    local anim=c:FindFirstChild("Animate")
     if anim then
-        if not M.unwalkSavedAnimate then
-            pcall(function() M.unwalkSavedAnimate = anim:Clone() end)
-        end
-        pcall(function() anim:Destroy() end)
+        if not M.unwalkSavedAnimate then M.unwalkSavedAnimate=anim:Clone() end
+        anim:Destroy()
     end
 end
 function M.stopUnwalk()
-    -- Unwalk OFF: restaura Animate y se vuelven a ver las animaciones
     M.unwalkEnabled = false
     M._unwalkOffLock = true
     local c = player.Character
@@ -3724,43 +3637,18 @@ function M.stopUnwalk()
             pcall(function() track:Stop(0) end)
         end
     end
-    -- Si ya hay Animate, no lo destruyas; solo recrea si falta
     local currentAnimate = c:FindFirstChild("Animate")
-    if not currentAnimate then
-        local restored = false
-        local saved = M.unwalkSavedAnimate or M.savedAnimate
-        if saved then
-            local ok, restoredAnimate = pcall(function()
-                local a = saved:Clone()
-                a.Disabled = true
-                a.Parent = c
-                return a
-            end)
-            if ok and restoredAnimate then
-                task.wait(0.06)
-                if restoredAnimate.Parent then restoredAnimate.Disabled = false end
-                restored = true
-            end
-        end
-        if not restored then
-            pcall(function()
-                local starter = game:GetService("StarterPlayer"):FindFirstChild("StarterCharacterScripts")
-                local def = starter and starter:FindFirstChild("Animate")
-                if def then
-                    local a = def:Clone()
-                    a.Parent = c
-                else
-                    M.restoreOriginalAnimate(c)
-                end
-            end)
-        end
+    if currentAnimate then currentAnimate:Destroy() end
+    local saved = M.unwalkSavedAnimate or M.savedAnimate
+    if saved then
+        local restoredAnimate = saved:Clone()
+        restoredAnimate.Disabled = true
+        restoredAnimate.Parent = c
+        task.wait(0.06)
+        if restoredAnimate.Parent then restoredAnimate.Disabled = false end
     end
     M.unwalkSavedAnimate = nil
-    if M.animPackEnabled and M.animPack and M.animPack ~= "Off" and M.animPack ~= "None" and M.PACKS[M.animPack] then
-        task.defer(function()
-            if not M.unwalkEnabled then pcall(function() M.applyAnimPack(M.animPack) end) end
-        end)
-    end
+    if c and not c:FindFirstChild("Animate") then M.restoreOriginalAnimate(c) end
 end
 function M.hasBrainrotInHand()
     local char = player.Character
@@ -5419,6 +5307,7 @@ local function loadPrimeHubFeKlanConfig()
         if type(d.skyTheme)=="string" and M.CANDY_SKY_PRESETS and M.CANDY_SKY_PRESETS[d.skyTheme] then M.currentSkyTheme=d.skyTheme end
         if d.speedESPEnabled~=nil then M.speedESPEnabled=d.speedESPEnabled end
         if type(d.animPack)=="string" then M.animPack=d.animPack end
+        if type(d.batSkinName)=="string" then M.batSkinName=d.batSkinName end
         if type(d.characterSkinName)=="string" then M.characterSkinName=d.characterSkinName end
         if d.headlessEnabled~=nil then M.headlessEnabled=d.headlessEnabled end
         if d.korbloxEnabled~=nil then M.korbloxEnabled=d.korbloxEnabled end
@@ -5595,6 +5484,7 @@ function savePrimeHubFeKlanConfig()
         adaptThemeName = M.adaptThemeName,
         menuBgIndex = tonumber(M.menuBgIndex) or 1,
         customBgId = tostring(M.customBgId or ""),
+        batSkinName = tostring(M.batSkinName or "Off"),
         characterSkinName = tostring(M.characterSkinName or "Off"),
         antiVoidEnabled = M.antiVoidEnabled == true,
         bodyLockEnabled = M.bodyLockEnabled == true,
@@ -9694,6 +9584,61 @@ function M.buildGui()
     uiChoiceRow(PM, "Auto Carry Mode", {"Lagger", "Carry", "Normal"}, M.autoCarryMode == "Lagger" and 1 or (M.autoCarryMode == "Carry" and 2 or 3), function(v) M.autoCarryMode = v end)
     local PMech = CategoryRefs.contents["Mechanics"]
     uiSectionHeader(PMech, "COMBAT")
+
+    -- SPIN Bot (Cerberus Duels): gira únicamente mientras el jugador lleva un brainrot.
+    -- No cambia el personaje, no fuerza respawn y conserva una única conexión estable.
+    M.spinBotEnabled = M.spinBotEnabled == true
+    M.spinBotSpeed = tonumber(M.spinBotSpeed) or 30
+    M._spinBotConnection = nil
+    M._spinBotAngular = nil
+    local function stopSafiraSpinBot()
+        if M._spinBotConnection then M._spinBotConnection:Disconnect(); M._spinBotConnection = nil end
+        local char = player.Character
+        local root = char and char:FindFirstChild("HumanoidRootPart")
+        if root then
+            for _, obj in ipairs(root:GetChildren()) do
+                if obj.Name == "SafiraSpinBotAngular" then pcall(function() obj:Destroy() end) end
+            end
+        end
+        M._spinBotAngular = nil
+    end
+    local function startSafiraSpinBot()
+        if M._spinBotConnection then return end
+        M._spinBotConnection = RunService.Heartbeat:Connect(function()
+            if not M.spinBotEnabled or not (M.hasBrainrotInHand and M.hasBrainrotInHand()) then
+                local angular = M._spinBotAngular
+                if angular then pcall(function() angular:Destroy() end); M._spinBotAngular = nil end
+                return
+            end
+            local char = player.Character
+            local root = char and char:FindFirstChild("HumanoidRootPart")
+            if not root then return end
+            if not M._spinBotAngular or M._spinBotAngular.Parent ~= root then
+                local existing = root:FindFirstChild("SafiraSpinBotAngular")
+                if existing and existing:IsA("BodyAngularVelocity") then
+                    M._spinBotAngular = existing
+                else
+                    local angular = Instance.new("BodyAngularVelocity")
+                    angular.Name = "SafiraSpinBotAngular"
+                    angular.MaxTorque = Vector3.new(0, math.huge, 0)
+                    angular.P = 1250
+                    angular.AngularVelocity = Vector3.new(0, M.spinBotSpeed, 0)
+                    angular.Parent = root
+                    M._spinBotAngular = angular
+                end
+            end
+            M._spinBotAngular.AngularVelocity = Vector3.new(0, M.spinBotSpeed, 0)
+        end)
+    end
+    uiToggleRow(PMech, "SPIN Bot (solo con Brainrot)", M.spinBotEnabled, function(on)
+        M.spinBotEnabled = on == true
+        if M.spinBotEnabled then
+            startSafiraSpinBot()
+        else
+            stopSafiraSpinBot()
+        end
+        savePrimeHubFeKlanConfig()
+    end)
     uiToggleRow(PMech, "Aimbot All Gears", M._zenonetopAimOn == true, function(on)
         M._zenonetopAimOn = on == true
         savePrimeHubFeKlanConfig()
@@ -10138,614 +10083,45 @@ function M.buildGui()
     end)
     task.defer(function() end)
 
-    local katanaSkinController = nil
-    local katanaSkinEnabled = false
-    do
-        local function createKatanaSkinController()
-            local katanaPlayersService = game:GetService("Players")
-            local katanaInsertService = game:GetService("InsertService")
-            local katanaLighting = game:GetService("Lighting")
-            local katanaReplicatedStorage = game:GetService("ReplicatedStorage")
-            local katanaPlayer = katanaPlayersService.LocalPlayer
-            local katanaColors = {
-                red = Color3.new(0.784314, 0, 0),
-                red2 = Color3.new(1, 0, 0.392157),
-                gold = Color3.new(1, 0.843137, 0),
-            }
-            local katanaState = {
-                Skin = "KATANA",
-                SkinOrder = {
-                    "KATANA",
-                    "NONE",
-                },
-                LastBat = nil,
-                LastAppliedSkin = nil,
-                OriginalKatanaTemplate = nil,
-                ExactTemplates = {},
-                ExactTemplateSearched = {},
-                ExactAssetIds = {
-                    KATANA = "126653333198410", -- Bloody Katana (PrimeVS)
-                },
-                Original = {},
-            }
-            local function findBat()
-                local character = katanaPlayer.Character
-                if character then
-                    local bat = character:FindFirstChild("Bat")
-                    if bat and bat:IsA("Tool") then
-                        return bat
-                    end
-                end
-                local backpack = katanaPlayer:FindFirstChildOfClass("Backpack")
-                if backpack then
-                    local bat = backpack:FindFirstChild("Bat")
-                    if bat and bat:IsA("Tool") then
-                        return bat
-                    end
-                end
-                return nil
-            end
-            local function configureVisualPart(part)
-                if not part or not part:IsA("BasePart") then
-                    return
-                end
-                part.Anchored = false
-                part.CanCollide = false
-                part.CanTouch = false
-                part.CanQuery = false
-                part.Massless = true
-            end
-            local function weldToHandle(part1, part0)
-                if not part1 or not part0 or not part1:IsA("BasePart") or not part0:IsA("BasePart") then
-                    return
-                end
-                configureVisualPart(part1)
-                local weldConstraint = Instance.new("WeldConstraint")
-                weldConstraint.Name = "FlowerSkin_AssetWeld"
-                weldConstraint.Part0 = part0
-                weldConstraint.Part1 = part1
-                weldConstraint.Parent = part1
-            end
-            local function cacheOriginalBatState(batTool)
-                if not batTool then
-                    return
-                end
-                local handle = batTool:FindFirstChild("Handle")
-                local slash = batTool:FindFirstChild("Slash")
-                katanaState.Original[batTool] = katanaState.Original[batTool] or {}
-                local originalState = katanaState.Original[batTool]
-                if handle and handle:IsA("BasePart") and not originalState.Handle then
-                    originalState.Handle = {
-                        Transparency = handle.Transparency,
-                        LocalTransparencyModifier = handle.LocalTransparencyModifier,
-                        CastShadow = handle.CastShadow,
-                    }
-                end
-                if slash and slash:IsA("Sound") and not originalState.SlashSoundId then
-                    originalState.SlashSoundId = slash.SoundId
-                end
-            end
-            local function captureOriginalKatanaTemplate()
-                if katanaState.OriginalKatanaTemplate then
-                    return
-                end
-                local function scanContainer(container)
-                    if not container then
-                        return
-                    end
-                    local bat = container:FindFirstChild("Bat")
-                    if not bat then
-                        return
-                    end
-                    local flowerSkinKatanaRealistic = bat:FindFirstChild("FlowerSkin_KatanaRealistic")
-                    flowerSkinKatanaRealistic = flowerSkinKatanaRealistic
-                        and flowerSkinKatanaRealistic:FindFirstChild("FlowerSkin_AssetKatana")
-                    if flowerSkinKatanaRealistic then
-                        katanaState.OriginalKatanaTemplate = flowerSkinKatanaRealistic:Clone()
-                    end
-                end
-                scanContainer(katanaPlayer:FindFirstChildOfClass("Backpack"))
-                scanContainer(katanaPlayer.Character)
-            end
-            local function setBatHandleHidden(batTool, hidden)
-                local handle523 = batTool and batTool:FindFirstChild("Handle")
-                if not handle523 or not handle523:IsA("BasePart") then
-                    return
-                end
-                cacheOriginalBatState(batTool)
-                if hidden then
-                    handle523.LocalTransparencyModifier = 1
-                    handle523.Transparency = 1
-                    handle523.CastShadow = false
-                else
-                    local handle = katanaState.Original[batTool] and katanaState.Original[batTool].Handle
-                    handle523.LocalTransparencyModifier = handle and handle.LocalTransparencyModifier or 0
-                    handle523.Transparency = handle and handle.Transparency or 0
-                    handle523.CastShadow = handle and handle.CastShadow
-                    if handle523.CastShadow == nil then
-                        handle523.CastShadow = true
-                    end
-                end
-            end
-            local function setBatSlashSound(batTool, soundId)
-                cacheOriginalBatState(batTool)
-                local slash = batTool and batTool:FindFirstChild("Slash")
-                if slash and slash:IsA("Sound") then
-                    if not soundId then
-                        soundId = katanaState.Original[batTool] and katanaState.Original[batTool].SlashSoundId
-                            or slash.SoundId
-                    end
-                    slash.SoundId = soundId
-                end
-            end
-            local function restoreOriginalBatVisual(batTool)
-                if not batTool then
-                    return
-                end
-                local flowerSkinKatanaRealistic = batTool:FindFirstChild("FlowerSkin_KatanaRealistic")
-                if flowerSkinKatanaRealistic then
-                    flowerSkinKatanaRealistic:Destroy()
-                end
-                local flowerSkinAssetKatana = batTool:FindFirstChild("FlowerSkin_AssetKatana")
-                if flowerSkinAssetKatana then
-                    flowerSkinAssetKatana:Destroy()
-                end
-                setBatHandleHidden(batTool, false)
-                setBatSlashSound(batTool, nil)
-            end
-            local function addKatanaRedEffects(parent)
-                if not parent or not parent:IsA("BasePart") then
-                    return
-                end
-                local fictionHubSpeedIndicator = parent:FindFirstChild("FictionHubSpeedIndicator")
-                if fictionHubSpeedIndicator then
-                    fictionHubSpeedIndicator:Destroy()
-                end
-                local topAttachment = Instance.new("Attachment")
-                topAttachment.Name = "FlowerSkin_ExtraRedVFX"
-                topAttachment.Position = Vector3.new(0, parent.Size.Y * 0.5, 0)
-                topAttachment.Parent = parent
-                local bottomAttachment = Instance.new("Attachment")
-                bottomAttachment.Name = "FlowerSkin_ExtraRedVFX_End"
-                bottomAttachment.Position = Vector3.new(0, -parent.Size.Y * 0.5, 0)
-                bottomAttachment.Parent = parent
-                local trail = Instance.new("Trail")
-                trail.Name = "FlowerSkin_ExtraRedVFX"
-                trail.Attachment0 = topAttachment
-                trail.Attachment1 = bottomAttachment
-                trail.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0, katanaColors.red2),
-                    ColorSequenceKeypoint.new(1, Color3.new(0.54902, 0, 0)),
-                })
-                trail.Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0, 0.35),
-                    NumberSequenceKeypoint.new(1, 1),
-                })
-                trail.Lifetime = 0.18
-                trail.LightEmission = 0.55
-                trail.Parent = parent
-                local particleEmitter = Instance.new("ParticleEmitter")
-                particleEmitter.Name = "FlowerSkin_ExtraRedVFX"
-                local red2 = katanaColors.red2
-                particleEmitter.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0, Color3.new(0.784314, 0, 0)),
-                    ColorSequenceKeypoint.new(1, red2),
-                })
-                particleEmitter.LightEmission = 0.55
-                particleEmitter.Rate = 14
-                particleEmitter.Lifetime = NumberRange.new(0.3, 0.45)
-                particleEmitter.Speed = NumberRange.new(0.2, 0.7)
-                particleEmitter.SpreadAngle = Vector2.new(12, 12)
-                particleEmitter.Size = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0, 0.08),
-                    NumberSequenceKeypoint.new(1, 0),
-                })
-                particleEmitter.Texture = "rbxasset://textures/particles/sparkles_main.dds"
-                particleEmitter.Parent = parent
-            end
-            local function createKatanaPart(parent, name, size, cframeOffset, color, material)
-                local part = Instance.new("Part")
-                part.Name = name
-                part.Size = size
-                part.Color = color
-                part.Material = material or Enum.Material.Neon
-                part.TopSurface = Enum.SurfaceType.Smooth
-                part.BottomSurface = Enum.SurfaceType.Smooth
-                configureVisualPart(part)
-                part.Parent = parent
-                return part, cframeOffset or CFrame.identity
-            end
-            local katanaCandidateNames = {
-                KATANA = {
-                    "FlowerSkin_AssetKatana",
-                    "Katana",
-                    "FlowerSkin_KatanaRealistic",
-                },
-            }
-            local function isScriptInstance(instance)
-                return instance:IsA("Script") or instance:IsA("LocalScript") or instance:IsA("ModuleScript")
-            end
-            local function removeScripts(root)
-                if not root then
-                    return
-                end
-                if isScriptInstance(root) then
-                    root:Destroy()
-                    return
-                end
-                for _, descendant in ipairs(root:GetDescendants()) do
-                    if isScriptInstance(descendant) then
-                        descendant:Destroy()
-                    end
-                end
-            end
-            local function hasBasePart(candidate)
-                if not candidate then
-                    return false
-                end
-                if candidate:IsA("BasePart") then
-                    return true
-                end
-                return candidate:FindFirstChildWhichIsA("BasePart", true) ~= nil
-            end
-            local function isGeneratedSkin(candidate)
-                local ok, result = pcall(function()
-                    return candidate:GetAttribute("CursedBatSkinsGenerated")
-                end)
-                return ok and result == true
-            end
-            local function validateSkinCandidate(candidate)
-                if not candidate or isGeneratedSkin(candidate) then
-                    return nil
-                end
-                if
-                    candidate:IsA("Model")
-                    or candidate:IsA("Tool")
-                    or candidate:IsA("Accessory")
-                    or candidate:IsA("BasePart")
-                then
-                    if hasBasePart(candidate) then
-                        return candidate
-                    end
-                end
-                return nil
-            end
-            local function findNamedSkinCandidate(root, candidateNames)
-                if not root then
-                    return nil
-                end
-                for _, entry in ipairs(candidateNames) do
-                    if root.Name ~= entry then
-                        continue
-                    end
-                    local candidate = validateSkinCandidate(root)
-                    if candidate then
-                        return candidate
-                    end
-                end
-                for _, candidateName in ipairs(candidateNames) do
-                    local instance = root:FindFirstChild(candidateName, true)
-                    local validatedCandidate = validateSkinCandidate(instance)
-                    if validatedCandidate then
-                        return validatedCandidate
-                    end
-                end
-                return nil
-            end
-            local function normalizeAssetId(assetId)
-                local normalizedId = tostring(assetId or ""):gsub("%s+", "")
-                if normalizedId == "" then
-                    return nil
-                end
-                if normalizedId:match("^rbxassetid://") or normalizedId:match("^rbxasset://") then
-                    return normalizedId
-                end
-                if normalizedId:match("^%d+$") then
-                    return "rbxassetid://" .. normalizedId
-                end
-                return normalizedId
-            end
-            local function loadAssetSkinTemplate(skinName)
-                local assetUri = normalizeAssetId(katanaState.ExactAssetIds[skinName])
-                if not assetUri then
-                    return nil
-                end
-                local loadedAssets = {}
-                pcall(function()
-                    loadedAssets = game:GetObjects(assetUri)
-                end)
-                if #loadedAssets == 0 then
-                    local match = tostring(assetUri):match("(%d+)")
-                    if match then
-                        pcall(function()
-                            table.insert(loadedAssets, katanaInsertService:LoadAsset(tonumber(match)))
-                        end)
-                    end
-                end
-                local candidateNames = katanaCandidateNames[skinName] or {}
-                for _, entry in ipairs(loadedAssets) do
-                    local candidate = findNamedSkinCandidate(entry, candidateNames) or validateSkinCandidate(entry)
-                    if candidate then
-                        local clone = candidate:Clone()
-                        removeScripts(clone)
-                        return clone
-                    end
-                end
-                return nil
-            end
-            local function findExistingSkinTemplate(skinName)
-                local candidateNames = katanaCandidateNames[skinName]
-                if not candidateNames then
-                    return nil
-                end
-                local searchRoots = {}
-                local character = katanaPlayer.Character
-                local backpack = katanaPlayer:FindFirstChildOfClass("Backpack")
-                local workspaceRoot = workspace
-                local lightingRoot = katanaLighting
-                searchRoots[1] = character
-                searchRoots[2] = backpack
-                searchRoots[3] = katanaReplicatedStorage
-                searchRoots[4] = lightingRoot
-                searchRoots[5] = workspaceRoot
-                for _, entry in ipairs(searchRoots) do
-                    local candidate = findNamedSkinCandidate(entry, candidateNames)
-                    if candidate then
-                        local clone = candidate:Clone()
-                        removeScripts(clone)
-                        return clone
-                    end
-                end
-                return nil
-            end
-            local function getSkinTemplate(skinName)
-                if skinName == "KATANA" and katanaState.OriginalKatanaTemplate then
-                    return katanaState.OriginalKatanaTemplate
-                end
-                if katanaState.ExactTemplates[skinName] then
-                    return katanaState.ExactTemplates[skinName]
-                end
-                if katanaState.ExactTemplateSearched[skinName] then
-                    return nil
-                end
-                katanaState.ExactTemplateSearched[skinName] = true
-                local template = loadAssetSkinTemplate(skinName) or findExistingSkinTemplate(skinName)
-                if template then
-                    katanaState.ExactTemplates[skinName] = template
-                end
-                return template
-            end
-            local normalizeSkinModel = nil
-            normalizeSkinModel = function(source, parent)
-                if source:IsA("Model") then
-                    source.Name = "FlowerSkin_AssetKatana"
-                    source.Parent = parent
-                    return source
-                end
-                if source:IsA("BasePart") then
-                    local model = Instance.new("Model")
-                    model.Name = "FlowerSkin_AssetKatana"
-                    model.Parent = parent
-                    source.Parent = model
-                    return model
-                end
-                if source:IsA("Tool") or source:IsA("Folder") then
-                    local flowerSkinAssetKatana = source:FindFirstChild("FlowerSkin_AssetKatana")
-                        or source:FindFirstChildWhichIsA("Model")
-                        or source:FindFirstChildWhichIsA("BasePart")
-                    if flowerSkinAssetKatana and flowerSkinAssetKatana.Parent == source then
-                        flowerSkinAssetKatana.Parent = nil
-                        source:Destroy()
-                        return normalizeSkinModel(flowerSkinAssetKatana, parent)
-                    end
-                    local model = Instance.new("Model")
-                    model.Name = "FlowerSkin_AssetKatana"
-                    model.Parent = parent
-                    for _, child in ipairs(source:GetChildren()) do
-                        if not isScriptInstance(child) then
-                            child.Parent = model
-                        end
-                    end
-                    source:Destroy()
-                    return model
-                end
-                return nil
-            end
-            local function applyExactSkinTemplate(batTool, skinName)
-                local handle = batTool and batTool:FindFirstChild("Handle")
-                if not handle or not handle:IsA("BasePart") then
-                    return false
-                end
-                local template = getSkinTemplate(skinName)
-                if not template then
-                    return false
-                end
-                local folder = Instance.new("Folder")
-                folder.Name = "FlowerSkin_KatanaRealistic"
-                folder.Parent = batTool
-                local skinModel = normalizeSkinModel(template:Clone(), folder)
-                if not skinModel or not hasBasePart(skinModel) then
-                    folder:Destroy()
-                    return false
-                end
-                removeScripts(skinModel)
-                pcall(function()
-                    skinModel:SetAttribute("CursedBatSkinsExactMesh", true)
-                end)
-                local firstPart = nil
-                for _, descendant in ipairs(skinModel:GetDescendants()) do
-                    if descendant:IsA("BasePart") then
-                        firstPart = firstPart or descendant
-                        configureVisualPart(descendant)
-                    end
-                end
-                if not firstPart then
-                    folder:Destroy()
-                    return false
-                end
-                if skinModel:IsA("Model") then
-                    skinModel.PrimaryPart = skinModel.PrimaryPart or firstPart
-                    pcall(function()
-                        skinModel:PivotTo(handle.CFrame)
-                    end)
-                end
-                for _, descendant in ipairs(skinModel:GetDescendants()) do
-                    if descendant:IsA("BasePart") then
-                        weldToHandle(descendant, handle)
-                    end
-                end
-                local weaponPart = skinModel:FindFirstChild("SharpParts", true)
-                    or skinModel:FindFirstChild("WeaponPart", true)
-                    or skinModel:FindFirstChild("Handle", true)
-                    or firstPart
-                if weaponPart and not weaponPart:FindFirstChild("FlowerSkin_ExtraRedVFX") then
-                    addKatanaRedEffects(weaponPart)
-                end
-                return true
-            end
-            local function createProceduralKatana(batTool, skinName)
-                local handle = batTool and batTool:FindFirstChild("Handle")
-                if not handle or not handle:IsA("BasePart") then
-                    return nil
-                end
-                local folder = Instance.new("Folder")
-                folder.Name = "FlowerSkin_KatanaRealistic"
-                folder.Parent = batTool
-                local model = Instance.new("Model")
-                model.Name = "FlowerSkin_AssetKatana"
-                model:SetAttribute("CursedBatSkinsGenerated", true)
-                model.Parent = folder
-                local createdParts = {}
-                local function createPart(name, size, cframeOffset, color, material)
-                    local part, offset = createKatanaPart(model, name, size, cframeOffset, color, material)
-                    part.CFrame = handle.CFrame * offset
-                    weldToHandle(part, handle)
-                    table.insert(createdParts, part)
-                    return part
-                end
-                if skinName == "KATANA" then
-                    local metal = Enum.Material.Metal
-                    createPart(
-                        "Handle2",
-                        Vector3.new(0.22, 1, 0.22),
-                        CFrame.new(0, -0.48, 0),
-                        Color3.new(0.176471, 0.176471, 0.045),
-                        metal
-                    )
-                    local red2 = katanaColors.red2
-                    local neon = Enum.Material.Neon
-                    local sharpParts =
-                        createPart("SharpParts", Vector3.new(0.18, 2.4, 0.12), CFrame.new(0, 1.05, 0), red2, neon)
-                    local red = katanaColors.red
-                    local neon2 = Enum.Material.Neon
-                    createPart("WeaponPart", Vector3.new(0.3, 2.7, 0.08), CFrame.new(0.08, 1.15, 0), red, neon2)
-                    local gold = katanaColors.gold
-                    local neon3 = Enum.Material.Neon
-                    createPart("GoldAccent", Vector3.new(0.5, 0.12, 0.08), CFrame.new(0, -0.28, 0), gold, neon3)
-                    addKatanaRedEffects(sharpParts)
-                end
-                model.PrimaryPart = createdParts[1]
-                return model
-            end
-            local slashSoundIds = {
-                KATANA = "rbxassetid://111808555599832",
-            }
-            return {
-                State = katanaState,
-                ApplySkin = function(skinName)
-                    captureOriginalKatanaTemplate()
-                    local lastBat = findBat()
-                    if not lastBat then
-                        katanaState.LastBat = nil
-                        katanaState.LastAppliedSkin = nil
-                        return false
-                    end
-                    cacheOriginalBatState(lastBat)
-                    restoreOriginalBatVisual(lastBat)
-                    if skinName == "NONE" then
-                        katanaState.LastBat = lastBat
-                        katanaState.LastAppliedSkin = skinName
-                        return true
-                    end
-                    setBatHandleHidden(lastBat, true)
-                    setBatSlashSound(lastBat, slashSoundIds[skinName])
-                    if not applyExactSkinTemplate(lastBat, skinName) then
-                        createProceduralKatana(lastBat, skinName)
-                    end
-                    local handle = lastBat:FindFirstChild("Handle")
-                    if handle then
-                        local fire = handle:FindFirstChildOfClass("Fire") or handle:FindFirstChild("Fire")
-                        if fire and fire:IsA("Fire") then
-                            fire.Enabled = true
-                            fire.Color = katanaColors.red
-                            fire.SecondaryColor = katanaColors.red2
-                        end
-                    end
-                    katanaState.LastBat = lastBat
-                    katanaState.LastAppliedSkin = skinName
-                    return true
-                end,
-                SetExactAssetId = function(assetId)
-                    katanaState.ExactAssetIds.KATANA = tostring(assetId or "")
-                    katanaState.ExactTemplateSearched.KATANA = nil
-                    katanaState.ExactTemplates.KATANA = nil
-                end,
-            }
-        end
-        katanaSkinController = createKatanaSkinController()
-    end
-    _G.CursedBatKatana = katanaSkinController
-
-    -- Reaplicar Bloody Katana tras respawn, pero solo si el toggle sigue activado.
-    -- Se espera a que el nuevo Bat aparezca en Character o Backpack antes de aplicar.
-    local katanaReapplyToken = 0
-    local function queueKatanaReapply(targetCharacter)
-        if not katanaSkinEnabled then return end
-        katanaReapplyToken = katanaReapplyToken + 1
-        local myToken = katanaReapplyToken
-        task.spawn(function()
-            local deadline = os.clock() + 12
-            while katanaSkinEnabled and myToken == katanaReapplyToken and os.clock() < deadline do
-                if targetCharacter and player.Character ~= targetCharacter then return end
-                local ok, applied = pcall(function()
-                    return katanaSkinController and katanaSkinController.ApplySkin("KATANA")
-                end)
-                if ok and applied == true then return end
-                task.wait(0.25)
-            end
-        end)
-    end
-    player.CharacterAdded:Connect(function(char)
-        if katanaSkinEnabled then
-            task.delay(0.35, function() queueKatanaReapply(char) end)
-        end
-        -- El nuevo Backpack suele crearse después del CharacterAdded.
-        task.delay(0.8, function()
-            if katanaSkinEnabled and player.Character == char then queueKatanaReapply(char) end
-        end)
-    end)
-    local katanaBackpack = player:FindFirstChildOfClass("Backpack")
-    if katanaBackpack then
-        katanaBackpack.ChildAdded:Connect(function(tool)
-            if katanaSkinEnabled and tool and tool:IsA("Tool") and tool.Name == "Bat" then
-                task.delay(0.1, function() queueKatanaReapply(player.Character) end)
-            end
-        end)
-    end
-    player.ChildAdded:Connect(function(child)
-        if child:IsA("Backpack") then
-            child.ChildAdded:Connect(function(tool)
-                if katanaSkinEnabled and tool and tool:IsA("Tool") and tool.Name == "Bat" then
-                    task.delay(0.1, function() queueKatanaReapply(player.Character) end)
-                end
-            end)
-        end
-    end)
-
-    -- SAFIRA HUB skin center: character cosmetics only; bat skin presets removed.
+    -- SAFIRA HUB skin center: cosmetic-only local presets for the character and bat.
+    M.batSkinName = M.batSkinName or "Off"
     M.characterSkinName = M.characterSkinName or "Off"
     M._primeBatSkinOriginals = M._primeBatSkinOriginals or {}
     M._primeCharacterOriginals = M._primeCharacterOriginals or {}
+    function M.applyPrimeBatSkin(name)
+        name = tostring(name or "Off")
+        M.batSkinName = name
+        local colors = {
+            Pumpkin = {Color3.fromRGB(255, 126, 20), Color3.fromRGB(92, 14, 120)},
+            Shadow = {Color3.fromRGB(24, 18, 35), Color3.fromRGB(145, 55, 255)},
+            Candy = {Color3.fromRGB(255, 75, 180), Color3.fromRGB(60, 220, 255)},
+        }
+        local pair = colors[name]
+        local char = player.Character
+        local bp = player:FindFirstChildOfClass("Backpack")
+        local containers = {char, bp}
+        for _, container in ipairs(containers) do
+            if container then
+                for _, tool in ipairs(container:GetChildren()) do
+                    if tool:IsA("Tool") and (tool.Name:lower():find("bat") or tool.Name:lower():find("slap")) then
+                        for _, obj in ipairs(tool:GetDescendants()) do
+                            if obj:IsA("BasePart") then
+                                if not M._primeBatSkinOriginals[obj] then M._primeBatSkinOriginals[obj] = {Color=obj.Color, Material=obj.Material} end
+                                if pair then
+                                    obj.Color = pair[1]
+                                    obj.Material = Enum.Material.Neon
+                                else
+                                    local original = M._primeBatSkinOriginals[obj]
+                                    obj.Color, obj.Material = original.Color, original.Material
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        if M.saveConfig then pcall(M.saveConfig) end
+    end
     function M.applyPrimeCharacterSkin(name)
         name = tostring(name or "Off")
         M.characterSkinName = name
@@ -10794,32 +10170,8 @@ function M.buildGui()
 
     local PAnim = CategoryRefs.contents["Animations"]
     uiSectionHeader(PAnim, "SKINS")
-    uiToggleRow(PAnim, "Bloody Katana", false, function(on)
-        katanaSkinEnabled = on == true
-        if katanaSkinEnabled then
-            queueKatanaReapply(player.Character)
-            local applied = false
-            pcall(function()
-                applied = katanaSkinController and katanaSkinController.ApplySkin("KATANA") == true
-            end)
-            if not applied then
-                task.spawn(function()
-                    local deadline = os.clock() + 10
-                    while katanaSkinEnabled and os.clock() < deadline do
-                        local ok, result = pcall(function()
-                            return katanaSkinController and katanaSkinController.ApplySkin("KATANA")
-                        end)
-                        if ok and result == true then break end
-                        task.wait(0.25)
-                    end
-                end)
-            end
-        else
-            pcall(function()
-                if katanaSkinController then katanaSkinController.ApplySkin("NONE") end
-            end)
-        end
-        savePrimeHubFeKlanConfig()
+    uiChoiceRow(PAnim, "Bat Skin", {"Off", "Pumpkin", "Shadow", "Candy"}, table.find({"Off", "Pumpkin", "Shadow", "Candy"}, M.batSkinName) or 1, function(v)
+        M.applyPrimeBatSkin(v)
     end)
     uiChoiceRow(PAnim, "Character Skin", {"Off", "Halloween", "Shadow", "Headless", "Korblox"}, table.find({"Off", "Halloween", "Shadow", "Headless", "Korblox"}, M.characterSkinName) or 1, function(v)
         M.applyPrimeCharacterSkin(v)
@@ -11601,18 +10953,12 @@ end
 local _voidSpeedConn = nil
 pcall(function()
     local _mobileSpeedModeAcc = 0
-    local _speedApplyAcc = 0
-    local SPEED_APPLY_INTERVAL = 1 / 30 -- 30 actualizaciones/s: menos escrituras de velocidad y menor carga
-    local function tickSpeed(dt)
-        dt = tonumber(dt) or (1 / 60)
-        _mobileSpeedModeAcc = _mobileSpeedModeAcc + dt
-        if _mobileSpeedModeAcc >= 0.15 then
+    local function tickSpeed()
+        _mobileSpeedModeAcc = _mobileSpeedModeAcc + 0.016
+        if not PRIMEHUB_MOBILE or _mobileSpeedModeAcc >= 0.15 then
             _mobileSpeedModeAcc = 0
             if M.updateAutoSwitchSpeed then pcall(M.updateAutoSwitchSpeed) end
         end
-        _speedApplyAcc = _speedApplyAcc + dt
-        if _speedApplyAcc < SPEED_APPLY_INTERVAL then return end
-        _speedApplyAcc = _speedApplyAcc % SPEED_APPLY_INTERVAL
         _voidApplyVelocitySpeed(M.getActiveMoveSpeed and M.getActiveMoveSpeed() or 16)
     end
     if RunService.PreSimulation then
