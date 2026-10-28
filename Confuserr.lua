@@ -1,684 +1,547 @@
--- clean by prince
-
+-- discord.gg/abysshub
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
-local GuiService = game:GetService("CoreGui")
 local HttpService = game:GetService("HttpService")
-local TweenService = game:GetService("TweenService")
-local Stats = game:GetService("Stats")
-local LP = Players.LocalPlayer
 
-local CONFIG_FILE = "VynxConfuserConfig2.json"
+local player = Players.LocalPlayer
+local CONFIG_FILE = "AmbitiousConfuser.json"
 
-local COLORS = {
-    bg          = Color3.fromRGB(8, 6, 12),
-    bgDark      = Color3.fromRGB(3, 2, 6),
-    frame       = Color3.fromRGB(14, 9, 22),
-    stroke      = Color3.fromRGB(125, 55, 190),
-    text        = Color3.fromRGB(255, 255, 255),
-    textDim     = Color3.fromRGB(185, 145, 225),
-    accent      = Color3.fromRGB(160, 70, 235),
-    activeGreen = Color3.fromRGB(190, 105, 255),
-    inactiveRed = Color3.fromRGB(110, 45, 155),
-    buttonBg    = Color3.fromRGB(24, 13, 36),
-    toggleOn    = Color3.fromRGB(190, 105, 255),
-    toggleOff   = Color3.fromRGB(35, 25, 45)}
-
-local State = {
-    confuserOn = false,
-    speed      = 50,
-    lockGui    = false,
-    activeOnSteal = false,
-    guiPos     = {XScale = 0.5, XOffset = -115, YScale = 0.5, YOffset = -65}}
-
-local toggleKey = Enum.KeyCode.X
+-- ============================================================
+-- SAVE / LOAD
+-- ============================================================
+local Config = {
+	grabState = true,
+	dropState = false,
+	spinKeybind = "N",
+	mainPosition = nil,
+}
 
 local function saveConfig()
-    local cfg = {
-        toggleKey = toggleKey.Name,
-        speed     = State.speed,
-        lockGui   = State.lockGui,
-        activeOnSteal = State.activeOnSteal,
-        guiPos    = State.guiPos}
-    pcall(function()
-        if writefile then
-            writefile(CONFIG_FILE, HttpService:JSONEncode(cfg))
-        end
-    end)
+	local data = {
+		grabState = Config.grabState,
+		dropState = Config.dropState,
+		spinKeybind = Config.spinKeybind,
+		mainPosition = Config.mainPosition,
+	}
+	local ok, encoded = pcall(function()
+		return HttpService:JSONEncode(data)
+	end)
+	if ok then
+		pcall(function()
+			writefile(CONFIG_FILE, encoded)
+		end)
+	end
 end
 
 local function loadConfig()
-    local hasFile = false
-    pcall(function() hasFile = isfile(CONFIG_FILE) end)
-    if not hasFile then return end
-    local ok, cfg = pcall(function()
-        return HttpService:JSONDecode(readfile(CONFIG_FILE))
-    end)
-    if not ok or not cfg then return end
-    if cfg.toggleKey and Enum.KeyCode[cfg.toggleKey] then
-        toggleKey = Enum.KeyCode[cfg.toggleKey]
-    end
-    if cfg.speed then State.speed = math.max(0, tonumber(cfg.speed) or 50) end
-    if cfg.lockGui ~= nil then State.lockGui = cfg.lockGui end
-    if cfg.activeOnSteal ~= nil then State.activeOnSteal = cfg.activeOnSteal end
-    if cfg.guiPos and type(cfg.guiPos) == "table" then
-        State.guiPos = cfg.guiPos
-    end
+	if not (isfile and isfile(CONFIG_FILE)) then return end
+	local ok, content = pcall(function()
+		return readfile(CONFIG_FILE)
+	end)
+	if not ok or not content or content == "" then return end
+	local decodeOk, data = pcall(function()
+		return HttpService:JSONDecode(content)
+	end)
+	if not decodeOk or type(data) ~= "table" then return end
+	if data.grabState ~= nil then Config.grabState = data.grabState end
+	if data.dropState ~= nil then Config.dropState = data.dropState end
+	if data.spinKeybind ~= nil then Config.spinKeybind = data.spinKeybind end
+	if data.mainPosition ~= nil then Config.mainPosition = data.mainPosition end
 end
+
 loadConfig()
 
-local Spin = {
-    enabled = false,
-    conn    = nil,
-    angle   = 0}
+-- Força o keybind pra N
+Config.spinKeybind = "N"
+saveConfig()
 
-local function startSpin()
-    if Spin.conn then return end
-    Spin.angle = 0
-
-    Spin.conn = RunService.Heartbeat:Connect(function(dt)
-        if not Spin.enabled then return end
-        local char = LP.Character
-        if not char then return end
-        local root = char:FindFirstChild("HumanoidRootPart")
-        if not root then return end
-
-        local hum = char:FindFirstChildOfClass("Humanoid")
-        if hum then
-            pcall(function() hum.AutoRotate = false end)
-        end
-
-        local step = State.speed * dt * 60
-        Spin.angle = (Spin.angle + step) % 360
-        local yaw = math.rad(Spin.angle)
-
-        local pos = root.Position
-        root.CFrame = CFrame.new(pos) * CFrame.Angles(0, yaw, 0)
-        root.AssemblyAngularVelocity = Vector3.zero
-    end)
-end
-
-local function stopSpin()
-    if Spin.conn then
-        Spin.conn:Disconnect()
-        Spin.conn = nil
-    end
-    local char = LP.Character
-    if char then
-        local hum = char:FindFirstChildOfClass("Humanoid")
-        if hum then
-            pcall(function() hum.AutoRotate = true end)
-        end
-        local root = char:FindFirstChild("HumanoidRootPart")
-        if root then
-            pcall(function() root.AssemblyAngularVelocity = Vector3.zero end)
-        end
-    end
-end
-
-local antiDieEnabled = false
-local antiDieCharConns = {}
-local antiDieCharAddedConn = nil
-local antiDieHeartbeat = nil
-
-local function clearCharEntry(char, restore)
-    local entry = antiDieCharConns[char]
-    if entry then
-        if entry.healthConn then pcall(function() entry.healthConn:Disconnect() end) end
-        if entry.diedConn then pcall(function() entry.diedConn:Disconnect() end) end
-        if entry.cleanupConn then pcall(function() entry.cleanupConn:Disconnect() end) end
-        antiDieCharConns[char] = nil
-    end
-    if restore and char and char.Parent then
-        pcall(function()
-            local hum = char:FindFirstChildOfClass("Humanoid")
-            if hum then
-                hum.BreakJointsOnDeath = true
-                hum:SetStateEnabled(Enum.HumanoidStateType.Dead, true)
-            end
-        end)
-    end
-end
-
-local function applyAntiDieToCharacter(char)
-    if not char or not char.Parent then return end
-    local hum = char:FindFirstChildOfClass("Humanoid")
-    if not hum then return end
-
-    clearCharEntry(char, false)
-
-    hum.BreakJointsOnDeath = false
-    hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
-
-    local entry = { humanoid = hum }
-    entry.healthConn = hum:GetPropertyChangedSignal("Health"):Connect(function()
-        if antiDieEnabled and antiDieCharConns[char] == entry and hum.Health <= 0 then
-            hum.Health = hum.MaxHealth
-        end
-    end)
-    entry.diedConn = hum.Died:Connect(function()
-        task.defer(function()
-            if antiDieEnabled and antiDieCharConns[char] == entry and hum and hum.Parent then
-                hum.BreakJointsOnDeath = false
-                hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
-                hum.Health = hum.MaxHealth
-            end
-        end)
-    end)
-    entry.cleanupConn = char.AncestryChanged:Connect(function()
-        if not char.Parent then clearCharEntry(char, false) end
-    end)
-    antiDieCharConns[char] = entry
-end
-
-local function setAntiDieEnabled(enabled)
-    enabled = enabled == true
-    if enabled == antiDieEnabled then return end
-    antiDieEnabled = enabled
-    if enabled then
-        if not antiDieCharAddedConn then
-            antiDieCharAddedConn = LP.CharacterAdded:Connect(function(char)
-                task.wait(0.2)
-                if antiDieEnabled and char and char.Parent then
-                    applyAntiDieToCharacter(char)
-                end
-            end)
-        end
-        local char = LP.Character
-        if char and char.Parent and not antiDieCharConns[char] then
-            applyAntiDieToCharacter(char)
-        end
-        if not antiDieHeartbeat then
-            antiDieHeartbeat = RunService.Heartbeat:Connect(function()
-                if not antiDieEnabled then return end
-                local c = LP.Character
-                local hum = c and c.Parent and c:FindFirstChildOfClass("Humanoid")
-                if not hum then return end
-                local entry = antiDieCharConns[c]
-                if not entry or entry.humanoid ~= hum then applyAntiDieToCharacter(c) end
-                if hum.BreakJointsOnDeath then hum.BreakJointsOnDeath = false end
-                if hum:GetStateEnabled(Enum.HumanoidStateType.Dead) then
-                    hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
-                end
-                if hum.Health <= 0 then hum.Health = hum.MaxHealth end
-            end)
-        end
-    else
-        if antiDieHeartbeat then antiDieHeartbeat:Disconnect(); antiDieHeartbeat = nil end
-        for char in pairs(antiDieCharConns) do
-            clearCharEntry(char, true)
-        end
-    end
-end
-
-local function setConfuser(on)
-    Spin.enabled = on
-    setAntiDieEnabled(on)
-    if on then startSpin() else stopSpin() end
-end
-
-for _, name in pairs({"BakiBypass", "BakiwareConfuser", "BakiAntiDie", "VynxConfuser"}) do
-    local old = GuiService:FindFirstChild(name)
-    if old then old:Destroy() end
-    local pg = LP:FindFirstChild("PlayerGui")
-    if pg then
-        local o = pg:FindFirstChild(name)
-        if o then o:Destroy() end
-    end
-end
-
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "VynxConfuser"
-screenGui.Parent = GuiService
-screenGui.ResetOnSpawn = false
-screenGui.IgnoreGuiInset = true
-
-local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 260, 0, 336)
-mainFrame.Position = UDim2.new(State.guiPos.XScale, State.guiPos.XOffset, State.guiPos.YScale, State.guiPos.YOffset)
-mainFrame.BackgroundColor3 = COLORS.bg
-mainFrame.BackgroundTransparency = 1
-mainFrame.ClipsDescendants = true
-mainFrame.Parent = screenGui
-Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 10)
-
-local borderStroke = Instance.new("UIStroke")
-borderStroke.Thickness = 1.5
-borderStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-borderStroke.Parent = mainFrame
-
-local borderGradient = Instance.new("UIGradient")
-borderGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(160, 70, 235)),
-    ColorSequenceKeypoint.new(0.3, Color3.fromRGB(110, 45, 170)),
-    ColorSequenceKeypoint.new(0.7, Color3.fromRGB(190, 105, 255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(160, 70, 235))})
-borderGradient.Parent = borderStroke
-TweenService:Create(borderGradient, TweenInfo.new(2, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1), {Rotation = 360}):Play()
-
-local starContainer = Instance.new("Frame")
-starContainer.Size = UDim2.new(1, 0, 1, 0)
-starContainer.BackgroundTransparency = 1
-starContainer.ClipsDescendants = true
-starContainer.ZIndex = 1
-starContainer.Parent = mainFrame
-
-local function createStar()
-    local star = Instance.new("Frame")
-    star.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    star.BorderSizePixel = 0
-    star.ZIndex = 1
-    local size = math.random(1, 2)
-    star.Size = UDim2.new(0, size, 0, size)
-    Instance.new("UICorner", star).CornerRadius = UDim.new(1, 0)
-    star.Position = UDim2.new(math.random(), 0, -0.1, 0)
-    star.BackgroundTransparency = math.random(5, 8) / 10
-    star.Parent = starContainer
-    local tween = TweenService:Create(star, TweenInfo.new(math.random(4, 7), Enum.EasingStyle.Linear), {
-        Position = UDim2.new(star.Position.X.Scale, 0, 1.1, 0)})
-    tween:Play()
-    tween.Completed:Connect(function() star:Destroy() end)
+-- ============================================================
+-- RESPAWN (reinicia o boneco ao executar)
+-- ============================================================
+local function respawnCharacter()
+	local char = player.Character
+	if not char then return end
+	local hum = char:FindFirstChildOfClass("Humanoid")
+	if hum then
+		hum.Health = 0
+	end
 end
 
 task.spawn(function()
-    while mainFrame and mainFrame.Parent do
-        createStar()
-        task.wait(0.85)
-    end
+	task.wait(0.5)
+	respawnCharacter()
 end)
 
-local topBar = Instance.new("Frame")
-topBar.Size = UDim2.new(1, 0, 0, 56)
-topBar.BackgroundColor3 = COLORS.bgDark
-topBar.BackgroundTransparency = 1
-topBar.BorderSizePixel = 0
-topBar.Parent = mainFrame
-topBar.ZIndex = 2
-Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 10)
+-- ============================================================
+-- BACKGROUND
+-- ============================================================
+local BG_URL = "https://kastor-box.lovable.app/api/public/f/eeb8vwyp.png"
+local BG_CACHE = nil
 
-local titleImage = Instance.new("ImageLabel")
-titleImage.Name = "VynxConfuserTitleImage"
-titleImage.Size = UDim2.new(0, 215, 0, 52)
-titleImage.Position = UDim2.new(0, 8, 0.5, -26)
-titleImage.BackgroundTransparency = 1
-titleImage.Image = "rbxassetid://126480374063161"
-titleImage.ScaleType = Enum.ScaleType.Fit
-titleImage.ZIndex = 2
-titleImage.Parent = topBar
+local function resolveBgAsset()
+	if BG_CACHE then return BG_CACHE end
 
-local rightButtonContainer = Instance.new("Frame")
-rightButtonContainer.Size = UDim2.new(0, 30, 0, 26)
-rightButtonContainer.Position = UDim2.new(0.96, 0, 0.5, -13)
-rightButtonContainer.AnchorPoint = Vector2.new(1, 0)
-rightButtonContainer.BackgroundTransparency = 1
-rightButtonContainer.Parent = topBar
+	local ok, asset = pcall(function()
+		if not (isfile and writefile and readfile) then return nil end
+		local fname = "ambitious_confuser_bg.png"
+		if not isfile(fname) then
+			local body
+			if game.HttpGet then
+				body = game:HttpGet(BG_URL)
+			elseif request or http_request or (syn and syn.request) then
+				local req = request or http_request or syn.request
+				local res = req({ Url = BG_URL, Method = "GET" })
+				body = res and (res.Body or res.body)
+			end
+			if type(body) == "string" and #body > 100 then
+				writefile(fname, body)
+			else
+				return nil
+			end
+		end
+		if typeof(getcustomasset) == "function" then
+			return getcustomasset(fname)
+		elseif typeof(getsynasset) == "function" then
+			return getsynasset(fname)
+		end
+		return nil
+	end)
 
-local keybindBtn = Instance.new("TextButton")
-keybindBtn.Name = "MinimizeButton"
-keybindBtn.Size = UDim2.new(0, 28, 0, 26)
-keybindBtn.Position = UDim2.new(1, 0, 0.5, -13)
-keybindBtn.AnchorPoint = Vector2.new(1, 0)
-keybindBtn.BackgroundTransparency = 1
-keybindBtn.BorderSizePixel = 0
-keybindBtn.Text = "-"
-keybindBtn.TextColor3 = COLORS.text
-keybindBtn.Font = Enum.Font.Gotham
-keybindBtn.TextSize = 24
-keybindBtn.ZIndex = 3
-keybindBtn.Parent = rightButtonContainer
+	if ok and type(asset) == "string" and asset ~= "" then
+		BG_CACHE = asset
+		return asset
+	end
 
-local isCollapsed = false
-local body = Instance.new("Frame")
-body.Size = UDim2.new(1, 0, 1, -56)
-body.Position = UDim2.new(0, 0, 0, 56)
-body.BackgroundTransparency = 1
-body.Parent = mainFrame
-body.ZIndex = 2
-
-local BOTTOM_IMAGE_ID = "0"
-local discordLabel = Instance.new("ImageLabel")
-discordLabel.Name = "BottomImage"
-discordLabel.Size = UDim2.new(0.92, 0, 0, 44)
-discordLabel.Position = UDim2.new(0.04, 0, 1, -52)
-discordLabel.BackgroundTransparency = 1
-discordLabel.Image = "rbxassetid://" .. BOTTOM_IMAGE_ID
-discordLabel.ScaleType = Enum.ScaleType.Fit
-discordLabel.ZIndex = 3
-discordLabel.Parent = mainFrame
-
-keybindBtn.MouseButton1Click:Connect(function()
-    isCollapsed = not isCollapsed
-    body.Visible = not isCollapsed
-    discordLabel.Visible = not isCollapsed
-    mainFrame.Size = isCollapsed and UDim2.new(0, 260, 0, 56) or UDim2.new(0, 260, 0, 336)
-    keybindBtn.Text = isCollapsed and "+" or "-"
-end)
-
-local activateBtn = Instance.new("TextButton")
-activateBtn.Size = UDim2.new(0.92, 0, 0, 40)
-activateBtn.Position = UDim2.new(0.04, 0, 0, 8)
-activateBtn.BackgroundColor3 = COLORS.buttonBg
-activateBtn.BackgroundTransparency = 0.45
-activateBtn.Text = "ACTIVATE"
-activateBtn.TextColor3 = COLORS.text
-activateBtn.Font = Enum.Font.GothamBold
-activateBtn.TextSize = 10
-activateBtn.ZIndex = 3
-activateBtn.Parent = body
-Instance.new("UICorner", activateBtn).CornerRadius = UDim.new(0, 6)
-local activateStroke = Instance.new("UIStroke")
-activateStroke.Color = COLORS.accent
-activateStroke.Thickness = 1
-activateStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-activateStroke.Parent = activateBtn
-
-local radiusContainer = Instance.new("Frame")
-radiusContainer.Name = "RadiusContainer"
-radiusContainer.Size = UDim2.new(0.92, 0, 0, 30)
-radiusContainer.Position = UDim2.new(0.04, 0, 0, 56)
-radiusContainer.BackgroundColor3 = COLORS.bgDark
-radiusContainer.BackgroundTransparency = 1
-radiusContainer.BorderSizePixel = 0
-radiusContainer.Parent = body
-radiusContainer.ZIndex = 3
-Instance.new("UICorner", radiusContainer).CornerRadius = UDim.new(0, 8)
-
-local radiusStroke = Instance.new("UIStroke")
-radiusStroke.Color = COLORS.accent
-radiusStroke.Thickness = 1
-radiusStroke.Transparency = 0
-radiusStroke.Parent = radiusContainer
-
-local radiusLabel = Instance.new("TextLabel")
-radiusLabel.Name = "RadiusLabel"
-radiusLabel.Size = UDim2.new(0, 56, 1, 0)
-radiusLabel.Position = UDim2.new(0, 8, 0, 0)
-radiusLabel.BackgroundTransparency = 1
-radiusLabel.Text = "RADIUS"
-radiusLabel.TextColor3 = COLORS.textDim
-radiusLabel.Font = Enum.Font.GothamMedium
-radiusLabel.TextSize = 10
-radiusLabel.TextColor3 = COLORS.text
-radiusLabel.TextStrokeTransparency = 0.4
-radiusLabel.TextXAlignment = Enum.TextXAlignment.Left
-radiusLabel.ZIndex = 3
-radiusLabel.Parent = radiusContainer
-
-local speedBox = Instance.new("TextBox")
-speedBox.Name = "RadiusValue"
-speedBox.Size = UDim2.new(1, -76, 1, -8)
-speedBox.Position = UDim2.new(0, 66, 0, 4)
-speedBox.BackgroundColor3 = COLORS.frame
-speedBox.BackgroundTransparency = 1
-speedBox.BorderSizePixel = 0
-speedBox.Text = tostring(State.speed)
-speedBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-speedBox.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
-speedBox.TextStrokeTransparency = 1
-speedBox.Font = Enum.Font.GothamBold
-speedBox.TextSize = 12
-speedBox.ClearTextOnFocus = false
-speedBox.TextXAlignment = Enum.TextXAlignment.Center
-speedBox.ZIndex = 3
-speedBox.Parent = radiusContainer
-Instance.new("UICorner", speedBox).CornerRadius = UDim.new(0, 6)
-
-local speedBoxStroke = Instance.new("UIStroke")
-speedBoxStroke.Color = COLORS.accent
-speedBoxStroke.Thickness = 1
-speedBoxStroke.Transparency = 0
-speedBoxStroke.Enabled = false
-speedBoxStroke.Parent = speedBox
-
-local stealRow = Instance.new("Frame")
-stealRow.Name = "ActiveOnStealRow"
-stealRow.Size = UDim2.new(0.92, 0, 0, 30)
-stealRow.Position = UDim2.new(0.04, 0, 0, 94)
-stealRow.BackgroundTransparency = 1
-stealRow.ZIndex = 3
-stealRow.Parent = body
-Instance.new("UICorner", stealRow).CornerRadius = UDim.new(0, 8)
-local stealRowStroke = Instance.new("UIStroke")
-stealRowStroke.Color = COLORS.accent
-stealRowStroke.Thickness = 1
-stealRowStroke.Parent = stealRow
-
-local stealLabel = Instance.new("TextLabel")
-stealLabel.Size = UDim2.new(1, -70, 1, 0)
-stealLabel.Position = UDim2.new(0, 10, 0, 0)
-stealLabel.BackgroundTransparency = 1
-stealLabel.Text = "ACTIVE ON STEAL"
-stealLabel.TextColor3 = COLORS.text
-stealLabel.TextStrokeTransparency = 0.4
-stealLabel.Font = Enum.Font.GothamBold
-stealLabel.TextSize = 10
-stealLabel.TextXAlignment = Enum.TextXAlignment.Left
-stealLabel.ZIndex = 3
-stealLabel.Parent = stealRow
-
-local stealToggle = Instance.new("TextButton")
-stealToggle.Size = UDim2.new(0, 46, 0, 20)
-stealToggle.Position = UDim2.new(1, -54, 0.5, -10)
-stealToggle.BorderSizePixel = 0
-stealToggle.Text = ""
-stealToggle.AutoButtonColor = false
-stealToggle.ZIndex = 4
-stealToggle.Parent = stealRow
-Instance.new("UICorner", stealToggle).CornerRadius = UDim.new(1, 0)
-local stealKnob = Instance.new("Frame")
-stealKnob.Size = UDim2.new(0, 16, 0, 16)
-stealKnob.BackgroundColor3 = COLORS.text
-stealKnob.BorderSizePixel = 0
-stealKnob.ZIndex = 5
-stealKnob.Parent = stealToggle
-Instance.new("UICorner", stealKnob).CornerRadius = UDim.new(1, 0)
-
-local function renderStealToggle()
-    stealToggle.BackgroundColor3 = State.activeOnSteal and COLORS.toggleOn or COLORS.toggleOff
-    stealKnob.Position = State.activeOnSteal and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
-end
-renderStealToggle()
-
-local backgroundTitle = Instance.new("TextLabel")
-backgroundTitle.Name = "BackgroundSelectorTitle"
-backgroundTitle.Size = UDim2.new(0.92, 0, 0, 18)
-backgroundTitle.Position = UDim2.new(0.04, 0, 0, 130)
-backgroundTitle.BackgroundTransparency = 1
-backgroundTitle.Text = "BACKGROUND"
-backgroundTitle.TextColor3 = COLORS.textDim
-backgroundTitle.Font = Enum.Font.GothamBold
-backgroundTitle.TextSize = 10
-backgroundTitle.TextColor3 = COLORS.text
-backgroundTitle.TextStrokeTransparency = 0.4
-backgroundTitle.TextXAlignment = Enum.TextXAlignment.Left
-backgroundTitle.Parent = body
-backgroundTitle.ZIndex = 3
-
-local backgroundIds = {
-    "112180017939463",
-    "106344835483006",
-    "134260766475623",
-    "124053948669794"}
-local selectedBackgroundId = backgroundIds[1]
-
-local backgroundPreview = Instance.new("ImageLabel")
-backgroundPreview.Name = "BackgroundPreview"
-backgroundPreview.Size = UDim2.new(0, 72, 0, 48)
-backgroundPreview.Position = UDim2.new(0.04, 0, 0, 150)
-backgroundPreview.BackgroundTransparency = 1
-backgroundPreview.BorderSizePixel = 0
-backgroundPreview.Image = "rbxassetid://" .. selectedBackgroundId
-backgroundPreview.ScaleType = Enum.ScaleType.Crop
-backgroundPreview.Parent = body
-backgroundPreview.ZIndex = 3
-Instance.new("UICorner", backgroundPreview).CornerRadius = UDim.new(0, 7)
-
-local previewStroke = Instance.new("UIStroke")
-previewStroke.Color = COLORS.stroke
-previewStroke.Thickness = 1
-previewStroke.Parent = backgroundPreview
-
-local selectorButtons = {}
-local backgroundImage
-for i, assetId in ipairs(backgroundIds) do
-    local button = Instance.new("ImageButton")
-    button.Name = "BackgroundOption" .. i
-    button.Size = UDim2.new(0, 30, 0, 30)
-    button.Position = UDim2.new(0, 94 + (i - 1) * 34, 0, 159)
-    button.BackgroundTransparency = 1
-    button.BorderSizePixel = 0
-    button.Image = "rbxassetid://" .. assetId
-    button.ScaleType = Enum.ScaleType.Crop
-    button.AutoButtonColor = true
-    button.Parent = body
-    button.ZIndex = 4
-    Instance.new("UICorner", button).CornerRadius = UDim.new(0, 5)
-
-    local optionStroke = Instance.new("UIStroke")
-    optionStroke.Color = assetId == selectedBackgroundId and COLORS.accent or COLORS.stroke
-    optionStroke.Thickness = assetId == selectedBackgroundId and 2 or 1
-    optionStroke.Parent = button
-
-    button.MouseButton1Click:Connect(function()
-        selectedBackgroundId = assetId
-        backgroundPreview.Image = "rbxassetid://" .. assetId
-        backgroundImage.Image = "rbxassetid://" .. assetId
-        for _, entry in ipairs(selectorButtons) do
-            entry.stroke.Color = entry.id == selectedBackgroundId and COLORS.accent or COLORS.stroke
-            entry.stroke.Thickness = entry.id == selectedBackgroundId and 2 or 1
-        end
-    end)
-    table.insert(selectorButtons, {button = button, stroke = optionStroke, id = assetId})
+	BG_CACHE = BG_URL
+	return BG_URL
 end
 
-backgroundImage = Instance.new("ImageLabel")
-backgroundImage.Name = "PanelBackgroundImage"
-backgroundImage.Size = UDim2.new(1, 0, 1, 0)
-backgroundImage.Position = UDim2.new(0, 0, 0, 0)
-backgroundImage.BackgroundTransparency = 1
-backgroundImage.Image = "rbxassetid://" .. selectedBackgroundId
-backgroundImage.ImageTransparency = 0
-backgroundImage.ScaleType = Enum.ScaleType.Crop
-backgroundImage.ZIndex = 0
-backgroundImage.Parent = mainFrame
-backgroundImage.LayoutOrder = -1
-mainFrame.ClipsDescendants = true
-backgroundImage.Active = false
-Instance.new("UICorner", backgroundImage).CornerRadius = UDim.new(0, 10)
+-- ============================================================
+-- UI
+-- ============================================================
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local MainBg = Instance.new("ImageLabel")
+local TitleLabel = Instance.new("TextLabel")
 
-local function updateUI()
-    if State.confuserOn then
-        activateBtn.Text = "ON"
-        activateBtn.TextColor3 = COLORS.activeGreen
-    else
-        activateBtn.Text = "ACTIVATE"
-        activateBtn.TextColor3 = COLORS.text
-    end
-    local n = tonumber(speedBox.Text) or State.speed
-    n = math.max(0, n)
-    State.speed = n
+local ActivateBtn = Instance.new("TextButton")
+local ActivateCorner = Instance.new("UICorner")
+
+local KeybindBtn = Instance.new("TextButton")
+local KeybindCorner = Instance.new("UICorner")
+
+local GrabBtn = Instance.new("TextButton")
+local GrabCorner = Instance.new("UICorner")
+
+local DropBtn = Instance.new("TextButton")
+local DropCorner = Instance.new("UICorner")
+
+ScreenGui.Parent = game.CoreGui
+ScreenGui.Name = "AmbitiousConfuserUI"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.DisplayOrder = 999
+ScreenGui.IgnoreGuiInset = true
+
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+MainFrame.BackgroundTransparency = 0.1
+MainFrame.Size = UDim2.new(0, 210, 0, 130)
+MainFrame.ClipsDescendants = true
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.BorderSizePixel = 0
+MainFrame.ZIndex = 2
+
+if Config.mainPosition and Config.mainPosition.x and Config.mainPosition.y then
+	MainFrame.Position = UDim2.new(0.5, Config.mainPosition.x, 0.5, Config.mainPosition.y)
+else
+	MainFrame.Position = UDim2.new(0.5, -105, 0.5, -65)
 end
 
-speedBox.FocusLost:Connect(function()
-    local n = tonumber(speedBox.Text)
-    if not n then n = State.speed end
-    n = math.max(0, n)
-    State.speed = n
-    speedBox.Text = tostring(n)
-    saveConfig()
-end)
+UICorner.CornerRadius = UDim.new(0, 12)
+UICorner.Parent = MainFrame
 
-local function toggleConfuser()
-    State.confuserOn = not State.confuserOn
-    setConfuser(State.confuserOn)
-    updateUI()
-    saveConfig()
-end
+local MainStroke = Instance.new("UIStroke", MainFrame)
+MainStroke.Color = Color3.fromRGB(60, 30, 90)
+MainStroke.Thickness = 1
+MainStroke.Transparency = 0.3
 
-activateBtn.MouseButton1Click:Connect(toggleConfuser)
-
-local stealActive = false
-
-local function isCarryingBrainrot()
-    local char = LP.Character
-    return LP:GetAttribute("Stealing") == true
-        or (char ~= nil and char:GetAttribute("Stealing") == true)
-end
-
-local function endSteal()
-    if not stealActive then return end
-    stealActive = false
-    State.confuserOn = false
-    setConfuser(false)
-    updateUI()
-end
-
-stealToggle.MouseButton1Click:Connect(function()
-    State.activeOnSteal = not State.activeOnSteal
-    renderStealToggle()
-    if not State.activeOnSteal then endSteal() end
-    saveConfig()
-end)
+MainBg.Name = "Bg"
+MainBg.Parent = MainFrame
+MainBg.BackgroundTransparency = 1
+MainBg.Size = UDim2.new(1, 0, 1, 0)
+MainBg.Position = UDim2.new(0, 0, 0, 0)
+MainBg.ImageTransparency = 0.45
+MainBg.ScaleType = Enum.ScaleType.Crop
+MainBg.ZIndex = 2
+MainBg.BorderSizePixel = 0
+Instance.new("UICorner", MainBg).CornerRadius = UDim.new(0, 12)
 
 task.spawn(function()
-    while screenGui and screenGui.Parent do
-        task.wait(0.15)
-        if State.activeOnSteal then
-            local carrying = isCarryingBrainrot()
-            if carrying and not stealActive and not State.confuserOn then
-                stealActive = true
-                State.confuserOn = true
-                setConfuser(true)
-                updateUI()
-            elseif not carrying and stealActive then
-                endSteal()
-            end
-        end
-    end
+	local asset = resolveBgAsset()
+	if asset then
+		MainBg.Image = asset
+	end
 end)
 
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-    if input.KeyCode == toggleKey and (input.UserInputType == Enum.UserInputType.Keyboard
-        or input.UserInputType == Enum.UserInputType.Gamepad1
-        or input.UserInputType == Enum.UserInputType.Gamepad2) then
-        toggleConfuser()
-    end
+TitleLabel.Parent = MainFrame
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Position = UDim2.new(0, 0, 0, 4)
+TitleLabel.Size = UDim2.new(1, 0, 0, 26)
+TitleLabel.Font = Enum.Font.GothamBlack
+TitleLabel.Text = "Ambitious Confuser"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextSize = 17
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Center
+TitleLabel.ZIndex = 5
+
+local grabState = Config.grabState
+local dropState = Config.dropState
+local spinActive = false
+
+local function updateTexts()
+	GrabBtn.Text = grabState and "ON GRAB" or "OFF GRAB"
+	DropBtn.Text = dropState and "ON DROP" or "OFF DROP"
+	ActivateBtn.Text = spinActive and "DEACTIVATE" or "ACTIVATE"
+end
+
+ActivateBtn.Parent = MainFrame
+ActivateBtn.BackgroundColor3 = Color3.fromRGB(150, 70, 220)
+ActivateBtn.BackgroundTransparency = 0.5
+ActivateBtn.Position = UDim2.new(0, 8, 0, 34)
+ActivateBtn.Size = UDim2.new(0, 142, 0, 30)
+ActivateBtn.Font = Enum.Font.GothamBold
+ActivateBtn.Text = "ACTIVATE"
+ActivateBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+ActivateBtn.TextSize = 13
+ActivateBtn.ZIndex = 5
+ActivateBtn.BorderSizePixel = 0
+ActivateBtn.AutoButtonColor = false
+
+ActivateCorner.CornerRadius = UDim.new(0, 8)
+ActivateCorner.Parent = ActivateBtn
+
+local ActivateStroke = Instance.new("UIStroke", ActivateBtn)
+ActivateStroke.Color = Color3.fromRGB(200, 150, 255)
+ActivateStroke.Thickness = 1
+ActivateStroke.Transparency = 0.5
+
+KeybindBtn.Parent = MainFrame
+KeybindBtn.BackgroundColor3 = Color3.fromRGB(230, 90, 160)
+KeybindBtn.BackgroundTransparency = 0.45
+KeybindBtn.Position = UDim2.new(0, 156, 0, 34)
+KeybindBtn.Size = UDim2.new(0, 46, 0, 30)
+KeybindBtn.Font = Enum.Font.GothamBold
+KeybindBtn.Text = "N"
+KeybindBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeybindBtn.TextSize = 11
+KeybindBtn.ZIndex = 5
+KeybindBtn.BorderSizePixel = 0
+KeybindBtn.AutoButtonColor = false
+
+KeybindCorner.CornerRadius = UDim.new(0, 8)
+KeybindCorner.Parent = KeybindBtn
+
+local KeybindStroke = Instance.new("UIStroke", KeybindBtn)
+KeybindStroke.Color = Color3.fromRGB(255, 170, 210)
+KeybindStroke.Thickness = 1
+KeybindStroke.Transparency = 0.5
+
+GrabBtn.Parent = MainFrame
+GrabBtn.BackgroundColor3 = Color3.fromRGB(150, 70, 220)
+GrabBtn.BackgroundTransparency = 0.5
+GrabBtn.Position = UDim2.new(0, 8, 0, 72)
+GrabBtn.Size = UDim2.new(0, 96, 0, 30)
+GrabBtn.Font = Enum.Font.GothamBold
+GrabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+GrabBtn.TextSize = 12
+GrabBtn.ZIndex = 5
+GrabBtn.BorderSizePixel = 0
+GrabBtn.AutoButtonColor = false
+
+GrabCorner.CornerRadius = UDim.new(0, 8)
+GrabCorner.Parent = GrabBtn
+
+local GrabStroke = Instance.new("UIStroke", GrabBtn)
+GrabStroke.Color = Color3.fromRGB(200, 150, 255)
+GrabStroke.Thickness = 1
+GrabStroke.Transparency = 0.5
+
+DropBtn.Parent = MainFrame
+DropBtn.BackgroundColor3 = Color3.fromRGB(150, 70, 220)
+DropBtn.BackgroundTransparency = 0.5
+DropBtn.Position = UDim2.new(0, 110, 0, 72)
+DropBtn.Size = UDim2.new(0, 92, 0, 30)
+DropBtn.Font = Enum.Font.GothamBold
+DropBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+DropBtn.TextSize = 12
+DropBtn.ZIndex = 5
+DropBtn.BorderSizePixel = 0
+DropBtn.AutoButtonColor = false
+
+DropCorner.CornerRadius = UDim.new(0, 8)
+DropCorner.Parent = DropBtn
+
+local DropStroke = Instance.new("UIStroke", DropBtn)
+DropStroke.Color = Color3.fromRGB(200, 150, 255)
+DropStroke.Thickness = 1
+DropStroke.Transparency = 0.5
+
+updateTexts()
+
+task.spawn(function()
+	local lastX, lastY = nil, nil
+	while true do
+		task.wait(1)
+		local pos = MainFrame.Position
+		local x = pos.X.Offset
+		local y = pos.Y.Offset
+		if x ~= lastX or y ~= lastY then
+			lastX, lastY = x, y
+			Config.mainPosition = { x = x, y = y }
+			saveConfig()
+		end
+	end
 end)
 
-local isDragging = false
-local dragInput, mousePos, framePos
+-- ============================================================
+-- ANTI-BAT
+-- ============================================================
+do
+	local AntiBat = { RagdollConnection = nil }
 
-mainFrame.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-    if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and not State.lockGui then
-        isDragging = true
-        mousePos = input.Position
-        framePos = mainFrame.Position
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                isDragging = false
-                local pos = mainFrame.Position
-                State.guiPos = {XScale = pos.X.Scale, XOffset = pos.X.Offset, YScale = pos.Y.Scale, YOffset = pos.Y.Offset}
-                saveConfig()
-            end
-        end)
-    end
+	local function startAntiBatRagdoll()
+		if AntiBat.RagdollConnection then
+			AntiBat.RagdollConnection:Disconnect()
+			AntiBat.RagdollConnection = nil
+		end
+		AntiBat.RagdollConnection = RunService.Heartbeat:Connect(function()
+			local char = player.Character
+			if not char then return end
+			local hum = char:FindFirstChildOfClass("Humanoid")
+			local root = char:FindFirstChild("HumanoidRootPart")
+			if not hum or not root then return end
+
+			local state = hum:GetState()
+			if state == Enum.HumanoidStateType.Physics
+				or state == Enum.HumanoidStateType.Ragdoll
+				or state == Enum.HumanoidStateType.FallingDown then
+				hum:ChangeState(Enum.HumanoidStateType.Running)
+				workspace.CurrentCamera.CameraSubject = hum
+				pcall(function()
+					local playerModule = player.PlayerScripts:FindFirstChild("PlayerModule")
+					if playerModule then
+						require(playerModule:FindFirstChild("ControlModule")):Enable()
+					end
+				end)
+				root.Velocity = Vector3.new(0, 0, 0)
+				root.RotVelocity = Vector3.new(0, 0, 0)
+			end
+
+			for _, object in ipairs(char:GetDescendants()) do
+				if object:IsA("Motor6D") and not object.Enabled then
+					object.Enabled = true
+				end
+			end
+		end)
+	end
+
+	task.spawn(function()
+		if not player.Character then player.CharacterAdded:Wait() end
+		startAntiBatRagdoll()
+	end)
+
+	player.CharacterAdded:Connect(function()
+		task.wait(0.3)
+		startAntiBatRagdoll()
+	end)
+end
+
+-- ============================================================
+-- INFINITE JUMP (HOLD)
+-- ============================================================
+;(function()
+	local HOP_POWER = 55
+	local HOP_COOLDOWN = 0.08
+	local lastJumpTime = 0
+	local conn = nil
+
+	local function startInfJump()
+		if conn then conn:Disconnect() end
+		conn = RunService.Heartbeat:Connect(function()
+			pcall(function()
+				local char = player.Character
+				if not char then return end
+				local hum = char:FindFirstChildOfClass("Humanoid")
+				if not hum then return end
+				local hrp = char:FindFirstChild("HumanoidRootPart")
+				if not hrp then return end
+				local now = tick()
+				local wantsToJump = UserInputService:IsKeyDown(Enum.KeyCode.Space)
+					or UserInputService:IsKeyDown(Enum.KeyCode.ButtonA)
+					or hum.Jump == true
+				if wantsToJump and (now - lastJumpTime) >= HOP_COOLDOWN then
+					lastJumpTime = now
+					local v = hrp.Velocity
+					hrp.Velocity = Vector3.new(v.X, HOP_POWER, v.Z)
+				end
+			end)
+		end)
+	end
+
+	task.spawn(function()
+		if not player.Character then player.CharacterAdded:Wait() end
+		startInfJump()
+	end)
+
+	player.CharacterAdded:Connect(function()
+		task.wait(0.5)
+		startInfJump()
+	end)
+end)()
+
+-- ============================================================
+-- SPIN 360° TOTAL (todos os eixos, rápido, podendo andar)
+-- Não altera speed — só aplica rotação via CFrame
+-- ============================================================
+local Spin = {}
+do
+	Spin.active = false
+	Spin.connection = nil
+
+	-- ====== AJUSTES ======
+	local SPIN_SPEED = 10      -- giro em pé (Y) — 5 devagar, 10 médio, 20 rápido, 35 insano
+	local TILT_SPEED = 6       -- velocidade da cambalhota/lado
+	local TILT_AMOUNT = 90     -- quanto inclina (graus) — 45 sutil, 90 completo, 180 duplo
+
+	local function getHRP()
+		local char = player.Character
+		if not char then return nil end
+		return char:FindFirstChild("HumanoidRootPart")
+	end
+
+	function Spin.stop()
+		if Spin.connection then
+			Spin.connection:Disconnect()
+			Spin.connection = nil
+		end
+		Spin.active = false
+	end
+
+	function Spin.start()
+		if Spin.active then return end
+		Spin.active = true
+
+		local tempo = 0
+
+		-- RenderStepped = antes do render, evita tremedeira
+		Spin.connection = RunService.RenderStepped:Connect(function(dt)
+			local hrp = getHRP()
+			if not hrp then
+				Spin.stop()
+				return
+			end
+
+			tempo += dt
+
+			-- Pega a posição ATUAL (não teletransporta)
+			local posAtual = hrp.Position
+
+			-- Giro 360 em TODOS os eixos ao mesmo tempo:
+			-- Y = gira em pé (spin principal)
+			-- X = cambalhota (frente/trás)
+			-- Z = rolamento (pros lados)
+			local angY = tempo * SPIN_SPEED * math.rad(60)
+			local angX = math.sin(tempo * TILT_SPEED) * math.rad(TILT_AMOUNT)
+			local angZ = math.cos(tempo * TILT_SPEED) * math.rad(TILT_AMOUNT)
+
+			-- Aplica SÓ a rotação — posição e velocidade linear intactas
+			hrp.CFrame = CFrame.new(posAtual) * CFrame.Angles(angX, angY, angZ)
+		end)
+	end
+
+	function Spin.toggle()
+		if Spin.active then
+			Spin.stop()
+		else
+			Spin.start()
+		end
+		updateTexts()
+	end
+
+	player.CharacterAdded:Connect(function()
+		Spin.stop()
+		updateTexts()
+	end)
+end
+
+-- ============================================================
+-- KEYBIND (padrão: N)
+-- ============================================================
+local spinKeybind = Enum.KeyCode.N
+local listeningForKeybind = false
+
+local function setKeybindText()
+	KeybindBtn.Text = listeningForKeybind and "..." or spinKeybind.Name
+end
+
+setKeybindText()
+
+KeybindBtn.MouseButton1Click:Connect(function()
+	if listeningForKeybind then return end
+	listeningForKeybind = true
+	setKeybindText()
+	print("[Keybind] Pressione uma tecla para bindar o Spin...")
+
+	local conn
+	conn = UserInputService.InputBegan:Connect(function(input, gpe)
+		if gpe then return end
+		if input.UserInputType == Enum.UserInputType.Keyboard then
+			spinKeybind = input.KeyCode
+			listeningForKeybind = false
+			setKeybindText()
+			Config.spinKeybind = spinKeybind.Name
+			saveConfig()
+			conn:Disconnect()
+			print("[Keybind] Spin bindado em: " .. spinKeybind.Name)
+		end
+	end)
 end)
 
-mainFrame.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-        dragInput = input
-    end
+UserInputService.InputBegan:Connect(function(input, gpe)
+	if gpe then return end
+	if listeningForKeybind then return end
+	if input.KeyCode == spinKeybind then
+		Spin.toggle()
+		print("[Spin] " .. (Spin.active and "ATIVADO" or "DESATIVADO"))
+	end
 end)
 
-UserInputService.InputChanged:Connect(function(input)
-    if input == dragInput and isDragging then
-        local delta = input.Position - mousePos
-        mainFrame.Position = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
-    end
+-- ============================================================
+-- Botões GRAB / DROP
+-- ============================================================
+GrabBtn.MouseButton1Click:Connect(function()
+	grabState = not grabState
+	Config.grabState = grabState
+	updateTexts()
+	saveConfig()
 end)
 
-updateUI()
-print("[VYNX CONFUSER] Loaded — WM: /jBYvMpbYSv")
+DropBtn.MouseButton1Click:Connect(function()
+	dropState = not dropState
+	Config.dropState = dropState
+	updateTexts()
+	saveConfig()
+end)
+
+ActivateBtn.MouseButton1Click:Connect(function()
+	Spin.toggle()
+end)
+
+print("[Script] Anti-Bat ON | Infinite Jump (HOLD) ON | Spin 360° Total: N ou botão ACTIVATE")
+-- thanks to me @sleep
+IVATE")
+print("[Config] Salvo em: " .. CONFIG_FILE)
+-- https://discord.gg/Cx3sVHeFaW 073 finder bot free
