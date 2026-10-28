@@ -9575,6 +9575,61 @@ function M.buildGui()
     uiChoiceRow(PM, "Auto Carry Mode", {"Lagger", "Carry", "Normal"}, M.autoCarryMode == "Lagger" and 1 or (M.autoCarryMode == "Carry" and 2 or 3), function(v) M.autoCarryMode = v end)
     local PMech = CategoryRefs.contents["Mechanics"]
     uiSectionHeader(PMech, "COMBAT")
+
+    -- SPIN Bot (Cerberus Duels): gira únicamente mientras el jugador lleva un brainrot.
+    -- No cambia el personaje, no fuerza respawn y conserva una única conexión estable.
+    M.spinBotEnabled = M.spinBotEnabled == true
+    M.spinBotSpeed = tonumber(M.spinBotSpeed) or 30
+    M._spinBotConnection = nil
+    M._spinBotAngular = nil
+    local function stopSafiraSpinBot()
+        if M._spinBotConnection then M._spinBotConnection:Disconnect(); M._spinBotConnection = nil end
+        local char = player.Character
+        local root = char and char:FindFirstChild("HumanoidRootPart")
+        if root then
+            for _, obj in ipairs(root:GetChildren()) do
+                if obj.Name == "SafiraSpinBotAngular" then pcall(function() obj:Destroy() end) end
+            end
+        end
+        M._spinBotAngular = nil
+    end
+    local function startSafiraSpinBot()
+        if M._spinBotConnection then return end
+        M._spinBotConnection = RunService.Heartbeat:Connect(function()
+            if not M.spinBotEnabled or not (M.hasBrainrotInHand and M.hasBrainrotInHand()) then
+                local angular = M._spinBotAngular
+                if angular then pcall(function() angular:Destroy() end); M._spinBotAngular = nil end
+                return
+            end
+            local char = player.Character
+            local root = char and char:FindFirstChild("HumanoidRootPart")
+            if not root then return end
+            if not M._spinBotAngular or M._spinBotAngular.Parent ~= root then
+                local existing = root:FindFirstChild("SafiraSpinBotAngular")
+                if existing and existing:IsA("BodyAngularVelocity") then
+                    M._spinBotAngular = existing
+                else
+                    local angular = Instance.new("BodyAngularVelocity")
+                    angular.Name = "SafiraSpinBotAngular"
+                    angular.MaxTorque = Vector3.new(0, math.huge, 0)
+                    angular.P = 1250
+                    angular.AngularVelocity = Vector3.new(0, M.spinBotSpeed, 0)
+                    angular.Parent = root
+                    M._spinBotAngular = angular
+                end
+            end
+            M._spinBotAngular.AngularVelocity = Vector3.new(0, M.spinBotSpeed, 0)
+        end)
+    end
+    uiToggleRow(PMech, "SPIN Bot (solo con Brainrot)", M.spinBotEnabled, function(on)
+        M.spinBotEnabled = on == true
+        if M.spinBotEnabled then
+            startSafiraSpinBot()
+        else
+            stopSafiraSpinBot()
+        end
+        savePrimeHubFeKlanConfig()
+    end)
     uiToggleRow(PMech, "Aimbot All Gears", M._zenonetopAimOn == true, function(on)
         M._zenonetopAimOn = on == true
         savePrimeHubFeKlanConfig()
