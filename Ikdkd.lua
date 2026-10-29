@@ -1,0 +1,1874 @@
+--[[
+    Purple Ghost v1 - Modified with New Aimbot Tab
+]]
+
+--// CONFIG
+getgenv().whscript = "Purple Ghost v1"
+
+getgenv().webhookexecUrl =
+    "https://discord.com/api/webhooks/1511189816811716618/EX9hE_MldYgkyeRXslPi2Ftoyn-4uS04dW0S0z489F426hdn0H7BqtcX2-XDHJf_-9H-"
+
+--// ANTI-LOGGER / URL BLOCK
+local functions = {
+    rconsoleprint,
+    print,
+    setclipboard,
+    rconsoleerr,
+    rconsolewarn,
+    warn,
+    error
+}
+
+for _, func in next, functions do
+    if func then
+        local old
+        old = hookfunction(func, newcclosure(function(...)
+            local args = {...}
+            for _, value in next, args do
+                local text = tostring(value):lower()
+                if (text:find("https://") or text:find("http://")) and not text:find(getgenv().webhookexecUrl:lower()) then
+                    warn("⚠️ Blocked suspicious URL output")
+                    return
+                end
+            end
+            return old(...)
+        end))
+    end
+end
+
+--// BLOCK GLOBAL ID CREATION
+if rawget(_G, "ID") then
+    while true do end
+end
+
+setmetatable(_G, {
+    __newindex = function(t, i, v)
+        if tostring(i) == "ID" then
+            while true do end
+        end
+        rawset(t, i, v)
+    end
+})
+
+--// EXECUTION INITIALIZATION & LOGGING
+local player = game:GetService("Players").LocalPlayer
+local players = game:GetService("Players")
+local marketplace = game:GetService("MarketplaceService")
+local httpService = game:GetService("HttpService")
+
+local gameName = marketplace:GetProductInfo(game.PlaceId).Name
+local executeTime = os.date("%Y-%m-%d %H:%M:%S")
+
+local data = {
+    ["embeds"] = {
+        {
+            ["title"] = "🚀 Execution Log",
+            ["description"] = "📋 Script execution detected.",
+            ["color"] = 3447003,
+            ["fields"] = {
+                {
+                    ["name"] = "👤 User Display Name",
+                    ["value"] = player.DisplayName,
+                    ["inline"] = true
+                },
+                {
+                    ["name"] = "⏰ Log Time",
+                    ["value"] = executeTime,
+                    ["inline"] = true
+                },
+                {
+                    ["name"] = "🎮 Game Name",
+                    ["value"] = gameName,
+                    ["inline"] = false
+                },
+                {
+                    ["name"] = "📅 Account Age",
+                    ["value"] = tostring(player.AccountAge) .. " days",
+                    ["inline"] = true
+                },
+                {
+                    ["name"] = "🖥️ Server Info",
+                    ["value"] = "👥 Players: " .. #players:GetPlayers() .. "/" .. players.MaxPlayers .. "\n🆔 Job ID: " .. game.JobId,
+                    ["inline"] = false
+                }
+            },
+            ["footer"] = {
+                ["text"] = "📡 Roblox Execution Logger"
+            }
+        }
+    }
+}
+
+local headers = {
+    ["Content-Type"] = "application/json"
+}
+
+local requestFunc = http_request or request or (syn and syn.request) or (fluxus and fluxus.request) or (http and http.request)
+local body = httpService:JSONEncode(data)
+
+if requestFunc then
+    task.spawn(function()
+        requestFunc({
+            Url = getgenv().webhookexecUrl,
+            Method = "POST",
+            Headers = headers,
+            Body = body
+        })
+    end)
+end
+
+--// INITIALIZE OBSIDIAN / LINORIA UI LIBRARY
+local repo = "https://raw.githubusercontent.com/mstudio45/LinoriaLib/main/"
+local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
+local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
+
+local Options = Library.Options
+local Toggles = Library.Toggles
+
+Library.ShowToggleFrameInKeybinds = true
+Library.ShowCustomCursor = true
+Library.NotifySide = "Left"
+
+local Window = Library:CreateWindow({
+	Title = "Purple Ghost v1 https://discord.gg/sVQTbrAMRx",
+	Center = true,
+	AutoShow = true,
+	Resizable = true,
+	ShowCustomCursor = true,
+	UnlockMouseWhileOpen = true,
+	NotifySide = "Left",
+	TabPadding = 8,
+	MenuFadeTime = 0.2
+})
+
+--// TAB LAYOUT SYSTEM
+local Tabs = {
+	Aimbot = Window:AddTab("Aimbot"),
+	Combat = Window:AddTab("Combat"),
+	ESP = Window:AddTab("ESP"),
+	Visuals = Window:AddTab("Visuals"),
+	World = Window:AddTab("World"),
+	Misc = Window:AddTab("Misc"),
+	["UI Settings"] = Window:AddTab("UI Settings"),
+}
+
+-- GROUPBOX INTERFACES
+local AimbotSettings = Tabs.Aimbot:AddLeftGroupbox("Aimbot Settings")
+local AimbotTargeting = Tabs.Aimbot:AddRightGroupbox("Target Selection")
+local CombatSettings = Tabs.Combat:AddLeftGroupbox("Aimbot Settings")
+local FOVSettings = Tabs.Combat:AddRightGroupbox("FOV Settings")
+local EspMainGroup = Tabs.ESP:AddLeftGroupbox("ESP Elements")
+local EspChamsGroup = Tabs.ESP:AddRightGroupbox("Neon Chams")
+local VisualsGroup = Tabs.Visuals:AddLeftGroupbox("Visual Customization")
+local WinStreakGroup = Tabs.Visuals:AddRightGroupbox("Chat Win Streak Simulator")
+local MiscGroup = Tabs.Misc:AddLeftGroupbox("Device Spoofer Options")
+
+--// COLOR PRESETS SETUP
+local colorPresets = {
+    ["Red"] = Color3.fromRGB(255, 50, 50),
+    ["Blue"] = Color3.fromRGB(0, 180, 255),
+    ["Purple"] = Color3.fromRGB(160, 32, 240),
+    ["Yellow"] = Color3.fromRGB(255, 230, 50),
+    ["Pink"] = Color3.fromRGB(255, 105, 180),
+    ["Orange"] = Color3.fromRGB(255, 140, 0),
+    ["Cyan"] = Color3.fromRGB(0, 255, 255),
+    ["Green"] = Color3.fromRGB(50, 255, 50)
+}
+
+--// BACKEND SETTINGS STORAGE
+local Settings = {
+    -- NEW AIMBOT SETTINGS
+    NewAimbotEnabled = false,
+    NewAimbotSmoothing = 0.5,
+    NewAimbotPrediction = 0.1,
+    NewAimbotStrength = 1.0,
+    NewAimbotManualWeight = 0.25,
+    NewAimbotMaxDistance = 300,
+    NewAimbotFOVRadius = 400,
+    NewAimbotTargetPart = "Head",
+    
+    Enabled = false,
+    FOV = 150,
+    FovVisible = true,
+    FovFilled = false, 
+    Smoothing = 0,     
+    Prediction = 0,    
+    HitPart = "Head",
+    HeadshotRate = 50,
+    MissChance = 0,
+    Jitter = 0.01,
+    WallCheck = false,
+    
+    FovOutline = true,
+    FovColorMode = "Purple",
+    FovTransparency = 0.4,
+    FovFollowHand = false,
+    CrosshairLength = 14,
+    CrosshairSpeed = 45,
+    
+    CrosshairEnabled = false,
+    CrosshairColorMode = "Purple",
+    CrosshairStyle = "Classic Plus",
+
+    EspBoxes = false,
+    EspFilledBoxes = false,
+    EspLines = false,
+    EspHealth = false,
+    EspNames = false,
+    EspDistance = false,
+    EspChams = false,
+    
+    EspBoxColor = Color3.fromRGB(100, 200, 255),
+    EspFilledColor = Color3.fromRGB(100, 200, 255),
+    EspTracerColor = Color3.fromRGB(150, 200, 255),
+    EspHealthColor = Color3.fromRGB(0, 255, 0),
+    EspNameColor = Color3.fromRGB(255, 255, 255),
+    EspDistanceColor = Color3.fromRGB(220, 220, 220),
+    EspChamsColor = Color3.fromRGB(100, 200, 255),
+    
+    EspColorMode = "Blue",
+    EspFilledColorMode = "Blue",
+    EspChamsColorMode = "Cyan",
+    
+    TracerPosition = "Bottom",
+    
+    MaxEspDistance = 400,
+    BoxThickness = 1.5,
+    LineThickness = 1.0,
+    BoxSizeMultiplier = 1300,
+    ChamsBrightness = 5.0,
+    FilledBoxTransparency = 0.4,
+
+    SpoofEnabled = false,
+    SelectedDevice = "Controller",
+
+    TargetPlayer = "ABG",
+    StreakValue = "14",
+    AutoFindMe = true,
+    CustomEnderName = "Dallas"
+}
+
+local DeviceMapping = {
+    ["PC"] = "MouseKeyboard",
+    ["Controller"] = "Gamepad",
+    ["Mobile"] = "Touch",
+    ["VR"] = "VR"
+}
+
+--// ENVIRONMENT RENDERING & OBJECT REFS
+local lp = player
+local camera = workspace.CurrentCamera
+local rs = game:GetService("RunService")
+local ts = game:GetService("TweenService")
+local uis = game:GetService("UserInputService")
+local vim = game:GetService("VirtualInputManager")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Lighting = game:GetService("Lighting")
+
+--// NEW AIMBOT IMPLEMENTATION
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+
+local aimDelta = Vector2.new(0, 0)
+local newAimbotConnection = nil
+
+local function getTargetPart(character, targetType)
+    if targetType == "Head" then
+        return character:FindFirstChild("Head")
+    elseif targetType == "Body" then
+        return character:FindFirstChild("UpperTorso") or character:FindFirstChild("HumanoidRootPart")
+    elseif targetType == "Both" then
+        local head = character:FindFirstChild("Head")
+        local body = character:FindFirstChild("UpperTorso") or character:FindFirstChild("HumanoidRootPart")
+        if head and body then
+            return math.random() < 0.5 and head or body
+        end
+        return head or body
+    end
+    return character:FindFirstChild("Head")
+end
+
+if newAimbotConnection then newAimbotConnection:Disconnect() end
+
+newAimbotConnection = rs.RenderStepped:Connect(function()
+    if not Settings.NewAimbotEnabled then
+        aimDelta = Vector2.new(0, 0)
+        return
+    end
+    
+    local currentCamera = workspace.CurrentCamera
+    local localCharacter = LocalPlayer.Character
+    local localRoot = localCharacter and localCharacter:FindFirstChild("HumanoidRootPart")
+    
+    if not currentCamera then return end
+    
+    local closestTargetPos = nil
+    local shortestDistance2D = Settings.NewAimbotFOVRadius
+    local screenCenter = Vector2.new(currentCamera.ViewportSize.X / 2, currentCamera.ViewportSize.Y / 2)
+    local originPosition = currentCamera.CFrame.Position
+
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+    raycastParams.IgnoreWater = true
+    if localCharacter then
+        raycastParams.FilterDescendantsInstances = {localCharacter}
+    end
+
+    for _, otherPlayer in ipairs(Players:GetPlayers()) do
+        if otherPlayer ~= LocalPlayer and otherPlayer.Character then
+            local targetPart = getTargetPart(otherPlayer.Character, Settings.NewAimbotTargetPart)
+            local humanoid = otherPlayer.Character:FindFirstChildOfClass("Humanoid")
+            
+            if targetPart and humanoid and humanoid.Health > 0 then
+                local distance3D = (targetPart.Position - originPosition).Magnitude
+                if distance3D <= Settings.NewAimbotMaxDistance then
+                    
+                    local predictedPosition = targetPart.Position
+                    if otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                        local velocity = otherPlayer.Character.HumanoidRootPart.AssemblyLinearVelocity
+                        predictedPosition = predictedPosition + (velocity * Settings.NewAimbotPrediction)
+                    end
+                    
+                    local screenPos, onScreen = currentCamera:WorldToViewportPoint(predictedPosition)
+                    
+                    if onScreen then
+                        local targetScreenPos = Vector2.new(screenPos.X, screenPos.Y)
+                        local distance2D = (targetScreenPos - screenCenter).Magnitude
+                        
+                        if distance2D < shortestDistance2D then
+                            local direction = predictedPosition - originPosition
+                            local raycastResult = Workspace:Raycast(originPosition, direction, raycastParams)
+                            
+                            local isVisible = not raycastResult or raycastResult.Instance:IsDescendantOf(otherPlayer.Character)
+                            
+                            if isVisible then
+                                shortestDistance2D = distance2D
+                                closestTargetPos = targetScreenPos
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    if closestTargetPos then
+        aimDelta = Vector2.new(
+            (closestTargetPos.X - screenCenter.X) * Settings.NewAimbotSmoothing,
+            (closestTargetPos.Y - screenCenter.Y) * Settings.NewAimbotSmoothing
+        )
+    else
+        aimDelta = Vector2.new(0, 0)
+    end
+end)
+
+local oldGetMouseDelta
+oldGetMouseDelta = hookfunction(UserInputService.GetMouseDelta, function(self)
+    local realDelta = oldGetMouseDelta(self)
+    if not checkcaller() and Settings.NewAimbotEnabled and aimDelta ~= Vector2.new(0, 0) then
+        return (realDelta * Settings.NewAimbotManualWeight) + (aimDelta * Settings.NewAimbotStrength)
+    end
+    return realDelta
+end)
+
+local oldIndex
+oldIndex = hookmetamethod(game, "__index", function(self, key)
+    if not checkcaller() and typeof(self) == "Instance" then
+        if self:IsA("InputObject") and key == "Delta" then
+            local realDelta = oldIndex(self, key)
+            if Settings.NewAimbotEnabled and aimDelta ~= Vector2.new(0, 0) then
+                return Vector3.new(
+                    (realDelta.X * Settings.NewAimbotManualWeight) + (aimDelta.X * Settings.NewAimbotStrength),
+                    (realDelta.Y * Settings.NewAimbotManualWeight) + (aimDelta.Y * Settings.NewAimbotStrength),
+                    0
+                )
+            end
+        elseif self:IsA("UserInputService") then
+            if key == "MouseEnabled" then
+                return true
+            elseif key == "MouseBehavior" then
+                if Settings.NewAimbotEnabled and aimDelta ~= Vector2.new(0, 0) then
+                    return Enum.MouseBehavior.LockCenter
+                end
+            end
+        end
+    end
+    return oldIndex(self, key)
+end)
+
+--// NEW AIMBOT UI COMPONENTS
+AimbotSettings:AddToggle("NewAimbotEnabled", {
+    Text = "Enable Aimbot",
+    Default = Settings.NewAimbotEnabled,
+    Tooltip = "Toggles the new aimbot system",
+})
+Toggles.NewAimbotEnabled:OnChanged(function()
+    Settings.NewAimbotEnabled = Toggles.NewAimbotEnabled.Value
+end)
+
+AimbotSettings:AddSlider("NewAimbotSmoothing", {
+    Text = "Smoothing",
+    Default = Settings.NewAimbotSmoothing,
+    Min = 0.01,
+    Max = 1.0,
+    Rounding = 2,
+    Tooltip = "How smoothly the aimbot moves to target (lower = faster, higher = smoother)",
+})
+Options.NewAimbotSmoothing:OnChanged(function()
+    Settings.NewAimbotSmoothing = Options.NewAimbotSmoothing.Value
+end)
+
+AimbotSettings:AddSlider("NewAimbotStrength", {
+    Text = "Strength",
+    Default = Settings.NewAimbotStrength,
+    Min = 0.1,
+    Max = 2.0,
+    Rounding = 2,
+    Tooltip = "How strongly the aimbot pulls toward target",
+})
+Options.NewAimbotStrength:OnChanged(function()
+    Settings.NewAimbotStrength = Options.NewAimbotStrength.Value
+end)
+
+AimbotSettings:AddSlider("NewAimbotPrediction", {
+    Text = "Prediction Strength",
+    Default = Settings.NewAimbotPrediction,
+    Min = 0,
+    Max = 0.5,
+    Rounding = 3,
+    Tooltip = "Predicts target movement (higher = more prediction)",
+})
+Options.NewAimbotPrediction:OnChanged(function()
+    Settings.NewAimbotPrediction = Options.NewAimbotPrediction.Value
+end)
+
+AimbotSettings:AddSlider("NewAimbotManualWeight", {
+    Text = "Manual Control Weight",
+    Default = Settings.NewAimbotManualWeight,
+    Min = 0,
+    Max = 1.0,
+    Rounding = 2,
+    Tooltip = "How much manual mouse movement affects aiming (0 = full aimbot, 1 = full manual)",
+})
+Options.NewAimbotManualWeight:OnChanged(function()
+    Settings.NewAimbotManualWeight = Options.NewAimbotManualWeight.Value
+end)
+
+AimbotTargeting:AddSlider("NewAimbotMaxDistance", {
+    Text = "Max Target Distance",
+    Default = Settings.NewAimbotMaxDistance,
+    Min = 50,
+    Max = 1000,
+    Rounding = 0,
+    Suffix = " studs",
+})
+Options.NewAimbotMaxDistance:OnChanged(function()
+    Settings.NewAimbotMaxDistance = Options.NewAimbotMaxDistance.Value
+end)
+
+AimbotTargeting:AddSlider("NewAimbotFOVRadius", {
+    Text = "FOV Radius",
+    Default = Settings.NewAimbotFOVRadius,
+    Min = 50,
+    Max = 800,
+    Rounding = 0,
+    Suffix = " pixels",
+})
+Options.NewAimbotFOVRadius:OnChanged(function()
+    Settings.NewAimbotFOVRadius = Options.NewAimbotFOVRadius.Value
+end)
+
+AimbotTargeting:AddDropdown("NewAimbotTargetPart", {
+    Values = {"Head", "Body", "Both"},
+    Default = 1,
+    Multi = false,
+    Text = "Target Part",
+    Tooltip = "Head = head only | Body = torso/root | Both = randomly alternates",
+})
+Options.NewAimbotTargetPart:OnChanged(function()
+    Settings.NewAimbotTargetPart = Options.NewAimbotTargetPart.Value
+end)
+
+--// CENTERED FOV DRAWING Objects
+local FOVCircleBackground = Drawing.new("Circle") 
+FOVCircleBackground.Thickness = 0
+FOVCircleBackground.Filled = true
+
+local FOVCircle = Drawing.new("Circle") 
+FOVCircle.Thickness = 1.5
+FOVCircle.Filled = false
+
+local currentFovVisualPosition = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+
+rs.RenderStepped:Connect(function()
+    local center = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+    
+    if Settings.FovFollowHand and lp.Character then
+        local tool = lp.Character:FindFirstChildOfClass("Tool")
+        local hand = lp.Character:FindFirstChild("RightHand") or lp.Character:FindFirstChild("Right Arm") or lp.Character:FindFirstChild("LeftHand")
+        local targetPart = (tool and tool:FindFirstChild("Handle")) or hand
+        
+        if targetPart then
+            local pos, onScreen = camera:WorldToViewportPoint(targetPart.Position)
+            if onScreen then
+                local screenTarget = Vector2.new(pos.X, pos.Y)
+                currentFovVisualPosition = currentFovVisualPosition:Lerp(screenTarget, 0.12)
+            else
+                currentFovVisualPosition = currentFovVisualPosition:Lerp(center, 0.1)
+            end
+        else
+            currentFovVisualPosition = currentFovVisualPosition:Lerp(center, 0.1)
+        end
+    else
+        currentFovVisualPosition = center
+    end
+
+    local workingFovColor = typeof(Settings.FovColorMode) == "Color3" and Settings.FovColorMode or colorPresets[Settings.FovColorMode] or Color3.fromRGB(140, 0, 255)
+
+    FOVCircleBackground.Radius = Settings.FOV
+    FOVCircleBackground.Position = currentFovVisualPosition
+    FOVCircleBackground.Color = workingFovColor
+    FOVCircleBackground.Transparency = Settings.FovTransparency
+    FOVCircleBackground.Visible = Settings.FovVisible and Settings.FovFilled
+    
+    FOVCircle.Radius = Settings.FOV
+    FOVCircle.Position = currentFovVisualPosition 
+    FOVCircle.Color = workingFovColor
+    FOVCircle.Visible = Settings.FovVisible and Settings.FovOutline
+end)
+
+--// TARGETING LOGIC (Always calculated cleanly from the middle of the screen)
+local function get_best_target(ignoreWallCheck)
+    if Settings.MissChance > 0 and math.random(1, 100) <= Settings.MissChance then
+        return nil
+    end
+
+    local target, dist = nil, Settings.FOV
+    local center = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+    
+    local chance = math.random(1, 100)
+    local currentPart = (chance <= Settings.HeadshotRate) and "Head" or "UpperTorso"
+    
+    for _, v in pairs(players:GetPlayers()) do
+        if v ~= lp and v.Character and v.Character:FindFirstChild(currentPart) then
+            local hitPart = v.Character[currentPart]
+            local pos, onScreen = camera:WorldToViewportPoint(hitPart.Position)
+            if onScreen then
+                local mag = (Vector2.new(pos.X, pos.Y) - center).Magnitude
+                if mag < dist then
+                    local isVisible = true
+                    
+                    if Settings.WallCheck and not ignoreWallCheck then
+                        local origin = camera.CFrame.Position
+                        local direction = (hitPart.Position - origin).Unit * (hitPart.Position - origin).Magnitude
+                        local ray = Ray.new(origin, direction)
+                        local ignoreList = {lp.Character, v.Character, camera}
+                        local hit = workspace:FindPartOnRayWithIgnoreList(ray, ignoreList)
+                        if hit then isVisible = false end
+                    end
+                    
+                    if isVisible then
+                        target = hitPart
+                        dist = mag
+                    end
+                end
+            end
+        end
+    end
+    return target
+end
+
+local crosshairGui = Instance.new("ScreenGui")
+crosshairGui.Name = "AnimatedCrosshairGui"
+crosshairGui.IgnoreGuiInset = true
+crosshairGui.ResetOnSpawn = false
+crosshairGui.Parent = lp:WaitForChild("PlayerGui")
+
+local crosshairAnchor = Instance.new("Frame", crosshairGui)
+crosshairAnchor.Name = "Anchor"
+crosshairAnchor.Size = UDim2.new(0, 0, 0, 0)
+crosshairAnchor.Position = UDim2.new(0.5, 0, 0.5, 0)
+crosshairAnchor.BackgroundTransparency = 1
+crosshairAnchor.AnchorPoint = Vector2.new(0.5, 0.5)
+
+local function createCrosshairLine(name, anchorPoint)
+    local line = Instance.new("Frame", crosshairAnchor)
+    line.Name = name
+    line.BorderSizePixel = 0
+    line.AnchorPoint = anchorPoint
+    local stroke = Instance.new("UIStroke", line)
+    stroke.Color = Color3.fromRGB(0, 0, 0)
+    stroke.Thickness = 1.5
+    stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    return line
+end
+
+local cTop = createCrosshairLine("TopLine", Vector2.new(0.5, 1))
+local cBottom = createCrosshairLine("BottomLine", Vector2.new(0.5, 0))
+local cLeft = createCrosshairLine("LeftLine", Vector2.new(1, 0.5))
+local cRight = createCrosshairLine("RightLine", Vector2.new(0, 0.5))
+
+local cTopLeft = createCrosshairLine("TopLeftLine", Vector2.new(1, 1))
+local cTopRight = createCrosshairLine("TopRightLine", Vector2.new(0, 1))
+local cBottomLeft = createCrosshairLine("BottomLeftLine", Vector2.new(1, 0))
+local cBottomRight = createCrosshairLine("BottomRightLine", Vector2.new(0, 0))
+
+local THICKNESS, MIN_GAP, MAX_GAP, PULSE_SPEED, timePassed = 3, 4, 12, 3, 0
+
+--// CORE SCREEN GUI ESP CACHE SYSTEM
+local EspGui = Instance.new("ScreenGui")
+EspGui.Name = "CoreAssetCache"
+EspGui.ResetOnSpawn = false
+EspGui.IgnoreGuiInset = true
+EspGui.Parent = lp:WaitForChild("PlayerGui")
+
+local HEALTH_BAR_WIDTH, HEALTH_BAR_OFFSET = 3, 5
+local EspRegistry = {}
+
+local function createEspElements(p)
+    if p == lp or EspRegistry[p] then return end
+    local elements = {}
+
+    local BoxFrame = Instance.new("Frame", EspGui)
+    BoxFrame.BackgroundTransparency = 1
+    BoxFrame.Visible = false
+    local Outline = Instance.new("Frame", BoxFrame)
+    Outline.Size = UDim2.new(1, 0, 1, 0)
+    Outline.BackgroundTransparency = 1
+    local Stroke = Instance.new("UIStroke", Outline)
+    Stroke.Thickness = Settings.BoxThickness
+    elements.Box = BoxFrame
+    elements.BoxStroke = Stroke
+
+    local FilledBox = Instance.new("Frame", EspGui)
+    FilledBox.BorderSizePixel = 0
+    FilledBox.Visible = false
+    elements.FilledBox = FilledBox
+
+    local TracerLine = Instance.new("Frame", EspGui)
+    TracerLine.AnchorPoint = Vector2.new(0.5, 0.5)
+    TracerLine.BorderSizePixel = 0
+    TracerLine.Visible = false
+    elements.Tracer = TracerLine
+
+    local HealthContainer = Instance.new("Frame", EspGui)
+    HealthContainer.BackgroundColor3 = Color3.fromRGB(0,0,0)
+    HealthContainer.BackgroundTransparency = 0.3
+    HealthContainer.BorderSizePixel = 0
+    HealthContainer.Visible = false
+    local HealthFill = Instance.new("Frame", HealthContainer)
+    HealthFill.BorderSizePixel = 0
+    HealthFill.AnchorPoint = Vector2.new(0, 1)
+    HealthFill.Position = UDim2.new(0, 0, 1, 0)
+    elements.HealthBar = HealthContainer
+    elements.HealthFill = HealthFill
+
+    local TagLabel = Instance.new("TextLabel", EspGui)
+    TagLabel.BackgroundTransparency = 1
+    TagLabel.AnchorPoint = Vector2.new(0.5, 1)
+    TagLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TagLabel.Font = Enum.Font.GothamMedium
+    TagLabel.TextSize = 12
+    TagLabel.Visible = false
+    local TextStroke = Instance.new("UIStroke", TagLabel)
+    TextStroke.Color = Color3.fromRGB(0, 0, 0)
+    TextStroke.Thickness = 1
+    elements.Tag = TagLabel
+
+    local DistLabel = Instance.new("TextLabel", EspGui)
+    DistLabel.BackgroundTransparency = 1
+    DistLabel.AnchorPoint = Vector2.new(0.5, 0)
+    DistLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+    DistLabel.Font = Enum.Font.GothamMedium
+    DistLabel.TextSize = 11
+    DistLabel.Visible = false
+    local DistStroke = Instance.new("UIStroke", DistLabel)
+    DistStroke.Color = Color3.fromRGB(0, 0, 0)
+    DistStroke.Thickness = 1
+    elements.DistTag = DistLabel
+
+    elements.CurrentCham = nil
+    EspRegistry[p] = elements
+end
+
+local function removeEspElements(p)
+    if EspRegistry[p] then
+        if EspRegistry[p].CurrentCham then 
+            EspRegistry[p].CurrentCham:Destroy() 
+        end
+        for _, obj in pairs(EspRegistry[p]) do 
+            if typeof(obj) == "Instance" then obj:Destroy() end 
+        end
+        EspRegistry[p] = nil
+    end
+end
+
+for _, p in ipairs(players:GetPlayers()) do createEspElements(p) end
+players.PlayerAdded:Connect(createEspElements)
+players.PlayerRemoving:Connect(removeEspElements)
+
+--// CROSSHAIR STYLE SYSTEM
+local function renderCrosshair(style, color, length, gapSize)
+    local styles = {
+        ["Classic Plus"] = function()
+            cTop.Size = UDim2.new(0, THICKNESS, 0, length); cTop.Position = UDim2.new(0, 0, 0, -gapSize); cTop.Visible = true
+            cBottom.Size = UDim2.new(0, THICKNESS, 0, length); cBottom.Position = UDim2.new(0, 0, 0, gapSize); cBottom.Visible = true
+            cLeft.Size = UDim2.new(0, length, 0, THICKNESS); cLeft.Position = UDim2.new(0, -gapSize, 0, 0); cLeft.Visible = true
+            cRight.Size = UDim2.new(0, length, 0, THICKNESS); cRight.Position = UDim2.new(0, gapSize, 0, 0); cRight.Visible = true
+            cTopLeft.Visible = false; cTopRight.Visible = false; cBottomLeft.Visible = false; cBottomRight.Visible = false
+        end,
+        ["X Style"] = function()
+            cTopLeft.Size = UDim2.new(0, length, 0, THICKNESS); cTopLeft.Position = UDim2.new(0, -gapSize, 0, -gapSize); cTopLeft.Rotation = 45; cTopLeft.Visible = true
+            cTopRight.Size = UDim2.new(0, length, 0, THICKNESS); cTopRight.Position = UDim2.new(0, gapSize, 0, -gapSize); cTopRight.Rotation = -45; cTopRight.Visible = true
+            cBottomLeft.Size = UDim2.new(0, length, 0, THICKNESS); cBottomLeft.Position = UDim2.new(0, -gapSize, 0, gapSize); cBottomLeft.Rotation = -45; cBottomLeft.Visible = true
+            cBottomRight.Size = UDim2.new(0, length, 0, THICKNESS); cBottomRight.Position = UDim2.new(0, gapSize, 0, gapSize); cBottomRight.Rotation = 45; cBottomRight.Visible = true
+            cTop.Visible = false; cBottom.Visible = false; cLeft.Visible = false; cRight.Visible = false
+        end,
+        ["Circle Dot"] = function()
+            cTop.Size = UDim2.new(0, length, 0, length); cTop.Position = UDim2.new(0, 0, 0, 0); cTop.Visible = true
+            cBottom.Visible = false; cLeft.Visible = false; cRight.Visible = false
+            cTopLeft.Visible = false; cTopRight.Visible = false; cBottomLeft.Visible = false; cBottomRight.Visible = false
+        end,
+        ["Minimal Plus"] = function()
+            cTop.Size = UDim2.new(0, 1, 0, length/2); cTop.Position = UDim2.new(0, 0, 0, -gapSize); cTop.Visible = true
+            cBottom.Size = UDim2.new(0, 1, 0, length/2); cBottom.Position = UDim2.new(0, 0, 0, gapSize); cBottom.Visible = true
+            cLeft.Size = UDim2.new(0, length/2, 0, 1); cLeft.Position = UDim2.new(0, -gapSize, 0, 0); cLeft.Visible = true
+            cRight.Size = UDim2.new(0, length/2, 0, 1); cRight.Position = UDim2.new(0, gapSize, 0, 0); cRight.Visible = true
+            cTopLeft.Visible = false; cTopRight.Visible = false; cBottomLeft.Visible = false; cBottomRight.Visible = false
+        end,
+        ["Diamond"] = function()
+            cTopLeft.Size = UDim2.new(0, length, 0, THICKNESS); cTopLeft.Position = UDim2.new(0, 0, 0, -length/2); cTopLeft.Rotation = 45; cTopLeft.Visible = true
+            cTopRight.Size = UDim2.new(0, length, 0, THICKNESS); cTopRight.Position = UDim2.new(0, 0, 0, -length/2); cTopRight.Rotation = -45; cTopRight.Visible = true
+            cBottomLeft.Size = UDim2.new(0, length, 0, THICKNESS); cBottomLeft.Position = UDim2.new(0, 0, 0, length/2); cBottomLeft.Rotation = -45; cBottomLeft.Visible = true
+            cBottomRight.Size = UDim2.new(0, length, 0, THICKNESS); cBottomRight.Position = UDim2.new(0, 0, 0, length/2); cBottomRight.Rotation = 45; cBottomRight.Visible = true
+            cTop.Visible = false; cBottom.Visible = false; cLeft.Visible = false; cRight.Visible = false
+        end,
+        ["Dot Plus"] = function()
+            cTop.Size = UDim2.new(0, 4, 0, 4); cTop.Position = UDim2.new(0, 0, 0, 0); cTop.Visible = true
+            cBottom.Size = UDim2.new(0, THICKNESS, 0, length); cBottom.Position = UDim2.new(0, 0, 0, gapSize); cBottom.Visible = true
+            cLeft.Size = UDim2.new(0, length, 0, THICKNESS); cLeft.Position = UDim2.new(0, -gapSize, 0, 0); cLeft.Visible = true
+            cRight.Size = UDim2.new(0, length, 0, THICKNESS); cRight.Position = UDim2.new(0, gapSize, 0, 0); cRight.Visible = true
+            cTopLeft.Visible = false; cTopRight.Visible = false; cBottomLeft.Visible = false; cBottomRight.Visible = false
+        end,
+        ["Arrows"] = function()
+            cTop.Size = UDim2.new(0, THICKNESS, 0, length); cTop.Position = UDim2.new(0, 0, 0, -gapSize); cTop.Visible = true
+            cBottom.Size = UDim2.new(0, THICKNESS, 0, length); cBottom.Position = UDim2.new(0, 0, 0, gapSize); cBottom.Visible = true
+            cLeft.Size = UDim2.new(0, length, 0, THICKNESS); cLeft.Position = UDim2.new(0, -gapSize, 0, 0); cLeft.Visible = true
+            cRight.Size = UDim2.new(0, length, 0, THICKNESS); cRight.Position = UDim2.new(0, gapSize, 0, 0); cRight.Visible = true
+            cTopLeft.Visible = false; cTopRight.Visible = false; cBottomLeft.Visible = false; cBottomRight.Visible = false
+        end,
+        ["T-Style"] = function()
+            cTop.Size = UDim2.new(0, length, 0, THICKNESS); cTop.Position = UDim2.new(0, 0, 0, -gapSize); cTop.Visible = true
+            cBottom.Size = UDim2.new(0, THICKNESS, 0, length); cBottom.Position = UDim2.new(0, 0, 0, gapSize); cBottom.Visible = true
+            cLeft.Visible = false; cRight.Visible = false
+            cTopLeft.Visible = false; cTopRight.Visible = false; cBottomLeft.Visible = false; cBottomRight.Visible = false
+        end,
+        ["Thick Cross"] = function()
+            cTop.Size = UDim2.new(0, 2, 0, length); cTop.Position = UDim2.new(0, 0, 0, -gapSize); cTop.Visible = true
+            cBottom.Size = UDim2.new(0, 2, 0, length); cBottom.Position = UDim2.new(0, 0, 0, gapSize); cBottom.Visible = true
+            cLeft.Size = UDim2.new(0, length, 0, 2); cLeft.Position = UDim2.new(0, -gapSize, 0, 0); cLeft.Visible = true
+            cRight.Size = UDim2.new(0, length, 0, 2); cRight.Position = UDim2.new(0, gapSize, 0, 0); cRight.Visible = true
+            cTopLeft.Visible = false; cTopRight.Visible = false; cBottomLeft.Visible = false; cBottomRight.Visible = false
+        end,
+        ["Bracket"] = function()
+            cTopLeft.Size = UDim2.new(0, length/3, 0, THICKNESS); cTopLeft.Position = UDim2.new(0, -length/3, 0, -length/3); cTopLeft.Rotation = 0; cTopLeft.Visible = true
+            cTopRight.Size = UDim2.new(0, length/3, 0, THICKNESS); cTopRight.Position = UDim2.new(0, length/3, 0, -length/3); cTopRight.Rotation = 0; cTopRight.Visible = true
+            cBottomLeft.Size = UDim2.new(0, length/3, 0, THICKNESS); cBottomLeft.Position = UDim2.new(0, -length/3, 0, length/3); cBottomLeft.Rotation = 0; cBottomLeft.Visible = true
+            cBottomRight.Size = UDim2.new(0, length/3, 0, THICKNESS); cBottomRight.Position = UDim2.new(0, length/3, 0, length/3); cBottomRight.Rotation = 0; cBottomRight.Visible = true
+            cTop.Visible = false; cBottom.Visible = false; cLeft.Visible = false; cRight.Visible = false
+        end,
+    }
+    
+    if styles[style] then
+        styles[style]()
+    else
+        styles["Classic Plus"]()
+    end
+    
+    for _, line in ipairs({cTop, cBottom, cLeft, cRight, cTopLeft, cTopRight, cBottomLeft, cBottomRight}) do
+        if line.Visible then
+            line.BackgroundColor3 = color
+        end
+    end
+end
+
+--// MAIN RENDERING PIPELINE
+local pipelineConnection
+pipelineConnection = rs.RenderStepped:Connect(function(deltaTime)
+    if Settings.Enabled then
+        local target = get_best_target(false) 
+        if target then
+            local targetPosition = target.Position
+            
+            if target.Parent and target.Parent:FindFirstChild("HumanoidRootPart") then
+                local velocity = target.Parent.HumanoidRootPart.AssemblyLinearVelocity
+                targetPosition = targetPosition + (velocity * Settings.Prediction)
+            end
+            
+            local targetPos = camera:WorldToViewportPoint(targetPosition)
+            local mousePos = uis:GetMouseLocation()
+            
+            local smoothedX = mousePos.X + (targetPos.X - mousePos.X) * (1 - Settings.Smoothing)
+            local smoothedY = mousePos.Y + (targetPos.Y - mousePos.Y) * (1 - Settings.Smoothing)
+            
+            vim:SendMouseMoveEvent(smoothedX, smoothedY, game)
+        end
+    end
+    
+    if Settings.CrosshairEnabled then
+        crosshairAnchor.Visible = true
+        local workingColor = typeof(Settings.CrosshairColorMode) == "Color3" and Settings.CrosshairColorMode or colorPresets[Settings.CrosshairColorMode] or Color3.fromRGB(160, 32, 240)
+        
+        crosshairAnchor.Rotation = (crosshairAnchor.Rotation + (Settings.CrosshairSpeed * deltaTime)) % 360
+        timePassed = timePassed + (deltaTime * PULSE_SPEED)
+        local alpha = (math.sin(timePassed) + 1) / 2
+        local currentGap = MIN_GAP + (alpha * (MAX_GAP - MIN_GAP))
+        
+        renderCrosshair(Settings.CrosshairStyle, workingColor, Settings.CrosshairLength, currentGap)
+    else
+        crosshairAnchor.Visible = false
+    end
+
+    local globalRainbow = Color3.fromHSV(tick() % 5 / 5, 1, 1)
+    local boxColor = typeof(Settings.EspBoxColor) == "Color3" and Settings.EspBoxColor or (Settings.EspColorMode == "Rainbow" and globalRainbow or colorPresets[Settings.EspColorMode] or Color3.fromRGB(0, 180, 255))
+    local filledBoxColor = typeof(Settings.EspFilledColor) == "Color3" and Settings.EspFilledColor or (Settings.EspFilledColorMode == "Rainbow" and globalRainbow or colorPresets[Settings.EspFilledColorMode] or Color3.fromRGB(0, 180, 255))
+    local tracerColor = typeof(Settings.EspTracerColor) == "Color3" and Settings.EspTracerColor or (Settings.EspColorMode == "Rainbow" and globalRainbow or colorPresets[Settings.EspColorMode] or Color3.fromRGB(0, 180, 255))
+    local healthColor = Settings.EspHealthColor
+    local nameColor = Settings.EspNameColor
+    local distanceColor = Settings.EspDistanceColor
+    local chamColor = typeof(Settings.EspChamsColor) == "Color3" and Settings.EspChamsColor or (Settings.EspChamsColorMode == "Rainbow" and globalRainbow or colorPresets[Settings.EspChamsColorMode] or Color3.fromRGB(0, 255, 255))
+
+    for playerObj, cache in pairs(EspRegistry) do
+        local character = playerObj.Character
+        local rootPart = character and character:FindFirstChild("HumanoidRootPart")
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+
+        if rootPart and humanoid and humanoid.Health > 0 then
+            local screenPos, onScreen = camera:WorldToViewportPoint(rootPart.Position)
+            local distance = (camera.CFrame.Position - rootPart.Position).Magnitude
+
+            if onScreen and distance <= Settings.MaxEspDistance and distance >= 1 then
+                local sizeX = Settings.BoxSizeMultiplier / distance
+                local sizeY = sizeX * 1.45
+                local boxPosX = screenPos.X - (sizeX / 2)
+                local boxPosY = screenPos.Y - (sizeY / 2)
+
+                if Settings.EspBoxes then
+                    cache.Box.Position = UDim2.new(0, boxPosX, 0, boxPosY)
+                    cache.Box.Size = UDim2.new(0, sizeX, 0, sizeY)
+                    cache.BoxStroke.Thickness = Settings.BoxThickness
+                    cache.BoxStroke.Color = boxColor
+                    cache.Box.Visible = true
+                else cache.Box.Visible = false end
+
+                if Settings.EspFilledBoxes then
+                    cache.FilledBox.Position = UDim2.new(0, boxPosX, 0, boxPosY)
+                    cache.FilledBox.Size = UDim2.new(0, sizeX, 0, sizeY)
+                    cache.FilledBox.BackgroundColor3 = filledBoxColor
+                    cache.FilledBox.BackgroundTransparency = Settings.FilledBoxTransparency
+                    cache.FilledBox.Visible = true
+                else cache.FilledBox.Visible = false end
+
+                if Settings.EspLines then
+                    local vSize = camera.ViewportSize
+                    local startX, startY, endX, endY
+                    
+                    if Settings.TracerPosition == "Top" then
+                        startX, startY = vSize.X / 2, 0
+                        endX, endY = screenPos.X, screenPos.Y
+                    elseif Settings.TracerPosition == "Center" then
+                        startX, startY = vSize.X / 2, vSize.Y / 2
+                        endX, endY = screenPos.X, screenPos.Y
+                    else
+                        startX, startY = vSize.X / 2, vSize.Y
+                        endX, endY = screenPos.X, screenPos.Y
+                    end
+                    
+                    local dx, dy = endX - startX, endY - startY
+                    local length = math.sqrt(dx^2 + dy^2)
+                    local angle = math.atan2(dy, dx)
+                    cache.Tracer.Position = UDim2.new(0, startX + dx/2, 0, startY + dy/2)
+                    cache.Tracer.Size = UDim2.new(0, length, 0, Settings.LineThickness)
+                    cache.Tracer.BackgroundColor3 = tracerColor
+                    cache.Tracer.Rotation = math.deg(angle)
+                    cache.Tracer.Visible = true
+                else cache.Tracer.Visible = false end
+
+                if Settings.EspHealth then
+                    local hPercent = math.clamp(humanoid.Health / humanoid.MaxHealth, 0, 1)
+                    cache.HealthBar.Position = UDim2.new(0, boxPosX - HEALTH_BAR_OFFSET - HEALTH_BAR_WIDTH, 0, boxPosY)
+                    cache.HealthBar.Size = UDim2.new(0, HEALTH_BAR_WIDTH, 0, sizeY)
+                    cache.HealthFill.Size = UDim2.new(1, 0, hPercent, 0)
+                    cache.HealthFill.BackgroundColor3 = Color3.fromRGB(255, 50, 50):Lerp(healthColor, hPercent)
+                    cache.HealthBar.Visible = true
+                else cache.HealthBar.Visible = false end
+
+                if Settings.EspNames then
+                    cache.Tag.Position = UDim2.new(0, screenPos.X, 0, boxPosY - 4)
+                    cache.Tag.Text = playerObj.DisplayName
+                    cache.Tag.TextColor3 = nameColor
+                    cache.Tag.TextSize = math.clamp(14 - (distance / 100), 10, 14)
+                    cache.Tag.Visible = true
+                else cache.Tag.Visible = false end
+
+                if Settings.EspDistance then
+                    cache.DistTag.Position = UDim2.new(0, screenPos.X, 0, boxPosY + sizeY + 2)
+                    cache.DistTag.Text = string.format("%d Studs", math.floor(distance))
+                    cache.DistTag.TextColor3 = distanceColor
+                    cache.DistTag.TextSize = math.clamp(12 - (distance / 100), 9, 12)
+                    cache.DistTag.Visible = true
+                else cache.DistTag.Visible = false end
+
+                if Settings.EspChams then
+                    if not cache.CurrentCham or cache.CurrentCham.Parent ~= character then
+                        if cache.CurrentCham then cache.CurrentCham:Destroy() end
+                        
+                        local freshHighlight = Instance.new("Highlight")
+                        freshHighlight.Name = "NeonEngineStorage"
+                        freshHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                        freshHighlight.Parent = character
+                        cache.CurrentCham = freshHighlight
+                    end
+                    
+                    local neonMultiplier = Settings.ChamsBrightness
+                    cache.CurrentCham.FillColor = Color3.new(chamColor.R * neonMultiplier, chamColor.G * neonMultiplier, chamColor.B * neonMultiplier)
+                    cache.CurrentCham.OutlineColor = Color3.new(chamColor.R * neonMultiplier, chamColor.G * neonMultiplier, chamColor.B * neonMultiplier)
+                    cache.CurrentCham.FillTransparency = 0.2
+                    cache.CurrentCham.OutlineTransparency = 0
+                    cache.CurrentCham.Enabled = true
+                else 
+                    if cache.CurrentCham then cache.CurrentCham.Enabled = false end
+                end
+            else
+                cache.Box.Visible = false; cache.FilledBox.Visible = false; cache.Tracer.Visible = false; cache.HealthBar.Visible = false; cache.Tag.Visible = false; cache.DistTag.Visible = false; if cache.CurrentCham then cache.CurrentCham.Enabled = false end
+            end
+        else
+            cache.Box.Visible = false; cache.FilledBox.Visible = false; cache.Tracer.Visible = false; cache.HealthBar.Visible = false; cache.Tag.Visible = false; cache.DistTag.Visible = false; if cache.CurrentCham then cache.CurrentCham.Enabled = false end
+        end
+    end
+end)
+
+--// DEVICE SPOOFER EXECUTION ENGINE
+local function FireSpoof(wantedDeviceName)
+    local actual = "MouseKeyboard"
+    local wanted = DeviceMapping[wantedDeviceName] or "Gamepad"
+    
+    local success, remote = pcall(function()
+        return ReplicatedStorage:WaitForChild("Remotes")
+            :WaitForChild("Replication")
+            :WaitForChild("Fighter")
+            :WaitForChild("SetControls")
+    end)
+    
+    if success and remote then
+        remote:FireServer(actual)
+        task.wait(0.3)
+        remote:FireServer(wanted)
+    end
+end
+
+task.spawn(function()
+    while task.wait(5) do
+        if Settings.SpoofEnabled then
+            FireSpoof(Settings.SelectedDevice)
+        end
+        if Library.Unloaded then break end
+    end
+end)
+
+--// UI COMPONENT INITIALIZATION (COMBAT TAB)
+CombatSettings:AddToggle("SilentAimEnabled", {
+	Text = "Silent Aim Enabled",
+	Default = Settings.Enabled,
+	Tooltip = "Toggles runtime camera alignment logic",
+})
+Toggles.SilentAimEnabled:OnChanged(function()
+	Settings.Enabled = Toggles.SilentAimEnabled.Value
+end)
+
+CombatSettings:AddToggle("WallCheck", {
+	Text = "Wall Check",
+	Default = Settings.WallCheck,
+	Tooltip = "Performs raycasting tests to ensure target visibility",
+})
+Toggles.WallCheck:OnChanged(function()
+	Settings.WallCheck = Toggles.WallCheck.Value
+end)
+
+CombatSettings:AddSlider("AimbotPrediction", {
+	Text = "Aimbot Prediction",
+	Default = Settings.Prediction,
+	Min = 0,
+	Max = 0.2,
+	Rounding = 2,
+	Tooltip = "Velocity tracking scale adjustment value",
+})
+Options.AimbotPrediction:OnChanged(function()
+	Settings.Prediction = Options.AimbotPrediction.Value
+end)
+
+CombatSettings:AddSlider("AimbotSmoothing", {
+	Text = "Aimbot Smoothing",
+	Default = Settings.Smoothing,
+	Min = 0,
+	Max = 0.95,
+	Rounding = 2,
+	Tooltip = "Interpolation rate parameter configuration",
+})
+Options.AimbotSmoothing:OnChanged(function()
+	Settings.Smoothing = Options.AimbotSmoothing.Value
+end)
+
+CombatSettings:AddSlider("HeadshotRate", {
+	Text = "Headshot Rate",
+	Default = Settings.HeadshotRate,
+	Min = 1,
+	Max = 100,
+	Rounding = 0,
+})
+Options.HeadshotRate:OnChanged(function()
+	Settings.HeadshotRate = Options.HeadshotRate.Value
+end)
+
+CombatSettings:AddSlider("MissChance", {
+	Text = "Miss Chance",
+	Default = Settings.MissChance,
+	Min = 0,
+	Max = 100,
+	Rounding = 0,
+})
+Options.MissChance:OnChanged(function()
+	Settings.MissChance = Options.MissChance.Value
+end)
+
+-- RIGHT SIDE: FOV CONFIGURATION
+FOVSettings:AddToggle("ShowFovCircle", {
+	Text = "Show FOV Circle",
+	Default = Settings.FovVisible,
+})
+Toggles.ShowFovCircle:OnChanged(function()
+	Settings.FovVisible = Toggles.ShowFovCircle.Value
+end)
+
+FOVSettings:AddSlider("FovRadiusSize", {
+	Text = "FOV Radius Size",
+	Default = Settings.FOV,
+	Min = 50,
+	Max = 400,
+	Rounding = 0,
+})
+Options.FovRadiusSize:OnChanged(function()
+	Settings.FOV = Options.FovRadiusSize.Value
+end)
+
+--// UI COMPONENT INITIALIZATION (ESP LEFT - MAIN ELEMENTS)
+EspMainGroup:AddToggle("EspBoxOutlines", {
+	Text = "Box Outlines",
+	Default = Settings.EspBoxes,
+}):AddColorPicker("EspBoxColor", {
+	Default = Color3.fromRGB(100, 200, 255),
+})
+Toggles.EspBoxOutlines:OnChanged(function()
+	Settings.EspBoxes = Toggles.EspBoxOutlines.Value
+end)
+Options.EspBoxColor:OnChanged(function()
+	Settings.EspBoxColor = Options.EspBoxColor.Value
+end)
+
+EspMainGroup:AddToggle("EspFilledBoxes", {
+	Text = "Filled Boxes",
+	Default = Settings.EspFilledBoxes,
+}):AddColorPicker("EspFilledColor", {
+	Default = Color3.fromRGB(100, 200, 255),
+})
+Toggles.EspFilledBoxes:OnChanged(function()
+	Settings.EspFilledBoxes = Toggles.EspFilledBoxes.Value
+end)
+Options.EspFilledColor:OnChanged(function()
+	Settings.EspFilledColor = Options.EspFilledColor.Value
+end)
+
+EspMainGroup:AddSlider("FilledBoxTransparencySlider", {
+	Text = "Filled Transparency",
+	Default = Settings.FilledBoxTransparency * 100,
+	Min = 0,
+	Max = 100,
+	Rounding = 0,
+    Suffix = "%"
+})
+Options.FilledBoxTransparencySlider:OnChanged(function()
+	Settings.FilledBoxTransparency = Options.FilledBoxTransparencySlider.Value / 100
+end)
+
+EspMainGroup:AddToggle("EspLineTracers", {
+	Text = "Line Tracers",
+	Default = Settings.EspLines,
+}):AddColorPicker("EspTracerColor", {
+	Default = Color3.fromRGB(150, 200, 255),
+})
+Toggles.EspLineTracers:OnChanged(function()
+	Settings.EspLines = Toggles.EspLineTracers.Value
+end)
+Options.EspTracerColor:OnChanged(function()
+	Settings.EspTracerColor = Options.EspTracerColor.Value
+end)
+
+EspMainGroup:AddDropdown("TracerPositionDropdown", {
+	Values = {"Top", "Center", "Bottom"},
+	Default = 3,
+	Multi = false,
+	Text = "Tracer Position",
+})
+Options.TracerPositionDropdown:OnChanged(function()
+	Settings.TracerPosition = Options.TracerPositionDropdown.Value
+end)
+
+EspMainGroup:AddDivider()
+
+EspMainGroup:AddToggle("EspHealthBars", {
+	Text = "Health Bars",
+	Default = Settings.EspHealth,
+}):AddColorPicker("EspHealthColor", {
+	Default = Color3.fromRGB(0, 255, 0),
+})
+Toggles.EspHealthBars:OnChanged(function()
+	Settings.EspHealth = Toggles.EspHealthBars.Value
+end)
+Options.EspHealthColor:OnChanged(function()
+	Settings.EspHealthColor = Options.EspHealthColor.Value
+end)
+
+EspMainGroup:AddToggle("EspNames", {
+	Text = "Player Names",
+	Default = Settings.EspNames,
+}):AddColorPicker("EspNameColor", {
+	Default = Color3.fromRGB(255, 255, 255),
+})
+Toggles.EspNames:OnChanged(function()
+	Settings.EspNames = Toggles.EspNames.Value
+end)
+Options.EspNameColor:OnChanged(function()
+	Settings.EspNameColor = Options.EspNameColor.Value
+end)
+
+EspMainGroup:AddToggle("EspDistance", {
+	Text = "Distance Tags",
+	Default = Settings.EspDistance,
+}):AddColorPicker("EspDistanceColor", {
+	Default = Color3.fromRGB(220, 220, 220),
+})
+Toggles.EspDistance:OnChanged(function()
+	Settings.EspDistance = Toggles.EspDistance.Value
+end)
+Options.EspDistanceColor:OnChanged(function()
+	Settings.EspDistanceColor = Options.EspDistanceColor.Value
+end)
+
+EspMainGroup:AddDivider()
+
+EspMainGroup:AddSlider("MaxEspDistance", {
+	Text = "Max Distance",
+	Default = Settings.MaxEspDistance,
+	Min = 50,
+	Max = 2000,
+	Rounding = 0,
+	Suffix = " studs"
+})
+Options.MaxEspDistance:OnChanged(function()
+	Settings.MaxEspDistance = Options.MaxEspDistance.Value
+end)
+
+EspMainGroup:AddSlider("BoxThickness", {
+	Text = "Box Thickness",
+	Default = Settings.BoxThickness,
+	Min = 1,
+	Max = 5,
+	Rounding = 1,
+})
+Options.BoxThickness:OnChanged(function()
+	Settings.BoxThickness = Options.BoxThickness.Value
+end)
+
+EspMainGroup:AddSlider("LineThickness", {
+	Text = "Tracer Thickness",
+	Default = Settings.LineThickness,
+	Min = 1,
+	Max = 5,
+	Rounding = 1,
+})
+Options.LineThickness:OnChanged(function()
+	Settings.LineThickness = Options.LineThickness.Value
+end)
+
+EspMainGroup:AddSlider("BoxSizeMultiplier", {
+	Text = "Box Scale",
+	Default = Settings.BoxSizeMultiplier,
+	Min = 800,
+	Max = 2000,
+	Rounding = 0,
+})
+Options.BoxSizeMultiplier:OnChanged(function()
+	Settings.BoxSizeMultiplier = Options.BoxSizeMultiplier.Value
+end)
+
+--// UI COMPONENT INITIALIZATION (ESP RIGHT - NEON CHAMS)
+EspChamsGroup:AddToggle("EspChamsToggle", {
+	Text = "Enable Neon Chams",
+	Default = Settings.EspChams,
+})
+Toggles.EspChamsToggle:OnChanged(function()
+	Settings.EspChams = Toggles.EspChamsToggle.Value
+end)
+
+EspChamsGroup:AddLabel("Chams Color"):AddColorPicker("EspChamsColor", {
+	Default = Color3.fromRGB(100, 200, 255),
+})
+Options.EspChamsColor:OnChanged(function()
+	Settings.EspChamsColor = Options.EspChamsColor.Value
+end)
+
+EspChamsGroup:AddSlider("ChamsBrightnessSlider", {
+	Text = "Glow Power",
+	Default = 5,
+	Min = 1,
+	Max = 15,
+	Rounding = 1,
+})
+Options.ChamsBrightnessSlider:OnChanged(function()
+	Settings.ChamsBrightness = Options.ChamsBrightnessSlider.Value
+end)
+
+EspChamsGroup:AddDivider()
+
+EspChamsGroup:AddLabel("Advanced Features")
+EspChamsGroup:AddLabel("Professional wallhack ESP")
+EspChamsGroup:AddLabel("Real-time player tracking")
+EspChamsGroup:AddLabel("Customizable glow effects")
+
+--// UI COMPONENT INITIALIZATION (VISUALS TAB)
+VisualsGroup:AddToggle("FovOutlineToggle", {
+	Text = "FOV Circle Outline",
+	Default = Settings.FovOutline,
+})
+Toggles.FovOutlineToggle:OnChanged(function()
+	Settings.FovOutline = Toggles.FovOutlineToggle.Value
+end)
+
+VisualsGroup:AddToggle("FilledFovCircle", {
+	Text = "Filled FOV Circle",
+	Default = Settings.FovFilled,
+})
+Toggles.FilledFovCircle:OnChanged(function()
+	Settings.FovFilled = Toggles.FilledFovCircle.Value
+end)
+
+VisualsGroup:AddToggle("FovFollowHandToggle", {
+	Text = "Follow Hands Movements",
+	Default = Settings.FovFollowHand,
+	Tooltip = "Smoothly binds visual FOV position to your character's equipped tool elements"
+})
+Toggles.FovFollowHandToggle:OnChanged(function()
+	Settings.FovFollowHand = Toggles.FovFollowHandToggle.Value
+end)
+
+VisualsGroup:AddLabel("FOV Color"):AddColorPicker("FovColorPresets", {
+	Default = Color3.fromRGB(160, 32, 240),
+})
+Options.FovColorPresets:OnChanged(function()
+	Settings.FovColorMode = Options.FovColorPresets.Value
+end)
+
+VisualsGroup:AddSlider("FovTransparencySlider", {
+	Text = "FOV Filled Transparency",
+	Default = Settings.FovTransparency * 100,
+	Min = 0,
+	Max = 100,
+	Rounding = 0,
+    Suffix = "%"
+})
+Options.FovTransparencySlider:OnChanged(function()
+	Settings.FovTransparency = Options.FovTransparencySlider.Value / 100
+end)
+
+VisualsGroup:AddDivider()
+
+VisualsGroup:AddToggle("AnimatedCrosshair", {
+	Text = "Animated Crosshair",
+	Default = Settings.CrosshairEnabled,
+})
+Toggles.AnimatedCrosshair:OnChanged(function()
+	Settings.CrosshairEnabled = Toggles.AnimatedCrosshair.Value
+end)
+
+VisualsGroup:AddLabel("Crosshair Color"):AddColorPicker("CrosshairColorPresets", {
+	Default = Color3.fromRGB(160, 32, 240),
+})
+Options.CrosshairColorPresets:OnChanged(function()
+	Settings.CrosshairColorMode = Options.CrosshairColorPresets.Value
+end)
+
+VisualsGroup:AddDropdown("CrosshairStyleDropdown", {
+	Values = {"Classic Plus", "X Style", "Circle Dot", "Minimal Plus", "Diamond", "Dot Plus", "Arrows", "T-Style", "Thick Cross", "Bracket"},
+	Default = 1,
+	Multi = false,
+	Text = "Crosshair Design",
+})
+Options.CrosshairStyleDropdown:OnChanged(function()
+	Settings.CrosshairStyle = Options.CrosshairStyleDropdown.Value
+end)
+
+VisualsGroup:AddSlider("CrosshairLengthSlider", {
+	Text = "Crosshair Vertex Length",
+	Default = Settings.CrosshairLength,
+	Min = 5,
+	Max = 50,
+	Rounding = 0,
+})
+Options.CrosshairLengthSlider:OnChanged(function()
+	Settings.CrosshairLength = Options.CrosshairLengthSlider.Value
+end)
+
+VisualsGroup:AddSlider("CrosshairSpeedSlider", {
+	Text = "Crosshair Animation Speed",
+	Default = Settings.CrosshairSpeed,
+	Min = 10,
+	Max = 200,
+	Rounding = 0,
+})
+Options.CrosshairSpeedSlider:OnChanged(function()
+	Settings.CrosshairSpeed = Options.CrosshairSpeedSlider.Value
+end)
+
+--================================================================================
+--// CHAT WIN STREAK INITIALIZATION (VISUALS RIGHT PANEL)
+--================================================================================
+WinStreakGroup:AddInput("StreakTargetPlayer", {
+	Default = Settings.TargetPlayer,
+	Numeric = false,
+	Finished = true,
+	Text = "Target Player Name",
+	Tooltip = "The player whose streak was broken",
+	Placeholder = "e.g. ABG",
+})
+Options.StreakTargetPlayer:OnChanged(function()
+	Settings.TargetPlayer = Options.StreakTargetPlayer.Value
+end)
+
+WinStreakGroup:AddInput("StreakCountNumber", {
+	Default = Settings.StreakValue,
+	Numeric = true,
+	Finished = true,
+	Text = "Win Streak Count",
+	Tooltip = "The amount of consecutive wins ended",
+	Placeholder = "e.g. 14",
+})
+Options.StreakCountNumber:OnChanged(function()
+	Settings.StreakValue = Options.StreakCountNumber.Value
+end)
+
+WinStreakGroup:AddToggle("AutoDetectMyName", {
+	Text = "Auto-Detect My Name",
+	Default = Settings.AutoFindMe,
+	Tooltip = "Automatically reads your current game display name for the credit",
+})
+Toggles.AutoDetectMyName:OnChanged(function()
+	Settings.AutoFindMe = Toggles.AutoDetectMyName.Value
+end)
+
+WinStreakGroup:AddInput("StreakCustomEnder", {
+	Default = Settings.CustomEnderName,
+	Numeric = false,
+	Finished = true,
+	Text = "Custom 'Ended By' Name",
+	Tooltip = "Used when Auto-Detect My Name is disabled",
+	Placeholder = "e.g. Dallas",
+})
+Options.StreakCustomEnder:OnChanged(function()
+	Settings.CustomEnderName = Options.StreakCustomEnder.Value
+end)
+
+WinStreakGroup:AddButton({
+	Text = "Send Fake Server Message",
+	Func = function()
+		local TextChatService = game:GetService("TextChatService")
+		local StarterGui = game:GetService("StarterGui")
+		
+		local enderName = Settings.AutoFindMe and player.DisplayName or Settings.CustomEnderName
+		if enderName == "" then enderName = "Dallas" end
+		
+		local targetName = Settings.TargetPlayer ~= "" and Settings.TargetPlayer or "ABG"
+		local streakVal = Settings.StreakValue ~= "" and Settings.StreakValue or "14"
+		
+		local completeMessage = string.format(
+			"[SERVER] %s's %s win streak was ended by %s (@%s)!",
+			targetName,
+			streakVal,
+			enderName,
+			string.lower(enderName)
+		)
+		
+		if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+			local channel = TextChatService:FindFirstChild("RBXGeneral", true) or TextChatService.TextChannels.RBXSystem
+			channel:DisplaySystemMessage('<font color="rgb(224, 130, 41)"><b>' .. completeMessage .. '</b></font>')
+		else
+			pcall(function()
+				StarterGui:SetCore("ChatMakeSystemMessage", {
+					Text = completeMessage,
+					Color = Color3.fromRGB(224, 130, 41),
+					Font = Enum.Font.FredokaOne,
+					TextSize = 18
+				})
+			end)
+		end
+	end,
+	DoubleClick = false
+})
+
+--// UI COMPONENT INITIALIZATION (MISC TAB)
+MiscGroup:AddToggle("EnableDeviceSpoofer", {
+	Text = "Enable Device Spoofer",
+	Default = Settings.SpoofEnabled,
+})
+Toggles.EnableDeviceSpoofer:OnChanged(function()
+	Settings.SpoofEnabled = Toggles.EnableDeviceSpoofer.Value
+	if Settings.SpoofEnabled then
+		FireSpoof(Settings.SelectedDevice)
+	end
+end)
+
+MiscGroup:AddDropdown("SelectTargetDevice", {
+	Values = {"Controller", "PC", "Mobile", "VR"},
+	Default = 1, 
+	Multi = false,
+	Text = "Select Target Device",
+})
+Options.SelectTargetDevice:OnChanged(function()
+	Settings.SelectedDevice = Options.SelectTargetDevice.Value
+	if Settings.SpoofEnabled then
+		FireSpoof(Settings.SelectedDevice)
+	end
+end)
+
+--// WORLD TAB
+local WorldLeft  = Tabs.World:AddLeftGroupbox("Atmosphere")
+local WorldRight = Tabs.World:AddRightGroupbox("Color Correction")
+local WorldRight2 = Tabs.World:AddRightGroupbox("Lighting")
+
+local cc = Lighting:FindFirstChildOfClass("ColorCorrectionEffect")
+local function getCC()
+    if not cc or not cc.Parent then
+        cc = Lighting:FindFirstChildOfClass("ColorCorrectionEffect")
+        if not cc then
+            cc = Instance.new("ColorCorrectionEffect")
+            cc.Parent = Lighting
+        end
+    end
+    return cc
+end
+
+local atmo = Lighting:FindFirstChildOfClass("Atmosphere")
+local function getAtmo()
+    if not atmo or not atmo.Parent then
+        atmo = Lighting:FindFirstChildOfClass("Atmosphere")
+        if not atmo then
+            atmo = Instance.new("Atmosphere")
+            atmo.Parent = Lighting
+        end
+    end
+    return atmo
+end
+
+WorldLeft:AddToggle("ATMO_ENABLED", { Text = "Enabled", Default = false, Callback = function(Value) if not Value then getAtmo().Density = 0 getAtmo().Haze = 0 getAtmo().Glare = 0 getAtmo().Offset = 0 end end })
+WorldLeft:AddLabel("Color"):AddColorPicker("ATMO_COLOR", { Default = Color3.fromRGB(255, 255, 255), Callback = function(Value) getAtmo().Color = Value end })
+WorldLeft:AddLabel("Decay"):AddColorPicker("ATMO_DECAY", { Default = Color3.fromRGB(255, 255, 255), Callback = function(Value) getAtmo().Decay = Value end })
+WorldLeft:AddSlider("ATMO_GLARE", { Text = "Glare", Default = 25, Min = 0, Max = 100, Rounding = 0, Callback = function(Value) getAtmo().Glare = Value / 10 end })
+WorldLeft:AddSlider("ATMO_HAZE", { Text = "Haze", Default = 10, Min = 0, Max = 100, Rounding = 0, Callback = function(Value) getAtmo().Haze = Value end })
+WorldLeft:AddSlider("ATMO_OFFSET", { Text = "Offset", Default = 37, Min = 0, Max = 100, Rounding = 0, Callback = function(Value) getAtmo().Offset = Value / 100 end })
+WorldLeft:AddSlider("ATMO_DENSITY", { Text = "Density", Default = 49, Min = 0, Max = 100, Rounding = 0, Callback = function(Value) getAtmo().Density = Value / 100 end })
+
+WorldRight:AddToggle("CC_ENABLED", { Text = "Enabled", Default = false, Callback = function(Value) getCC().Enabled = Value end })
+WorldRight:AddSlider("CC_SATURATION", { Text = "Saturation", Default = 10, Min = -100, Max = 100, Rounding = 0, Callback = function(Value) getCC().Saturation = Value / 10 end })
+WorldRight:AddSlider("CC_CONTRAST", { Text = "Contrast", Default = -5, Min = -100, Max = 100, Rounding = 0, Callback = function(Value) getCC().Contrast = Value / 10 end })
+WorldRight:AddSlider("CC_BRIGHTNESS", { Text = "Brightness", Default = -1, Min = -100, Max = 100, Rounding = 0, Callback = function(Value) getCC().Brightness = Value / 100 end })
+
+WorldRight2:AddToggle("L_AMBIENT", { Text = "Ambient", Default = false })
+WorldRight2:AddLabel("Ambient Color"):AddColorPicker("L_AMBIENT_COLOR", { Default = Color3.fromRGB(255, 255, 255), Callback = function(Value) Lighting.Ambient = Value end })
+WorldRight2:AddToggle("L_COLORSHIFT_BOT", { Text = "ColorShift Bottom" })
+WorldRight2:AddLabel("ColorShift Bottom"):AddColorPicker("L_CSB_COLOR", { Default = Color3.fromRGB(255, 255, 255), Callback = function(Value) Lighting.ColorShift_Bottom = Value end })
+WorldRight2:AddToggle("L_COLORSHIFT_TOP", { Text = "ColorShift Top" })
+WorldRight2:AddLabel("ColorShift Top"):AddColorPicker("L_CST_COLOR", { Default = Color3.fromRGB(255, 255, 255), Callback = function(Value) Lighting.ColorShift_Top = Value end })
+WorldRight2:AddToggle("L_FOGCOLOR", { Text = "Fog Color" })
+WorldRight2:AddLabel("Fog"):AddColorPicker("L_FOG_COLOR", { Default = Color3.fromRGB(200, 200, 200), Callback = function(Value) Lighting.FogColor = Value end })
+WorldRight2:AddSlider("L_FOGEND_VAL", { Text = "Fog End", Default = 2510, Min = 0, Max = 10000, Rounding = 0, Suffix = "studs", Callback = function(Value) Lighting.FogEnd = Value end })
+WorldRight2:AddSlider("L_FOGSTART_VAL", { Text = "Fog Start", Default = 0, Min = 0, Max = 5000, Rounding = 0, Suffix = "studs", Callback = function(Value) Lighting.FogStart = Value end })
+WorldRight2:AddToggle("L_EXPOSURE", { Text = "Exposure" })
+WorldRight2:AddSlider("L_EXPOSURE_VAL", { Text = "Exposure", Default = -11, Min = -100, Max = 100, Rounding = 0, Callback = function(Value) Lighting.ExposureCompensation = Value / 10 end })
+WorldRight2:AddToggle("L_BRIGHTNESS", { Text = "Brightness" })
+WorldRight2:AddSlider("L_BRIGHTNESS_VAL", { Text = "Brightness", Default = 17, Min = 0, Max = 50, Rounding = 0, Callback = function(Value) Lighting.Brightness = Value / 10 end })
+WorldRight2:AddToggle("L_CLOCKTIME", { Text = "Clock Time" })
+WorldRight2:AddSlider("L_CLOCKTIME_VAL", { Text = "Clock", Default = 114, Min = 0, Max = 240, Rounding = 0, Suffix = "h", Callback = function(Value) Lighting.ClockTime = Value / 10 end })
+WorldRight2:AddToggle("L_GLOBALSHADOWS", { Text = "Global Shadows", Callback = function(Value) Lighting.GlobalShadows = Value end })
+WorldRight2:AddDropdown("L_TECHNOLOGY", { Text = "Technology", Values = {"Compatibility", "Voxel", "ShadowMap", "Future"}, Default = "ShadowMap", Callback = function(Value) Lighting.Technology = Enum.Technology[Value] end })
+
+--// CONFIGURATION & CLEANUP ENGINE (SETTINGS TAB)
+local MenuGroup = Tabs["UI Settings"]:AddLeftGroupbox("Menu")
+
+MenuGroup:AddToggle("KeybindMenuOpen", { 
+	Default = Library.KeybindFrame.Visible, 
+	Text = "Open Keybind Menu", 
+	Callback = function(value) Library.KeybindFrame.Visible = value end
+})
+
+MenuGroup:AddToggle("ShowCustomCursor", {
+	Text = "Custom Cursor", 
+	Default = true, 
+	Callback = function(Value) Library.ShowCustomCursor = Value end
+})
+
+MenuGroup:AddDivider()
+
+MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { 
+	Default = "RightControl", 
+	NoUI = true, 
+	Text = "Menu keybind" 
+})
+Library.ToggleKeybind = Options.MenuKeybind
+
+MenuGroup:AddButton({
+	Text = "Unload UI (Delete Cheat)",
+	Func = function() 
+		Library:Unload() 
+	end,
+	DoubleClick = false,
+})
+
+--// RUNTIME DISPOSAL CLEANUP HOOK
+local WatermarkConnection
+Library:OnUnload(function()
+	if WatermarkConnection then WatermarkConnection:Disconnect() end
+	if pipelineConnection then pipelineConnection:Disconnect() end
+	if newAimbotConnection then newAimbotConnection:Disconnect() end
+	crosshairGui:Destroy()
+	EspGui:Destroy()
+	FOVCircle:Destroy()
+	FOVCircleBackground:Destroy()
+	for _, cache in pairs(EspRegistry) do
+		if cache.CurrentCham then cache.CurrentCham:Destroy() end
+	end
+	Library.Unloaded = true
+	print("Unloaded Purple Ghost v1 via Custom Hook Engine.")
+end)
+
+--// WATERMARK REFRESH CONNECTION
+local FrameTimer = tick()
+local FrameCounter = 0
+local FPS = 60
+local GetPing = (function() return math.floor(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue()) end)
+local CanDoPing = pcall(function() return GetPing(); end)
+
+WatermarkConnection = game:GetService("RunService").RenderStepped:Connect(function()
+	FrameCounter = FrameCounter + 1
+
+	if (tick() - FrameTimer) >= 1 then
+		FPS = FrameCounter
+		FrameTimer = tick()
+		FrameCounter = 0
+	end
+
+	if CanDoPing then
+		Library:SetWatermark(("Purple Ghost v1 | %d fps | %d ms"):format(
+			math.floor(FPS),
+			GetPing()
+		))
+	else
+		Library:SetWatermark(("Purple Ghost v1 | %d fps"):format(
+			math.floor(FPS)
+		))
+	end
+end)
+
+--// HOOK MODULE UTILITY ENGINE
+task.spawn(function()
+    task.wait(3) 
+    local modules = game:GetService("ReplicatedStorage"):WaitForChild("Modules", 5)
+    if not modules then return end
+    local utility = require(modules:WaitForChild("Utility", 5))
+    if not utility then return end
+    
+    local old_rc = utility.Raycast
+    utility.Raycast = function(...)
+        local args = {...}
+        
+        if Settings.Enabled then
+            local current_script = debug.info(2, "s")
+            if current_script and (current_script:find("Weapon") or current_script:find("Gun") or current_script:find("Client")) then
+                
+                local hit = get_best_target(true) 
+                if hit then
+                    local jitter = Vector3.new(math.random(-5,5)/100, math.random(-5,5)/100, math.random(-5,5)/100)
+                    local targetPosition = hit.Position
+                    if hit.Parent and hit.Parent:FindFirstChild("HumanoidRootPart") then
+                        targetPosition = targetPosition + (hit.Parent.HumanoidRootPart.AssemblyLinearVelocity * Settings.Prediction)
+                    end
+                    args[3] = targetPosition + jitter 
+                end
+            end
+        end
+        return old_rc(table.unpack(args))
+    end
+end)
+
+--// MANAGEMENT STORAGE AND RETRIEVAL INITIALIZATION
+ThemeManager:SetLibrary(Library)
+SaveManager:SetLibrary(Library)
+
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({ "MenuKeybind" })
+
+ThemeManager:SetFolder("PurpleGhostHub")
+SaveManager:SetFolder("PurpleGhostHub/game-config")
+
+SaveManager:BuildConfigSection(Tabs["UI Settings"])
+ThemeManager:ApplyToTab(Tabs["UI Settings"])
+
+SaveManager:LoadAutoloadConfig()
+
+local function sb()
+    local c = {
+        bp = {"Cheat", "Exploit", "Hack", "Script", "Inject", "Memory", "Speed", "Teleport", "Noclip", "Fly", "Bypass", "Macro", "AutoFarm", "WallHack", "AimBot", "SpeedHack", "NoClip", "InfiniteResource", "ModifiedClient", "GameModifier", "ClientModification", "RuntimePatch", "MemoryManipulation", "ProcessInjection"},
+        fe = {"Roblox Studio", "Roblox Client", "Roblox Player", "Roblox Beta", "Roblox Test Client", "RobloxPlayerBeta", "RobloxStudioBeta", "RobloxApp", "RobloxMobile"},
+        nt = {md = 0.05, mc = 100, at = 0.8},
+        lr = {min = 50, max = 100},
+        ok = 0x35ACED,
+        rni = 10,
+        doi = 30,
+        bm = {at = 0.7, lr = 0.01, hs = 100}
+    }
+
+    local s = {
+        nc = {},
+        lns = tick(),
+        rnt = tick(),
+        lo = math.random(c.lr.min, c.lr.max) / 1000,
+        os = math.random(1, 1000000),
+        bh = {},
+        as = 0
+    }
+
+    local function es(i, k)
+        local r = ""
+        for j = 1, #i do
+            local c = string.byte(i, j)
+            local b = k % 256
+            r = r .. string.char(bit32.bxor(c, b))
+            k = bit32.rshift(k, 8) + bit32.lshift(b, 24)
+        end
+        return r
+    end
+
+    local function ot(t, s)
+        local o = {}
+        for k, v in pairs(t) do
+            local ok = es(tostring(k), s)
+            if type(v) == "string" then
+                o[ok] = es(v, s)
+            elseif type(v) == "table" then
+                o[ok] = ot(v, s + 1)
+            else
+                o[ok] = v
+            end
+        end
+        return o
+    end
+
+    local function sa()
+        local a = {
+            "[S] I...", "[I] S...", "[W] P...",
+            "[D] O...", "[N] E...", "[P] A...",
+            "[S] S..."
+        }
+        return a[math.random(1, #a)]
+    end
+
+    local function fl()
+        local ls = game:GetService("LogService")
+        local oc = ls.MessageOut.Connect
+        hookfunction(oc, function(self, cb)
+            return oc(self, function(m)
+                for _, p in ipairs(c.bp) do
+                    if m:lower():find(p:lower()) then
+                        return
+                    end
+                end
+                if tick() - s.rnt >= c.rni then
+                    s.rnt = tick()
+                    cb(sa())
+                end
+                cb(m)
+            end)
+        end)
+    end
+
+    local function me()
+        getgenv().ie = function()
+            local i = (tick() % #c.fe) + 1
+            return c.fe[i]
+        end
+    end
+
+    local function sl()
+        local ot = tick
+        getgenv().tick = function()
+            local fv = math.random(-10, 10) / 1000
+            local nv = math.random(-5, 5) / 1000
+            s.lo = s.lo + fv + nv
+            return ot() + s.lo
+        end
+    end
+
+    local function bsf()
+        local sf = {"warn", "error", "debug.traceback", "assert"}
+        for _, fn in ipairs(sf) do
+            local of = getfenv(0)[fn]
+            hookfunction(of, function(...)
+                local i = debug.getinfo(2, "Sl")
+                print("[S] F c: " .. fn .. " (L " .. i.currentline .. ")")
+                return true
+            end)
+        end
+    end
+
+    local function on()
+        local os = game.ReplicatedStorage.RemoteEvent.FireServer
+        game.ReplicatedStorage.RemoteEvent.FireServer = function(self, ...)
+            local a = {...}
+            local ea = ot(a, s.os)
+            for k, v in pairs(ea) do
+                if type(k) == "string" and k:find(c.ok) then
+                    return
+                end
+            end
+
+            local ct = tick()
+            if ct - s.lns < c.nt.md then
+                return
+            end
+
+            s.lns = ct
+            table.insert(s.nc, ct)
+
+            local cpm = #s.nc
+            if cpm > c.nt.mc then
+                local ec = cpm - c.nt.mc
+                if ec / c.nt.mc > c.nt.at then
+                    c.nt.md = c.nt.md * 1.1
+                end
+                for i = 1, ec do
+                    table.remove(s.nc, 1)
+                end
+            elseif cpm < c.nt.mc * 0.9 then
+                c.nt.md = c.nt.md * 0.9
+            end
+
+            return os(self, ...)
+        end
+    end
+
+    local function dm()
+        spawn(function()
+            while wait(5) do
+                local ct = tick()
+                for i = #s.nc, 1, -1 do
+                    if ct - s.nc[i] > 60 then
+                        table.remove(s.nc, i)
+                    end
+                end
+            end
+        end)
+    end
+
+    local function rok()
+        spawn(function()
+            while wait(c.doi) do
+                s.os = math.random(1, 1000000)
+            end
+        end)
+    end
+
+    local function dab(b)
+        table.insert(s.bh, 1, b)
+        if #s.bh > c.bm.hs then
+            table.remove(s.bh)
+        end
+
+        local as = 0
+        for _, pb in ipairs(s.bh) do
+            local s = 0
+            for i = 1, math.min(#b, #pb) do
+                if b[i] == pb[i] then
+                    s = s + 1
+                end
+            end
+            s = s / math.max(#b, #pb)
+            as = as + (1 - s)
+        end
+        as = as / #s.bh
+
+        if as > c.bm.at then
+            print("[B M] A b d. S: " .. as)
+            s.as = s.as + c.bm.lr * (as - s.as)
+        else
+            s.as = s.as - c.bm.lr * s.as
+        end
+
+        return as
+    end
+
+    local function mnb()
+        local os = game.ReplicatedStorage.RemoteEvent.FireServer
+        game.ReplicatedStorage.RemoteEvent.FireServer = function(self, ...)
+            local a = {...}
+            local b = {self.Name, unpack(a)}
+            local as = dab(b)
+
+            if as > c.bm.at then
+                return
+            end
+
+            return os(self, ...)
+        end
+    end
+
+    local function mlb()
+        local ls = game:GetService("LogService")
+        local oc = ls.MessageOut.Connect
+        hookfunction(oc, function(self, cb)
+            return oc(self, function(m)
+                local b = {m}
+                local as = dab(b)
+
+                if as > c.bm.at then
+                    return
+                end
+
+                cb(m)
+            end)
+        end)
+    end
+
+    -- Execute all bypass modules
+    fl()
+    me()
+    sl()
+    bsf()
+    on()
+    dm()
+    rok()
+    mnb()
+    mlb()
+end
+
+sb()
