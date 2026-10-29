@@ -138,13 +138,21 @@ screen.DisplayOrder = 999
 screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screen.Enabled = true
 
-local okParent = pcall(function() screen.Parent = plrGui end)
-if not okParent or not screen.Parent then
-	pcall(function() screen.Parent = game:GetService("CoreGui") end)
-end
-if not screen.Parent then
-	warn("[Must] could not parent ScreenGui")
-	return
+do
+	local okParent = false
+	if gethui then
+		okParent = pcall(function() screen.Parent = gethui() end)
+	end
+	if not okParent or not screen.Parent then
+		okParent = pcall(function() screen.Parent = plrGui end)
+	end
+	if not okParent or not screen.Parent then
+		pcall(function() screen.Parent = game:GetService("CoreGui") end)
+	end
+	if not screen.Parent then
+		warn("[Must] could not parent ScreenGui")
+		return
+	end
 end
 
 local rootScale = Instance.new("UIScale")
@@ -259,7 +267,7 @@ local BLACKLISTED = {
 	[Enum.KeyCode.Unknown] = true,
 }
 
-local function makeToggle(onToggle)
+local function makeToggle()
 	local bg = Instance.new("Frame")
 	bg.Size = UDim2.fromOffset(44, 22)
 	bg.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
@@ -278,6 +286,7 @@ local function makeToggle(onToggle)
 	corner(knob, 9)
 
 	local btn = Instance.new("TextButton", bg)
+	btn.Name = "ToggleBtn"
 	btn.Size = UDim2.fromScale(1, 1)
 	btn.BackgroundTransparency = 1
 	btn.Text = ""
@@ -293,8 +302,7 @@ local function makeToggle(onToggle)
 		tw(bg,   {BackgroundColor3 = bgc}, 0.15)
 	end
 
-	bindTap(btn, onToggle)
-	return {set = set, frame = bg}
+	return {set = set, frame = bg, btn = btn}
 end
 
 local toggleUI = nil
@@ -395,9 +403,7 @@ row1Lbl.ZIndex = 4
 row1Lbl.Active = false
 row1Lbl.Selectable = false
 
-toggleUI = makeToggle(function()
-	flipLag(not active, true)
-end)
+toggleUI = makeToggle()
 toggleUI.frame.Parent = main
 toggleUI.frame.Position = UDim2.new(1, -58, 0, 42)
 toggleUI.frame.ZIndex = 10
@@ -880,32 +886,41 @@ end
 
 updateTargetBtns()
 
--- ═════════ LOGIC ═════════
--- Misma lógica de remote que Cypher Ping Lagger (RemoteEvent / Unreliable / RemoteFunction)
+-- ═════════ LOGIC (idéntica a Cypher Ping Lagger) ═════════
+local pingLoopRunning = false
+
+local function setUIActive(on)
+	if toggleUI then toggleUI.set(on) end
+end
+
 local function findRemote()
 	local rrs = game:FindFirstChild("RobloxReplicatedStorage")
 	if not rrs then return nil end
-	local names = {"SetPlayerBlockList", "UpdatePlayerBlockList", "SetBlockList", "UpdateBlockList"}
-	for _, name in ipairs(names) do
+	local found = nil
+	for _, name in ipairs({"SetPlayerBlockList", "UpdatePlayerBlockList", "SetBlockList", "UpdateBlockList"}) do
 		local r = rrs:FindFirstChild(name)
 		if r and (r:IsA("RemoteEvent") or r:IsA("UnreliableRemoteEvent") or r:IsA("RemoteFunction")) then
-			return r
+			found = r
+			break
 		end
 	end
-	for _, c in ipairs(rrs:GetChildren()) do
-		if (c:IsA("RemoteEvent") or c:IsA("UnreliableRemoteEvent") or c:IsA("RemoteFunction"))
-			and c.Name:find("Block") then
-			return c
+	if not found then
+		for _, c in ipairs(rrs:GetChildren()) do
+			if (c:IsA("RemoteEvent") or c:IsA("UnreliableRemoteEvent") or c:IsA("RemoteFunction")) and c.Name:find("Block") then
+				found = c
+				break
+			end
 		end
 	end
-	return nil
+	return found
 end
+
 remote = findRemote()
 
 local function buildPayload(power)
 	local safePower = tonumber(power) or DEFAULT_CFG.power
 	if safePower < 1 then safePower = 1 end
-	local mainT = {}
+	local main = {}
 	local nested = {{}}
 	local current = nested[1]
 	for _ = 1, 186 do
@@ -916,47 +931,42 @@ local function buildPayload(power)
 	local maxRep = math.min(math.floor(safePower / 188), 10000)
 	if maxRep < 1 then maxRep = 1 end
 	for _ = 1, maxRep do
-		table.insert(mainT, nested)
+		table.insert(main, nested)
 	end
-	return mainT
+	return main
 end
-
-local function setUIActive(on)
-	if toggleUI then toggleUI.set(on) end
-end
-
-local function firePayload(payload)
-	if not remote then return false end
-	local ok = pcall(function()
-		if remote:IsA("RemoteFunction") then
-			remote:InvokeServer(payload)
-		else
-			remote:FireServer(payload)
-		end
-	end)
-	return ok
-end
-
-local pingLoopRunning = false
 
 local function runPingLoop()
-	if pingLoopRunning then return end
+	if not active or not remote then
+		pingLoopRunning = false
+		return
+	end
 	pingLoopRunning = true
-	local delay = tonumber(cfg.interval) or DEFAULT_CFG.interval
+	local currentDelay = tonumber(cfg.interval) or DEFAULT_CFG.interval
 	while active and remote and pingLoopRunning do
 		local payload = buildPayload(cfg.power)
-		local ok = firePayload(payload)
+		local ok = pcall(function()
+			if remote:IsA("RemoteFunction") then
+				remote:InvokeServer(payload)
+			else
+				remote:FireServer(payload)
+			end
+		end)
 		if not ok then
-			delay = math.min(delay * 1.5, 0.5)
+			currentDelay = math.min(currentDelay * 1.5, 0.5)
 		else
-			delay = math.max(delay * 0.995, 0.04)
+			currentDelay = math.max(currentDelay * 0.995, 0.05)
 		end
-		task.wait(delay)
+		task.wait(currentDelay)
 	end
 	pingLoopRunning = false
 end
 
-function flipLag(state, isManual)
+local function flipLag(state, isManual)
+	if not state and pingLoopRunning then
+		pingLoopRunning = false
+	end
+	active = state
 	if isManual then
 		if brainrotMode then
 			manualOverride = not state
@@ -964,39 +974,27 @@ function flipLag(state, isManual)
 			manualOverride = false
 		end
 	end
-	if not state then
-		pingLoopRunning = false
-	end
-	active = state
 	if active then
 		if not remote then
 			remote = findRemote()
-		end
-		if not remote then
-			-- reintentar un poco por si el remote aún no existe
-			task.spawn(function()
-				for _ = 1, 8 do
-					task.wait(0.25)
-					remote = findRemote()
-					if remote then break end
-				end
-				if not remote or not active then
-					active = false
-					setUIActive(false)
-					warn("[Must] Remote not found — no se puede activar el lag")
-					return
-				end
-				setUIActive(true)
-				task.spawn(runPingLoop)
-			end)
-			setUIActive(true) -- feedback visual inmediato; el loop arranca cuando haya remote
-			return
+			if not remote then
+				active = false
+				setUIActive(false)
+				return
+			end
 		end
 		setUIActive(true)
 		task.spawn(runPingLoop)
 	else
 		setUIActive(false)
 	end
+end
+
+-- Conexión del toggle IGUAL que activateBtn del Cypher (MouseButton1Click directo)
+if toggleUI and toggleUI.btn then
+	toggleUI.btn.MouseButton1Click:Connect(function()
+		flipLag(not active, true)
+	end)
 end
 
 local function applyPreset(name)
