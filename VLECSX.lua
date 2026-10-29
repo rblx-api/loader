@@ -11056,10 +11056,8 @@ print("  Bat Bypass auto-equipa bat sin bugs")
 print("  TP Down automatico 0.2s tras plataforma")
 print("  Infinite Jump intacto")
 print("===========================================")
--- VLEXUS HUB LED SELECTIVO (ajuste solicitado):
--- LED en el marco exterior de la interfaz, SOLO en los interruptores on/off,
--- en la barra de progreso y en los botones móviles derechos, incluidos TP BAT,
--- BAT BYPASS e INSTA RESET. No se ilumina la fila ni el nombre de cada opción.
+-- VLEXUS HUB LED FINAL: bordes blancos/grises siguiendo la silueta original.
+-- Alcance limitado a la interfaz principal, opciones, barra de progreso y botones móviles derechos.
 task.defer(function()
     local TweenService = game:GetService("TweenService")
     local CoreGui = game:GetService("CoreGui")
@@ -11067,14 +11065,38 @@ task.defer(function()
 
     local ledColors = ColorSequence.new({
         ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255,255,255)),
-        ColorSequenceKeypoint.new(0.24, Color3.fromRGB(105,105,115)),
-        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255,255,255)),
-        ColorSequenceKeypoint.new(0.76, Color3.fromRGB(135,135,145)),
+        ColorSequenceKeypoint.new(0.22, Color3.fromRGB(90,90,100)),
+        ColorSequenceKeypoint.new(0.48, Color3.fromRGB(255,255,255)),
+        ColorSequenceKeypoint.new(0.72, Color3.fromRGB(135,135,145)),
         ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255,255,255)),
     })
 
+    local function copyCornerIfMissing(target)
+        if not target or not target:IsA("GuiObject") then return end
+        if target:FindFirstChildOfClass("UICorner") then return end
+        local source = target:FindFirstChildWhichIsA("UICorner", true)
+        if not source and target.Parent then
+            source = target.Parent:FindFirstChildOfClass("UICorner")
+            if not source then
+                for _, sibling in ipairs(target.Parent:GetChildren()) do
+                    if sibling ~= target and sibling:IsA("GuiObject") then
+                        source = sibling:FindFirstChildOfClass("UICorner")
+                        if source then break end
+                    end
+                end
+            end
+        end
+        if source then
+            local corner = Instance.new("UICorner")
+            corner.Name = "VlexusLEDShape"
+            corner.CornerRadius = source.CornerRadius
+            corner.Parent = target
+        end
+    end
+
     local function addLED(target, strokeName, thickness)
         if not target or not target:IsA("GuiObject") or not target.Parent then return end
+        copyCornerIfMissing(target)
         local stroke = target:FindFirstChild(strokeName)
         if not stroke then
             stroke = Instance.new("UIStroke")
@@ -11082,20 +11104,9 @@ task.defer(function()
             stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
             stroke.LineJoinMode = Enum.LineJoinMode.Round
             stroke.Thickness = thickness or 2.2
-            stroke.Color = Color3.fromRGB(255,255,255)
+            stroke.Color = Color3.fromRGB(250,250,255)
             stroke.Transparency = 0
             stroke.Parent = target
-        end
-        local corner = target:FindFirstChildOfClass("UICorner")
-        if not corner then
-            -- Only copy an existing corner from this object's own visual background when available.
-            local source = target:FindFirstChildWhichIsA("UICorner", true)
-            if source then
-                corner = Instance.new("UICorner")
-                corner.Name = "VlexusLEDCornerMatch"
-                corner.CornerRadius = source.CornerRadius
-                corner.Parent = target
-            end
         end
         local gradient = stroke:FindFirstChild("VlexusLEDGradient")
         if not gradient then
@@ -11108,7 +11119,11 @@ task.defer(function()
             gradient:SetAttribute("VlexusLEDLoop", true)
             task.spawn(function()
                 while gradient.Parent and target.Parent do
-                    local tween = TweenService:Create(gradient, TweenInfo.new(2, Enum.EasingStyle.Linear), {Rotation = gradient.Rotation + 360})
+                    local tween = TweenService:Create(
+                        gradient,
+                        TweenInfo.new(2.0, Enum.EasingStyle.Linear),
+                        {Rotation = gradient.Rotation + 360}
+                    )
                     tween:Play()
                     tween.Completed:Wait()
                 end
@@ -11143,591 +11158,160 @@ task.defer(function()
         end)
     end
 
-    -- Marco exterior de la interfaz: solo el panel completo, no cada botón/categoría.
-    if main and main.Parent then addLED(main, "VlexusMainPanelLED", 2.4) end
-
-    -- SOLO el pequeño control on/off (Track con Knob y botón de clic), nunca la fila ni su texto.
-    local function isToggleSwitch(obj)
-        return obj:IsA("GuiObject")
-            and obj.Name == "Track"
-            and obj:FindFirstChild("Knob") ~= nil
-            and obj:FindFirstChildWhichIsA("GuiButton") ~= nil
-    end
-    local function decorateToggleSwitch(obj)
-        if isToggleSwitch(obj) then
-            addLED(obj, "VlexusToggleOnlyLED", 1.8)
+    local function directText(obj)
+        for _, child in ipairs(obj:GetChildren()) do
+            if child:IsA("TextLabel") or child:IsA("TextButton") then
+                local text = string.upper((child.Text or ""):gsub("%s+", " "))
+                if text ~= "" then return text end
+            end
         end
+        if obj:IsA("TextButton") or obj:IsA("TextLabel") then
+            return string.upper((obj.Text or ""):gsub("%s+", " "))
+        end
+        return ""
     end
-    local function scanMainToggles()
+
+    local function decorateMain()
         if not main or not main.Parent then return end
-        for _, obj in ipairs(main:GetDescendants()) do decorateToggleSwitch(obj) end
+        -- Contorno de la interfaz completa.
+        addLED(main, "VlexusMainPanelLED", 2.5)
+
+        -- Botones reales: categorías, cerrar/minimizar y controles de opciones.
+        for _, obj in ipairs(main:GetDescendants()) do
+            if obj:IsA("GuiButton") then
+                addLED(obj, "VlexusMainOptionLED", 2.0)
+                addPress(obj)
+            elseif obj:IsA("Frame") and obj:FindFirstChildOfClass("UICorner") then
+                -- Filas de opciones/toggles redondeadas: solo las que tienen texto directo.
+                local txt = directText(obj)
+                if txt ~= "" and obj.AbsoluteSize.Y >= 20 and obj.AbsoluteSize.Y <= 90 then
+                    addLED(obj, "VlexusOptionRowLED", 1.8)
+                end
+            end
+        end
         main.DescendantAdded:Connect(function(obj)
             task.defer(function()
-                if obj and obj.Parent then
-                    decorateToggleSwitch(obj)
-                    -- Track may arrive before its Knob/click target; check again after children are built.
-                    task.wait(0.1)
-                    if obj.Parent then decorateToggleSwitch(obj) end
+                if not obj.Parent then return end
+                if obj:IsA("GuiButton") then
+                    addLED(obj, "VlexusMainOptionLED", 2.0)
+                    addPress(obj)
+                elseif obj:IsA("Frame") and obj:FindFirstChildOfClass("UICorner") then
+                    local txt = directText(obj)
+                    if txt ~= "" and obj.AbsoluteSize.Y >= 20 and obj.AbsoluteSize.Y <= 90 then
+                        addLED(obj, "VlexusOptionRowLED", 1.8)
+                    end
                 end
             end)
         end)
     end
 
-    -- Barra de progreso: marco exterior, pista y relleno; no otros controles cercanos.
-    if pbFrame and pbFrame.Parent then addLED(pbFrame, "VlexusProgressOuterLED", 2.2) end
-    if fillRegion and fillRegion.Parent then addLED(fillRegion, "VlexusProgressTrackLED", 1.8) end
-    if progressFill and progressFill.Parent then
-        local gradient = progressFill:FindFirstChild("VlexusProgressFillGradient")
-        if not gradient then
-            gradient = Instance.new("UIGradient")
-            gradient.Name = "VlexusProgressFillGradient"
-            gradient.Parent = progressFill
-        end
-        gradient.Color = ledColors
-        if not gradient:GetAttribute("VlexusLEDLoop") then
-            gradient:SetAttribute("VlexusLEDLoop", true)
-            task.spawn(function()
-                while gradient.Parent and progressFill.Parent do
-                    local tween = TweenService:Create(gradient, TweenInfo.new(1.8, Enum.EasingStyle.Linear), {Rotation = gradient.Rotation + 360})
-                    tween:Play()
-                    tween.Completed:Wait()
-                end
-            end)
+    local function decorateProgress()
+        if pbFrame and pbFrame.Parent then addLED(pbFrame, "VlexusProgressOuterLED", 2.2) end
+        if progressFill and progressFill.Parent then
+            local track = progressFill.Parent
+            addLED(track, "VlexusProgressTrackLED", 2.0)
+            -- El relleno conserva su tamaño/posición; solo anima el gradiente de color.
+            local gradient = progressFill:FindFirstChild("VlexusProgressFillGradient")
+            if not gradient then
+                gradient = Instance.new("UIGradient")
+                gradient.Name = "VlexusProgressFillGradient"
+                gradient.Parent = progressFill
+            end
+            gradient.Color = ledColors
+            if not gradient:GetAttribute("VlexusLEDLoop") then
+                gradient:SetAttribute("VlexusLEDLoop", true)
+                task.spawn(function()
+                    while gradient.Parent and progressFill.Parent do
+                        local tween = TweenService:Create(gradient, TweenInfo.new(1.8, Enum.EasingStyle.Linear), {Rotation = gradient.Rotation + 360})
+                        tween:Play()
+                        tween.Completed:Wait()
+                    end
+                end)
+            end
         end
     end
 
-    -- Todos los botones del panel móvil derecho: LED con la silueta del botón y efecto de presión.
+    local targetNames = {
+        ["AUTO RIGHT"]=true, ["AUTO LEFT"]=true, ["TP DOWN"]=true,
+        ["DROP BR"]=true, ["INSTA RESET"]=true, ["BAT BYPASS"]=true,
+        ["BAT AIMBOT"]=true, ["TP BAT"]=true, ["LAGGER CARRY"]=true,
+        ["LAGGER"]=true, ["CARRY SPD"]=true, ["CARRY LAGGER"]=true,
+    }
+    local function normalized(text)
+        return string.upper((text or ""):gsub("%s+", " "):match("^%s*(.-)%s*$") or "")
+    end
     local function decorateRightPanel(panel)
         if not panel or not panel.Parent then return end
-        local function process(obj)
+        local function decorateOne(obj)
+            if not obj.Parent then return end
             if obj:IsA("GuiButton") then
                 addLED(obj, "VlexusRightButtonLED", 2.2)
                 addPress(obj)
             end
+            if obj:IsA("TextLabel") or obj:IsA("TextButton") then
+                local txt = normalized(obj.Text)
+                if targetNames[txt] then
+                    local target = obj
+                    local current = obj
+                    for _ = 1, 6 do
+                        local parent = current.Parent
+                        if not parent or not parent:IsA("GuiObject") then break end
+                        if parent:IsA("GuiButton") then target = parent; break end
+                        if parent:IsA("Frame") and parent:FindFirstChildOfClass("UICorner") then
+                            target = parent
+                        end
+                        current = parent
+                    end
+                    addLED(target, "VlexusRightTileLED", 2.2)
+                    -- If the tile is a Frame with a transparent click button inside, animate that button.
+                    if not target:IsA("GuiButton") then
+                        local clickButton = target:FindFirstChildWhichIsA("GuiButton", true)
+                        if clickButton then addPress(clickButton) end
+                    else
+                        addPress(target)
+                    end
+                end
+            end
         end
-        for _, obj in ipairs(panel:GetDescendants()) do process(obj) end
+        for _, obj in ipairs(panel:GetDescendants()) do pcall(decorateOne, obj) end
         panel.DescendantAdded:Connect(function(obj)
             task.defer(function()
-                if obj.Parent then
-                    process(obj)
-                    for _, child in ipairs(obj:GetDescendants()) do process(child) end
-                end
+                pcall(decorateOne, obj)
+                for _, child in ipairs(obj:GetDescendants()) do pcall(decorateOne, child) end
             end)
         end)
     end
 
-    -- Estos tres botones son ScreenGui separados; el LED va en el Frame visual clicable,
-    -- no en toda la pantalla ni en el texto por separado.
-    local function decorateNamedFloatingButton(root, guiName)
-        if not root then return end
-        local gui = root:FindFirstChild(guiName, true)
-        if not gui then return end
-        local visual = gui:FindFirstChild("Frame") or gui:FindFirstChildWhichIsA("GuiObject")
-        if visual then addLED(visual, "VlexusSpecialFloatingLED", 2.2) end
-        if gui:IsA("GuiButton") then addPress(gui) end
-        if visual and visual:IsA("GuiButton") then addPress(visual) end
-        local clickable = visual and visual:FindFirstChildWhichIsA("GuiButton", true)
-        if clickable then addPress(clickable) end
+    -- Esperar a que la interfaz principal y la barra ya estén construidas.
+    task.wait(0.25)
+    pcall(decorateMain)
+    pcall(decorateProgress)
+
+    -- Menú minimizado y botón de menú: mismo LED siguiendo su contorno.
+    if miniBtn and miniBtn.Parent then
+        addLED(miniBtn, "VlexusMenuButtonLED", 2.3)
+        addPress(miniBtn)
     end
 
-    task.wait(0.2)
-    pcall(scanMainToggles)
-    -- Keep menu button style only if this reference is the actual menu control.
-    if miniBtn and miniBtn.Parent then addLED(miniBtn, "VlexusMenuButtonLED", 2.2) end
-    for _, root in ipairs({CoreGui, PlayerGui}) do
-        if root then
-            local panel = root:FindFirstChild("RaptureDuelMobilePanel", true)
-            if panel then decorateRightPanel(panel) end
-            decorateNamedFloatingButton(root, "TpBatButton")
-            decorateNamedFloatingButton(root, "BatBypassButton")
-            decorateNamedFloatingButton(root, "InstaResetButton")
-        end
-    end
-end)
-
-
-
--- VLEXUS HUB: LED blanco/gris SOLO en todos los interruptores y en el rectángulo interior de la barra.
--- No elimina ni modifica los LED existentes de los botones móviles del lado derecho.
-task.defer(function()
-    local TweenService = game:GetService("TweenService")
-    local CoreGui = game:GetService("CoreGui")
-    local playerGui = LP and LP:FindFirstChildOfClass("PlayerGui")
-
-    local ledSequence = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255,255,255)),
-        ColorSequenceKeypoint.new(0.25, Color3.fromRGB(105,105,115)),
-        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255,255,255)),
-        ColorSequenceKeypoint.new(0.75, Color3.fromRGB(135,135,145)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255,255,255)),
-    })
-
-    local function applySwitchLed(obj)
-        if not obj or not obj:IsA("GuiObject") or not obj.Parent then return end
-        -- Only target small switch-like controls, not the row/container or its label.
-        local size = obj.AbsoluteSize
-        if size.X < 22 or size.Y < 12 or size.X > 100 or size.Y > 60 then return end
-
-        local stroke = obj:FindFirstChild("VlexusSwitchLED")
-        if not stroke then
-            stroke = Instance.new("UIStroke")
-            stroke.Name = "VlexusSwitchLED"
-            stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-            stroke.LineJoinMode = Enum.LineJoinMode.Round
-            stroke.Thickness = 2
-            stroke.Color = Color3.new(1,1,1)
-            stroke.Transparency = 0
-            stroke.Parent = obj
-        end
-
-        local gradient = stroke:FindFirstChild("LEDGradient")
-        if not gradient then
-            gradient = Instance.new("UIGradient")
-            gradient.Name = "LEDGradient"
-            gradient.Parent = stroke
-        end
-        gradient.Color = ledSequence
-
-        if not gradient:GetAttribute("VlexusSpinRunning") then
-            gradient:SetAttribute("VlexusSpinRunning", true)
-            task.spawn(function()
-                while gradient.Parent and obj.Parent do
-                    local tween = TweenService:Create(
-                        gradient,
-                        TweenInfo.new(1.8, Enum.EasingStyle.Linear),
-                        {Rotation = gradient.Rotation + 360}
-                    )
-                    tween:Play()
-                    tween.Completed:Wait()
-                end
-            end)
-        end
-    end
-
-    local function looksLikeSwitch(obj)
-        if not obj:IsA("GuiObject") then return false end
-        local size = obj.AbsoluteSize
-        if size.X < 22 or size.Y < 12 or size.X > 100 or size.Y > 60 then return false end
-        local name = string.lower(obj.Name or "")
-        local class = obj.ClassName
-        if class == "TextButton" or class == "ImageButton" then
-            if name:find("toggle") or name:find("switch") or name:find("check")
-                or name:find("option") or name:find("enabled") or name:find("enable") then
-                return true
-            end
-        end
-        -- Common Roblox toggle shape: a small pill/track with a circular knob child.
-        for _, child in ipairs(obj:GetChildren()) do
-            if child:IsA("GuiObject") then
-                local childSize = child.AbsoluteSize
-                if childSize.X >= 7 and childSize.Y >= 7
-                    and childSize.X < size.X and childSize.Y < size.Y then
-                    local ratio = size.X / math.max(size.Y, 1)
-                    if ratio >= 1.25 and ratio <= 3.5 then return true end
-                end
-            end
-        end
-        return false
-    end
-
-    local function findProgressInnerRect(root)
-        if not root then return end
-        -- Look for a narrow horizontal progress track within the known progress widget.
-        for _, obj in ipairs(root:GetDescendants()) do
-            if obj:IsA("GuiObject") then
-                local name = string.lower(obj.Name or "")
-                local size = obj.AbsoluteSize
-                local horizontal = size.X >= 180 and size.X > size.Y * 3
-                local namedProgress = name:find("progress") or name:find("bar") or name:find("fill") or name:find("track")
-                if horizontal and namedProgress then
-                    -- The interior rectangle is the track/fill parent when available.
-                    if obj.Name ~= "progressFill" and obj.Name ~= "ProgressFill" then
-                        local existing = obj:FindFirstChild("VlexusProgressInnerLED")
-                        if not existing then
-                            local stroke = Instance.new("UIStroke")
-                            stroke.Name = "VlexusProgressInnerLED"
-                            stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                            stroke.LineJoinMode = Enum.LineJoinMode.Round
-                            stroke.Thickness = 2
-                            stroke.Color = Color3.new(1,1,1)
-                            stroke.Parent = obj
-                            local gradient = Instance.new("UIGradient")
-                            gradient.Name = "LEDGradient"
-                            gradient.Color = ledSequence
-                            gradient.Parent = stroke
-                            task.spawn(function()
-                                while gradient.Parent and obj.Parent do
-                                    local tween = TweenService:Create(
-                                        gradient,
-                                        TweenInfo.new(1.8, Enum.EasingStyle.Linear),
-                                        {Rotation = gradient.Rotation + 360}
-                                    )
-                                    tween:Play()
-                                    tween.Completed:Wait()
-                                end
-                            end)
-                        end
-                    end
-                end
-            end
-        end
-    end
-
-    local function scanRoot(root)
-        if not root then return end
-        for _, obj in ipairs(root:GetDescendants()) do
-            if looksLikeSwitch(obj) then
-                pcall(applySwitchLed, obj)
-            end
-        end
-        root.DescendantAdded:Connect(function(obj)
-            task.defer(function()
-                if looksLikeSwitch(obj) then pcall(applySwitchLed, obj) end
-                for _, child in ipairs(obj:GetDescendants()) do
-                    if looksLikeSwitch(child) then pcall(applySwitchLed, child) end
-                end
-            end)
-        end)
-        findProgressInnerRect(root)
-    end
-
-    scanRoot(CoreGui)
-    scanRoot(playerGui)
-end)
-
-
-
--- VLEXUS HUB: AJUSTE SOLICITADO
--- Mantiene los LED de botones móviles e interruptores; en la interfaz solo queda el contorno exterior.
--- La barra conserva su contorno LED con grosor similar al de los botones móviles y relleno blanco/gris.
-task.defer(function()
-    local TweenService = game:GetService("TweenService")
-    local CoreGui = game:GetService("CoreGui")
-    local playerGui = LP and LP:FindFirstChildOfClass("PlayerGui")
-
-    local ledColors = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255,255,255)),
-        ColorSequenceKeypoint.new(0.25, Color3.fromRGB(115,115,125)),
-        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255,255,255)),
-        ColorSequenceKeypoint.new(0.75, Color3.fromRGB(135,135,145)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255,255,255)),
-    })
-
-    local function spinGradient(gradient, target)
-        if gradient:GetAttribute("VlexusSpinRunning") then return end
-        gradient:SetAttribute("VlexusSpinRunning", true)
-        task.spawn(function()
-            while gradient.Parent and target.Parent do
-                local tween = TweenService:Create(
-                    gradient,
-                    TweenInfo.new(1.8, Enum.EasingStyle.Linear),
-                    {Rotation = gradient.Rotation + 360}
-                )
-                tween:Play()
-                tween.Completed:Wait()
-            end
-        end)
-    end
-
-    local function setLedStroke(obj, name, thickness)
-        if not obj or not obj:IsA("GuiObject") then return end
-        local stroke = obj:FindFirstChild(name)
-        if not stroke then
-            stroke = Instance.new("UIStroke")
-            stroke.Name = name
-            stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-            stroke.LineJoinMode = Enum.LineJoinMode.Round
-            stroke.Parent = obj
-        end
-        stroke.Thickness = thickness
-        stroke.Color = Color3.new(1,1,1)
-        stroke.Transparency = 0
-        local gradient = stroke:FindFirstChild("LEDGradient")
-        if not gradient then
-            gradient = Instance.new("UIGradient")
-            gradient.Name = "LEDGradient"
-            gradient.Parent = stroke
-        end
-        gradient.Color = ledColors
-        spinGradient(gradient, obj)
-        return stroke
-    end
-
-    local function findMainInterface(root)
+    -- Panel flotante móvil derecho solamente; no tocar joystick ni botones de salto.
+    local roots = {CoreGui, PlayerGui}
+    local function findPanel(root)
         if not root then return nil end
-        -- Prefer known variable from the original script, then fall back to title-bearing GUI.
-        if main and main:IsA("GuiObject") then return main end
-        for _, obj in ipairs(root:GetDescendants()) do
-            if obj:IsA("GuiObject") then
-                local name = string.lower(obj.Name or "")
-                local textValue = ""
-                pcall(function() textValue = string.lower(obj.Text or "") end)
-                if name == "main" or (textValue:find("vlexus hub") and obj.Parent) then
-                    local candidate = obj
-                    for _ = 1, 4 do
-                        if candidate.Parent and candidate.Parent:IsA("GuiObject") then
-                            candidate = candidate.Parent
-                        else
-                            break
-                        end
-                    end
-                    if candidate:IsA("GuiObject") then return candidate end
-                end
-            end
-        end
-        return nil
+        return root:FindFirstChild("RaptureDuelMobilePanel", true)
     end
-
-    local function findProgressFrame(root)
-        -- Prefer original script variables where available.
-        if pbFrame and pbFrame:IsA("GuiObject") then return pbFrame end
-        for _, obj in ipairs(root:GetDescendants()) do
-            if obj:IsA("GuiObject") then
-                local name = string.lower(obj.Name or "")
-                local size = obj.AbsoluteSize
-                if size.X >= 180 and size.X > size.Y * 3
-                    and (name:find("progress") or name:find("bar") or name:find("track")) then
-                    return obj
-                end
-            end
-        end
-        return nil
-    end
-
-    local function adjustInterface(root)
-        local panel = findMainInterface(root)
-        if panel then
-            -- Remove only LED strokes added to descendants inside the main interface.
-            -- Preserve any non-LED/original UIStroke and keep the outer panel border.
-            for _, obj in ipairs(panel:GetDescendants()) do
-                if obj:IsA("GuiObject") then
-                    for _, child in ipairs(obj:GetChildren()) do
-                        if child:IsA("UIStroke") and child.Name ~= "VlexusInterfaceLED" then
-                            local n = string.lower(child.Name)
-                            if n:find("led") or child:FindFirstChild("LEDGradient") then
-                                child:Destroy()
-                            end
-                        end
-                    end
-                end
-            end
-            setLedStroke(panel, "VlexusInterfaceLED", 2.4)
-        end
-
-        local bar = findProgressFrame(root)
-        if bar then
-            -- Match the thicker mobile-button LED outline.
-            setLedStroke(bar, "VlexusProgressOuterLED", 2.8)
-
-            -- Color the existing fill with the same animated white/gray LED sequence.
-            local fill = progressFill
-            if not (fill and fill:IsA("GuiObject")) then
-                for _, obj in ipairs(bar:GetDescendants()) do
-                    if obj:IsA("GuiObject") then
-                        local n = string.lower(obj.Name or "")
-                        if n:find("fill") or n:find("progress") then
-                            fill = obj
-                            break
-                        end
-                    end
-                end
-            end
-            if fill and fill:IsA("GuiObject") then
-                local gradient = fill:FindFirstChild("VlexusProgressFillLEDGradient")
-                if not gradient then
-                    gradient = Instance.new("UIGradient")
-                    gradient.Name = "VlexusProgressFillLEDGradient"
-                    gradient.Parent = fill
-                end
-                gradient.Color = ledColors
-                spinGradient(gradient, fill)
-            end
-        end
-    end
-
-    for _, root in ipairs({CoreGui, playerGui}) do
+    for _, root in ipairs(roots) do
         if root then
-            pcall(adjustInterface, root)
-            root.DescendantAdded:Connect(function()
-                task.defer(function() pcall(adjustInterface, root) end)
-            end)
-        end
-    end
-end)
-
-
-
--- VLEXUS HUB: corrección puntual solicitada
--- Quita únicamente el LED aplicado al icono de micrófono y las dos líneas horizontales largas.
--- No modifica los LED de los botones del panel derecho, interruptores ni barra de progreso.
-task.defer(function()
-    local CoreGui = game:GetService("CoreGui")
-    local Players = game:GetService("Players")
-    local player = Players.LocalPlayer
-    local PlayerGui = player and player:FindFirstChildOfClass("PlayerGui")
-
-    local function cleanRoot(root)
-        if not root then return end
-        for _, obj in ipairs(root:GetDescendants()) do
-            -- miniBtn estaba recibiendo este LED, pero en esta interfaz referencia al micrófono.
-            for _, child in ipairs(obj:GetChildren()) do
-                if child:IsA("UIStroke") and child.Name == "VlexusMenuButtonLED" then
-                    child:Destroy()
-                end
-            end
-            -- Elimina solo las líneas decorativas horizontales largas creadas por el script.
-            if obj.Name == "VLEXDividerLine" or obj.Name == "VLEXDividerGlow" then
-                obj:Destroy()
-            end
-        end
-
-        root.DescendantAdded:Connect(function(obj)
-            task.defer(function()
-                if not obj or not obj.Parent then return end
-                if obj.Name == "VLEXDividerLine" or obj.Name == "VLEXDividerGlow" then
-                    obj:Destroy()
-                    return
-                end
-                for _, child in ipairs(obj:GetChildren()) do
-                    if child:IsA("UIStroke") and child.Name == "VlexusMenuButtonLED" then
-                        child:Destroy()
-                    end
-                end
-            end)
-        end)
-    end
-
-    cleanRoot(CoreGui)
-    cleanRoot(PlayerGui)
-end)
-
-
--- VLEXUS HUB: limpieza precisa de las líneas horizontales y del LED del micrófono.
--- Se conserva el LED de botones del panel derecho, interruptores y barra de progreso.
-task.defer(function()
-    local CoreGui = game:GetService("CoreGui")
-    local Players = game:GetService("Players")
-    local player = Players.LocalPlayer
-    local PlayerGui = player and player:FindFirstChildOfClass("PlayerGui")
-
-    local function isLedStroke(inst)
-        if not inst or not inst:IsA("UIStroke") then return false end
-        local n = string.lower(inst.Name or "")
-        return n:find("vlexus") ~= nil or n:find("led") ~= nil
-            or inst:FindFirstChild("LEDGradient") ~= nil
-            or inst:FindFirstChild("VlexusLEDGradient") ~= nil
-    end
-
-    local function cleanRoot(root)
-        if not root then return end
-        local function cleanObject(obj)
-            if not obj or not obj.Parent then return end
-            local name = string.lower(obj.Name or "")
-            -- Remove the script-added LED from mic/voice/chat controls only.
-            local micLike = name:find("mic") or name:find("voice") or name:find("chat")
-            if micLike and obj:IsA("GuiObject") then
-                for _, child in ipairs(obj:GetChildren()) do
-                    if isLedStroke(child) then child:Destroy() end
-                end
-            end
-            -- Remove only long, very thin horizontal GUI objects near the top/bottom edge.
-            -- This catches divider lines even if their instance names differ.
-            if obj:IsA("GuiObject") then
-                local camera = workspace.CurrentCamera
-                local viewport = camera and camera.ViewportSize or Vector2.new(1920,1080)
-                local size = obj.AbsoluteSize
-                local pos = obj.AbsolutePosition
-                local thin = size.Y > 0 and size.Y <= math.max(5, viewport.Y * 0.008)
-                local long = size.X >= viewport.X * 0.65
-                local nearEdge = pos.Y <= viewport.Y * 0.22
-                    or (pos.Y + size.Y) >= viewport.Y * 0.78
-                local n = string.lower(obj.Name or "")
-                local explicitlyLine = n:find("divider") or n:find("separator")
-                    or n:find("horizontalline") or n:find("ledline")
-                if long and thin and nearEdge then
-                    obj:Destroy()
-                    return
-                elseif explicitlyLine and long and size.X > size.Y * 15 then
-                    obj:Destroy()
-                    return
-                end
-            end
-            -- Remove known LED stroke attached directly to the microphone button reference.
-            if miniBtn and obj == miniBtn then
-                for _, child in ipairs(obj:GetChildren()) do
-                    if isLedStroke(child) then child:Destroy() end
-                end
-            end
-        end
-
-        for _, obj in ipairs(root:GetDescendants()) do
-            cleanObject(obj)
-        end
-        root.DescendantAdded:Connect(function(obj)
-            task.defer(function()
-                pcall(cleanObject, obj)
-                if obj and obj.Parent then
-                    for _, child in ipairs(obj:GetDescendants()) do
-                        pcall(cleanObject, child)
-                    end
-                end
-            end)
-        end)
-    end
-
-    cleanRoot(CoreGui)
-    cleanRoot(PlayerGui)
-end)
-
-
--- VLEXUS HUB: eliminación específica de las DOS rayas blancas superiores.
--- Espera a que la interfaz tenga tamaño/posición calculados y repite la limpieza
--- para cubrir líneas que aparezcan después. No toca botones ni otros contornos LED.
-task.defer(function()
-    local CoreGui = game:GetService("CoreGui")
-    local Players = game:GetService("Players")
-    local RunService = game:GetService("RunService")
-    local player = Players.LocalPlayer
-    local playerGui = player and player:FindFirstChildOfClass("PlayerGui")
-
-    local function sweep(root)
-        if not root then return end
-        local camera = workspace.CurrentCamera
-        local viewport = camera and camera.ViewportSize or Vector2.new(1920, 1080)
-        for _, obj in ipairs(root:GetDescendants()) do
-            if obj:IsA("GuiObject") and obj.Parent then
-                local size = obj.AbsoluteSize
-                local pos = obj.AbsolutePosition
-                local name = string.lower(obj.Name or "")
-                local isLongThin = size.X >= viewport.X * 0.65
-                    and size.Y > 0 and size.Y <= math.max(6, viewport.Y * 0.009)
-                local isInUpperBand = pos.Y >= -2 and pos.Y <= viewport.Y * 0.20
-                local namedDivider = name:find("divider") or name:find("separator")
-                    or name:find("horizontalline") or name:find("ledline")
-                    or name == "line" or name:find("vlexdivider")
-                if (isLongThin and isInUpperBand) or (namedDivider and isLongThin) then
-                    pcall(function() obj:Destroy() end)
+            local panel = findPanel(root)
+            if panel then decorateRightPanel(panel) end
+            for _, name in ipairs({"TpBatButton", "BatBypassButton", "InstaResetButton"}) do
+                local floating = root:FindFirstChild(name, true)
+                if floating and floating:IsA("GuiObject") then
+                    addLED(floating, "VlexusRightNamedButtonLED", 2.2)
+                    if floating:IsA("GuiButton") then addPress(floating) end
+                    local clickButton = floating:FindFirstChildWhichIsA("GuiButton", true)
+                    if clickButton then addPress(clickButton) end
                 end
             end
         end
     end
-
-    -- Several passes let Roblox/CoreGui finish laying out its top bar first.
-    for _ = 1, 12 do
-        RunService.Heartbeat:Wait()
-        pcall(sweep, CoreGui)
-        pcall(sweep, playerGui)
-    end
-
-    local function watch(root)
-        if not root then return end
-        root.DescendantAdded:Connect(function()
-            task.delay(0.15, function()
-                pcall(sweep, CoreGui)
-                pcall(sweep, playerGui)
-            end)
-        end)
-    end
-    watch(CoreGui)
-    watch(playerGui)
 end)
