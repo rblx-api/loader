@@ -7318,15 +7318,26 @@ function buildGui()
     titleFrame.BackgroundTransparency = 1
     titleFrame.ZIndex = 20
 
-    local titleImage = Instance.new("ImageLabel", titleFrame)
+    local titleImage = Instance.new("TextLabel", titleFrame)
     titleImage.Name = "TitleImage"
     titleImage.AnchorPoint = Vector2.new(0.5, 0.5)
-    titleImage.Size = UDim2.new(1.20, 0, 1.20, 0)
+    titleImage.Size = UDim2.new(1, 0, 1, 0)
     titleImage.Position = UDim2.new(0.5, 0, 0.5, 0)
     titleImage.BackgroundTransparency = 1
-    titleImage.Image = "rbxassetid://129749560759368"
-    titleImage.ScaleType = Enum.ScaleType.Crop
+    titleImage.Text = "Venomfat"
+    titleImage.Font = Enum.Font.GothamBlack
+    titleImage.TextSize = 52
+    titleImage.TextColor3 = Color3.fromRGB(220, 220, 230)
+    titleImage.TextStrokeTransparency = 0.4
+    titleImage.TextStrokeColor3 = Color3.fromRGB(40, 40, 50)
     titleImage.ZIndex = 21
+    local titleGrad = Instance.new("UIGradient", titleImage)
+    titleGrad.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(180, 180, 195)),
+        ColorSequenceKeypoint.new(0.45, Color3.fromRGB(245, 245, 255)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(160, 160, 175)),
+    })
+    titleGrad.Rotation = 90
 
     local closeBtn = Instance.new("TextButton", main)
     closeBtn.Size = UDim2.new(0, 32, 0, 32)
@@ -7364,15 +7375,26 @@ function buildGui()
     miniBtn.Visible = false
     Instance.new("UICorner", miniBtn).CornerRadius = UDim.new(1, 0)
 
-    local miniTitleImage = Instance.new("ImageLabel", miniBtn)
+    local miniTitleImage = Instance.new("TextLabel", miniBtn)
     miniTitleImage.Name = "MiniTitleImage"
     miniTitleImage.AnchorPoint = Vector2.new(0.5, 0.5)
-    miniTitleImage.Size = UDim2.new(0.88, 0, 0.88, 0)
+    miniTitleImage.Size = UDim2.new(0.95, 0, 0.9, 0)
     miniTitleImage.Position = UDim2.new(0.5, 0, 0.5, 0)
     miniTitleImage.BackgroundTransparency = 1
-    miniTitleImage.Image = "rbxassetid://129749560759368"
-    miniTitleImage.ScaleType = Enum.ScaleType.Crop
+    miniTitleImage.Text = "Venomfat"
+    miniTitleImage.Font = Enum.Font.GothamBlack
+    miniTitleImage.TextSize = 18
+    miniTitleImage.TextColor3 = Color3.fromRGB(220, 220, 230)
+    miniTitleImage.TextStrokeTransparency = 0.4
+    miniTitleImage.TextStrokeColor3 = Color3.fromRGB(40, 40, 50)
     miniTitleImage.ZIndex = 21
+    local miniGrad = Instance.new("UIGradient", miniTitleImage)
+    miniGrad.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(180, 180, 195)),
+        ColorSequenceKeypoint.new(0.45, Color3.fromRGB(245, 245, 255)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(160, 160, 175)),
+    })
+    miniGrad.Rotation = 90
 
     local slideTween = nil
     local mainOriginalPos = main.Position
