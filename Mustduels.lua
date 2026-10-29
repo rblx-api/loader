@@ -6097,6 +6097,63 @@ MUSIC_PLAYER_OPTIONS = MUSIC_PLAYER_OPTIONS or {
 
   -- From Calcium Duels V2 music player
   {name="Gelato Duels", url="https://files.catbox.moe/zf2z42.mp3", file="CalciumSong_8.mp3"},
+
+  -- BLESS MUSIC LIBRARY (imported)
+  {name="Bless · LAGUNAS", artist="Peso Pluma, Jasiel Nuñez", url="https://file.garden/algLafWA1jk8WMfK/LAGUNAS_spotdown.org.mp3", file="BlessMusic_01_LAGUNAS.mp3"},
+  {name="Bless · Misery Slowed + Reverb", artist="A7AX", url="https://file.garden/algLafWA1jk8WMfK/Misery%20-%20Remix%20Slowed%2BReverb_spotdown.org.mp3", file="BlessMusic_02_MiserySlowedReverb.mp3"},
+  {name="Bless · Tusa", artist="KAROL G, Nicki Minaj", url="https://file.garden/algLafWA1jk8WMfK/Tusa_spotdown.org.mp3", file="BlessMusic_03_Tusa.mp3"},
+  {name="Bless · Orula", artist="Victor Mendivil", url="https://files.catbox.moe/v20ko9.mp3", file="BlessMusic_04_Orula.mp3"},
+  {name="Bless · X.O.X.O", artist="Pedro Calderón, D' La Crem", url="https://files.catbox.moe/jghp0f.mp3", file="BlessMusic_05_XOXO.mp3"},
+  {name="Bless · Beretta", artist="El De Las R's", url="https://file.garden/algLafWA1jk8WMfK/Beretta%20-%20video%20oficial(MP3_160K).mp3", file="BlessMusic_06_Beretta.mp3", startAt=11},
+  {name="Bless · Took Her To The O", artist="King Von", url="https://file.garden/algLafWA1jk8WMfK/King%20Von%20-%20Took%20Her%20To%20The%20O%20(Lyrics)(MP3_160K).mp3", file="BlessMusic_07_TookHerToTheO.mp3"},
+  {name="Bless · LAJA - NADIE TA FRIO", artist="LAJA", url="https://file.garden/algLafWA1jk8WMfK/LAJA%20-%20NADIE%20TA%20FRIO%20(Letra)(MP3_160K).mp3", file="BlessMusic_08_LAJANADIETAFRIO.mp3"},
+  {name="Bless · HORA CERO", artist="Myke Towers", url="https://file.garden/algLafWA1jk8WMfK/Myke%20Towers%20-%20HORA%20CERO%20(Lyrics)(MP3_160K).mp3", file="BlessMusic_09_HORACERO.mp3"},
+  {name="Bless · Bling Bling", artist="Grupo Marca Registrada, Octavio Cuadras", url="https://file.garden/algLafWA1jk8WMfK/Bling%20Bling_spotdown.org.mp3", file="BlessMusic_10_BlingBling.mp3"},
+  {name="Bless · Lucid Dreams (Clean)", artist="Juice WRLD", url="https://file.garden/algLafWA1jk8WMfK/Lucid%20Dreams%20-%20Clean%20-%20Juice%20WRLD(MP3_160K).mp3", file="BlessMusic_11_LucidDreamsClean.mp3"},
+  {name="Bless · Un Pacto", artist="Victor Mendivil, El Padrinito Toys", url="https://file.garden/algLafWA1jk8WMfK/Un%20Pacto_spotdown.org.mp3", file="BlessMusic_12_UnPacto.mp3"},
+  {name="Bless · La diabla", artist="Xavi", url="https://file.garden/algLafWA1jk8WMfK/La%20Diabla_spotdown.org.mp3", file="BlessMusic_13_Ladiabla.mp3"},
+  {name="Bless · Kamikaze", artist="Natanael Cano, Uriel Gaxiola, Ganggy, Victor Mendivil", url="https://file.garden/algLafWA1jk8WMfK/Kamikaze%20(feat.%20Victor%20Mendivil)_spotdown.org.mp3", file="BlessMusic_14_Kamikaze.mp3"},
+  {name="Bless · Triple lavada", artist="Esau Ortiz, Luis R Conriquez, Oscar Maydon, Alemán, Victor Mendivil", url="https://file.garden/algLafWA1jk8WMfK/Triple%20Lavada%20%28feat.%20Victor%20Mendivil%29%20-%20Remix_spotdown.org.mp3", file="BlessMusic_15_Triplelavada.mp3"},
+  {name="Bless · Dopamina", artist="Peso Pluma, Tito Double P", url="https://file.garden/algLafWA1jk8WMfK/dopamina_spotdown.org.mp3", file="BlessMusic_16_Dopamina.mp3"},
+  {name="Bless · You", artist="Tiagz, Victor Mendivil", url="https://file.garden/algLafWA1jk8WMfK/You_spotdown.org.mp3", file="BlessMusic_17_You.mp3"},
+  {name="Bless · PRESIDENTE", artist="Gabito Ballesteros, Natanael Cano, Luis R Conriquez, Neton Vega", url="https://file.garden/algLafWA1jk8WMfK/PRESIDENTE_spotdown.org.mp3", file="BlessMusic_18_PRESIDENTE.mp3"},
+  {name="Bless · El Drip", artist="Natanael Cano", url="https://file.garden/algLafWA1jk8WMfK/El%20Drip_spotdown.org.mp3", file="BlessMusic_19_ElDrip.mp3"},
+  {name="Bless · Por Mi Zona", artist="La Santa Grifa", url="https://file.garden/algLafWA1jk8WMfK/Por%20Mi%20Zona_spotdown.org.mp3", file="BlessMusic_20_PorMiZona.mp3"},
+  {name="Bless · Cachondos Session #1", artist="Kevin AMF, Victor Mendivil, Dani Flow, Sebastian Esquivel, Eugenio Esquivel, Tiagz, Los Esquivel", url="https://file.garden/algLafWA1jk8WMfK/Cachondos%20Session%20%231%20(feat.%20Sebastian%20Esquivel%2C%20Eugenio%20Esquivel%2C%20Tiagz%20%26%20Los%20Esquivel)_spotdown.org.mp3", file="BlessMusic_21_CachondosSession1.mp3"},
+  {name="Bless · Jacobo Grinberg", artist="Victor Mendivil", url="https://file.garden/algLafWA1jk8WMfK/Jacobo%20Grinberg_spotdown.org.mp3", file="BlessMusic_22_JacoboGrinberg.mp3"},
+  {name="Bless · Punta Cana", artist="Victor Mendivil, Kevin AMF", url="https://file.garden/algLafWA1jk8WMfK/Punta%20Cana_spotdown.org.mp3", file="BlessMusic_23_PuntaCana.mp3"},
+  {name="Bless · King of Watches", artist="Omar Camacho", url="https://file.garden/algLafWA1jk8WMfK/King%20of%20Watches_spotdown.org%202.mp3", file="BlessMusic_24_KingofWatches.mp3"},
+  {name="Bless · King of Watches", artist="Victor Mendivil, Neton Vega", url="https://file.garden/algLafWA1jk8WMfK/King%20of%20Watches_spotdown.org.mp3", file="BlessMusic_25_KingofWatches.mp3"},
+  {name="Bless · Don Dimadon", artist="Remp, Oscar Maydon, Victor Mendivil, Sintapia", url="https://file.garden/algLafWA1jk8WMfK/Don%20Dimadon_spotdown.org.mp3", file="BlessMusic_26_DonDimadon.mp3"},
+  {name="Bless · Singapur (Remix)", artist="El Alfa, Chencho Corleone, Farruko, Justin Quiles, Myke Towers", url="https://file.garden/algLafWA1jk8WMfK/Singapur%20(Remix)_spotdown.org.mp3", file="BlessMusic_27_SingapurRemix.mp3"},
+  {name="Bless · Without Me", artist="Eminem", url="https://file.garden/algLafWA1jk8WMfK/Without%20Me_spotdown.org.mp3", file="BlessMusic_28_WithoutMe.mp3"},
+  {name="Bless · 3 AM", artist="Jimmy Guzman, Omar Camacho", url="https://file.garden/algLafWA1jk8WMfK/3%20AM_spotdown.org.mp3", file="BlessMusic_29_3AM.mp3"},
+  {name="Bless · STARGAZING", artist="Travis Scott", url="https://file.garden/algLafWA1jk8WMfK/STARGAZING_spotdown.org.mp3", file="BlessMusic_30_STARGAZING.mp3"},
+  {name="Bless · Gané", artist="Victor Mendivil, Gabito Ballesteros", url="https://file.garden/algLafWA1jk8WMfK/Gane%CC%81_spotdown.org.mp3", file="BlessMusic_31_Gan.mp3"},
+  {name="Bless · Te Lo Doy", artist="Tiagz, El Malilla, El Bogueto", url="https://file.garden/algLafWA1jk8WMfK/Te%20Lo%20Doy_spotdown.org.mp3", file="BlessMusic_32_TeLoDoy.mp3"},
+  {name="Bless · Gramos", artist="Jimmy Guzman", url="https://file.garden/algLafWA1jk8WMfK/Gramos_spotdown.org.mp3", file="BlessMusic_33_Gramos.mp3"},
+  {name="Bless · GOET", artist="Victor Mendivil", url="https://file.garden/algLafWA1jk8WMfK/GOET_spotdown.org.mp3", file="BlessMusic_34_GOET.mp3"},
+  {name="Bless · Mercenarios", artist="Capo, Victor Mendivil", url="https://file.garden/algLafWA1jk8WMfK/Mercenarios_spotdown.org.mp3", file="BlessMusic_35_Mercenarios.mp3"},
+  {name="Bless · Emparejé", artist="Russo, Luis R Conriquez", url="https://file.garden/algLafWA1jk8WMfK/Empareje%CC%81_spotdown.org.mp3", file="BlessMusic_36_Emparej.mp3"},
+  {name="Bless · squabble up", artist="Kendrick Lamar", url="https://file.garden/algLafWA1jk8WMfK/squabble%20up_spotdown.org.mp3", file="BlessMusic_37_squabbleup.mp3"},
+  {name="Bless · ROSA PASTEL", artist="Peso Pluma, Jasiel Nuñez", url="https://file.garden/algLafWA1jk8WMfK/ROSA%20PASTEL_spotdown.org.mp3", file="BlessMusic_38_ROSAPASTEL.mp3"},
+  {name="Bless · LUNA", artist="Peso Pluma, Junior H", url="https://file.garden/algLafWA1jk8WMfK/LUNA_spotdown.org.mp3", file="BlessMusic_39_LUNA.mp3"},
+  {name="Bless · NUEVA VIDA", artist="Peso Pluma", url="https://file.garden/algLafWA1jk8WMfK/NUEVA%20VIDA_spotdown.org.mp3", file="BlessMusic_40_NUEVAVIDA.mp3"},
+  {name="Bless · Juan Martha", artist="La Original Banda El Limón de Salvador Lizárraga, Julio Preciado", url="https://file.garden/algLafWA1jk8WMfK/Juan%20Martha_spotdown.org.mp3", file="BlessMusic_41_JuanMartha.mp3"},
+  {name="Bless · Rojo Vivo", artist="Jesus Parra", url="https://file.garden/algLafWA1jk8WMfK/Rojo%20Vivo_spotdown.org.mp3", file="BlessMusic_42_RojoVivo.mp3"},
+  {name="Bless · Vuelvo Mejor - Remix", artist="NTG, Arcángel", url="https://file.garden/algLafWA1jk8WMfK/Vuelvo%20Mejor%20-%20Remix_spotdown.org.mp3", file="BlessMusic_43_VuelvoMejorRemix.mp3"},
+  {name="Bless · DEMBOW BÉLICO", artist="Tito Double P, Joel De La P, Luis R Conriquez", url="https://file.garden/algLafWA1jk8WMfK/DEMBOW%20BE%CC%81LICO_spotdown.org.mp3", file="BlessMusic_44_DEMBOWBLICO.mp3"},
+  {name="Bless · No Nací Para Caerle Bien", artist="La Santa Grifa", url="https://file.garden/algLafWA1jk8WMfK/No%20Naci%CC%81%20Para%20Caerle%20Bien_spotdown.org.mp3", file="BlessMusic_45_NoNacParaCaerleBien.mp3"},
+  {name="Bless · Alaska", artist="Victor Mendivil, Hades66", url="https://file.garden/algLafWA1jk8WMfK/Alaska_spotdown.org.mp3", file="BlessMusic_46_Alaska.mp3"},
+  {name="Bless · Tony Montana", artist="Victor Mendivil, Yng Lvcas", url="https://file.garden/algLafWA1jk8WMfK/Tony%20Montana_spotdown.org.mp3", file="BlessMusic_47_TonyMontana.mp3"},
+  {name="Bless · Amnesia", artist="La Santa Grifa", url="https://file.garden/algLafWA1jk8WMfK/Amnesia_spotdown.org.mp3", file="BlessMusic_48_Amnesia.mp3"},
+  {name="Bless · Mal Ejemplo", artist="La Santa Grifa", url="https://file.garden/algLafWA1jk8WMfK/Mal%20Ejemplo_spotdown.org.mp3", file="BlessMusic_49_MalEjemplo.mp3"},
+  {name="Bless · Cholo 2", artist="Victor Mendivil, Eladio Carrion", url="https://file.garden/algLafWA1jk8WMfK/Cholo%202_spotdown.org.mp3", file="BlessMusic_50_Cholo2.mp3"},
+  {name="Bless · OLIVIA LA FLAKA", artist="Natanael Cano, Tito Double P, Victor Mendivil, Ovi", url="https://file.garden/algLafWA1jk8WMfK/SpotiDownloader.com%20-%20OLIVIA%20LA%20FLAKA%20-%20Natanael%20Cano.mp3", file="BlessMusic_51_OLIVIALAFLAKA.mp3"},
+  {name="Bless · redrum", artist="21 Savage", url="https://file.garden/algLafWA1jk8WMfK/redrum_spotdown.org%202.mp3", file="BlessMusic_52_redrum.mp3"},
+  {name="Bless · Paris Hilton", artist="$HUPE, Victor Mendivil", url="https://file.garden/algLafWA1jk8WMfK/Paris%20Hilton_spotdown.org.mp3", file="BlessMusic_53_ParisHilton.mp3"},
+  {name="Bless · Dandy Hats", artist="El Rabbanito", url="https://file.garden/algLafWA1jk8WMfK/Dandy%20Hats_spotdown.org.mp3", file="BlessMusic_54_DandyHats.mp3"},
+  {name="Bless · Mi Terre CLN", artist="Fuerza Regida, Juanpa Salazar", url="https://file.garden/algLafWA1jk8WMfK/Mi%20Terre%20CLN_spotdown.org.mp3", file="BlessMusic_55_MiTerreCLN.mp3"},
 }
 
 -- Play custom sound from rbxassetid (music player)
@@ -13424,21 +13481,6 @@ end
 pcall(_G.CalciumAutoPlay.restore)
 pcall(_G.CalciumAutoPlay.watch)
 
--- AUTO PLAY MUST ALWAYS START OFF.
--- Plot detection/restore may remember the side, but must never activate movement.
--- Only the Auto Play GUI button or the configured AutoPlay keybind may enable it.
-pcall(function()
-  if _G.CalciumSetAutoLeft then _G.CalciumSetAutoLeft(false) end
-  if _G.CalciumSetAutoRight then _G.CalciumSetAutoRight(false) end
-  autoLeftEnabled = false
-  autoRightEnabled = false
-  _G.CalciumAutoLeftOn = false
-  _G.CalciumAutoRightOn = false
-  if _G.CalciumAutoPlay and _G.CalciumAutoPlay.updateVisual then
-    _G.CalciumAutoPlay.updateVisual()
-  end
-end)
-
 LP.CharacterAdded:Connect(function(char)
   _G._CalciumWaitCharReady(char, 10)
   -- Auto-left/right remain off after respawn unless manually re-enabled.
@@ -16524,7 +16566,7 @@ end
 
 local pages = {}
 local tabButtons = {}
-local tabNames = {"MOVEMENT", "COMBAT", "KEYBINDS", "VISUALS", "PANELS", "SETTINGS", "COMPAT", "SPOTIFY", "MESSAGES"}
+local tabNames = {"MOVEMENT", "COMBAT", "KEYBINDS", "VISUALS", "PANELS", "SETTINGS", "SPOTIFY", "MESSAGES"}
 local activeTab = nil -- nil = on home screen
 _G._CalciumPhoneOnHome = true
 
@@ -16958,13 +17000,6 @@ local APP_META = {
     color2 = Color3.fromRGB(20, 120, 80),
     icon = "⚙️",
     sub = "config",
-  },
-  COMPAT = {
-    label = "Compat",
-    color = Color3.fromRGB(150, 150, 165),
-    color2 = Color3.fromRGB(55, 55, 65),
-    icon = "🔧",
-    sub = "compatibility tools",
   },
   SPOTIFY = {
     label = "Spotify",
@@ -38518,19 +38553,7 @@ task.spawn(function()
         end)
       end)
     end
-    local lastSkipClick = 0
-    skip.MouseButton1Click:Connect(function()
-      local now = os.clock()
-      if now - lastSkipClick <= 0.45 then
-        finish()
-      else
-        lastSkipClick = now
-        skip.Text = "TAP AGAIN"
-        task.delay(0.5, function()
-          if alive and skip and skip.Parent then skip.Text = "SKIP" end
-        end)
-      end
-    end)
+    skip.MouseButton1Click:Connect(finish)
     task.delay(5.8, function() finish() end)
 
     -- particles
@@ -38603,121 +38626,6 @@ task.spawn(function()
 end)
 
 
--- ===================== COMPAT: PING LAGGER WINDOW CONTROLS =====================
-do
-  local compatPage = pages and pages["COMPAT"]
-  if compatPage then
-    local function makeCompatButton(text, order, callback)
-      local button = Instance.new("TextButton")
-      button.Name = text:gsub("%s+", "")
-      button.Size = UDim2.new(1, -8, 0, 42)
-      button.BackgroundColor3 = Color3.fromRGB(24, 24, 30)
-      button.BorderSizePixel = 0
-      button.Text = text
-      button.TextColor3 = Color3.fromRGB(245, 245, 250)
-      button.Font = Enum.Font.GothamBold
-      button.TextSize = 13
-      button.AutoButtonColor = true
-      button.LayoutOrder = order
-      button.ZIndex = 10
-      button.Parent = compatPage
-      local c = Instance.new("UICorner")
-      c.CornerRadius = UDim.new(0, 10)
-      c.Parent = button
-      local st = Instance.new("UIStroke")
-      st.Color = Color3.fromRGB(95, 95, 110)
-      st.Transparency = 0.35
-      st.Parent = button
-      button.Activated:Connect(callback)
-      return button
-    end
-
-    local note = Instance.new("TextLabel")
-    note.Name = "PingLaggerInfo"
-    note.Size = UDim2.new(1, -8, 0, 62)
-    note.BackgroundTransparency = 1
-    note.Text = "PING LAGGER UI CONTROLS\nOpen or close the panel here. Network-spam lag behavior is not enabled."
-    note.TextColor3 = Color3.fromRGB(190, 190, 205)
-    note.Font = Enum.Font.Gotham
-    note.TextSize = 11
-    note.TextWrapped = true
-    note.LayoutOrder = 1
-    note.ZIndex = 10
-    note.Parent = compatPage
-
-    makeCompatButton("OPEN PING LAGGER", 2, function()
-      local pg = PlayerGui or (LP and LP:FindFirstChildOfClass("PlayerGui"))
-      if not pg then return end
-      local existing = pg:FindFirstChild("MustPingLaggerLauncherGui")
-      if existing then existing:Destroy() end
-      local sg = Instance.new("ScreenGui")
-      sg.Name = "MustPingLaggerLauncherGui"
-      sg.ResetOnSpawn = false
-      sg.IgnoreGuiInset = true
-      sg.DisplayOrder = 99990
-      sg.Parent = pg
-      local panel = Instance.new("Frame")
-      panel.Name = "Panel"
-      panel.AnchorPoint = Vector2.new(0.5, 0.5)
-      panel.Position = UDim2.fromScale(0.5, 0.5)
-      panel.Size = UDim2.fromOffset(300, 150)
-      panel.BackgroundColor3 = Color3.fromRGB(8, 8, 8)
-      panel.BorderSizePixel = 0
-      panel.Parent = sg
-      Instance.new("UICorner", panel).CornerRadius = UDim.new(0, 14)
-      local stroke = Instance.new("UIStroke", panel)
-      stroke.Color = Color3.fromRGB(95, 95, 105)
-      stroke.Thickness = 1.2
-      local title = Instance.new("TextLabel", panel)
-      title.BackgroundTransparency = 1
-      title.Position = UDim2.fromOffset(14, 12)
-      title.Size = UDim2.new(1, -28, 0, 28)
-      title.Font = Enum.Font.GothamBlack
-      title.Text = "MUST PING LAGGER"
-      title.TextColor3 = Color3.new(1, 1, 1)
-      title.TextSize = 15
-      title.TextXAlignment = Enum.TextXAlignment.Left
-      local desc = Instance.new("TextLabel", panel)
-      desc.BackgroundTransparency = 1
-      desc.Position = UDim2.fromOffset(14, 44)
-      desc.Size = UDim2.new(1, -28, 0, 48)
-      desc.Font = Enum.Font.Gotham
-      desc.Text = "Panel opened. Network-spam lag mode is disabled."
-      desc.TextColor3 = Color3.fromRGB(190, 190, 200)
-      desc.TextSize = 12
-      desc.TextWrapped = true
-      desc.TextXAlignment = Enum.TextXAlignment.Left
-      local close = Instance.new("TextButton", panel)
-      close.Position = UDim2.new(0, 14, 1, -42)
-      close.Size = UDim2.new(1, -28, 0, 30)
-      close.BackgroundColor3 = Color3.fromRGB(235, 235, 240)
-      close.Text = "CLOSE PING LAGGER"
-      close.TextColor3 = Color3.fromRGB(10, 10, 10)
-      close.Font = Enum.Font.GothamBold
-      close.TextSize = 11
-      close.AutoButtonColor = true
-      Instance.new("UICorner", close).CornerRadius = UDim.new(0, 8)
-      close.Activated:Connect(function() sg:Destroy() end)
-    end)
-
-    makeCompatButton("CLOSE PING LAGGER", 3, function()
-      local pg = PlayerGui or (LP and LP:FindFirstChildOfClass("PlayerGui"))
-      if not pg then return end
-      for _, name in ipairs({"MustPingLaggerLauncherGui", "MustPingLaggerGui", "GalaxyPingLaggerGui"}) do
-        local gui = pg:FindFirstChild(name)
-        if gui then pcall(function() gui:Destroy() end) end
-      end
-      pcall(function()
-        local cg = game:GetService("CoreGui")
-        for _, name in ipairs({"MustPingLaggerLauncherGui", "MustPingLaggerGui", "GalaxyPingLaggerGui"}) do
-          local gui = cg:FindFirstChild(name)
-          if gui then pcall(function() gui:Destroy() end) end
-        end
-      end)
-    end)
-  end
-end
-
 -- ===================== ÚNICA INTRO: PASTED_CONTENT_2 =====================
 task.spawn(function()
   pcall(function()
@@ -38764,7 +38672,7 @@ task.spawn(function()
     title.Position = UDim2.new(0.5, 0, 0.78, 0)
     title.Size = UDim2.new(0.9, 0, 0, 60)
     title.BackgroundTransparency = 1
-    title.Text = "MUST HUB DUELS"
+    title.Text = "MUST DUELS"
     title.TextColor3 = Color3.new(1, 1, 1)
     title.TextStrokeColor3 = Color3.new(0, 0, 0)
     title.TextStrokeTransparency = 0.25
@@ -38793,20 +38701,8 @@ task.spawn(function()
       pcall(function() if type(stopIntroPlayback) == "function" then stopIntroPlayback() end end)
       pcall(function() gui:Destroy() end)
     end
-    local lastSkipClick = 0
-    skip.Activated:Connect(function()
-      local now = os.clock()
-      if now - lastSkipClick <= 0.45 then
-        closeIntro()
-      else
-        lastSkipClick = now
-        skip.Text = "TAP AGAIN"
-        task.delay(0.5, function()
-          if not closed and skip and skip.Parent then skip.Text = "SKIP" end
-        end)
-      end
-    end)
-    task.delay(6, closeIntro)
+    skip.Activated:Connect(closeIntro)
+    task.delay(120, closeIntro)
     task.spawn(function()
       local current = 1
       while not closed and gui.Parent do
@@ -39135,7 +39031,7 @@ end)
       local shortMap = {
         MOVEMENT = "Speed", COMBAT = "Combat", KEYBINDS = "Keys",
         VISUALS = "Visual", SETTINGS = "Config", SPOTIFY = "Music",
-        PANELS = "Panels", MESSAGES = "Msgs", COMPAT = "Compat",
+        PANELS = "Panels", MESSAGES = "Msgs",
       }
       button.Text = shortMap[name] or (name:sub(1, 1) .. name:sub(2):lower())
       button.TextColor3 = Color3.fromRGB(150, 150, 165)
