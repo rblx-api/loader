@@ -198,10 +198,10 @@ BAT_V2_HIT_DIST = 4.5
 _isDraggingButton = false
 
 backgroundIndex = 1
-backgroundImages = {"78418040549415", "86952050926223", "91411557607071", "130901785905213", "88139170832911"}
+backgroundImages = {"129085053275432"}
 
-backgroundImageTransparency = 1
-backgroundMode = "None"
+backgroundImageTransparency = 0.06
+backgroundMode = "Background 1"
 backgroundSelectorLabel = nil
 miniBackgroundImage = nil
 autoGrabBackgroundImage = nil
