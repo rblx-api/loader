@@ -1,12 +1,3 @@
--- 🔐 USUARIOS AUTORIZADOS
-local authorizedUsers = {"wasonoa900"}
-local Players = game:GetService("Players")
-local localPlayer = Players.LocalPlayer
-if not localPlayer then return end
-local isAuthorized = false
-for _, u in ipairs(authorizedUsers) do if u == localPlayer.Name then isAuthorized = true break end end
-if not isAuthorized then pcall(function() localPlayer:Kick("RESET HWID - No autorizado") end) return end
-
 (function()
 local Players = game:GetService('Players'); local player = Players.LocalPlayer; local TweenService = game:GetService('TweenService'); local Lighting = game:GetService('Lighting');
 local M = {}
@@ -935,6 +926,9 @@ M.FONT_NAMES = {"None", "Coding Font", "Summer", "Beachy", "Scary", "Bangers"}
 M.mobBtnTransparencyEnabled = false
 M.perButtonDragEnabled = true
 M.antiKickEnabled = false
+M.antiE01Enabled = false
+M._antiE01GuardRunning = false
+M._antiE01CarryLock = false
 M.brainrotDetected = false
 M.safeModeEnabled = false
 M.mirrorTPDownEnabled = false
@@ -3982,6 +3976,111 @@ function M.startAutoRight()
         end
     end)
 end
+-- ANTI E01 GUARD (preventivo; no evita expulsiones decididas por el servidor)
+function M.isCarryingBrainrot()
+    local char = player.Character
+    if not char then return false end
+    for _, tool in ipairs(char:GetChildren()) do
+        if tool:IsA("Tool") then
+            local n = tostring(tool.Name):lower()
+            if n:find("brainrot", 1, true) or n:find("skibidi", 1, true) or n:find("toilet", 1, true) then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+function M.enableAntiE01Guard()
+    M.antiE01Enabled = true
+    if M._antiE01GuardRunning then return end
+    M._antiE01GuardRunning = true
+    task.spawn(function()
+        while M.antiE01Enabled do
+            local carrying = M.isCarryingBrainrot and M.isCarryingBrainrot() or false
+            M._antiE01CarryLock = carrying
+            if carrying then
+                M.brainrotDetected = true
+                -- Evita que el motor local fuerce velocidad mientras transportas el objeto.
+                M.lastMoveDir = Vector3.zero
+            end
+            task.wait(0.2)
+        end
+        M._antiE01CarryLock = false
+        M._antiE01GuardRunning = false
+    end)
+end
+
+function M.disableAntiE01Guard()
+    M.antiE01Enabled = false
+    M._antiE01CarryLock = false
+end
+
+-- COMBAT GUARD: alerta de daño/stun/knockback; no bloquea golpes ni altera la física del servidor.
+function M.stopCombatGuard()
+    M.combatGuardEnabled = false
+    if M._combatHealthConn then
+        M._combatHealthConn:Disconnect()
+        M._combatHealthConn = nil
+    end
+    if M._combatStateConn then
+        M._combatStateConn:Disconnect()
+        M._combatStateConn = nil
+    end
+    M._combatGuardRunning = false
+end
+
+function M.startCombatGuard()
+    M.stopCombatGuard()
+    M.combatGuardEnabled = true
+    local char = player.Character
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    if not hum then return end
+
+    local lastHealth = hum.Health
+    M._combatHealthConn = hum.HealthChanged:Connect(function(hp)
+        if not M.combatGuardEnabled then return end
+        if hp < lastHealth and M.notify then
+            pcall(function() M.notify("COMBAT ALERT: recibiste daño (" .. tostring(math.floor(lastHealth - hp)) .. ")") end)
+        end
+        lastHealth = hp
+    end)
+
+    M._combatStateConn = hum.StateChanged:Connect(function(_, newState)
+        if not M.combatGuardEnabled then return end
+        if newState == Enum.HumanoidStateType.FallingDown
+            or newState == Enum.HumanoidStateType.Ragdoll
+            or newState == Enum.HumanoidStateType.Physics then
+            if M.notify then pcall(function() M.notify("COMBAT ALERT: posible stun/knockback") end) end
+        end
+    end)
+
+    if root and not M._combatGuardRunning then
+        M._combatGuardRunning = true
+        task.spawn(function()
+            while M.combatGuardEnabled do
+                local currentChar = player.Character
+                local currentRoot = currentChar and currentChar:FindFirstChild("HumanoidRootPart")
+                if currentRoot then
+                    local v = currentRoot.AssemblyLinearVelocity
+                    local horizontal = Vector3.new(v.X, 0, v.Z).Magnitude
+                    if horizontal > 85 and not M._combatKnockbackAlertAt then
+                        M._combatKnockbackAlertAt = tick()
+                        if M.notify then pcall(function() M.notify("KNOCKBACK ALERT: movimiento brusco detectado") end) end
+                    elseif horizontal <= 85 then
+                        M._combatKnockbackAlertAt = nil
+                    elseif M._combatKnockbackAlertAt and tick() - M._combatKnockbackAlertAt > 3 then
+                        M._combatKnockbackAlertAt = nil
+                    end
+                end
+                task.wait(0.15)
+            end
+            M._combatGuardRunning = false
+        end)
+    end
+end
+
 function M.enableAntiKick()
     M.antiKickEnabled = true
     task.spawn(function()
@@ -9788,6 +9887,21 @@ function M.buildGui()
         if M.notify then pcall(function() M.notify("Drop Type: " .. M.dropMode) end) end
         savePrimeHubFeKlanConfig()
     end)
+    uiSectionHeader(PMech, "SAFETY / COMBAT GUARD")
+    uiToggleRow(PMech, "Anti E01 Guard", M.antiE01Enabled == true, function(on)
+        if on then M.enableAntiE01Guard() else M.disableAntiE01Guard() end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PMech, "Combat / Anti Bat Alert", M.combatGuardEnabled == true, function(on)
+        if on then M.startCombatGuard() else M.stopCombatGuard() end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PMech, "Carry Safe Mode", M.carrySafeModeEnabled == true, function(on)
+        M.carrySafeModeEnabled = on == true
+        if on then M.enableAntiE01Guard() end
+        if M.notify then pcall(function() M.notify(on and "Carry Safe Mode: ON" or "Carry Safe Mode: OFF") end) end
+        savePrimeHubFeKlanConfig()
+    end)
     uiSectionHeader(PMech, "AUTO STEAL")
     uiToggleRow(PMech, "Auto Steal", (M.Steal and M.Steal.AutoStealEnabled == true) or (M.autoGrabV1Enabled == true), function(on)
         if on then
@@ -10328,6 +10442,11 @@ function M.buildGui()
         end)
     end
 
+    uiToggleRow(PUtil, "Anti E01 Guard", M.antiE01Enabled == true, function(on)
+        if on then M.enableAntiE01Guard() else M.disableAntiE01Guard() end
+        if M.notify then pcall(function() M.notify(on and "Anti E01 Guard: ON" or "Anti E01 Guard: OFF") end) end
+        savePrimeHubFeKlanConfig()
+    end)
     uiToggleRow(PUtil, "Anti-Kick", M.antiKickEnabled, function(on) M.antiKickEnabled = on; if on then M.enableAntiKick() else M.disableAntiKick() end; savePrimeHubFeKlanConfig() end)
     uiToggleRow(PUtil, "Safe Mode", M.safeModeEnabled, function(on) M.safeModeEnabled = on; if on then M.enableSafeMode() else M.disableSafeMode() end; savePrimeHubFeKlanConfig() end)
     uiSectionHeader(PUtil, "MUSIC")
@@ -10879,6 +10998,12 @@ local function _voidApplyVelocitySpeed(speed)
     local hum = char:FindFirstChildOfClass("Humanoid")
     local root = char:FindFirstChild("HumanoidRootPart")
     if not hum or not root then return end
+
+    -- Anti E01 Guard: no aplicar velocidad personalizada mientras se lleva un Brainrot.
+    if M.antiE01Enabled and (M._antiE01CarryLock or (M.isCarryingBrainrot and M.isCarryingBrainrot())) then
+        M.lastMoveDir = Vector3.zero
+        return
+    end
 
     if M.antiDieEnabled and root.AssemblyLinearVelocity.Magnitude > FLING_THRESHOLD then
         root.AssemblyLinearVelocity = Vector3.new(0, root.AssemblyLinearVelocity.Y, 0)
