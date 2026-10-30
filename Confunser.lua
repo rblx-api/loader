@@ -1,46 +1,59 @@
--- clean by prince
+-- Sure Hub | Confuser
+-- Discord: https://discord.gg/DhyJ3N6pP
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
-local GuiService = game:GetService("CoreGui")
+local CoreGui = game:GetService("CoreGui")
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
-local Stats = game:GetService("Stats")
 local LP = Players.LocalPlayer
 
-local CONFIG_FILE = "VynxConfuserConfig2.json"
+local CONFIG_FILE = "SureHubConfig.json"
+local DISCORD_LINK = "https://discord.gg/DhyJ3N6pP"
 
+-- Fuentes
+local FONT_TITLE = Enum.Font.Michroma
+local FONT_LABEL = Enum.Font.Jura
+local FONT_VALUE = Enum.Font.Oswald
+
+-- Paleta (negros + acentos rojos de estado)
 local COLORS = {
-    bg          = Color3.fromRGB(8, 6, 12),
-    bgDark      = Color3.fromRGB(3, 2, 6),
-    frame       = Color3.fromRGB(14, 9, 22),
-    stroke      = Color3.fromRGB(125, 55, 190),
-    text        = Color3.fromRGB(255, 255, 255),
-    textDim     = Color3.fromRGB(185, 145, 225),
-    accent      = Color3.fromRGB(160, 70, 235),
-    activeGreen = Color3.fromRGB(190, 105, 255),
-    inactiveRed = Color3.fromRGB(110, 45, 155),
-    buttonBg    = Color3.fromRGB(24, 13, 36),
-    toggleOn    = Color3.fromRGB(190, 105, 255),
-    toggleOff   = Color3.fromRGB(35, 25, 45)}
+    bg          = Color3.fromRGB(10, 3, 4),
+    bgDark      = Color3.fromRGB(0, 0, 0),
+    panel       = Color3.fromRGB(0, 0, 0),
+    stroke      = Color3.fromRGB(0, 0, 0),
+    text        = Color3.fromRGB(255, 235, 235),
+    textDim     = Color3.fromRGB(200, 90, 95),
+    accent      = Color3.fromRGB(0, 0, 0),
+    accentHi    = Color3.fromRGB(235, 35, 45),
+    toggleOn    = Color3.fromRGB(220, 30, 40),
+    toggleOff   = Color3.fromRGB(0, 0, 0),
+    statusOff   = Color3.fromRGB(90, 25, 28)}
+
+-- Fondo único
+local BACKGROUND_ID = "106897611019941"
+
+local SCALE_MIN, SCALE_MAX, SCALE_STEP = 0.5, 1.5, 0.1
 
 local State = {
-    confuserOn = false,
-    speed      = 50,
-    lockGui    = false,
+    confuserOn    = false,
+    speed         = 50,
+    lockGui       = false,
     activeOnSteal = false,
-    guiPos     = {XScale = 0.5, XOffset = -115, YScale = 0.5, YOffset = -65}}
+    guiScale      = 1,
+    guiPos        = {XScale = 0.5, XOffset = -135, YScale = 0.5, YOffset = -180}}
 
 local toggleKey = Enum.KeyCode.X
 
 local function saveConfig()
     local cfg = {
-        toggleKey = toggleKey.Name,
-        speed     = State.speed,
-        lockGui   = State.lockGui,
+        toggleKey     = toggleKey.Name,
+        speed         = State.speed,
+        lockGui       = State.lockGui,
         activeOnSteal = State.activeOnSteal,
-        guiPos    = State.guiPos}
+        guiScale      = State.guiScale,
+        guiPos        = State.guiPos}
     pcall(function()
         if writefile then
             writefile(CONFIG_FILE, HttpService:JSONEncode(cfg))
@@ -62,12 +75,18 @@ local function loadConfig()
     if cfg.speed then State.speed = math.max(0, tonumber(cfg.speed) or 50) end
     if cfg.lockGui ~= nil then State.lockGui = cfg.lockGui end
     if cfg.activeOnSteal ~= nil then State.activeOnSteal = cfg.activeOnSteal end
+    if cfg.guiScale then
+        State.guiScale = math.clamp(tonumber(cfg.guiScale) or 1, SCALE_MIN, SCALE_MAX)
+    end
     if cfg.guiPos and type(cfg.guiPos) == "table" then
         State.guiPos = cfg.guiPos
     end
 end
 loadConfig()
 
+----------------------------------------------------------------
+-- SPIN
+----------------------------------------------------------------
 local Spin = {
     enabled = false,
     conn    = nil,
@@ -117,6 +136,9 @@ local function stopSpin()
     end
 end
 
+----------------------------------------------------------------
+-- ANTI DIE
+----------------------------------------------------------------
 local antiDieEnabled = false
 local antiDieCharConns = {}
 local antiDieCharAddedConn = nil
@@ -218,8 +240,11 @@ local function setConfuser(on)
     if on then startSpin() else stopSpin() end
 end
 
-for _, name in pairs({"BakiBypass", "BakiwareConfuser", "BakiAntiDie", "VynxConfuser"}) do
-    local old = GuiService:FindFirstChild(name)
+----------------------------------------------------------------
+-- LIMPIEZA DE GUIS ANTERIORES
+----------------------------------------------------------------
+for _, name in pairs({"BakiBypass", "BakiwareConfuser", "BakiAntiDie", "VynxConfuser", "GhoxtHub", "MustHub", "MustConfuser", "SureHub", "SureConfuser"}) do
+    local old = CoreGui:FindFirstChild(name)
     if old then old:Destroy() end
     local pg = LP:FindFirstChild("PlayerGui")
     if pg then
@@ -228,352 +253,483 @@ for _, name in pairs({"BakiBypass", "BakiwareConfuser", "BakiAntiDie", "VynxConf
     end
 end
 
+----------------------------------------------------------------
+-- GUI
+----------------------------------------------------------------
+local function corner(parent, radius)
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, radius)
+    c.Parent = parent
+    return c
+end
+
+local function stroke(parent, color, thickness, transparency)
+    local s = Instance.new("UIStroke")
+    s.Color = color
+    s.Thickness = thickness or 1
+    s.Transparency = transparency or 0
+    s.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    s.Parent = parent
+    return s
+end
+
+local FRAME_W, FRAME_H = 270, 360
+local CORNER = 18
+local HEADER_H = 50
+
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "VynxConfuser"
-screenGui.Parent = GuiService
+screenGui.Name = "SureHub"
+screenGui.Parent = CoreGui
 screenGui.ResetOnSpawn = false
 screenGui.IgnoreGuiInset = true
 
-local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 260, 0, 336)
+-- Panel principal (con la única imagen de fondo)
+local mainFrame = Instance.new("ImageLabel")
+mainFrame.Name = "Main"
+mainFrame.Size = UDim2.new(0, FRAME_W, 0, FRAME_H)
 mainFrame.Position = UDim2.new(State.guiPos.XScale, State.guiPos.XOffset, State.guiPos.YScale, State.guiPos.YOffset)
 mainFrame.BackgroundColor3 = COLORS.bg
-mainFrame.BackgroundTransparency = 1
+mainFrame.BackgroundTransparency = 0
+mainFrame.BorderSizePixel = 0
+mainFrame.Image = "rbxassetid://" .. BACKGROUND_ID
+mainFrame.ImageColor3 = Color3.fromRGB(215, 215, 215)
+mainFrame.ImageTransparency = 0
+mainFrame.ScaleType = Enum.ScaleType.Crop
 mainFrame.ClipsDescendants = true
 mainFrame.Parent = screenGui
-Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 10)
+corner(mainFrame, CORNER)
 
+-- Escala de la GUI
+local uiScale = Instance.new("UIScale")
+uiScale.Scale = State.guiScale
+uiScale.Parent = mainFrame
+
+-- Borde animado NEGRO
 local borderStroke = Instance.new("UIStroke")
-borderStroke.Thickness = 1.5
+borderStroke.Thickness = 2
 borderStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 borderStroke.Parent = mainFrame
 
 local borderGradient = Instance.new("UIGradient")
 borderGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(160, 70, 235)),
-    ColorSequenceKeypoint.new(0.3, Color3.fromRGB(110, 45, 170)),
-    ColorSequenceKeypoint.new(0.7, Color3.fromRGB(190, 105, 255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(160, 70, 235))})
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
+    ColorSequenceKeypoint.new(0.35, Color3.fromRGB(35, 35, 35)),
+    ColorSequenceKeypoint.new(0.65, Color3.fromRGB(0, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(35, 35, 35))})
 borderGradient.Parent = borderStroke
-TweenService:Create(borderGradient, TweenInfo.new(2, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1), {Rotation = 360}):Play()
+TweenService:Create(borderGradient, TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1), {Rotation = 360}):Play()
 
-local starContainer = Instance.new("Frame")
-starContainer.Size = UDim2.new(1, 0, 1, 0)
-starContainer.BackgroundTransparency = 1
-starContainer.ClipsDescendants = true
-starContainer.ZIndex = 1
-starContainer.Parent = mainFrame
+-- Brasas que suben
+local emberContainer = Instance.new("Frame")
+emberContainer.Size = UDim2.new(1, 0, 1, 0)
+emberContainer.BackgroundTransparency = 1
+emberContainer.ClipsDescendants = true
+emberContainer.ZIndex = 1
+emberContainer.Parent = mainFrame
 
-local function createStar()
-    local star = Instance.new("Frame")
-    star.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    star.BorderSizePixel = 0
-    star.ZIndex = 1
-    local size = math.random(1, 2)
-    star.Size = UDim2.new(0, size, 0, size)
-    Instance.new("UICorner", star).CornerRadius = UDim.new(1, 0)
-    star.Position = UDim2.new(math.random(), 0, -0.1, 0)
-    star.BackgroundTransparency = math.random(5, 8) / 10
-    star.Parent = starContainer
-    local tween = TweenService:Create(star, TweenInfo.new(math.random(4, 7), Enum.EasingStyle.Linear), {
-        Position = UDim2.new(star.Position.X.Scale, 0, 1.1, 0)})
+local function createEmber()
+    local ember = Instance.new("Frame")
+    ember.BackgroundColor3 = Color3.fromRGB(math.random(200, 255), math.random(20, 50), math.random(25, 45))
+    ember.BorderSizePixel = 0
+    ember.ZIndex = 1
+    local size = math.random(2, 3)
+    ember.Size = UDim2.new(0, size, 0, size)
+    ember.BackgroundTransparency = math.random(4, 8) / 10
+    local x = math.random()
+    ember.Position = UDim2.new(x, 0, 1.05, 0)
+    corner(ember, 3)
+    ember.Parent = emberContainer
+    local tween = TweenService:Create(ember, TweenInfo.new(math.random(4, 7), Enum.EasingStyle.Linear), {
+        Position = UDim2.new(x, 0, -0.05, 0),
+        BackgroundTransparency = 1})
     tween:Play()
-    tween.Completed:Connect(function() star:Destroy() end)
+    tween.Completed:Connect(function() ember:Destroy() end)
 end
 
 task.spawn(function()
     while mainFrame and mainFrame.Parent do
-        createStar()
-        task.wait(0.85)
+        createEmber()
+        task.wait(0.6)
     end
 end)
 
+-- Cabecera
 local topBar = Instance.new("Frame")
-topBar.Size = UDim2.new(1, 0, 0, 56)
+topBar.Name = "Header"
+topBar.Size = UDim2.new(1, 0, 0, HEADER_H)
 topBar.BackgroundColor3 = COLORS.bgDark
-topBar.BackgroundTransparency = 1
+topBar.BackgroundTransparency = 0.35
 topBar.BorderSizePixel = 0
-topBar.Parent = mainFrame
 topBar.ZIndex = 2
-Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 10)
+topBar.Parent = mainFrame
+corner(topBar, CORNER)
 
-local titleImage = Instance.new("ImageLabel")
-titleImage.Name = "VynxConfuserTitleImage"
-titleImage.Size = UDim2.new(0, 215, 0, 52)
-titleImage.Position = UDim2.new(0, 8, 0.5, -26)
-titleImage.BackgroundTransparency = 1
-titleImage.Image = "rbxassetid://126480374063161"
-titleImage.ScaleType = Enum.ScaleType.Fit
-titleImage.ZIndex = 2
-titleImage.Parent = topBar
+local headerLine = Instance.new("Frame")
+headerLine.Size = UDim2.new(1, -36, 0, 2)
+headerLine.Position = UDim2.new(0, 18, 1, -2)
+headerLine.BackgroundColor3 = COLORS.stroke
+headerLine.BorderSizePixel = 0
+headerLine.ZIndex = 3
+headerLine.Parent = topBar
+local lineGradient = Instance.new("UIGradient")
+lineGradient.Transparency = NumberSequence.new({
+    NumberSequenceKeypoint.new(0, 1),
+    NumberSequenceKeypoint.new(0.5, 0),
+    NumberSequenceKeypoint.new(1, 1)})
+lineGradient.Parent = headerLine
 
-local rightButtonContainer = Instance.new("Frame")
-rightButtonContainer.Size = UDim2.new(0, 30, 0, 26)
-rightButtonContainer.Position = UDim2.new(0.96, 0, 0.5, -13)
-rightButtonContainer.AnchorPoint = Vector2.new(1, 0)
-rightButtonContainer.BackgroundTransparency = 1
-rightButtonContainer.Parent = topBar
+-- Título
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Name = "Title"
+titleLabel.Size = UDim2.new(1, -60, 0, 26)
+titleLabel.Position = UDim2.new(0, 14, 0, 5)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "SURE HUB CONFUSER"
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+titleLabel.TextStrokeTransparency = 0
+titleLabel.Font = Enum.Font.Bangers
+titleLabel.TextSize = 19
+titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+titleLabel.ZIndex = 3
+titleLabel.Parent = topBar
 
-local keybindBtn = Instance.new("TextButton")
-keybindBtn.Name = "MinimizeButton"
-keybindBtn.Size = UDim2.new(0, 28, 0, 26)
-keybindBtn.Position = UDim2.new(1, 0, 0.5, -13)
-keybindBtn.AnchorPoint = Vector2.new(1, 0)
-keybindBtn.BackgroundTransparency = 1
-keybindBtn.BorderSizePixel = 0
-keybindBtn.Text = "-"
-keybindBtn.TextColor3 = COLORS.text
-keybindBtn.Font = Enum.Font.Gotham
-keybindBtn.TextSize = 24
-keybindBtn.ZIndex = 3
-keybindBtn.Parent = rightButtonContainer
+local titleGradient = Instance.new("UIGradient")
+titleGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(180, 180, 180)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))})
+titleGradient.Parent = titleLabel
 
-local isCollapsed = false
+local subtitleLabel = Instance.new("TextLabel")
+subtitleLabel.Size = UDim2.new(1, -60, 0, 14)
+subtitleLabel.Position = UDim2.new(0, 14, 0, 32)
+subtitleLabel.BackgroundTransparency = 1
+subtitleLabel.Text = "CONFUSER  //  v3"
+subtitleLabel.TextColor3 = COLORS.textDim
+subtitleLabel.Font = FONT_LABEL
+subtitleLabel.TextSize = 11
+subtitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+subtitleLabel.ZIndex = 3
+subtitleLabel.Parent = topBar
+
+local minBtn = Instance.new("TextButton")
+minBtn.Name = "MinimizeButton"
+minBtn.Size = UDim2.new(0, 28, 0, 28)
+minBtn.Position = UDim2.new(1, -38, 0.5, -14)
+minBtn.BackgroundColor3 = COLORS.panel
+minBtn.BackgroundTransparency = 0.2
+minBtn.BorderSizePixel = 0
+minBtn.Text = "–"
+minBtn.TextColor3 = COLORS.text
+minBtn.Font = FONT_VALUE
+minBtn.TextSize = 18
+minBtn.AutoButtonColor = false
+minBtn.ZIndex = 4
+minBtn.Parent = topBar
+corner(minBtn, 14)
+stroke(minBtn, COLORS.accent, 1)
+
+-- Cuerpo
 local body = Instance.new("Frame")
-body.Size = UDim2.new(1, 0, 1, -56)
-body.Position = UDim2.new(0, 0, 0, 56)
+body.Name = "Body"
+body.Size = UDim2.new(1, 0, 1, -HEADER_H)
+body.Position = UDim2.new(0, 0, 0, HEADER_H)
 body.BackgroundTransparency = 1
-body.Parent = mainFrame
 body.ZIndex = 2
+body.Parent = mainFrame
 
-local BOTTOM_IMAGE_ID = "0"
-local discordLabel = Instance.new("ImageLabel")
-discordLabel.Name = "BottomImage"
-discordLabel.Size = UDim2.new(0.92, 0, 0, 44)
-discordLabel.Position = UDim2.new(0.04, 0, 1, -52)
-discordLabel.BackgroundTransparency = 1
-discordLabel.Image = "rbxassetid://" .. BOTTOM_IMAGE_ID
-discordLabel.ScaleType = Enum.ScaleType.Fit
-discordLabel.ZIndex = 3
-discordLabel.Parent = mainFrame
+local function makeRow(name, y, h)
+    local row = Instance.new("Frame")
+    row.Name = name
+    row.Size = UDim2.new(0.92, 0, 0, h)
+    row.Position = UDim2.new(0.04, 0, 0, y)
+    row.BackgroundColor3 = COLORS.panel
+    row.BackgroundTransparency = 0.45
+    row.BorderSizePixel = 0
+    row.ZIndex = 3
+    row.Parent = body
+    corner(row, h >= 30 and 14 or 12)
+    return row
+end
 
-keybindBtn.MouseButton1Click:Connect(function()
-    isCollapsed = not isCollapsed
-    body.Visible = not isCollapsed
-    discordLabel.Visible = not isCollapsed
-    mainFrame.Size = isCollapsed and UDim2.new(0, 260, 0, 56) or UDim2.new(0, 260, 0, 336)
-    keybindBtn.Text = isCollapsed and "+" or "-"
-end)
+local function makeRowLabel(parent, text, width)
+    local l = Instance.new("TextLabel")
+    l.Size = UDim2.new(0, width or 90, 1, 0)
+    l.Position = UDim2.new(0, 12, 0, 0)
+    l.BackgroundTransparency = 1
+    l.Text = text
+    l.TextColor3 = COLORS.text
+    l.Font = FONT_LABEL
+    l.TextSize = 13
+    l.TextXAlignment = Enum.TextXAlignment.Left
+    l.ZIndex = 4
+    l.Parent = parent
+    return l
+end
 
+-- Estado
+local statusRow = makeRow("StatusRow", 10, 24)
+stroke(statusRow, COLORS.stroke, 1)
+
+local statusDot = Instance.new("Frame")
+statusDot.Size = UDim2.new(0, 8, 0, 8)
+statusDot.Position = UDim2.new(0, 10, 0.5, -4)
+statusDot.BackgroundColor3 = COLORS.statusOff
+statusDot.BorderSizePixel = 0
+statusDot.ZIndex = 4
+statusDot.Parent = statusRow
+corner(statusDot, 4)
+
+local statusLabel = Instance.new("TextLabel")
+statusLabel.Size = UDim2.new(1, -30, 1, 0)
+statusLabel.Position = UDim2.new(0, 26, 0, 0)
+statusLabel.BackgroundTransparency = 1
+statusLabel.Text = "STATUS: OFFLINE"
+statusLabel.TextColor3 = COLORS.textDim
+statusLabel.Font = FONT_LABEL
+statusLabel.TextSize = 12
+statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+statusLabel.ZIndex = 4
+statusLabel.Parent = statusRow
+
+-- Botón principal
 local activateBtn = Instance.new("TextButton")
-activateBtn.Size = UDim2.new(0.92, 0, 0, 40)
-activateBtn.Position = UDim2.new(0.04, 0, 0, 8)
-activateBtn.BackgroundColor3 = COLORS.buttonBg
-activateBtn.BackgroundTransparency = 0.45
+activateBtn.Size = UDim2.new(0.92, 0, 0, 42)
+activateBtn.Position = UDim2.new(0.04, 0, 0, 42)
+activateBtn.BackgroundColor3 = COLORS.accent
+activateBtn.BackgroundTransparency = 0.55
 activateBtn.Text = "ACTIVATE"
 activateBtn.TextColor3 = COLORS.text
-activateBtn.Font = Enum.Font.GothamBold
-activateBtn.TextSize = 10
+activateBtn.Font = FONT_TITLE
+activateBtn.TextSize = 12
+activateBtn.AutoButtonColor = false
 activateBtn.ZIndex = 3
 activateBtn.Parent = body
-Instance.new("UICorner", activateBtn).CornerRadius = UDim.new(0, 6)
-local activateStroke = Instance.new("UIStroke")
-activateStroke.Color = COLORS.accent
-activateStroke.Thickness = 1
-activateStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-activateStroke.Parent = activateBtn
+corner(activateBtn, 14)
+stroke(activateBtn, COLORS.stroke, 1.5)
 
-local radiusContainer = Instance.new("Frame")
-radiusContainer.Name = "RadiusContainer"
-radiusContainer.Size = UDim2.new(0.92, 0, 0, 30)
-radiusContainer.Position = UDim2.new(0.04, 0, 0, 56)
-radiusContainer.BackgroundColor3 = COLORS.bgDark
-radiusContainer.BackgroundTransparency = 1
-radiusContainer.BorderSizePixel = 0
-radiusContainer.Parent = body
-radiusContainer.ZIndex = 3
-Instance.new("UICorner", radiusContainer).CornerRadius = UDim.new(0, 8)
-
-local radiusStroke = Instance.new("UIStroke")
-radiusStroke.Color = COLORS.accent
-radiusStroke.Thickness = 1
-radiusStroke.Transparency = 0
-radiusStroke.Parent = radiusContainer
-
-local radiusLabel = Instance.new("TextLabel")
-radiusLabel.Name = "RadiusLabel"
-radiusLabel.Size = UDim2.new(0, 56, 1, 0)
-radiusLabel.Position = UDim2.new(0, 8, 0, 0)
-radiusLabel.BackgroundTransparency = 1
-radiusLabel.Text = "RADIUS"
-radiusLabel.TextColor3 = COLORS.textDim
-radiusLabel.Font = Enum.Font.GothamMedium
-radiusLabel.TextSize = 10
-radiusLabel.TextColor3 = COLORS.text
-radiusLabel.TextStrokeTransparency = 0.4
-radiusLabel.TextXAlignment = Enum.TextXAlignment.Left
-radiusLabel.ZIndex = 3
-radiusLabel.Parent = radiusContainer
+-- Fila de velocidad
+local speedRow = makeRow("SpeedRow", 92, 32)
+stroke(speedRow, COLORS.stroke, 1)
+makeRowLabel(speedRow, "SPEED", 70)
 
 local speedBox = Instance.new("TextBox")
-speedBox.Name = "RadiusValue"
-speedBox.Size = UDim2.new(1, -76, 1, -8)
-speedBox.Position = UDim2.new(0, 66, 0, 4)
-speedBox.BackgroundColor3 = COLORS.frame
-speedBox.BackgroundTransparency = 1
+speedBox.Name = "SpeedValue"
+speedBox.Size = UDim2.new(1, -92, 1, -10)
+speedBox.Position = UDim2.new(0, 82, 0, 5)
+speedBox.BackgroundColor3 = COLORS.bgDark
+speedBox.BackgroundTransparency = 0.2
 speedBox.BorderSizePixel = 0
 speedBox.Text = tostring(State.speed)
-speedBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-speedBox.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
-speedBox.TextStrokeTransparency = 1
-speedBox.Font = Enum.Font.GothamBold
-speedBox.TextSize = 12
+speedBox.TextColor3 = COLORS.accentHi
+speedBox.Font = FONT_VALUE
+speedBox.TextSize = 15
 speedBox.ClearTextOnFocus = false
 speedBox.TextXAlignment = Enum.TextXAlignment.Center
-speedBox.ZIndex = 3
-speedBox.Parent = radiusContainer
-Instance.new("UICorner", speedBox).CornerRadius = UDim.new(0, 6)
+speedBox.ZIndex = 4
+speedBox.Parent = speedRow
+corner(speedBox, 11)
+stroke(speedBox, COLORS.accent, 1)
 
-local speedBoxStroke = Instance.new("UIStroke")
-speedBoxStroke.Color = COLORS.accent
-speedBoxStroke.Thickness = 1
-speedBoxStroke.Transparency = 0
-speedBoxStroke.Enabled = false
-speedBoxStroke.Parent = speedBox
-
-local stealRow = Instance.new("Frame")
-stealRow.Name = "ActiveOnStealRow"
-stealRow.Size = UDim2.new(0.92, 0, 0, 30)
-stealRow.Position = UDim2.new(0.04, 0, 0, 94)
-stealRow.BackgroundTransparency = 1
-stealRow.ZIndex = 3
-stealRow.Parent = body
-Instance.new("UICorner", stealRow).CornerRadius = UDim.new(0, 8)
-local stealRowStroke = Instance.new("UIStroke")
-stealRowStroke.Color = COLORS.accent
-stealRowStroke.Thickness = 1
-stealRowStroke.Parent = stealRow
-
-local stealLabel = Instance.new("TextLabel")
-stealLabel.Size = UDim2.new(1, -70, 1, 0)
-stealLabel.Position = UDim2.new(0, 10, 0, 0)
-stealLabel.BackgroundTransparency = 1
-stealLabel.Text = "ACTIVE ON STEAL"
-stealLabel.TextColor3 = COLORS.text
-stealLabel.TextStrokeTransparency = 0.4
-stealLabel.Font = Enum.Font.GothamBold
-stealLabel.TextSize = 10
-stealLabel.TextXAlignment = Enum.TextXAlignment.Left
-stealLabel.ZIndex = 3
-stealLabel.Parent = stealRow
+-- Fila Active on Steal
+local stealRow = makeRow("ActiveOnStealRow", 132, 32)
+stroke(stealRow, COLORS.stroke, 1)
+makeRowLabel(stealRow, "ACTIVE ON STEAL", 150)
 
 local stealToggle = Instance.new("TextButton")
-stealToggle.Size = UDim2.new(0, 46, 0, 20)
-stealToggle.Position = UDim2.new(1, -54, 0.5, -10)
+stealToggle.Size = UDim2.new(0, 42, 0, 20)
+stealToggle.Position = UDim2.new(1, -52, 0.5, -10)
 stealToggle.BorderSizePixel = 0
 stealToggle.Text = ""
 stealToggle.AutoButtonColor = false
 stealToggle.ZIndex = 4
 stealToggle.Parent = stealRow
-Instance.new("UICorner", stealToggle).CornerRadius = UDim.new(1, 0)
+corner(stealToggle, 10)
 local stealKnob = Instance.new("Frame")
-stealKnob.Size = UDim2.new(0, 16, 0, 16)
+stealKnob.Size = UDim2.new(0, 14, 0, 14)
 stealKnob.BackgroundColor3 = COLORS.text
 stealKnob.BorderSizePixel = 0
 stealKnob.ZIndex = 5
 stealKnob.Parent = stealToggle
-Instance.new("UICorner", stealKnob).CornerRadius = UDim.new(1, 0)
+corner(stealKnob, 7)
 
 local function renderStealToggle()
     stealToggle.BackgroundColor3 = State.activeOnSteal and COLORS.toggleOn or COLORS.toggleOff
-    stealKnob.Position = State.activeOnSteal and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
+    stealKnob.Position = State.activeOnSteal and UDim2.new(1, -17, 0.5, -7) or UDim2.new(0, 3, 0.5, -7)
 end
 renderStealToggle()
 
-local backgroundTitle = Instance.new("TextLabel")
-backgroundTitle.Name = "BackgroundSelectorTitle"
-backgroundTitle.Size = UDim2.new(0.92, 0, 0, 18)
-backgroundTitle.Position = UDim2.new(0.04, 0, 0, 130)
-backgroundTitle.BackgroundTransparency = 1
-backgroundTitle.Text = "BACKGROUND"
-backgroundTitle.TextColor3 = COLORS.textDim
-backgroundTitle.Font = Enum.Font.GothamBold
-backgroundTitle.TextSize = 10
-backgroundTitle.TextColor3 = COLORS.text
-backgroundTitle.TextStrokeTransparency = 0.4
-backgroundTitle.TextXAlignment = Enum.TextXAlignment.Left
-backgroundTitle.Parent = body
-backgroundTitle.ZIndex = 3
+-- Fila de tecla (keybind)
+local keyRow = makeRow("KeybindRow", 172, 32)
+stroke(keyRow, COLORS.stroke, 1)
+makeRowLabel(keyRow, "KEYBIND", 80)
 
-local backgroundIds = {
-    "112180017939463",
-    "106344835483006",
-    "134260766475623",
-    "124053948669794"}
-local selectedBackgroundId = backgroundIds[1]
+local keyBtn = Instance.new("TextButton")
+keyBtn.Name = "KeybindButton"
+keyBtn.Size = UDim2.new(0, 124, 0, 22)
+keyBtn.Position = UDim2.new(1, -134, 0.5, -11)
+keyBtn.BackgroundColor3 = COLORS.bgDark
+keyBtn.BackgroundTransparency = 0.2
+keyBtn.BorderSizePixel = 0
+keyBtn.Text = toggleKey.Name
+keyBtn.TextColor3 = COLORS.accentHi
+keyBtn.Font = FONT_VALUE
+keyBtn.TextSize = 14
+keyBtn.AutoButtonColor = false
+keyBtn.ZIndex = 4
+keyBtn.Parent = keyRow
+corner(keyBtn, 11)
+stroke(keyBtn, COLORS.accent, 1)
 
-local backgroundPreview = Instance.new("ImageLabel")
-backgroundPreview.Name = "BackgroundPreview"
-backgroundPreview.Size = UDim2.new(0, 72, 0, 48)
-backgroundPreview.Position = UDim2.new(0.04, 0, 0, 150)
-backgroundPreview.BackgroundTransparency = 1
-backgroundPreview.BorderSizePixel = 0
-backgroundPreview.Image = "rbxassetid://" .. selectedBackgroundId
-backgroundPreview.ScaleType = Enum.ScaleType.Crop
-backgroundPreview.Parent = body
-backgroundPreview.ZIndex = 3
-Instance.new("UICorner", backgroundPreview).CornerRadius = UDim.new(0, 7)
+local listeningForKey = false
+local function renderKeybind()
+    if listeningForKey then
+        keyBtn.Text = "PRESIONA UNA TECLA"
+        keyBtn.TextColor3 = COLORS.text
+    else
+        keyBtn.Text = toggleKey.Name
+        keyBtn.TextColor3 = COLORS.accentHi
+    end
+end
+renderKeybind()
 
-local previewStroke = Instance.new("UIStroke")
-previewStroke.Color = COLORS.stroke
-previewStroke.Thickness = 1
-previewStroke.Parent = backgroundPreview
+keyBtn.Activated:Connect(function()
+    listeningForKey = not listeningForKey
+    renderKeybind()
+end)
 
-local selectorButtons = {}
-local backgroundImage
-for i, assetId in ipairs(backgroundIds) do
-    local button = Instance.new("ImageButton")
-    button.Name = "BackgroundOption" .. i
-    button.Size = UDim2.new(0, 30, 0, 30)
-    button.Position = UDim2.new(0, 94 + (i - 1) * 34, 0, 159)
-    button.BackgroundTransparency = 1
-    button.BorderSizePixel = 0
-    button.Image = "rbxassetid://" .. assetId
-    button.ScaleType = Enum.ScaleType.Crop
-    button.AutoButtonColor = true
-    button.Parent = body
-    button.ZIndex = 4
-    Instance.new("UICorner", button).CornerRadius = UDim.new(0, 5)
+-- Fila de tamaño
+local sizeRow = makeRow("SizeRow", 212, 32)
+stroke(sizeRow, COLORS.stroke, 1)
+makeRowLabel(sizeRow, "SIZE", 80)
 
-    local optionStroke = Instance.new("UIStroke")
-    optionStroke.Color = assetId == selectedBackgroundId and COLORS.accent or COLORS.stroke
-    optionStroke.Thickness = assetId == selectedBackgroundId and 2 or 1
-    optionStroke.Parent = button
-
-    button.MouseButton1Click:Connect(function()
-        selectedBackgroundId = assetId
-        backgroundPreview.Image = "rbxassetid://" .. assetId
-        backgroundImage.Image = "rbxassetid://" .. assetId
-        for _, entry in ipairs(selectorButtons) do
-            entry.stroke.Color = entry.id == selectedBackgroundId and COLORS.accent or COLORS.stroke
-            entry.stroke.Thickness = entry.id == selectedBackgroundId and 2 or 1
-        end
-    end)
-    table.insert(selectorButtons, {button = button, stroke = optionStroke, id = assetId})
+local function makeSizeButton(text, xOffset)
+    local b = Instance.new("TextButton")
+    b.Size = UDim2.new(0, 28, 0, 22)
+    b.Position = UDim2.new(1, xOffset, 0.5, -11)
+    b.BackgroundColor3 = COLORS.bgDark
+    b.BackgroundTransparency = 0.2
+    b.BorderSizePixel = 0
+    b.Text = text
+    b.TextColor3 = COLORS.accentHi
+    b.Font = FONT_VALUE
+    b.TextSize = 18
+    b.AutoButtonColor = false
+    b.ZIndex = 4
+    b.Parent = sizeRow
+    corner(b, 11)
+    stroke(b, COLORS.accent, 1)
+    return b
 end
 
-backgroundImage = Instance.new("ImageLabel")
-backgroundImage.Name = "PanelBackgroundImage"
-backgroundImage.Size = UDim2.new(1, 0, 1, 0)
-backgroundImage.Position = UDim2.new(0, 0, 0, 0)
-backgroundImage.BackgroundTransparency = 1
-backgroundImage.Image = "rbxassetid://" .. selectedBackgroundId
-backgroundImage.ImageTransparency = 0
-backgroundImage.ScaleType = Enum.ScaleType.Crop
-backgroundImage.ZIndex = 0
-backgroundImage.Parent = mainFrame
-backgroundImage.LayoutOrder = -1
-mainFrame.ClipsDescendants = true
-backgroundImage.Active = false
-Instance.new("UICorner", backgroundImage).CornerRadius = UDim.new(0, 10)
+local sizeMinus = makeSizeButton("–", -122)
+local sizePlus = makeSizeButton("+", -38)
 
+local sizeValue = Instance.new("TextLabel")
+sizeValue.Size = UDim2.new(0, 50, 0, 22)
+sizeValue.Position = UDim2.new(1, -92, 0.5, -11)
+sizeValue.BackgroundTransparency = 1
+sizeValue.Text = "100%"
+sizeValue.TextColor3 = COLORS.text
+sizeValue.Font = FONT_VALUE
+sizeValue.TextSize = 15
+sizeValue.ZIndex = 4
+sizeValue.Parent = sizeRow
+
+local function setScale(v)
+    v = math.clamp(math.floor(v * 10 + 0.5) / 10, SCALE_MIN, SCALE_MAX)
+    State.guiScale = v
+    uiScale.Scale = v
+    sizeValue.Text = math.floor(v * 100 + 0.5) .. "%"
+    saveConfig()
+end
+sizeValue.Text = math.floor(State.guiScale * 100 + 0.5) .. "%"
+
+sizeMinus.Activated:Connect(function() setScale(State.guiScale - SCALE_STEP) end)
+sizePlus.Activated:Connect(function() setScale(State.guiScale + SCALE_STEP) end)
+
+-- Botón de Discord (un tap copia el link)
+local discordBtn = Instance.new("TextButton")
+discordBtn.Name = "DiscordButton"
+discordBtn.Size = UDim2.new(0.92, 0, 0, 34)
+discordBtn.Position = UDim2.new(0.04, 0, 1, -44)
+discordBtn.BackgroundColor3 = COLORS.bgDark
+discordBtn.BackgroundTransparency = 0.25
+discordBtn.Text = "DISCORD  •  discord.gg/DhyJ3N6pP"
+discordBtn.TextColor3 = COLORS.text
+discordBtn.Font = FONT_LABEL
+discordBtn.TextSize = 13
+discordBtn.AutoButtonColor = false
+discordBtn.ZIndex = 4
+discordBtn.Parent = mainFrame
+corner(discordBtn, 17)
+stroke(discordBtn, COLORS.accent, 1)
+
+local function copyToClipboard(text)
+    local methods = {
+        function() setclipboard(text) end,
+        function() toclipboard(text) end,
+        function() set_clipboard(text) end,
+        function() Clipboard.set(text) end}
+    for _, fn in ipairs(methods) do
+        if pcall(fn) then return true end
+    end
+    return false
+end
+
+local DISCORD_TEXT = "DISCORD  •  discord.gg/DhyJ3N6pP"
+local discordTick = 0
+discordBtn.Activated:Connect(function()
+    local ok = copyToClipboard(DISCORD_LINK)
+    discordTick = discordTick + 1
+    local myTick = discordTick
+    if ok then
+        discordBtn.Text = "LINK COPIADO"
+        discordBtn.BackgroundColor3 = COLORS.accent
+        discordBtn.BackgroundTransparency = 0.3
+    else
+        discordBtn.Text = "NO SE PUDO COPIAR"
+        print("[SURE HUB] Copia este link: " .. DISCORD_LINK)
+    end
+    task.delay(1.5, function()
+        if myTick ~= discordTick then return end
+        if discordBtn and discordBtn.Parent then
+            discordBtn.Text = DISCORD_TEXT
+            discordBtn.BackgroundColor3 = COLORS.bgDark
+            discordBtn.BackgroundTransparency = 0.25
+        end
+    end)
+end)
+
+-- Minimizar
+local isCollapsed = false
+minBtn.Activated:Connect(function()
+    isCollapsed = not isCollapsed
+    body.Visible = not isCollapsed
+    discordBtn.Visible = not isCollapsed
+    mainFrame.Size = isCollapsed and UDim2.new(0, FRAME_W, 0, HEADER_H) or UDim2.new(0, FRAME_W, 0, FRAME_H)
+    minBtn.Text = isCollapsed and "+" or "–"
+end)
+
+----------------------------------------------------------------
+-- LÓGICA
+----------------------------------------------------------------
 local function updateUI()
     if State.confuserOn then
         activateBtn.Text = "ON"
-        activateBtn.TextColor3 = COLORS.activeGreen
+        activateBtn.BackgroundTransparency = 0.1
+        activateBtn.TextColor3 = COLORS.text
+        statusDot.BackgroundColor3 = COLORS.accentHi
+        statusLabel.Text = "STATUS: ACTIVE"
+        statusLabel.TextColor3 = COLORS.accentHi
     else
         activateBtn.Text = "ACTIVATE"
+        activateBtn.BackgroundTransparency = 0.55
         activateBtn.TextColor3 = COLORS.text
+        statusDot.BackgroundColor3 = COLORS.statusOff
+        statusLabel.Text = "STATUS: OFFLINE"
+        statusLabel.TextColor3 = COLORS.textDim
     end
     local n = tonumber(speedBox.Text) or State.speed
     n = math.max(0, n)
@@ -596,7 +752,7 @@ local function toggleConfuser()
     saveConfig()
 end
 
-activateBtn.MouseButton1Click:Connect(toggleConfuser)
+activateBtn.Activated:Connect(toggleConfuser)
 
 local stealActive = false
 
@@ -614,7 +770,7 @@ local function endSteal()
     updateUI()
 end
 
-stealToggle.MouseButton1Click:Connect(function()
+stealToggle.Activated:Connect(function()
     State.activeOnSteal = not State.activeOnSteal
     renderStealToggle()
     if not State.activeOnSteal then endSteal() end
@@ -638,7 +794,19 @@ task.spawn(function()
     end
 end)
 
+-- Teclas
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if listeningForKey then
+        if input.UserInputType == Enum.UserInputType.Keyboard then
+            if input.KeyCode ~= Enum.KeyCode.Escape and input.KeyCode ~= Enum.KeyCode.Unknown then
+                toggleKey = input.KeyCode
+                saveConfig()
+            end
+            listeningForKey = false
+            renderKeybind()
+        end
+        return
+    end
     if gameProcessed then return end
     if input.KeyCode == toggleKey and (input.UserInputType == Enum.UserInputType.Keyboard
         or input.UserInputType == Enum.UserInputType.Gamepad1
@@ -647,11 +815,11 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     end
 end)
 
+-- Arrastrar desde la cabecera
 local isDragging = false
 local dragInput, mousePos, framePos
 
-mainFrame.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
+topBar.InputBegan:Connect(function(input)
     if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and not State.lockGui then
         isDragging = true
         mousePos = input.Position
@@ -667,7 +835,7 @@ mainFrame.InputBegan:Connect(function(input, gameProcessed)
     end
 end)
 
-mainFrame.InputChanged:Connect(function(input)
+topBar.InputChanged:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
         dragInput = input
     end
@@ -681,4 +849,4 @@ UserInputService.InputChanged:Connect(function(input)
 end)
 
 updateUI()
-print("[VYNX CONFUSER] Loaded — WM: /jBYvMpbYSv")
+print("[SURE HUB] Loaded — " .. DISCORD_LINK)
