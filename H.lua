@@ -931,8 +931,8 @@ M.safeModeEnabled = false
 M.mirrorTPDownEnabled = false
 M.mirrorTPPreviousY = {}
 M.mirrorTPLastTeleport = 0
-M.MIRROR_TP_DROP_THRESHOLD = 3
-M.MIRROR_TP_DOWN_Y = -7.00
+M.MIRROR_TP_DROP_THRESHOLD = 1.5 -- detecta antes la caída del rival
+M.MIRROR_TP_DOWN_Y = -8.50 -- baja un poco más para esquivar
 M.activeBatBillboard = nil
 M.activeMedusaBillboard = nil
 M.ragdollGuiEnabled = true
@@ -2947,9 +2947,15 @@ end
 
 
 function M.doAutoTPDown(force)
-    local char=player.Character;if not char then return end;local hrp=char:FindFirstChild("HumanoidRootPart");if not hrp then return end
-    local hum2=char:FindFirstChildOfClass("Humanoid");if not hum2 then return end
-    hrp.CFrame=CFrame.new(hrp.Position.X,-7.00,hrp.Position.Z)*CFrame.Angles(0,select(2,hrp.CFrame:ToEulerAnglesYXZ()),0);hrp.Velocity=Vector3.zero
+    local char = player.Character
+    if not char then return end
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    local hum2 = char:FindFirstChildOfClass("Humanoid")
+    if not hrp or not hum2 or hum2.Health <= 0 then return end
+    local _, yaw = hrp.CFrame:ToEulerAnglesYXZ()
+    hrp.CFrame = CFrame.new(hrp.Position.X, -8.50, hrp.Position.Z) * CFrame.Angles(0, yaw, 0)
+    hrp.AssemblyLinearVelocity = Vector3.zero
+    hrp.AssemblyAngularVelocity = Vector3.zero
 end
 function M.runTPFloor() pcall(function() M.doAutoTPDown(true) end) end
 function M.enableStretchRez()
@@ -3472,7 +3478,7 @@ local function _arV2Start()
         if state == Enum.HumanoidStateType.Physics
             or state == Enum.HumanoidStateType.Ragdoll
             or state == Enum.HumanoidStateType.FallingDown then
-            if now - _arV2.resetCooldown > 0.15 then
+            if now - _arV2.resetCooldown > 0.08 then
                 _arV2.resetCooldown = now
                 pcall(function()
                     if hum:GetState() == Enum.HumanoidStateType.GettingUp then return end
@@ -4133,7 +4139,7 @@ function M.mirrorTPTeleportDown()
     local humanoid = char and char:FindFirstChildOfClass("Humanoid")
     if not root or not humanoid or humanoid.Health <= 0 then return end
     local now = tick()
-    if now - (M.mirrorTPLastTeleport or 0) < 0.08 then return end
+    if now - (M.mirrorTPLastTeleport or 0) < 0.02 then return end
     M.mirrorTPLastTeleport = now
     local _, yaw = root.CFrame:ToEulerAnglesYXZ()
     local y = (M.MIRROR_TP_DOWN_Y or -7) + (math.random() * 0.6 - 0.3)
@@ -10864,24 +10870,89 @@ end
 -- ==================== VOID SPEED ENGINE (Anti Drop — no spoof) ====================
 -- Normal/Lagger: root.Velocity | Carry: CFrame step | Anti Fling
 local FLING_THRESHOLD = 80
+-- Carry Safe: detecta herramientas de Brainrot equipadas y deja el movimiento
+-- normal del juego mientras se transportan. No intenta eludir controles del servidor.
+local _carryCheckChar = nil
+local _carryCheckAt = 0
+local _carryCheckValue = false
+local function _isCarryingBrainrot(char)
+    if not char then
+        _carryCheckChar, _carryCheckValue = nil, false
+        return false
+    end
+    -- Cachea la detección durante 0.10 s para no recorrer herramientas/atributos
+    -- en cada frame de física.
+    local now = os.clock()
+    if _carryCheckChar == char and (now - _carryCheckAt) < 0.10 then
+        return _carryCheckValue
+    end
+    _carryCheckChar, _carryCheckAt = char, now
+    local carrying = false
+    if M.hasBrainrotInHand then
+        local ok, result = pcall(M.hasBrainrotInHand)
+        carrying = ok and result == true
+    end
+    if not carrying then
+        for _, item in ipairs(char:GetChildren()) do
+            if item:IsA("Tool") then
+                local itemName = string.lower(item.Name)
+                if string.find(itemName, "brainrot", 1, true)
+                    or string.find(itemName, "skibidi", 1, true)
+                    or string.find(itemName, "toilet", 1, true) then
+                    carrying = true
+                    break
+                end
+            end
+        end
+    end
+    _carryCheckValue = carrying
+    return carrying
+end
+
 local function _voidApplyVelocitySpeed(speed)
     local char = player.Character
     if not char then return end
     local hum = char:FindFirstChildOfClass("Humanoid")
     local root = char:FindFirstChild("HumanoidRootPart")
-    if not hum or not root then return end
+    if not hum or not root or hum.Health <= 0 then return end
 
-    if M.antiDieEnabled and root.AssemblyLinearVelocity.Magnitude > FLING_THRESHOLD then
-        root.AssemblyLinearVelocity = Vector3.new(0, root.AssemblyLinearVelocity.Y, 0)
-        root.AssemblyAngularVelocity = Vector3.zero
+    -- Carry: usa WalkSpeed del Humanoid para conservar el control normal del juego
+    -- y aplicar el Carry Speed del perfil sin forzar AssemblyLinearVelocity.
+    if _isCarryingBrainrot(char) then
+        M.lastMoveDir = Vector3.zero
+        local carrySpeed = tonumber(M.CS)
+            or (M.getProfileSteal and tonumber(M.getProfileSteal(M.speedProfile)))
+            or 29
+        if M.laggerCarryActive == true then
+            carrySpeed = tonumber(M.LAGGER_CARRY_SPEED) or 15
+        end
+        carrySpeed = math.clamp(carrySpeed, 1, 60)
+        if M._carryWalkHumanoid ~= hum then
+            M._carryWalkHumanoid = hum
+            M._carryWalkOriginal = hum.WalkSpeed
+        end
+        hum.WalkSpeed = carrySpeed
+        return
+    elseif M._carryWalkHumanoid == hum then
+        -- Restaura la velocidad que tenía el personaje al dejar de cargar.
+        local original = tonumber(M._carryWalkOriginal)
+        if original and hum.Parent then
+            hum.WalkSpeed = original
+        end
+        M._carryWalkHumanoid = nil
+        M._carryWalkOriginal = nil
     end
 
-    if hum.Health <= 0 then return end
+    local currentVelocity = root.AssemblyLinearVelocity
+    if M.antiDieEnabled and currentVelocity.Magnitude > FLING_THRESHOLD then
+        root.AssemblyLinearVelocity = Vector3.new(0, currentVelocity.Y, 0)
+        root.AssemblyAngularVelocity = Vector3.zero
+        currentVelocity = root.AssemblyLinearVelocity
+    end
 
     if M.autoBatEnabled or M.autoLeftEnabled or M.autoRightEnabled or M.bypassAimbotEnabled then
         return
     end
-
     if M.isRagdollState and M.isRagdollState(hum) then
         M.lastMoveDir = Vector3.zero
         return
@@ -10901,14 +10972,20 @@ local function _voidApplyVelocitySpeed(speed)
     end
 
     M.lastMoveDir = dir
-    local u = dir.Unit
     local s = tonumber(speed)
     if not s or s <= 0 then
         s = (M.getActiveMoveSpeed and M.getActiveMoveSpeed()) or 16
     end
     s = tonumber(s) or 16
-    -- Mismo método exacto que Lagger Carry: solo root.Velocity
-    root.Velocity = Vector3.new(u.X * s, root.Velocity.Y, u.Z * s)
+    local target = Vector3.new(dir.X * s, currentVelocity.Y, dir.Z * s)
+
+    -- Evita reescribir la misma velocidad cientos de veces sin necesidad.
+    -- El pequeño umbral mantiene la respuesta al cambiar de dirección.
+    local dx = target.X - currentVelocity.X
+    local dz = target.Z - currentVelocity.Z
+    if (dx * dx + dz * dz) > 0.0625 then
+        root.AssemblyLinearVelocity = target
+    end
 end
 
 local function destroySpeedObjects()
@@ -10943,11 +11020,12 @@ end
 
 local _voidSpeedConn = nil
 pcall(function()
-    local _mobileSpeedModeAcc = 0
-    local function tickSpeed()
-        _mobileSpeedModeAcc = _mobileSpeedModeAcc + 0.016
-        if not PRIMEHUB_MOBILE or _mobileSpeedModeAcc >= 0.15 then
-            _mobileSpeedModeAcc = 0
+    local _modeUpdateAcc = 0
+    local function tickSpeed(dt)
+        -- Usa el delta real del frame; no presupone que el juego vaya a 60 FPS.
+        _modeUpdateAcc = _modeUpdateAcc + (tonumber(dt) or 1/60)
+        if _modeUpdateAcc >= 0.10 then
+            _modeUpdateAcc = 0
             if M.updateAutoSwitchSpeed then pcall(M.updateAutoSwitchSpeed) end
         end
         _voidApplyVelocitySpeed(M.getActiveMoveSpeed and M.getActiveMoveSpeed() or 16)
