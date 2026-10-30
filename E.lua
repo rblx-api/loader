@@ -931,8 +931,8 @@ M.safeModeEnabled = false
 M.mirrorTPDownEnabled = false
 M.mirrorTPPreviousY = {}
 M.mirrorTPLastTeleport = 0
-M.MIRROR_TP_DROP_THRESHOLD = 3
-M.MIRROR_TP_DOWN_Y = -7.00
+M.MIRROR_TP_DROP_THRESHOLD = 1.5 -- detecta antes la caída del rival
+M.MIRROR_TP_DOWN_Y = -8.50 -- baja un poco más para esquivar
 M.activeBatBillboard = nil
 M.activeMedusaBillboard = nil
 M.ragdollGuiEnabled = true
@@ -2737,14 +2737,10 @@ function M.startBypassAimbot()
         pcall(function() M.bypassAimbotConn:Disconnect() end)
         M.bypassAimbotConn = nil
     end
-    if M._blessTpBatConn then
-        pcall(function() M._blessTpBatConn:Disconnect() end)
-        M._blessTpBatConn = nil
-    end
+    if M._blessTpBatConn then pcall(function() M._blessTpBatConn:Disconnect() end); M._blessTpBatConn = nil end
     if M._tpShieldConn then pcall(function() M._tpShieldConn:Disconnect() end); M._tpShieldConn = nil end
     if M._tpAntiDieConn then pcall(function() M._tpAntiDieConn:Disconnect() end); M._tpAntiDieConn = nil end
     if M._tpCharConn then pcall(function() M._tpCharConn:Disconnect() end); M._tpCharConn = nil end
-
     if _forceAimbotOffForTP then pcall(_forceAimbotOffForTP) end
 
     if M.batV2Enabled and M.stopBatV2 then
@@ -2756,55 +2752,165 @@ function M.startBypassAimbot()
         end)
     end
 
+    -- Luckbroom-style predictive bypass: estimate target velocity, compensate for ping,
+    -- predict jumps/quick turns, then follow and swing when within range.
     M.bypassAimbotEnabled = true
     M._adaptTpBatCooldown = false
-
-    -- Anti-Sammy TP Bat Heartbeat (threshold follows live M.tpBatVersion)
-    M.bypassAimbotConn = RunService.Heartbeat:Connect(function()
-        if not M.bypassAimbotEnabled then return end
-        local distThreshold = (tostring(M.tpBatVersion) == "V2") and 3 or 8
-        local char = player.Character
-        if not char then return end
-        local root = char:FindFirstChild("HumanoidRootPart")
-        if not root then return end
-
-        local target, dist = nil, math.huge
-        if M._bypassGetClosest then
-            target, dist = M._bypassGetClosest()
-        else
-            for _, p in pairs(Players:GetPlayers()) do
-                if p ~= player and p.Character then
-                    local tr = p.Character:FindFirstChild("HumanoidRootPart")
-                    if tr then
-                        local d = (root.Position - tr.Position).Magnitude
-                        if d < dist then
-                            dist = d
-                            target = tr
-                        end
-                    end
+    local state = {
+        target = nil, lastPos = nil, velocity = Vector3.zero,
+        smoothVelocity = Vector3.zero, acceleration = {}, airborne = {},
+        previousDirection = nil, lastDirectionChange = 0,
+        airborneTime = 0, lastSwing = 0, swingLocked = false,
+    }
+    local cfg = {
+        followSpeed = tonumber(M.bypassAimbotSpeed) or tonumber(M.BYPASS_AIMBOT_SPEED) or 55,
+        activateDistance = 13, minFollowDistance = 1, predictionTime = 0.242,
+        predictAhead = 3, maxVelocityChange = 150, smoothing = 0.2,
+        maxHorizontalVelocity = 80, serverTick = 1/60,
+        minPing = 0.03, maxPing = 0.25, accelWeight = 0.3,
+        turnWindow = 0.12, quickTurn = 1.5, gravity = 196.2,
+        airFactor = 0.8, minAirTime = 0.08, swingCooldown = 0.08,
+    }
+    local function average(list)
+        if #list == 0 then return Vector3.zero end
+        local sum = Vector3.zero
+        for _, v in ipairs(list) do sum = sum + v end
+        return sum / #list
+    end
+    local function push(list, value, max)
+        list[#list + 1] = value
+        if #list > max then table.remove(list, 1) end
+    end
+    local function findTarget(myRoot)
+        local nearest, distance = nil, math.huge
+        for _, p in ipairs(Players:GetPlayers()) do
+            if p ~= player and p.Character then
+                local tr = p.Character:FindFirstChild("HumanoidRootPart")
+                local th = p.Character:FindFirstChildOfClass("Humanoid")
+                if tr and th and th.Health > 0 then
+                    local d = (tr.Position - myRoot.Position).Magnitude
+                    if d < distance then nearest, distance = tr, d end
                 end
             end
         end
-
-        if not target or not target.Parent then return end
-
-        if sethiddenproperty then
-            pcall(function() sethiddenproperty(root, "PhysicsRepRootPart", target) end)
+        return nearest, distance
+    end
+    local function findBat()
+        if M._bypassFindBat then
+            local ok, bat = pcall(M._bypassFindBat)
+            if ok and bat then return bat end
         end
-
-        local targetPos = target.Position + Vector3.new(0, 0.9, 0)
-        if (root.Position - targetPos).Magnitude > distThreshold then
-            root.CFrame = CFrame.new(targetPos)
+        local char = player.Character
+        if not char then return nil end
+        local tool = char:FindFirstChildOfClass("Tool")
+        if tool then
+            local n = tool.Name:lower()
+            if n:find("bat") or n:find("slap") then return tool end
         end
-
-        local cam = workspace.CurrentCamera
-        if cam then
-            cam.CFrame = CFrame.new(cam.CFrame.Position, target.Position)
+        local bp = player:FindFirstChildOfClass("Backpack")
+        if bp then
+            for _, t in ipairs(bp:GetChildren()) do
+                if t:IsA("Tool") and (t.Name:lower():find("bat") or t.Name:lower():find("slap")) then return t end
+            end
         end
+        return nil
+    end
+    local function swing()
+        local now = tick()
+        if state.swingLocked or now - state.lastSwing < cfg.swingCooldown then return end
+        state.swingLocked, state.lastSwing = true, now
+        pcall(function()
+            local char = player.Character
+            local bat = findBat()
+            local hum = char and char:FindFirstChildOfClass("Humanoid")
+            if bat and char and bat.Parent ~= char and hum then hum:EquipTool(bat) end
+            if bat then
+                bat:Activate()
+                local remote = bat:FindFirstChildWhichIsA("RemoteEvent")
+                if remote then remote:FireServer() end
+            end
+            if M._adaptTpBatTryHit then M._adaptTpBatTryHit() end
+        end)
+        task.delay(cfg.swingCooldown, function() state.swingLocked = false end)
+    end
 
-        M._adaptTpBatTryHit()
+    M.bypassAimbotConn = RunService.RenderStepped:Connect(function(dt)
+        if not M.bypassAimbotEnabled then return end
+        -- La velocidad se puede modificar desde el ajuste Bat Bypass Speed de la interfaz.
+        cfg.followSpeed = math.clamp(tonumber(M.bypassAimbotSpeed) or cfg.followSpeed or 55, 10, 150)
+        local char = player.Character
+        local root = char and char:FindFirstChild("HumanoidRootPart")
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if not root or not hum or hum.Health <= 0 then return end
+        local target = findTarget(root)
+        if not target or not target.Parent then state.target = nil; state.lastPos = nil; return end
+        local targetChar = target.Parent
+        local targetHum = targetChar:FindFirstChildOfClass("Humanoid")
+        if not targetHum or targetHum.Health <= 0 then return end
+        if state.target ~= target then
+            state.target, state.lastPos = target, nil
+            state.velocity, state.smoothVelocity = Vector3.zero, Vector3.zero
+            state.acceleration, state.airborne = {}, {}
+            state.previousDirection, state.airborneTime = nil, 0
+        end
+        local ping = 0.1
+        pcall(function()
+            ping = math.clamp(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue()/1000, cfg.minPing, cfg.maxPing)
+        end)
+        local pos = target.Position
+        local step = math.max(dt or 1/60, 1/240)
+        if state.lastPos then
+            local instant = (pos - state.lastPos) / step
+            local delta = instant - state.velocity
+            if delta.Magnitude > cfg.maxVelocityChange then instant = state.velocity + delta.Unit * cfg.maxVelocityChange end
+            local horizontal = Vector3.new(instant.X, 0, instant.Z)
+            if horizontal.Magnitude > cfg.maxHorizontalVelocity then
+                horizontal = horizontal.Unit * cfg.maxHorizontalVelocity
+                instant = Vector3.new(horizontal.X, instant.Y, horizontal.Z)
+            end
+            push(state.acceleration, (instant - state.velocity) / step, 4)
+            state.velocity = instant
+            state.smoothVelocity = state.smoothVelocity:Lerp(instant, cfg.smoothing)
+        end
+        state.lastPos = pos
+        local inAir = targetHum.FloorMaterial == Enum.Material.Air
+        state.airborneTime = inAir and (state.airborneTime + step) or 0
+        if inAir and state.airborneTime >= cfg.minAirTime then push(state.airborne, state.velocity, 6)
+        elseif not inAir then state.airborne = {} end
+        local velocity = state.smoothVelocity
+        if inAir and #state.airborne > 0 then
+            local avg = average(state.airborne)
+            velocity = Vector3.new(avg.X, state.velocity.Y, avg.Z) * cfg.airFactor
+        end
+        local horizontal = Vector3.new(state.velocity.X, 0, state.velocity.Z)
+        local quick = false
+        if horizontal.Magnitude > 5 then
+            local dir = horizontal.Unit
+            if state.previousDirection and state.previousDirection:Dot(dir) < 0.5 then
+                quick = tick() - state.lastDirectionChange < cfg.turnWindow
+                state.lastDirectionChange = tick()
+            end
+            state.previousDirection = dir
+        end
+        local delay = ping + cfg.serverTick
+        if quick then delay = delay * cfg.quickTurn end
+        local predicted = pos + velocity * delay + average(state.acceleration) * (delay * delay * 0.5 * cfg.accelWeight)
+        predicted = predicted + velocity * cfg.predictionTime
+        if inAir then predicted = predicted + Vector3.new(0, -0.5 * cfg.gravity * cfg.predictionTime * cfg.predictionTime, 0) end
+        local hv = Vector3.new(velocity.X, 0, velocity.Z)
+        if hv.Magnitude > 1 then predicted = predicted + hv.Unit * cfg.predictAhead end
+        local direction = predicted - root.Position
+        if direction.Magnitude > 0.01 then
+            local cross = root.CFrame.LookVector:Cross(direction.Unit)
+            root.AssemblyAngularVelocity = cross.Magnitude > 0.01 and cross.Unit * math.asin(math.clamp(cross.Magnitude, -1, 1)) * 80 or Vector3.zero
+        end
+        if (pos - root.Position).Magnitude <= cfg.activateDistance then swing() end
+        if direction.Magnitude > cfg.minFollowDistance then
+            root.AssemblyLinearVelocity = direction.Unit * cfg.followSpeed
+        else
+            root.AssemblyLinearVelocity = Vector3.new(0, root.AssemblyLinearVelocity.Y * 0.5, 0)
+        end
     end)
-
     if M.setBypassVisual then M.setBypassVisual(true) end
     if M.mobBtnRefs and M.mobBtnRefs.bypass then M.mobBtnRefs.bypass(true) end
     if M.mobBtnRefs and M.mobBtnRefs.tpBat then M.mobBtnRefs.tpBat(true) end
@@ -2813,68 +2919,43 @@ end
 function M.stopBypassAimbot()
     M.bypassAimbotEnabled = false
     M._adaptTpBatCooldown = false
-    if M.bypassAimbotConn then
-        pcall(function() M.bypassAimbotConn:Disconnect() end)
-        M.bypassAimbotConn = nil
-    end
-    if M._blessTpBatConn then
-        pcall(function() M._blessTpBatConn:Disconnect() end)
-        M._blessTpBatConn = nil
-    end
+    if M.bypassAimbotConn then pcall(function() M.bypassAimbotConn:Disconnect() end); M.bypassAimbotConn = nil end
+    if M._blessTpBatConn then pcall(function() M._blessTpBatConn:Disconnect() end); M._blessTpBatConn = nil end
     if M._tpShieldConn then pcall(function() M._tpShieldConn:Disconnect() end); M._tpShieldConn = nil end
     if M._tpAntiDieConn then pcall(function() M._tpAntiDieConn:Disconnect() end); M._tpAntiDieConn = nil end
     if M._tpCharConn then pcall(function() M._tpCharConn:Disconnect() end); M._tpCharConn = nil end
-    pcall(function()
-        local cam = workspace.CurrentCamera
-        if cam and cam.CameraType == Enum.CameraType.Scriptable then
-            cam.CameraType = Enum.CameraType.Custom
-        end
-    end)
-    if M.restoreCharacterMovement then
-        pcall(function() M.restoreCharacterMovement(player.Character) end)
+    local char = player.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    if hum then pcall(function() hum.AutoRotate = true end) end
+    if root then
+        pcall(function() root.AssemblyAngularVelocity = Vector3.zero end)
+        if sethiddenproperty then pcall(function() sethiddenproperty(root, "PhysicsRepRootPart", root) end) end
     end
-    -- reset PhysicsRepRootPart
-    local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-    if hrp and sethiddenproperty then
-        pcall(function() sethiddenproperty(hrp, "PhysicsRepRootPart", hrp) end)
-    end
-    M._adaptTpBatCharacter = nil
-    M._adaptTpBatHumanoid = nil
-    M._adaptTpBatRoot = nil
+    if M.restoreCharacterMovement then pcall(function() M.restoreCharacterMovement(char) end) end
+    M._adaptTpBatCharacter, M._adaptTpBatHumanoid, M._adaptTpBatRoot = nil, nil, nil
     if M.setBypassVisual then M.setBypassVisual(false) end
     if M.mobBtnRefs and M.mobBtnRefs.bypass then M.mobBtnRefs.bypass(false) end
     if M.mobBtnRefs and M.mobBtnRefs.tpBat then M.mobBtnRefs.tpBat(false) end
 end
 
 function M.toggleBypassAimbot()
-    M.bypassAimbotEnabled = not M.bypassAimbotEnabled
-    if M.bypassAimbotEnabled then
-        M.startBypassAimbot()
-    else
-        M.stopBypassAimbot()
-    end
-    if M.setBypassVisual then
-        M.setBypassVisual(M.bypassAimbotEnabled)
-    end
-    if M.mobBtnRefs and M.mobBtnRefs.bypass then
-        M.mobBtnRefs.bypass(M.bypassAimbotEnabled)
-    end
-    if M.mobBtnRefs and M.mobBtnRefs.tpBat then
-        M.mobBtnRefs.tpBat(M.bypassAimbotEnabled)
-    end
-    if savePrimeHubFeKlanConfig then
-        pcall(savePrimeHubFeKlanConfig)
-    elseif M.saveConfig then
-        pcall(M.saveConfig)
-    end
+    if M.bypassAimbotEnabled then M.stopBypassAimbot() else M.startBypassAimbot() end
+    if savePrimeHubFeKlanConfig then pcall(savePrimeHubFeKlanConfig) elseif M.saveConfig then pcall(M.saveConfig) end
     return M.bypassAimbotEnabled
 end
 
 
 function M.doAutoTPDown(force)
-    local char=player.Character;if not char then return end;local hrp=char:FindFirstChild("HumanoidRootPart");if not hrp then return end
-    local hum2=char:FindFirstChildOfClass("Humanoid");if not hum2 then return end
-    hrp.CFrame=CFrame.new(hrp.Position.X,-7.00,hrp.Position.Z)*CFrame.Angles(0,select(2,hrp.CFrame:ToEulerAnglesYXZ()),0);hrp.Velocity=Vector3.zero
+    local char = player.Character
+    if not char then return end
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    local hum2 = char:FindFirstChildOfClass("Humanoid")
+    if not hrp or not hum2 or hum2.Health <= 0 then return end
+    local _, yaw = hrp.CFrame:ToEulerAnglesYXZ()
+    hrp.CFrame = CFrame.new(hrp.Position.X, -8.50, hrp.Position.Z) * CFrame.Angles(0, yaw, 0)
+    hrp.AssemblyLinearVelocity = Vector3.zero
+    hrp.AssemblyAngularVelocity = Vector3.zero
 end
 function M.runTPFloor() pcall(function() M.doAutoTPDown(true) end) end
 function M.enableStretchRez()
@@ -3397,7 +3478,7 @@ local function _arV2Start()
         if state == Enum.HumanoidStateType.Physics
             or state == Enum.HumanoidStateType.Ragdoll
             or state == Enum.HumanoidStateType.FallingDown then
-            if now - _arV2.resetCooldown > 0.15 then
+            if now - _arV2.resetCooldown > 0.08 then
                 _arV2.resetCooldown = now
                 pcall(function()
                     if hum:GetState() == Enum.HumanoidStateType.GettingUp then return end
@@ -4058,7 +4139,7 @@ function M.mirrorTPTeleportDown()
     local humanoid = char and char:FindFirstChildOfClass("Humanoid")
     if not root or not humanoid or humanoid.Health <= 0 then return end
     local now = tick()
-    if now - (M.mirrorTPLastTeleport or 0) < 0.08 then return end
+    if now - (M.mirrorTPLastTeleport or 0) < 0.04 then return end
     M.mirrorTPLastTeleport = now
     local _, yaw = root.CFrame:ToEulerAnglesYXZ()
     local y = (M.MIRROR_TP_DOWN_Y or -7) + (math.random() * 0.6 - 0.3)
@@ -4669,7 +4750,7 @@ function M.buildMobileButtons()
     local startX = vp.X - (cols * size + gap) - pad
     local defs = {
         {"autoLeft", "AUTO\nLEFT", true}, {"autoRight", "AUTO\nRIGHT", true},
-        {"batAimbot", "BAT\nAIMBOT", true}, {"tpBat", "TP\nBAT", true},
+        {"batAimbot", "BAT\nAIMBOT", true}, {"tpBat", "BAT\nBYPASS", true},
         {"batV2", "BAT\nV2", true},
         {"carrySpeed", "CARRY\nSPEED", true},
         {"drop", "DROP\nBR", false}, {"tpDown", "TP\nDOWN", false},
@@ -4825,6 +4906,13 @@ function M.buildMobileButtons()
         btn.ZIndex = 102
         btn:SetAttribute("BtnKey", key)
         btn.Parent = holder
+
+        -- Botón independiente: solo activa/desactiva; la velocidad se ajusta en la interfaz.
+        if key == "tpBat" then
+            M.bypassAimbotSpeed = math.clamp(tonumber(M.bypassAimbotSpeed) or 55, 10, 150)
+            btn.Text = "BAT\nBYPASS"
+            btn.TextSize = 12
+        end
 
         local pumpkin = Instance.new("TextLabel")
         pumpkin.Name = "PumpkinButtonDecoration"
@@ -8689,7 +8777,7 @@ function M.buildPCKeyStatusPanel()
     list.Parent = panel
 
     local entries = {
-        {"TP Bat", "BatTP", function() return M.bypassAimbotEnabled == true end},
+        {"Bat Bypass", "BatTP", function() return M.bypassAimbotEnabled == true end},
         {"Bat Aimbot", "AutoBat", function() return M.autoBatEnabled == true end},
         {"Drop Brainrot", "DropBrainrot", function() return M.dropActive == true end},
         {"Auto Left", "AutoLeft", function() return M.autoLeftEnabled == true end},
@@ -9493,6 +9581,61 @@ function M.buildGui()
     uiChoiceRow(PM, "Auto Carry Mode", {"Lagger", "Carry", "Normal"}, M.autoCarryMode == "Lagger" and 1 or (M.autoCarryMode == "Carry" and 2 or 3), function(v) M.autoCarryMode = v end)
     local PMech = CategoryRefs.contents["Mechanics"]
     uiSectionHeader(PMech, "COMBAT")
+
+    -- SPIN Bot (Cerberus Duels): gira únicamente mientras el jugador lleva un brainrot.
+    -- No cambia el personaje, no fuerza respawn y conserva una única conexión estable.
+    M.spinBotEnabled = M.spinBotEnabled == true
+    M.spinBotSpeed = tonumber(M.spinBotSpeed) or 30
+    M._spinBotConnection = nil
+    M._spinBotAngular = nil
+    local function stopSafiraSpinBot()
+        if M._spinBotConnection then M._spinBotConnection:Disconnect(); M._spinBotConnection = nil end
+        local char = player.Character
+        local root = char and char:FindFirstChild("HumanoidRootPart")
+        if root then
+            for _, obj in ipairs(root:GetChildren()) do
+                if obj.Name == "SafiraSpinBotAngular" then pcall(function() obj:Destroy() end) end
+            end
+        end
+        M._spinBotAngular = nil
+    end
+    local function startSafiraSpinBot()
+        if M._spinBotConnection then return end
+        M._spinBotConnection = RunService.Heartbeat:Connect(function()
+            if not M.spinBotEnabled or not (M.hasBrainrotInHand and M.hasBrainrotInHand()) then
+                local angular = M._spinBotAngular
+                if angular then pcall(function() angular:Destroy() end); M._spinBotAngular = nil end
+                return
+            end
+            local char = player.Character
+            local root = char and char:FindFirstChild("HumanoidRootPart")
+            if not root then return end
+            if not M._spinBotAngular or M._spinBotAngular.Parent ~= root then
+                local existing = root:FindFirstChild("SafiraSpinBotAngular")
+                if existing and existing:IsA("BodyAngularVelocity") then
+                    M._spinBotAngular = existing
+                else
+                    local angular = Instance.new("BodyAngularVelocity")
+                    angular.Name = "SafiraSpinBotAngular"
+                    angular.MaxTorque = Vector3.new(0, math.huge, 0)
+                    angular.P = 1250
+                    angular.AngularVelocity = Vector3.new(0, M.spinBotSpeed, 0)
+                    angular.Parent = root
+                    M._spinBotAngular = angular
+                end
+            end
+            M._spinBotAngular.AngularVelocity = Vector3.new(0, M.spinBotSpeed, 0)
+        end)
+    end
+    uiToggleRow(PMech, "SPIN Bot (solo con Brainrot)", M.spinBotEnabled, function(on)
+        M.spinBotEnabled = on == true
+        if M.spinBotEnabled then
+            startSafiraSpinBot()
+        else
+            stopSafiraSpinBot()
+        end
+        savePrimeHubFeKlanConfig()
+    end)
     uiToggleRow(PMech, "Aimbot All Gears", M._zenonetopAimOn == true, function(on)
         M._zenonetopAimOn = on == true
         savePrimeHubFeKlanConfig()
@@ -9577,30 +9720,14 @@ function M.buildGui()
         if on then M.startBatCounterV2() else M.stopBatCounterV2() end
         savePrimeHubFeKlanConfig()
     end)
-    uiExpandableVersionToggle(PMech, "TP Bat", M.bypassAimbotEnabled == true, {"V1", "V2"}, M.tpBatVersion or "V1",
-        function(on, version)
-            M.tpBatVersion = tostring(version or M.tpBatVersion or "V1")
-            M.bypassAimbotEnabled = on == true
-            if on then
-                if M.batV2Enabled then M.disableBatV2() end
-                M.startBypassAimbot()
-            else
-                M.stopBypassAimbot()
-            end
+    -- Velocidad del Bat Bypass: se ajusta desde la interfaz, no desde el botón flotante.
+    if uiNumberRow then
+        uiNumberRow(PMech, "Bat Bypass Speed", M.bypassAimbotSpeed or 55, 10, 150, function(v)
+            M.bypassAimbotSpeed = math.clamp(tonumber(v) or 55, 10, 150)
             savePrimeHubFeKlanConfig()
-        end,
-        function(version, isOn)
-            M.tpBatVersion = tostring(version or "V1")
-            if M.notify then pcall(function() M.notify("TP Bat: " .. M.tpBatVersion) end) end
-            -- If TP Bat is running, restart so the new distance threshold applies
-            if isOn or M.bypassAimbotEnabled then
-                M.stopBypassAimbot()
-                M.bypassAimbotEnabled = true
-                M.startBypassAimbot()
-            end
-            savePrimeHubFeKlanConfig()
-        end
-    )
+        end)
+    end
+    -- Bat Bypass is activated/deactivated from its standalone mobile button.
     do
         local _, setBatV2Vis = uiToggleRow(PMech, "Bat V2", M.batV2Enabled == true, function(on)
             if on then M.enableBatV2() else M.disableBatV2() end
@@ -10280,7 +10407,7 @@ uiSectionHeader(PUtil, "MOBILE")
     end)
     uiKeybindRow(PKB, "Carry Speed", M.KB.SpeedNormal, function() return M.manualCarryActive == true or M.carrySpeedActive == true end)
     uiKeybindRow(PKB, "Bat Aimbot", M.KB.AutoBat, function() return M.autoBatEnabled == true end)
-    uiKeybindRow(PKB, "Bat TP", M.KB.BatTP, function() return M.bypassAimbotEnabled == true end)
+    uiKeybindRow(PKB, "Bat Bypass", M.KB.BatTP, function() return M.bypassAimbotEnabled == true end)
     uiKeybindRow(PKB, "Bat V2", M.KB.BatV2, function() return M.batV2Enabled == true end)
     uiKeybindRow(PKB, "Drop Brainrot", M.KB.DropBrainrot, function() return M.dropActive == true end)
     uiSectionHeader(PKB, "OTHER KEYBINDS")
@@ -10743,24 +10870,68 @@ end
 -- ==================== VOID SPEED ENGINE (Anti Drop — no spoof) ====================
 -- Normal/Lagger: root.Velocity | Carry: CFrame step | Anti Fling
 local FLING_THRESHOLD = 80
+-- Carry Safe: detecta herramientas de Brainrot equipadas y deja el movimiento
+-- normal del juego mientras se transportan. No intenta eludir controles del servidor.
+local _carryCheckChar = nil
+local _carryCheckAt = 0
+local _carryCheckValue = false
+local function _isCarryingBrainrot(char)
+    if not char then
+        _carryCheckChar, _carryCheckValue = nil, false
+        return false
+    end
+    -- Cachea la detección durante 0.10 s para no recorrer herramientas/atributos
+    -- en cada frame de física.
+    local now = os.clock()
+    if _carryCheckChar == char and (now - _carryCheckAt) < 0.10 then
+        return _carryCheckValue
+    end
+    _carryCheckChar, _carryCheckAt = char, now
+    local carrying = false
+    if M.hasBrainrotInHand then
+        local ok, result = pcall(M.hasBrainrotInHand)
+        carrying = ok and result == true
+    end
+    if not carrying then
+        for _, item in ipairs(char:GetChildren()) do
+            if item:IsA("Tool") then
+                local itemName = string.lower(item.Name)
+                if string.find(itemName, "brainrot", 1, true)
+                    or string.find(itemName, "skibidi", 1, true)
+                    or string.find(itemName, "toilet", 1, true) then
+                    carrying = true
+                    break
+                end
+            end
+        end
+    end
+    _carryCheckValue = carrying
+    return carrying
+end
+
 local function _voidApplyVelocitySpeed(speed)
     local char = player.Character
     if not char then return end
     local hum = char:FindFirstChildOfClass("Humanoid")
     local root = char:FindFirstChild("HumanoidRootPart")
-    if not hum or not root then return end
+    if not hum or not root or hum.Health <= 0 then return end
 
-    if M.antiDieEnabled and root.AssemblyLinearVelocity.Magnitude > FLING_THRESHOLD then
-        root.AssemblyLinearVelocity = Vector3.new(0, root.AssemblyLinearVelocity.Y, 0)
-        root.AssemblyAngularVelocity = Vector3.zero
+    -- Al transportar el objeto, deja que el juego gestione el movimiento.
+    if _isCarryingBrainrot(char) then
+        M.lastMoveDir = Vector3.zero
+        return
     end
 
-    if hum.Health <= 0 then return end
+    local currentVelocity = root.AssemblyLinearVelocity
+    if M.antiDieEnabled and currentVelocity.Magnitude > FLING_THRESHOLD then
+        root.AssemblyLinearVelocity = Vector3.new(0, currentVelocity.Y, 0)
+        root.AssemblyAngularVelocity = Vector3.zero
+        currentVelocity = root.AssemblyLinearVelocity
+    end
 
     if M.autoBatEnabled or M.autoLeftEnabled or M.autoRightEnabled or M.bypassAimbotEnabled then
         return
     end
-
     if M.isRagdollState and M.isRagdollState(hum) then
         M.lastMoveDir = Vector3.zero
         return
@@ -10780,14 +10951,20 @@ local function _voidApplyVelocitySpeed(speed)
     end
 
     M.lastMoveDir = dir
-    local u = dir.Unit
     local s = tonumber(speed)
     if not s or s <= 0 then
         s = (M.getActiveMoveSpeed and M.getActiveMoveSpeed()) or 16
     end
     s = tonumber(s) or 16
-    -- Mismo método exacto que Lagger Carry: solo root.Velocity
-    root.Velocity = Vector3.new(u.X * s, root.Velocity.Y, u.Z * s)
+    local target = Vector3.new(dir.X * s, currentVelocity.Y, dir.Z * s)
+
+    -- Evita reescribir la misma velocidad cientos de veces sin necesidad.
+    -- El pequeño umbral mantiene la respuesta al cambiar de dirección.
+    local dx = target.X - currentVelocity.X
+    local dz = target.Z - currentVelocity.Z
+    if (dx * dx + dz * dz) > 0.0625 then
+        root.AssemblyLinearVelocity = target
+    end
 end
 
 local function destroySpeedObjects()
@@ -10822,11 +10999,12 @@ end
 
 local _voidSpeedConn = nil
 pcall(function()
-    local _mobileSpeedModeAcc = 0
-    local function tickSpeed()
-        _mobileSpeedModeAcc = _mobileSpeedModeAcc + 0.016
-        if not PRIMEHUB_MOBILE or _mobileSpeedModeAcc >= 0.15 then
-            _mobileSpeedModeAcc = 0
+    local _modeUpdateAcc = 0
+    local function tickSpeed(dt)
+        -- Usa el delta real del frame; no presupone que el juego vaya a 60 FPS.
+        _modeUpdateAcc = _modeUpdateAcc + (tonumber(dt) or 1/60)
+        if _modeUpdateAcc >= 0.10 then
+            _modeUpdateAcc = 0
             if M.updateAutoSwitchSpeed then pcall(M.updateAutoSwitchSpeed) end
         end
         _voidApplyVelocitySpeed(M.getActiveMoveSpeed and M.getActiveMoveSpeed() or 16)
