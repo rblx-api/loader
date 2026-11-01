@@ -1,1118 +1,1259 @@
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
--- Script decrypted by channel: https://discord.gg/76wNYBeDxR
+-- Galaxy Ping Lagger (New GUI)
+-- Features: LOW/MED/HIGH · Strength presets · Auto Brainrot · UI Scale · Keybinds · Auto-save
 
--- =====================================================
---  ELITE ANTI DROP (Compact Edition) + FONDOS + WIN DETECT
---  Tamaño reducido y OPEN reacomodado
---  Selector de fondos aparece al lado de la GUI
--- =====================================================
+local UserInputService = game:GetService("UserInputService")
+local TweenService     = game:GetService("TweenService")
+local HttpService      = game:GetService("HttpService")
+local Players          = game:GetService("Players")
+local RunService       = game:GetService("RunService")
 
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local UIS = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
-local HttpService = game:GetService("HttpService")
-local Workspace = game:GetService("Workspace")
-local SoundService = game:GetService("SoundService")
-local LP = Players.LocalPlayer
-local HttpRequest = request or http_request or (syn and syn.request) or nil
+local plr = Players.LocalPlayer
+local plrGui = plr:WaitForChild("PlayerGui", 10)
+if not plrGui then
+	warn("[Galaxy] PlayerGui not found")
+	return
+end
 
--- // CLEANHUB THEME (negro + gris plateado)
-local C_BORDER = Color3.fromRGB(180, 180, 180)
-local C_PANEL = Color3.fromRGB(15, 15, 15)
-local C_TEXT_TITLE = Color3.fromRGB(255, 255, 255)
-local C_TEXT_SUB = Color3.fromRGB(200, 200, 200)
-local C_INACTIVE = Color3.fromRGB(255, 80, 100)
-local C_ACTIVE = Color3.fromRGB(100, 255, 120)
-local C_TOGGLE_ON = Color3.fromRGB(200, 200, 200)
-local C_TOGGLE_OFF = Color3.fromRGB(40, 40, 40)
+local CONFIG_FILE = "GalaxyPingLagger_Config.json"
 
-local GUI_WIDTH = 200
-local GUI_EXPANDED_HEIGHT = 280   -- reducido
-local GUI_COLLAPSED_HEIGHT = 35
-
--- // CONFIGURACIÓN (persistente)
-local ConfigFile = "Elite_AntiDrop_Config.json"
-local Config = {
-    Position = { X_Scale = 0.5, X_Offset = -100, Y_Scale = 0.5, Y_Offset = -100 },
-    AntiDrop = false,
-    AntiDie = false,
-    AntiBat = false,
-    HoldJump = false,
-    IsCollapsed = false,
-    GuiVisible = true
+-- Strength presets → power
+local STRENGTHS = {
+	{ name = "Ultra Weak",  power = 5000 },
+	{ name = "Extra Weak",  power = 15000 },
+	{ name = "Weak",        power = 35000 },
+	{ name = "Normal",      power = 100000 },
+	{ name = "Strong",      power = 200000 },
+	{ name = "Extra Strong",power = 400000 },
+	{ name = "Ultra Strong",power = 750000 },
 }
 
-local function SaveConfig()
-    if writefile then
-        pcall(function() writefile(ConfigFile, HttpService:JSONEncode(Config)) end)
-    end
-end
-
-local function LoadConfig()
-    if isfile and isfile(ConfigFile) then
-        local success, data = pcall(function() return HttpService:JSONDecode(readfile(ConfigFile)) end)
-        if success and data then
-            for k, v in pairs(data) do Config[k] = v end
-        end
-    end
-end
-LoadConfig()
-
--- // KEYBINDS
-local Keys = {
-    antiDie = Enum.KeyCode.X,
-    guiHide = Enum.KeyCode.RightControl
+local PRESETS = {
+	LOW  = { power = 35000,  interval = 0.18 },
+	MED  = { power = 100000, interval = 0.125 },
+	HIGH = { power = 400000, interval = 0.08 },
 }
 
--- =====================================================
---  CARTEL FLOTANTE (activado por ANTI DROP)
--- =====================================================
-local billboardGui = nil
-local billboardFrame = nil
-local billboardUpdater = nil
-local billboardCharAddedConn = nil
+local DEFAULT_CFG = {
+	power        = 100000,
+	interval     = 0.125,
+	strength     = "Normal",
+	keybindKb    = "F",
+	keybindGp    = "ButtonR2",
+	autoBrainrot = true,
+	uiScale      = 1.0,
+	locked       = false,
+	posX         = nil,
+	posY         = nil,
+}
 
-local function createBillboard(char)
-    if not char then return end
-    local head = char:FindFirstChild("Head")
-    if not head then return end
+local cfg = {}
+for k, v in pairs(DEFAULT_CFG) do cfg[k] = v end
 
-    if billboardGui then billboardGui:Destroy() end
-    if billboardUpdater then billboardUpdater:Disconnect(); billboardUpdater = nil end
-
-    billboardGui = Instance.new("ScreenGui")
-    billboardGui.Name = "EliteAntiDropBillboard"
-    billboardGui.ResetOnSpawn = false
-    billboardGui.IgnoreGuiInset = true
-    billboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    billboardGui.Parent = game:GetService("CoreGui")
-
-    billboardFrame = Instance.new("Frame", billboardGui)
-    billboardFrame.Size = UDim2.new(0, 180, 0, 50)
-    billboardFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    billboardFrame.BackgroundTransparency = 0.3
-    billboardFrame.BorderSizePixel = 0
-    Instance.new("UICorner", billboardFrame).CornerRadius = UDim.new(0, 8)
-    billboardFrame.Position = UDim2.new(0.5, -90, 0.5, -25)
-
-    local txt1 = Instance.new("TextLabel", billboardFrame)
-    txt1.Size = UDim2.new(1, 0, 0.5, 0)
-    txt1.Position = UDim2.new(0, 0, 0, 0)
-    txt1.BackgroundTransparency = 1
-    txt1.Text = "ANTI DROP"
-    txt1.TextColor3 = Color3.fromRGB(255, 255, 255)
-    txt1.Font = Enum.Font.GothamBlack
-    txt1.TextSize = 18
-    txt1.TextXAlignment = Enum.TextXAlignment.Center
-    txt1.TextYAlignment = Enum.TextYAlignment.Bottom
-
-    local txt2 = Instance.new("TextLabel", billboardFrame)
-    txt2.Size = UDim2.new(1, 0, 0.5, 0)
-    txt2.Position = UDim2.new(0, 0, 0.5, 0)
-    txt2.BackgroundTransparency = 1
-    txt2.Text = "discord.gg/ExmMtVmxBY"
-    txt2.TextColor3 = Color3.fromRGB(255, 255, 255)
-    txt2.Font = Enum.Font.GothamBold
-    txt2.TextSize = 12
-    txt2.TextXAlignment = Enum.TextXAlignment.Center
-    txt2.TextYAlignment = Enum.TextYAlignment.Top
-
-    local camera = Workspace.CurrentCamera
-    billboardUpdater = RunService.Heartbeat:Connect(function()
-        if not billboardGui or not billboardGui.Parent then
-            if billboardUpdater then billboardUpdater:Disconnect(); billboardUpdater = nil end
-            return
-        end
-        if not head or not head.Parent then
-            billboardFrame.Visible = false
-            return
-        end
-        local pos, onScreen = camera:WorldToScreenPoint(head.Position)
-        if onScreen then
-            billboardFrame.Position = UDim2.new(0, pos.X - 90, 0, pos.Y - 30)
-            billboardFrame.Visible = true
-        else
-            billboardFrame.Visible = false
-        end
-    end)
+local function resolveKb(name)
+	if not name or name == "" or name == "None" then return nil end
+	local ok, val = pcall(function() return Enum.KeyCode[name] end)
+	return (ok and val) or nil
 end
 
-local function destroyBillboard()
-    if billboardUpdater then
-        billboardUpdater:Disconnect()
-        billboardUpdater = nil
-    end
-    if billboardGui then
-        billboardGui:Destroy()
-        billboardGui = nil
-    end
-    billboardFrame = nil
-    if billboardCharAddedConn then
-        billboardCharAddedConn:Disconnect()
-        billboardCharAddedConn = nil
-    end
+local function saveConfig()
+	if not writefile then return end
+	local ok, encoded = pcall(function() return HttpService:JSONEncode(cfg) end)
+	if ok and encoded then pcall(writefile, CONFIG_FILE, encoded) end
 end
 
--- // Eliminar GUI antigua
-for _, name in pairs({"EliteAntiDropUI", "AntiDieUI", "VioletteTPBat"}) do
-    local old = game:GetService("CoreGui"):FindFirstChild(name)
-    if old then old:Destroy() end
+local function loadConfig()
+	local okLoad = pcall(function()
+		if not (type(isfile) == "function" and type(readfile) == "function") then return end
+		if not isfile(CONFIG_FILE) then return end
+		local raw = readfile(CONFIG_FILE)
+		local ok, data = pcall(function() return HttpService:JSONDecode(raw) end)
+		if not ok or type(data) ~= "table" then return end
+		cfg.power        = tonumber(data.power) or DEFAULT_CFG.power
+		cfg.interval     = tonumber(data.interval) or DEFAULT_CFG.interval
+		cfg.strength     = type(data.strength) == "string" and data.strength or DEFAULT_CFG.strength
+		cfg.keybindKb    = type(data.keybindKb) == "string" and data.keybindKb or DEFAULT_CFG.keybindKb
+		cfg.keybindGp    = type(data.keybindGp) == "string" and data.keybindGp or DEFAULT_CFG.keybindGp
+		if type(data.autoBrainrot) == "boolean" then cfg.autoBrainrot = data.autoBrainrot end
+		local sc = tonumber(data.uiScale)
+		if sc then cfg.uiScale = math.clamp(sc, 0.5, 1.8) end
+		cfg.locked = data.locked == true
+		cfg.posX = tonumber(data.posX)
+		cfg.posY = tonumber(data.posY)
+	end)
+	if not okLoad then warn("[Galaxy] loadConfig failed") end
+end
+pcall(loadConfig)
+
+local active, listeningFor, remote = false, nil, nil
+local brainrotMode, lastBrainrotState, manualOverride = false, false, false
+local settingsOpen, strengthOpen = false, false
+
+local C = {
+	bg      = Color3.fromRGB(12, 8, 24),
+	panel   = Color3.fromRGB(18, 12, 36),
+	card    = Color3.fromRGB(28, 18, 48),
+	input   = Color3.fromRGB(22, 14, 42),
+	purple1 = Color3.fromRGB(100, 50, 180),
+	purple2 = Color3.fromRGB(140, 80, 220),
+	purple3 = Color3.fromRGB(180, 130, 255),
+	accent  = Color3.fromRGB(120, 70, 220),
+	white   = Color3.fromRGB(240, 235, 255),
+	dim     = Color3.fromRGB(140, 120, 180),
+	green   = Color3.fromRGB(90, 230, 140),
+	red     = Color3.fromRGB(255, 100, 120),
+	yellow  = Color3.fromRGB(255, 200, 60),
+	waiting = Color3.fromRGB(255, 190, 50),
+}
+
+for _, n in ipairs({"GalaxyPingLaggerGui"}) do
+	local o = plrGui:FindFirstChild(n)
+	if o then o:Destroy() end
 end
 
-local gui = Instance.new("ScreenGui")
-gui.Name = "EliteAntiDropUI"
-gui.ResetOnSpawn = false
-gui.DisplayOrder = 10
-gui.IgnoreGuiInset = true
-gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+local screen = Instance.new("ScreenGui")
+screen.Name = "GalaxyPingLaggerGui"
+screen.ResetOnSpawn = false
+screen.IgnoreGuiInset = true
+screen.DisplayOrder = 999
+screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+screen.Enabled = true
 
-if not pcall(function() gui.Parent = game:GetService("CoreGui") end) then
-    gui.Parent = LP:WaitForChild("PlayerGui")
+local okParent = pcall(function() screen.Parent = plrGui end)
+if not okParent or not screen.Parent then
+	pcall(function()
+		screen.Parent = game:GetService("CoreGui")
+	end)
+end
+if not screen.Parent then
+	warn("[Galaxy] could not parent ScreenGui")
+	return
 end
 
-local main = Instance.new("Frame", gui)
+local rootScale = Instance.new("UIScale")
+rootScale.Name = "RootScale"
+rootScale.Scale = math.clamp(tonumber(cfg.uiScale) or 1, 0.5, 1.8)
+rootScale.Parent = screen
+
+local function tw(obj, props, t, style)
+	TweenService:Create(obj, TweenInfo.new(t or 0.15, style or Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
+end
+
+local function corner(p, r)
+	local c = Instance.new("UICorner", p)
+	c.CornerRadius = UDim.new(0, r or 10)
+	return c
+end
+
+local function stroke(p, col, th, tr)
+	local s = Instance.new("UIStroke", p)
+	s.Color = col or C.purple1
+	s.Thickness = th or 1.2
+	s.Transparency = tr or 0.35
+	return s
+end
+
+local function grad(p, c1, c2, rot)
+	local g = Instance.new("UIGradient", p)
+	g.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, c1), ColorSequenceKeypoint.new(1, c2)})
+	g.Rotation = rot or 135
+	return g
+end
+
+local function makeDraggable(frame, handle)
+	handle = handle or frame
+	local dragging, start, pos
+	handle.InputBegan:Connect(function(i)
+		if cfg.locked then return end
+		if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
+			dragging = true
+			start = i.Position
+			pos = frame.Position
+			i.Changed:Connect(function()
+				if i.UserInputState == Enum.UserInputState.End then
+					dragging = false
+					cfg.posX = frame.Position.X.Offset
+					cfg.posY = frame.Position.Y.Offset
+					saveConfig()
+				end
+			end)
+		end
+	end)
+	UserInputService.InputChanged:Connect(function(i)
+		if dragging and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then
+			local d = i.Position - start
+			frame.Position = UDim2.new(pos.X.Scale, pos.X.Offset + d.X, pos.Y.Scale, pos.Y.Offset + d.Y)
+		end
+	end)
+end
+
+
+local function mobileClick(btn, fn)
+	btn.Active = true
+	btn.Selectable = true
+	if btn:IsA("TextButton") or btn:IsA("ImageButton") then
+		btn.AutoButtonColor = false
+	end
+	btn.MouseButton1Click:Connect(fn)
+	btn.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.Touch
+			or input.UserInputType == Enum.UserInputType.MouseButton1 then
+			local now = os.clock()
+			if (btn:GetAttribute("_lastTap") or 0) + 0.2 > now then return end
+			btn:SetAttribute("_lastTap", now)
+			task.defer(function() end)
+		end
+	end)
+end
+
+local function bindTap(btn, fn)
+	btn.Active = true
+	btn.Selectable = true
+	local last = 0
+	local function fire()
+		local now = os.clock()
+		if now - last < 0.25 then return end
+		last = now
+		fn()
+	end
+	btn.MouseButton1Click:Connect(fire)
+	btn.MouseButton1Down:Connect(function() end)
+	btn.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.Touch then
+			fire()
+		end
+	end)
+end
+
+local function isGamepad(kc)
+	local n = kc.Name
+	return n:sub(1,6)=="Button" or n:sub(1,10)=="Thumbstick" or n:sub(1,4)=="DPad" or n=="ButtonSelect" or n=="ButtonStart"
+end
+
+local BLACKLISTED = {
+	[Enum.KeyCode.Escape] = true,
+	[Enum.KeyCode.LeftControl] = true,
+	[Enum.KeyCode.Unknown] = true,
+}
+
+-- ===================== MAIN =====================
+local MAIN_W, MAIN_H = 230, 118
+
+local main = Instance.new("Frame")
 main.Name = "Main"
-main.Size = UDim2.new(0, GUI_WIDTH, 0, GUI_EXPANDED_HEIGHT)
-main.Position = UDim2.new(Config.Position.X_Scale, Config.Position.X_Offset,
-                          Config.Position.Y_Scale, Config.Position.Y_Offset)
-main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-main.BackgroundTransparency = 0
-main.BorderSizePixel = 0
-main.Active = true
-main.ClipsDescendants = true
-main.ZIndex = 1
-local mainCorner = Instance.new("UICorner", main)
-mainCorner.CornerRadius = UDim.new(0, 12)
-
--- Fondo con imagen
-local bgImage = Instance.new("ImageLabel", main)
-bgImage.Size = UDim2.new(1, 0, 1, 0)
-bgImage.BackgroundTransparency = 1
-bgImage.Image = "rbxassetid://101894744159774"
-bgImage.ScaleType = Enum.ScaleType.Stretch
-bgImage.ZIndex = 0
-local imageCorner = Instance.new("UICorner", bgImage)
-imageCorner.CornerRadius = UDim.new(0, 12)
-
--- Arrastre
-local dragging, dragInput, dragStart, mainStart = false, nil, nil, nil
-main.InputBegan:Connect(function(inp)
-    if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
-        dragging = true; dragStart = inp.Position; mainStart = main.Position
-        inp.Changed:Connect(function()
-            if inp.UserInputState == Enum.UserInputState.End then 
-                dragging = false
-                Config.Position = {X_Scale = main.Position.X.Scale, X_Offset = main.Position.X.Offset, Y_Scale = main.Position.Y.Scale, Y_Offset = main.Position.Y.Offset}
-                SaveConfig()
-            end
-        end)
-    end
-end)
-main.InputChanged:Connect(function(inp)
-    if inp.UserInputType == Enum.UserInputType.MouseMovement or inp.UserInputType == Enum.UserInputType.Touch then dragInput = inp end
-end)
-UIS.InputChanged:Connect(function(inp)
-    if inp == dragInput and dragging then
-        local dx = inp.Position.X - dragStart.X
-        local dy = inp.Position.Y - dragStart.Y
-        main.Position = UDim2.new(mainStart.X.Scale, mainStart.X.Offset+dx, mainStart.Y.Scale, mainStart.Y.Offset+dy)
-    end
-end)
-
--- CABECERA (más compacta)
-local titleDot = Instance.new("Frame", main)
-titleDot.Size = UDim2.new(0, 8, 0, 8)
-titleDot.Position = UDim2.new(0, 12, 0, 10)
-titleDot.BackgroundColor3 = C_BORDER
-titleDot.BorderSizePixel = 0
-titleDot.ZIndex = 5
-Instance.new("UICorner", titleDot).CornerRadius = UDim.new(1, 0)
-
-local titleLbl = Instance.new("TextLabel", main)
-titleLbl.Size = UDim2.new(0, 140, 0, 16)
-titleLbl.Position = UDim2.new(0, 26, 0, 4)
-titleLbl.BackgroundTransparency = 1
-titleLbl.Text = "ELITE ANTI DROP"
-titleLbl.TextColor3 = C_TEXT_TITLE
-titleLbl.Font = Enum.Font.GothamBlack
-titleLbl.TextSize = 13
-titleLbl.TextXAlignment = Enum.TextXAlignment.Left
-titleLbl.ZIndex = 5
-
-local subLbl = Instance.new("TextLabel", main)
-subLbl.Size = UDim2.new(0, 140, 0, 12)
-subLbl.Position = UDim2.new(0, 26, 0, 22)
-subLbl.BackgroundTransparency = 1
-subLbl.Text = "discord.gg/ExmMtVmxBY"
-subLbl.TextColor3 = C_TEXT_SUB
-subLbl.Font = Enum.Font.Gotham
-subLbl.TextSize = 9
-subLbl.TextXAlignment = Enum.TextXAlignment.Left
-subLbl.ZIndex = 5
-
--- Botón minimizar
-local minBtn = Instance.new("TextButton", main)
-minBtn.Size = UDim2.new(0, 20, 0, 20)
-minBtn.Position = UDim2.new(1, -28, 0, 8)
-minBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-minBtn.BackgroundTransparency = 0.5
-minBtn.Text = "-"
-minBtn.TextColor3 = C_TEXT_TITLE
-minBtn.Font = Enum.Font.GothamBlack
-minBtn.TextSize = 14
-minBtn.ZIndex = 5
-Instance.new("UICorner", minBtn).CornerRadius = UDim.new(0, 6)
-minBtn.MouseButton1Click:Connect(function()
-    Config.IsCollapsed = not Config.IsCollapsed
-    local targetHeight = Config.IsCollapsed and GUI_COLLAPSED_HEIGHT or GUI_EXPANDED_HEIGHT
-    TweenService:Create(main, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
-        Size = UDim2.new(0, GUI_WIDTH, 0, targetHeight)
-    }):Play()
-    SaveConfig()
-end)
-
--- =====================================================
---  FUNCIÓN PARA CREAR PANELES (más pequeños)
--- =====================================================
-local function CreatePanel(yPos, height)
-    local p = Instance.new("Frame", main)
-    p.Size = UDim2.new(1, -16, 0, height)
-    p.Position = UDim2.new(0, 8, 0, yPos)
-    p.BackgroundColor3 = C_PANEL
-    p.BackgroundTransparency = 0.5
-    p.ZIndex = 4
-    Instance.new("UICorner", p).CornerRadius = UDim.new(0, 10)
-    return p
-end
-
--- =====================================================
---  PANEL DE ESTADO (resumen)
--- =====================================================
-local statusPanel = CreatePanel(36, 22)
-local statusDot = Instance.new("Frame", statusPanel)
-statusDot.Size = UDim2.new(0, 6, 0, 6)
-statusDot.Position = UDim2.new(0, 10, 0.5, -3)
-statusDot.BackgroundColor3 = C_INACTIVE
-statusDot.BorderSizePixel = 0
-statusDot.ZIndex = 6
-Instance.new("UICorner", statusDot).CornerRadius = UDim.new(1, 0)
-
-local statusTxt = Instance.new("TextLabel", statusPanel)
-statusTxt.Size = UDim2.new(0, 50, 1, 0)
-statusTxt.Position = UDim2.new(0, 22, 0, 0)
-statusTxt.BackgroundTransparency = 1
-statusTxt.Text = "Status"
-statusTxt.TextColor3 = C_TEXT_TITLE
-statusTxt.Font = Enum.Font.GothamBold
-statusTxt.TextSize = 11
-statusTxt.TextXAlignment = Enum.TextXAlignment.Left
-statusTxt.ZIndex = 6
-
-local statusVal = Instance.new("TextLabel", statusPanel)
-statusVal.Size = UDim2.new(0, 120, 1, 0)
-statusVal.Position = UDim2.new(1, -130, 0, 0)
-statusVal.BackgroundTransparency = 1
-statusVal.Text = "OFF"
-statusVal.TextColor3 = C_INACTIVE
-statusVal.Font = Enum.Font.GothamBlack
-statusVal.TextSize = 11
-statusVal.TextXAlignment = Enum.TextXAlignment.Right
-statusVal.ZIndex = 6
-
-local function updateStatusPanel()
-    local activeList = {}
-    if Config.AntiDrop then table.insert(activeList, "1") end
-    if Config.AntiDie then table.insert(activeList, "2") end
-    if Config.AntiBat then table.insert(activeList, "3") end
-    if Config.HoldJump then table.insert(activeList, "4") end
-
-    local activeCount = #activeList
-    if activeCount > 0 then
-        statusVal.Text = table.concat(activeList, " | ")
-        statusVal.TextColor3 = C_ACTIVE
-        statusDot.BackgroundColor3 = C_ACTIVE
-    else
-        statusVal.Text = "OFF"
-        statusVal.TextColor3 = C_INACTIVE
-        statusDot.BackgroundColor3 = C_INACTIVE
-    end
-end
-
--- =====================================================
---  FUNCIÓN PARA CREAR UN TOGGLE PANEL (compacto)
--- =====================================================
-local function CreateTogglePanel(yPos, labelText, subText, keybindText)
-    local panel = CreatePanel(yPos, 38)
-    
-    local title = Instance.new("TextLabel", panel)
-    title.Size = UDim2.new(0, 120, 0, 16)
-    title.Position = UDim2.new(0, 10, 0, 4)
-    title.BackgroundTransparency = 1
-    title.Text = labelText
-    title.TextColor3 = C_TEXT_TITLE
-    title.Font = Enum.Font.GothamBlack
-    title.TextSize = 12
-    title.TextXAlignment = Enum.TextXAlignment.Left
-    title.ZIndex = 6
-
-    local sub = Instance.new("TextLabel", panel)
-    sub.Size = UDim2.new(0, 140, 0, 12)
-    sub.Position = UDim2.new(0, 10, 0, 22)
-    sub.BackgroundTransparency = 1
-    sub.Text = subText
-    sub.TextColor3 = C_TEXT_SUB
-    sub.Font = Enum.Font.Gotham
-    sub.TextSize = 9
-    sub.TextXAlignment = Enum.TextXAlignment.Left
-    sub.ZIndex = 6
-
-    local keyLbl = nil
-    if keybindText then
-        keyLbl = Instance.new("TextLabel", panel)
-        keyLbl.Size = UDim2.new(0, 25, 0, 16)
-        keyLbl.Position = UDim2.new(1, -80, 0.5, -8)
-        keyLbl.BackgroundTransparency = 1
-        keyLbl.Text = keybindText
-        keyLbl.TextColor3 = C_BORDER
-        keyLbl.Font = Enum.Font.GothamBlack
-        keyLbl.TextSize = 10
-        keyLbl.ZIndex = 6
-    end
-
-    local toggleBg = Instance.new("Frame", panel)
-    toggleBg.Size = UDim2.new(0, 36, 0, 18)
-    toggleBg.Position = UDim2.new(1, -48, 0.5, -9)
-    toggleBg.BackgroundColor3 = C_TOGGLE_OFF
-    toggleBg.BorderSizePixel = 0
-    toggleBg.ZIndex = 6
-    Instance.new("UICorner", toggleBg).CornerRadius = UDim.new(1, 0)
-
-    local toggleDot = Instance.new("Frame", toggleBg)
-    toggleDot.Size = UDim2.new(0, 12, 0, 12)
-    toggleDot.Position = UDim2.new(0, 3, 0.5, -6)
-    toggleDot.BackgroundColor3 = C_TOGGLE_ON
-    toggleDot.BorderSizePixel = 0
-    toggleDot.ZIndex = 7
-    Instance.new("UICorner", toggleDot).CornerRadius = UDim.new(1, 0)
-
-    local btn = Instance.new("TextButton", panel)
-    btn.Size = UDim2.new(1, 0, 1, 0)
-    btn.BackgroundTransparency = 1
-    btn.Text = ""
-    btn.ZIndex = 10
-
-    local function updateVisuals(state)
-        TweenService:Create(toggleDot, TweenInfo.new(0.2, Enum.EasingStyle.Back), {
-            Position = state and UDim2.new(1, -17, 0.5, -6) or UDim2.new(0, 3, 0.5, -6)
-        }):Play()
-        updateStatusPanel()
-    end
-
-    return panel, btn, updateVisuals, toggleDot, keyLbl
-end
-
--- =====================================================
---  LÓGICA: ANTI DROP (spoof velocidad) + BILLBOARD
--- =====================================================
-local mt = getrawmetatable(game)
-local oldIdx, oldNewIdx
-local spoofedVelocity = Vector3.zero
-local antiDropActive = false
-
-local function startAntiDrop()
-    if antiDropActive then return end
-    if not mt then return end
-    oldIdx = mt.__index
-    oldNewIdx = mt.__newindex
-    setreadonly(mt, false)
-    mt.__index = newcclosure(function(self, key)
-        if not checkcaller() and (key == "AssemblyLinearVelocity" or key == "Velocity") and
-           typeof(self) == "Instance" and self:IsA("BasePart") and self.Name == "HumanoidRootPart" and
-           self:IsDescendantOf(LP.Character) then
-            return spoofedVelocity
-        end
-        return oldIdx(self, key)
-    end)
-    mt.__newindex = newcclosure(function(self, key, value)
-        if not checkcaller() and (key == "AssemblyLinearVelocity" or key == "Velocity") and
-           typeof(self) == "Instance" and self:IsA("BasePart") and self.Name == "HumanoidRootPart" and
-           self:IsDescendantOf(LP.Character) then
-            spoofedVelocity = value
-            return
-        end
-        return oldNewIdx(self, key, value)
-    end)
-    setreadonly(mt, true)
-    antiDropActive = true
-
-    local char = LP.Character
-    if char then
-        createBillboard(char)
-    end
-
-    if billboardCharAddedConn then billboardCharAddedConn:Disconnect() end
-    billboardCharAddedConn = LP.CharacterAdded:Connect(function(c)
-        if Config.AntiDrop then
-            task.wait(0.1)
-            createBillboard(c)
-        end
-    end)
-end
-
-local function stopAntiDrop()
-    if not antiDropActive then return end
-    if mt and oldIdx then
-        setreadonly(mt, false)
-        mt.__index = oldIdx
-        mt.__newindex = oldNewIdx
-        setreadonly(mt, true)
-        oldIdx = nil
-        oldNewIdx = nil
-    end
-    antiDropActive = false
-    destroyBillboard()
-end
-
--- =====================================================
---  LÓGICA: ANTI DIE (vida infinita)
--- =====================================================
-local heartConn, deathConns, charAddedConn = nil, {}, nil
-
-local function protectChar(character)
-    if not character then return end
-    local hum = character:WaitForChild("Humanoid", 5)
-    if not hum then return end
-
-    hum.MaxHealth = math.huge
-    hum.Health = math.huge
-
-    local sc = hum.StateChanged:Connect(function(_, new)
-        if not Config.AntiDie then return end
-        if new == Enum.HumanoidStateType.Dead then
-            hum.Health = math.huge
-            hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
-        end
-    end)
-    table.insert(deathConns, sc)
-
-    hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
-
-    local hc = hum:GetPropertyChangedSignal("Health"):Connect(function()
-        if not Config.AntiDie then return end
-        if hum.Health < hum.MaxHealth then
-            hum.Health = math.huge
-        end
-    end)
-    table.insert(deathConns, hc)
-
-    if heartConn then heartConn:Disconnect() end
-    heartConn = RunService.Heartbeat:Connect(function()
-        if not Config.AntiDie then return end
-        if hum and hum.Parent and hum.Health < hum.MaxHealth then
-            hum.Health = math.huge
-        end
-    end)
-end
-
-local function startAntiDie()
-    for _, c in ipairs(deathConns) do pcall(function() c:Disconnect() end) end
-    deathConns = {}
-    if heartConn then heartConn:Disconnect(); heartConn = nil end
-    if charAddedConn then charAddedConn:Disconnect(); charAddedConn = nil end
-
-    protectChar(LP.Character)
-
-    charAddedConn = LP.CharacterAdded:Connect(function(c)
-        if not Config.AntiDie then return end
-        task.wait(0.1)
-        for _, c2 in ipairs(deathConns) do pcall(function() c2:Disconnect() end) end
-        deathConns = {}
-        protectChar(c)
-    end)
-end
-
-local function stopAntiDie()
-    for _, c in ipairs(deathConns) do pcall(function() c:Disconnect() end) end
-    deathConns = {}
-    if heartConn then heartConn:Disconnect(); heartConn = nil end
-    if charAddedConn then charAddedConn:Disconnect(); charAddedConn = nil end
-
-    local char = LP.Character
-    if char then
-        local hum = char:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hum:SetStateEnabled(Enum.HumanoidStateType.Dead, true)
-            hum.MaxHealth = 100
-            hum.Health = 100
-        end
-    end
-end
-
--- =====================================================
---  LÓGICA: ANTI BAT (fijar velocidad horizontal)
--- =====================================================
-local antiBatConnection = nil
-local AntiBatForceX = 1000
-local AntiBatForceZ = 1000
-
-local function startAntiBat()
-    if antiBatConnection then return end
-    antiBatConnection = RunService.Heartbeat:Connect(function()
-        if not Config.AntiBat then return end
-        local char = LP.Character
-        if not char then return end
-        local root = char:FindFirstChild("HumanoidRootPart")
-        if not root then return end
-        local origXZ = Vector3.new(root.Velocity.X, 0, root.Velocity.Z)
-        root.Velocity = Vector3.new(AntiBatForceX, root.Velocity.Y, AntiBatForceZ)
-        RunService.RenderStepped:Wait()
-        root.Velocity = Vector3.new(origXZ.X, root.Velocity.Y, origXZ.Z)
-    end)
-end
-
-local function stopAntiBat()
-    if antiBatConnection then
-        antiBatConnection:Disconnect()
-        antiBatConnection = nil
-    end
-end
-
--- =====================================================
---  LÓGICA: HOLD JUMP (salto continuo)
--- =====================================================
-RunService.Heartbeat:Connect(function()
-    if not Config.HoldJump then return end
-    local char = LP.Character
-    if not char then return end
-    local hum = char:FindFirstChildOfClass("Humanoid")
-    local root = char:FindFirstChild("HumanoidRootPart")
-    if root and hum and hum.Jump then
-        root.Velocity = Vector3.new(root.Velocity.X, 55, root.Velocity.Z)
-    end
-end)
-
--- =====================================================
---  CONSTRUCCIÓN DE LOS 4 TOGGLES + BOTÓN OPEN (reacomodado)
--- =====================================================
-local yPos = 62  -- después del statusPanel (36+22+4)
-
--- 1. ANTI DROP
-local panel1, btn1, update1, dot1, key1 = CreateTogglePanel(yPos, "ANTI DROP", "Previene que el brainrot se caiga", nil)
-update1(Config.AntiDrop)
-btn1.MouseButton1Click:Connect(function()
-    Config.AntiDrop = not Config.AntiDrop
-    update1(Config.AntiDrop)
-    if Config.AntiDrop then startAntiDrop() else stopAntiDrop() end
-    SaveConfig()
-end)
-local invisibleBtn1 = Instance.new("TextButton", panel1)
-invisibleBtn1.Size = UDim2.new(0, 40, 1, 0)
-invisibleBtn1.Position = UDim2.new(1, -52, 0, 0)
-invisibleBtn1.BackgroundTransparency = 1
-invisibleBtn1.Text = ""
-invisibleBtn1.ZIndex = 10
-invisibleBtn1.MouseButton1Click:Connect(function()
-    Config.AntiDrop = not Config.AntiDrop
-    update1(Config.AntiDrop)
-    if Config.AntiDrop then startAntiDrop() else stopAntiDrop() end
-    SaveConfig()
-end)
-
--- 2. ANTI DIE
-local panel2, btn2, update2, dot2, key2 = CreateTogglePanel(yPos + 42, "ANTI DIE", "Previene la muerte", Keys.antiDie.Name)
-update2(Config.AntiDie)
-btn2.MouseButton1Click:Connect(function()
-    Config.AntiDie = not Config.AntiDie
-    update2(Config.AntiDie)
-    if Config.AntiDie then startAntiDie() else stopAntiDie() end
-    SaveConfig()
-end)
-local invisibleBtn2 = Instance.new("TextButton", panel2)
-invisibleBtn2.Size = UDim2.new(0, 40, 1, 0)
-invisibleBtn2.Position = UDim2.new(1, -52, 0, 0)
-invisibleBtn2.BackgroundTransparency = 1
-invisibleBtn2.Text = ""
-invisibleBtn2.ZIndex = 10
-invisibleBtn2.MouseButton1Click:Connect(function()
-    Config.AntiDie = not Config.AntiDie
-    update2(Config.AntiDie)
-    if Config.AntiDie then startAntiDie() else stopAntiDie() end
-    SaveConfig()
-end)
-
--- 3. ANTI BAT
-local panel3, btn3, update3, dot3, key3 = CreateTogglePanel(yPos + 84, "ANTI BAT", "Previene Aimbots", nil)
-update3(Config.AntiBat)
-btn3.MouseButton1Click:Connect(function()
-    Config.AntiBat = not Config.AntiBat
-    update3(Config.AntiBat)
-    if Config.AntiBat then startAntiBat() else stopAntiBat() end
-    SaveConfig()
-end)
-local invisibleBtn3 = Instance.new("TextButton", panel3)
-invisibleBtn3.Size = UDim2.new(0, 40, 1, 0)
-invisibleBtn3.Position = UDim2.new(1, -52, 0, 0)
-invisibleBtn3.BackgroundTransparency = 1
-invisibleBtn3.Text = ""
-invisibleBtn3.ZIndex = 10
-invisibleBtn3.MouseButton1Click:Connect(function()
-    Config.AntiBat = not Config.AntiBat
-    update3(Config.AntiBat)
-    if Config.AntiBat then startAntiBat() else stopAntiBat() end
-    SaveConfig()
-end)
-
--- 4. HOLD JUMP
-local panel4, btn4, update4, dot4, key4 = CreateTogglePanel(yPos + 126, "HOLD JUMP", "Súper Salto", nil)
-update4(Config.HoldJump)
-btn4.MouseButton1Click:Connect(function()
-    Config.HoldJump = not Config.HoldJump
-    update4(Config.HoldJump)
-    SaveConfig()
-end)
-local invisibleBtn4 = Instance.new("TextButton", panel4)
-invisibleBtn4.Size = UDim2.new(0, 40, 1, 0)
-invisibleBtn4.Position = UDim2.new(1, -52, 0, 0)
-invisibleBtn4.BackgroundTransparency = 1
-invisibleBtn4.Text = ""
-invisibleBtn4.ZIndex = 10
-invisibleBtn4.MouseButton1Click:Connect(function()
-    Config.HoldJump = not Config.HoldJump
-    update4(Config.HoldJump)
-    SaveConfig()
-end)
-
--- =====================================================
---  BOTÓN OPEN (reacomodado como un botón independiente en la parte inferior)
--- =====================================================
-local openY = yPos + 168  -- justo después del último toggle (126+38+4)
-local openBtn = Instance.new("TextButton", main)
-openBtn.Size = UDim2.new(1, -16, 0, 28)
-openBtn.Position = UDim2.new(0, 8, 0, openY)
-openBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 24)
-openBtn.Text = "OPEN"
-openBtn.TextColor3 = C_TEXT_TITLE
-openBtn.Font = Enum.Font.GothamBlack
-openBtn.TextSize = 12
-openBtn.TextXAlignment = Enum.TextXAlignment.Center
-openBtn.ZIndex = 6
-Instance.new("UICorner", openBtn).CornerRadius = UDim.new(0, 8)
-local openStroke = Instance.new("UIStroke", openBtn)
-openStroke.Color = C_BORDER
-openStroke.Thickness = 1.5
-openStroke.Transparency = 0.5
-
--- Ajustar altura expandida para que quepa todo (openY+28 = 62+168+28 = 258, dejamos margen)
-GUI_EXPANDED_HEIGHT = 270  -- actualizamos la variable
-
--- =====================================================
---  INICIALIZAR ESTADOS GUARDADOS
--- =====================================================
-if Config.AntiDrop then startAntiDrop() end
-if Config.AntiDie then startAntiDie() end
-if Config.AntiBat then startAntiBat() end
-
-updateStatusPanel()
-
-if Config.IsCollapsed then
-    main.Size = UDim2.new(0, GUI_WIDTH, 0, GUI_COLLAPSED_HEIGHT)
-end
-if not Config.GuiVisible then
-    main.Visible = false
-end
-
--- =====================================================
---  ATAJOS DE TECLADO
--- =====================================================
-UIS.InputBegan:Connect(function(inp, gp)
-    if gp then return end
-    if inp.UserInputType == Enum.UserInputType.Keyboard then
-        if inp.KeyCode == Keys.antiDie then
-            Config.AntiDie = not Config.AntiDie
-            update2(Config.AntiDie)
-            if Config.AntiDie then startAntiDie() else stopAntiDie() end
-            SaveConfig()
-        elseif inp.KeyCode == Keys.guiHide then
-            Config.GuiVisible = not Config.GuiVisible
-            main.Visible = Config.GuiVisible
-            SaveConfig()
-        end
-    end
-end)
-
--- =====================================================
---  CAMBIO DE KEYBIND (para Anti Die)
--- =====================================================
-local kListening = false
-local kConn = nil
-local invisibleKeyBtn = Instance.new("TextButton", panel2)
-invisibleKeyBtn.Size = UDim2.new(0, 35, 1, 0)
-invisibleKeyBtn.Position = UDim2.new(1, -90, 0, 0)
-invisibleKeyBtn.BackgroundTransparency = 1
-invisibleKeyBtn.Text = ""
-invisibleKeyBtn.ZIndex = 10
-invisibleKeyBtn.MouseButton1Click:Connect(function()
-    if kListening then return end
-    kListening = true
-    if key2 then key2.Text = "..." end
-    kConn = UIS.InputBegan:Connect(function(inp)
-        if inp.UserInputType == Enum.UserInputType.Keyboard then
-            Keys.antiDie = inp.KeyCode
-            if key2 then key2.Text = inp.KeyCode.Name end
-            kListening = false
-            kConn:Disconnect()
-        end
-    end)
-end)
-
--- =====================================================
---  SISTEMA DE FONDOS (selector + persistencia)
--- =====================================================
+main.Size = UDim2.fromOffset(MAIN_W, MAIN_H)
 do
-    local HttpService = game:GetService("HttpService")
-    local BG_CONFIG_FILE = "Elite_AntiDrop_BGs.json"
-    local savedBG = "rbxassetid://101894744159774"
+	local cam = workspace.CurrentCamera
+	local vs = cam and cam.ViewportSize or Vector2.new(800, 600)
+	local isMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
+	local useSaved = cfg.posX and cfg.posY and not isMobile
+		and cfg.posX > -50 and cfg.posY > -50
+		and cfg.posX < vs.X - 40 and cfg.posY < vs.Y - 40
+	if useSaved then
+		main.Position = UDim2.fromOffset(cfg.posX, cfg.posY)
+	else
+		main.Position = UDim2.new(0.5, -MAIN_W/2, 0.5, -MAIN_H/2)
+	end
+end
+main.Visible = true
+main.BackgroundColor3 = C.bg
+main.BorderSizePixel = 0
+main.Active = false
+main.Parent = screen
+corner(main, 14)
+stroke(main, C.purple1, 1.4, 0.3)
+grad(main, C.bg, Color3.fromRGB(24, 12, 48), 150)
 
-    local function loadBG()
-        if isfile and isfile(BG_CONFIG_FILE) then
-            local ok, data = pcall(function() return HttpService:JSONDecode(readfile(BG_CONFIG_FILE)) end)
-            if ok and type(data) == "string" and data ~= "" then
-                savedBG = data
-            end
-        end
-    end
-    loadBG()
+local header = Instance.new("Frame", main)
+header.Size = UDim2.new(1, 0, 0, 34)
+header.BackgroundColor3 = C.panel
+header.BorderSizePixel = 0
+header.Active = true
+header.ZIndex = 2
+corner(header, 14)
+grad(header, C.purple1, C.purple2, 120)
 
-    local function applyBG(imgId)
-        savedBG = imgId
-        if bgImage then bgImage.Image = imgId end
-        if writefile then
-            pcall(function() writefile(BG_CONFIG_FILE, HttpService:JSONEncode(imgId)) end)
-        end
-    end
+local headerFill = Instance.new("Frame", main)
+headerFill.Size = UDim2.new(1, 0, 0, 10)
+headerFill.Position = UDim2.fromOffset(0, 24)
+headerFill.BackgroundColor3 = C.panel
+headerFill.BorderSizePixel = 0
+headerFill.Active = false
+headerFill.ZIndex = 2
+grad(headerFill, C.purple1, C.purple2, 120)
 
-    applyBG(savedBG)
+local title = Instance.new("TextLabel", header)
+title.Size = UDim2.new(1, -100, 1, 0)
+title.Position = UDim2.fromOffset(10, 0)
+title.BackgroundTransparency = 1
+title.Text = "GALAXY PING LAGGER"
+title.TextColor3 = C.white
+title.Font = Enum.Font.GothamBlack
+title.TextSize = 10
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.ZIndex = 3
 
-    local BG_CHOICES = {
-        "rbxassetid://136208130767349",
-        "rbxassetid://126793180958099",
-        "rbxassetid://105542572852370",
-        "rbxassetid://128997600029394",
-        "rbxassetid://99420703803809",
-        "rbxassetid://117186687504218",
-        "rbxassetid://123015462349687",
-        "rbxassetid://111195293067618",
-        "rbxassetid://133619037676439",
-        "rbxassetid://116985758139639",
-        "rbxassetid://132062039944824",
-        "rbxassetid://139571679676131",
-        "rbxassetid://70418952815837",
-    }
+local lockBtn = Instance.new("TextButton", header)
+lockBtn.Size = UDim2.fromOffset(22, 22)
+lockBtn.Position = UDim2.new(1, -86, 0.5, -11)
+lockBtn.BackgroundColor3 = Color3.fromRGB(40, 18, 70)
+lockBtn.Text = cfg.locked and "🔒" or "🔓"
+lockBtn.TextSize = 11
+lockBtn.AutoButtonColor = false
+lockBtn.ZIndex = 4
+corner(lockBtn, 6)
 
-    local pickerGui = Instance.new("ScreenGui")
-    pickerGui.Name = "EliteBgPicker"
-    pickerGui.ResetOnSpawn = false
-    pickerGui.DisplayOrder = 12
-    pickerGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    pickerGui.Parent = game:GetService("CoreGui")
+local statusPill = Instance.new("Frame", header)
+statusPill.Size = UDim2.fromOffset(36, 16)
+statusPill.Position = UDim2.new(1, -60, 0.5, -8)
+statusPill.BackgroundColor3 = Color3.fromRGB(50, 16, 40)
+statusPill.BorderSizePixel = 0
+statusPill.ZIndex = 3
+corner(statusPill, 8)
 
-    local Win = Instance.new("Frame", pickerGui)
-    Win.Name = "Win"
-    Win.Visible = false
-    Win.Size = UDim2.new(0, 200, 0, 180)
-    Win.Position = UDim2.new(0.5, -100, 0.5, -70)  -- posición inicial (se actualiza al abrir)
-    Win.BackgroundColor3 = Color3.fromRGB(10, 10, 12)
-    Win.BorderSizePixel = 0
-    Win.ClipsDescendants = true
-    Win.Active = true
-    Instance.new("UICorner", Win).CornerRadius = UDim.new(0, 10)
-    local winStroke = Instance.new("UIStroke", Win)
-    winStroke.Color = Color3.fromRGB(110, 110, 120)
-    winStroke.Thickness = 1.5
-    winStroke.Transparency = 0.25
+local statusLbl = Instance.new("TextLabel", statusPill)
+statusLbl.Size = UDim2.fromScale(1, 1)
+statusLbl.BackgroundTransparency = 1
+statusLbl.Text = "OFF"
+statusLbl.TextColor3 = C.red
+statusLbl.Font = Enum.Font.GothamBlack
+statusLbl.TextSize = 9
+statusLbl.ZIndex = 4
 
-    local WinTitle = Instance.new("TextLabel", Win)
-    WinTitle.Size = UDim2.new(1, 0, 0, 22)
-    WinTitle.BackgroundTransparency = 1
-    WinTitle.Text = "Elige un fondo"
-    WinTitle.TextColor3 = Color3.fromRGB(240, 240, 240)
-    WinTitle.TextSize = 10
-    WinTitle.Font = Enum.Font.GothamBold
-    WinTitle.TextXAlignment = Enum.TextXAlignment.Center
+local settingsBtn = Instance.new("TextButton", header)
+settingsBtn.Size = UDim2.fromOffset(22, 22)
+settingsBtn.Position = UDim2.new(1, -28, 0.5, -11)
+settingsBtn.BackgroundColor3 = Color3.fromRGB(40, 18, 70)
+settingsBtn.Text = "⚙"
+settingsBtn.TextColor3 = C.white
+settingsBtn.Font = Enum.Font.GothamBold
+settingsBtn.TextSize = 12
+settingsBtn.AutoButtonColor = false
+settingsBtn.ZIndex = 4
+corner(settingsBtn, 6)
 
-    local offBtn = Instance.new("TextButton", Win)
-    offBtn.Size = UDim2.new(0, 150, 0, 18)
-    offBtn.Position = UDim2.new(0.5, -75, 0, 26)
-    offBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 24)
-    offBtn.Text = "PREDETERMINADO"
-    offBtn.TextColor3 = Color3.fromRGB(255, 90, 90)
-    offBtn.TextSize = 9
-    offBtn.Font = Enum.Font.GothamBold
-    offBtn.TextXAlignment = Enum.TextXAlignment.Center
-    offBtn.TextYAlignment = Enum.TextYAlignment.Center
-    Instance.new("UICorner", offBtn).CornerRadius = UDim.new(0, 6)
-    local os2 = Instance.new("UIStroke", offBtn)
-    os2.Color = Color3.fromRGB(255, 90, 90)
-    os2.Transparency = 0.4
-    offBtn.MouseButton1Click:Connect(function()
-        applyBG("rbxassetid://101894744159774")
-        Win.Visible = false
-    end)
+makeDraggable(main, header)
 
-    local Grid = Instance.new("ScrollingFrame", Win)
-    Grid.Position = UDim2.new(0, 6, 0, 50)
-    Grid.Size = UDim2.new(1, -12, 1, -58)
-    Grid.BackgroundTransparency = 1
-    Grid.ScrollBarThickness = 3
-    Grid.CanvasSize = UDim2.new(0, 0, 0, 0)
-    Grid.AutomaticCanvasSize = Enum.AutomaticSize.Y
+local activateBtn = Instance.new("TextButton", main)
+activateBtn.Size = UDim2.new(1, -16, 0, 28)
+activateBtn.Position = UDim2.fromOffset(8, 40)
+activateBtn.BackgroundColor3 = C.card
+activateBtn.BorderSizePixel = 0
+activateBtn.Text = ""
+activateBtn.AutoButtonColor = false
+activateBtn.Active = true
+activateBtn.Selectable = true
+activateBtn.ZIndex = 5
+corner(activateBtn, 9)
+local actGrad = grad(activateBtn, C.purple1, C.purple2, 135)
+local actStroke = stroke(activateBtn, C.purple3, 1.1, 0.4)
 
-    local gridLayout = Instance.new("UIGridLayout", Grid)
-    gridLayout.CellSize = UDim2.new(0, 40, 0, 40)
-    gridLayout.CellPadding = UDim2.new(0, 5, 0, 5)
+local activateLbl = Instance.new("TextLabel", activateBtn)
+activateLbl.Size = UDim2.fromScale(1, 1)
+activateLbl.BackgroundTransparency = 1
+activateLbl.Text = "ACTIVATE"
+activateLbl.TextColor3 = C.white
+activateLbl.Font = Enum.Font.GothamBlack
+activateLbl.TextSize = 12
+activateLbl.ZIndex = 4
 
-    for _, imgId in ipairs(BG_CHOICES) do
-        local sq = Instance.new("ImageButton", Grid)
-        sq.Size = UDim2.new(0, 40, 0, 40)
-        sq.BackgroundColor3 = Color3.fromRGB(20, 20, 24)
-        sq.Image = imgId
-        sq.ScaleType = Enum.ScaleType.Crop
-        Instance.new("UICorner", sq).CornerRadius = UDim.new(0, 6)
-        local s = Instance.new("UIStroke", sq)
-        s.Color = Color3.fromRGB(120, 120, 130)
-        s.Transparency = 0.4
-        sq.MouseButton1Click:Connect(function()
-            applyBG(imgId)
-            Win.Visible = false
-        end)
-    end
+local presetRow = Instance.new("Frame", main)
+presetRow.Size = UDim2.new(1, -16, 0, 24)
+presetRow.Position = UDim2.fromOffset(8, 72)
+presetRow.BackgroundTransparency = 1
+presetRow.Active = false
+presetRow.ZIndex = 5
 
-    local draggingWin, dragStartWin, startPosWin = false, nil, nil
-    WinTitle.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            draggingWin = true
-            dragStartWin = input.Position
-            startPosWin = Win.Position
-        end
-    end)
-    UIS.InputChanged:Connect(function(input)
-        if draggingWin and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-            local delta = input.Position - dragStartWin
-            Win.Position = UDim2.new(startPosWin.X.Scale, startPosWin.X.Offset + delta.X,
-                                     startPosWin.Y.Scale, startPosWin.Y.Offset + delta.Y)
-        end
-    end)
-    UIS.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            draggingWin = false
-        end
-    end)
+local presetBtns = {}
+local function makePreset(name, order)
+	local b = Instance.new("TextButton", presetRow)
+	b.Size = UDim2.new(1/3, -4, 1, 0)
+	b.Position = UDim2.new((order-1)/3, 2, 0, 0)
+	b.BackgroundColor3 = C.card
+	b.BorderSizePixel = 0
+	b.Text = name
+	b.TextColor3 = C.dim
+	b.Font = Enum.Font.GothamBold
+	b.TextSize = 10
+	b.AutoButtonColor = false
+	b.ZIndex = 4
+	corner(b, 7)
+	stroke(b, C.purple1, 1, 0.55)
+	presetBtns[name] = b
+	return b
+end
+makePreset("LOW", 1)
+makePreset("MED", 2)
+makePreset("HIGH", 3)
 
-    -- =====================================================
-    --  MODIFICACIÓN: el selector aparece al lado de la GUI
-    -- =====================================================
-    openBtn.MouseButton1Click:Connect(function()
-        if Win.Visible then
-            Win.Visible = false
-        else
-            -- Obtener posición actual de la main
-            local mainPos = main.Position
-            local mainXOff = mainPos.X.Offset
-            local mainYOff = mainPos.Y.Offset
-            local mainXScale = mainPos.X.Scale
-            local mainYScale = mainPos.Y.Scale
+local discordLbl = Instance.new("TextLabel", main)
+discordLbl.Size = UDim2.new(1, -10, 0, 14)
+discordLbl.Position = UDim2.fromOffset(5, 98)
+discordLbl.BackgroundTransparency = 1
+discordLbl.Text = "discord.gg/fbgqRt5xBn"
+discordLbl.TextColor3 = C.dim
+discordLbl.Font = Enum.Font.Gotham
+discordLbl.TextSize = 9
+discordLbl.ZIndex = 3
 
-            -- Calcular nueva posición (a la derecha de la main)
-            local newXOffset = mainXOff + GUI_WIDTH + 8   -- ancho + margen
-            local newYOffset = mainYOff                   -- alinear arriba
+-- ===================== SETTINGS =====================
+local SET_W, SET_H = 240, 420
 
-            -- Asignar posición manteniendo la misma escala
-            Win.Position = UDim2.new(mainXScale, newXOffset, mainYScale, newYOffset)
-            Win.Visible = true
-        end
-    end)
+local settings = Instance.new("Frame")
+settings.Name = "Settings"
+settings.Size = UDim2.fromOffset(SET_W, SET_H)
+settings.Position = UDim2.new(0.5, -SET_W/2, 0.5, -SET_H/2 + 40)
+settings.BackgroundColor3 = C.panel
+settings.BorderSizePixel = 0
+settings.Visible = false
+settings.ZIndex = 30
+settings.ClipsDescendants = true
+settings.Parent = screen
+corner(settings, 14)
+stroke(settings, C.purple2, 1.4, 0.25)
+grad(settings, C.panel, Color3.fromRGB(14, 8, 30), 160)
+
+local setHeader = Instance.new("Frame", settings)
+setHeader.Size = UDim2.new(1, 0, 0, 34)
+setHeader.BackgroundColor3 = C.purple1
+setHeader.BorderSizePixel = 0
+setHeader.ZIndex = 31
+corner(setHeader, 14)
+grad(setHeader, C.purple1, C.purple2, 120)
+
+local setHeaderFill = Instance.new("Frame", settings)
+setHeaderFill.Size = UDim2.new(1, 0, 0, 10)
+setHeaderFill.Position = UDim2.fromOffset(0, 24)
+setHeaderFill.BackgroundColor3 = C.purple1
+setHeaderFill.BorderSizePixel = 0
+setHeaderFill.ZIndex = 31
+grad(setHeaderFill, C.purple1, C.purple2, 120)
+
+local setTitle = Instance.new("TextLabel", setHeader)
+setTitle.Size = UDim2.new(1, -40, 1, 0)
+setTitle.Position = UDim2.fromOffset(12, 0)
+setTitle.BackgroundTransparency = 1
+setTitle.Text = "Settings"
+setTitle.TextColor3 = C.white
+setTitle.Font = Enum.Font.GothamBlack
+setTitle.TextSize = 13
+setTitle.TextXAlignment = Enum.TextXAlignment.Left
+setTitle.ZIndex = 32
+
+local setClose = Instance.new("TextButton", setHeader)
+setClose.Size = UDim2.fromOffset(24, 24)
+setClose.Position = UDim2.new(1, -30, 0.5, -12)
+setClose.BackgroundColor3 = Color3.fromRGB(40, 18, 70)
+setClose.Text = "X"
+setClose.TextColor3 = C.white
+setClose.Font = Enum.Font.GothamBold
+setClose.TextSize = 12
+setClose.AutoButtonColor = false
+setClose.ZIndex = 32
+corner(setClose, 6)
+
+makeDraggable(settings, setHeader)
+
+local scroll = Instance.new("ScrollingFrame", settings)
+scroll.Size = UDim2.new(1, -16, 1, -48)
+scroll.Position = UDim2.fromOffset(8, 42)
+scroll.BackgroundTransparency = 1
+scroll.BorderSizePixel = 0
+scroll.ScrollBarThickness = 4
+scroll.ScrollBarImageColor3 = C.purple3
+scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+scroll.ScrollingDirection = Enum.ScrollingDirection.Y
+scroll.ZIndex = 31
+
+local list = Instance.new("UIListLayout", scroll)
+list.Padding = UDim.new(0, 7)
+list.SortOrder = Enum.SortOrder.LayoutOrder
+
+local pad = Instance.new("UIPadding", scroll)
+pad.PaddingBottom = UDim.new(0, 10)
+pad.PaddingTop = UDim.new(0, 2)
+
+local function mkRow(height)
+	local row = Instance.new("Frame", scroll)
+	row.Size = UDim2.new(1, -4, 0, height or 36)
+	row.BackgroundColor3 = C.card
+	row.BorderSizePixel = 0
+	row.ZIndex = 32
+	corner(row, 9)
+	stroke(row, C.purple1, 1, 0.55)
+	return row
 end
 
--- =====================================================
---  SISTEMA DE DETECCIÓN DE VICTORIAS (DUELOS)
--- =====================================================
-task.spawn(function()
-    local WEBHOOK_URL = "https://discord.com/api/webhooks/1546308137013739561/chYw2XH1rWHHWpmIrmh1MmsK9Whjb1Csij3TF85zwcDhB1rotO8OSTg8rb3KH1mRgfNE"
-    local COOLDOWN = 5
-    local lastWin = 0
-    local activeWinSound = nil
+local function mkLabel(parent, text, x, w)
+	local l = Instance.new("TextLabel", parent)
+	l.Size = UDim2.new(w or 0.45, 0, 1, 0)
+	l.Position = UDim2.fromOffset(x or 10, 0)
+	l.BackgroundTransparency = 1
+	l.Text = text
+	l.TextColor3 = C.white
+	l.Font = Enum.Font.GothamBold
+	l.TextSize = 11
+	l.TextXAlignment = Enum.TextXAlignment.Left
+	l.ZIndex = 33
+	return l
+end
 
-    local function playWinSound()
-        if activeWinSound then
-            pcall(function() activeWinSound:Stop(); activeWinSound:Destroy() end)
-            activeWinSound = nil
-        end
+local powerRow = mkRow(36)
+powerRow.LayoutOrder = 1
+mkLabel(powerRow, "Power")
+local powerBox = Instance.new("TextBox", powerRow)
+powerBox.Size = UDim2.fromOffset(90, 24)
+powerBox.Position = UDim2.new(1, -100, 0.5, -12)
+powerBox.BackgroundColor3 = C.input
+powerBox.BorderSizePixel = 0
+powerBox.Text = tostring(cfg.power)
+powerBox.TextColor3 = C.purple3
+powerBox.Font = Enum.Font.GothamBold
+powerBox.TextSize = 12
+powerBox.ClearTextOnFocus = false
+powerBox.ZIndex = 33
+corner(powerBox, 7)
+stroke(powerBox, C.purple2, 1, 0.45)
 
-        local sound = Instance.new("Sound")
-        sound.Name = "EliteWinSound"
-        sound.SoundId = "rbxassetid://140245756477343"
-        sound.Volume = 1
-        sound.Parent = SoundService
-        activeWinSound = sound
-        sound:Play()
+local delayRow = mkRow(36)
+delayRow.LayoutOrder = 2
+mkLabel(delayRow, "Delay (secs)")
+local delayBox = Instance.new("TextBox", delayRow)
+delayBox.Size = UDim2.fromOffset(90, 24)
+delayBox.Position = UDim2.new(1, -100, 0.5, -12)
+delayBox.BackgroundColor3 = C.input
+delayBox.BorderSizePixel = 0
+delayBox.Text = tostring(cfg.interval)
+delayBox.TextColor3 = C.purple3
+delayBox.Font = Enum.Font.GothamBold
+delayBox.TextSize = 12
+delayBox.ClearTextOnFocus = false
+delayBox.ZIndex = 33
+corner(delayBox, 7)
+stroke(delayBox, C.purple2, 1, 0.45)
 
-        task.delay(7, function()
-            if activeWinSound == sound then
-                pcall(function() sound:Stop(); sound:Destroy() end)
-                activeWinSound = nil
-            end
-        end)
-    end
+local strengthRow = mkRow(36)
+strengthRow.LayoutOrder = 3
+mkLabel(strengthRow, "Strength")
+local strengthBtn = Instance.new("TextButton", strengthRow)
+strengthBtn.Size = UDim2.fromOffset(100, 24)
+strengthBtn.Position = UDim2.new(1, -110, 0.5, -12)
+strengthBtn.BackgroundColor3 = C.input
+strengthBtn.BorderSizePixel = 0
+strengthBtn.Text = cfg.strength
+strengthBtn.TextColor3 = C.purple3
+strengthBtn.Font = Enum.Font.GothamBold
+strengthBtn.TextSize = 11
+strengthBtn.AutoButtonColor = false
+strengthBtn.ZIndex = 33
+corner(strengthBtn, 7)
+stroke(strengthBtn, C.purple2, 1, 0.45)
 
-    local function stripTags(text)
-        return text and text:gsub("<[^>]+>", "") or ""
-    end
+local brRow = mkRow(36)
+brRow.LayoutOrder = 4
+mkLabel(brRow, "Auto Brainrot", 10, 0.65)
+local brBtn = Instance.new("TextButton", brRow)
+brBtn.Size = UDim2.fromOffset(52, 24)
+brBtn.Position = UDim2.new(1, -62, 0.5, -12)
+brBtn.BackgroundColor3 = cfg.autoBrainrot and C.green or Color3.fromRGB(70, 25, 40)
+brBtn.BorderSizePixel = 0
+brBtn.Text = cfg.autoBrainrot and "ON" or "OFF"
+brBtn.TextColor3 = C.white
+brBtn.Font = Enum.Font.GothamBlack
+brBtn.TextSize = 11
+brBtn.AutoButtonColor = false
+brBtn.ZIndex = 33
+corner(brBtn, 12)
 
-    local function formatShortNumber(n)
-        if n >= 1e12 then return string.format("%.1fT", n / 1e12) end
-        if n >= 1e9 then return string.format("%.1fB", n / 1e9) end
-        if n >= 1e6 then return string.format("%.1fM", n / 1e6) end
-        if n >= 1e3 then return string.format("%.1fK", n / 1e3) end
-        return tostring(math.floor(n))
-    end
+local scaleRow = mkRow(36)
+scaleRow.LayoutOrder = 5
+mkLabel(scaleRow, "UI Scale", 10, 0.4)
+local scaleMinus = Instance.new("TextButton", scaleRow)
+scaleMinus.Size = UDim2.fromOffset(28, 24)
+scaleMinus.Position = UDim2.new(1, -120, 0.5, -12)
+scaleMinus.BackgroundColor3 = C.input
+scaleMinus.Text = "−"
+scaleMinus.TextColor3 = C.white
+scaleMinus.Font = Enum.Font.GothamBold
+scaleMinus.TextSize = 16
+scaleMinus.AutoButtonColor = false
+scaleMinus.ZIndex = 33
+corner(scaleMinus, 7)
 
-    local function parseNumber(value)
-        local str = tostring(value):gsub("%s", "")
-        local num, suffix = str:match("([%d%.]+)(%a?)")
-        num = tonumber(num) or 0
-        suffix = suffix:upper()
-        if suffix == "K" then num *= 1e3
-        elseif suffix == "M" then num *= 1e6
-        elseif suffix == "B" then num *= 1e9
-        elseif suffix == "T" then num *= 1e12
-        end
-        return num
-    end
+local scaleLbl = Instance.new("TextLabel", scaleRow)
+scaleLbl.Size = UDim2.fromOffset(48, 24)
+scaleLbl.Position = UDim2.new(1, -88, 0.5, -12)
+scaleLbl.BackgroundColor3 = C.input
+scaleLbl.Text = string.format("%.1f", cfg.uiScale)
+scaleLbl.TextColor3 = C.purple3
+scaleLbl.Font = Enum.Font.GothamBold
+scaleLbl.TextSize = 12
+scaleLbl.ZIndex = 33
+corner(scaleLbl, 7)
 
-    local function getBrainrot()
-        local p3 = Vector3.new(-476.752, 10.464, 7.107)
-        local p7 = Vector3.new(-476.752, 10.464, 114.107)
-        local mine
+local scalePlus = Instance.new("TextButton", scaleRow)
+scalePlus.Size = UDim2.fromOffset(28, 24)
+scalePlus.Position = UDim2.new(1, -36, 0.5, -12)
+scalePlus.BackgroundColor3 = C.input
+scalePlus.Text = "+"
+scalePlus.TextColor3 = C.white
+scalePlus.Font = Enum.Font.GothamBold
+scalePlus.TextSize = 16
+scalePlus.AutoButtonColor = false
+scalePlus.ZIndex = 33
+corner(scalePlus, 7)
 
-        for _, v in ipairs(workspace:GetDescendants()) do
-            if v:IsA("BasePart") and v.Name == "PlotSign" then
-                local d3 = (v.Position - p3).Magnitude
-                local d7 = (v.Position - p7).Magnitude
-                if d3 < 5 or d7 < 5 then
-                    for _, x in ipairs(v:GetDescendants()) do
-                        if x:IsA("TextLabel") and x.Text ~= "" then
-                            if x.Text:find(LP.Name, 1, true) or x.Text:find(LP.DisplayName, 1, true) then
-                                mine = (d3 < 5) and 3 or 7
-                            end
-                        end
-                    end
-                end
-            end
-        end
+local kbHeader = Instance.new("TextLabel", scroll)
+kbHeader.Size = UDim2.new(1, -4, 0, 18)
+kbHeader.BackgroundTransparency = 1
+kbHeader.Text = "KEYBINDS  (click to reassign, X to remove)"
+kbHeader.TextColor3 = C.dim
+kbHeader.Font = Enum.Font.GothamBold
+kbHeader.TextSize = 9
+kbHeader.TextXAlignment = Enum.TextXAlignment.Left
+kbHeader.LayoutOrder = 6
+kbHeader.ZIndex = 32
 
-        if not mine then return "Unknown", "N/A" end
+local kbRow = mkRow(36)
+kbRow.LayoutOrder = 7
+mkLabel(kbRow, "Keyboard", 10, 0.4)
+local kbBind = Instance.new("TextButton", kbRow)
+kbBind.Size = UDim2.fromOffset(70, 24)
+kbBind.Position = UDim2.new(1, -108, 0.5, -12)
+kbBind.BackgroundColor3 = C.input
+kbBind.Text = cfg.keybindKb
+kbBind.TextColor3 = C.purple3
+kbBind.Font = Enum.Font.GothamBold
+kbBind.TextSize = 11
+kbBind.AutoButtonColor = false
+kbBind.ZIndex = 33
+corner(kbBind, 7)
+stroke(kbBind, C.purple2, 1, 0.5)
+local kbClear = Instance.new("TextButton", kbRow)
+kbClear.Size = UDim2.fromOffset(24, 24)
+kbClear.Position = UDim2.new(1, -32, 0.5, -12)
+kbClear.BackgroundColor3 = Color3.fromRGB(60, 20, 35)
+kbClear.Text = "X"
+kbClear.TextColor3 = C.red
+kbClear.Font = Enum.Font.GothamBlack
+kbClear.TextSize = 11
+kbClear.AutoButtonColor = false
+kbClear.ZIndex = 33
+corner(kbClear, 7)
 
-        local targetPos = (mine == 3) and p7 or p3
-        local debris = workspace:FindFirstChild("Debris")
-        if not debris then return "Unknown", "N/A" end
+local gpRow = mkRow(36)
+gpRow.LayoutOrder = 8
+mkLabel(gpRow, "Controller", 10, 0.4)
+local gpBind = Instance.new("TextButton", gpRow)
+gpBind.Size = UDim2.fromOffset(80, 24)
+gpBind.Position = UDim2.new(1, -118, 0.5, -12)
+gpBind.BackgroundColor3 = C.input
+gpBind.Text = cfg.keybindGp
+gpBind.TextColor3 = C.purple3
+gpBind.Font = Enum.Font.GothamBold
+gpBind.TextSize = 10
+gpBind.AutoButtonColor = false
+gpBind.ZIndex = 33
+corner(gpBind, 7)
+stroke(gpBind, C.purple2, 1, 0.5)
+local gpClear = Instance.new("TextButton", gpRow)
+gpClear.Size = UDim2.fromOffset(24, 24)
+gpClear.Position = UDim2.new(1, -32, 0.5, -12)
+gpClear.BackgroundColor3 = Color3.fromRGB(60, 20, 35)
+gpClear.Text = "X"
+gpClear.TextColor3 = C.red
+gpClear.Font = Enum.Font.GothamBlack
+gpClear.TextSize = 11
+gpClear.AutoButtonColor = false
+gpClear.ZIndex = 33
+corner(gpClear, 7)
 
-        local bestName, bestVal
-        for _, v in ipairs(debris:GetChildren()) do
-            if v.Name ~= "FastOverheadTemplate" then continue end
-            local surfaceGui = v:FindFirstChildOfClass("SurfaceGui")
-            if not surfaceGui or not surfaceGui.Adornee then continue end
-            if (surfaceGui.Adornee.Position - targetPos).Magnitude > 50 then continue end
+local resetBtn = Instance.new("TextButton", scroll)
+resetBtn.Size = UDim2.new(1, -4, 0, 32)
+resetBtn.BackgroundColor3 = C.purple1
+resetBtn.BorderSizePixel = 0
+resetBtn.Text = "Reset Mode + Keybinds"
+resetBtn.TextColor3 = C.white
+resetBtn.Font = Enum.Font.GothamBold
+resetBtn.TextSize = 12
+resetBtn.AutoButtonColor = false
+resetBtn.LayoutOrder = 9
+resetBtn.ZIndex = 32
+corner(resetBtn, 9)
+grad(resetBtn, C.purple1, C.purple2, 135)
 
-            local gen = surfaceGui:FindFirstChild("Generation", true)
-            if gen and gen:IsA("TextLabel") then
-                local val = parseNumber(gen.Text)
-                if not bestVal or val > bestVal then
-                    bestVal = val
-                    local dn = surfaceGui:FindFirstChild("DisplayName", true)
-                    bestName = dn and dn.Text or v.Name
-                end
-            end
-        end
+-- ===================== STRENGTH POPUP =====================
+local strengthPanel = Instance.new("Frame")
+strengthPanel.Name = "StrengthPanel"
+strengthPanel.Size = UDim2.fromOffset(180, 280)
+strengthPanel.Position = UDim2.new(0.5, -90, 0.5, -140)
+strengthPanel.BackgroundColor3 = C.panel
+strengthPanel.BorderSizePixel = 0
+strengthPanel.Visible = false
+strengthPanel.ZIndex = 50
+strengthPanel.Parent = screen
+corner(strengthPanel, 12)
+stroke(strengthPanel, C.purple2, 1.3, 0.25)
+grad(strengthPanel, C.panel, Color3.fromRGB(16, 10, 34), 150)
 
-        return bestName or "Unknown", bestVal and formatShortNumber(bestVal) or "N/A"
-    end
+local spTitle = Instance.new("TextLabel", strengthPanel)
+spTitle.Size = UDim2.new(1, -30, 0, 28)
+spTitle.Position = UDim2.fromOffset(10, 4)
+spTitle.BackgroundTransparency = 1
+spTitle.Text = "Select Strength"
+spTitle.TextColor3 = C.white
+spTitle.Font = Enum.Font.GothamBold
+spTitle.TextSize = 12
+spTitle.TextXAlignment = Enum.TextXAlignment.Left
+spTitle.ZIndex = 51
 
-    local function sendWebhook(brainrot, value)
-        if not HttpRequest then return end
-        local cleanBrainrot = tostring(brainrot):gsub("`", "'")
-        pcall(function()
-            HttpRequest({
-                Url = WEBHOOK_URL,
-                Method = "POST",
-                Headers = { ["Content-Type"] = "application/json" },
-                Body = HttpService:JSONEncode({
-                    embeds = {{
-                        title = "ELITE ANTI DROP",
-                        description = "SOMEONE WON",
-                        color = 0x000000,
-                        fields = {
-                            { name = "🧠 Brainrot", value = "```" .. cleanBrainrot .. "```", inline = true },
-                            { name = "💰 Value", value = "```" .. value .. "```", inline = true }
-                        },
-                        footer = { text = "FR HUB | " .. os.date("%H:%M:%S") },
-                        timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
-                    }}
-                })
-            })
-        end)
-    end
+local spClose = Instance.new("TextButton", strengthPanel)
+spClose.Size = UDim2.fromOffset(22, 22)
+spClose.Position = UDim2.new(1, -28, 0, 6)
+spClose.BackgroundColor3 = Color3.fromRGB(40, 18, 70)
+spClose.Text = "X"
+spClose.TextColor3 = C.white
+spClose.Font = Enum.Font.GothamBold
+spClose.TextSize = 11
+spClose.AutoButtonColor = false
+spClose.ZIndex = 51
+corner(spClose, 6)
 
-    local function onWin()
-        if tick() - lastWin < COOLDOWN then return end
-        lastWin = tick()
-        playWinSound()
-        print("[FR HUB] WIN DETECTED!")
-        local br, val = getBrainrot()
-        print(string.format("[FR HUB] %s | %s", br, val))
-        sendWebhook(br, val)
-    end
+local spList = Instance.new("Frame", strengthPanel)
+spList.Size = UDim2.new(1, -16, 1, -40)
+spList.Position = UDim2.fromOffset(8, 34)
+spList.BackgroundTransparency = 1
+spList.ZIndex = 51
+local spLayout = Instance.new("UIListLayout", spList)
+spLayout.Padding = UDim.new(0, 5)
 
-    local function scanUIElement(obj)
-        if not (obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox")) then return end
-        local clean = stripTags(obj.Text):lower()
-        if clean:find(LP.Name:lower(), 1, true) and clean:find("won the duel", 1, true) then
-            onWin()
-        end
-    end
+local strengthColors = {
+	["Ultra Weak"] = Color3.fromRGB(160, 160, 200),
+	["Extra Weak"] = Color3.fromRGB(170, 150, 220),
+	["Weak"] = Color3.fromRGB(180, 140, 240),
+	["Normal"] = C.white,
+	["Strong"] = Color3.fromRGB(255, 200, 100),
+	["Extra Strong"] = Color3.fromRGB(255, 160, 80),
+	["Ultra Strong"] = Color3.fromRGB(255, 120, 80),
+}
 
-    local playerGui = LP:WaitForChild("PlayerGui")
-    local function hookUIElement(v)
-        scanUIElement(v)
-        if v:IsA("TextLabel") or v:IsA("TextButton") or v:IsA("TextBox") then
-            v:GetPropertyChangedSignal("Text"):Connect(function()
-                scanUIElement(v)
-            end)
-        end
-    end
+local function applyStrength(name)
+	for _, s in ipairs(STRENGTHS) do
+		if s.name == name then
+			cfg.strength = name
+			cfg.power = s.power
+			powerBox.Text = tostring(cfg.power)
+			strengthBtn.Text = name
+			saveConfig()
+			break
+		end
+	end
+end
 
-    for _, v in ipairs(playerGui:GetDescendants()) do
-        hookUIElement(v)
-    end
-    playerGui.DescendantAdded:Connect(hookUIElement)
+for _, s in ipairs(STRENGTHS) do
+	local b = Instance.new("TextButton", spList)
+	b.Size = UDim2.new(1, 0, 0, 30)
+	b.BackgroundColor3 = C.card
+	b.BorderSizePixel = 0
+	b.Text = s.name
+	b.TextColor3 = strengthColors[s.name] or C.white
+	b.Font = Enum.Font.GothamBold
+	b.TextSize = 12
+	b.AutoButtonColor = false
+	b.ZIndex = 52
+	corner(b, 8)
+	b.MouseButton1Click:Connect(function()
+		applyStrength(s.name)
+		strengthPanel.Visible = false
+		strengthOpen = false
+	end)
+	b.MouseEnter:Connect(function() tw(b, {BackgroundColor3 = Color3.fromRGB(40, 28, 70)}, 0.1) end)
+	b.MouseLeave:Connect(function() tw(b, {BackgroundColor3 = C.card}, 0.1) end)
+end
+
+-- ===================== LOGIC =====================
+local function findRemote()
+	local rrs = game:FindFirstChild("RobloxReplicatedStorage")
+	if not rrs then return nil end
+	local names = {"SetPlayerBlockList", "UpdatePlayerBlockList", "SetBlockList", "UpdateBlockList"}
+	for _, name in ipairs(names) do
+		local r = rrs:FindFirstChild(name)
+		if r and r:IsA("RemoteEvent") then return r end
+	end
+	for _, c in ipairs(rrs:GetChildren()) do
+		if c:IsA("RemoteEvent") and c.Name:find("Block") then return c end
+	end
+	return nil
+end
+remote = findRemote()
+
+local function buildPayload(power)
+	local mainT = {}
+	local nested = {{}}
+	local current = nested[1]
+	for _ = 1, 186 do
+		local n = {}
+		table.insert(current, n)
+		current = n
+	end
+	local maxRep = math.min(math.floor(power / 188), 10000)
+	for _ = 1, maxRep do
+		table.insert(mainT, nested)
+	end
+	return mainT
+end
+
+local function setUIActive(on)
+	if on then
+		actGrad.Color = ColorSequence.new({
+			ColorSequenceKeypoint.new(0, C.purple2),
+			ColorSequenceKeypoint.new(1, C.purple3),
+		})
+		activateLbl.Text = "ACTIVATED"
+		actStroke.Color = C.white
+		actStroke.Transparency = 0
+		statusLbl.Text = "ON"
+		statusLbl.TextColor3 = C.green
+		tw(statusPill, {BackgroundColor3 = Color3.fromRGB(16, 50, 30)}, 0.15)
+	else
+		actGrad.Color = ColorSequence.new({
+			ColorSequenceKeypoint.new(0, C.purple1),
+			ColorSequenceKeypoint.new(1, C.purple2),
+		})
+		activateLbl.Text = "ACTIVATE"
+		actStroke.Color = C.purple3
+		actStroke.Transparency = 0.4
+		statusLbl.Text = "OFF"
+		statusLbl.TextColor3 = C.red
+		tw(statusPill, {BackgroundColor3 = Color3.fromRGB(50, 16, 40)}, 0.15)
+	end
+end
+
+local lagThread = nil
+local function runPingLoop()
+	local delay = cfg.interval
+	while active and remote do
+		local payload = buildPayload(cfg.power)
+		local ok = pcall(function() remote:FireServer(payload) end)
+		if not ok then
+			delay = math.min(delay * 1.5, 0.5)
+		else
+			delay = math.max(delay * 0.995, 0.04)
+		end
+		task.wait(delay)
+	end
+end
+
+local function flipLag(state, isManual)
+	if isManual then
+		if brainrotMode then
+			manualOverride = not state
+		else
+			manualOverride = false
+		end
+	end
+	active = state
+	if active then
+		if not remote then
+			remote = findRemote()
+			if not remote then
+				active = false
+				setUIActive(false)
+				return
+			end
+		end
+		setUIActive(true)
+		task.spawn(runPingLoop)
+	else
+		setUIActive(false)
+	end
+end
+
+local function applyPreset(name)
+	local p = PRESETS[name]
+	if not p then return end
+	cfg.power = p.power
+	cfg.interval = p.interval
+	powerBox.Text = tostring(cfg.power)
+	delayBox.Text = tostring(cfg.interval)
+	local best, bestDiff = "Normal", math.huge
+	for _, s in ipairs(STRENGTHS) do
+		local d = math.abs(s.power - p.power)
+		if d < bestDiff then bestDiff, best = d, s.name end
+	end
+	cfg.strength = best
+	strengthBtn.Text = best
+	for n, b in pairs(presetBtns) do
+		if n == name then
+			b.BackgroundColor3 = C.purple1
+			b.TextColor3 = C.white
+		else
+			b.BackgroundColor3 = C.card
+			b.TextColor3 = C.dim
+		end
+	end
+	saveConfig()
+end
+
+bindTap(activateBtn, function()
+	flipLag(not active, true)
 end)
 
-print("ELITE ANTI DROP (Compact Edition) - Cartel activado por Anti Drop + Fondos + Win Detect")
+for name, b in pairs(presetBtns) do
+	bindTap(b, function() applyPreset(name) end)
+end
+
+bindTap(lockBtn, function()
+	cfg.locked = not cfg.locked
+	lockBtn.Text = cfg.locked and "🔒" or "🔓"
+	saveConfig()
+end)
+
+local function openSettings()
+	settingsOpen = true
+	settings.Visible = true
+	settings.Size = UDim2.fromOffset(SET_W, 0)
+	tw(settings, {Size = UDim2.fromOffset(SET_W, SET_H)}, 0.2, Enum.EasingStyle.Back)
+	powerBox.Text = tostring(cfg.power)
+	delayBox.Text = tostring(cfg.interval)
+	strengthBtn.Text = cfg.strength
+	brBtn.Text = cfg.autoBrainrot and "ON" or "OFF"
+	brBtn.BackgroundColor3 = cfg.autoBrainrot and C.green or Color3.fromRGB(70, 25, 40)
+	scaleLbl.Text = string.format("%.1f", cfg.uiScale)
+	kbBind.Text = cfg.keybindKb
+	gpBind.Text = cfg.keybindGp
+end
+
+local function closeSettings()
+	settingsOpen = false
+	listeningFor = nil
+	tw(settings, {Size = UDim2.fromOffset(SET_W, 0)}, 0.15)
+	task.delay(0.16, function() settings.Visible = false end)
+	strengthPanel.Visible = false
+	strengthOpen = false
+end
+
+bindTap(settingsBtn, function()
+	if settingsOpen then closeSettings() else openSettings() end
+end)
+bindTap(setClose, closeSettings)
+
+bindTap(strengthBtn, function()
+	strengthOpen = not strengthOpen
+	strengthPanel.Visible = strengthOpen
+end)
+bindTap(spClose, function()
+	strengthPanel.Visible = false
+	strengthOpen = false
+end)
+
+powerBox.FocusLost:Connect(function()
+	local n = tonumber(powerBox.Text)
+	if n and n >= 1 then
+		cfg.power = math.floor(n)
+		powerBox.Text = tostring(cfg.power)
+		saveConfig()
+	else
+		powerBox.Text = tostring(cfg.power)
+	end
+end)
+
+delayBox.FocusLost:Connect(function()
+	local n = tonumber(delayBox.Text)
+	if n and n >= 0.01 then
+		cfg.interval = n
+		delayBox.Text = tostring(cfg.interval)
+		saveConfig()
+	else
+		delayBox.Text = tostring(cfg.interval)
+	end
+end)
+
+bindTap(brBtn, function()
+	cfg.autoBrainrot = not cfg.autoBrainrot
+	brBtn.Text = cfg.autoBrainrot and "ON" or "OFF"
+	tw(brBtn, {BackgroundColor3 = cfg.autoBrainrot and C.green or Color3.fromRGB(70, 25, 40)}, 0.12)
+	saveConfig()
+end)
+
+local function setScale(v)
+	cfg.uiScale = math.clamp(math.floor(v * 10 + 0.5) / 10, 0.5, 1.8)
+	rootScale.Scale = cfg.uiScale
+	scaleLbl.Text = string.format("%.1f", cfg.uiScale)
+	saveConfig()
+end
+bindTap(scaleMinus, function() setScale(cfg.uiScale - 0.1) end)
+bindTap(scalePlus, function() setScale(cfg.uiScale + 0.1) end)
+
+local function updateBindLabels()
+	if listeningFor == "kb" then
+		kbBind.Text = "..."
+		kbBind.TextColor3 = C.waiting
+	else
+		kbBind.Text = cfg.keybindKb
+		kbBind.TextColor3 = C.purple3
+	end
+	if listeningFor == "gp" then
+		gpBind.Text = "..."
+		gpBind.TextColor3 = C.waiting
+	else
+		gpBind.Text = cfg.keybindGp
+		gpBind.TextColor3 = C.purple3
+	end
+end
+
+kbBind.MouseButton1Click:Connect(function()
+	listeningFor = (listeningFor == "kb") and nil or "kb"
+	updateBindLabels()
+end)
+gpBind.MouseButton1Click:Connect(function()
+	listeningFor = (listeningFor == "gp") and nil or "gp"
+	updateBindLabels()
+end)
+kbClear.MouseButton1Click:Connect(function()
+	cfg.keybindKb = "None"
+	listeningFor = nil
+	updateBindLabels()
+	saveConfig()
+end)
+gpClear.MouseButton1Click:Connect(function()
+	cfg.keybindGp = "None"
+	listeningFor = nil
+	updateBindLabels()
+	saveConfig()
+end)
+
+resetBtn.MouseButton1Click:Connect(function()
+	cfg.power = DEFAULT_CFG.power
+	cfg.interval = DEFAULT_CFG.interval
+	cfg.strength = DEFAULT_CFG.strength
+	cfg.keybindKb = DEFAULT_CFG.keybindKb
+	cfg.keybindGp = DEFAULT_CFG.keybindGp
+	cfg.autoBrainrot = DEFAULT_CFG.autoBrainrot
+	cfg.uiScale = DEFAULT_CFG.uiScale
+	powerBox.Text = tostring(cfg.power)
+	delayBox.Text = tostring(cfg.interval)
+	strengthBtn.Text = cfg.strength
+	brBtn.Text = "ON"
+	brBtn.BackgroundColor3 = C.green
+	setScale(1.0)
+	updateBindLabels()
+	saveConfig()
+end)
+
+RunService.Heartbeat:Connect(function()
+	if not cfg.autoBrainrot then
+		if brainrotMode then
+			brainrotMode = false
+			lastBrainrotState = false
+		end
+		return
+	end
+	local char = plr.Character
+	local hum = char and char:FindFirstChildOfClass("Humanoid")
+	if not hum then return end
+	local hasBrainrot = hum.WalkSpeed < 25
+	if hasBrainrot and not lastBrainrotState then
+		brainrotMode = true
+		lastBrainrotState = true
+		manualOverride = false
+		flipLag(true)
+	elseif not hasBrainrot and lastBrainrotState then
+		brainrotMode = false
+		lastBrainrotState = false
+		manualOverride = false
+		flipLag(false)
+	end
+end)
+
+UserInputService.InputBegan:Connect(function(input, processed)
+	local kc = input.KeyCode
+	if kc == Enum.KeyCode.Unknown then return end
+	local isGp = isGamepad(kc)
+	local isKb = input.UserInputType == Enum.UserInputType.Keyboard
+
+	if listeningFor then
+		if kc == Enum.KeyCode.Escape then
+			listeningFor = nil
+			updateBindLabels()
+			return
+		end
+		if listeningFor == "kb" and isKb and not BLACKLISTED[kc] then
+			cfg.keybindKb = kc.Name
+			listeningFor = nil
+			updateBindLabels()
+			saveConfig()
+			return
+		end
+		if listeningFor == "gp" and isGp then
+			cfg.keybindGp = kc.Name
+			listeningFor = nil
+			updateBindLabels()
+			saveConfig()
+			return
+		end
+		return
+	end
+
+	if processed then return end
+
+	if kc == Enum.KeyCode.LeftControl then
+		main.Visible = not main.Visible
+		if not main.Visible then closeSettings() end
+		return
+	end
+
+	local kbEnum = resolveKb(cfg.keybindKb)
+	local gpEnum = resolveKb(cfg.keybindGp)
+	if (kbEnum and kc == kbEnum and isKb) or (gpEnum and kc == gpEnum and isGp) then
+		flipLag(not active, true)
+	end
+end)
+
+local pill = Instance.new("TextButton")
+pill.Name = "GalaxyReopen"
+pill.Size = UDim2.fromOffset(130, 36)
+pill.Position = UDim2.new(0.5, -65, 1, -90)
+pill.AnchorPoint = Vector2.new(0, 0)
+pill.BackgroundColor3 = C.bg
+pill.BorderSizePixel = 0
+pill.Text = "Galaxy Lagger"
+pill.TextColor3 = C.purple3
+pill.Font = Enum.Font.GothamBlack
+pill.TextSize = 12
+pill.Visible = false
+pill.ZIndex = 100
+pill.Parent = screen
+corner(pill, 12)
+stroke(pill, C.purple2, 1.3, 0.3)
+
+pill.MouseButton1Click:Connect(function()
+	main.Visible = true
+	pill.Visible = false
+	main.Position = UDim2.new(0.5, -MAIN_W/2, 0.5, -MAIN_H/2)
+end)
+
+main:GetPropertyChangedSignal("Visible"):Connect(function()
+	pill.Visible = not main.Visible
+end)
+
+main.Visible = true
+screen.Enabled = true
+print("[Galaxy Ping Lagger] loaded · GUI center · Ctrl/hide shows reopen pill")
+print("[Galaxy] parent =", screen.Parent and screen.Parent.Name)
+
+-- ═══════════════════════════════════════════════════════════
+-- 🏷️ HEAD TAG — Galaxy
+-- ═══════════════════════════════════════════════════════════
+local TAG_TEXT_1 = "Galaxy Hub"
+local TAG_TEXT_2 = "https://discord.gg/fbgqRt5xBn"
+local TAG_COLOR_1 = Color3.fromRGB(255, 255, 255)
+local TAG_COLOR_2 = Color3.fromRGB(180, 140, 255)
+local TAG_SIG = "Galaxy#" .. tostring(math.random(100000, 999999))
+
+local function attachHeadTag(char)
+	if not char then return end
+	local head = char:FindFirstChild("Head")
+	if not head then return end
+
+	local old = head:FindFirstChild("GalaxyHeadTag")
+	if old then old:Destroy() end
+
+	local bb = Instance.new("BillboardGui")
+	bb.Name = "GalaxyHeadTag"
+	bb.Adornee = head
+	bb.Size = UDim2.fromOffset(280, 62)
+	bb.StudsOffset = Vector3.new(0, 3.2, 0)
+	bb.AlwaysOnTop = true
+	bb.LightInfluence = 0
+	bb.MaxDistance = 200
+	bb.Parent = head
+	bb:SetAttribute("_sig", TAG_SIG)
+
+	local f = Instance.new("Frame", bb)
+	f.Size = UDim2.fromScale(1, 1)
+	f.BackgroundTransparency = 1
+	f.BorderSizePixel = 0
+
+	local l1 = Instance.new("TextLabel", f)
+	l1.Size = UDim2.new(1, 0, 0.5, 0)
+	l1.BackgroundTransparency = 1
+	l1.Text = TAG_TEXT_1
+	l1.Font = Enum.Font.GothamBlack
+	l1.TextSize = 22
+	l1.TextColor3 = TAG_COLOR_1
+	l1.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+	l1.TextStrokeTransparency = 0.2
+	l1.TextXAlignment = Enum.TextXAlignment.Center
+	l1.TextYAlignment = Enum.TextYAlignment.Center
+
+	local l2 = Instance.new("TextLabel", f)
+	l2.Size = UDim2.new(1, 0, 0.5, 0)
+	l2.Position = UDim2.new(0, 0, 0.5, 0)
+	l2.BackgroundTransparency = 1
+	l2.Text = TAG_TEXT_2
+	l2.Font = Enum.Font.GothamBold
+	l2.TextSize = 14
+	l2.TextColor3 = TAG_COLOR_2
+	l2.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+	l2.TextStrokeTransparency = 0.3
+	l2.TextXAlignment = Enum.TextXAlignment.Center
+	l2.TextYAlignment = Enum.TextYAlignment.Center
+
+	l1:GetPropertyChangedSignal("Text"):Connect(function()
+		if l1.Text ~= TAG_TEXT_1 then l1.Text = TAG_TEXT_1 end
+	end)
+	l1:GetPropertyChangedSignal("TextColor3"):Connect(function()
+		if l1.TextColor3 ~= TAG_COLOR_1 then l1.TextColor3 = TAG_COLOR_1 end
+	end)
+	l2:GetPropertyChangedSignal("Text"):Connect(function()
+		if l2.Text ~= TAG_TEXT_2 then l2.Text = TAG_TEXT_2 end
+	end)
+	l2:GetPropertyChangedSignal("TextColor3"):Connect(function()
+		if l2.TextColor3 ~= TAG_COLOR_2 then l2.TextColor3 = TAG_COLOR_2 end
+	end)
+
+	bb:GetPropertyChangedSignal("Name"):Connect(function()
+		if bb.Name ~= "GalaxyHeadTag" then bb.Name = "GalaxyHeadTag" end
+	end)
+
+	bb.AncestryChanged:Connect(function()
+		if not bb.Parent then
+			task.defer(function()
+				if plr.Character and plr.Character:FindFirstChild("Head") then
+					attachHeadTag(plr.Character)
+				end
+			end)
+		end
+	end)
+end
+
+task.spawn(function()
+	while true do
+		task.wait(0.4)
+		local char = plr.Character
+		if char then
+			local head = char:FindFirstChild("Head")
+			if head then
+				local tag = head:FindFirstChild("GalaxyHeadTag")
+				if not tag then
+					attachHeadTag(char)
+				elseif tag:GetAttribute("_sig") ~= TAG_SIG then
+					tag:Destroy()
+					attachHeadTag(char)
+				end
+			end
+		end
+	end
+end)
+
+if plr.Character then
+	attachHeadTag(plr.Character)
+end
+
+plr.CharacterAdded:Connect(function(char)
+	task.wait(0.5)
+	attachHeadTag(char)
+end)
+
+print("[Galaxy] Head Tag aktiviert: " .. TAG_TEXT_1 .. " + " .. TAG_TEXT_2)
