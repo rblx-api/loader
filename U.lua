@@ -9101,22 +9101,34 @@ function M.buildGui()
     guiStroke(CloseBtn, C.divider, 1)
     local MiniBtn = Instance.new("ImageButton")
     local mobileEntry = UIS.TouchEnabled and not UIS.KeyboardEnabled
-    -- Botón SAFIRA HUB: usa el mismo largo y alto que el botón minimizado de PRIME HUB.
+    -- Barra flotante DEMONS HUB con el mismo tamaño que SAFIRA HUB.
     MiniBtn.Size = UDim2.new(0, 180, 0, 40)
     MiniBtn.Position = mobileEntry and UDim2.new(0, 14, 0, 60) or Outer.Position
-    MiniBtn.BackgroundColor3 = Color3.fromRGB(8, 8, 10)
-    MiniBtn.BackgroundTransparency = 0.05
+    MiniBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    MiniBtn.BackgroundTransparency = 0
     MiniBtn.BorderSizePixel = 0
-    MiniBtn.Image = "rbxassetid://119236750093198"
-    MiniBtn.ScaleType = Enum.ScaleType.Crop
-    MiniBtn.ImageColor3 = Color3.new(1, 1, 1)
+    -- El botón queda negro; el icono nuevo va separado para que no tape el texto.
+    MiniBtn.Image = ""
     MiniBtn.Active = true
     MiniBtn.AutoButtonColor = false
     MiniBtn.ZIndex = 1000
     MiniBtn.Visible = true
     MiniBtn.Parent = GuiHub
-    guiCorner(MiniBtn, 999)
-    local miniStroke = guiStroke(MiniBtn, Color3.fromRGB(40, 40, 45), 1)
+    MiniBtn.ClipsDescendants = true
+    guiCorner(MiniBtn, 12)
+
+    local miniIcon = Instance.new("ImageLabel")
+    miniIcon.Name = "MenuLogo"
+    miniIcon.BackgroundTransparency = 1
+    miniIcon.Image = "rbxassetid://126405527996904"
+    miniIcon.ScaleType = Enum.ScaleType.Stretch
+    -- Zoom del logo al 5%, manteniendo el tamaño de la barra.
+    miniIcon.Size = UDim2.new(1.05, 0, 1.05, 0)
+    miniIcon.Position = UDim2.new(-0.025, 0, -0.025, 0)
+    miniIcon.ZIndex = 1001
+    miniIcon.Parent = MiniBtn
+
+    local miniStroke = guiStroke(MiniBtn, Color3.fromRGB(55, 55, 55), 1)
     if miniStroke then miniStroke.Transparency = 0.35 end
     makeDraggable_cyber(MiniBtn, MiniBtn)
     MiniBtn.MouseEnter:Connect(function()
@@ -10864,68 +10876,24 @@ end
 -- ==================== VOID SPEED ENGINE (Anti Drop — no spoof) ====================
 -- Normal/Lagger: root.Velocity | Carry: CFrame step | Anti Fling
 local FLING_THRESHOLD = 80
--- Carry Safe: detecta herramientas de Brainrot equipadas y deja el movimiento
--- normal del juego mientras se transportan. No intenta eludir controles del servidor.
-local _carryCheckChar = nil
-local _carryCheckAt = 0
-local _carryCheckValue = false
-local function _isCarryingBrainrot(char)
-    if not char then
-        _carryCheckChar, _carryCheckValue = nil, false
-        return false
-    end
-    -- Cachea la detección durante 0.10 s para no recorrer herramientas/atributos
-    -- en cada frame de física.
-    local now = os.clock()
-    if _carryCheckChar == char and (now - _carryCheckAt) < 0.10 then
-        return _carryCheckValue
-    end
-    _carryCheckChar, _carryCheckAt = char, now
-    local carrying = false
-    if M.hasBrainrotInHand then
-        local ok, result = pcall(M.hasBrainrotInHand)
-        carrying = ok and result == true
-    end
-    if not carrying then
-        for _, item in ipairs(char:GetChildren()) do
-            if item:IsA("Tool") then
-                local itemName = string.lower(item.Name)
-                if string.find(itemName, "brainrot", 1, true)
-                    or string.find(itemName, "skibidi", 1, true)
-                    or string.find(itemName, "toilet", 1, true) then
-                    carrying = true
-                    break
-                end
-            end
-        end
-    end
-    _carryCheckValue = carrying
-    return carrying
-end
-
 local function _voidApplyVelocitySpeed(speed)
     local char = player.Character
     if not char then return end
     local hum = char:FindFirstChildOfClass("Humanoid")
     local root = char:FindFirstChild("HumanoidRootPart")
-    if not hum or not root or hum.Health <= 0 then return end
+    if not hum or not root then return end
 
-    -- Al transportar el objeto, deja que el juego gestione el movimiento.
-    if _isCarryingBrainrot(char) then
-        M.lastMoveDir = Vector3.zero
-        return
-    end
-
-    local currentVelocity = root.AssemblyLinearVelocity
-    if M.antiDieEnabled and currentVelocity.Magnitude > FLING_THRESHOLD then
-        root.AssemblyLinearVelocity = Vector3.new(0, currentVelocity.Y, 0)
+    if M.antiDieEnabled and root.AssemblyLinearVelocity.Magnitude > FLING_THRESHOLD then
+        root.AssemblyLinearVelocity = Vector3.new(0, root.AssemblyLinearVelocity.Y, 0)
         root.AssemblyAngularVelocity = Vector3.zero
-        currentVelocity = root.AssemblyLinearVelocity
     end
+
+    if hum.Health <= 0 then return end
 
     if M.autoBatEnabled or M.autoLeftEnabled or M.autoRightEnabled or M.bypassAimbotEnabled then
         return
     end
+
     if M.isRagdollState and M.isRagdollState(hum) then
         M.lastMoveDir = Vector3.zero
         return
@@ -10945,20 +10913,14 @@ local function _voidApplyVelocitySpeed(speed)
     end
 
     M.lastMoveDir = dir
+    local u = dir.Unit
     local s = tonumber(speed)
     if not s or s <= 0 then
         s = (M.getActiveMoveSpeed and M.getActiveMoveSpeed()) or 16
     end
     s = tonumber(s) or 16
-    local target = Vector3.new(dir.X * s, currentVelocity.Y, dir.Z * s)
-
-    -- Evita reescribir la misma velocidad cientos de veces sin necesidad.
-    -- El pequeño umbral mantiene la respuesta al cambiar de dirección.
-    local dx = target.X - currentVelocity.X
-    local dz = target.Z - currentVelocity.Z
-    if (dx * dx + dz * dz) > 0.0625 then
-        root.AssemblyLinearVelocity = target
-    end
+    -- Mismo método exacto que Lagger Carry: solo root.Velocity
+    root.Velocity = Vector3.new(u.X * s, root.Velocity.Y, u.Z * s)
 end
 
 local function destroySpeedObjects()
@@ -10993,12 +10955,11 @@ end
 
 local _voidSpeedConn = nil
 pcall(function()
-    local _modeUpdateAcc = 0
-    local function tickSpeed(dt)
-        -- Usa el delta real del frame; no presupone que el juego vaya a 60 FPS.
-        _modeUpdateAcc = _modeUpdateAcc + (tonumber(dt) or 1/60)
-        if _modeUpdateAcc >= 0.10 then
-            _modeUpdateAcc = 0
+    local _mobileSpeedModeAcc = 0
+    local function tickSpeed()
+        _mobileSpeedModeAcc = _mobileSpeedModeAcc + 0.016
+        if not PRIMEHUB_MOBILE or _mobileSpeedModeAcc >= 0.15 then
+            _mobileSpeedModeAcc = 0
             if M.updateAutoSwitchSpeed then pcall(M.updateAutoSwitchSpeed) end
         end
         _voidApplyVelocitySpeed(M.getActiveMoveSpeed and M.getActiveMoveSpeed() or 16)
