@@ -6,7 +6,7 @@ local HttpService  = game:GetService("HttpService")
 local SoundService = game:GetService("SoundService")
 
 local LP = Players.LocalPlayer
-local CONFIG_FILE = "Heartless_Config.json"
+local CONFIG_FILE = "IceHubLaggerOmahad_Config.json"
 
 -- ============ THEME ============
 local ICE_BLUE    = Color3.fromRGB(0, 170, 255)
@@ -23,7 +23,7 @@ local STROKE_BLUE = Color3.fromRGB(30, 80, 140)
 
 -- ============ SFX ============
 local sfxFolder = Instance.new("Folder")
-sfxFolder.Name = "HeartlessSFX"
+sfxFolder.Name = "IceHubSFX"
 sfxFolder.Parent = SoundService
 
 local function makeSfx(name, id, vol, pitch)
@@ -56,7 +56,7 @@ end
 
 -- ============ GUI ============
 local gui = Instance.new("ScreenGui")
-gui.Name = "Heartless"
+gui.Name = "IceHubLaggerOmahad"
 gui.ResetOnSpawn = false
 gui.IgnoreGuiInset = true
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -157,22 +157,13 @@ StripeGrad.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(1, ICE_DEEP),
 }
 
--- Icono de la imagen
-local Icon = Instance.new("ImageLabel", TopBar)
-Icon.Size = UDim2.new(0, 32, 0, 32)
-Icon.Position = UDim2.new(0, 12, 0.5, -16)
-Icon.BackgroundTransparency = 1
-Icon.Image = "rbxassetid://1000009328"
-Icon.ScaleType = Enum.ScaleType.Fit
-Icon.ZIndex = 4
-
 local Title = Instance.new("TextLabel", TopBar)
 Title.BackgroundTransparency = 1
-Title.Position = UDim2.new(0, 52, 0, 0)
-Title.Size = UDim2.new(1, -100, 1, 0)
-Title.Text = "hearteless"
+Title.Position = UDim2.new(0, 18, 0, 0)
+Title.Size = UDim2.new(1, -80, 1, 0)
+Title.Text = "ICE HUB LAGGER"
 Title.Font = Enum.Font.GothamBlack
-Title.TextSize = 16
+Title.TextSize = 15
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.TextYAlignment = Enum.TextYAlignment.Center
 Title.TextColor3 = TEXT_WHITE
