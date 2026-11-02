@@ -1,32 +1,11608 @@
---[[ Stick Obfuscador v1.2 ]]
-local _M
-do _M=function()
-local _1_l_i1illI1={"\x96\x50\x3C\xE6\x3B\x7B\x70\x93\x1D\x0A\xAC\x4D\x7D\xBC\xF3";"\xE7\x6A\x93\x35\xF2\xB2\xA9\x27\x49\x6F\xE6\x7C\xC4\x3E\x6A\x67\xB1\x5D\xF2\x54\x9F\x4B\x9B";"\x8B\x38\x28\xE2\x0C\x65\x77\x93\x17\x0A\xFB\x4D\x1F\xD2\xAC\x9F";"\x7F\xA8\xA2\x60\x9B\x9C\xE6\x7F\x9B\x9F\x3F\xD8\xE8\x55\x77\x70\xFE\x62\x4F\xB2\x53\x9D\xCA\xD0\xBB\x16\x90\xD8\x77\xDB";"\xEB\x66\x92\x4D\xEA\x82\xCE\x2A\xF2\x74\xBE\x1D\xCB\x14\x1F\x11\xB8\x20";"\x3B\x92\x5C\x81\xA4\xC4\xDE\x73\xF6\xBA\x08\xE6\x77\xCC\x12\x4C\xAB\x62\x4A\x86\x6B\xAE\x4B\x27\xC2\x4D\xDC\xC1\x7A\xFF\x26";"\xAF\x14\xD5\x08\x24\x45\x57\xF7\x63\x7D\x92\x34\x82\x53\xD6\xD4\x75\xE4\xCC\x16\xF2\x0D\xC6\xAD\x49\xC3\x68\x4F\xE7\x18\xA8\x1F";"\x31\x94\x2A\xCF\x5E\x22\x3A\x55\xD4\xD3\x72\x9A\x3F\xFE\xB2\xBA\x2B\x45\x0B\x88\x01\xF2\x7D\x58";"\xF2\x59\x96\x41\xEA\x80\x9A\x23\xB4\x7B\xD3\x24\xDA\x1A\x18\x7E\x8E\x7D\x1E\x01\xAE\x39\x8B\xED\x87";"\x18\xB0\xB0\x60\x86\xFF\xB3\x18\x99\x9E\x3A\xC0\xFA\x37\x6B\x75\xEB\x03\x26\xA1\x4A\x8C\xBC\x89\xE5\x04\x97\xB4\x1C\xD8\x03\x29";"\x12\xD2\xAA\x35\x9F\x82\x97\x12\x94\x9B\x34\xC5\xE2\x25\x75\x7A\xE3\x00\x24\xC8";"\x7E\xEB\xB4\x64\x81\xFE\xFB\x1D\x9D\x9F\x2C\xC2\xFD\x20\x74\x6D\xE5\x06\x2E\xA6";"\x73\xAF\x1D\xCF\x6F\x03\x20\xAC\x3E\xFC\x57\x86\x45\x9B\x96\x90\x3A\xBA\x9C\xB2\x3E\xD5\x1A\x14";"\xAE\x03\xCD\x18\x20\x47\x5A\xF4\x72\x3E\x88\x79\x82\x5B\xD0\xD6\x7E\xEF\xC4";"\x83\x0E\x83\x25\x84\xDD\xB2\x5B\xF4\x70\xAC\x60\xD0\x01\x0C\x76\xA1\x54\x57\x59\xF0\x5A\xF0\x9E\x94\x69\xBB\x81\xBC\x68\xB3";"\xBD\x0C\xE7\x17\xD1\x56\x51\xFE\x0A\x28\x89\x2F\x91\x25\x32\xC8\x49";"\x31\x97\x67\x80\x2D\x3D\xBD\x4A\xBE\xD7\x2D\xB4\x25\xC1\xD3\xD8\x94\x39\x07\x86\x41\xD5\x1B\x27\x22\xA9\xD3\x87\x6F\xD6\x38\xEC";"\xAF\x4A\xC2\x4C\x81\xF2\xC7\x50\xBB\x7A\xCB\x2D\xD2\x11\x0D\x13\x85\x27\x0F\x49\xA7\x6C\xE7";"\xE4\x6D\x84\x34\xE9\x9B\xA1\x2F\x4D\x78\xD8\x12\xC4\x0F\x02\x5D\xB7\x31\xFD\x53\xA0\x58\x94\x94\x94\x00\xBC\x85\xC6\x2C";"\xD4\x12\xE1\x02\xC1\x48\x5E\xA6\x03\x31\xF1\x7B\xC3\x4B\x60\xBE\x28\xA7\xA9\x2E";"\xF6\x44\xA0\x58\x80\x90\x8A\x08\xA0\x81\xAD\x42\xF3\x5B\x08\x01\x85\x15\x14\xB2\xB8\x7B\xA2";"\xE0\x6C\x8B\x3B\xEE\x8F\xBC\x28\x49\x78\xD6\x14\xCD\x60\x03\x71\xBB\x66\xE3\x16";"\xDD\x7B\x97\x39\xF3\xB1\xB2\x26\x41\x64\xE4\x60\xA0\x28\x0F\x4C\xAE\xCF\xFB\x51";"\x9B\x58\xCD\x52\xEB\x93\xEB\x20\xBD\x81\xCA\x2E\xD3\x16\x76\x0B\x80\x2B";"\x55\xFE\x7A\xA3\x45\x3B\x2E\x5C\xD9\xDE\x6E\x8C\x57\x98\xF2\xAC\x4B\x40\x6A\xE8\x0C";"\xD3\x7F\xF1\x25\xD9\xA5\xC6\xC3\x43\x5A\xE4\x04\xBA\x70\x34\x35\xA4";"\x66\xEA\x6C\xDC\x34\x4E\x34\xD9\x2D\xB7\x46\xC2\x5A\xF8\x9C\x99\x3F\xBA\x79\xCF\x39\xDF\x17\x12";"\xA1\x1F\xD9\x09\xD6\x5E\x5C\xFA\x65\x57\x83\x67\x90\x51\xD1\xCD\x45\xE7\xCE\x02\xF1\x3B\xC8\xA7\x40\xC5\x53\x52";"\x7B\xF5\x52\x17\xB3\xB5\xF1\x36\xD6\xFC\x4F\x89\x15\x53\x48\x09\xEF\x0F\x23\xCD\x3F\xCD\x08\x8E\xC2\x1A\xEA";"\x8F\x17\x8D\x28\xCB\xB1\x2F\xC4\x20\x2C\xEA\x66\xB1\x62\x2D\x59\x4D\xDB";"\x2D\x9D\x51\x8B\xB8\xDE\xC3\x72\xF3\xBA\x10\xD6\x19\xC3\x58\x28\xF0\x60\x46\x8F\x6D\x96\x48\x35\xCC\x48\xED\xC8\x7B\xF5\x2E\x83";"\x56\xF3\x7E\xB4\x74\x3D\x37\x5C\xDE\xE4\x69\x89\x36\xF3\x96\xAB\x20\x48\x6A\xDB\x13\xD0";"\xD5\x76\x81\x38\xFF\xAD\xB9\x23\x44\x67\xEE\x0A\xC3\x3D\x1D\x63\xF7\x9F\xAC\x49\xFC\x4B\x9C\x82\x98";"\xBC\x11\xD9\x06\xB3\x32\x1D\xFB\x13\x5D\x8D\x65\x91\x5B\xD2\xCD\x5D\xEF\xC8\x07\xF8\x2C\xCF\xCC\x4E\x88\x4E\x12";"\x7E\xCF\x23\xC6\x0E\x0A\x10\x82\x27\x0C\x46\xAD\x75\xE6\xF0\xC0\x0C\xFE\x90\x3E\x3A\xE6\x01\x79\x60\x86";"\x52\x9C\x71\xAE\x49\x2B\xCA\x45\xCE\xCC\x68\xFA\x2B\xF7\xB6\xB8\xD8";"\xDC\x6E\x61\xA2\x23\x1B\x6D\xC2\x5A\x70\xFB\x15\x61\xCD\xD5\xBA";"\xF9\x44\xAD\x5B\x9D\x96\x95\x1D\xA4\x80\xC9\x2F\xEA\x0C\x0E\x1C\xC9\x16\x7F\xB3\xB2";"\x00\x4F\xA2\x53\x8A\xEB\x81\x17\xAF\x8B\x36\x36\xE4\x04\x79\x7E\x92\x15\x18\xB9\x45\x77";"\xAB\x6A\xED\x2D\x90\xAC\x2D\xB2\x62\x51\xFC\x3A\xB4\x4A\x28\x5A";"\xFB\x4F\xA1\x55\x90\x97\x8B\x12\xA4\x83\xC4\x38\xE7\x0D\x62\x6F\x81\x1F\x13\xB4\xB3\x6B\xBE\xE4\xFE";"\x28\xD9\x5C\x71\xCF\xAB\xFA\x61\x9B\xCF\x71\xA4\x6D\x37\x04\x51\xEC\x1E\x56\xE2\x0C\xF2\x31";"\xD3\x7A\xFD\x28\xCC\xA7\xB6\xC9\x4F\x24\xE8\x62\xBB\x7D\x3A\x3C\x54";"\xDA\x1C\xE3\x3F\xF8\xB9\xB1\xDE\x58\x7B\xF7\x0A\xB2\x76\x0C\x2C\xB2\xA3\xE3\x5F\x9D\x4B\xE2\x82";"\x1E\xD8\x5F\x7C\xBF\xF1\xF3\x61\x9A\xA3\x2E\xCE\x0C\x2C\x20\x7B\xAB\x08\x59\x9D\x59";"\xDA\x72\x81\x3A\xEC\xB1\xB2\xDE\x47\x61\xE6\x66\xBE\x68";"\xC8\x1E\x88\x00\xCE\x0A\x4C\x85\x7D\x03\xF8\x71\xDC\x32\x20\xC5";"\xF7\x49\xDD\x56\x38\x06\x0E\xFB\x2D\x5F\x86\x50\x91\x3E\xA9\xB3\x19\x85\xC1\x72\xB1\x1E\x91\x54";"\xD8\x69\x87\x3C\xF1\xB2\xB3\x27\x5F\x7A\xF8\x0D\xB5\x65\x08\x2E\xAA\xD0";"\xFE\x37\x3A\xE4\x00\x7C\x7C\x9C\x1C\x1E\xA9\x43\x72\xB1\xF1\xF3";"\x57\xE9\x07\xB7\x74\x34\x33\xA4\xC1\xEE\x62\x94\x4E\xEA\x80\xA1\x24\xB7\x77\xD6\x1D\xDE\x06\x02";"\xF6\x5D\x9B\x49\xE1\x9E\xF6\x27\xFA\x7C\xA6\x26\xD3\x10\x17\x06\x81\x27\x0B\x40\xBA\x6E\x8F\xE6\x86\x08\x9C\x91\x3D\x57";"\xF1\x01\x8F\x14\xFA\xD9\xBD\x72\xBD\x05\xCF\x19\xDF\x13\x1C\x12\xBA";"\x07\x4B\xA3\x52\x96\x93\x8B\x6B\xA0\x8D\xCA\x36\xEF\x09\x60\x00\x8E\x0E\x0B\xB3\xB8\x65\xBC\xF9\xF2\x01\x97\xA6\x2A\xC2";"\xA2\x2E\xCE\xF6\x2D\x40\x6A\xEF\x08\x2F\x96\x33\x87\xAC\xC7\xDC\x79\xFA\xBE\x0D\xD6\x1E\xD8\x5A\x57\xF9\x78\x2F\x99";"\x27\x98\x62\x83\x30\x48\xA0\x09\x85\xA9\x3D\xE7\x2B\xC8\xB9\xFC\x89\x41\x52\xE2\x1F\xD5\x28";"\x9F\x3F\xCE\x5C\x81\xF9\xE2\x10\xAA\x95\xA6\x2C\xB5\x13\x31\x67\x92\x48\x03\xD3\xD3\x64\x8F\x96\xED";"\xDC\x0F\xE5\x17\xD1\xA8\x48\xDC\x01\x50\xC7\x70\xC3\x45\x24\xC4\x5A\xD7\xD2\x75\xFA\x39\xE9\xBE\xB7\xD9\x5A\x6A";"\x77\xD3\x18\xC9\x63\x19\x0E\xBA\x3F\xFF\x45\xA0\x5D\x91\x90\xE3\x0D\xA1\x81\xC7\x28";"\xE7\x0F\x8C\x32\xE9\x8B\xA0\x2A\x4B\x75\xDD\x03\xC5\x66\x01\x15";"\xD9\x2D\x91\x64\xFD\xD3\xA5\xD3\x5B\x59\xEE\x00\xBC\x6F\x3C\x2D\xA1\xC0\xED\x68\xFD\x23\xAD";"\x87\xC3\x2E\xCC\x18\x6E\x09\x89\x2B\x0E\xA4\xF0\x68\xEE\xFB\xF6\x14\x94\x9B\x35\x39\xE4\x32\x77";"\xE7\x62\x96\x31\xEE\x8C\xA9\x2C\x4E\x1D\xC6\x52\xC6\x08\x00\x1C\xBE\x3B\xF3\x56\xBC\x5D\x98\x99\x96\x02\xA1\xEB\xC8";"\x6D\x4C\xAC\x50\x8E\xEF\x8F\x01\xA9\x91\x2D\x3E\xE0\x02\x79\x7E\x93\x1E\x71\xAA\x06\x7A\xDC\xF1\xF1";"\xBF\x3F\xF8\x4B\xFE\xBB\xBB\xDF\x59\x5F\xEC\x01\xB1\x61\x34\x2F\xA2";"\xBB\x37\xCC\xF1\x31\x4D\x6D\xE8\x17\x43\x81\x10\x88\xCE\xC3\xD8\x77";"\x21\xD9\x53\x95\x5B\xDA\xD0\x7A\xE5\xC4\x17\xF1\x0C\xD1\xA9\x4A\xCF\x69\x4F\xF5\x6D\xF4\x3B\x2B\x65";"\x7E\xF8\x09\xB5\x6E\x0F\x24\xAB\xD2\xB5\x00\xC2\x19\xF2\xC5\x81\x5F";"\xA8\x26\xD6\x07\x2A\x45\x0F\xE1\x21\x5E\xD0\x59\xE8\x5C\xDC\xDB\x7B\xFD\xC3\x0F";"\x4F\x81\x65\xA5\x4B\x2F\xAA\x53\xAE\xD0\x12\xE5\x22\xC5\xBD\xBF\xD4\x56\x40\xF4";"\xE5\xDB\x6A\xEE\x60\x71\x07\x87\x10\x17\xBE\xB9\x7A\x83\xF0\xFE\x1D\x96\x9A\x40";"\x23\xF8\x66\xC6\x16\x53\xAA\x42\x9F\xAC\x65\x93\x54\xBF\xD7\xB7\x83\x21\x56\x87";"\xE3\x6D\x8E\x35\xF4\x8F\xAF\x22\x47\x69\xC9\x14\xCE\x6E";"\x46\xE0\x76\xAF\x40\x20\x3A\x40\x97\xDB\x1B\xFD\x3D\xFF\xBA\xBD\xDD\x47\x71\xE8\x08\xB2\x67\x08\x21\xC7\xC4\xB4\x46\xD1\x47\x8F";"\xDB\x72\x86\x3A\xF0\xB4\xB5\x33\x19\x24\xF5\x0D\xB0\x6A\x0F\x22\xAA\xC9\xF8\x45\x8F\x5A\xEB\x99";"\xDE\x04\xF6\x2D\xC8\xA0\x4A\xD5\x5D\x3D\xE7\x10\xB5\x6F\x53";"\x12\xB3\xBF\x63\x86\xF1\xF9\x1B\x9B\x9D\x38\xCC\xFF\x36\x73\x67\xE4\x0A\x67\xAD\x4D\x8B\xAD\xC2\xED\x6C\xFC\xB1\x19\xCF\x01";"\xB4\x17\xC1\x00\xDF\x59\x55\xFD\x78\x2C\x85\x1A\x8F\x4F\x22\xC8\x40\xEF\xCE\x04\xE9\x21\xC7\xA0\x45\xD5\x56\x4E\xB2\x7F";"\x69\xE0\x17\xCF\x7C\x08\x21\xB7\x37\xF6\x5F\xF0\x50\xC7\x85\xD3\x3D\xD1\x9F\xCB\x29\xD6\x19\x68\x03\x9F\x2D\x0C\xBD\xB3\x62\x84";"\x19\xB8\xB4\x62\xEE\xF8\xB8\x14\xF6\x9A\x30\xC8\xFC\x31\x75\x70\xE5\x06\x24\xB0\x49";"\x16\xD1\x27\xD8\x17\x13\x15\x82\x3B\x0C\x44\xAF\x6A\x83\xEE\xE9\x12\xD1\x91\x51\x38\xE6\x07\x7C\x78\x9B\x05\x03\xAC\x43\x7D\xB0";"\xEC\x31\xC7\xF3\x30\x7F\x69\xE4\x02\x2B\xA6\x4F\x9A\xAB\xC5\xEC\x64\xF4\xB3\x1E\xDB";"\xB5\x75\xC5\xEE\x2C\x46\x6C\xED\x09\x38\x84\x57\x80\xA0\xC7\xD9";"\x57\x9F\x73\xA0\x40\x22\xC0\x48\xD4\xD0\x77\xF9\x26\xF9\xBB\xF8";"\x2C\xA0\x4F\x86\xAF\xAE\xEE\x06\xB0\xB6\x70\xDC\x02\xDB\x5B\x5A\xF3\x62\x22\x88\x67\x91\x56\xDC\xC7\x2A\x8F\xC7";"\xEB\x16\xF9\x0C\xC6\x81\xC5\x0E\xF0\x9D\xB8\x36\xCA\x15\x6C\x00\x8E\x28\x18\xBE\xAA\x65\x84\xFD\xFE\x16\x9E\x85\x5D\xDA\xE0";"\x1C\xCB\x19\xDB\x1E\x14\x14\xB7\x21\x06\x4F\xAB\x56\x98\xEC\xE7\x09\xF4\x95\x78";"\x9D\x3E\x3E\xED\x0A\x64\x79\x91\x00\x12\xBA\x48\x7D\xB1\xF7\xFF\x6E\x9B\xA5\x25\xCD\xF2\x2B\x4C\x7D\xE9";"\xFF\x51\x9E\x46\xF7\x8F\xDE\x70\xF1\xD8\x88\x7F\x89\x59\x78\x59\x86\x21\x09\xBC\xB2\x64\x81\xFE\xF9\x15\x91\x92\x30";"\x2F\x9E\x51\x86\xAC\xD5\x8A\x2B\xB1\xEF\x01\xBA\x02\xAB\x5F\x0C\xA3\x23\x55\xF1\x77\xF7\x55\x5D\xD9\x17";"\x97\x37\xC0\xFE\x3E\x7A\x74\x87\x1A\x23\xA4\x4B\x74\xA6\xCD\xF5\x2D\x85\xB2\x1E\xD5\x07\x2B\x43\x55\xFE\x79\x3B";"\xB3\x09\xE0\x11\xDB\x54\x53\xCB\x6E\x46\x86\x6C\x94\x49\x29\xCF\x54\xF6\xD5\x7D";"\x65\xBF\x17\x12\xE7\x8F\x9E\x14\x84\xBA\x61\xCE\x99\x2F\x47\x60\xEC\x09\x39\x83\x4A\x85\xAB\xDD\xD9\x74\xFF\xD1\x1E\x9F\x00\xD1";"\xA9\x24\xC8\x0D\x2C\x5E\x7D\xF0\x75\x30\x92\x52\x89\x59\xC1";"\xB4\x04\xE3\x1C\xD1\x4A\x52\xC4\x62\x40\x8E\x66\xB5\x39\x21\xA3\x25\xB1\xBE\x24\xE5\x70\xCD";"\xC0\x01\xEB\x36\xC1\xA5\x42\xD0\x53\x58\xEC\x78\xBA\x73\x3E\x3D\x5B\xDC\xAB\x67\xC3\x29\xA9\x95\xED\x32\x04\x63\x96";"\xBB\x40\x92\x79\x2E\x4D\x7D\x92\x18\x26\x9D\x36\x97\x0D\xA1";"\x0B\x57\xA1\x53\x97\xE0\x8E\x12\xCF\xE5\x6F\x59\xE7\x5B\x76\x20\x9D\x72\x72\xC3\xD2\x26\xA6\x86\xF8\x60\x9C\xA6";"\xBB\x27\xCE\xFA\x2F\x4A\x6F\x85\x06\x67\xF3\x13\x85\xC9\xDA\xDC\x70\xFA\xB9\x1B\xE1\x10\xD7";"\xC5\x70\x82\x32\xF0\xBF\xAE\x23\x53\x2D\xB8\x5A\x91\x7A\x75\x4E\xFC\x59\xE8\x3A\xF1\x11\xF2\x95\xC6\x63";"\xDB\x71\xF9\x35\xFF\xB4\xA9\xC6\x58\x60\xEC\x01\xB1\x71\x08\x32\xC6\xC3";"\x99\x6A\x2A\xBF\x7D\x68\x26\x8A\x4C\x41\xFA\x55\x20\xE8\xB6\xBA\x77\xDB\xFC";"\x23\xAE\x46\x6C\xB3\xCC\xE5\x61\x8B\xA5\x4E\xDF\x0B\x26\x43\x61\xF0\x74\x34\x96\x54\x9A";"\x71\x11\xFB\x3F\xE8\x92\xD5\x16\xEC\xF5\x59\x33\xE3\x1C\x36\x13";"\x5F\xFC\x79\xAA\x7C\x3D\x32\x5B\xDC\xE1\x75\x9F\x2A\xF6\x82\xA9\x20\x4A\x75\x97\x1F\xA2\x7F\x19\x64\xB0\x5A\xF5\x54\x9B\x5E";"\x44\xE4\x4D\xE4\xA8\xC4\xE4\x6C\xF0\xB1\x13\xD2\x08\xCA\x5B\x58\xFE\x7F\x3A\x86\x65\xF8\x48\x91\xCD\x2C";"\x12\xAF\xD0\x7C\xC8\x89\x91\x4D\xD9\xCF\x46\x90\xAC\x73\x42\x03\xB9\x0A\x53\xC4\x54";"\xD3\x67\x80\x3C\xFD\xB9\xB7\x20\x44\x64\xF5\x78\xBF\x07\x1B\x63\xB8\xBD\xED\x3C\x8B\x34\xEF\xC5\xC4\x69";"\xF5\x40\x87\x41\x9F\x99\x9F\x3D\xB9\x79\xA3\x39\x91\x16\x7E\x0E\x8F\x27";"\xE3\x61\x97\x23\xE4\xFF\xBA\x31\xBF\x7C\xD5\x1B\xC2\x19\x04\x11\xBA\x3E\x03\x4F\xA6\x4D\x8F\xE9\x94\x05\xAF\x8C\xC6";"\x40\xEF\x08\xBA\x7B\x30\x34\xA5\xAB\xFA\x21\x8E\x59\xE8\x8F\xA1\x2B\x42\x71\xC5\x12\xC6\x65\x1A\x19\xB5\x51";"\xFF\x4B\xA4\x5D\xFB\x8B\xD5\x03\xCB\x95\xC6\x2F\xE8\x0F";"\xCC\x05\xE9\x13\xD3\xB7\x54\xCF\x6D\x59\xFE\x7E\xA1\x5A\x77\x31\x1F\xC5\xDC\x72\x83\x3C\xF9\xB6\xB7\x3E\x5E\x7B\xE3";"\x0C\xA0\x25\xF5\x1F\x34\x78\x5B\xA0\xB0\x15\xEC\x60\xAE\xA1\xD1\x3B\x02\x7F\xE8\x01\xA0\x2E\x4A\x64\xF1\x95";"\x81\xCD\x2D\xD9\x13\x6F\x17\xFC\x23\x13\xB8\xB5\x6B\x86\xE1\xF9\x0B\x96\x98";"\x88\xC0\x2F\xED\x09\x62\x06\x94\x08\x69\xA3\xA7\x65\xBE\xF1\xFC\x12\x90\x84";"\x07\x47\xA5\x44\xD7\xCC\xD9\x58\xBD\xDA\xCF\x30\xE9\x09\x60\x02\x93\x10\x14\xA8\xA4\x7F\xB4\xFF\xF5\x1D\x93\xA0\x31\xB4";"\x9F\x63\x45\xB3\x05\x10\x76\xD2\x0D\x6A\xDF\xA8\x08\xD6\xE8\x8D\x0C\x99\xB1\x4A\x8D\xA3";"\x57\xF3\x1D\xA8\x73\x37\x2B\xA7\xC0\xEA\x78\x8C\x05\xAC\xCF\xBB\x58\xBA\x31\xCC\x02";"\x71\xD2\x1F\xDB\x14\x1F\x0A\xB9\x3E\x00\x4F\xAB\x51\xFC\x87\x87\x40\xAD\xE6\x34\x33\xEB\x07";"\xBE\x11\xDF\x19\xC1\x45\x4A\xF6\x7B\x4B\x81\x6B\x90\x48\x47\xC1\x2F\xAB\xCF\x17\xF4\x2E\xC0\xA1\x41\xD4\x59\x51\xFF\x6B";"\x68\xE5\x16\xC1\x61\x05\x27\xB3\x23\xF7\x50\x95\x42\x9D\x9F\x92\x30\xAB\xC5\xCA\x4C\xD5\x12\x6C\x09\x86\x28\x0B\x40\xB5\x6E";"\x49\x84\x74\xA0\x42\x23\xDB\x5B\xD2\xD1\x75\xF5\x39\xFE\xB3\xBA\xDD\x5E\x61\xE8\x0E\xB7\x72\x0A\x29\xA3\xDA";"\xCB\x0A\x9C\x35\xA3\xE5\x41\xB8\x4B\x52\xFD\x78\xA4\x7B\x37\x2B\x40\xC6\xE5\x60\x83\x3E\xF1\x8D\xB4\x48\x21\x61\xA7";"\x97\x36\x38\xE4\x3F\x64\x71\x9B\x1A\x24\xAA\x40\x19\xBE\xA2\x87\x22\x8F\xC0\x23";"\xCB\x0B\xE5\x20\xFB\xB4\xB0\xD9\x52\x63\xF2\x0F\xB2\x73\x03\x22\xA0\xD6\xF1\x5E\x91\x4E\xE7\x80";"\x70\x99\x31\x82\x5E\xDE\xDF\x7A\xFE\xB9\x06\xE4\x17\xC1\x54\x4F\xC7";"\x50\x85\x62\x90\x4D\x27\xC1\x40\xE1\x9E\x72\xF7\x21\xCB\xAD\xB5\xD0\x5E\x5F\xF1\x14\xBB\x7C\x32\x33\xA2\xC6\xE3\x66\x90\x4F\xF5";"\x89\xC2\x32\xEF\x0D\x6F\x0E\x92\x17\x16\xB5\xB9\x62\xBD\xFD\xF5\x10\x8E\xA0\x2B\xC6\xFF\x32";"\x0C\x45\xB5\x74\x80\xE2\x87\x10\x90\x93\x25\x78\xE0\x56\x7F\x75\x99\x12\x28\xAF";"\x5A\x9C\x7F\xBA\x73\x3A\x31\x5B\xC2\xE5\x69\x9C\x37\xF4\x81";"\xDB\x70\xF7\x3E\xF8\xB1\xD8\xD6\x2F\x20\xE9\x61\xB7\x66\x00\x2E\xAE";"\x39\x98\x51\x9F\xA5\xCC\xDD\x74\xFB\xB2\x0B\x95\x72\xB2\x3C\x5E";"\x2F\x8B\x5E\x9B\x5A\xDE\xD3\x78\xE3\xDE\x62\xFA\x7A\xC3\xB8\x27\xC9\x72\x48\xFB\x72\xAC\x4E\x27\xDC\x49\xCD\xDD\x70";"\x15\xBB\xBE\x6F\x99\xF8\xFC\x11\x99\x99\x3B\xAF\xF5\x2A\x74";"\x2D\xCA\x23\xC8\xA9\xA7\xE7\x6F\xF2\xB2\x19\xDC\x02\x21\x5D\x53\xEE";"\x9A\x25\xEF\x6E\xE6\xF3\xB8\xBA\x2F\x19\xF3\x17\xB4\x66\x01\x2E\xA8\xC9\xF2\x46\x88\x41\xE0";"\xC9\x02\xF3\x2E\xC4\xB9\x5C\xCF\x50\x54\xF5\x7E\xBB\x67\x3C\x32\x58\xDB\xE0\x6D\x8A";"\xCA\x77\xF8\x34\xF4\xBC\xBE\x91\x57\x61\xEF\x0C\xB4\x72\x0E\x31\xA6\xCD\xEC\x54\x92\x4D\xE4\x97\xE2\x3C\xEB\x60\x8A\x02\x9E\x02";"\x57\xE6\x6D\xD1\x36\x2C\xC4\x5A\xD2\xD4\x72\xF5\x27\xE0\xBB\xB4\xD8\x5E\x65";"\xB1\x17\xAF\x0C\xBB\xA5\x55\xCC\x6D\x47\xF7\x77\xA5\x5F\x23\x3B\x5E\xD3\xDD\x77\x9C\x60\xA0\xEE\xAE\x82\x1E\x39\xF4\x79\xBE\x0A";"\x75\xDA\xB3\x2D\xAB\xAD\xE8\x5E\x88\xC4\x41\xB4\xE9\x2D\x48\x6B\xEF\x0F\x2B\x99\x57\x91\xAC\xCE\xD8";"\xC8\x09\xF0\x2F\xCF\xAB\x43\xD0\x2A\x4D\xE9\x7A\xA3\x7D\x3C\x31\x50\xC3\xE4\x67\x80\x33";"\xE3\x03\x9A\x3E\xFB\x8C\xAA\x2D\x44\x71\xFB\x0F\xC1\x6E\x07\x28\xB4\x34\xEE\x3B\x81";"\xB1\x10\xDC\x1D\x27\x52\x5E\xF2\x7A\x3B\xE1\x6E\x86\x54\xDF";"\x35\x96\x58\x9A\x4C\xBC\xBC\x23\x91\xCB\x0E\xE0\x15\xD2\xAF\x51\xD9";"\x2A\xAE\x49\x84\xAB\xCF\xFF\x6C\xF1\xB0\x1B\xD9\x04\x39\x2D\x25\xF6\x25\x26\xEE\x1A\x86\x2B\xA8\xD7\x04\xE1\xA2\x05\xED";"\xAF\x24\xD6\x10\x2A\x4A\x66\xE9\x0B\x36\xF4\x55\x87\xA2\xDC\xDB\x75\xF6\xB8\x0F\xFE\x1A\xD1";"\x75\x2F\xF5\x6B\xE3\xE0\x8B\x15\x97\x91\x37\x27\xFF\x3C\x76\x73\x91\x1C\x24\xC5\x4A\x0A\xAA";"\x51\xF6\x73\xA1\x78\x3D\x31\x44\xD1\xE3\x6E\x8E\x35\xF4\xA4\xE8";"\x1C\xC6\x40\x7F\xB2\xF7\xEB\x65\x98\xB4\x24\xCA\x09\x23\x45\x6D";"\x44\xBF\x78\xCB\x7A\x39\x38\x5F\xDB\xDA\x6A\x86\x35\xE1\xB0\xA6\x24\x44\x69\xE5";"\xDD\x7B\x94\xAE\x24\x20\x31\xB3\x12\x7F\xFD\x13\xDB\xB9\x93\xEF\x65\xF5\xB3\x17\xD9\x05\xC3\x56\x5B\xFF\x7A\x44";"\xDB\x76\xBE\x65\x44\x2C\x04\x81\x2D\x43\xFA\x49\x9B\x04\xCC\xCA\x6A\x9B\xC9\x5A\xF9\x03\xBE\xB9\x30";"\xCA\x01\xF5\x20\xC1\xA4\x4B\xD5\x56\x55\xE0\x74\xA6\x74\x3E\x35\x58\xDE\x8C\x74\xC3\x35\x99\x89\xAE\x27\x48\x6D";"\xC6\x72\x81\x3C\xF5\xB7\xAC\x23\x47\x68\xE4\x12\xDB\x6B\x01\x24\xA4\x37\xF5\x50\x9A\x0D\x93\x82\x9E\x3F\xBA\x86\xC6\x22";"\x78\xED\x0D\xB1\x69\x09\x2B\xB2\xC1\xF6\x5D\x91\x4C\xE2\xE9\x91\x60\xD6\x3F\xD0\x4A\xDD\x1C\x14\x13\x80\x2E\x00";"\x81\x47\x86\x15\xF1\xE9\x86\x65\xB2\x2A\xD0\x25\xD8\x13\x11\x11\x87\x20\x15\x5F\xB3";"\xEC\x59\x97\x42\xE1\x9C\x81\x55\xB1\x61\xD4\x25\xD9\x1F\x14\x0D\x9A\x3C\x00\x41\xAF\x68";"\x02\x90\x4D\xCD\x76\x12\x2B\xA0\x51\xB3\x5C\x9E\x39\xCA\xDC\x9C\x3D\xA3\x93\xB3\x58\x84\x11\x78\x01\x96\x4F\x67\xC8\xF3\x34\xF5";"\xB2\x10\x88\x37\xF9\xF1\x87\x65\xED\x2D\xC0\x5D\x8A\x5E\x56\x57\xE3\x34\x62\x5B\xFF\x0E\xDB\xF4\x8E\x0B";"\x45\x95\x28\xCA\x18\x70\xD6\x29\x80\x8A\x15\xFA\x58\xD2\xEA\xB0\x94\x4C\x0D\xFE\x00\xBB\x76\x32\x34\xA6\xC3\xE4";"\xCF\x17\xF1\x2E\xC3\xA6\x49\xD5\x50\x5B\xF6\x7B\xA9\x7A\x38\x32\x58\xC0\xE4\x6E\x81\x5C\xEC\xCD\xA9\x40\x4A\x68\xDF";"\xB8\x1A\xD7\x00\x2A\x58\x30\xF8\x78\x38\x90\x67\x90\x5F\xD1\xD1\x45\xE4\xCF\x0E\xEE\x30\xD4";"\x3A\xEE\x12\xCF\x6A\x08\x2B\xBA\x32\xEB\x4D\x81\x43\x94\x97\x95\x31\xBE";"\x4F\xEF\xA9\x3A\x8C\xF4\x9D\x0B\xCA\xC1\x3D\x98\xA5\x66\x27\x32\xF0\x64\x24\xB8\x29\x92\xF1\xDA\xFE\x6E\xF2\xBD";"\x24\xC8\x41\x29\xB5\x8A\xE4\x03\x96\xB0\x18\xD5\x01\x22\x5C\x55";"\x49\xDD\x01\xF9\x22\x77\xC5\x11\xF1\x97\x62\x92\x5B\xDD\xC5";"\x3B\x9A\x5C\x82\xA7\xDC\xCF\x77\xFF\xBF\x0D\xE7\x12\xD6";"\xD8\x6C\x8D\x31\xF5\xB3\xC2\x2A\x3F\x72\xFC\x12\xC9\x60\x00\x25\xA4";"\x3E\x9F\x33\x91\x00\xC4\x90\x7C\x8E\xDE\x0C\xEC\x10\xD2\xA9\x4E\xD0\x68\x4B\xFC\x76\xA9\x4D\x4B\x22\x14\xD1\xB2\x73\xFC\x3A";"\x9A\x2E\xCC\xF2\x36\x7E\x66\xE9\x07\x2B\xA2\x49\x93\xD7\xDB\xE2\x6A\xF2";"\x98\x3F\x37\xEF\x6F\x67\x39\x97\x77\x1D\xB0\x45\x7C\xB6\xF0\xF7\x6B\x83\xA6\x33\xCC\x0D\x24\x4C\x6E";"\xF5\x5C\x9C\x48\xE6\x9F\x82\x32\xB3\x78\xD7\x1E\xD7\x1F\x15\x10";"\x5B\xF1\x05\xF6\x12\x41\xA8\x42\xD6\xBA\x7D\x9A\x23\xEF\xEF\xAB\xC5\x4A\x00\xB7\x52\xD8\x1F\x58\x40\xC0\xBF\x82\x1E\x8D\x5B";"\x88\x37\x34\xE0\x05\x6D\x62\x8F\x0F\x1D\xB8\x41\x78\xBE\xFB\xEB\x71\x8A\xF3\x4F\x8F\xF1\x45\x47\x6D\xEF\x0F\x34\x9E";"\x7D\x8F\x33\x95\x32\xCC\xD1\x44\xE0\xC5\x02\xE5\x29\xCF";"\x94\xDE\x30\xEF\x01\x65\x08\x94\x08\x0B\xDD\xAF\x79\xAE\x90";"\x49\xB5\x1C\xCE\x14\x6D\x4E\xA6\xA4\x8E\x12\x9B\x50\xF8\x9F\xB7\x4D\xCB\x72\xBB\x06\xA2\x4C\x18";"\xF3\x5C\x94\x2F\x90\x9D\x92\x3D\xB8\x82\xCA\x3C\xD6\x1A\x69\x0A\x81\x2F\x08\x40\xBA\x68\x8F\xE9\x84\x0E";"\x62\x85\x0D\x81\x66\x6E\x1E\xB7\x32\xFD\x51\xA0\x5E\x84\x93\x92\x3C\xA1\x8D\xC0\x28\xBE";"\x89\x29\x3A\xE6\x37\x7A\x7E\x91\x03\x23\xA8\x43\x7C\xB5\xFD\xE8\x6A\x8C\xA9\x20\xD1\x0E\x2A\x48\x67\xEE\x6E\x2B";"\x26\xAF\x56\x25\xBE\xA5\xFC\x39\xCF\xBB\x79\xC1\x5C\x76\x15\x73\xA6\x28\x62\x85\x09\xDE\x1E\x8B\xC6\x21\xAD\xD1\x59\xE9\x14\xD2";"\x46\xFE\x64\xF5\x07\x3B\x37\x55\xD4\xDF\x72\xFC\x24\xF3\xB1\xB4\xD4\x44\x6C\xE2\x1A\xE5\x33";"\x15\xBA\x4B\x70\xB7\xF8\xF4\x64\x86\xB2\x27\xC4\x0C\x2C\x44";"\xE5\x52\x97\x54\x9A\x94\x94\x25\xA0\x8A\xC2\x2D\xD5\x16\x04\x06\xD0\x36\x4A\xBF\xDF\x6E\x81\xE4\xF6\x15\x91\x84\x34";"\xDD\x72\xFA\x37\xFF\xDE\xA9\x99\x46\x0F\xEE\x0E\xB8\x66";"\x2A\xDF\x7F\xC8\x67\x00\x17\xB3\x36\xE4\x52\x9D\x59\x9C\x95\x90\x50\xAF\xEF\x8F";"\x4B\x89\x6A\x88\x4C\x2B\xC9\x4A\xE7\xC7\x75\xF2\x2C\xCD\xAE\xB7\xD6\x57\x44\xE8\x62\xB8\x7C\x30\x3C\x5A\xC7";"\x24\xEC\x7B\xB7\x29\x28\x22\x5F\xD7\xDF\x77\x87\x3F\xE4\xAA\xAF\xD4\x42\x60\xE3\x0F\xB2\x77\x13\x46\xA4\xD5\xF8\x56\x93\x40\xE3";"\x22\x8C\x67\x97\x5F\xDA\xD7\x75\xFE\xA8\x09\xEF\x1B\xC6\xAA\x49\xCF\x68\x51\xFC\x73\xB1\x42\x2D\x35\x50\xDE\xDC\x74\x82\x37";"\x31\x98\x53\x85\xA6\xC7\xD8\x76\xFE\xB2\x07\xE8\x11\xD1\x54\x55\xC4\x67\x2B\x99\x07\xD6\x4F\x45\xDB\x41\xE8\xD6\x7A";"\x8D\x7B\x2B\xB2\x1E\x3B\x7F\x89\x4F\x62\xAF\x04\x64\xE1\xEC\xA3\x7E\xFC\xA5";"\x23\xA7\x45\x8C\xAB\xC6\xEB\x69\xF0\xB0\x5A\xD6\x02\xDD\x5C\x51";"\x1A\xA9\x5C\x70\xB9\xF1\xF3\x64\x80\xCB\x48\xC1\xB6\x2F";"\x64\xE5\x0F\xBB\x6E\x06\x2B\xAC\xD5\xE8\x42\x9F\x47\xE4\x85\x99\x35";"\xFC\x37\x3A\xFC\x35\x79\x7E\x84\x07\x23\xAE\x49\x7E\xB5\xCC\x87\x69";"\xE3\x54\x9E\x40\x9E\x9D\x91\x3A\xB3\x91\x9F\x2A\x81\x79\x3E\x60\xD0\x21\x0D\x45\xB7\x6A\x84\xE9\x88\x14";"\x06\xBC\xB3\x62\x8C\xE6\xE6\x7A\xFF\xEC\x3C\x91\xE6\x62\x6E\x24\x85";"\xE2\x78\xC3\x35\x99\x96\xAF\x20\x4D\x68\xE2\x1A\xD5\x7F\x1D\x22\xB7\x30";"\x72\xF4\x41\xF4\xA5\xCC\xFE\x77\xF0\xBE\x13\xD8\x04\xC6\x5A\x50\xF0\x7D\x44\x88\x77\xD3\x0A\x7E";"\x5F\xAF\x06\x7A\xDC\xF4\xF0\x67\x88\xAE\x24\xCA\x0D\x24\x58\x66\xE8\x0C\x37\x98";"\x6D\xE0\x08\x98\x16\x0C\x78\xAB\x41\x88\x49\xFA\x3C\x84\xE3\xE8\x35\xED\xEA\x99\x59\xBA\x74\x15\x00\xDE\x34";"\x78\x48\xF7\x4A\xF0\x90\x9A\x59\xD5\x88\x60\x3A\xB1\x69";"\x8C\x39\x3D\xE6\x08\x6E\x7B\x93\x10\x1F\xB5\xB9\x62\xBC\xF1\xF5\x15\x82\xAD\x3B\x8E\xF2\x44\x55\x6A\xEC";"\xEF\x15\xD6\x02\x21\x5B\x5E\xF0\x75\x3C\x90\x62\x8D\x51\xD5\xD1\x40\xE0\xC1\x03\xFD";"\xE9\x0F\x8D\x22\xAC\x83\xC8\x31\xB5\x77\xD6\x1A\xC3\x1A\x19\x13";"\xBC\x7C\x81\x60\xB6\xC8\xAF\x78\x4B\x33\x88\x1F\xC6\x7E\x6D\x4B\xBD\x8A\x95\x44\x86\x04\xF8\x96\xEC";"\x2D\x96\x5D\x9F\x53\xD8\xDC\x7C\xE5\xAE\x67\xE4\x55\xD2\xC2\x49\xCA\x6C\x4C\xFF\x7C\xB1\x58\x24\x3F\x52\xD1\xD8\x76\x92\x23\x91";"\xBC\x74\xFA\x38\xFC\xB5\xB5\xDA\x5C\x63\xFC\x0A\xB6\x78\x03\x22\xA2\xCA\x80\x31\xD7\x49\x8D\x9A\xA9\x37\xB8\x78\xD6\x1A";"\xE6\x05\xCD\x47\x76\x4B\x09\xE8\x04\x21\xDA\x46\x86\x0D\xDE\x91\x65\xFD\xA5\x60\xBD\x7D\xC2\xFB\x58\x99\x64\x48\xF6\x75\xAD";"\x5A\x94\x6D\x94\x59\x28\xCD\x42\xF4\xC9\x7B\xF0\x28\xC3\xA5\x58\xCD\x51\x50\xF3\x7A\xBA\x7C\x3D\x32\x5C";"\xCB\x51\x7B\xE6\x4C\x7F\x77\x8D\x4E\x01\xFD\xB3\x1D\xD0\xA0\x9F\x1F\x82\xAA\x2C";"\x38\xA0\x4B\x74\xAE\xCB\xED\x04\xE5\xF4\x1D\xBD\x19\x26\x46\x55\xFF\x7A\x32\x8F";"\xEF\x71\xD4\x16\xBC\xDC\xB2\x6A\xBA\x08\xCC\x06\xC2\x16\x1F\x1F\xBF\x3A\x1B\x4E\xA4\x51\x94\x9C\x8F\x1F\xE5";"\x78\xD6\x1B\xCB\x17\x1A\x1E\xBB\x3C\x03\x48\xA6\x56\x92\x96\x91\x0F\xA8\x8E\xC3\x36\xE9\x14\x60";"\xFB\x55\xA0\x42\x9D\x92\x9A\x3C\xA4\x83\xDF\x2A\xDB\x0D\x6F\x0A\x8B";"\x0C\x45\xE4\x14\xD0\xE4\xD8\x14\xA6\x99\xA2\x2D\xBA\x14\x0D\x14\xE3\x6C\x0C\xC8\xA3\x27\xB8";"\xB4\x1D\xD9\x03\x29\x41\x5F\xF2\x7B\x3F\x8F\x61\xF6\x4F\x93\xD3\x2A\xFD\xC0\x00\xEC\x28\xC8\xA4\x59\xD6\x48\x5B\xFD\x7B";"\x66\xD3\x21\xDA\x11\x14\x11\x82\x3F\x1A\x38\xB4\x53\x89\xEC\x8E\x0B\xA9\x8A\x25\x36\xEE\x05\x7D\x74\x93\x05\x00\xCE\x5A\x79";"\x8F\xC6\x26\xE8\x05\x61\x02\x8E\x14\x1B\xBE\xBF\x61\x9D\xE1\xE6\x13\x96\x98\x2F\xC6\xFE\x2C\x32\x6C\x8B";"\xB0\x13\x93\x0D\x94\xAB\x20\xCF\x6A\x4D\xF5\x71\xAE\x58\x22\x3A\x53\xD5\xDF\x71\x92\x23\xBE\xB1\xDE\xDB\x40\x66";"\xB2\x4D\x9D\x40\xD2\x51\x46\xF5\x77\x23\xF2\x08\xF2\x07\x55\xAC\x5A\x83\xBA\x04\x80\x53\xD7\xAD\xAC\xB0\x2E\x18\xA9";"\x30\x92\x5E\x84\x4D\x9A\xD4\x13\xFA\xC1\x09\xE6\x13\xDA\xA9\x50\xC4\x6C\x4D";"\x22\xA2\x51\x6A\xB0\xCB\xE6\x68\x8D\xB9\x1A\xCE\x49\x2F\x46\x5F\xF3\x7E\x38\x92\x63\x83\x56\xD2\xD0\x44\xE7\xC4";"\x73\xDF\x1C\xC8\x64\x07\x17\xAB\x32\xF9\x58\x9E\x58\x9D\x92\x97";"\xC7\x5D\xAD\xFD\x4A\x59\x71\xF7\x6C\x7B\xBD\x0A\xE1\xC5\xA9\xFD\x0F\xE9\xD2";"\x98\x32\xC2\xF9\x54\x1F\x36\x9E\x6C\x23\xA7\x49\x73\xA6\xC8";"\x0E\x44\xBA\x75\x9F\xFD\x83\x11\x91\x93\x34\x35\xE4\x25\x61\x74\x9F\x13\x24\xAD\x40\x7F\xB4\xC8\xED\x66\x87\xA5\x1D\xCE";"\x12\xAA\xFE\x70\xB5\xFF\xFF\x16\x9F\xA3\x34\xC1\xF4\x39\x43\x69\xE6\x04\x46\x8E\x52\x99\xCB\xCA\xE9\x73\xF4\xB0\x16";"\xCE\x7B\xF2\x20\xD9\xA3\xBE\xD6\x57\x5D\xF4\x1C\xF5\x34\x2E\x64\x19\x99\xB6\x20\xD2\x6C\xB0\x97\xF8";"\xC0\x62\xEB\x13\xD8\xAF\x4F\xC7\x67\x4E\xF8\x7B\xBE\x47";"\x3E\x91\x7B\x86\x55\xDE\xD3\x48\xE6\xC0\x1E\xBF\x52\xC6\xF7\x5C\xB9\x2B\x4F\x9C\x07\xB8\x27\x47\x36";"\x68\xCE\x4A\x87\x79\x03\x1B\xBE\x30\xFB\x55\xBB\x5F\x9B\x9A\x97\x39";"\xF4\x20\xE0\x19\xF7\xE9\xE2\x11\xBA\x94\xA5\x22\xCC\x63\x39\x43\xDB\x4B\x03\xB3\xA5\x07\xDF\xF8";"\xE7\xD6\x51\xE0\x51\x06\x7D\xE2\x4F\x1F\xCB\xA3\x1A\x91";"\xC1\x08\xFC\x10\xD5\xA3\x4B\xCC\x65\x55\x9F\x7A\xAD\x43\x25\xC8\x53\xD9\xDF\x7E\xF4";"\x1E\xB4\xBA\x7E\xBE\xF4\xF1\x08\x85\xA1\x22\xC2\xF7\x27\x4E\x6C\x87\x10\x6B\x9C\x3E\x87\xA0\xCD\xD9\x73\xF4\xB3";"\x75\xB5\x07\xB4\x6F\x0B\x2D\xAB\xCC\xF0\x42\x92\x45\xE4\x80\x98";"\xFF\x69\xC2\x7C\xA5\x40\x0D\x80\x79\x02\x96\x2A\xEF\x4C\x6C\xB5\x57\x84\xB0\x61\x8F\x54\xD9\xFB\xC0\xCC\x3A\x27";"\x66\xDD\x1C\xCD\x79\x1D\x02\xB5\x34\xF3\x55\xA3\x5A\x80\xFF\x9F\x67\xBF\xC1\xC6\x40\xD2\x0E\x67\x0A\x8B\x28\x17\xB7\xB6\x71";"\x33\x99\x52\x80\x56\xCD\xDB\x72\xF8\xB9\x0B\xE7\x1D\xB9\x58\x32\xDF";"\x52\xB1\x12\x6B\xC6\xB5\xF1\x3B\x81\xA4\x2A\xD0\x00\x20\x43\x7B\xF1\x75\x33\x90\x5D\x9A\x5B\xDE\xDE\x7B\xF3\xC3\x0C\xE0\x0A\xD2";"\xDC\x69\x81\x38\xF4\xB5\xB1\x26\x50\x2C\xE5\x65\xC5\x6F\x08\x25\xAC\x37\xF5\x58\x98\x54\xE5\x91\x9D";"\xF8\x50\xA5\x5F\x9D\x91\x9F\x0E\xBB\x87\xC5\x2C\xDB\x0C\x6D\x0E\x93";"\x20\xAE\x45\x73\xDF\xD7\xA9\x67\xE7\xAD\x27\xD4\x0F\x21\x44\x7D\xF3\x75\x31\x90\x5A\x9F\x31\xC4\x93\x7D\x91\xCB\x08\xEA\x10\xD3";"\xFA\x43\xE6\x5A\xFC\x91\x90\x06\xA3\x8E\xCE\x2E\xF0\x0D\x6D\x03\x8D\x23\x16\xB9";"\x87\xCD\x27\xC7\x56\x69\x66\x86\x2B\x0C\x41\xB6\x6C\x8F\xE1\x88\x14\x84\x96\x32\x3B\xF4\x3E\x7F\x72\x9B\x77";"\xDB\x1A\x83\x15\xC8\x45\x5A\xD3\x00\x24\x95\x38\xC9\x0B\x38\xDA\x38\x8E\xC0\x05\xF5\x70\x99\xE2\xE7\xC9\x55\x4C\x8D";"\x67\xE8\x07\xB5\x70\x59\x30\xE2\xCF\x80\x63\x92\x4F\xEB\x87\xA7\x31";"\x6F\xDE\x58\xCF\x19\x16\x15\xBA\x39\x09\x55\xA3\x5F\x91\xEA\x8A\x06\xA7\xF1\xCE\x2F\xED\x00\x63";"\x0E\xBF\xB7\x6B\x8A\xE6\x81\x11\x96\x9A\x34\x37\xE7\x3C\x75\x76\x99\x0D\x25\xAC\x55\x0C\xA8\xD4\xEE\x6D\x88\xAF\x1A";"\x96\x30\x51\x8F\x30\x3A\x74\xF3\x1F\x25\xAC\x43\x73\xB6\xD6\xE9\x61\x88\xA8\x23\xD2\x65\x3B\x2B\x24\xF0\x1A";"\xE3\x73\x88\x4A\xED\x8E\xA1\x2C\x43\x1F\xC5\x5C\xC4\x0A\x18";"\xD4\xD9\x47\xDD\x12\x69\x00\x83\x2E\x0C\xBE\xAE\x64\x8C\xEC\xF8\x10\x9A\x86\x5A\xD2\xF2\x2B\x1F\x7F\x9E\x01\x24\xA0";"\x60\x94\x1D\xB4\x07\x15\x13\xBB\x21\x04\x4B\xB7\x48\x92\xEE\x8E\x0C";"\x08\x49\xA4\x55\x9A\x93\x89\x02\xA8\x96\xCA\x38\xEE\x0D\x61\x05\x8F\x6B\x0E\xB3\xB4\x65\xBD\xFC\xF4\x03\x86\xA6\x2C";"\xEA\x33\x89\x01\xE6\xEE\x82\x36\xB2\x7A\xD7\x22\xDB\x11\x0F\x0A\xA1\x26\x05\x44\xAD\x50\x87\xED\x90\x64\xB4\xD4";"\x5E\x89\x6F\x96\x56\x2C\xC2\x56\xF6\xD3\x7E\xF5\x28\xCD\xA2\xB9\xC9\x4A\x45\x8D\x67\xA2\x7B\x33\x34\x5B\xCD\xE7\x68";"\x63\xEA\x16\xD3\x18\x6D\x41\xAB\x87\xFB\x37\xCD\x0A\xBD\xD8\xF5\x23\xB4\x74\xD2\x18\xC1\x19\x1B\x10\xB9\x2E\x00";"\xB4\x12\xDF\x00\x29\x42\x5F\xF9\x7D\x37\x8E\x6D\x83\x49\xAB\xD6\x5D\xE1\xC1\x08\xEB\x2B";"\x0A\xA5\xB3\x6D\x82\xE5\xFC\x10\x8B\xF0\x3C\xA7\x95\x4D\x1F\x20\x80\x40\x28\xD9\x53\x72\xAD\xCB\xEE\x6B\x8C\xAD\x1E\xDE\x0D\x27";"\x9A\x39\xC2\xF7\x31\x77\x75\x94\x12\x27\xAC\x4A\x76\xA6\xCA\xE8\x04\xE5\xBD\x5B\xD4\x6F\x20\x46\x5B\xFE\x7A\x38\x97\x65\x91";"\x09\x42\xB5\x71\x8E\xED\x8C\x0E\x92\x94\x57\x34\xBA\x18\x3D\x79\xF0\x03\x19\xA5\x40\x7B\xB1";"\x71\xDF\x16\xC4\x65\x03\x15\xB6\x50\xE7\x39\xE5\x5B\xF3\x8C\x90\x06\xA1\x86\xC3\x24\xC9\x0E\x6B\x01\x89";"\x4D\x81\x68\x90\x23\x42\xC4\x0D\xEA\xBB\x62\xF7\x20\xC5\xA0\xBB\xD7\x46\x5A\xF6\x07\xBF\x7E\x34\x5E\xA8";"\x0E\xBD\x5F\xAB\x36\x3A\x72\xE5\x82\xB1\x39\xD9\x52\xB8\xD4\xF5";"\xAE\x6B\x8D\x43\xD5\xF4\xFD\xC5\x59\x48\x91\x14\xFC\x2C\x2D\x6A\x30";"\x64\xEE\x0A\xBF\x75\x08\x2F\xC9\xC4\x86\x18\x91\x20\xE5\x80\xA7";"\x8C\xCD\x2C\xCB\x12\x6D\x0E\x8D\x21\x0B\xBA\xD8\x7C\xC0\xE7\x94";"\x81\xCD\x3F\xD1\x09\x68\x09\x8E\x2E\x08\xBD\xA5\x21\xDC\xB0\xA1\x07\xCB\xCC";"\x93\x04\xB9\x06\x80\xF4\x1E\xD9\x6C\x4C\xF9\x77\xA9\x44";"\xF1\x18\x91\x20\xFB\x8E\xA2\x37\xB3\x7C\xD3\x03\xC4\x06\x15\x17\xB8\x26\x0A\x48\xB0\x3C\x9D\xF4\x8F\x08\xAC\x8B";"\xE4\x69\x8F\x35\xF3\xAD\xC1\x2B\x16\x73\xA6\x13\xA2\x6A\x06\x23\xB2\x32\xF2\x51\x9A\x42\x9E";"\xD5\x74\x86\x3E\xF7\xB1\xA5\x23\x43\x63\xE3\x04\xC8\x6F\x09\x29\xA2";"\x5D\x50\xFA\x33\xC9\xB6\x95\x54\xC2\x84\x6A\x34\xE7\x36\x79";"\x51\xF6\x67\xBF\x7B\x37\x37\x58\xDB\xE4\x74\xEC\x25\xE7\x99\xC0\x28\x51\x6F\xE5\x14\xCB\x63\x07\x3D";"\x36\x98\x67\x9B\x5C\xD0\xC6\x49\xE7\xA4\x1C\xAB\x2D\xA1\xA1\x46\xCD\x53\x55\xF2\x7F\xA6\x79\x3B\x2D\x53\xD8\xDA\x6B\x80\x36\xFC";"\x27\xBB\x55\x90\xA8\xC8\xEE\x6C\x82\xB5\x00\xB5\x1A\x65\x58\x31\xE9\x7C\x34\x89\x60\x9D\x53\xCA\xC9\x5C";"\x86\x36\x32\xE5\x0D\x60\x12\x8E\x56\x18\xDA\x41\x7F\xBB\xF0\xF3\x18\x82\xAD\x23\xDE\xF0\x29\x4B\x69\xED";"\x80\x18\xE0\x2A\x92\x91\xCE\x33\x15\x7F\xDA\x11\xC2\x65\x18\x1F\xB7\x37\xFE\x49\xB6\x59\x96\x97\x98\x05\xA0\x89\xC0\x22\xF1";"\xB3\x1B\xD2\x04\xDC\x43\x45\xF9\x7E\x3F\x89\x60\x90\x39\xCC\x8B\x45\x89\xD7\x09";"\xAD\x21\xC2\xF6\x27\x5A\x6A\xEE\x0C\x34\x9C\x50\x8D\xCE\xC9\x87\x6E\xB9\xB9\x79\xE9\x19";"\x75\xDB\x19\xC7\x65\x1F\x0E\xBA\x3C\xF6\x4E\xA6\x59\x96\x96\xE3\x0B\xC8\xCD\xC2\x44\xEB\x0C";"\xF9\x5E\x8A\x5F\xFF\x9A\x9D\x35\xBE\x7E\xD6\x2B\xC1\x7A\x0C";"\xEF\x7B\x9B\x1D\xB1\x4E\x56\xF4\x66\x46\x8D\x69\x8B\x4C\x21";"\x14\xAF\x5A\x65\xB4\xF2\xF1\x61\x84\xAE\x3B\xD5\x10\x2F\x4F\x66\xEC\x0C";"\xC5\x0E\xE0\x1D\xC8\x49\x48\xC0\x68\x4B\x83\x74\xC4\x43\x4A\x87\x51";"\x4C\xF2\x7F\xBA\x7A\x3B\x30\x55\xC2\xF8\x76\x8E\x38\xE9\x80\xAD";"\x7B\xED\x04\xB6\x70\x31\x2D\xA8\x9C\xFB\x26\xC9\x1C\xB6\x91\xF2";"\x76\xC1\x0B\xC6\x67\x18\x1A\xB1\x3F\xFE\x50\xBF\x50\x92\x90\x96\x01\xA8\x89\xC7\x2D\xEA\x0B\x6C";"\xAB\x22\xCA\xEC\x34\x4F\x69\xEE\x0B\x2A\x8D\x10\xD2\xF0\x98\xCE\x29\xA5\xA9\x41\xD3\x1C\xD8\x56\x52\xF5\x66\x44\x89";"\xF3\x26\xAF\xBE\x37\x1D\x6A\xE8\x07\x2A\xA1\x4F\x87\xAB\xC5\xF0\x6F\xF3\xB7\x1D\xD8\x01\xD6\x35\x35\xF7\x3D\x3D";"\x7E\xBE\x6A\xC7\x33\x6D\x60\xCE\x5E\x87\x2E\x92\x5A\x92\x9B\x9C\x3F";"\x5A\xFE\x7A\xA3\x49\x38\x27\x55\xDE\xDF\x6F\x85\x3A\xEA\xAA\xB8\x26\x42\x6E";"\x16\xB1\xB4\x7B\xA7\xF8\xFE\x19\x9C\xA4\x21\xCC\xEA\x4C\x52\x68\xE7\x0B\x2D";"\x19\xBF\xBF\x78\xA2\xF7\x9F\x0C\x88\xB1\x47\xC4\xF4\x31\x4D\x62\xEB\x0E\x35";"\x1D\xB5\x48\x7E\xD4\x9F\xB6\x1E\xEC\xB8\x2C\xCD\xF5\x28\x4E\x61\xF2\x00\x36\x99\x51\x85\xA7\xA9\xC0\x32\xFF\xD0\x13\xE3\x1A";"\x7B\xCE\x27\xD1\x1C\x12\x12\x9F\x3F\x0E\x41\xB2\x6A\x80\xEB\x9B\x61\x8B\xD1\x36\x50\xE0\x39\x77\x71\x90\x18\x25\xAE\x40\x61";"\xB0\x48\x8A\x76\x4A\x4D\x07\xF0\x6D\x5C\xEB\x5F\xF0\x51\x8C\xD5\x63\x91\xB5\x0B\x85\x1B\xB7\xA8\x41\xAF\x33\x4F\x91";"\x29\x8D\x32\x84\x48\x43\x41\xDE\x31\x65\x4B\xE9\x24\xCC\xB8\x97\x53\xF5";"\x36\xAB\x4F\x73\xB1\xC1\xE3\x6A\x88\xBE\x7C\xAA\x07\x73\x2D\x28\x8E\x1E\x4F\xEE\x52\x9B\x5F\xD0\xD3\x79\xED\xC0\x0A\xEB";"\x70\xC8\x25\xDE\x10\x1E\x18\x9C\x24\x0E\x42\xA8\x65\x8C\xF0\x87\x0D\x93\x94\x3D\x31\xFC\x03\x7A\x7D\x9C\x19\x19\xBD\x30";"\x3C\xB8\x03\xD5\x7A\x61\x47\xCB\x3F\xFB\x2A\xEC\x4D\xF2\xCE\xC0\x40";"\x34\x84\x62\x9E\x46\x88\x93\x51\xE2\xCA\x03\xEA\x2D\xC3\xB7\x4C\xCE\x5C\x55\xFD";"\x95\x84\x26\xCE\x0D\x6C\x00\x8A\x20\x16\xA4\xB7\x65\x85\xE0\xFA\x17\x9B";"\x8A\xC3\x38\xFB\x01\x60\x04\x84\x1E\x14\xB6\xB7\x6E\xB9";"\x65\xE1\x13\xB7\x73\x08\x2D\xA1\xCA\xEA\x54\x9A\x49\xE2\x8E\xA3\x37\xAC\x05\xCF\x16\xDA\x1F\x15\x14\xB9\x3E\x1E\x43\xA8\x58";"\x5C\xE4\x1D\xC7\x7F\x35\x33\x38\xDE\x96\x01\xF5\x49\xFC\x9C\xD0\x55\x0D\x67";"\x90\x34\x3B\xFA\x3E\x63\x2E\x90\x72\x3C\xB2\x1F\x2C\xEC\x9D\xB1\x3C\x94\xAD\x17\xD3\x00\x2D\x40\x44\xF4";"\x17\x48\xB5\x6F\x81\xEB\x8A\x61\x8B\xD1\x36\x50\xE6\x3B\x7C\x7B\x90\x11\x3B\xB2\x43\x71\xB0\xF6\xE9\x63";"\x43\x8C\x62\x94\x46\x2F\xD5\x52\xF4\xC8\x79\xFD\x23\xC1\xA3\xA6\xBA\x3F\x57\xB5";"\x0E\x4B\xBB\x6D\x87\xE1\x83\x1A\x84\x96\x34\x34\xFB\x3F\x74\x75\x96\x06\x3F\xA8\x4F\x75\xB8\xCA\xEA\x7F";"\x5F\xFD\x70\xC4\x0E\x7D\xDB\x09\xBB\x8A\x38\xB6\x74\xD5\xC0\xAE\x85\x0D\x0D\xEC\x29\xFA\x24\x60\x71\x04";"\x72\xDE\x10\xAA\x7B\x5F\x1F\xDE\x3A\xFD\x56\xA2\x5A\x9F\x8B\x8D\x04\xA0\x83\xC1\x2B\xEB";"\xAD\x25\xCD\x14\x22\x46\x62\xE8\x73\x33\xF6\x46\xC4\x5D\xB3\xC5\x7B\xFD\xB9\x0E\xE3\x13\xC9\x4D\x52\xC6\x66\x4C\x80\x79";"\xFC\x45\xAA\x5B\x91\x8A\x90\x01\xA2\x80\xC1\x29\xEA\x17\x6D\x0C";"\x59\xEE\x05\xBC\x74\x7B\x22\xA5\xC4\xEA\x63\x91\x49\xE8\x81\xA1\x25\xA2\x74\xDC\x1F\xC1\x1A\x19\x1B\xB1\x24\x05";"\x71\xC4\x6A\xA7\x3C\x44\x77\xAC\x28\x92\x21\xCA\x50\xF7\xF0\x9C\x1C";"\xFA\x7D\x9C\x03\xBA\x5E\x54\xF8\x66\x4D\x88\x6D\x97\x4C\x2F\xDD\x48\xEC";"\x2C\xA8\x57\x87\xA1\xDB\xFB\x01\xEB\xC2\x7F\xA6\x1B\xC3\x5B\x50\xFA\x7B\x42\x8B\x7D\x90\x50\xDC\xCA\x42\xEB\xD2\x6F\xFC\x4E\xD4";"\x89\x6F\x9D\x95\x2E\x06\x25\x93\x78\x47\xCD\x33\xFD\xD6\xC3\xA7\x05\xE1\xA7\x7E\x8C\x77\x2F\x51\x3B\xE9\x75\x2C";"\x8A\xCA\x28\x9C\x05\x10\x1B\xE6\x0F\x7F\xCB\xB1\x1F\xA5\xE3";"\x00\x9D\x6D\x86\x33\xD3\xDD\x04\xFB\xCF\x58\xA1\x56\xDA\xAA\x51\xB3\x02\x14\xE9\x11\xDB\x2F\x69\x5B\x4B\xD4\xFD\x68\x95\x2B";"\x7E\xEB\x09\xB2\x78\x0B\x2E\xAD\xD5\xEF\x5D\x97\x42\xE7\x80\x9F\x5D\xBE";"\x8F\x3D\x3E\xE0\x00\x7B\x72\x8D\x03\x1F\xAC\x44\x7A\xB6\xFE\xF2\x62\x84\xAD\x25\xC6\x04\x23\x51";"\x77\xA7\xC4\x7C\xE4\xE4\x8E\x06\xC8\x83\x4F\xD9\x81\x28\x23\x73\x96\x0F\x7C\xE4\x0E\xDD\xED\x9B\xBD\x32\xEF\xAC\x4F\xD6\x58";"\x40\x8E\x72\x9E\x52\x28\xCD\x42\xE8\xA1\x1A\xB6\x2A\xAC\xA7\x42\xD6\x55\x53\xFF\x78\xBB\x78\x28\x36\x5B\xD8\xE2\x6D\x80";"\x28\x9D\x4A\x85\xA1\xC2\xE8\x74\xF7\xBB\x0A\xC6\x01\xDC\x55\x56\xFF";"\x73\xD6\x14\xDF\x1F\x08\x16\xBB\x3E\x0B\x4F\xA0\x50\x94\xFA\xCE\x06\xC4\x8B\x3F\x31\xE3\x04\x6F\x07";"\xDA\x2D\x37\xEB\x0D\x61\x78\x92\x08\x1B\xB0\xBE\x7B\xB8\xF7";"\xDB\x7E\xF6\x3E\xFE\xB8\xBC\xCB\x43\x66\xEF\x01\xB4\x76\x08\x46\xB7\x8A\xEC\x36\x95\x4A\xE7\x84\x97\x38\xBB\x7D";"\xD3\x73\xFB\x24\xFC\xBE\xBE\xCF\x58\x5D\xEC\x02\xB7\x74\x37\x2D\xAB\xC3";"\x39\x90\x67\x9A\x5C\xD1\xD3\x53\xA2\xC4\x6E\xF1\x10\xCA\xAD\x45\xCD\x6D\x4A\xFA\x70\xA4\x46\x3B\x35\x38\xD1\x87";"\x9B\x30\xC3\xFB\x27\x2F\x32\xF2\x03\x2F\xA6\x4E\x89\xA9\xCC\xFA\x77\x97\xB4\x18\xD9\x03\x23\x5B\x43\xA1";"\xF3\x57\x82\x1A\xA9\x46\x57\xFA\x7D\x49\x81\x66\x9E\x53\x23\xCF\x50\xE9\xCA\x05\xF7\x2A\xCF\xA2\x5C\x99\x1C\x4E\xEF";"\xD2\x55\xD6\x9B\x6B\x36\x05\xE7\x52\x51\x82\x3E\xD3\xDA\xA8\xD2\x1D\x8C\xB1\x7A\x91\x60\xB4";"\x06\xB5\x10\xCA\x7F\x37\x3D\xBB\xD0\x8A\x15\xD2\x4C\x8A\xFC\xBC\x42\xEF\x6A\xA8\x70";"\x12\xA3\xAA\x61\x85\xF8\xFA\x10\x9D\xF1\x5E\x9C\xF5\x65\x1E\x2B\xF2\x46";"\x80\x54\x31\xE0\x6D\x05\x03\xFC\x1D\x58\xB5\xB5\x17\xDA\xFE\x99";"\xC8\x1C\x8D\x3D\xFD\xB3\xB7\xD5\x42\x7E\xF9\x08\xB7\x6F\x0A\x21\xAA\xD4\x94\x52\x94\x44";"\x62\xE2\x0C\xDC\x1D\x04\x6F\xA9\xA5\xEA\x55\x9D\x4D\xE0\x9B\x9A\x38\xBB\x78\xD7\x72\xC3\x71\x57\x17\xD6\x39";"\x19\xD0\x19\xA8\x26\x71\x76\xB7\x2F\xE5\x21\x8D\x43\x88\xF3\xC0\x7F\xA4\x8E\x96";"\xB5\x13\xDA\x00\x23\x5F\x58\xE6\x66\x23\x8A\x63\x9F\x51\xDF\xC7\x59\xA7";"\x05\x2D\xAC\x64\x8F\xEB\x81\x0F\xB1\x8F\x38\x31\xE5\x05";"\x4B\xC7\x3F\x16\xE8\x89\xED\x03\xFE\xB4\x64\xD2\x4E\x26\x4D\x61\xEA\x7D\x36\x81\x58\x80\xA3\xDF\xD2\x7D\xF6\xB8\x0A\xE6\x1F";"\xB2\x4F\xAB\x4F\xB1\x35\x16\xE5\x68\x49\x9B\x08\xE7\x14\x68\xA6\x56\x83\xA1\x7F\x83\x44\x9C\xC5\x3D\xDD\x22\x0D\x96\x0B";"\x4F\xF6\x2D\xE7\xA8\x9B\xCE\x0B\xFE\xF0\x08\xDC\x18\xD8\x51\x5D\xFF\x6C\x43\x88\x6E\x85\x4E";"\xBD\x17\xDD\x17\xDF\x55\x48\xE5\x79\x40\x8C\x68\x98\x46\x2A\xD1\x56\x9C";"\xEB\x55\x97\x4A\xE7\x87\xBD\x38\xB8\x70\xD2\x19\xDA\x00\x1E\x1C";"\xF9\x4F\xD8\xEC\x3D\x28\x13\xE9\x59\x33\xFD\x25\xE7\xF8\xA9\xB3\x74\xE4\xAC\x63\xF2\x15\xCB\x32\x4D\xA7\x6E\x39\xE8\x79\x88";"\xE9\x5C\x95\x4D\xE7\x84\x82\x39\xBB\x7C\xD3\x1E\xDF\x18";"\x0E\x49\xB2\x6B\x90\x8F\x8F\x5A\xFC\xD1\x36\x50\xE0\x3B\x7A\x7D\x99\x11\x25\xAB\x53\x76\xB2\xF5\xE9\x63\x8F\xC6\x4F\x95\x0B";"\x7A\x83\x76\xE3\x44\x92\xC2\x3A\xFA\xC8\x00\xF5\x29\xCC\xAA";"\x6B\xC2\x13\xCD\x67\x07\x1F\xBE\x24\x96\x5F\xF7\x1C\xC6\xC2\xD7\x5A\xF9\xD8\xDD\x35\x90";"\x30\x9B\x42\x83\xA1\xD1\xDB\x7B\xFF\xBF\x09\xE6\x1A\xDD\x53\x4F\xC0\x7F\x54\x85\x6A\xA7\x42\x26\xC5\x56\xD5\xD6";"\x70\xDA\x18\xC5\x68\x10\x76\xA7\x7A\xFC\x26\xA3\x58\x92\x95\x87\x06\xB8\x94";"\xD0\x70\xFA\x22\xFE\xB7\xAB\xC0\x46\x67\xE8\x06\xB6\x77\x0B\x34\xBC\x88\xEE\x08";"\x28\xA7\x54\x89\xA2\xC4\xE0\x6A\xF4\xB0\x0B\x9E\x02\xB4\x45\x5D\xFE\x7D\x39\x8E\x6D\x88\x4C\xC8\xCA\x43";"\x98\x59\xCD\x28\xDA\x9D\xF2\x3C\xB9\x88\xCD\x25\xD3\x0E\x11\x0D\x81\x24\x02\x4B\xDC\x04\xCC";"\x90\x6E\xA8\x10\xA6\xAA\x45\xC9\x6D\x52\xFF\x70\xA5\x57\x3F\x3A\x5C\xD9\xD5\x76\x84\x55\x9A\xF4\xB2\x49\x47\x60\xE7\x0A";"\x54\xF7\x74\xB4\x16\x78\x7F\x03\xCD\x8A\x7F\x83\x3A\xF1\xB1\xB4\x25\x41\x6E\xE4\x05\xA7\x6C\x0B";"\xAF\x20\xD2\x09\x26\x47\x75\xF5\x70\x31\x93\x5A\x9D\x31\xC1\xAA\x01\xF7\xC3\x0B\xEB\x11\xD5\xAF\x4D\xCD\x6E";"\x4C\xF1\x7F\xB9\x7A\x35\x34\x5B\xC3\x89\x06\xCE\x32\x84\x8E\xA9\x2C\x49\x6F\xC3\x13\xC4\x67\x02\x1F";"\x8B\x83\x5C\xF9\x61\x70\x09\x9E\x77\x4C\xB1\xD5\x6E\xFE\x84\xAD\x67\xDD\xE4\x3C\x91\xB0\x5C\x2B\x32\x8B\x60";"\xF2\x59\x92\x45\xE1\x85\x98\x2A\xAA\x67\xD6\x27\xDE\x1E\x14\x12\xA5\x4A";"\x4E\x85\x69\xA4\x42\x22\xC2\x47\xDD\xD3\x7C\xFC\x23\xDD\xB1\xBC\xD3\x5D\x5F\xEA";"\x83\x3C\x34\xEE\x01\x64\x7F\x99\x08\x1A\xB1\xB8\x77\xBE\xF0\xF2\x1B\x80\xA4\x2F\xCC\xF9\x2C\x54\x69";"\x2E\x9A\x48\x8A\xA0\xC6\xE9\x72\xF8\xD5\x7A\x8F\x11\xDC\x5E\x57\xF8\x67\x45\x8C\x6F\x98\x45\x2B";"\xBA\x6A\xEB\x35\xA2\xD7\xD1\xA6\x28\x00\x97\x59\xBC\x15";"\x1C\x58\xD6\x4B\x93\xEC\x89\x0E\xA0\x96\x3E\x2B\xFC\x1E\x66\x79\x95\x1C\x19\xBA";"\xB9\x1C\xD1\x04\x2A\x57\x50\xF0\x7A\x3C\x90\x6B\x9C\x5F\xD0\xD9\x57";"\x06\x59\xFA\x5B\xD4\xFF\xF8\x14\xF5\x80\x3E\x30\xED\x05\x62\x09\x97\x17\x10\xB6\xAB\x7D";"\xAB\x12\xEE\x1D\xD3\x53\x4E\xC2\x76\x43\x8B\x71\xA0\x4F\x28\xAE\x4F\x92\xD4\x1E\xFA\x24\xF9\xBD\xB4\xDA\x40\x7C\xEE";"\x27\x99\x54\x86\xA2\xC6\xC4\x6A\xFA\xBD\x10\xE1\x1C\xDC\x3F\x59\x97\x23\x47\xEF\x6E\x92\x4B\x2E\xCE\x4D";"\x77\xCB\x22\xD2\x11\x03\x0F\x83\x25\x08\x41\xA9\x6B\x8F\x8E\xE8\x00\xD0\x96\x50\x27\xE6\x3C\x7B\x71\x9B\x1A\x02\xB6\x58";"\xBD\x0B\xE5\x1D\xCD\x4C\x13\xC5\x6F\x1C\xEA\x18\xAC\x24\x4A\xC0\x50\x93\xD7\x1F\xF8\x22\xFC\xB9\xB8\xD0\x58\x66\xED";"\xDB\x76\xF8\x52\xF7\xE8\xAD\x99\x46\x0F\xE2\x0F\xB7\x6B\x0F\x2D\xB7\xC0\xEA\x59\x91\x45\xE4\xE8\x83\x73\xB0";"\x7F\xDA\x21\xDA\x12\x13\x11\x81\x34\x05\x41\xAE\x6C\x84\xEB\x82\x62\xC7\xD6\x3B\x53\xE2\x01\x72\x72\x9C\x1E\x19\xAD\x4B\x6E";"\xC1\x00\xE0\x0B\xD2\xA8\x42\xC7\x6D\x5D\xB8\x2B\xFE\x18\x37\x81";"\xB6\x01\xBA\x1B\x70\x25\x41\xB1\x7E\x57\x92\x6A\x9B\x50\xD8\xD4";"\x3F\xA2\x4C\x72\xAD\xC8\xEC\x73\xC9\xAD\x13\x8E\x1D\x45\x47\x43\x81\x70\x23\xF3\x62\x93\x0F\xB9\x92\x7E\x8A\xB3\x06\xE6\x48";"\xC4\x6E\xE8\x16\xCB\xAA\x41\xCA\x70\x4C\xFC\x73\xA1\x41\x3D\x3E\x38\xC0\x98\x71";"\x25\xBA\x4E\x89\xA7\xC6\xE1\x7A\xF2\xB6\x10\xDD\x15\xC9\x5C\x50\xFC\x7B";"\xFB\x70\x94\x37\xF8\x8F\xA9\x25\x4E\x6A\xD4\x13\xCE\x73\x05\x27\xB4\x37\xFC\x56\x9C\x5D\x95\x98\x97\x3E\xA7\x83";"\xAE\x5F\x86\x1E\x8F\xBF\x20\xC4\x09\x3B\xBC\x1B\xF5\x5F\x44\x31\x2D\xC1\xDA\x74";"\xC7\x2C\xD5\x08\x2F\x42\x67\xE5\x6C\x34\x96\x58\x81\x59\xDD\xD9\x7B\xFB\xC2\x0E\xE4\x15\xD4\x48\x4A\xC2";"\x1C\xB3\x47\x7C\xA4\xF6\xF4\x15\x8F\xAC\x26\xDB\xAC\x6C\x52\x61\xEB\x0F\x30\x9A\x5F\x9F\xA6\xC6\xDF\x73\xF5";"\x02\x49\xA2\x4D\x97\xF5\x8E\x0C\xAE\x86\x39\x2C\x88\x18\x21\x7D\xFC\x10\x1A\xB2\x42";"\x26\xA2\x4F\x1D\xA2\x9E\x83\x2E\x8B\xC4\x1C\xD1\x02\x2C\x44\x5D\xF6\x74\x3B\x98\x75\x9F\x5C\xD5\xDA\x78";"\x8E\x38\x36\x87\x19\x0D\x3A\x92\x78\x10\xB2\xB7\x7B\xBE\xF3\xE8\x14\x86\xAC";"\xA7\x25\xCB\xF4\x27\x49\x61\xEB\x0B\x25\x9D\x56\x8C\xA4\xC4\xD5\x71\x90\xA7";"\xA5\x2E\xCA\x0C\x35\x54\x72\xF7\x17\x30\x9A\x59\x85\xA4\xDE\xC7\x6C\xE2\xBF\x0F\xE2\x1D\xD7\x57\x48\xD8\x3C\x17\xD4\x3F";"\x5D\x1D\xBA\x01\x83\xE9\x8A\x0F\xA0\x8C\x3E\x3D\xED\x19\x63\x76\x9F\x1A\x13\xB9\x50\x3A\xE1\xA7\xAC\x0C\xCF\xA8\x56";"\x6B\xEA\x0D\xBF\x79\x08\x36\xD9\xD7\xF0\x58\x9B\x43\xEE\x82\xA0\x2A\xB4\x7B\xD3\x1F\xDB\x1D\x05\x50\xBC";"\xF6\x58\x98\x40\xF9\xDD\x99\x50\xA3\x7D\xCE\x20\xDB\x14\x1F\x13\x98\x3E\x0A\x43\xAB\x6C\x89\xEB\x9C\x60";"\x62\x9D\x1A\xAD\x7C\x1F\x1D\xB4\x39\xFD\x4C\xBE\x43\x8B\x92\x96\x01\xA7\x89\xCF\x37\x81\x06\x37\x1C\xCA";"\x1F\xB2\xB8\x61\x87\xFD\xF9\x12\x98\x9D\x38\xC1\xF8\x32\x73\x6A\xE2\x03\x35\xDD\x57\x89\xAD";"\xEB\x69\x8C\x46\xED\xEE\xB9\x69\xB6\x1F\xC6\x1B\xC2\x1E\x1D\x11\xBE\x24\xE7\x53\xA4\x57";"\xA0\x2C\xCD\xE9\x30\x4C\x65\xEA\x0E\x39\x9D\x3A\x9B\xF4\xA5\xC1\x31\xFE\xD7\x14\xE7\x1E";"\xD7\xCD\x79\x84\x58\x0E\x70\x80\x69\x0C\xBA\xBA\x64\xBB\xF9\xFB\x1B\x82";"\xF9\x45\x97\xA0\x69\x78\x2A\x8A\x60\x2B\xC2\x12\xD8\xB6\xB1\x8B\x08";"\x12\xE0\x2E\x92\x24\x35\xCF\x4D\xEA\xCC\x7E\xF2\x38\xDC";"\x59\xEA\x66\xA1\x7D\x3B\x36\x5D\xC7\xEB\x73\x95\x30\xF1\x81\xA8\x2F\x4D\x6E\xDE\x14\xCA\x6C\x01\x1F\xB0\x2E\xE1\x4D\x9E\x5B";"\x22\xAE\x4C\x84\xA9\xCA\xE0\x6A\x8A\xB4\x05\xA5\x1E\x3C\x59\x5E\xF7\x7A\x3C\x8C";"\xDF\x71\x89\x39\xE3\xAC\xBA\x2B\x42\x65\xE5\x08\xDF\x71\x4A\x24\xC3\xD6\xF4\x50\x9E\x44\xE5\x99\x80\x2D\xA1\x79";"\x5E\xB7\x0E\x81\xE0\x9D\xA9\x3F\xF8\xD4\x71\xA4\x19\x27\x5F\x5A";"\xDE\xDC\x6F\xD1\x65\x72\x01\x81\x2D\x10\xB9\xB4\x79\x9B\xF9\xF4\x1E\x98\x99\x32\xC6\xE0\x55\x6D\x37\xE1\x6D\x3B\xAC";"\xB8\x19\xDF\x06\x36\x45\x5A\xF5\x79\x3D\x93\x62\x9C\x48\x95\xD1\x28\xE7\xCE\x04\xE5\x1A\xC8\xA7\x45";"\x0A\x48\xA0\x52\x92\xEA\x9E\x09\xA6\x8E\x3E\x33\xEA\x05\x0B\x62\xF5\x6D";"\x98\x26\x5B\xE9\x02\x62\x7D\x97\x1C\x1F\xA9\x40\x7F\xB1\xF6\xF5\x62\x85\xA6\x23\xCF\xF0\x2D\x49\x67\xF8\x76\x33\x95\x01\xEC\xF3";"\x0C\xB5\xB7\x63\x85\xF3\xFF\x15\x9B\x9F\x35\x37\xF7\x39";"\xB6\x44\x8A\x5D\xDA\x3A\x51\xC5\x65\x4E\x85\x6A\x9A\x44";"\x35\x94\x5C\x8A\x42\x97\xD4\x78\xF9\xC6\x09\xE7\x09\xD2\x55\x4A";"\x39\xBD\x02\x9E\x7B\x76\x2D\xAF\x39\xF6\x57\x9C\x5A\x9D\x86\x9F\x3E";"\x2F\xA6\x4D\x8D\xA9\xC3\xEB\x60\xE9\xB5\x1F\xDA\x07\xD7\x5E\x45\xE2\x64\x37\x88\x6D\x9D\x56\xDC\xD6\x01\x9C\xC7\x5A";"\x47\xA4\x51\x89\xA1\xC5\xE0\x7B\xF2\xBF\x03\xDE\x15\xD5\x5C\x50\xFA\x73\x2F\x90\x2C\x94\x3A\x37\xC2\x44\xE8\xCE\x78\xF4";"\x9A\x5C\x23\xFA\x3F\x7E\x75\x9F\x0D\x38\xAC\x4D\x73\xB3\xCF\xEB\x06";"\xFB\x6E\x31\xB4\x56\x08\x1B\xCE\x16\x40\xC3\x1B\x1C\xAF\xCF\xE9\x67\x85\xA5\x2B\xCF\x10\x3A";"\x89\xC5\x35\xF1\x0F\x6A\x00\x8B\x1D\x16\xD7\xA5\x25\x82\x92\xFA\x1B\x9D\x9F\x25\xC0\xFF\x2E\x6B\x6F\xE0";"\x63\xEA\x00\xB6\x1D\x04\x7D\xC0\x8A\xEC\x36\x89\x42\xE3\x82\x9A\x33\xA8\x71\xD6\x1A\xDF\x19\x7E\x78\xF9\x26\x6F\x56\xA9";"\x8C\xC2\x26\xEF\x13\x7A\x19\xD3\x4D\x48\xA7\xC7\x78\xBD\xFA\xF0\x1C\x99\x9B\x33";"\xFE\x54\xF3\x40\xDF\x9E\xFF\x3F\xA3\x85\xC2\x2A\xD4\x11\x6E\x09\x89\x3B\x0F\xBD\xB0\x63\x87\xE1\xF9";"\x3D\x98\x69\x9B\x59\xDC\xDF\x7E\xE1\xC0\x03\xE8\x15\xCE\xA9\x4A\xCE\x7D\x51";"\xB7\x7F\xC6\x0A\xDD\x59\x5A\xF0\x7C\x5B\x86\x65\x92\x55\xD5\xC8\x2B\xE0\xC3\x02\xF7";"\x8B\x2D\x21\xE0\x3C\x7D\x77\x98\x1B\x38\xFD\x19\x23\xA2\x9E\xB3\x31\x9C\xF9\x7D";"\x60\x26\xB1\x13\x8C\xE1\xEE\x64\xCF\xD1\x27\x57\xEE\x45\x17\x69\x87\x0C\x7E\xE9\x18\x12\xCB\x8F\xE1\x6A\x8B\xC8\x5D";"\x1B\xB8\x56\xB5\x50\x1D\x6D\x9A\x27\x04\x4F\xAF\x6B\x88\xF6\x9A\x09\xA3";"\xFE\x56\x9A\x45\x87\x9D\x97\x36\xA7\x83\xCF\x2D\xD8\x19\x61\x0E\x83\x2C\x13\xBA\xBC\x68";"\x80\xC0\x40\xE0\x5A\x06\x43\x8D\x41\x16\xB0\xB1\x63\x81\xF3\xFE\x13";"\x3B\x92\x78\x97\x55\xD0\xCD\x41\xEA\xD7\x19\xED\x2C\xC8";"\x4C\x45\xC5\x6A\x8C\xE5\x84\x0E\x93\x88\x27\x3F\xE6\x08\x7E\x7C\x9E\x73\x73\xA0\x00\x78\xDE\xEB\xEA\x66";"\x41\x87\x69\xA8\x49\x2C\xC4\x46\xF7\xD7\x7F\xFE\x21\xC0\xBF\xA6\xA9\x47\x40";"\x1A\xAF\x44\x73\xB3\xEF\x83\x79\xC7\xAB\x4B\xD2\x0B\x2B\x47\x6D\xE9\x77\x29\x83\x47\x84\x5E\xDD\xD8\x79";"\x72\xAF\x3E\x6F\xDD\xC4\xAE\x62\xFC\xAC\x7B\x9B\x1D\x47\x49\x2D\xEE\x19\x22\xC4\x7D\xDD\x5A\xBA\xD2\x4B\xE6\xC1\x04\xEF";"\x09\xBF\xB3\x68\xBD\xF1\x95\x77\x94\xDB\x2C\xAE\xF4\x3D\x7C\x6A\xE2\x07";"\xB6\x74\xD4\x84\x31\x0E\x7E\xB4\x13\x67\x87\x4F\x86\xA2";"\xB8\x0E\xEA\x1D\xD0\x54\x3C\xDD\x11\x36\x8A\x73\xAE\x43\x25\xC1\x47\xD4\xC8\x7B\xF0";"\x8C\xB5\x3F\xD4\x1B\x63\x09\x83\x2E\x11\x47\xB7\x6B\x86\xE7\x84\x0B\xD6\x9A\x60\x56\x8E";"\x1F\xB6\xBF\x64\xBE\xF6\xF2\x1B\x82\xA6\x37\xA1\xE2\x36\x5A\x05\xE7\x14\x2A\x9F\x55\x85\xA5\xC3";"\x8D\xC6\x32\xED\x0D\x79\x06\x8B\x10\x17\xBD\xBC\x0E\xA2\xBB\xFB\x72";"\x75\xB8\x71\x86\x1F\x75\x0B\xBF\x3B\x03\x48\xA7\x5E\x89\xEC\x8D\x07\xAE\x8E\xC0\x5F\xE5\x5C\x78\x44\x90\x7A\x11\xB5\xBA";"\xE6\x43\x9D\x4C\xE2\x84\x9C\x37\xDF\x66\x95\x22\xB5\x1B\x1A\x1A\xB5\x20\x07\x59\xA9\x5B\x86\xE8\x81\x0B\xC5\x89\x7B\x34";"\x95\x20\x3C\xE2\x01\x6F\x78\x98\x7E\x74\xF4\xBD\x14\xA7\xFA\xF4\x1A\x8D\xAD\x2F\xD7\xE8\x32\x41\x69\xE2\x08\x2A\x9E\x4C\xE8";"\x7B\xD2\x22\xD0\x12\x14\x7D\xEF\x65\x05\x2D\xA4\x6F\x8F\xE5\x85\x0F\xB7\x9B\x3B\x3B\xE3";"\xAE\x0A\xA5\x46\xC6\xAE\x4D\xC6\x5D\x57\xFD\x62\xBC\x42\x30\x33\x53\xDF\xDA\x71\xEC\x37\xF2\xBF\xAE\x24\x44\x6D\xFB";"\xF4\x58\x9A\x43\xE1\x80\x87\x3A\xBC\x79\xC4\x2C\xDD\x10\x1E\x0C";"\x81\x38\xC2\x12\x82\xDC\xDB\x4A\xFB\x13\x90\x38\xBF\x19\x04\x05\x92\x43\x70\x17\xB1\x12\x9E\x84\xFD\x7E";"\x81\x48\x3E\xED\x5D\x6A\x25\xE0\x7A\x72\xC1\x45\x17\xCC\xE4\xE5\x72\xE3\xA5\x5E\xD2\x05\x4B\x2E\x37\x81\x18";"\x26\x90\x65\x92\x52\xD3\xC8\x43\xFA\xD0\x44\xED\x44\xCB\xA3\x40\xCE\x53\x57\xFF\x7C\xA2\x7F\x2D\x3C\x5F";"\x8B\xD8\x28\xD1\x08\x6D\x01\x8C\x36\x09\xA5\xB3\x64\x87\xF8";"\x21\xB3\x4C\x84\xAB\xCE\xE2\x6F\x8D\xB3\x09\x8D\x5A\x62\x0F\x03\xA2\x6F\x6C\x80\x66\x99\x52\xD2\xD6\x44";"\x81\xCB\x26\xD2\x14\x6D\x18\x87\x29\x04\x41\xB4\x6E\x87\xE7\x8E\x0F\x92\x94\x37\x3D\xF8\x3E\x66\x73\x9E\x12\x2B";"\xCD\x6E\x9E\xA6\x7A\x61\x2F\xBC\x55\x77\xF9\x5C\x1A\xA0\x8D\xA2\x2A\xD2\xEF\x4F\xC9\x5B";"\x5B\xE1\x16\x9B\x57\x28\xCB\x41\xEC\xCD\x7F\xFA\x2B\xD3\xA6\x48\xD3\x50\x5B\xFE\x7A\xBC\x77\x35\x31\x5F\xCC\xE3\x6C\x8A\x36\xF0";"\x5E\xF6\x03\xD3\x65\x76\x30\x37\xDA\xE1\x62\x8E\x3B\xE7\x87\xB4\x31\x55\x74\xD9\x10\xC4\x60\x01\x05\xDB\x21\xBF\x50\xCA\x58\x98";"\x1F\xDE\xD3\x33\xEC\xBC\xF7\x5E\x87\xC4\x35\x92\xE7\x7C\x7A\x77\xE3\x09\x2A\xAE\x4F";"\x28\xE9\x2F\x91\x25\x2D\xC9\x49\xE0\xD8\x76\xF7\x26\xC1\xB1\xBB\xDF\x5D\x52\xF2";"\x98\xDC\x36\xD5\x0C\x6C\x0C\x8E\x21\x09\xE0\xF4\x74\x8B\xE6\xF5\x10\x95\x93\x29\xC8\xFD\x3B\x76\x75\xE7\x03\x36\xF0\x10";"\x88\x30\x3B\xEA\x3F\x64\x7D\x99\x11\x29\xC2\x5A\x1F\xF7\xF6\x87\x7B\x8E";"\xCA\x79\xFD\x2F\xC6\xA7\xBC\xC5\x50\x50\xF8\x7D\xBF\x72\x36\x58\x50\x9F\xFC\x2F\x88\x5B\xEE\x80";"\xB5\x10\xD4\x1C\xDC\x30\x5A\xA4\x62\x06\x8B\x03\x94\x59\x28\xC8\x45\xEF";"\xA1\x21\xC2\xF1\x2B\x26\x00\xF9\x6B\x47\xF2\x39\x8E\xA4\xC4\xE9\x74\xF3\xAA\x10\xDE\x19\xD5\x5B";"\x44\x81\x1F\xFF\x74\x5C\x34\xA6\xC8\xEE\x64\x89\x45\xE3";"\xE7\x21\xC9\xEA\x57\x33\x6E\x82\x76\x52\xB5\x47\xF7\xEE\xAC";"\x94\x0C\x9D\x31\x97\x9E\xC9\x6D\xC9\x18\xD9\x67\xBD\x02";"\x2A\xA1\x25\x6A\xF5\xC8\x81\x65\x8B\xAB\x15\xDA\x0C\x3B\x46\x65\xF7\x78\x3A\x9E\x33\x91\x46\xD9\xD1\x7B\xE2";"\xBE\x32\xD4\xF4\x30\x4C\x68\xE3\x0B\x37\xF0\x48\xFC\xDB\xDA\x9A";"\xC0\x0D\xE5\x13\xD7\xC6\x51\x81\x6E\x27\x9E\x7B\xAF\x4F\x24\xC9\x55\xCC\xCF\x6B\xF4\x3A\xF4";"\x6E\xD3\x27\xDD\x19\x15\x17\x85\x26\x0D\x2E\xBE\x50\x9F\x83\x8B\x09\xAC\x93\x3C\x35\xE6\x1F";"\xB1\x19\xD5\x0D\x4E\x49\x07\xEE\x39\x39\xF9\x7C\x98\x5D\xD9\xDA\x45\xE2\xDB\x1D\xF1\x13\xC8\xA7\x47\xCC\x6E\x48\x95";"\xA4\x06\xFC\x48\xCB\xCF\xC3\x53\xFD\x97\xBB\x20\x9A\x14";"\xD2\x73\xEC\x54\xBC\xB3\xD8\x3E\x42\x61\xE5\x08\xB3\x70\x16";"\xDA\x6C\x98\x39\xF6\xB6\xB8\x24\x47\x05\x8A\x03\x88\x69\x67\x20\xAF\x3C\xF4";"\xBB\x20\x9B\x60\xC1\xCF\xB5\xD3\x59\x59\xFA\x02\xA2\x65\x38\x36\xA7\xC6\xE4\x67\xE1\x2E\xB2";"\x4E\x80\x75\xAB\x24\x3E\x86\x4E\xBC\xC8\x72\xF2\x27\xF8\xB7\xB8\xC4\x40\x7D\xE9\x0F\xB0\x7A\x35\x29";"\x41\xD5\x19\xEC\x45\x4B\xC2\x55\xD2\xD6\x74\xF5\x26\xE1";"\x73\xD2\x29\xDA\x04\x0A\x0F\xB8\x25\x01\x42\xA8\x54\x97\xF6\x95\x0D\xAF\x91\x3D\x3E\xE4\x18\x67\x7D\x95";"\xE1\x3E\x5C\xFB\x2C\x1C\x03\xC3\x55\x25\xA4\x13\x18\xA5\xD0\xAC\x61";"\x81\xB7\x6A\xAD\x5B\x23\x12\x99\x03\x77\xE7\xC1\x1F\xA6\xAC\x91\x7B\xCC\xF6\x52\xCF\xA0\x2E";"\xBD\x0C\xE2\x1B\xD3\x4D\x53\xC9\x60\x48\x83\x67\xAD\x27\x3A\x81\x4F\xBF\xD5\x7A\xF9\x23\xF9\xBA\xA5\xDB\x58\x5C\xEF\x06";"\x63\xE9\x0C\xB7\x02\x05\x7E\xC1\x8D\xED\x35\x93\x47\xE3\x83\x97\x3E\xAF\x7C\xD3\x27\xD8\x1E\x15";"\x90\x3D\x34\xE6\x05\x62\x61\x8E\x00\x1A\xB2\x43\x7B\xBB\xF6";"\x65\xE4\x05\xA9\x6F\x0E\x25\xA0\xCD\xF9\x50\x97\x46\xE3\x93\x94";"\x7C\x55\xEC\x54\xFA\xE8\x8A\x01\xA9\x89\x35\x2E\xE9\x06\x62\x04\x93\x14\x75\xBA\xBC";"\xC9\x06\xF3\x34\xD6\xAB\x41\xC7\x5D\x51\xFF\x60\xCC\x5C\x7D\x39\x30\xC3\xD7\x6F\x83\x3F\xF6\xB7\xB3";"\x99\x2D\x34\xEF\x05\x79\x7D\x96\x1A\x71\xBE\x19\x60\xF3\xF2\x9B\x63\x82\xA2\x2F";"\xF3\x5B\x98\x46\xE5\xF7\x86\x6B\xA3\x39\xCE\x48\xC6\x11\x13\x16\x80\x20\x13\x40\xAA\x64\x88";"\x01\x43\xAA\x5A\x8C\xF7\x9F\x14\xAF\x92\x39\x36\xEF\x04\x7A";"\x64\xA8\xA2\x78\xBF\xF4\xF0\x18\x86\xB9\x33\xD7\xF7\x2F\x4A\x60\xE2\x09\x36\x87\x11\x87\xCF\xD8\xD9\x75\xF7\xBE\x16";"\x8F\x41\x25\xBD\x25\x64\x22\xC1\x4E\x3B\xB1\x0D\x28\xF1\x9B\xB9\x3F\x9F\xF2\x5E\xC3\x4F\x77\x15\x3D\xA4\x1B\x45\x8F\x43";"\xD4\x7A\xEE\x3E\x87\xB6\xDA\xBE\x1B\x31\xAD\x0F\xE3\x6F\x62\x2C\xD0\xD8\x95\x7A\xDF\x40\xED";"\xC6\x03\xEF\x14\xC4\xE8\x45\xCB\x60\x48\xFC\x77\xAC\x44\x23";"\xE7\x49\xBD\x56\x9E\x94\x97\x38\xAF\x9C\xA5\x40\x88\x63\x62\x58\x99\x6F\x0C";"\xD0\x79\xE4\x39\xDD\xBF\xBC\xDD\x5E\x5A\xEB\x1D\xD7\x69\x72\x2C\xCB\xCB\xEF\x61\x8E\x4A\xEC\x98\xB8\x25\xB2\x74\xD2\x1E\xC2";"\xA1\x2F\xCC\xEF\x5C\x56\x2E\xE6\x64\x2F\x9A\x54\x88\xA0\xC2\xFC";"\x0E\xBD\xB1\x6B\x86\xE3\xFC\x15\x86\x98\x34\x39\xFD\x3C\x76\x76\x98\x69\x38\xC0\x0E\x72\xC4\xD5\xEA";"\xF6\x52\x9D\x59\x95\x8D\xC4\x32\xFE\x9A\xD0\x49\xBD\x42";"\x1D\xF0\x0B\x85\x43\x32\xA6\x29\xFB\xA7\x55\xE4\x44\xD5\xB9\x52\xCE\x43\x37\x92\x1E";"\x28\xA2\x55\x8A\xA3\xC1\xE1\x1F\xFC\xEC\x0E\x99\x1F\xB7\x40\x51\xFA\x7D\x42\x8D\x69\x8B\x49\x37\xCC\x41\xE8";"\x8C\x39\x3B\xE2\x05\x62\x09\x97\x05\x19\xB1\xB9\x79\xB3\xFC\xF4\x17\x99\xC8\x38";"\x34\x86\x3B\xE9\xE7\xC6\xB7\x6B\xF5\xBE\x13\xE6\x1B\xD8\x4C\x4B\xDE\x6E\x43\x84\x64\x94\x4B\x37\xAB\x45\xEA\xD1\x71\xF2\x2F\xCA";"\x84\xC1\x28\xCA\x10\x69\x0D\x8C\x2E\x0E\xBB\xB0\x63\x80";"\x5C\xF1\x63\xB9\x7C\x34\x31\x5D\xC0\xFA\x3E\xF7\x3C\xAB\x91\xF6\x55\x52\x2C\xA3\x0D\x8A\x67\x0B\x03\xB9\x32";"\x30\x91\x35\x9A\xE5\xD8\xB1\x7D\xF7\xBF\x09\xE5\x18\xCD\x4A\x58\xC9\x62\x4B\x8E";"\x82\xC2\x37\xED\x0F\x60\x00\x99\x16\x10\xB6\xB9\x65\xBC\xFC\xB7\x14\x90\xA5\x28\xC7\xFC\x30\x73\x71\xFE\x10\x28\xA3\x54\x80";"\x9C\x1C\xF1\x2C\xC9\xAB\x4B\xD7\x56\x56\xF5\x7D\xA7\x76\x3A\x3B\x57\x89";"\x6C\xAD\x6C\xF0\x1F\x4E\x20\xE1\xD4\xF5\x24\x9F\x0C\xFF";"\xDC\x77\xA1\x16\x3F\x56\x3C\xF7\x7E\x48\xE9\x7F\xF7\x0D\xAE\x93\x17\x90\xCF\x6A\xBC\x00\xD1\xBC\x26\xDB\x6A\x5C\xF6";"\xAB\x4B\xC8\x0C\x28\x45\x6D\xF0\x73\x37\x9A\x5A\x83\x32\xB5\xD5\x3E\xFB\xD4\x0D\xE1\x15\xD2";"\x8A\xC9\x2E\xEA\x1F\x62\x03\x8F\x15\x1D\xBB\xBA\x62\xAF\xBC\xFA\x71\x84\x9D\x29\xC3";"\x18\xA3\xBE\x63\x82\xFB\xFF\x78\xF1\x91\x77\xC0\x93\x3E\x78\x77\xE6\x09";"\xD0\x72\xE4\x39\xDD\xBB\xBA\xDC\x5F\x5B\xE5\x1D\xD0\x78\x73\x3B\xD4\xD3\xAC\x6D\x86\x4C\xEF\x8B";"\x8D\x7C\x35\x8C\x04\x7A\x7A\x9C\x1C\x1D\xB0\x42\x7A\xA2\xF3\xF8\x64\x80\xAF\x2E\xCF\x60\x35\x09\x65\x84\x09";"\x05\x41\xA4\x69\x95\xF1\xFA\x17\xAD\x90\x38\x30\xE2\x03\x67\x7D\x93\x19\x1B\xAB\x44\x62\xF4\xFA\xB5\x79\x99\xC9\x4C\x8C\x61\x26";"\x5E\xF0\x61\xBA\x60\x3D\x3F\x5D\xDA\xE5\x71\xEA\x2B\xB6\x89\xC6\x38\x4A\x6E\xE3\x15\xC0\x62\x1B\x26\xB0";"\x29\xA5\x54\xE4\xA5\x97\x88\x37\xF4\xDD\x08\xD8\x06\xDD\x5B\x55\xFA\x60\x45\x8C\x67\x92\x5A\x2B\xA0\x28\xA8\xCE\x68\xEF";"\xE9\x65\x99\x54\xF0\x9C\xA7\x36\xB6\x75\xD0\x14\xDB\x16";"\x06\xCA\x23\xDD\x18\x17\x16\x81\x3D\x1B\x47\xA5\x57\x89";"\x68\x43\xA0\x63\x95\x80\xDE\x09\xEC\x88\x73\x32\x9D\x46\x17\x7D\xF8\x47\x4C\xBB\x43\x64\xD1\xBF";"\x18\x4A\xA2\x0E\xFC\xF9\xC7\x0E\xEC\x9B\x35\x2D\x9E\x67\x26\x76\xE9\x79\x32\xB3\x54\x14\xB4\xA3\xB8\x05\xD6\xE9\x25\xCA\x53\x57";"\xE9\x5D\x96\x41\xE7\x98\x87\x2A\xB0\x7C\xD2\x25\xDF\x1D\x0B\x7F\xD1";"\xD3\x49\xE6\x71\xC8\x50\x4B\xC5\x67\x4D\x88\x72\xB7\x57\x25\xC0\x48\xD0\xDD\x79\xE3\x4D\xF2\xBC\xBD\xDF\x5D\x59\xEA\x03\xBC";"\x36\x8F\x60\x9A\x55\xC6\x91\x02\xF3\xCF\x05\xEC\x2D\xCF";"\xAE\x53\xE4\x10\xD3\xA9\x48\xC3\x67\x4D\xFA\x71\xAE\x50\x27\x3F\x59\xD5\xDB";"\x4C\xE4\x16\xD7\x78\x33\x2C\xA1\xCB\xE0\x60\x94\x52\xEF\x81\xA4\x25\xB0\x74\xC7\x40\xCD\x19\x1B\x1C\xB3\x30\xF8\x55\xB8";"\xEA\x12\x80\x13\x9F\x82\xEF\x46\xA7\xD6\xB6\x3B\xB5\x6C\x77\x54";"\x63\xE4\x18\xD5\x6B\x05\x25\xAE\x37\xF7\x39\x96\x18\x86\xDB\x9B";"\x71\x89\x28\x8F\x20\xC6\xCB\x7A\xFF\xC0\x00\xEE\x1F\xCF\xB3\x50\xC4\x64\x4B\x83\x72";"\x56\xEF\x78\xA0\x7F\x3F\x3F\x5A\xC1\xFC\x6E\x84\x3D\xF4\xB5\xAD";"\x7C\xBE\x1F\x95\x7F\x5A\x3C\xCB\x2D\x88\x4F\xDC\x50\xE1\x85\x8A\x38\xB2\x80";"\x9E\x79\x36\x81\x18\x67\x7E\x99\x13\x1D\xB8\xA2\x67\xA7\xF2\xF5\x14\x86\xA2\x23\xD3\x9D";"\x0D\xB2\xBB\x62\xBB\xF8\xFD\x04\x9E\xA5\x29\xC5\xF5\x30\x6D\x0B\x8D\x7B";"\x11\xB3\xB9\x7C\xB4\xF0\xF2\x1A\x87\xAD\x22\xCD\xF7\x2B\x4C\x7D\xEB\x0E\x2D\x9A\x51\x80\xA7\xC5\xC3\x74\xF7\xBB\x11";"\x70\xFC\x01\xD9\xFB\xD0\x97\x7F\xA7\xAF\x6B\xC4\x41\x83\x0E\x06\xA3\x6A\x24\x84\x3E";"\x1F\x83\x63\xA4\x12\x24\x3C\xBA\xD3\xFB\x74\xED\x51\xB7\xD3\xF0\x3B\x2C\x2B\xA5\x1D\x91\x7F\x6E\x01\xE6\x53\xEA\x5A\xF5";"\xA5\x13\xE7\x39\x9C\xED\x9C\x3C\xAD\xEC\xD9\x21\xC2\x6F\x04\x1F\xEE\x4A\x6C\xE9\xF6\x0B\xD8\xB1\xA5\x40\x9D\x80";"\x14\xC8\x27\xDD\x15\x10\x06\x9C\x3F\x0C\x43\xB8\x6F\x89\xE7\xEF\x07\xFC\xD1\x36\x50\xE1\x3A\x7A\x78\x9A\x1F\x3D\xAD\x42";"\xF9\x52\xAA\x5A\x8C\x8D\x91\x00\xA1\x87\xC6\x2C\xF4\x10\x10\x1F\x92\x2E\x1A\xBF\xB1\x6E\x81";"\x75\xAE\xFA\x7E\xD0\xFD\xF4\x1D\x8C\xAA\x22\xCE\xF2\x33\x5C\x69\xEA\x08\x28\x9B";"\x3A\x94\x09\x86\x10\xA8\xC3\x41\xEB\xCD\x08\xED\x2F\xC2\xA4\x47\xCE\x56\x53\xFE";"\xBC\x79\xC7\x68\x9A\x5D\x32\xFF\x79\x49\x88\x61\x93\x50\xD7\xD9\x45\xE9\xCF\x01\xF3";"\x46\x9F\x17\xF2\x09\xBC\xCE\x41\xE7\xC0\x05\xEE\x15\xCD\xAE\x45\xCB\x7E\x50\xF9\x70\xA3\x42\x3E\x34";"\xCB\x16\xF3\x29\xC1\xA8\x44\xDB\x52\x5F\x9B\x10\xB0\x38\x3F\x5C";"\xB5\x7A\xB4\x2C\xAF\xB1\xD3\xB5\x06\x0E\xA9\x04\xCC\x68\x0F\x2B\xAF\xCE\xEE\x46\x89\x4B\xE4\x83\x9C\x32\xBB\x60\x85\x12\x8B\x71";"\xE2\x60\x87\x36\xEF\x93\xB0\x21\x4F\x68\xE5\x15\xC8\x7E\x44\x22\xD9\x30\xF0\x53\x98\x5B\x9B\x9E\x94\x3A\xAF\x85\xC9\x2A\xD4";"\x5B\xE2\xAE\x25\xED\xEC\xF2\x18\x82\xA1\x2E\xC1\xEA\x31\x4B\x6D\xEE\x06\x28\x9C\x5C\x84\xF4\xD6\x9A\x28";"\xE5\x6E\x9D\x29\xF5\xB7\xAB\x22\x4E\x62\x8F\x1C\x92\x70\x45\x21\xD8\x2B\xF1\x57\x9C\x41\x9F\x9C\x8B\x20";"\x19\xA8\x58\x6D\xA9\xF4\xE6\x6F\x80\xAE\x27\xC9\x5B\x75\x01\x37\xB5\x21\x25\xC5\x57\x86\x59\xDC\xDF\x7F\xF0\xC4\x12\xE0\x10\xD7";"\x1C\xAC\x4D\x78\xB1\xE3\xEC\x69\x82\xAF\x26\xCA\x0B\x2D\x4D\x61\xEE\x75";"\x3F\xB1\x1E\xD3\x6F\x49\x35\xFA\x92\xB8\x33\xCD\x59\x9F\x8C\xF5\x2B\xCB\x6F\x89\x43\x91\x4C\x42\x06\xDE";"\x4A\xBA\x09\x8F\xC7\xC5\xE4\x66\x83\xBB\x19\xC3\x1B\x29\x59\x53\xFD\x7F\x3F\xE1\x7F\xDF";"\xF8\x5F\x90\x2A\xFB\xDF\x9F\x5E\xB4\x7A\xD7\x21\xD0\x15\x0D\x18\x84\x25\x05\x42\xAE";"\x72\xB7\x01\x77\xDF\xF4\xE7\x62\x84\xAC\x29\xD7\x06\x29\x41\x77";"\xFD\x4B\xA6\x36\x9B\x94\x95\x03\xA2\x8E\xC3\x29\xE4\x02\x65\x00\x89\x13\x1B\xA7\xBC\x68\x85\xFE\xF9";"\x37\x98\x5E\x86\xA3\xD9\xDF\x75\xF5\xBB\x14\xE8\x05\xC5\x50\x53\xC2\x63\x4E\x84\x6B\x89\x45";"\x17\xB4\xBA\x65\xBE\xE3\xF3\x1E\x9D\xA4\x2D\xC4\xEE\x2E\x4D\x69\xE4\x04\x28\xA2\x51\x89\xA5\xD5\xE3\x76";"\x00\x4E\xAE\x53\x91\x84\xE6\x06\xEA\x8C\x56\x35\xE9\x06\x62\x7D\x97\x0E\x18\xB3\xBC\x7C";"\x60\xDA\x44\x16\xD7\xFD\xEB\x17\x93\xDB\x30\xD1\x9F\x3C\x5E\x7B\xF5\x1A\x50\x9F\x0C";"\x3E\xCE\x51\x9D\x31\x5B\x0F\xE2\x2E\xBC\x5C\xDD\x46\x84";"\x19\xB5\xA5\x75\xBF\xFC\xFD\x1B\x80\xCE\x36\x8D\xF3\x5B\x54\x68\xEC\x0F\x2F\x9E";"\x4D\xA2\x05\x68\xD8\xA9\x81\x6B\xCF\xA0\x49\xA8\x64\x25\x3D\x7F\x98\x0C";"\xAC\x6D\xE5\x49\xC6\x2C\x33\xCD\x62\x2C\xFE\x63\xC0\x25\x5C\xD7\x46\xC6\xB4\x7E\xA9\x52\xF0\xFD\xE3\x89";"\x34\x91\x5A\x9F\xBD\xA7\xC2\x69\xFE\xBD\x09\xE1\x1D\xD3\x56\x4C\xD9\x7D\x41\x8E\x69\xAB\x4E";"\x66\xE8\x0E\xBE\x7B\x09\x36\xA2\xC9\xEC\x67\x92\x40\xEE\x90\xD6\x4C\xBC\x2C\xCE\x59\xA3\x00\x46\x69";"\xDA\x2D\xB2\x17\x2D\x4B\x61\xE4\x75\x37\x80\x47\x88\x5C\xD1\xDF\x7D";"\xC8\x7B\xF0\x27\xDD\xC8\xD2\x93\x50\x31\xF7\x00\xBE\x70\x3B\x30";"\x1F\xB9\x59\x13\xB2\x99\xB6\x1E\xEC\xA4\x23\xCF\xF5\x28\x4E\x69\xEB\x00\x35";"\x79\x92\x71\xCE\x00\x61\x53\xDA\xA6\x9E\x23\x81\x14\xA4\x88\x86\x26\xDF\x1D\xB8\x4B\xC6\x74\x6E\x50\x9C\x79\x4C\x34\xDD\x0A\xD4";"\xBD\x16\xE5\x1B\xD1\x48\x3E\xAE\x6B\x02\x87\x07\x93\x4F\x2B\xC5\x49";"\x15\x8A\x30\xF5\x17\x3C\x97\x43\xA4\xCB\x29\xE0\x74\xCD\xC8\xA3\x8E\x47\x1C\xE0\x75\xA2\x37\x2F\x7F\xAD\xCA\xE1\x68";"\x86\x76\x98\x52\xF0\xA4\xB9\xCC\x4E\x71\x8A\x4A\xBC\x1C\x1E\x28\xE8\x8B\xAE\x28\x9A\x26\x89\xDC";"\x06\xB8\xB4\x61\x91\xE7\xF7\x1E\x91\x99\x32\xC0\xFC\x37\x70\x72\x9C\x03\x2D\xA7\x4D\x6E\xB6\xD2\xEF\x6F\x80\xB1\x17\xD3\x1D\x67";"\x87\xAB\x39\x82\x79\x6D\x1D\xE3\x12\x05\xAE\xB5\x20\xE7";"\x14\xB9\xB3\x62\xBF\xF9\xF0\x19\x9D\x9D\x2B\xC3\xF5\x29\x6D\x72\xE6\x02\x2E\xA3\x54\x8B\xAF\xDB\xFE\x11\xEF\xB4";"\x02\xB6\x58\x76\xBD\xF5\xE9\x60\x81\xB3\x3D\xAD\x16\x28\x42\x60\xE9\x7E\x31\x91\x40\x9E\x5F\xDF\xD1\x79\xF0\xC4\x0E";"\xC0\x02\xF2\x2F\xCF\xA6\x43\xD4\x52\x4A\xF4\x79\xB8\x7D\x3C\x32";"\x4F\xFB\x6D\xB3\x1E\x58\x33\x0B\xCB\x8F\x0E\xE3\x55\x84\xAA\xF1\xA3\x49\x32\x80\x51\xCE\x02\x4C\x2A\xC1";"\x03\xA9\x41\x73\xBD\xFF\xED\x7B\x82\xA8\x25\xC9\x0D\x23\x42\x61\xE1\x69\x3C";"\x56\xF9\x7A\xA5\x46\x54\x56\x1F\xDC\xB5\x6C\x83\x3A\xF4\xB1\xAA\x20\x46\x6C\xE8\x1A\xCE\x6B\x05\x20\xA8\x33\xF1\x5D\xF7";"\xFE\x72\x94\x34\xF0\x8E\xAD\x2B\x4A\x77\xD6\x7D\xC7\x6C\x0E\x19\xB6\x33\xF0\x57\x9B\x5B\x8F\x92\x95\x35\xA1";"\x75\x9A\x3C\x9A\xA5\xD9\xD4\x76\xFD\xBB\x08\xE5\x1A\xDE\x54\x50\xCB\x0C\x4A\x87";"\x1A\xB6\x48\x79\xBF\xF6\xF6\x7F\xFB\xBE\x38\xC9\xF5\x25\x46\x65\xED\x10\x34\x9A\x53";"\x47\x8B\x68\x8C\x53\x2E\xCD\x49\xE6\xC6\x10\x99\x27\x81\xA4\xD5\xD8\x52\x5B\xF4\x77";"\xB9\x0D\xF7\x33\xA4\xA8\xE9\xD7\x3E\x34\x93\x1D\xB4\x75\x32\x2C\xA3\xC2\xF7\x60\x97\x4C\xEB\x87\xA1\x35\xDA\x23\xD9";"\xE4\x61\x8B\x26\xEF\x8D\xA0\x28\x49\x79\xD9\x7B\xCF\x08\x40\x1E\xDD\x3C\xFB";"\xF9\x75\x85\x35\xF4\x8A\xAA\x20\x55\x01\xFF\x61\xD4\x3D\x1C\x64\xB0\x5A\xF1\x5F\x95";"\xF1\x57\x98\x47\x83\x87\x84\x3C\xBF\x80\xCC\x23\xD5\x0A\x18\x01\x82\x2F\x0C\x40\xB5\x69\x8D\xE4\x84\x11\x83\x94\x36";"\xF6\x59\x94\x43\xEA\x9E\xF0\x3E\xD7\x38\xD1\x49\xC5\x1F\x17\x15\x80\x23\x05\x5D\xA5";"\x9E\x62\x87\x37\xF2\xBD\xA5\x2E\x4B\x69\xE5\x13\xDC\x69\x08\x21\xB4\x36\xF7\x52\x9D\x4E\x9B\x9B\x95\x38\xB8\x88\xCD\x2E";"\x76\xA8\x18\x9E\x7E\x53\x0F\xEC\x3F\xF9\x54\xA5\x57\x9A\x95\x89\x21\xA4\x80\xC1\x2D\xDB\x0E\x7F\x49\x84\x5E\x05\xE4\xA6";"\x9D\x2E\xC0\xF1\x37\x70\x69\xE7\x04\x2E\xB4\x51\x8F\xAE\xC1\xEB\x6D\xF0\xB2\x79\xB6\x0E\x9A\x5D\x32\xFB\x7E\x42\x8F\x6F";"\x7F\xB4\xBA\x64\x80\xF8\xFD\x1C\x9F\x9D\x25\xC5\xF2\x30\x77\x74\xFC\x18\x35\xA1";"\xDD\x73\x87\x3B\xED\xB0\xB3\x2B\x4E\x64\xE0\x08\xBB\x00\x03\x7D\xB0\x8F\xF3\x33\x90\x47\xE7";"\x24\xAC\x48\x75\xAB\xC8\xEA\x79\xDD\xEC\x5C\x83\x5D\x75\x54\x0D\xFA\x7E";"\x12\xB2\xB0\x64\xBB\xFC\xF6\x1E\x9F\xA4\x2E\xCF\xF2\x27\x49\x65\xE7\x0E\x25\xA3\x56\x89\xB7\x84\xE2\x19\xF3\xBE\x12";"\x12\x99\x7B\x99\x15\x62\x19\xB1\x63\x96\x20\xB1\x21\xC0\xC7\xC2\x1B\xF5\xD0\xDB\x7E\xF0\x19\x21\x58\xD1\x46\x42\xE6\xA9\x37\xC5";"\x59\xF0\x08\xBA\x7D\x29\x35\x55\xC2\xE0\x60\x8A\x3A\xED\x86\xA0\x2A\x40\x70\xCF\x42\xC9\x35\x6F\x5F\xDB\x79";"\x9E\x57\xDD\x43\x8B\x9A\x98\x3E\xB9\x7B\xC5\x39\xD9\x16\x13\x09\x81\x2B\x64\x5C\xC4\x2B\x88\x88\x8D\x0A\x95\x97";"\x47\x80\x73\xAD\x4C\x2A\xC3\x4D\xDE\xD7\x72\xEE\x24\xFC\xBD\xB9\xDF\x58\x65\xFF\x51\xB9\x06\x24\x59\xAB\xCF\xEA\x6B\x90\x4F\xE9";"\x30\x95\x5D\x84\x48\xDF\xD6\x7C\xFE\xC7\x0A\xE4\x1F\x9C\xA6\x4A\xC4\x6A\x44\x80\x7B\xB3\x46\x21\xC9";"\xEA\x6B\x89\x37\xF5\x9F\xAB\x25\x4C\x69\xD9\x16\xCB\x63\x17\x53\xBC\x6E\xE5\x33";"\xC6\x08\xF2\x15\xDB\xA8\x48\xC7\x6E\x45\x82\x62\xD0\x39\x2D";"\x25\xA1\x53\x8D\xA7\xC4\xFD\x7B\xF6\xB1\x15\xDA\x1E\xC5\x41\x2A\xE7\x7B\x41\x8D\x6B\x95\x50\x31\xD7\x45\xE7\xC4";"\x0D\x44\xB2\x6D\x8A\xFF\x8B\x0B\x92\x94\x3D\x3D\xFF\x55\x6D\x72\x8B\x75\x2D\xB2\x42\x71\xB3";"\x9E\x02\xC2\x36\x98\xB0\xA5\x24\x45\x6A\xF9\x0C\xCD\x61\x01\x27\xBA\x5B\xEA\x04";"\xB6\x1A\xDF\x04\x23\x40\x40\xFD\x7B\x3E\x9B\x63\x91\x3A\xC9\x94\x40\x8A\xDA\x04";"\x17\xB1\xBD\x61\xB9\xFD\xE3\x19\x99\xA5\x2D\xC2\xF0\x36\x49\x00\x88\x01\x68\xA1\x39\x8B\xA6\xC6\xE3\x71\xF3\xB0\x16";"\x27\xAB\x4F\x73\xB6\xBA\xE1\x67\x8F\xA8\x21\xD3\x0B\x2C\x43\x7E\xEB\x6B\x30";"\xBC\x07\xE0\x1A\xD1\x50\x55\xCA\x62\x5A\xC5\x7C\xD2\x40\x75\xD3\x3C\xFB\xB0\x13\xAB\x4C\xC5\xB2\xBA\xD3\x5E\x59";"\xCD\x09\xF4\x27\xC3\xA3\x45\xC9\x51\x4D\xE7\x73\xA9\x7D\x3E\x38";"\x87\x41\xD8\xB4\x6E\x7C\x2D\xBA\x5A\x36\xD1\x41\x18\xB5\xB9\xFE\x2F\x92\xA8\x43\xDA\x59\x7B\x07";"\xBD\x19\xE1\x1D\xDE\x57\x5B\xB1\x3B\x1A\xD7\x3A\xCF\x5E\x73\xC4\x14\xB9\x94\x27\xE8";"\x3C\x93\x58\x85\x57\xDE\xCD\x7B\xFA\xB9\x0A\xE1\x13\xDC\x52\x22\xDB\x26\x48";"\x4B\xE3\x09\xB2\x69\x3A\x47\xFA\xD9\xF5\x60\x9C\x50\xF9\xEC";"\x20\x88\x58\x96\x0E\x4E\x05\xCD\x24\x5E\x42\xED\x19\x8F\x96\x8D\x02\xAF\x8D\xC4\x2A\xEA\x0D\x60\x0B\x97";"\x66\xEC\x0B\xB1\x6D\x08\x2C\xA8\xC9\xEE\x55\x84\x0E\xBD\xD3\xC0\x20\xEA\x2F\xCD\x19\xDB\x1B\x12\x13\xB8\x3F\x01\x4B\xAA\x57";"\x4F\xF8\x7D\xA8\x41\x26\x35\x2F\xDE\xC4\x76\xFD\x3D\xF8\xB5\xBD\xC0\x5C\x79\xED\x08\xB2\x6D\x01";"\x68\xA8\xEA\x73\xE7\xA1\xE9\x40\xD8\xF1\x76\x84\xB7\x2B\x3F\x27\xE4\x0F\x2E\xA2\x54\x8E\xB3\xDC\xE1\x71\xF3\xB6";"\xE9\x45\x96\x45\xE5\x82\x97\x33\xDF\x66\x95\x22\xB5\x04\x13\x10\xBC";"\x44\x82\x43\x8D\x3A\xBF\xC2\x1C\xB8\x9C\x01\x87\x6C\xC9\xA8";"\x5E\xF2\x06\xBC\x7F\x20\x70\xAF\x86\xEA\x6B\xFE\x5D\xBD\x80\xE7\x3F\x1B\x2C\x8D\x08\xC7\x62\x19\x1A\xB3\x3E\xE6\x4D\xA7\x5A\x96";"\x32\x97\x56\xDB\x32\x52\x29\xE7\x9E\x9E\x03\x91\x1F\xE4\xED\xCF\x52\xA4\x7D\xC7\x7C\x9F\x77\x06\x0B\xB1\x4B\x6F\x52\xF2\x31";"\xBF\x20\xCA\xF3\x34\x49\x6E\xFF\x06\x2F\x99\x55\x8D\xA4\xAA\xEC\x70\xF6\xBD\x10\xDB\x18\xDA\x5B";"\xCC\x66\xF8\x25\xFF\xB1\xBA\xDC\x42\x5E\xE7\x03\xB5\x7D\x32\x36\xE2\xCF\xB1\x79\xD7\x52\x9A\x9B\xC8\x21\xE1\x1E\x91\x76\x94";"\xE5\x0B\xE1\x43\xDE\x91\xFE\x34\xA7\x81\xCE\x2A\xD0\x14\x75\x01\x89\x2C\x0C\xBE\xB7";"\x71\xBD\x59\xE3\x62\x52\x7B\xB5\xAD\xFC\x27\xCA\x1D\xB9\x90\xFC\x6D\xE2\x26\x8A\x0D\xBA\x11\x41\x0F\xD7\x25\x1A\x4A\xA8\x5E";"\xA8\x28\xD0\x0A\x2B\x4A\x66\xED\x6B\x48\x8C\x52\x85\x5A\xD9\xDA\x71\xE5\xC1\x0F\xE7\x1D\xD7";"\xC2\x0E\xE5\x2E\xC9\xAC\x52\xC9\x69\x5B\xF1\x7E\xAF\x42\x57\x57\x10\xDD\xB6\x6D\x85\x39\xF6\xBF\xB3\x29\x49\x6A\xF2\x0F\xCE";"\x3A\x88\x6D\x9A\x51\xD7\xCB\x44\xF6\xCE\x02\xEB\x2C\xCC\xA1\x4D";"\x7D\xD3\x1D\xAE\x13\x44\x01\xFD\x3A\x6B\x52\xAF\x54\x91\x9D\x84\x00\xB0\x93\xDF";"\x8F\xC4\x33\xEA\x11\x78\x1F\xEE\x0E\x14\xBC\xBC\x61\xBA\xF7\xEB\x1B\x9F\xA4\x2A\xC1";"\x71\xBA\x64\xDC\x72\x0F\x11\xB5\x27\x06\x4D\xAF\x48\x8D\xE6\x89\x0C\xAC\x91\x52\x5B\xE9";"\x4C\x85\x02\xC2\x47\x67\xC7\x26\xC9\xDD\x78\xFC\x28\xFB\xB0\xA5\xC2";"\x49\x82\x67\xA9\x49\x36\xC4\x45\xD4\xDD\x7A\xF9\x20\xF8\xF6\xB5";"\x85\x3F\xE5\x5B\xF3\x8C\x91\x07\xA5\x8E\xC1\x2C\xC9\x0F\x6A\x02\x88\x2F\x16\xD5";"\x3B\x9D\x5A\x86\xB9\xC0\xBD\x79\xF3\xE5\x15\xB8\x18\xC9\x3E\x4C\xD9\x27";"\x42\x89\x61\x96\x56\xC1\xCD\x44\xEA\xCD\x00\xF3\x2C\xCF\xCC";"\x10\x5F\xB4\x61\x8A\xE8\x84\x10\x8F\xC1\x38\x3B\xEB\x3F\x7C\x7F\x9A\x1C\x27\xAA\x52\x76\xB1\xCD\xEB\x65\x8E\xAE\x23\xC2";"\x14\xBC\xB8\x67\x88\xFE\xEE\x1C\x99\x9C\x25\xCC\xFA\x33\x1B\x63\xB6\x68\x6D\xA2\x24\x89\xA8\xCA\xF8\x68";"\xFA\x57\x96\x57\x9D\x83\xD1\x3F\xCF\x99\xC2\x2E\xD8\x0E\x6F";"\x19\xB6\x5E\xC2\x74\x05\x1F\xBA\x30\xFE\x47\xBE\x52\x94";"\xC8\x07\xF4\x2A\xD0\xCF\x2F\x9D\x4B\x3F\xF9\x30\xEE\x62\x69";"\x25\xA0\x4F\x8C\xA8\xC5\xE1\x66\x8F\xBA\x1F\xD1\x03\x28\x47\x5F\xFD\x76\x3C\x8F\x65\x8B\x12\xD5\xBA\x44\xE1\xC0\x05";"\xEB\x59\x92\x4A\xEC\x8E\x87\x5D\xAA\x3D\xD2\x74\xDE\x1A\x12\x15\xB4\x20\x07\x56\xAB\x50\x8E\xE8\x81\x0E";"\x3E\x99\x5D\x97\x43\xCF\xD7\x7B\xE5\xC3\x0B\xEF\x13\xCF\xA9\x4A\xC9";"\xC7\x0A\xE3\x10\xC6\x55\x4C\xC0\x69\x4B\x8B\x78\xA9\x58\x70\xCE\x13\xC6\x87\x2B\xA8\x32";"\x73\x94\x36\x95\x5B\xDA\xD1\x7B\xFE\xDF\x01\xEF\x11\xD4\xAC\x4C\xA9\x62\x4C\xF5\x7A\xAF\x4E\x25\xDC\x49";"\x37\x9E\x5C\x9F\x31\xC1\x93\x7D\x91\xC4\x09\xE1\x0D\xCC\xAE\x4F\xC0\x02\x51\xB8\x71\xC0\x43\x2F\xC1";"\xB8\x16\xE1\x10\xDC\x48\x4F\xBE\x7E\x47\x80\x6B\x95\x45\x27\xDD\x55\xE9\xD0\x7A\xF2\x27\xCB\xA2\xA1";"\x53\xF8\x7C\xBB\x42\x3B\x3F\x52\xDB\xD8\x70\x81\x3F\xF0\xB0\xB8\x23\x5B\x6A\xEF\x08\xCA\x6C\x0C\x22\xAF";"\x23\xA8\x40\x70\xB1\x99\xF0\x22\x8F\xC0\x20\xD2\x0E\x2C\x47\x62\xFB\x76\x30\x97";"\xE4\x7A\x88\x4E\xED\x88\xA5\x26\xAE\x72\xD9\x1D\xC9\x69\x1C\x19\xB2\x22\x83\x55\xB9\x53\x91\x92\x87";"\xFE\x4A\xA5\x5B\x96\x96\x99\x14\xA6\x8C\xC1\x2D\xE8\x08\x69\x69\x97\x51\x11\xD1\xBF\x61\x88\xFE\xFD\x12\x83\x98\x2D\xCC\xFF";"\x55\xE4\x0A\xBF\x44\x3B\x3E\x5C\xDE\xDB\x68\x9F\x3E\xF2\xB8";"\xCE\x03\xF4\x2B\xCE\xBB\x48\xD2\x52\x56\xFE\x79\xB8\x72\x30\x30\x5A\xD2";"\xD2\x73\x81\x37\xF7\xBC\xAA\x24\x59\x6D\xE1\x14\xCA\x60\x0A\x2A\xAE\x32\xF0\x52\x9A\x5F\xE3\x87\x9F\x30\xB1\x82";"\x38\xEC\x45\x1C\xAF\xCE\xE9\x62\x8D\xAA\x25\xC9\x0D\x23\x47\x63\xFA\x71\x5A\x9B\x40\x9B\x5A\xDB\xDF\x7F\xFF\xD9\x08\xE9\x13\xD6";"\x60\x8D\x16\x8B\x68\x68\x27\xA4\x30\xF0\x5B\x92\x5B\x82\x9A\x91";"\xC8\x09\xE2\x1C\x89\xA6\x4A\xCC\x68\x49\x87\x73\xB3\x5A\x27\xC9\x56\xD4\xD4\x75\xF6\x56\xEE\xB9\xA5\xB2\x57";"\x89\xC5\x34\xEF\x0E\x78\x1F\xC9\x7D\x4B\xD8\xC7\x6F\xC1\xE0\xE8\x7D\x8B\xDE\x25\x86\xE9\x2C\x30";"\xFA\x57\x9F\x54\x95\x9C\x91\x3B\xB2\x8A\xCF\x3D\xD7\x11\x69\x0B\x84\x27\x0E\xBE\xAF\x3F\x8B\xE6\x81\x10\x97\x9F\x3E";"\x22\xAB\x4E\x73\xB6\xD7\xAE\x68\x8A\xA4\x24\xDB\x09\x23\x5B\x7D\xF4\x79\x30\x9E\x54\x9A";"\x38\xEF\x48\x1B\xAC\xCE\xED\x68\x88\xA6\x18\xD2\x03\x31\x44\x5E\xF0\x7A\x3B\x93\x67\x9C\x34\xCB\x96\x7E\x8C\xD8\x0D";"\x47\xF3\x05\xBC\x7C\x31\x2F\x44\xDA\xE7\x61\x8F\x35\xEA\x96\xC4\x24\x55\x77\xD8\x16\xC4\x61\x03\x07\xB5\x3F\xFC\x5A";"\x1D\xAC\x56\x79\xB7\xFE\xF5\x67\x85\xAF\x23\xDE\x59\x77\x0F\x31\xFE\x32\x2F\xCC\x54\xDF\xFF\x9D\xCB\x3E\xE2\xE8\x16";"\xB1\x71\xC4\x00\x20\x5A\x5F\xFA\x7E\x37\x90\x7C\x87\x54\xD6\xCD\x44\xE0\xC1\x00\xF6\x42\xC7\xF5\x2E\x89\x56\x3F\xFC\x7B\xA8\x76";"\x33\x9B\x56\x8D\xA3\xC1\xDC\x6B\xF5\xBB\x17\xD6\x1C\xD8\x3E";"\xDE\x19\xE3\x10\xC9\xA8\x41\xCB\x05\x4C\xBB\x74\xCF\x4B\x2C\x39\x57";"\xC7\x78\xF0\x25\xD9\xBD\xA2\xD3\x51\x5E\xF2\x04\xBA\x60\x3E\x3F\x5D\xC2\xE1\x62\x82\x3B";"\x55\xEB\x03\xBC\x7E\x36\x36\xA1\xD5\xED\x64\x86\x49\xE9\x8A\xA0\x43\xB8\x6E\xDD\x1D\xC2";"\x28\xC5\x4D\xCF\x15\x1E\x15\xBB\x3A\x02\x40\xBA\x4F\x8F\xE9\x8F\x02\xA5\x88\xC7\x2B\xA6\x0A\x66\x01\x9B\x13";"\xFD\x6D\x8B\x33\xEE\x8B\xA1\x45\x40\x1A\x9C\x15\xAC\x66\x1B";"\x85\xCE\x22\xD6\x11\x6D\x60\x88\x2D\x08\x4B\xB7\x6F\x86";"\x4A\xFF\x76\xA1\x42\x25\x23\x55\xD0\xDF\x74\x86\x3E\xF8\xBA\xB7";"\x57\x9C\x64\x9D\x5C\xD3\xD5\x75\xEF\xD8\x1C\xF6\x17\xCF\xAE\x4C\xCA\x61\x49\xF1\x72\xA7\x44\x24\x3D";"\x89\x40\x45\xEE\x3A\x76\x71\x9B\x19\x29\xA8\x4E\x71\xB5\xF7\xEC\x61\x90\xA3\x27\xD8";"\x54\xBD\xDD\x67\x83\xE4\xFB\x14\x95\x80\x2F\xC2\xF9\x38\x77\x70\xE0\x6B\x3A\xE1\x4E\x19\xAF";"\xEC\x7D\x97\x52\xEE\x8B\xA5\x24\xB7\x76\xC2\x54\xCD\x1E\x1E\x1C";"\xBD\x13\xD6\x1D\xB6\x31\x10\xFC\x0E\x45\x8B\x6B\x96\x56\x34\xCD\x4A\xEE\xC7\x7F\x99\x27\x9E\xBE\xFA\xD2\x38\x44\xF3";"\x32\xCF\x5C\xF4\xB0\xDC\xE7\x74\xF1\xB6\x12\xDF\x1F\xC5\x43\x52\xFA\x79\x42\x8F\x67";"\xF3\x45\x89\x42\xED\x80\x99\x39\xB3\x60\xCC\x54\xAA\x06\x54\x1E\xC9\x38\x41\x06\xB3\x14\x8D\x83\x95";"\xA3\x1F\xD8\x14\xD9\x5A\x54\x93\x68\x4A\x8C\x6C\x92\x53\x28\xC9\x4B\xFB\xCF\x7C\xF1\x2B\xC4\xAE\xBD\xD3\x1D";"\xD0\x72\xF2\x25\xEE\xED\xB4\x82\x40\x12\xF3\x62\xAD\x37\x36\x47\xA7\xC8\xE3\x6B\x93\x48\xEF\x81\xA0\x26\xB2\x77\xDD\x1E";"\x85\xCC\x20\xD1\x10\x14\x19\x85\x28\x0D\x4A\xB1\x69\x8F\x8C\xEE\x57\x94\xFD\x37\x3D\xE4";"\x14\xBE\xD5\x7A\xEA\xBE\xF8\x7F\x9D\x9B\x29\xC3\xFA\x3E\x6C\x6C\xE3\x06\x2C\xAE\x49\x85\xC6";"\x23\xC7\x44\x2A\xA8\x8D\xE9\x00\x89\xAC\x15\xD6\x0A\x2D\x46\x5A\xF5\x66\x3F";"\x7E\xCF\x24\xDE\x10\x13\x15\x83\x21\x0C\x40\xA6\x6D\x83\xE4";"\x49\x89\x7B\x8C\x4E\xDC\xC9\x47\xEF\xCF\x04\xE8\x44\xC5\xA9\x42\xD6\x5F\x54\xEE\x7D\xA0\x7C";"\xD4\x01\xEF\x2F\xC8\xA6\x46\xC9\x4D\x39\xE2\x3E\xA2\x14\x3A\x3F\x5D\xD8\xD6\x68\x98";"\xF6\x4A\xAD\x5D\x9C\x8F\xE3\x6D\xAE\xCD\xC2\x44\xF2\x09\x60\x07\x8B\x0F\x17\xBF\xBD\x68\xD2\xF3\x93\x5E\x9B\xF4";"\x17\xB1\xBB\x78\xB5\xE1\x8A\x07\x98\xA5\x2D\xCD\xFE\x37\x57\x69\xE6\x06\x2E\x9E\x51\x92\xE6\xB9\xEC\x2A\xE8";"\x7D\xE9\x05\xBC\x73\x35\x28\xBF\xD1\xEE\x65\x96\x4A\xE0\x83\xA7\x30\xB3\x7E\xDD\x1E\xC2\x00\x16\x10\xBC\x3B\x02\x4E";"\xA8\x3B\xC8\x0B\x28\x40\x67\xEE\x19\x39\xC0\x42\xC4\x5D\xB3\xC5\x7E";"\x48\x8F\x65\x96\x5A\xD1\xCB\x56\xB3\xC6\x50\xEE\x5B\xD8\xD3\x5F\x82\x5B\x4B\xF2\x74\xA3\x7C\x3F\x3E\x45\xC3";"\x4E\xEE\x4B\x1A\xAD\xC1\xEE\x63\x89\xA7\x00\xCC\x17\x2D\x43\x57\xF8\x76\x20\xFD\x52\x99\x5D\xD3\xD1\x79\xED\xDF\x0C\xED\x14\xC7";"\x5B\xE8\x03\xD3\x3C\x27\xA0\x54\x85\xC0\x78\xF3\x2F\xC2\xAE\x45\xCC\x54\x58\xF3\x7A\xB5\x7F\x2C\x55\x35\x82\x8E\x67\xE3\x21";"\xC4\x0D\xE9\x16\xC9\xA8\x50\x8C\x65\x0B\xE7\x31\xB8\x30\x3D\x78\x54\xB6\xD9\x71\x83";"\x5D\xF5\x7F\x8A\x53\x29\xCF\x40\xE9\xCE\x18\xF4\x2F\xC1\xA7\x47\xCB\x3B\x5A\x91\x16\xC9\x11\x5B\x49\x52\xD9\xE7\x68\x8C\x30";"\xA2\x73\x9A\x06\x91\x54\x25\xC7\x62\x4D\x84\x67\xAC\x57\x24\xC4\x49\xD7\xD4\x7C\x97\x3C\xBB\xBA\xD3\xDB\x5F\x59\xEC\x0D\xB7";"\x5B\xFB\x0E\xCA\x2A\x4F\x68\xE0\xC6\xB6\x77\x90\x20\x8D\x9B\xD1\x27\x2D\x7D\xCB\x1F\x96\x10\x44";"\xC9\x02\xF7\x2A\xC0\xAB\x59\xCF\x54\x52\xF3\x78\xA1\x13\x52";"\x1A\xB4\x4B\x63\xB1\xF7\xF2\x64\x89\xA4\x4B\xD1\x4E\x30\x09\x65\x84\x02\x3B\x9B\x5B\x85\xA9\xC1\xC7\x7C\xF6\xBF";"\x6C\x45\xCE\x5C\xF9\x8B\xE0\x08\xF3\x87\xA8\x6A\x85\x0A\x07";"\x38\x99\x53\x8C\xA4\xC0\xE5\x72\x9D\xD5\x1A\x9A\x1E\xB0\x5F\x53";"\x09\x92\x07\xF2\x77\x77\x34\xEB\xD0\xAD\x53\x93\x4C\xED\x8D\x98\x34\xAF";"\xCE\x0F\x80\x31\x88\xAF\x2C\xC9\x6C\x5B\xF8\x7A\xAE\x44\x3B\x39\x41\xD9\xDF\x69\x80\x3E\xF5\xB0\xDC\x3D\x04\x6A";"\x89\xC3\x29\xE9\x0E\x6E\x05\x86\x78\x18\xD1\xFD\x63\xEB\xE4";"\x99\x63\x3B\xE5\x29\x60\x66\xFE\x16\x78\xB7\x44\x65\xC8\xBA\xED\x14\xF7\xD1\x71\xB8\x19\x7A";"\x2A\x80\x51\x8D\xA5\xC1\xDB\x70\x9E\xD4\x54\xDD\x74\xC7\x50\x5D\xF5\x6C\x4D\x82";"\x16\xB6\xBC\x65\xBD\x92\xF4\x42\x80\xE4\x2D\xAD\xF5\x33\x70\x68\xE6\x0F\x29\xAA\x53\x80\xBD\xC0\xE0\x70";"\xE2\x04\x9B\x3D\xF1\xBD\xAD\x23\x4C\x76\xFA\x0C\xC0\x6A\x08\x20\xB7\x36\xEF\x38\xF1\x4F\xD9\x9C";"\x0A\xF1\xBE\x09\xBF\xF9\xF1\x1A\x93\xA1\x2E\xC5\xF1\x31\x5E\x6C\xE0\x0C\x2A\xAA\x57";"\x1B\xA3\xA0\x26\x8D\x8A\x90\x45\xF3\xED\x20\x80\xE2\x2C\x12\x63";"\x39\xCC\x11\xCD\x65\x0E\x21\xB8\x31\xFC\x5E\x96\x49\x9A\x9E\x95\x3F\xA0\x83";"\x13\xAB\x44\x7D\xB7\xF2\xE8\x64\x9E\xB1\x3D\xC6\x0D\x2C\x46\x61\xE5\x6D\x28";"\x0F\xBE\x14\xC4\x6D\x6A\x36\xE6\xD3\x94\x40\xEF\x57\x87\xF9\xAC\x4C\xA8\x7B\xD2";"\x92\x98\x26\xD2\x18\x6E\x0C\x81\x2C\x0B\xA1\xAB\x76\x81\xE6\x84\x10\x93\x9C\x2E\x7A\xA4\x6E\x22\x64\xC7\x53\x33";"\x59\x4A\xF0\x35\xD7\xF0\x85\x0D\x95\x97\x3A\x3D\xE2\x04\x70\x7A\x8E\x1B\x16\xA5";"\xA6\x40\xCB\xF0\x26\x41\x6D\xE8\x0F\x2B\x98\x56\x90\xA0";"\xA7\x2B\xCC\xF4\x36\x4F\x69\x86\x63\x6A\x9F\x3F\x83\xA2";"\x6A\xD4\x13\xD6\x18\x1E\x03\xB6\x34\xFC\x52\x99\x58\x87\x8B\x88\x3B\xA6\x84\xCE\x28\xD1\x16\x71\x14\xF7\x31\x12\xBC\xB1\x65\x8C";"\x93\x04\xDA\x46\xD1\x94\xE5\x08\xA1\x8A\xC7\x2F\xEA\x0C\x65\x10\x8C\x17";"\x79\xE2\x03\xB1\x66\x0F\x33\xA2\xCA\xEA\x5B\x92\x44\xF8\x87\x9A\x33\xB6\x72";"\x91\x65\xCE\xF5\x5D\x60\x2B\xEF\x46\x37\xF7\x13\xD9\xBC";"\x57\xF3\x72\xBB\x62\x39\x38\x59\xDE\xDF\x6A\x95\x71\xF6\xDE\xAA\x2F\x46\x69";"\x5A\xF1\x00\xBD\x7C\x36\x36\xA0\xC5\xF3\x63\x85\x3B\xEC\x86\xAF\x45\x47\x20\xB3";"\x11\xB2\xB9\x78\xA1\xEE\xF4\x1D\x87\xAC\x29\xCC\xF7\x3F\x19\x65\xAA\x04";"\x50\xF4\x66\xA0\x7A\x3E\x32\x5A\xDD\x8F\x75\xCC\x34\x9A\x8B\xA8\x22\x4A\x6A\xDD\x10\xC3\x6E";"\xC7\x0A\xE1\x12\xD6\xAF\x53\xA9\x62\x16\xE4\x37\xA9\x2D\x3A\xC4\x51\xD1\xDC\x73\xFC\x21";"\xDB\x7C\xFA\x22\xC0\xD4\xA2\x9F\x5C\x35\xF0\x01\xB3\x72\x35\x26\xA9\xDE\xF1";"\x36\xAB\x4B\x77\xB9\xC9\xED\x62\x8D\xB7\x41\x8B\x59\x74\x1A\x4E\x87\x7E\x65";"\xA0\x0E\xEA\x1F\xD5\x50\x53\xC5\x7C\x5F\x9B\x65\xAA\x4E\x2F\xCE\x4C\xF3\xCE\x7A\xF0\x26\xC6\xBF\xBF\xD7\x59\x5C\xF9\x02\xBE";"\xFD\x5E\x99\x47\x93\x9B\x9D\x3A\xAC\x84\xCE\x27\x80\x00\x2D";"\x46\xD9\x69\xED\x4A\x4A\xC7\x5B\xDF\xD2\x74\xF4\x3F\xF9";"\x3D\xF1\x7F\xA5\x75\x3F\x34\x5F\xD3\xE7\x7D\x81\x3E\xF6\x82\xA9\x25\x44\x01\xFA";"\x67\xED\x08\xA6\x35\x08\x41\xB9\xCE\xED\x58\x9B\x48\xE3\x8E\xBA\x30\xB0\x7C\xDF\x18\xDC\x1A\x71";"\xF1\x53\x9E\x47\xFB\x9B\x9D\x3C\xBB\x78\xC5\x20\xD8\x11\x10\x06\x84\x22\x08\x5C\xD2";"\x27\x8F\x0B\xD7\xFF\xD6\xCD\x2E\xED\xBC\x63\xBF\x7C\x84\x5B\x57\xB6\x39\x23\x92\x73\xBD\x2A\x4A\x81";"\xF3\x40\xFF\x21\xF5\xC0\x9F\x2E\xB3\x67\xD0\x0F\x87\x5E\x57\x55\xFE\x2E\x1B\x54\xED\x05\xDE\xAA\xDD\x5E\xFC\xC9\x7D\x2B\xBB\x51";"\xC0\x0B\xE1\x18\xBD\xA4\x1D\xA0\x2A\x4C\x96\x77\xAD\x46\x2F\x3A\x55\xCE\xDA\x77\xFC\x38\xF9\xB4\xD8\xB0\x00\x66\x80\x0D";"\xA4\x2B\xCA\xF3\x38\x4C\x6A\xF4\x6E\x46\xC8\x3E\x86\xE5\xD7\xA2\x7C\x91\xD3\x64\xB3\x65\xD6\x3D\x3F\xAB";"\xFE\x69\x8C\x34\xF7\x8F\xAB\x46\x43\x35\xC5\x50\xC8\x0E\x07";"\xF2\x34\x8B\x47\xEB\x80\x9B\x30\xBB\x66\xCA\x3C\xDA\x10\x15\x1B\x80\x2E";"\xB8\x12\xDE\x1B\xD9\x56\x51\xF4\x79\x5C\x96\x6B\x99\x4D\x20\xCD\x4D\xF0\x81";"\x26\xE1\x74\xAE\x42\x23\xC0\x50\xCD\xC0\x6A\xF9\x39\xFF\xB8\xB6\xDB\x5C\x0E\x87\x4D\xB3\x1B\x14\x2A\xAB\xCF\xE6\x5B";"\x30\xB6\x1F\xB2\x67\x0E\x38\xA5\x30\xF7\x5F\x98\x42\x84\x90\x9C\x39\xBD";"\xA7\x29\xC2\xE0\x65\x45\x2E\xE4\x50\x3F\xCF\x58\xCF\xB4\x94\x81\x23\xE2\xB3\x12\xE9\x1E\xDE\x50\x57";"\xF9\x68\x88\x33\xE7\x8A\xA1\x33\x18\x77\xA8\x09\x85\x7C\x62\x03\xCA\x2E\x8D\x48\xB9\x08\x94\x93\x95\x39\xA3\x86\xC7\x36\xD2";"\xBE\x06\xED\x1D\xB9\x38\x0B\xC5\x09\x57\x80\x71\xA9\x4E\x20\xC7\x57\xD6\xD4\x73\xF3\x2A\xF7\xD2\xB4\xC4\x5A\x63";"\xDA\x2F\xAF\xF2\x35\x70\x6F\xE8\x00\x32\xBD\x47\x8F\xAC\xC2\xE1\x6E";"\x39\x93\x5F\x9C\x5D\xD5\xD3\x78\xE3\xC3\x0C\xEA\x10\xD9\xB5";"\xBC\x13\xDA\x09\xC2\x50\x5B\xF9\x7D\x3A\x88\x75\xC0\x0A\x81\xDF\x12\xBE\x89\x54\xE0\x77\x9F\xB2\x13\xC0";"\xA6\x7B\xA2\x00\xA4\x34\x4A\xA1\x13\x54\x9C\x79\x87\x34\xBA\xD9\x1B\xBD\xBC\x6D\x9C";"\x2F\x8F\x6F\x93\x4E\x20\xC1\x57\xED\xCA\x7C\xFC\x26\xCD\xC8\xD2\x93\x50\x31\xF8\x07\xBA\x79\x3A\x33\x47\xDA";"\x4F\xFD\x7C\xA0\x48\x3D\x3B\x4F\xDB\xD9\x6B\x82\x3F\xF7\xDA\xAD";"\xBD\x0A\xE3\x12\xCA\x4A\x54\xC8\x68\x41\x87\x68\xB7\x4E\x28\xCC\x4C\xD5\xD0\x79\xB7\x2C\xDD\xB8\xB9\xDB\x56\x5C";"\x1E\xAA\x3F\xCC\x47\x0B\x4D\xDC\x50\x59\x37\xA0\x32\xD7\x84\xF5\x5E\xF8\x83\x3F\x4F\xE6\x2D\x64\x6A\xFA\x6C\x4B";"\x15\xB9\xB5\x66\x80\xE1\xF5\x10\x99\x8E\x3B\xC3\xFA\x3B\x72\x74\xE1\x6B\x2B\xFE\x54\x36\xAF\xA5\xFB\x69\x8B\xB1\x19\xDE";"\x5B\xD7\x60\xD0\x54\x2C\xCF\x4D\xEF\xD3\x7C\xE3\x3B\xC3\xB9\xBD\xD7\x5C\x5B\xF5\x1F\xA6\x75\x32\x35\xA8\xC2\xEC\x7C";"\x18\xD1\x69\x82\x2F\x78\xC7\x1E\xFA\xDB\x6D\x96\x5C\xDD";"\x1D\x58\xAD\x52\x8C\xE8\x85\x65\xB7\xD5\x3A\x5C\xFA\x04\x78\x7E\x90\x1F\x18\xA8\x44\x7B\xB4";"\x6B\xE9\x15\xAE\x6C\x0D\x2A\xAD\xC7\xEC\x59\x8A\x45\xFB\x81\xA9\x30\xB3\x7D\xD1\x05\xDE\x1E\x1D\x1C\xB6\x22\x07\x56\xD4\x49";"\xB8\x11\xD7\x0F\x2B\x36\x50\xAE\x64\x78\x91\x09\x99\x54\xD0\xD4\x41\xE4\xC6\x04\xE5\x2A\xD9\xAA\x47\xC7";"\x67\xEC\x0A\xB7\x76\x67\x27\xFF\xD7\xA9\x5E\xF8\x4D\xE5\x86\xA2\x35\xB2\x63\xCA\x18\xDF\x1A\x1E\x1C\xB9";"\xA7\x2C\xC5\xF7\x30\x26\x60\x98\x14\x28\xA6\x52\x8C\xAF\xC1\xFB\x6F\xF4\xB7\x13\xDE\x15\xDA\x44\x4B\xFE";"\xED\x61\x8C\x4B\xEF\x84\xAA\x34\xBE\x6F\xC9\x61\xDA\x00\x17\x12\xBC\x3A\x06\x48\xBA\x4F\x8F\xE3\x85\x0C\xAF\x84\xC4\x2B";"\xD4\xD7\x4F\xE1\x63\x79\x1C\x88\x16\x13\xB9\xB9\x62\x9B\xE4\xFD\x18\x9E\x9E\x29\xC3\xE3";"\xE7\x69\x85\x3D\xE8\xB7\xAE\x21\x4B\x6F\xE2\x0D\xB4\x70\x1C";"\xBD\x7E\xDA\x6D\x65\x24\x09\x89\x7D\x6B\xD1\x60\x8C\x52\xC0\xB2\x26\x9F\xA6\x1D\xB7\x7F\xD9\xD5\x48\xB4\x11\x01\x8C";"\x40\x8A\x6F\x98\x4E\x2A\xCB\x4C\xEF\xDA\x7F\xF3\x27\xC5\xA6\xBA\xD7\x57\x37\xFC\x56\xD5\x3D\x30\x59\x58\xC7\xE2\x65\x8D\x35\xF5";"\x97\x34\x9C\x50\xF9\xEC\xC1\x7E\xDB\x07\x8E\x18\xA9\x32\x0B\x10\xA9\x5E";"\xDC\x0E\xE1\x17\xD6\xAF\x4C\xDE\x6A\x4A\x83\x77\xA8\x4E\x4D\xCD\x09\xC9\x93\x74\x96";"\x2D\xF6\x58\xC0\x35\x1D\x76\xF1\x9E\xE2\x0C\x88\x15\xEC\xCF\x8A\x6B\xFD\x6D\x9F";"\xC8\x6E\xCB\x9A\x2D\x4E\x69\xE8\x13\x36\x80\x5D\x8E\xAD\xDF\xB3\x1D\xFE\xFD\x12\xB4";"\x9D\x00\x82\x1F\x8B\xBD\x5F\xD9\x7E\x2C\x86\x02\xFE\x37\x34\xAC\x40\xBD\xC5\x7E\xEF\x21\xEE\xDD\xC8\xD4\x43\x0E\x85\x0D";"\x1D\xB7\x59\x7A\xB7\xF3\xF0\x62\x82\xA1\x21\xCF\x09\x2C\x4C\x67\xEC\x16\x31\x98\x5E\x80\xA2\xD2\xDA\x74\xF6\xA8\x0D\xE0\x1C";"\x1C\xF0\x06\xB4\x73\x0B\x25\xA2\xD7\xF1\x62\x9A\x4D\xEF\x83\xA6\x2B\xF5\x75\xBD\x1B\xDD\x1F\x14\x17\xBB\x21\x1F\x4F";"\x56\xF3\x61\xA3\x7C\x3A\x38\x5E\xD1\xDB\x62\x88\x32\xF0\xBD\xA8\x2E\x47\x71\xE2\x11\xC7";"\xB2\x1A\xDB\x08\x25\x5C\x4B\x87\x73\x44\x80\x69\xF3\x45\x87\xD2\x3B\xEE\xB5\x10\xBE\x71\x9E\xB3\x41\xCC\x52\x54";"\x39\x87\x60\x9F\x5E\xD1\xD5\x42\xE0\xAB\x08\xF1\x1B\xCE\xAF\x43";"\x14\xAC\xB9\x61\x83\xFC\xFB\x15\x9A\x9B\x3C\x87\xA3\x63\x29\x61\x8B\x0D\x76\xFE";"\x3D\xB7\x37\x68\xA6\xCE\xED\x68\x88\xA6\x03\xD4\x05\x26\x45\x5E\xF6\x7A";"\x43\xEB\x06\xB2\x7C\x33\x2F\xCD\xC8\x82\x24\x8D\x24\xEE\x80\xAC\x2F\xB3\x75\xD3\x18\xC1\x0A\x1E\x1C\xBF\x30\xF7\x49";"\xEF\x60\x8F\x37\xEA\x8B\xA3\x24\x46\x75\xD9\x15\xC5\x65\x1E\x18\xB0\x3C\xFB\x46";"\x6C\xDB\x17\xC8\x63\x04\x3A\xAC\x31\xFF\x53\x9D\x59\x98\x8C\xD1\x33\xD1\x8F\x9C\x39\x87\x0C\x38\x06\xD0\x33";"\x74\xD7\x17\xC0\x65\x04\x05\xE3\x61\xB8\x07\xB1\x08\x84\xCF\x9E\x44\xBA\xFB\xDD\x2F\xDB\x0E\x67\x07\x81\x36";"\xDE\x41\xEE\x79\xCC\xAD\x41\xC8\x68\x54\xFE\x77\xA3\x4B";"\x27\xAC\x48\x70\xB7\xCF\xE2\x7E\x8F\xA8\x19\xD5\x0D\x22\x40\x5C\x9D";"\x02\x90\x0C\xDE\x12\x4E\x46\x46\xBA\xA1\x72\xC5\x4B\xF9\xA8\xAE\x27\x42\x63\xE6\x12\xCD\x72\x00\x24";"\x88\xC1\x25\xD1\x0B\x06\x60\x88\x68\x0E\x28\xBA\x69\x83\xE2\x86\x12\x94\x93\x31\x28";"\x70\xDA\x19\xC4\x68\x07\x19\xB6\x3D\xF4\x49\xA3\x36\x9B\xC1\xFA\x45\xA2\xE3\xC0\x28\xEC\x09\x68\x05\x8A\x12\x11\xAF\xBE\x65";"\x7B\xD2\x20\xDB\x11\x15\x17\xBE\x27\x0D\x51\xAA\x56\x89\xEC\x8A\x0D\xAB\x94";"\xC7\x07\xEC\x21\xCF\xAD\x4F\xC8\x6E\x50\xFA\x7D\xAE\x54\x3B\x3F\x52\xD7\xD8\x64\x84\x3E\xE6\xD6\xB3\x2C\x16\x03\x91\x0C";"\x3C\x90\x6E\x9F\x57\x29\xC8\x43\xF1\xCD\x03\xF1\x21\xCE\xA2\x47\xCB\x4D";"\xD7\x6A\xB0\x5F\xCD\xEF\xD0\xA3\x20\x33\xA9\x06\xD1\x70\x3E\x2A\xA7\xC5\xEF\x64\x8D\x5A\xED\x85";"\xF6\x53\x9A\x5F\x9A\x91\x9A\x3C\xBC\x8A\xCB\x2B\xDE\x18\x68\x08\x86\x3A\x0C\xB9\xB1\x69\x82\xE3\x80\x18\x80\xDC";"\x6A\xEA\x08\xB1\x6D\x11\x36\xA2\xCA\xE7\x58\x92\x4D\xFC\xC2\x9C\x5B\xB1\x70\xD7\x1E\xDC\x1A\x1B";"\x83\xA4\x45\xCA\x40\x01\x08\x8C\x28\x0E\xBB\xB5\x76\x84\xEF\x86";"\xF5\x39\xF6\x07\x9C\xF4\x9F\x31\xB0\x82\xCB\x2F\xC9\x15\x1C\x04\x87\x2E\x0C\x2F\xBC\x32\x90\xA5\x81\x78\x8B";"\xB1\x16\xDC\x15\xD9\x59\x55\xFB\x7D\x46\x81\x78\xFE\x53";"\x07\xE2\xCD\x63\x8A\xB2\xE9\x1A\x8B\x9D\x58\x97\xEF\x52\x1A\x02\xF8";"\x73\xCF\x21\xDE\x17\x13\x0F\x9D\x21\x0C\x44\xAE\x69\x83\xE8\xDA\x00\x90\x92\x3A\x3A\xE2\x37\x7B\x7F\x9E";"\xAE\x48\xCF\x0B\x27\x49\x69\xF0\x76\x2A\x8E\x40\x9E\x5D\xDD\xD6\x76\xFF\xDB\x64\xE3\x7D\x95\xA8\x21\xD9\x6B";"\xBB\x17\xDB\x0F\x8F\x0D\x01\xED\x31\x18\xC8\x3F\x80\x16\x7E\xD8\x1B\xE5";"\x13\xBC\x40\x7A\xBC\xF4\xF6\x67\x82\xAE\x27\xC8\xE7\x25\x4F\x6F\xE8\x03\x38";"\xEA\x57\x9A\x5A\x95\x9B\x92\x26\xD7\x9E\x8D\x2A\xBD\x13\x6F\x03\x8C\x2E\x0E";"\x83\xDF\x62\xD6\x78\x15\x0A\x81\x25\x0D\x45\xB7\x6B\x8A\xE6\x96\x12\x90\x94\x3C\x3B\xEA\x3F\x79\x1B\x95";"\xDD\x3A\x9D\x63\xAE\xCE\xB1\x80\x45\x2F\xEB\x57\xB4\x05\x29\x2E\xAB\xC3\xE2\x64\x8A\x3A";"\x8D\x24\x79\xBC\x5A\x24\x6E\xF7\x1E\x1B\xB0\xB6\x76\xB2\xF3";"\x2F\x9D\x57\x8D\xAC\xC7\xDA\x6D\xF2\xB9\x13\xD8\x17\xDD\x52\x38\xE1\x20\x46\xE0\x6B\x90\x4C\x2A\xCD\x42\xEB\xD4";"\x5C\xF8\x05\xB8\x73\x33\x2A\xA0\xC6\xEF\x2E\x82\x4E\xE9\x81\xAC\x2B\xB3\x74\xD8\x07\xC4\x16\x1F\x10\xBE\x3E\xEF\x0B\xA8\x1E\xFF";"\xB2\x7F\xC0\x51\xA3\x82\xCB\x2F\xB8\x72\xD0\x1F\xD4\x1F\x06";"\x14\xB7\xA0\x00\xB0\xF9\xF7\x10\x9C\xA4\x29\xDA\xF0\x33\x43\x6A\xE6\x04\x30\xF4";"\x73\xD6\x1A\xC3\x00\x06\x0B\xBB\x3E\x02\x4F\xA7\x4E\xFF\x86\x80\x41\xAE\xE7\xDE\x36\xE1\x00\x66";"\xDF\x6E\x8A\x56\xEA\xF3\xB3\x4A\x45\x6F\xE1\x06\xCD\x6B\x17\x39\xAB\x32\xF5\x5F\x9A\x48\x8D\x85\xC6";"\x05\x4B\xB0\x3C\xFD\xAD\x89\x60\xAF\x8A\x3E\x37\xE3\x00\x65\x7B";"\xB8\x29\xCA\xF4\x34\x41\x6B\xE9\x1E\x71\xDF\x44\x8F\xAC\xC1\xDB\x74\xF6\xB1\x0D\xDD\x1B\xD2\x57\x5D\xFD\x74\x11";"\x21\x8B\x7F\x9D\x50\xD4\xD3\x4A\xE6\xDE\x6B\xE0\x76\xD4\xE9";"\x99\x34\xC3\xFA\x31\x74\x76\x9D\x1A\x20\xA4\x4B\x77\xAF\xCB\xF5\x6A\x8C\xB6\x1B\xD1\x0C\x25\x43\x55\xF3\x7A\x33\x94\x60\x84\x40";"\xD1\x7C\xE1\x3A\xE0\xBB\xB6\xD1\x5A\x68\xE9\x1E\xAE\x13\x60\x58\xC8\xC1\x88\x73\xC5\x45\xA3";"\x95\x6E\xE6\x21\x80\xE5\xBD\x53\x23\x0B\xB5\x0F\xD8\x73\x11\x08\xD4\x35\xE0\x38\xB5\x1F\x92\x9F";"\x21\xA0\x4E\x62\xB3\xCE\xED\x65\x8D\xA5\x26\xD7\x18\x46\x2B\x25\x9F\x7C\x61\x86\x03\x90\x21\xC5\xD2\x7A";"\x51\x9B\x6F\xAE\x4F\x26\xC9\x57\xD2\xCE\x6A\x80\x25\xF9\xBB\xB2\xDD\x52\x65\xF4\x0E\xB4\x71\x0A\x29\xAD";"\x68\x8D\x49\x93\x72\x4E\x43\xE1\x2C\xA9\x0D\xF6\x48\xC2\xCE\xC4\x12\xE3\xD2\x82\x68\xAF\x52\x75\x51\xCA\x74\x41\xFD\xE1\x39\xDF";"\x33\x97\x5C\x84\x59\xDC\xD9\x78\xFD\xD0\x57\xEB\x42\xB8\x33\x32\xAB\x0C\x49";"\x86\x07\x8B\x4A\x9C\xE7\xAA\x77\x32\x22\xDA\x04\xB5\x03\x09\x16\xA7\x5C\x9B";"\xE4\x21\xE4\x4D\xC4\x80\xF8\x44\xA5\x20\xB0\x3C\xB0\x6A\x18";"\x34\x84\x5E\x8D\xA6\xC0\xD9\x75\xF6\xDA\x1F\xE0\x1D\xDA\x53\x52\xCB\x62\x42\x82\x68\x87";"\x1C\xBD\xBC\x64\xBB\x92\x94\x14\xDC\xA2\x44\xC0\xF0\x34\x75\x6F\xFD";"\x25\xEA\x6C\xB6\x72\x09\x2E\xA6\xC5\xEB\x78\x8F\x49\xE7\x82\xA3\x31\xB1\x71";"\xF0\x62\x9A\x56\x96\xF1\xF8\x54\x39\x79\xDC\x6D\x8F\x32\x78\x34\xD2\x47\xEA";"\x93\x31\xBC\x48\x9E\x84\xEE\x66\xE1\xEB\x9B\x71\xFD\x16\x71\x65\xF8\x4A\x4D\xBE";"\xCA\x06\xF9\x26\xCC\xA7\x49\xB5\x5A\x48\xF1\x7A\xA2\x78\x3B\x3B\x42\xDD\xE1\x6E\x80\x30\xF4\xA8\xC7\x34\x53\x79";"\x90\x31\x3C\xF5\x27\x7C\x75\x98\x12\x24\xAF\x4C\x7F\xA1\x95\xA8\x74\x8C\xAC\x1C\xD7";"\x85\x32\x3F\xF5\x3F\x7F\x72\x85\x00\x22\xA3\x4C\x75\xB8\xA4\xE6\x6A\x87\xAE\x1C\xDD\x02\x24\x4E";"\x2B\xA9\x4F\x76\xB9\xCE\xF1\x66\x88\xA8\x1E\xD6\x0F\x21\x4F\x66\xF7\x72\x3F\x90\x42\x81\x5C\xDF\xD0\x7F";"\xCB\x05\xEF\x2C\xCC\xB7\x59\xCC\x56\x52\xF3\x78\xA8\x2D";"\xAE\x0E\xE2\x0C\x88\xD9\x9E\x62\xCD\xDD\xA8\x7F\xCE\x47\x63\x4E\x94\x7A\x01\xE9";"\xEE\x07\xC8\x1A\x3D\x5D\x00\xA9\x2E\x6A\xCE\x71\xFE\x55\x9A\xC1\x23\xB2\xA8\x14\x8C\x14\xA2\xAB\x16";"\x2B\x8B\x52\x80\xA4\xC4\xDE\x77\xF4\xD7\x1C\xBB\x06\x9D\x50\x39\xF8\x65\x4C\x86\x6C\x91\x53";"\x80\xC9\x2B\xD0\x62\x65\x5E\xE1\x6D\x0D\xD5\xA8\x6D\x87\xE6\xFC\x10\x97\x87\x29\xDD\xF6\x3A\x71\x76\x99\x06\x3C\xC9";"\xCC\x3B\xC9\x09\x29\x4D\x63\xEB\x11\x36\x9D\x5D\x87\xA4\xDE\xB7\x6D\xBB\xBF\x67\xE6\x1B\xD7\x5F\x50\xC2";"\xAE\x19\xE8\x13\xCC\xA6\x4D\xC1\x75\x48\xE2\x75\xA4\x40\x24\x3D\x56";"\xBD\x12\xCA\x1E\xDE\x51\x55\xF5\x65\x43\x8A\x07\x89\x0B\x2A\xA3\x57\xE8";"\x35\xEB\x0F\x98\xBF\xC7\xA1\x66\xE3\xAF\x6C\xE9\x07\xBE\x3D\x4D\xAB\x35\x3B\x91";"\xC8\x23\xCE\xF4\x39\x4C\x6E\xF6\x07\x29\x98\x5C\x8B\xAC";"\xE8\x68\x8B\x4C\xEF\x87\xA4\x29\xB7\x61\xDE\x13\xC5\x1E\x1D\x1A\xBD\x54\xF2\x15\xBD\x11\x96\xFE\x8A\x0E\xAB\x83\xC2\x30";"\x05\xFD\x43\xB7\x70\x34\x2F\xA0\xC4\xF2\x63\x87\x4D\xE9\x80\xA3";"\x52\xF0\x04\xBB\x7B\x2B\x7C\x51\xC6\xE6\x6D\x8A\x36\xED\x89\xAD\x2D\x4B\x65\xDD";"\x97\x37\x3F\xFB\x34\x64\x6E\xC0\x64\x2F\xF2\x50\x1F\xCF\xD6\x91";"\x00\xD1\x56\xDB\x22\x05\x4A\xB4\x30\xF0\x51\x9C\x59\x80\x81\x91\x3E\xAD\x80\xC3\x2B";"\xD1\x3B\x92\x69\xA9\xE4\xA0\x23\x43\x66\xE6\x04\xCC\x6A\x05\x3A\xAC\xCC\xF2\x59\x9E\x42\xF1";"\x6E\xCC\x27\x65\xEF\xA4\xB7\x3E\xD3\xE2\x74\x88\xA3\x7F\x12\x33\xF1\x5E\x6F\xCC\x4E\x9F\xBC\xC5\xC3\x6C";"\xE9\xCD\x70\xDB\x71\x0D\x06\x95\x6B\x63\xAE\xB8\x79\xE6\xB5";"\x16\xFF\x1D\xA3\x21\x5C\xDE\x27\xB5\xAB\x19\xF6\x63\x80\xA3\xD2\xB8\x26\x0D\xE2\x70\xCA\x3E\x47\x30";"\xD5\x5D\xFF\x7E\xAC\xF2\x2D\xAE\x5C\x56\xF6\x7D\xB4\x7E\x34\x3E\x44\xD9\xE6\x6F\x88\x31";"\x58\xF0\x1B\xA4\x76\x34\x30\xA3\xC9\xE0\x62\x8E\x48\xE8\x8D\xA4\x2B";"\x84\xC9\x2D\xD3\x13\x04\x12\xCF\x2C\x65\xA0\xBC\x6A\x83\xE4\xFA\x15\x88\x91\x30\x39\xFC\x3B\x72\x18\x81\x40\x26\xC0\x57\x77";"\x56\xDC\x5C\x81\xA8\xC7\xE1\x73\xF2\xB6\x10\xD4\x05\xDB\x5C\x52\xE5\x63\x5C\x89\x61\x9F\x50\x2E\xC5\x5C\xF0\xB1\x1B\xF3";"\x86\xCF\x2D\xD2\x12\x69\x0C\x81\x2F\x0F\xBB\xB6\x69\x9B\xE3\x86\x10\x93\x9D\x34\x2E\xB8\x39\x17";"\x7F\xCE\x22\xD3\x11\x10\x0A\x92\x25\x08\x48\xB3\x66\x89\xE5";"\x6D\xDA\x15\xC8\x6D\x07\x0B\xB1\x35\xF8\x58\x9C\x5A\x98\x96\xF8\x50\xFA\x89\x95\x73";"\x84\x28\x22\xFB\x33\x76\x7C\x9E\x00\x3D\xB7\x01\x3D\xB3\x83\xA5\x0B\xE2";"\xC6\x65\x9A\x6F\xA5\xE7\x5F\x8D\x5B\x2B\xED\x61\xA0\x74\x3D\x31\x5B";"\x47\xF7\x13\xF2\x15\x3A\xCA\x3D\xC2\xCE\x2A\xEC\x20\xE9\xDC\xC8\xB0\x5B\x66\xF6\x7B\xD1\x2E\x09";"\x28\xA4\x57\x8C\xA8\xC7\xFE\x27\x80\xAD\x43\xC2\x4E\xC2\x22\x41\xFC\x7A\x48\x8E\x66\x93";"\x83\x01\x96\x23\xE7\xBD\xBC\x40\x3F\x61\xFF\x70\x9B\x35\x7F\x51\xD6\x44\x94\x40\xF6\x52\x8D\x93\x8A\x5A\xD5\x68\xD1\x52\xB9";"\x0F\xF2\x1A\x26\xE5\xA9\xFF\x11\x8F\xE1\x47\xDD\x0B\x21\x43\x67\xEF\x75";"\x34\xF7\x5F\xC1\x0D\x14\x60\xEC\x70\xA6\x43\xC5\x1E\xB3\xC8\xC7\x2B\xC9\x73\xA5\x3C\x8B\x0C\x61\x65\xFD\x3B\x0E\x40";"\x7F\xFB\x0A\xC9\x6F\x04\x26\xA7\xD3\x9F\x52\xF3\x02\xE3\xF1\x9B\x36\xBE\x7E\xC8\x25";"\x45\xF4\x70\xAA\x44\x25\xC1\x3C\xDD\x8E\x1C\xBA\x3E\x90\xB9\xB3\xDE\x4C\x67";"\xD6\x76\xF8\x27\xF8\xD3\xBB\xDB\x53\x60\xE0\x07\xB0\x69\x09\x28\xA2";"\x30\x8C\x5C\x9E\x58\xD4\xD2\x7C\x88\xCE\x02\xED\x14\xD8\xA1\x4C\xC2\x73\x56\xE0\x7C\xA2";"\x9A\x36\xC1\xF9\x3F\x6E\x6F\x9A\x04\x23\xA5\x42\x70\xB3\xD7\xF4\x6F";"\x66\xEF\x0B\xCD\x6C\x16\x3A\xA6\xCB\xFB\x5C\x9E\x41\x8C\x97\xCC";"\x52\xC1\x35\x1E\xC2\xDF\xF9\x60\x9C\xCE\x63\xCF\x73\x4A\x3B\x35";"\x66\x93\x3C\xA9\x67\x0E\x50\xC2\x3B\x70\x58\xF1\x2D\x92\x89\x8B\x15\xCB\xEE\x23\x4F\xF8\x49\x78\x20\xE8\x01\x5A\xCC\x5D\x28";"\xCD\x13\xF8\x73\xAF\xE1\xBD\xBC\x53\x5B\xF6\x01\xB9\x7D\x3B";"\xD2\xD3\x63\xE5\x06\x64\x01\x95\x13\x15\xBF\xB9\x7A\xBB\xE8\xF5\x17\x9B\xA3\x2D\xCC\xF1\x39\x5A\x3F\xB8\x4C\x78\xC5\x05";"\x7C\xCB\x26\xDB\x0E\x1F\x0E\x89\x23\x0B\x48\xA8\x73\xC1\xAE\x9C\x48\x99\xD0\x23\x23\xB2\x32\x06\x60\x9C\x18\x19\xA9\x4D\x70";"\x98\x31\xC7\xF7\x3D\x71\x75\x9D\x01\x20\xB1\x4A\x77\xA9\xCF\xEB\x69\x8E\xB1\x0F\x92\x5C\x76\x1A\x4C";"\x3C\xBB\x48\x8E\xAE\xCA\xE7\x6C\x81\xD9\x0B\xDE\x14\x4C\x57\x47";"\xDA\x78\xF8\x3A\xC8\xB1\xBA\xD2\x5C\x59\x80\x18\xD1\x31\x34\x45\xA9\xC2";"\x7D\xD2\x19\xD8\x18\x17\x08\xA5\x39\x00\x49\xAC\x59\x8F\xE8\x91\x67\xB0\xCB\x3C\x5E\xE7\x00\x65\x7E\x97\x14";"\xBC\x18\xE1\x1B\xDD\x54\x5B\xF5\x63\x50\x83\x63\x90\x4F\x2D\xCA\x4F\x85\xBD\x3B\xF4";"\xDD\x75\xF7\x24\xFF\xB4\xB5\xD9\x4C\x60\xF7\x6E\xBD\x6E\x0D\x28\xA2\xC9\xEA\x5B\x91\x4C\xE2\x90";"\xB6\x05\xF4\x45\x97\x46\x4F\xC0\x61\x4A\x89\x6B\xAD\x51\x26\xC3\x44\xDC\xDC\x7F\xFA\x30\xAA\xE4\xFB\x8F\x49\x0E";"\xC4\x74\x84\x39\xF3\xB5\xAD\x25\x47\x66\xE2\x0F\xD4\x71\x67\x3E\xB6\xD3\x98";"\xFE\x6E\x80\x36\xF9\x8B\xA2\x46\x52\x2A\xDF\x7F\xD7\x60\x02\x1F\xB1\x37\xF9\x4B";"\xDE\x9B\x76\x8B\x02\x0D\x00\xD3\x69\x52\x10\xF6\x31\xD8\xBE\x98\x74\x8D\xCB";"\x5D\xF7\x06\xA7\x14\x2E\x76\x5E\xAC\xE6\x61\x8E\x30\xE9\x8D\xA9\x2F";"\xEB\x1C\xBE\x18\x26\x41\x57\xFF\x73\x38\x8C\x78\x83\x5B\xD6\xDA\x74\xEE";"\x82\xC3\x34\xE8\x0E\x62\x0A\x8D\x15\x10\xB0\xA6\x62\xBD\xFE\xF1\x1F\x99\xBC";"\x35\xF8\x31\xC6\x5F\xB5\xD7\x7A\xF3\xC5\x08\xEF\x1E\xDB\xA2\x4D\xD0\x6D\x4F\x80\x75";"\x80\x08\xF0\x42\xD1\xAF\xAE\xB6\x1E\x09\xF2\x58\xB3\x6B\x6E\x3B\xCB\xB7\xA5\x24\xEF\x5B\x81\xE2\xC2\x78\x59\x7A\xCA";"\xB9\x48\xCA\x51\xD2\x12\x48\xB0\x74\x5E\xE5\x3E\xF8\x05\xD8\x85\x57\xB3\x94\x55\xE0";"\xB6\x1B\xDE\x00\xDE\x5B\x5A\xEF\x78\x3D\x8F\x63\x95\x51\xD6\xCA\x2A\x8F\xC7\x45\xF2\x45";"\x1C\xF0\x6B\xC2\x77\x06\x20\xAD\x3D\xFC\x5C\x87\x58\x82\x9D\x9D\x3A\xB0\x77\xC6\x3C\xA0";"\x53\xFF\x60\xB8\x5C\x24\x3F\x53\xD8\xDD\x69\x83\x21\xF7\xB5\xAA\x29\x40\x6D\xE4\x0E\xC8\x69\x0B\x26\xAA\x30\xE4";"\xAD\x76\xC6\x44\xDD\x33\x51\xFC\x7C\x3A\x8A\x6D\x96\x57\xD2\xDA\x42\xE4\xCD\x08\xF6\x27\xCC\xCF";"\xB9\x2C\xCC\xF1\x29\x4D\x6E\xEE\x0B\x33\x9F\x55\x87\xA5";"\x81\xCA\x3B\xDC\x14\x14\x0B\x9F\x40\x17\x3F\xA9\x74\x89\xE1\x80\x17\x95\x9F\x36\x27\xEB\x3A\x77";"\x1C\xD5\x41\xAC\x26\x19\x76\xB6\x3E\xFE\x55\xA3\x5F\x95\x93\x96\x17\xA6\x84\xC5\x2F\xEF\x0C\x6B\x6A\xE2\x6E\x10\xD2";"\xFC\x58\xA3\x5F\x9D\x91\x9A\x38\xA0\x83\xD9\x2A\xD4\x09\x6F\x0E\x8A\x38\x54\xBD\xDD\x66\x87\xE1\xF5\x12\x98";"\x48\xE2\xE0\x2F\xDF\xB8\xDF\x09\xF6\x84\x6B\x27\xBE\x6E\x38\x31\xDC\x5B\x33\xFB\x51\x16\xAC\x82\x8D\x60";"\x4F\xA2\x07\xBD\x21\x47\x27\x0F\xA0\xC2\x05\x86\x26\x90\xAA\xD8\x3C\x06\x75\x9F\x13\x85\x14\x1F\x53\xAF\x28\x90\x47\xEB";"\x60\xCB\x25\xD2\x1E\x1F\x17\x9A\x27\x0E\x4E\xA6\x65\x88\xF0\xEF";"\xD7\x04\xF9\x27\xCF\xA7\x4B\xA1\x4B\x11\xF6\x10\xBE\x7F\x39\x3E\x51";"\xBD\x15\xDC\x1A\xD8\x54\x40\xFC\x62\x41\x8F\x6A\x97\x47\x2E\xA5\x56\xAD\xCD\x15\xF1\x20\xCC\xA3\xBF\xD2\x49\x47\xF5\x05";"\x94\x2E\xC0\xF2\x33\x74\x72\xE1\x01\x2D\xA1\x4F\x8C\xB6\xD4\xF9";"\x79\xBA\xB1\x64\x83\xFC\xF2\x09\x9C\x94\x2E\xC2\xFA\x34\x1A\x1C\xA5\x02\x43\xA4\x4F\x8C\xA3\xCD\xE3\x6B\xF7\xB4\x1F\xCC\x00\x23";"\xF6\x5D\x9D\x47\x82\x9B\x9B\x33\xBE\x7A\xD2\x24\xD5\x17\x11\x06\x8F\x26\x02\x44\xB8\x68\x8B\xE6\x81\x11\x9E\x90";"\x6E\xDB\x1A\xCB\x64\x1E\x3D\xCC\x28\xE5\x53\x9B\x55\x98\x9B\x97\x25\xA1\x83\xCE\x2C";"\x95\x31\x34\xFE\x6F\x2E\x23\xC1\x0C\x49\xEF\x01\x2D\xA7\xA9\xA6\x7F\x80\xA4\x23\xCB\x04\x2A";"\x65\xE7\xDC\x60\xED\xED\x8A\x69\xED\xD8\x20\xD1\xE7\x24\x17\x77\x93\x7F\x2D\xE5\x5B\xFA\xC8\xB1\xF6\x65\xE7\xD3\x76\xB5\x01\x33";"\x68\xE0\x51\xC4\xB1\xD8\xCE\x16\xB9\xFB\x17\x98\x49\xD7\x0E\x0E\xA3\x27\x1C";"\x15\xB0\xAA\x7F\x9F\xF3\xFA\x11\x9D\x9E\x31\xDB\xF6\x33\x73\x73\xE4\x02\x22\xA3\x45";"\x00\x4A\xA7\x53\x95\xEA\x84\x0C\xB1\x94\xDE\x34\xEE\x05\x68\x01\x92\x08\x0B\xCB\xA5";"\xBE\x13\x96\x3F\x9F\xD4\xDE\xB4\x55\x3E\xB6\x5A\xA8\x2D\x6D\x70\xB6\x98\xB5\x36\x81\x1C\xB6\xD5\xB3\x71\xE3\x32";"\x3C\x8A\x63\x9F\x59\xD1\xDA\x7C\xFB\xD8\x05\xEB\x17\xCF\xAC\x49\xC0\x73\x51";"\xD9\x71\xDA\x63\xA9\xAA\xD3\x38\x5E\x6F\xE3\x0C\xCE\x6B\x01\x38\xB5\x29\xF1\x5C\x92\x43\x97\x9A\x81\x23\xA5\x02\xD6";"\x93\xC3\x47\x81\x58\x32\x40\x9C\x78\x78\xD5\xD1\x78\xDD\xEA\xF3\x08\xF9\x8C\x22\xBE\xB4\x49\x0A\x64\xFF\x10";"\x39\x84\x66\x98\x4F\xBA\xCD\x05\xE2\xA3\x1A\xEF\x2C\xCF\xAD\x4D\xCE\x57\x4E\xE2\x64\xA0\x40";"\x03\xFE\x77\xB8\x00\x20\x4B\xB7\x90\xE7\x15\x8D\x3C\xF9\xF0\xAF\x24\xBE\x7C\xD2\x12\xC2\x1A\x1B\x19\xAC";"\x3B\x97\x64\x90\x5F\xD0\xD2\x2E\xFA\x82\x07\x87\x0F\xCB\xA9\x44";"\x8B\x23\x4F\xFD\x40\x65\x2A\x96\x78\x02\xAE\x47\x7B\xB7";"\x42\x8C\x6B\x85\x4E\x2E\xCF\x49\xEA\xC8\x7B\xF4\x39\x8F";"\xC2\x04\xE3\x14\xD5\xAE\x4D\xCD\x6D\x55\xF8\x76\xA7\x4D\x22\x3F\x51";"\x00\x40\xAA\x64\x8E\xEE\x86\x0D\xAE\x9A\x31\x3A\xE1\x1D\x7E\x7F\x92\x19\x18\xA5\x45\x7B\xBF\xF2\xF5\x69\x84\xB5\x20\xCC";"\xC6\x0C\xE1\x14\xD5\xB3\x27\xA9\x62\x09\xFE\x18\xAC\x4F\x2F\xC2\x59\xD2\xC3\x6A\xF9\x35\xF3\xBD\xB1\xD6\x28\x68";"\x12\xB7\xBC\x78\xB4\xFE\xE7\x5B\xC2\xF7\x77\xD8\xAF\x67\x5A\x69\xE1\x07";"\xD3\x7F\xF9\x3D\xF9\xA4\xDA\xD2\x0C\x09\xAD\x0A\xDD\x70\x0A\x2F\xA2\xC9\xEE\x47\x8E\x4A\xE6";"\x31\xFE\x59\xA0\x33\x32\x5B\xBF\xC3\xEF\x62\x8B\x4B\xEC\x90\xBF\x32\x48\x7A";"\x46\xC6\x69\xB0\x2A\x5F\xDF\x17\xD4\xBD\x68\xF4\x25\xFE\xBB\xB7\xDC\x40\x69\xEF\x04\xB0\x73\x0E\x40\xA8";"\xF3\xAE\x5D\x81\x1A\x6A\x11\xF3\x41\x7B\xB7\xE3\x3C\xA1\x8B\x9B\x7E\xEB\xC7\x43\x82\xF3\x2E\x35\x62\x88\x0D\x36";"\x86\xA0\x2E\xD2\x0F\x69\x0C\x89\x34\x0B\xBC\xB5\x65\x84\xE2";"\x8D\xCA\x2F\xE9\x0F\x64\x06\x95\x13\x07\xF2\xBF\x16\xB8\xF5\xF2\x1C\x9A\xA4\x29\xCD\xFE\x24\x4E\x68";"\xA3\x10\x96\x17\xF2\xC1\xB8\x49\xDE\x0E\xC2\x04\xC7\x67\x1E\x1C\xBB\x3E\xE5\x4B\xA6\x58\x9C\x9F";"\x23\xEC\x12\x86\x3D\x92\xD0\x04\xFD\xA5\x12\xAF\x76\x96\xC2\x46\x8D\x5B\x10\x93";"\x02\xB6\xBC\x61\x8D\xE6\xFE\x0C\x8F\x92\x38\xC4\xF6\x31\x75\x79\xE6\x0A\x38\xA7\x4E\x77\xAF\xCA\xEE\x74\x90\xAD\x1C";"\xA3\x21\xC4\xEC\x31\x4D\x6E\xE5\x0C\x2D\xA0\x57\x8C\xA1\xC9\xE4\x71\xED\xB5\x10\xD8\x1B\xD8\x5A\x56\xF8";"\xE0\x63\x8E\x50\xF4\x90\xA5\x2B\x42\x7B\xD8\x01\xDF\x25\x18\x71";"\xD2\x14\xEB\x25\xCB\xA5\xBE\xD6\x5B\x46\xEA\x1C\xB8\x70\x30\x31\xAA";"\x7F\xD3\x28\xDD\x1D\x10\x1B\xB5\x20\x10\x45\xAA\x5B\x8A\xE8\x8F\x08\xA0\xDD\x72\x2F\xB0\x5C\x74\x3B\xCE\x44\x47\xE7\x51\x28\xD3";"\x04\x4D\xB0\x48\xCC\xB6\xD8\x5A\xF2\x9E\x4A\x39\xBC\x10\x7E\x7D\x92\x17\x19\xB8\xBA";"\x7A\xD0\x1E\xC1\x13\x15\x10\xB8\x22\x06\x56\xDC\x41\xC5\xB7\xDF\x1B\xFB\xD2\x7E\x61\xFA\x5C\x30\x63\x92\x15\x1E\xB3";"\xE5\x66\x96\x2B\xF3\x8B\xAB\x2B\x4F\x70\xDA\x0F\x81\x6E\x4F";"\x0D\x5D\xB7\x72\x8B\xEB\x87\x04\x97\x96\x22\x26\x8B\x2D";"\x17\xDF\xA6\x62\xBC\xFA\xFB\x1E\x90\xBB\x2E\xC4\xF1\x30\x7D\x69\x8B\x00\x7D\xC9";"\xA5\x36\xAB\xFF\x58\x30\x6E\x8D\x10\x2E\xA5\x58\x81\xA8\xC4\xFE\x6B\xEB\xB3\x12";"\x03\xDA\xDF\x19\xE8\x95\xF3\x5B\xD4\x81\x6E\x26\xB2\x7D\x6F\x30\x90\x07\x2C\xAE\x42\x72\xAE\xCB";"\x97\x3D\x33\x80\x0C\x7C\x7A\x96\x17\x19\xAA\x58\x66\xB0\xF7";"\xDB\x06\xE4\x13\xDB\x54\x49\xC2\x71\x4A\x85\x77\xAF\x4A\x22\xC5\x51\xD1\xD0\x60\xFD\x20\xF5\xBE\xB6";"\xB2\x57\xF7\x5F\x9B\x9A\x94\x38\xBD\x87\xD5\x3F\xCA\x14\x6F\x0F\x84\x24\x08\x5A\xDF\x05\xC3\xE2\xEB\x0F";"\x39\x99\x5E\x9C\x41\xD1\xD7\x78\xE3\xCC\x09\xE2\x15\xCC\xA0\x41\xCD\x6B\x5F";"\x88\x2D\xCB\xF2\x31\x71\x76\xE4\x07\x24\xA5\x48\x85\xA2\xCE\xE3\x69\xF0\xB6\x18\xCC\x00\x29\x59\x52\xFD\x77\x3E\x8E\x78\x87\x54";"\x5A\xF1\x1F\xB0\x7F\x32\x34\xA5\xC9\xF7\x12\xF3\x40\xB7\x95\xC4\x51\x56\x0C\xA7\x01\xB7\x1F";"\x32\xE6\x08\xB3\x79\x08\x22\xA8\xD5\xE8\x5C\x90\x4A\xE2\x86\x98\x20\xF7\x21\x85\x41\xCF\x43\x45\x05\xEC";"\x9B\x32\x36\xFF\x33\x75\x72\x99\x01\x24\xAF\x4F\x77\xA9\xD4";"\xA0\x2F\xCD\xF5\x2A\x49\x61\xE3\x1C\x2E\x9A\x53\x85\xA7\xC5\xDC\x7E\x9F\xB7\x4A\xF8\x5A\xDB\x39\x4F\xFD";"\xEF\x09\xF4\x43\xBE\x52\x15\xAC\x7C\x2F\xC2\x34\xF9\x57\x72\xAB\x5D\x9F\xC0\x65\xEA\x46";"\x6F\xB2\x10\xF2\x73\x61\x2F\xA5\xCA\xE5\x55\x92\x50\xFB\x82\xA0\x34\xB7\x79\xD5\x73\xC0\x5F\x1E\x7F\xB7\x21\x02\x4A";"\xF8\x56\xAB\x51\x9E\x98\x8B\x04\xA1\x85\xC1\x2F\xEE\x0B\x23\x0A\x87\x2A\x1A\xBF\xBF\x64\x9A";"\x0F\x9D\x7F\xC5\x19\x7E\x3C\xD9\x78\x89\x3B\x90\x25\xE2\x96\xFC\x7A\xC4\xEF\xC4\x6F\xA8\x5C\x18";"\xDF\x69\x82\x37\xFB\xB6\xB4\x27\x49\x6C\xE6\x07\xCD\x76\x14\x39\xA6\x34";"\x14\xBD\xBD\x6C\x84\xEC\xFA\x7A\x9F\xC1\x29\x84\xFC\x52\x74\x76\x99\x07\x23\xA1\x56\x75\xAA\xCB\xE1\x6F\x80\xDD\x03\x92\x06\x48";"\x47\xEF\x76\x9A\x47\x2B\xCC\x4A\xE8\xCB\x76\xFF\x20\xC6\xA3\xBD\xBB\x41\x1F\xF0\x6A\xA4\x7E\x34\x3A\xA0\xC5\xE0\x7E";"\xEE\x54\x90\x43\xE6\x86\xA7\x2C\xA8\x65\xD4\x1E\xDB\x13\x15\x11\xA7\x39\x02\x4A\xA0\x59\x94\xEE\x83\x03\xB3\x8C\x3B\x37";"\x6B\x9C\x04\x82\x58\xDA\xD5\x7B\xE3\xC3\x06\xEC\x14\xC9\xBA\x48\xC8\x69\x53\xF9\x7F\xA2\x43\x34\x4E\x3D\xB9\xB6\x7F\xD4\x29\x9C";"\x0C\x4D\xA3\x58\x87\xED\xE5\x16\xED\x8D\x55\x37\xEC\x06\x66\x79\x90\x1A\x1B\xB8\x55\x7F\xB9\xFA";"\x92\x33\xC5\xEC\x31\x73\x75\xE5\x0F\x27\xA1\x42\x23\xBD\x8A\xBE\x3D\xD5";"\xE7\x6C\x8F\x31\xE7\xE2\xB0\x6D\x4A\x1B\xC2\x1F\xCC\x61\x01\x1E\xB5\x20\xE3\x4F\xA8\x51";"\xB4\x12\xF7\x1F\xD4\x55\x52\xC7\x66\x40\x9A\x06\xBF\x27\x3F\xAA\x42\xF7\xD5";"\x97\x4E\xA4\x59\x9E\x98\x95\x05\xBA\x81\xC7\x24\xE4\x08\x6E\x6A\x84\x41\x56\xBB\xD3\x7B\x83\xFA\xFB\x1C";"\x32\xCC\x45\x17\xDA\x91\x87\x1F\x93\xEC\x11\x82\x17\x43\x57\x30\xFC\x15";"\x6B\xC3\x3C\xCB\x45\x85\x87\x38\xB1\x90\x5A\xAD\x03\x9F\xF1\x1D\xD9\x3F\x05\xBB\x20\xF1\x1D\x62\x24\x4F\x82\x99\x62\xEE";"\xA0\x55\xC1\x2C\xB9\xF6\xCC\x38\xED\x6C\x82\x7C\x8C\x07\x18";"\xC4\x79\xF5\x28\xC7\xAE\x2C\xDC\x4D\x5D\xF6\x76\xB8\x7C\x38\x2F\x5F\xCD\xE4\x6A\x8D\x33\xF3\x80";"\xE1\x61\x8C\x34\xF0\x8D\xAA\x26\x4A\x78\xDB\x1B\xCD\x62\x0F\x27\xB9\x5D\x95\x5A\xDA\x5E\xF0\x9E\x97";"\x8D\x18\xF1\x2B\xF8\xBF\xB1\xDB\x5B\x66\xE0\x0E\xA2\x7B\x08\x2E\xA5\xCA\xE5\x67\x82";"\x07\x4C\xCB\x39\x9E\xD0\x8E\x6D\xAC\x8D\xCA\x32\xEC\x0F\x60\x07\x9B\x14\x03\xB4\xBD\x67\xBE\xFF\xF5\x19\x9B\xCC\x34\xAC";"\x93\x24\x4F\x88\x54\x12\x74\xDC\x08\x54\xA2\x3B\x6C\xB6\xF0\xE4\x65\x88\xAD";"\x4C\xBB\x74\xCF\x5E\x23\x3E\x51\xDA\xD2\x71\x9A\x3E\xFA\xB6\xBA\x26\x47\x0B\xFC\x48\xB0\x06\x0C";"\x2B\xA8\x4A\x72\xB3\xD4\xEC\x6B\x8B\xA8\x1C\xD2\x16\x2D\x42\x5A\xF6\x77\x3D";"\x85\xCE\x22\xD2\x13\x6E\x10\x9D\x31\x08\x42\xB2\x6F\x87\xE4\x99\x0B\x8D\x8A\x31\x3C\xF4";"\x2D\x90\x57\x9D\x5D\xDC\xDC\x7C\x88\xCE\x09\xEE\x17\xD1\xAE\x4B\xD0\x6F\x4A\xFA\x77";"\x94\x32\x3F\xEB\x39\x7A\x7A\x9E\x05\x25\xAC\x43\x74\xB1\xF4\xFC\x22\xD5\xFE";"\xD4\x6E\xFC\x29\xF9\xBC\xBB\xD9\x51\x53\xEA\x03\xB2\x70\x31";"\x72\xCC\x38\xC3\x1B\x11\x15\xBA\x27\x03\x5D\xC6\x5E\xD5\xF7\xCD\x0B\xC3\x99\x3C\x35\xE0\x01\x61";"\xCE\x78\xF0\x26\xC3\xB8\xBA\xD1\x5B\x5C\xF1\x08\xAE\x3D\x30\x59\x41\xC1\xE6\x64\x8D\x32\xE9\x94\xAF\x2A\x48\x76\xD8\x15\xA9";"\xE9\x60\x9A\x40\xE5\x99\xB9\x2E\xAC\x70\xD6\x1E\xD9\x1A\x1F\x0C\xBD\x3E\x03\x4F\xA8\x56\x94\xEA\x88\x01\xA6\x84\x3E\x3B";"\x4A\x81\x6B\xB4\x4B\x25\xC3\x48\xD0\xD4\x16\xF7\x23\xF9\xB8\xB1\xD8\x5D\x5A";"\x38\x98\x5A\x9E\x5F\xD6\xD3\x6D\xA3\x9C\x52\xB6\x45\xDF\xF3\x44\xC7\x0B\x5F\xAA\x2A\xB5\x18";"\xDD\x1D\xDE\x06\xDF\x56\x51\xFD\x72\x54\x8F\x6E\x95\x57\x23\xCF\x28\xF0\x88\x01\x99\x35";"\xED\x6A\x8D\x33\xED\x80\xAC\x23\x4C\x67\x8B\x0E\xC4\x61\x10\x1C\xB4\x36\xF8\x59\xA8";"\x19\xEE\x68\xBA\x7F\x36\x34\xA1\xC9\xF5\x66\x87\x4D\xE8\x8A\xA0\x43\xB8\x6E\xDB\x19\xC0\x61\x1D\x13";"\x81\x34\xCB\xFF\x31\x72\x71\x8F\x6C\x2A\xE6\x5D\xC8\xA1\x96\xF2\x28\x9A\xF5\x05\xAA";"\x5F\x89\x61\x93\x4E\x29\xC3\x4E\xE9\xD0\x7B\xEA\x3F\xDF\xBC\xB9\xD7\x59\x5A\xF2\x1B\xA4";"\xB9\x09\xFF\x07\xD1\x57\x47\xC6\x6B\x4F\xED\x73\xC4\x0E\x21\xAE";"\x09\x1D\xC1\x14\x8D\x83\x89\x0C\xAD\x8B\x3C\x3C\xE4\x0D\x65\x6A\x96\x1A\x1C\xB9\x45\x7F\xBA\x9F\x9F\x58\x85";"\x4B\xFD\x55\xF7\x55\x99\xDD\x14\xF7\xC8\x18\x89\x04\xC9\xFD\x5E\xB2\x01\x5B\x8C\x37\xC5\x4C\x5C\x22\x07\xD9\xB0";"\x0F\xB5\xAE\x73\x9B\xE6\x87\x10\x90\x9C\x30\x27\x91\x22\x38\x76\xF5\x04\x25\xA2\x49\x72\xB3\xCE\xEB\x68\x9B\xA6\x1E\xD1\x03";"\x3D\x98\x7B\x9B\x5A\xD1\xD2\x7A\xE4\xA8\x0F\x80\x57\xCC\xC4\x40\xC8\x68\x51\xF9";"\x70\xDA\x03\x95\x41\x4C\x08\xEF\x67\xAB\x5E\xF0\x0B\xC0\x85\xDA\x59\xF6";"\xE3\x66\x99\x4B\xE8\x81\xBF\x34\xAA\x74\xD3\x1D\xC1\x1F\x1E";"\x0B\x4E\xAB\x68\x8E\xE5\x9D\x63\x98\x92\x3F\x38\xE8\x08\x79";"\x31\x9F\x59\xF0\x40\x99\xD5\x14\xE7\xC1\x01\xEA\x1F\xD5\xA9\x51\xC7\x67\x4E\xFD\x76\xAA";"\x6E\xB9\x04\xBB\x1F\x06\x68\xCA\x23\xA8\x32\xBF\x1B\xE8\x8B\xC6\x1D\xFB\x94\xA2\x50\xF0\x56\x70\x44\x92\x7F";"\x51\x94\x15\xAB\x05\x38\x51\x49\xDE\xD9\x6C\x86\x38\xF6\xAA\xA9\x3C\x41\x6C";"\x6C\xE8\x06\xC6\x69\x6E\x28\xB0\x36\xFC\x5E\x99\x46\x97\x83\x9A";"\x1A\xE0\xA1\x60\xB4\xF9\xF4\x1D\x93\xA3\x32\xCC\xF6\x31\x4A\x6D\xEC\x0F\x3D\xCA\x5E\x96\xA1\xC0\xE8\x71\xF1\xBB\x0A\xC6\x01\xDC";"\x37\xB0\x31\xF9\xF6\xAA\x94\x78\xF0\xB5\x65\x85\x6E\xCF\x07\x42\x97";"\x16\xF2\x13\xDD\x0A\x62\x5E\xD5\x6E\x93\x51\xF3\x14\x8D\x84\x8A\x5A\xB3\x66";"\xE6\x24\xDE\x47\xDD\x90\xF9\x3D\xA7\x81\xCC\x2A\xD0\x0D\x72\x08\x89\x2C\x18\xBE\xB7\x67\xEE\xE9\xFD\x11\x98\x98";"\x5D\xF4\x00\xBB\x70\x32\x2C\xE7\xCC\xFA\x67\x85\x49\xE5\x8C\xA1\x34\x4B\x7A\xDD\x11\xC0\x65\x06\x68\xB9\x3E\xFD\x4F\xA0\x5D\x91";"\x35\xA4\x49\x8D\xA3\xC8\xE2\x03\xF8\xB6\x1F\xD0\x08\x25\x5E\x52\xE6\x66\x23\x84\x64\x9B\x55";"\xC5\x0D\xE3\x16\xCB\xA0\x51\x8E\x6B\x24\xFF\x74\xAC\x40\x23\x3A\x50\xDA\xDA\x78\x95\x37\xF0\xB7\xB7\xD8\x4F\x64\x89\x06\xE5";"\x33\x99\x50\x8E\xA4\xC7\xDD\x6B\xF7\xBD\x14\xDE\x17\xD9\x3E\x58\xFA\x67\x42\x88\x6C\x93";"\x75\xD2\x1A\xD4\x09\x1C\x16\xB8\x3C\x03\x49\xAA\x3B\x8D\xAE\x88\x6F\xB2\x8C\x3C\x3A\xEB\x01";"\x73\xD2\x1F\xD4\x15\x14\x0E\xD2\x57\x42\x44\xE3\x0D\xDC\xBC\xE1\x72\xC2\x80\x56\x23\xBE\x5A\x24\x54\xC8\x46";"\x16\xCE\x24\xDA\x1E\x1E\x18\x80\x27\x0F\x40\xBB\x6D\x8A\xEA\x82\x07\x91\x9A\x38\x54\xEC\x56";"\x54\xA2\x6F\xF0\x5A\x63\xC3\x3A\xCD\xDB\x70\xFC\x3E\xFA\xBA\xA9\xC6\x58\x60\xED\x0B\xB2\x76\x0D\x32\xC6\xD2\xAA\x5F\xFF";"\x26\xAC\x4E\x70\xAA\xA2\xE4\x14\x90\xAD\x1E\xD7\x01\x2A\x45\x5D\xED";"\x34\x91\x64\x98\x51\xBD\xCC\x18\x9F\xCA\x04\xE8\x2E\xCA\xAB\x45\xCA\x6F\x57\xF8\x7E\xA7\x46\x3A\x27\x55\xD6\xD9\x6F\x83\x27\x8B";"\x66\xFC\x61\xAB\x29\x0C\x4D\xB5\xCF\xF1\x50\x92\x45\xE6\x86\x85\x28\xB8\x7C\xDB\x27";"\x13\xBD\xB6\x66\x8A\xE6\xE5\x08\x9A\x9D\x31\xCB\xFB\x30\x69\x34\xE0\x6A\x26\xA6";"\x2D\xA7\x4D\x8A\xAB\xC9\xE3\x6C\xF5\xB4\x18\xDD\x1C\x27\x5C\x5D\xFA\x7D\x3F\x91";"\xA6\x21\xCD\xE3\x33\x48\x6E\xED\x06\x2A\x9D\x5B\x9B\xF7\xCA\x85\x61\xA1\xE6\x43\xCE\x49\xCB\x38\x59\xE3";"\x83\xC5\x22\xDB\x0B\x67\x64\xE4\x25\x54\xBD\xDD\x79\x84\xE4\xFA\x15\x9A\x9C\x2F\xD9\xE4\x3F\x71";"\x57\x19\xF3\x7F\xDF\xBF\xC6\x58\xCD\xC2\x2B\x6B\xEC\x3E\x7F\x7E\x9B\x10\x1A\xAF\x41\x74\xBD\xE0\xEE\x67\x85\xAF\x20\xD4\x0D";"\x36\x85\x66\x81\x54\xD0\xC6\x42\xEA\xC9\x09\xE9\x61\xC7\xA7\x40\xCD\x54\x51\xFE";"\x53\xFA\x71\xA2\x43\x56\x30\x0E\xC4\x98\x71\xE9\x25\xF1\xB3\xB3\x20\x47\x64\xFD\x0B\xCE\x6F\x09";"\xBE\x0F\xE6\x11\xD4\x54\x4D\xCE\x6E\x4B\x83\x74\xAF\x41\x26\xCA";"\xCA\x00\xE7\x2B\xCC\xAF\x4C\xC7\x49\x18\x8E\x34\xB8\x08\x34\x70\x11\xC6\xC7\x20\xC4\x37\xBE";"\x86\x0B\x83\x0B\xD4\xAC\x4F\xC0\x6B\x4F\xE1\x6B\xB6\x43\x21";"\xA0\x29\xCB\xF1\x2A\x4B\x6D\xE6\x0D\x24\x9B\x3E\x92\xE2\xC5\x8A\x6C\xF7\xB8\x1E\xD9\x1C\xDA\x47\x53\xFE";"\xAA\x09\xEF\x15\xD0\xAF\x44\xC1\x6E\x4E\x96\x71\xAF\x4E\x26\xC8\x57\xD8\xBA";"\xFD\x52\x9E\x44\x84\x85\x9F\x39\xBD\x77\xCA\x21\xCC\x73\x6B";"\x7A\xDB\x02\xC8\x64\x1C\x13\xB2\x38\x93\x20\xD2\x46\xC4\x9B\xCE";"\xD3\x76\xB3\x67\x28\x27\x46\x86\x6A\x6C\xCC\x1C\xCA\x03\x85\xC5\x1F\xE9\xC9\x19\x8A\x02\x8B\xF0\x1D\x94\x79\x0B\xF3";"\x55\xF4\x7A\xA1\x7E\x3B\x36\x4D\xD9\xE9\x6E\x87\x31\xF0\x8D\xA9\x39\x4D\x68\xE4\x1A\xC1";"\xF2\x33\x57\x94\x6F\x20\x1E\x9F\x6B\x74\xA9\x24\x17\xA1\xEA\x81\x22\x92\xA3\x35\xAE\x5E\x6B\x3E\x0B\x80\x2E";"\x64\xEC\x04\xB3\x6B\x0E\x20\xBD\xCA\xF1\x5E\x92\x4E\xE4\x98\x9C\x29\xEA\x71";"\xF0\x24\x8D\x24\xE9\x82\xA6\x2D\xB0\x7C\xDF\x18\xD5\x1E\x19\x19\xB2\x39\xFD\x4D\xC8\x58\x97\x9C\x8C\x03\xA7\x89\xC1\x2D";"\x16\x46\xB6\x61\x8F\xE0\x81\x0E\x8E\x8B\x31\x3E\xE1\x35\x7A\x72\x81\x02\x3D\xAE\x4F\x7F\xB3\xCA\xE9\x7E\x89\xAB\x20\xDB";"\x23\xAE\x46\x77\xB4\xC9\xED\x60\x8C\xA4\x1C\xCE\x09\x21\x45\x60\xF7\x78\x24\xEA\x46\x99\x5C\xDA\xD0\x77\xE1\xD8\x17";"\xC8\x15\xFA\x7C\xDA\xFF\xBF\xBE\x5A\x5C\xF1\x0A\xBF\x72\x2D\x36\xA2\xC3\xEF\x66\x8F\x20\xF0\xC9\xA5\x44\x57\x77";"\x6F\xE7\x0B\xCA\x69\x18\x26\xAF\xC3\xF5\x5B\x9F\x44\xE4\x8A\xDE\x6C\xEA";"\x71\xB8\x11\x94\x76\x5A\x14\xD3\x3F\x06\x4E\xA4\x54\x9A\xEB\x8F\x01\xB9\x8D";"\xD5\xDC\x47\xF3\x68\x7F\x45\x94\x56\x41\xFF\xFF\x22\xE1\xE8\xA9\x02\xFE\x83";"\x31\xBD\x4E\x8F\xAA\xC2\xE0\x6A\xFD\xAD\x02\xAE\x6B\xB5\x35\x55\xBF\x69\x4B\x92\x21\x97\x3F\xDC\xCA\x45\xE2\xCB\x05";"\x3C\x91\x42\xEE\x53\xDE\xD8\x7F\xFE\xC9\x0C\xFD\x1C\xDA\x53\x4E\xC4";"\xFE\x38\xA3\x58\x92\x99\x96\x0B\xA1\x84\xC0\x25\xF8\x08\x6A\x02\x8E\x23\x15\xBD\xD5\x6B\xDA\xE2\xBE\x16\xF4";"\xA2\x61\xD2\x27\x8D\xA7\xE0\x2C\x3B\x78\xB6\x50\x98\x7B\x04\x2C\xAE\x33\xFB\x58\x9D\x5C\xE1\x99\x9C\x3E";"\x59\xEF\x0B\xD6\x1B\x6C\x3C\xF7\xCD\xE5\x11\x9E\x1D\xF7\xCC\xA9\x2F\xB1\x75\xDD\x18\xC2";"\xD0\x7E\xFF\x23\xC4\xBB\xB2\xD1\x4A\x59\xEC\x03\xBB\x75\x3F\x33";"\x08\x47\xB3\x6E\x8D\xE0\x81\x1C\xC8\xD7\x24\x3A\xE3\x3E";"\xB5\x62\x88\x63\xE4\xF2\xA2\x62\x52\x3B\xBF\x44\xDE\x2E\x12\x62\xA1\x70\xE5\x0B\xD9\x53\xDE\x8F\xDE\x34\xBE\x89\xC7\x2F\xDC";"\x5C\xEE\x00\xB2\x76\x34\x32\xA8\xAD\xE5\x1A\x96\x51\xE9\x88\xA6\x2A\xB4\x7A\xC7";"\x60\xDB\x15\xCB\x6E\x03\x24\xAC\x37\xFE\x57\x96\x58\x99\x80\xFF\x2C\xAF\x91\xA7\x24\xCC\x11\x6C\x02\x8A\x29\x07\xA6";"\x5E\x5F\xF7\x59\x92\x95\x85\x01\xAD\x89\xC3\x36\xF4\x09\x61\x03";"\xFA\x5F\x9E\x41\xE3\x81\x98\x33\xB6\x7C\xCB\x24\xDE\x11\x1F\x17\x84\x29\x0C";"\x4C\xF9\x74\xAC\x40\x24\xC2\x53\xCC\xB3\x65\xF8\x2E\x96\xB1\xA9\xDC\x45";"\xFD\x55\x9D\x5D\x9D\xFE\x98\x66\xBC\xC0\xC9\x41\xD3\x06\x61\x09\x8A\x2D\x0F\xB6\xBC\x70\x86\xE2\xF8\x16\x97\x9F\x37";"\xDF\x74\xFF\x38\xF8\xBC\xB6\xC2\x42\x7F\xE1\x0D\xB5\x75\x0A\x2F\xBD\xC1\xE0\x41\x92\x4E\xE1\x83";"\x2F\xEB\x45\xE0\xBC\xB3\xC7\x18\xE2\xFA\x11\xAD\x03\x91\x4A\x24\xDC\x2A\x55\xF8\x73";"\x1F\xF0\x6A\xB1\x7A\x34\x33\xA2\xC7\xE3\x62\x8F\x27\xE9\x89\xA7\x2C\x48\x74\xD9";"\x08\x40\xAE\x6C\x89\xEF\x82\x08\x9C\x9A\x3D\x30\xFD\x04\x7C\x73\x92\x18";"\x97\x30\xC1\xF7\x3C\x75\x77\x9D\x04\x38\xBC\x56\x76\xAE\xC9\xEA\x6B\x8D\xA9\x75\xA8\x09\x78\x5C\x2D\x88\x61\x4F\xEC\x78\xCF\x26";"\x35\xA3\x4A\x8B\xAE\xC5\xE1\x77\x98\xAA\x5E\xDB\x6A\x22\x5D\x58\xFB\x78\x3A";"\x03\x4A\xB9\x6B\x95\xF9\x9E\x11\x95\x94\x30\x35\xE1\x24\x62\x0B\x80\x06\x25\xA8\x4F\x71\xB4\xCD\xF0\x7D\x91\xAF";"\xD8\x88\x7F\x89\x59\x78\x59\x86\x28\x0F\xB8\xBC\x64\x87";"\x09\xE1\xB2\x62\xBB\xF3\xF6\x1F\x87\xA2\x2B\xD1\xF1\x2D\x48\x60\xEE\x0B\x26\x9B\x59\x84\xA5\xCC\xDF\x74\xFB\xBC\x12";"\xD0\x77\xF5\x23\xE0\xA6\xAB\xDA\x5A\x60\xEB\x00\xB1\x6B\x12\x6E\xA8\x97\xF4\x3E";"\x0A\x2C\xAF\x6A\x83\xE5\x82\x08\x9C\x91\x33\x3B\xF4\x01\x7F\x7C";"\x27\xAA\x49\x77\xB2\xCF\xEC\x62\x8F\xB0\x04\xCE\x0C\x2F\x43\x65\xF2\x74\x21\xE3\x53\xF6\x43\xC5\x90\x7C\x8E\xC7\x0A\xE9";"\x1D\x00\xA9\x38\x87\xE6\x80\x0E\xA0\x8B\x22\x3F\xED\x0A\x63\x7B\xFB\x01\x5F\xB0\x2A\x7D\xB9\xF8\xF6";"\x84\xCA\x36\xE9\x04\x64\x06\x96\x0C\x10\xB3\xB5\x7E\xB5\xFA\xE7\x5A\x97\xF4\x42\x8F\x9B\x45\x21\x00";"\x6A\xDC\x3C\xD2\x7B\x07\x54\xDB\x28\x76\x58\xAE\x69\xF1\x91\x84";"\xCD\x08\xF1\x2C\xCF\xA6\x41\xD9\x56\x52\xF1\x7E\xA1\x7B\x37\x38\x45\xDB\xE2\x67\x8F\x33\xF6\xB6\xA5";"\xBB\x54\xCD\x5F\x34\x1A\x6E\xA2\x6A\x32\x94\x55\x81\x5D\xDC\xCB\x7C\xFA\xC8\x0B\xE7\x16\xCE\xAC";"\xC4\x36\xA4\x8B\x28\x03\x11\xFE\x60\x54\xAC\x06\xE5\xE9\xBC\x8F\x2C\x89\xB8";"\xC4\x02\xE9\x14\xD4\xC3\x4B\x9E\x00\x15\xFA\x1C\xA2\x45\x32\x38\x5D\xDF\xC1\x76\x85\x31\xF4\xB4\xB9\x4F\x2C\x23\xE4\x66";"\x55\xE7\x7C\xA3\x47\x30\x32\x58\xC7\x8F\x60\xE3\x51\xB5\xDB\xD8\x2D\x3E\x71\xFD\x0E\xCF\x6A\x0A\x21\xA4\x33\xE9\x43";"\x92\x3B\x3D\xE5\x3F\x6D\x79\x9C\x1B\x17\xAD\x41\x72\xB0\x98";"\x53\xD1\x21\x0D\xA6\xA3\xB3\x04\x9C\xE3\x60\xA3\x1A\x45\x28\x0F\xAF\x26\x20\x99\x26\xF6\x45\xCC\xC2\x22\x8C\x85\x5D";"\xF3\x56\xA3\x5B\x9A\x96\x97\x21\xA2\x86\xC4\x2A\xD1\x08\x73\x74\x91\x35\x17\xBE\xB2\x64\x83";"\x58\xF0\x04\xBA\x7B\x35\x36\x54\xC3\xE0\x60\x8D\x2E\xF6\x92\xA8\x28\x48\x79\xD9\x17\xDD\x7F\x79\x04\xAB\x3C\xFA";"\xDF\xAE\x2A\xB9\x78\x72\x17\x97\x40\x43\xD8\xD1\x6C\xF2\xE9\xE1\x07\xFC\xE6\x47\x9F";"\xD7\x69\x57\x8F\x23\x3F\x1F\x86\x10\x56\xAB\x2B\x18\xDF\x98\xFE\x27\xDE\xCB\x30\xCD\x1B\x48\x04\x15\xA0";"\xA8\x1A\xD2\x1C\x49\x28\x1B\xF5\x19\x27\x93\x63\x9B\x59\xD4\xDB\x67\xE5\xC6\x01\xE8\x13\xCB\xC2";"\x19\x0A\xAB\x0F\x8B\xD3\x90\x75\xB4\xE1\xCF\x67\x82\x4D\x0C\x47\x91\x7D\x0B\xB7\xBE\x64\xBC\xFD\xF1\x05";"\xA0\x47\xD5\xB5\x32\x22\x6E\xED\x0E\x29\x9E\x5D\x91\xB8";"\x82\x29\xC6\xF4\x33\x75\x6C\x8A\x1E\x6E\xA3\x3B\x93\xAF\xC2\xEB\x6C\xFE\xB7\x09\xC3\x1E\xD8\x5F\x50";"\x3C\xAF\x4F\x76\xB1\xCC\xE9\x7C\x90\xA8\x22\xD4\x08\x24\x44\x7B\xF3\x72\x35\x94\x5F\x94\x59";"\x71\xD1\x1D\xD8\x1F\x13\x0C\xF9\x7C\x51\x15\xBA\x01\x82\xEC\x8C\x0F\xA8\x8B\x3F\x34\xF8\x05\x65\x78\x91";"\x7A\xD1\x73\xC0\x70\x58\x16\xD5\x26\x03\x4D\xA9\x59\x95\xED\x8B\x03";"\x52\xB7\xD7\x60\xBA\xF9\xF0\x18\x9E\xBC\x2A\xC0\xF0\x36\x4A\x6E\x88\x15\x68\xA1";"\xD4\x72\xF5\x26\xF4\xBF\xA6\x9C\x59\x0A\xEA\x07\xB3\x70\x0D\x28\xA4\xCE\xEB\x67\x87\x41\xE0";"\x4E\xFC\x78\xA2\x43\x3C\x32\x42\xB3\xC2\x29\x86\x51\xF4\xBE\xAD\x26";"\x56\xF2\x7C\xA0\x79\x31\x2D\x5D\xDE\xDE\x6B\x8C\x3D\xF6\xD8\xC2\x2A\x06\x68\x8A";"\x6B\xDE\x10\xA8\x09\x08\x5B\xB5\x59\xE7\x56\xA8\x5A\x90\x96\x9A\x21\xBF\x98\xC3\x23\xD7\x07\x67\x0D\x90";"\x73\xDA\x1B\xC1\x1C\x10\x0D\xBB\x3A\xF9\x46\xAD\x5D\x9C\x9C\x93\x7A\xBA\x8D\xC6\x30\xE8\x0A";"\x45\xB4\x7D\xD4\x67\x35\x35\x59\xC5\xE1\x63\x91\x36\xEF\x8C\xAA\x2A\x49\x02\xD3\x14\xC0\x60\x03\x1A\xB1\x36\xFA\x53\xA1\x5F\x9E";"\x2D\x9D\x55\x81\xA1\xC7\xC4\x6A\xF0\xB9\x11\xE3\x1C\xDB\x3F\x4E";"\xDA\x43\x2D\xB6\x07\x6B\x03\x88\x0E\x1E\xB5\xBE\x7A\xB2\xF1\xE8\x05\x99\xA2\x22\xCC\xF6";"\xD0\x4B\xE4\x7F\xCE\x5D\x4E\xC4\x6A\x4D\x80\x6A\xA0\x4A\x23\xCB\x51\xD4";"\x8D\xC3\x35\xE8\x08\x77\x0B\x8B\x14\x16\xB0\xB2\x64\xD3\xF4\x92\x5D\x9A\xCB\x2E\xCF\xFD\x35\x71\x6A\xE7\x0A\x2E\xA3\x44";"\xA5\x2F\xCB\xEB\x32\x4D\x6C\xE0\x08\x2F\x80\x2E\x93\xBB\xC6\xE3\x70\xF1\xB1\x10\xC5\x1A\xDD\x5F\x55\xFA";"\xB1\x1D\xD2\x01\xD8\x5F\x5D\xF8\x78\x55\x8E\x66\x9C\x50\xD0\xCE\x4F\xED\xDB\x46\xF3\x42\xC9\xA9\x44\xD5\x52\x52\xF3";"\x8A\x5D\xE4\x57\xC3\x9A\x83\x6A\xB3\xC9\xCD\x68\xFF\x5B\x3D\x51\x9D\x54\x04\xFC\xB7";"\xC3\xC4\x46\xEC\x04\x6E\x0E\x89\x2A\x0F\xB8\xB0\x65\x88\xFA\xFE\x79\x83\xDF\x52\xCE";"\x8E\x3A\x33\xEF\x02\x7A\x19\x8C\x14\x1B\xB1\xBD\x7D\xB8\xE5\x99\x73\x88";"\xC4\x0B\xF7\x2D\xC4\xB5\x43\xD3\x53\x5E\xF6\x7A\xBE\x75\x2D\x73\x5D\xB1\xFF\x6B\x8B\x3F\xF6\x89";"\xFA\x56\xF2\x52\xCC\xF8\xD1\x3F\xCF\x99\xC8\x29\xD2\x0B\x6B\x01\x97\x31\x12\xBD\xB6\x67\x82\xE1\xFA\x0E";"\xC6\x70\x85\x3F\xF4\xB3\xAF\x24\x5A\x70\xFC\x07\xC9\x6B\x0B\x26\xA4\x32\xF2\x5C\x8F";"\x26\xA2\x4D\x77\xB1\xC1\xF6\x6E\x86\xAA\x19\xD1\x0A\x48\x4B\x05\xE8\x37\x3B\xFB\x42\x99\x5C";"\xFB\x1D\x9D\x3D\xFF\xD1\x97\x75\xA1\x2F\xCE\x73\x94\x01\x6E";"\xC0\x70\x87\x3E\xFC\xB9\xBB\x24\x42\x62\xE4\x04\xB4\x6E\x06\x36\xFA\xB5\xFC\x0E\xFC\x23";"\x67\x85\x36\x8F\x0B\xCE\x80\x75\xFE\xC5\x01\xEE\x1F\xD2\xA8\x4F\xC3\x79\x4D\x81\x70\xAA\x46\x27\xC8\x57\xC1\xA3\x6A\xAC";"\x29\x9D\x50\x8D\xAC\xCC\xB2\x6B\xB5\xA6\x68\xFC\x6A\xD4\x2F\x4A";"\xDE\x79\x82\x38\xF5\xB6\xB2\x25\x48\x60\x8A\x12\x88\x69\x67\x2D";"\xFB\x40\x2C\xE7\x10\x67\x6F\xF5\x16\x4D\xD4\x37\x0F\xC6\xF8\xE5\x13\x92\xD1";"\xD9\x79\xF9\x21\xFF\xB8\xBF\xDD\x50\x5A\xEB\x0C\xBC\x74";"\x9B\xC2\x2B\xD6\x0D\x66\x07\x98\x58\x1C\xE3\xAF\x39\x9E\xA9\xE4\x71\x91\x9F\x33\xC5\xFA\x32\x75";"\x3B\x97\x5C\x96\x37\xBE\xD8\x39\xE6\xAF\x16\xEB\x14\xC7\xAC\x49\xCA\x74\x57\xE3\x74\xA1\x4C\x21";"\xF4\x5E\x8D\x47\xE9\x9C\x9D\x30\xBC\x7A\xCD\x33\x9F\x14\x7C\x0C\x80\x20\x0B";"\x46\x80\x6F\x86\x4F\x2A\xCB\x4D\xE8\xD8\x78\xF4\x2A\xCE\xA5\xB9\xD0\x5C\x59\xF1\x02\xA4\x60\x2C\x30\xA0\xC2\xE5\x6C\x8D";"\x76\xD8\x17\xCD\x62\x0C\x1E\xAF\x61\xA4\x01\xF0\x05\x88\xF7\x9E\x6B\xBE\xC2\xDC\x70\x8D\x5E";"\xB3\x0A\xD5\x07\x20\x44\x5F\xFE\x7A\x56\x8E\x25\x9B\x33\xCC\xD5\x40\xEF\xC0\x03\xEA\x09\xCB\xAD";"\xA2\x2F\xC4\xF4\x3B\x4E\x64\xEB\x11\x2A\xA4\x57\x8F\xA4\xC4\xFB\x70\xF5\xB2\x1E";"\x9E\x2B\xF4\x46\xAB\xC4\xA3\xDF\x59\x5A\xED\x06\xA7\x74\x36\x2C\xA1\xC1\xE0\x79\xE2\x1A\xB6\xC0\xF0\x3D\xE5\x79\xDA\x1E\xC1\x1B";"\x63\xFF\x1F\x81\x35\xDD\xDA\x7A\xF8\xC3\x06\xE4\x13\xD7";"\x59\xF3\x0A\xB9\x73\x31\x32\xA3\xC1\xF2\x64\x8B\x4D\xED\x8D\xA7\x27\x4E\x3C\xD4\x11\xC1\x61\x1A\x19\xB1\x3D";"\x6C\xC6\x1B\xC0\x1D\x1A\x18\xBD\x3A\xE6\x52\xA4\x55\x93\x90\x8C\x0E\xA4";"\xCE\x78\xF2\x24\xCC\xAC\xA2\xCF\x4F\x5B\xF7\x07\xBC\x7D\x34\x2B\x31\xDB\xB7\x69\xF6\x2B\xE8";"\x9F\x34\x38\xF7\x34\x7F\x7F\x90\x19\x27\xA1\x2A\x7A\xE9\xD3\xA9\x67\xE7\xAE\x26\xDA\x0F\x23";"\xFF\x4D\x87\x42\x99\x94\x94\x3F\xAC\x84\xD2\x47\xC9\x4B\x6A\x63\x8E\x2D\x0B\xBE";"\xC9\x74\xA3\x29\xC4\xA7\xBB\xD4\x55\x59\xEF\x06\xBA\x7F\x33\x31\xA2\xCD\xA7\x68\x91\x3B\xE8\x87\xA4\x29";"\x9F\x35\xC9\x93\x25\x00\x62\x8F\x0C\x3A\xAE\x45\x8B\xA5\xCE\xEE\x72\x92\xAF\x11\xD0\x00\x28\x52\x5C\xED\x63\x66\x81";"\x6C\xC6\x1E\xC0\x18\x11\x1C\xBB\x22\xFC\x4B\xA6\x57\x97\x95\x96\x59\xAF\xCF\xAA\x6E\x83\x4E\x6F\x49\xD2\x0F\x50";"\xF7\x27\xB0\x0F\x94\xC3\x82\x6D\xF9\xD1\xD9\x29\xDA\x06\x6F\x0E\x89\x33\x11";"\xA6\x28\xC8\xF0\x3A\x4B\x6B\xE2\x0C\x2E\x9D\x53\xE8\xA9";"\xF8\x4A\xA3\x50\x91\x8E\x8C\x06\xA5\x8E\xC2\x36\xEC\x0C\x63\x01\x8F\x11\x1C\xB6\xA7\x66\xBA";"\x0D\xE7\x34\xB1\x7F\x3B\x35\x5F\xC4\xE2\x6C\x80\x37\xF7\x9C\xA8\x2B\x48\x67\xD8\x1C\xC2\x66\x48\x13\xB2\x32\xFA\x58\x9D";"\xC6\x73\xBD\x64\xA9\xD4\xC8\x9C\x27\x7D\xE9\x48\xB9\x6E\x61\x55\xD4";"\x6B\xD3\x1C\xC1\x1F\x1F\x16\xA1\x51\x0C\x2F\xCC\x23\xFF\xB9\x91\x77\xB0\xF9";"\x17\xBF\xBD\x0D\xB2\xAE\x93\x5E\x9B\xF4\x2A\xC1\xF6\x36\x72\x6F\xFC\x1F\x2E\xA5\x53\x8F\xAF";"\xD2\x46\xF3\x42\xD5\xA4\x47\xD4\x5F\x55\xF3\x61\xBA\x60\x3B\x32\x50\xDB\xE9\x6A\x9E\x5A\xFF\xD0\xB5\x61\x4E\x07";"\x86\x34\xC3\xFF\x39\x72\x70\xF8\x00\x24\xA3\x4E\x72\xAB\xA3\xEB\x3E\xE0\xF5\x1A\xBC\x04\x26\x5B\x54";"\x3D\xAD\x41\x74\xB5\xFD\xE8\x7F\xE9\xB7\x70\xDC\x7B\x34\x04\x73\xA5\x1D\x6D\xF8\x51\xC5\x4D\xAC\xDB\x79\xFB\xC9\x0A\xE1\x14";"\x3E\x8C\x08\xBF\x17\x2B\x4D\x54\xD7\xE8\x78\xE9\x4E\xB4\xE5\xBC\x23";"\xA4\x01\xCB\x16\x24\x44\x68\xF9\x79\x3A\x8E\x33\x91\x0D\xB7\x90\x7C\x8E\xCB\x02\xEC\x10\xD2\xAB";"\x73\xA2\x62\xB1\x70\x7E\x7B\xD3\x4C\x10\x55\xBA\x36\xFB\x9D\xD8\x73\xD9\xF5\x42\x20\x9D\x61\x36";"\x94\x22\x23\xFC\x42\x60\x79\x93\x10\x17\xA7\x42\x6E\xA9\xF7\xEA\x63\x84\xAD\x24\xC9\x12\x2A\x41\x66\xEC\x76\x31\x93\x5D\x87\x58";"\x0F\x45\xAC\x52\x8B\xF5\x9B\x0D\xA3\x98\x30\x35\xE7\x6F\x76\x26\x8D\x58\x1E\xD8\x43\x70\xBF\xF5\xF5\x62\x83\xA0";"\x0A\x43\xA6\x74\x97\xE6\x87\x0F\x9C\x94\x56\x26\xA4\x3D\x13\x79\x9A\x1E\x1F\xA7\x47\x68\xB5\xF5\xE9";"\x09\x45\xB2\x6F\x9C\xFD\x85\x17\x95\x94\x3E\x50\xF0\x6A\x16\x33\x9D\x71\x2A\xAE\x40";"\x6C\xDE\x0E\xD3\x7B\x0E\x29\xB6\x33\xFC\x5F\x87\x31\x87\xF7\xD0\x3C\xCE\x86";"\xEE\x63\xE3\x50\x80\xC8\xA6\x45\xA8\x70\xDE\x19\xC7\x61\x19\x00\xB8\x3A\xFE\x45\xA4\x5D\xF8\xFB";"\x37\xCC\x59\xED\xCE\xB0\xB3\x2B\xFE\xD8\x7B\x83\x74\xC7\x5A\x57\xFB\x63\x43\x8E\x77\x88\x52";"\x36\x9B\x5E\x82\x5F\xD1\xDE\x17\xAC\xE1\x5A\xF5\x43\x8B\x17\x5F";"\xFD\x67\x8B\x37\xED\x8E\xAC\x2C\x49\x73\xDF\x03\xC5\x66\x05\x18\xB6\x3D\xFC\x56\xB8\x05\xC7\xC2\xC2\x5F\xB6\xE0\xC8\x70\xCA";"\x65\xE3\x0B\xB1\x02\x14\x6C\xA8\xA2\xF2\x59\x97\x4C\xE7\x82\x98\x2A\xAA\x67\xD6\x22\xD7\x1C\x12\x1A\xA5\x4A\x19\x00";"\x56\x14\xFD\x41\xD2\xBC\xCF\x4E\xEC\xD0\x2D\x52\xFA\x50\x38\x2A\x8C\x45\x5C\xEE\xEC\x3B\xE3\xAC\xAB";"\xBA\x12\xDD\x19\xD3\x5E\x54\xFD\x61\x5E\x8D\x6E\x90\x50\x2A\xCC\x57\x93\xD6\x60\xF0\x22\xC2\xA6\xB7";"\x82\xC4\x24\xF0\x0B\x68\x01\x8D\x23\x11\xD4\xA4\x22\x83\x91\xE7\x16\x97\x9C\x2A\xC7";"\xE1\x66\x89\x4A\xF9\x8C\xA1\x26\x4D\x73\xD0\x1A\xC5\x6F\x4B\x0A\xF0\x67\xA8\x12\xB3\x1B\x9B\xEA\x89\x1C";"\x7E\xD7\x16\xB2\x17\x1B\x17\xBC\x27\x04\x4E\xA2\x4D\x97\xF5\x8F";"\x76\xF3\x70\xCD\x06\x62\x5F\xFB\x3D\xF2\x3D\xC5\x2A\xDF\x89\xC3\x47\xB6\xE5\xCC\x39";"\xF8\x5B\x95\x29\xFF\xF1\x80\x72\xBF\x10\xDB\x28\xDF\x1C\x11\x1A\x9E\x2F\x0F\x43\xAF\x5A\x8C\x83\x9A\x7C";"\x96\x50\x27\xE2\x39\x71\x78\x9E\x19\x04\xAC\x43\x7C\xB6\xF1\xEC\x0A\x8F\xFC\x4A\x94\x0C\x42\x43\x66\xEA\x71\x36\x96\x5E";"\x64\xE1\x0D\xCF\x62\x0B\x2D\xAC\x3D\xE9\x43\x87\x47\x96\x91\x9D\x39\xBA\x66\x80\x28\xD7\x16\x10";"\x80\x7F\x96\x4F\xEF\x80\xA3\x31\xAD\x71\xD3\x1B\xC3\x1E\x18\x7B\xB5\x38\x01\x40\xA0\x5F\x90\xE3\x84\x06\xAA\x8D";"\x16\xB4\xB3\x6C\x83\xEE\x81\x7C\x9D\xCE\x5C\x7A\xFE\x50\x61\x76\x97\x0C\x24\xAB\x40\x6A\xB2\xC0";"\x21\xBE\x53\x88\xA7\xC0\xE9\x74\xF3\xAC\x17\xDF\x1E\xDC\x5F\x5E\xFF\x79\x5E\x8B\x6B\x97\x57\x2E\xC2\x5F\xEA\xC8\x75";"\xCA\x65\xF4\x23\xC2\xBC\xBC\xDD\x57\x23\xFE\x1F\xBC\x74\x38\x39\xA7\xC6\xFC\x62\x8E\x44";"\x70\xDD\x1D\xC5\x69\x1A\x12\xBD\x36\xE0\x4B\xA4\x59\x9E\x94\x94\x11\xFA\x85\x9C\x36\xBB\x17\x39\x1D\xE6\x6B\x1E\xB8\xBC";"\xC6\x0E\xEE\x2E\xC9\xAF\x42\xC7\x76\x4F\xF1\x7C\xA4\x42\x3C\x3B\x4F\xDA\xD8\x6D\x81\x3D\xF3\xB1\xB3\x20\x47";"\x0B\x51\xA8\x55\x96\xED\x89\x08\xA8\x88\x35\x30\xE3\x01\x7A\x7B\x96\x16\x1E\xB3\xA4\x7E\xBF\xF5\xF5\x15\x86\xA4\x65";"\x5E\xF4\x18\xB9\x74\x35\x28\xA7\xCA\xE9\x63\x8A\x4C\xEE\x84\xA1\x2E";"\x0F\xAF\x3D\xAF\x1D\x3E\x32\x5C\xC5\xE2\x63\x83\x2D\xE8\x89\xA9\x2C\x41\x66\xC2\x08\xC6\x65\x05\x1C\xB0";"\x35\xFD\x54\x9F\x5C\xD5\xD1\x79\xE7\xCB\x0B\xE8\x11\xD3\xAE\x27\xC9\x34\x55\xB8\x71\xC0\x5B\x2E\xC5\x51\xD8";"\x85\xC0\x30\xE9\x04\x7B\x1D\x95\x18\x14\xB4\xBC\x7F\xAC\x89\xFA\x49\x8A\xF4\x24";"\x85\xC3\x35\xE0\x0E\x65\x15\x97\x15\x1E\xB1\xBB\x79\xBB\xF3\xF6\x18\x93\xA3\x29\xC9\xF6\x2C\x52\x77\xE0\x06";"\xE7\x0A\x83\x11\x7E\x54\x58\xFF\x79\x3D\x8F\x66\x9A\x5D\xD2\xCF\x55\xE1\xCD\x02\xED\x2C\xC8\xA3\x4D\xDD\x05";"\xF7\x7E\x93\x4B\xE6\x87\xA6\x3B\xDC\x7A\x8D\x05\x99\x1E\x76\x1F\xBB\x3A\x00\x41\xA0\x4B\x99\xEE\x8A\x04\xAA\x84\x51\x2F\xAF\x04";"\x68\x5E\xE5\x78\xD2\xBC\xC3\x47\xC8\xC1\x26\x6C\xF1\x39\x7F\x72\x9B\x1D\x22\xB4\x4B\x75\xB0\xCB\xEE\x66\x9F\xE9";"\x96\x7B\x93\x24\xC7\xB8\xB2\xDC\x57\x5B\xEC\x00\xBF\x63\x36\x37\xA5\xC3\xE8\x62\x8D\x4A\x86\x95\xE0";"\x01\xB9\x5F\xC1\x75\x1A\x1F\xBC\x39\x00\x47\xBB\x51\x95\x91\x8C\x01\xA9\xE6\xCF\x32\xEB\x0F\x65";"\x54\xF4\x06\xBC\x70\x36\x5D\xCF\x85\xE5\x0D\x90\x45\xE9\x8F";"\xC1\x24\x98\x28\xF0\xED\xA5\xA6\x5B\x36\x9E\x70\xD6\x0B";"\x27\x9F\x49\xE3\x59\xB7\x83\x12\x9A\xB8\x7C\x9E\x6A\xCA\x2C\x3F\xC0\x70\x35\x91";"\x7D\xA6\xF2\x66\xE8\xE5\xFC\x15\x9F\x9F\x33\xC2\xE4\x39\x71\x70\xE1\x05\x25\xA2\x21\x7F\xB0\xC7\xE2\x69\x83\xB9";"\x38\x9C\x51\x82\xAA\xA9\xC0\x1D\xB9\xB9\x79\xE6\x10\xD8\x58\x53\xCB\x7D\x5B\x82\x65\x92\x44\x2E\xC3\x25\x86\xDC\x3C\xF5\x4C\xC3";"\xAF\x15\xAB\x68\xCD\xEE\x48\xAF\x72\x48\xFC\x76\xA9\x46\x20";"\xFA\x5A\x93\x4D\xE5\x85\x9D\x34\xDF\x17\xA7\x2D\x85\x14\x1F\x44\xAC\x67\x08\x32\xBB\x06\xD2\xAC\xDC\x50\xFE\x80";"\x0F\x47\xB2\x69\x8E\xE0\x83\x11\x93\x97\x33\x3E\xE5\x3D\x63\x04\x81\x1A\x22\xAE\x47";"\x73\xD6\x1C\xC3\x1C\x1E\x0F\xFF\x45\x0C\x13\xBF\x24\xEC\xF7";"\x39\xF9\x66\x91\x5B\xD1\xDA\x41\xFB\xC1\x0D\xEE\x1B\xC9\xAE\x2B\xD4\x3A\x53\xE4";"\x74\xD5\x46\x94\xFB\xA1\xF0\x69\x93\xA6\x6F\x85\x1D\x7B\x3F\x25\xE6\x74\x2F\xEC\x32\x93";"\x45\xA1\x25\xF7\x6E\x6A\x65\x1A\x8D\xF0\x36\xD0\x24\xA2\xB8\xAD\x26\x48\x6E\xE1\x12\xCB\x6E\x1C\x3B\xAE\x33\xF3\x52\x9C";"\xB3\x13\xDA\x03\xD8\x4A\x5B\xFB\x70\x45\x8C\x63\x9D\x56\xC8\xC5\x41\xE9\xC3\x07\xF5\x32\xCD\xA6\x45\xDA\x57\x57\xF5";"\x7F\xDF\x16\xDB\x02\x00\x12\xBB\x23\x00\x4D\xA1\x55\x99\xEB";"\x1E\x22\xBA\x38\x83\x87\x87\x19\xAA\x8D\x3B\x36\xEE\x0F";"\x01\x45\xA7\x67\x8B\x8E\x88\x56\x8C\xD0\x39\x51\xE1\x3F\x78\x7C\x9A\x19\x1E\xB5";"\xAF\x1D\xD6\x0D\x2C\x4F\x4E\xB7\x7E\x6F\xFB\x2C\xF2\x1E\xD1\xBE";"\x65\xE3\x0B\xB8\x68\x13\x2F\xAB\xC1\xED\x56\x91\x28\xE9\x86\x9D\x33\xB3\x7A\xD4\x26\xD8\x1B\x10";"\xA2\x24\xC2\xF6\x3B\x4A\x6E\xEF\x0A\x38\x9A\x50\xE9\xAE\x92\xB7\x32\xFF\xD0\x11\xE5\x1F\xD9";"\x1A\xB5\x51\xE4\x65\x70\x32\xF9\xCE\xF4\x65\x8F\x4D\xEC\x86\xA6\x36\xB1\x74\xD9\x1C\xC5";"\xDF\x6E\x84\x38\xF7\xA6\xEA\x22\x28\x68\xE8\x0E\xC9\x62";"\xDE\x6E\x87\x39\xFC\xB5\xA6\x3C\x3E\x71\xFD\x06\xC7\x6D\x00\x24\xA9\x29\xEC\x46\x93\x43";"\x99\xC0\x34\xEE\x05\x66\x03\x9B\x7C\x1A\xB4\xBB\x7A\xBC\xFC";"\xB9\x04\xE3\x19\xCC\x3E\x30\xCD\x38\x51\xE2\x11\xB3\x0A\x5D\xDC\x11\xAA\xD9\x2D\x91\x48\x81\xD5\xF8\xA4\x54";"\x34\x8D\x5F\x9F\x5F\xDB\xD3\x79\xF8\x8C\x04\xEC\x10\xD4\xA9\x48\xC5\x69\x50\xE4\x6E";"\xBA\x51\xDB\xB4\x23\x04\x1A\xF5\x56\x2C\xCD\x5D\xF6\xEE\xA5\xB7\x2A\x96\xA6\x14\xE6\x10\xDD";"\x77\xD1\x1C\xC5\x03\x07\x04\xBC\x31\x01\x4F\xA3\x53\x8A\xFE\xF2\x0B\xF6\x93\xB3\x4F\xF5\x7C\x1F\x1A\xD7\x14\x7D\xA8\xBF\x6B\xBF";"\x06\xCE\x64\xA2\x07\x58\x16\xD5\x38\x0A\x4E\xAB\x56\x94\xEE\x96\x13\xB3\x87\x39\x36\xED";"\xE5\x4F\x83\x5E\x9B\x9E\x91\x38\xA2\x9A\xA7\x24\xD2\x12\x6C\x09\x88\x28\x06\xBF\xB7\x6C\x90\xE4\xF7\x19\x95\x9A";"\x76\xD4\x1E\xD9\x00\x19\x16\xB8\x39\x03\x41\xB7\x02\xCC\xBF\x9D\x50\xF0\xCF\x96\x22\xB1\x51\x70\x09\x9B\x10\x10\xB0\xBE\x75";"\x1D\xB4\xB7\x7D\xA3\xBD\xF8\x15\x80\xAD\x29\xCC\xF6\x34\x4C\x68\xEE\x09";"\x1A\xDC\xB9\x7B\xBC\xFC\xF7\x17\x98\xA4\x2D\xCF\xF8\x30\x4D\x06\xF7\x48\x50\x81\x10\x88\xCE";"\xEE\x5D\x9C\x42\xFD\xCB\x92\x31\xB3\x79\xD0\x23\xD7\x1B\x1B\x11\xA9\x25\x0C\x4D\xAA\x50";"\x78\xCB\x1C\xDB\x1B\x1B\x15\xB9\x25\x04\x48\xAC\x58\x89\xEB\x8D\x16\xA8\x86";"\xAA\x13\xED\x18\xA9\xE5\xC5\x40\xDB\x2A\xDC\x41\xCF\x0C\x03\x0B\xD9\x6F\x07\x11\xC2";"\x67\xED\x0E\xB2\x70\x31\x2D\xCB\xC0\x96\x7A\x8C\x4D\xEE\x83\xA5\x32\xB0\x6B\xCD\x01\xC6\x1D\x19\x1F\xBC\x33\x18\x51\xBB";"\x93\xBB\x3D\xB8\x62\x0B\x6F\xC8\x15\x7E\xB5\xBB\x67\xBD\xFD\xFC\x1A\x85\xA1\x2F\xC2\xF7\x32\x7C\x6D\x8B\x00\x28\xA2\x53\x88\xA9";"\xE1\x60\x8F\x2E\xEB\x89\xAB\x2B\x48\x72\xC6\x7C\xC9\x3D\x6F";"\x5B\xE0\x03\xC3\x19\x7A\xC1\x39\xDD\xD0\x2B\x8F\x62\xE5\xBF\xAC\xC8\x52";"\x25\xB0\x1C\xE5\x60\x73\x3E\xAA\xCA\xF7\x5C\x97\x43\xF9\x86\x9F\x32\xBD\x7E\xDA\x25\xC1\x4D\x1D\x77\xE9\x76\x6A\x11";"\xE1\x60\x8C\x49\xEC\x8E\xAE\x23\x4E\x7A\xD8\x1A\xC1\x61\x12\x1C\xB0\x3F\xE8\x4D\xAA\x59";"\x1B\xB6\x40\x7A\xB9\xF1\xE3\x37\xD9\xB6\x79\x93\xA1\x7C\x12\x76\xB9\x1B\x68\xCE\x47\xE0\xAE\xA6\xCD\x31";"\x49\x8C\x6E\x9C\x48\xD6\xCB\x47\xEE\xC2\x05\xF2\x2F\xC1\xA4\x41\xD2\x53\x55\xE5\x08\xAF\x17\x26\x2F\x1C\xD9\x8A\x75\x86\x30\xFA";"\x48\xA0\x6A\xF1\x21\x6C\x25\x58\xDB\xDD\x69\x86\x2E\xF5\xB7\xAF\x2E";"\x32\x9F\x5D\x86\xA1\xC0\xDA\x6A\xEA\xA7\x10\xE8\x1D\xDF\x5B\x54\xE5\x0A\x59\xC0";"\x09\x44\xB0\x68\x80\xF4\x80\x13\x96\x91\x32\x3D\xE3\x3D\x30\x7B\x99\x1A";"\x9C\x46\xC3\xF9\x36\x70\x69\xE8\x1E\x2E\xA3\x4C\x8B\xAE\xCB\x88\x71\xA0\xCA\x07\x9E\x02\xB4\x45";"\x78\xD4\x20\xD0\x1B\x08\x47\x8E\x73\x1E\x06\xB0\x0F\x94\x91\x9A\x4A\xB7\xCC\x35\x36\xE1\x03\x7D";"\x16\xB4\xB5\x7A\xD1\xF0\xA1\x74\xDE\xA0\x42\xCC\xF1\x39\x43\x6B\xE7\x12";"\xA4\x2E\xC0\xB9\x3F\x4E\x6B\xE1\x08\x25\xAB\x52\x95\xBF\xDD\xE3\x73\xF8\xB3\x13\xD9\x04\xB5\x50\x0C\xE7\x1A\x5E\xD6\x71\xEA\x5C";"\xA2\x27\xC4\x0F\x29\x4F\x72\xEE\x0E\x30\x9F\x5B\x80\xA1\xDA";"\x23\xA9\x48\x77\xB3\xCC\xEC\x6B\x8D\xA8\x1B\xD0\x02\x27\x45\x56\xF6\x7A\x27";"\x69\xE2\x14\xC9\x75\x03\x22\xB2\x3F\xF4\x5D\xF1\x4F\xE0\x86\x9E\x38\xBF\x86\xCA\x23\xCA\x1A\x6E\x04\x81\x2C\x04\x5A\xAE\x75";"\x23\xA8\x48\x73\xB9\xCF\xEF\x65\x87\xA8\x09\xD6\x08\x27\x41\x67\xF0";"\xA1\x22\xD3\x9D\x22\x55\x6A\xE8\x0A\x26\x9C\x54\x9E\xA5\xC4";"\xAD\x24\xDE\xF4\x27\x4D\x69\xE1\x0C\x36\x94\x3D\x96\xBF\xD6\xB1";"\x67\xEF\x0F\xB4\x71\x16\x28\xA7\xCC\xEE\x59\x91\x49\xE5\x85\xA2\x36\xB3\x70\xD2\x03\xDE\x1E\x14\x15\xB7\x2C\x1F";"\xFF\x2A\x87\x18\xF1\xDF\x97\x40\xA7\x3A\xD5\x57\xD6\x12\x15\x18\x85\x27\x0D\x47\xAF";"\xF7\x5F\x9B\x41\xE9\x9D\x9B\x32\xAA\x7A\xCB\x25\xDC\x12\x1F\x18\xEC\x2D\x53\x5F\xEA\x6E\xE0\xF1\x82\x09\x90\x9B";"\x41\xDD\xF9\x7F\xD7\xF8\xF5\x1C\x92\xAA\x2C\xD5\xF3\x33\x49\x6C\xE6\x0E\x40\xF1\x17\x89\xCD";"\xE9\x16\x92\x37\xE7\x8E\xA8\x2E\x4F\x74\xC3\x1D\xC1\x64\x02\x1C\xBE\x2B\xE6\x2C\xB8\x5F\x9A\x95\x94\x35\xA1\x98";"\x08\xCC\x12\xC4\x16\x16\x1A\xB8\x25\x01\x4F\xA5\x57\x95\x9C\x8E\x1F\xFC\x86\x82\x7F\xE4\x7B\x71";"\x05\xA5\xAA\x77\xFB\xFF\x86\x13\x94\x9A\x35\x37\xE7\x26\x7B\x73\x97\x05\x2A\xAA\x50\x2B\xBD\xAA\xF3\x63\x89\xAD\x15\xD2\x0F\x21";"\x5D\xF3\x02\xBA\x6A\x36\x35\xA5\xC3\xE7\x7F\x91\x30\xF4\x90\xA0\x2E\x4A\x70\xDE\x1F\xDB\x79\x07\x1C";"\xDE\x9B\x36\x81\x4D\x40\x1C\xD3\x71\x48\x17\xA1\x30\xDE\xF1\x82\x12\x95\x96\x32\x35\xF9";"\x54\xA8\xD3\x7B\xF6\xE7\xB9\x17\xF7\x95\x36\xCA\xF1\x37\x74\x72\xEB\x09\x32\xA7\x49\x8E";"\xBF\x11\xD5\x17\xD5\x5D\x53\xF9\x7A\x40\x8B\x77\xC8\x10\x3B\xAA\x55";"\x0A\x4F\xAD\x4D\x92\xEF\x8B\x0C\xAB\x8E\x3B\x31\xEF\x04\x63\x07\x98\x17\x08";"\xFC\x52\xAA\x41\x8B\x97\x92\x00\xA3\x8E\xC6\x2C\xF0\x08\x6A";"\x89\x32\xC5\xFE\x30\x75\x72\xE1\x08\x37\xE2\x4F\xE6\xAD\xCD\xE7\x6B\x82\xB0\x1D\xDC\x0E\x34\x5B\x53\xF3\x7F\x3F\x88\x63\xF6\x5B";"\x61\x5E\xE7\x2C\xD6\xB2\xC7\x4A\xC9\xC8\x2D\x25\xA0\x68\x3A\x33\xDA\x45\x3C\xA1\x4E\x71\xB7\xCF\xEC\x7E\x8F\xAB\x27\xD0\x00\x2E";"\xC2\x0C\xEE\x14\xD1\xB0\x50\xC4\x65\x45\x80\x70\xB1\x13\x2D\x84\x4A\xC8\x88\x7B\xFA\x3A\xF4\xBF\xB2\xDA\x5A\x62\xE9\x1D";"\x1A\x5E\xB0\x6C\x8C\xEF\x81\x0F\xA3\x91\x20\x55\xFA\x45\x78\x11\x95\x1F\x1F\xA8\x44\x7B\xB0\xEA\xF0\x61\x82";"\x1C\xBB\xB9\x67\xBF\xFF\xFF\x0A\xF3\x92\x49\xAE\x81\x59\x11\x73\xBC\x7C\x36\xF3\x5D";"\x81\xC5\x34\xEC\x08\x6A\x00\x8E\x15\x12\xAB\xFE\x38\xEA\xA6\xE8\x43\xCF\x8F\x7F\xCB\xF7\x33\x7C\x6B\xE1\x06\x2D\xBC\x48";"\x9C\xCA\x2E\xD7\x17\x69\x0C\x89\x21\x0E\x44\xB0\x6C\x86\xE3\x88\x16\x99\x94\x23\x3C\xF8";"\xAD\x2F\x88\x52\x9F\xB1\xE3\xC6\x29\x64\x99\x54\xEB\x36\x1E\x42\xCE\xB4\x8D\x32\x82";"\xFB\x57\x6C\x90\x73\x79\x76\x89\x13\x08\xAD\x52\x1E\xD5\xE5\xE7\x47\x9F\xAA\x3F\x98\x83\x24";"\xB1\x1B\xD2\x0D\x20\x46\x59\xF6\x10\x27\xF9\x25\x9B\x33\xCC\xDA\x43\xE6\xC2\x04\xE8\x09";"\x9C\x2E\x7A\xA4\x6E\x22\x64\xC7\x53\x33\xFB\x45\x76\xB0\xC9\xEF\x62\x86\xB3\x05\xC9";"\xC8\x61\x8B\x6F\xBD\xA4\x0B\xB5\x65\x25\x9C\x0A\xC7\x48";"\x4D\x87\x71\xAB\x47\x24\xC2\x54\xBC\xCB\x1D\xB9\x3F\x97\xBA\xB1\xDA\x53\x6A\xED\x0B\xB0\x73";"\x8D\x3F\x32\xE3\x1B\x66\x01\x91\x10\x1B\xB6\xBB\x11\xD6\x88\xF9\x5B\x98\xD5\x3A\x9F\xED\x75\x44\x76\xE3\x0A\x27\x95\x50\x8E\xB8";"\x65\xEF\x0A\xB6\x73\x4E\x25\xAF\xC9\xED\x57\x95\x44\xF9\x80\x9F\x35\xBA\x7D\xD0\x2B\x97\x14\x13\x13\xB9\x26\x05";"\xA3\x28\xCF\xF7\x32\x71\x79\xE7\x08\x22\xAB\x57\x8B\xAB\xC9\x8E\x6F\xB2\xB4\x7E\xC1\x07";"\xD6\x78\x9A\x3E\x86\xB9\xD6\xD6\x5E\x5A\xF7\x06\xBE\x77\x36\x25\xA3\xC7\xE4\x64\x8F\x4C\xEB\x88\xCA\x33\x0E\x70\xB2\x05\xC7";"\xC2\xC6\x50\xA3\x6D\x62\x5A\xE8\x3E\x07\x51\xD2\x0F\xEB\xF2\xD3\x41\x85\xEC\x41\x68\xA9\x56\x0F\x7F\xF3";"\x6A\xE2\x13\xC1\x7A\x18\x3D\xB3\x37\xF1\x54\x98\x5E\x85\xF0\x8E\x7B";"\x2C\x9A\x53\x80\xA1\xD0\xDE\x72\xFA\xB9\x17\xE6\x19\xDC\x42\x16\xFE\x0C";"\x63\xE3\x10\xCF\x69\x01\x27\xDE\x5B\xFB\x11\x9E\x29\x9E\x9F\x94\x3C\xBB\x82\xCB\x27\xD4\x14\x7E";"\x93\xC4\x2D\xD2\x08\x6B\x07\x8A\x2D\x5F\xB5\xB1\x63\x81\xF3\xFB\x13\x87\x9D\x37\xC3\xFC\x37\x77\x74\xEB\x11\x63\xA4\x26\x84";"\xC8\x42\xB4\xA3\x6F\x47\x2E\xBF\x0F\x38\x97\x46\x81\xB7\xA6\xB2\x1C\xED\xD4\x52\x9E\x18";"\xD0\x73\xFD\x26\xC3\xBF\xA2\x8E\x02\x1D\xB8\x14\xDB\x1E\x6D\x43";"\x4D\xE1\x4E\x19\xAF\xC7\xE0\x6F\x8A\xB6\x03\xCA\x05\x2B\x5D\x58\xF7\x7E\x51\xFE\x6F\xDC";"\x40\x94\x63\xE5\x66\x46\x38\x20\xDC\xE7\x6B\x8A\x30\xE9\x95\xA0\x2E\x41\x67\xD8\x0C\xD9\x3A\x5C\x43\xAB\x6C\xA3\x0D";"\x53\x9A\x6F\xAE\x4A\x2F\xC5\x49\xB8\xBE\x77\xBD\x23\xAB\xBE\xBE\xDB\x5F\x5C\xE8\x19\xBD";"\x16\xA0\xBC\x62\x8C\xEF\xFA\x0D\x8B\x84\x33\x3B\xFD\x38\x70\x6C\x84\x40\x26\xC0\x43\x79\xA6\xCA\xE8";"\x88\xD8\x5D\xF7\x4D\x60\x69\x8D\x10\x1C\xB2\xB8\x60\xBE\xFC\xF1\x1E\x8D\xA9\x29\xC6\xF2\x33\x70\x68\x8B\x11\x6F\xA0\x3A\x8B\xA9";"\x2C\xBA\x56\x91\xA2\xCA\xED\x69\xF2\xAA\x77\xB4\x0C\x64\x5B\x30\xE6\x79\x3F\x88\x65\x9F\x5D\xCB\xD6\x5D\xE4\xC8\x05\xEB\x2D";"\x3F\x90\x59\x84\x54\xD7\xD6\x7F\xE6\xC2\x0C\xE4\x1F\xDB\xA2\x51\xCD\x6B\x4F\x85\x71\xA9\x5C\x23\xC3\x54\xD4\xD5\x71\xFE\x39\xFC";"\x4C\x8C\x63\x93\x53\x22\xC8\x43\xEE\xCD\x01\xE7\x2A\xC6\xA1\x47\xDA\x57";"\xA1\x22\xD2\x08\x22\x49\x69\xF0\x6A\x2A\x97\x5D\x9D\x59\xD4\xD0\x7B\xE6\x96\x04\xEA\x1F";"\x4F\x84\x71\xAE\x4C\x2F\xC0\x47\xE8\xD2\x71\xFE\x21\xC7\xBA\xB9\xC9\x47\x40\xED\x03\xB8\x71\x3E\x31\xB8\xDC\xEB\x64";"\xE1\x2B\xDF\xF9\x34\x77\x76\xE7\x03\x3A\xBE\x50\x85\xAE\xCA\xEF\x6E\x93";"\x36\x9B\x52\x86\xA6\xC4\xD8\x71\xF8\xAE\x13\xE4\x1D\xDC\x51\x55\xC4\x67\x5A\x80\x6A\x9B\x4F\x2F\xCF";"\x75\x85\x08\xF4\xB9\xAE\xA0\x69\x84\xC7\x1D\x89\x74\xBC\x2D\x38\xB9\x66\x2F\x89\x6F\x96\x4C\x2B\xC0\x57\xEB\xCA\x78\xF4\x20\xC6";"\x47\x86\x7F\xA9\x2A\x51\xA8\x22\x8D\x8A\x2D\xE3\x20\xAC\xAE";"\x5E\x1B\xBB\x55\x93\x95\x85\x0F\xAB\x8C\xD9\x30\xED\x00\x68\x03\x9B\x13\x10";"\x8E\xD7\x37\xEA\x0B\x60\x03\x96\x1E\x7B\xA9\xF8\x60\xD6\xE3\xF7\x1E";"\xE0\x6B\x82\x3F\xF2\x83\xA9\x2C\x48\x68\xF6\x13\xCB\x63\x04\x26\xB1\x39\xF2\x4A\xC0\x50\x9E\x9C\x97";"\xCF\x00\xE4\x2F\xCD\xAD\x4F\xC8\x6F\x50\xFE\x70\xBB\x45\x3B\x3B\x50\xDA\xD9\x70\xFE\x23";"\x26\xAE\x41\x7C\xAA\xBA\xE1\x62\x8A\xAA\x27\xD0\x0A\x28";"\x83\xCD\x2E\xC2\x49\x36\x53\xD6\x3B\x48\xEE\xA7\x6E\x8B\xFE\xFE\x12\x99\x87\x32\xC1\xFA\x37\x75\x72\xEB\x04";"\x62\xB3\xA8\x6C\x85\xE3\xF7\x10\x9B\x81\x33\xC2\xFA\x30\x7A\x7B\x98\x06\x27\xAC\x4A\x7A\xAF\xCA\xF9\x01\xF6\xBD\x44\xCE\x66\x5D";"\xBB\x19\xDF\x02\x6F\x57\x59\xF6\x77\x3B\x8D\x66\x9A\x57\xD0\xD8\x54\xE1\xCB\x0E\xED\x28\xC2\xAF\x4C\xD2";"\x09\xA4\x15\xB4\x5D\x28\x5A\x27\xA6\xD8\x0E\xFD\x26\xFA\xA5\xAD\x33\x20\x0B\xBA\x65";"\xF1\x51\x9E\x46\xE2\x99\x9C\x29\xC1\x64\xCE\x2B\xD8\x11";"\xAC\x0E\x8F\x0E\x97\x92\x90\x39\xA6\x86\xCC\x29\xD4\x08\x7D\x09\x8F\x2C\x0F\xB9\xB4\x60\x83\xAB";"\xF9\x31\x8D\x88\x2D\x0D\x14\xFD\x46\x53\x91\x05\xE0\xDE\xB9\x8C\x36\x8E\xB5\x4C\xC6\x6F\xA5\x40\x0A\x80\x7C\x3B\xF4\x64\x90";"\x98\x34\xC6\xF9\x39\x70\x6A\x8E\x0B\x70\xCE\x08\x70\xC6\xD3\xE1\x69\x8B\xB4\x10\xDF\x1C";"\x16\x9F\x3D\x99\x51\xD3\xC9\x43\xEF\xC3\x07\xF5\x2E\xCA\xA3\x47\xDB\x56\x4B";"\x04\x42\xAA\x46\x8A\xEE\x80\x09\xAD\x99\x52\x5B\xE9\x47\x66\x17\x8B\x15\x1C\xB3\x43\x7A\xB9";"\x1B\xA3\x64\xFB\x48\x47\x55\x0C\xB8\xC4\x79\xFC\x3B\xF8\xB6\xB6\xC6\x4D\x67\xEF\x08\xB5\x6B\x65\x45";"\xFD\x66\x8C\x4A\xE9\x8B\xA7\x2E\xB7\x1E\xD7\x42\xD9\x24\x1B\x70\xBA\x36\xFB\x4B\xA4\x5D\x92\x9E\x8E\x15\xA2\x8F\xC1\x2C";"\xE6\x60\xE1\x6B\x8E\x3B\x25\x92\x7D\x4B\xE8\x79\xEE\x3B\x7A\xA4\x2F";"\x89\xC4\x30\x83\x04\x34\x69\xC8\x15\x7E\xB2\xB9\x61\xB7";"\x09\xFC\xB5\x0C\x80\xFA\xF4\x11\x98\x98\x3A\xC2\xF8\x36\x65\x71\xE2\x05\x23\xAF\x4A\x88\xAB\xA0\xFB\x2B\x88";"\x32\x98\x55\x85\xA7\xD3\xDE\x60\xFD\xBD\x16\xE3\x19\xD5\x51\x54\xAF\x6C\x11\xED\x29\xAF";"\x42\x82\x11\x87\xCF\xC6\xDB\x73\xF7\xB9\x13\xE3\x17\xDC\x52\x47\xFD\x64\x40\x85\x6A\x93\x49\x2B";"\x8B\x38\x33\xEC\x00\x7A\x19\x8C\x19\x1E\xB3\xBF\x7C\xB8\xE5\x99\x13\xD3\xC8\x6E\xCB\x9A\x37\x4E\x6C";"\xBB\x7C\x87\x27\xE1\x86\xA3\x36\xAD\x2B\x8E\x17\xD2\x14\x0A\x78\xA9\x6A\x96\x1D\xF0\x32\xE4\xF0\xCB\x0F\xDD\x91\x80\x24\x99";"\x6C\xCB\x0C\xD3\xB4\x94\xD3\x6A\xF1\xBD\x17\xE1\x1B\xDF\x49\x5B\xFE\x65\x4D";"\x81\xCC\x2E\xD0\x17\x6A\x66\x97\x6A\x0C\xD6\xB6\x69\x8C\xE4\xF6\x19\x97\x8C\x33\x3B";"\x13\xB7\xB4\x66\x83\xEC\xE7\x0B\x99\x98\x35\xC1\xFA\x3A\x68\x6F\xFE\x07\x20\xA0\x49\x76\xAE\xD5\xE7\x6B\x8F\xB9\x1A\xD5\x03";"\xF0\x59\x9D\x58\xF7\xFE\x98\x79\xA6\xEF\xC2\x2A\xD8\x0A\x61";"\x83\xC7\x36\xEE\x01\x7C\x06\x9B\x13\x11\xB5\xB4\x0F\xA1\xBA\xF4\x73\x99\xA6\x21\xC6";"\x04\x4C\xA8\x53\x84\xEB\x8A\x0D\xA6\x88\x38\x3A\xE2\x6B\x6A\x00\x96\x13\x1F\xB1\xB9\x7F\xBF\xFC\xF0\x0B\x84\xA3\x2F\xC0\xF0";"\x3B\x85\x65\x8E\x5E\xD3\xD3\x41\xE0\xCE\x01\x83\x30\xA0\xE8";"\x55\xE7\x48\x88\x19\xB4\xA9\x2A\xA4\xDC\x1D\xB2\x7F\x92\xFE";"\xBF\x0C\xED\x1F\xCC\x3B\x57\x84\x61\x22\x81\x6E\xAF\x4E\x2A\xC0\x4F\xD7\xD1\x6E";"\xA7\x47\xAE\x05\x42\x1E\x1C\x81\x7A\x5D\xEA\x47\xE8\x3C\xA1\xB4\x74\xB8\xBE\x04\x8D\x75\xAD\x39\x41\xB0\x13\x57\xE9\x35\xD7";"\xA2\x0B\xE1\x1D\xD7\x54\x4F\xDA\x7A\x57\x85\x79\xAD\x4D\x24\xC6\x55\xCE\xC9\x70\xFB\x20\xFE";"\xAC\x4D\x9A\x60\x21\x18\x7B\x84\x5E\x5F\x94\x1B\x9A\xCA";"\xB4\x1A\xDC\x04\x23\x5F\x5D\x99\x63\x79\x8E\x08\x9A\x51\xDE\xD6\x47\xE4\xCC\x06\xE9\x25\xDE\xA5\x46\xCF\x5D\x55\xF2";"\x13\x41\xAC\x6D\x8D\xEE\x86\x07\x85\xD7\x62\x6C\xBF\x10\x2F\x76";"\x46\x85\x78\xA9\x4E\x29\xC3\x4C\xE9\xD6\x14\xF5\x70\xAA\xFE\xB8\xBF\x5D\x5E\xE5\x02\xBC\x7F\x2C\x2C\xA3\xC3\xE1\x67\x8D";"\x07\xF8\x2D\xB2\x2C\x60\x62\x45\xDC\xE4\x6A\x84\x3F\xF6\x90\xAC\x23\x4D\x6E\xE7\x1A\xC1\x64\x10\x7F\xF0\x21\xFE\x53\x94\x58\x87";"\x77\xD4\x1D\xB0\x00\x59\x15\xD4\x27\x0A\x4C\xAE\x52\x94\xEC\x97\x1C\xB2\x85\x39\x35\xEE\x03\x63\x18\xFC\x09\x5C\xB5\xD5";"\xD0\x17\xE5\x65\xC2\xD2\xA6\xDA\x5C\x5A\xE5\x0D\xBD\x68\x2E\x33\xA1\xC1\xED\x69\x86\x4C";"\x9D\xCD\x21\xD5\x16\x13\x0C\x9D\x2C\x0A\x43\xB5\x6F\x88\xE1\x87\x5D\x9B";"\xAA\x2A\xD7\x08\x29\x48\x7E\xF2\x76\x37\x9D\x5B\x81\x5B\xC2\xD2\x7C\xF8";"\xA7\x11\x9E\x44\xD5\xCD\x4D\xD5\x51\x56\xF2\x7C\xBF\x67\x20\x30\x5F\xDB\xE1\x61\x8F\x3D\xA3\x87\xB7\x2C\x47\x6A\xDC\x1B\xCF";"\xCD\x07\xFA\x29\xC6\xAC\x44\xD4\x50\x53\xF0\x74\xBA\x74\x3B\x37\x4A\xDB\xEA\x6E\x80\x3E\xF7\x8F\xAA\x34\x3C\x60\xBD\x78\x90";"\x1B\xA9\x44\x60\xB6\xF5\xEA\x65\x8B\xA3\x21\xC0\x78\x24\x14\x6F\xE1\x2C\x25\xD4\x47\xD2\x53\xA9\xC5\x0F\xE8\x91";"\x08\x43\xB9\x6F\x8F\xE0\x86\x7E\xFB\x9B\x71\x3E\x89\x3C\x7F\x75";"\xD7\x6B\x6B\xF5\x55\x68\x76\x91\x17\x12\xB2\x43\x7D\xA4\xEA\xEF";"\xD9\x6E\x86\x3D\xE1\xB4\xAB\x21\x44\x6F\xE1\x16\xC9\x04\x1B\x66\xAE";"\x6A\xAA\x35\x60\xEE\xFC\xAD\x3A\xDA\xB6\x60\xC1\x83\x35\x0B\x7F\x9B\x06\x40\x80\x24\x9E\xF3";"\x12\x09\xCE\x72\xDC\x9C\x9B\x55\xE9\x98\x62\x50\xA5\x40\x12\x3D\x9B\x73\x24\xAB\x40";"\x4A\xFC\x75\xAD\x45\x22\x2B\x51\xD0\xDC\x72\xF8\x39\xF8\xB6";"\xC7\x74\xF6\x26\xC8\xBB\xB8\xD0\x57\x5F\xF7\x79\xA4\x7B\x35\x3D\x5D\xC2\xE5\x69\x8F\x2C\xEE\x8D\xAC";"\xEC\x6A\x8F\x40\xEF\x89\xA3\x32\xB8\x1A\xDB\x1E\xD8\x14\x1E\x10\xB9\x32\x1F\x51\xB5\x57\x91\xEE\x8E\x03\xA6";"\x82\xC4\x35\xFC\x09\x60\x02\x95\x10\x16\xB4\xBF\x0F\xD0\xBA\xF4\x73\x86\xA9\x29";"\x10\xBB\xBB\x60\xBD\xFE\xF9\x13\x9D\x97\x2D\xC7\xE9\x49\x6D\x66\xEF\x07\x2E\xA3\x56\x95\xB4\xC3\xE2\x68\xF7\xB4\x1D";"\xEE\x5E\x80\x47\xE1\x80\x9A\x36\xB2\x72\xCD\x6B\xA9\x01\x61\x0B\xF1\x53";"\x51\x91\x64\xA3\x40\x30\x3D\x5B\xD8\xC5\x6F\x84\x33\xF2\xB4\xAB\x4D\x5F\x2D\xE2";"\xB9\x64\xCD\x64\x37\x41\x63\xE8\x70\x32\x93\x47\x98\x42\xDA\xDE\x7F\xFD\xB8\x08\xFC\x78";"\xAA\x06\xF9\x36\xE0\xDD\xCB\x28\xC6\x8A\x93\x71\x91\x69\x3E\x0F";"\xA6\x0A\xFC\x1C\xDB\x56\x5B\xCA\x61\x5F\xD0\x30\xD1\x18\x3E\x81\x54\xBD\xDC\x26\xA8\x63\xD2\xFE\xA1\xA1\x47\x0A\xE3\x59";"\x51\xF0\x75\xA8\x7D\x3D\x32\x5D\xD3\xE3\x6D\x8B\x5B\xED\xCE\xA8\x4F\x4C\x6A\xDE\x13\xCE\x60\x07\x26\xB7";"\xC0\x12\xE7\x16\xD7\x53\x4A\xC3\x74\x16\x8F\x10\xC2\x1F\x4C\x97";"\x82\x2C\xC6\xFD\x3A\x72\x77\x9C\x1A\x3D\xB9\x4E\x74\xA6\xCE\xE8\x60\x91\xA9\x03";"\x9D\x6D\x3E\xF6\x00\x64\x08\x98\x11\x1C\xAC\xBF\x7F\xB2\xF9\xF1\x1C\x83\xA4\x3A\x9C\xAD\x73\x1C\x32\xBD\x1E\x2F\x9B\x5C\x8F\xAD";"\xE2\x60\x98\x4C\xEE\x89\xA1\x29\x4F\x73\xDD\x16\xCB\x7C\x12";"\xD9\x78\xF4\x39\xDB\xB9\xBD\xD4\x5C\x5B\xF6\x01\xA0\x15\x2D\x77\xA1\xAD\xEF\x67\x8C\x3A\xE9\x8B\xBD\x35";"\xED\x73\xFD\x43\xF4\x84\xA4\x2E\xB2\x76\xDC\x00\xC5\x18\x1D\x1C\xBF\x3D\x0B\x16\xAB\x51\x95\x92\x8D\x01\xAB\x8E\xC2\x39";"\xDC\x35\x55\xFE\x3D\x7B\x73\x97\x0D\x38\xB7\x4B\x77\xB7\xCE\xEF\x63\xE3\xC3\x59\xD6\x61\x22\x4E\x5F\xF8\x71\x30\x8D\x58\x97\x5B";"\x5F\xE8\x0D\xBC\x76\x5B\x37\xE4\xC1\x82\x62\x88\x4C\xEA\x8A\xA2\x2E\xB0";"\xA5\x2B\xCD\xEF\x5C\x56\x2E\xE6\x64\x30\x98\x50\x89\xA3\xC1\xE0";"\x48\x95\x7A\xDA\x5A\x39\x38\x56\xD4\xD9\x72\x99\x25\xF4\xB0\xB8\x24\x46\x6F\xFF\x11";"\xF0\x4C\x9F\x43\xE0\x9E\x93\x36\xBB\x76\x92\x2E\xC6\x11\x12\x17";"\xE5\x67\x99\x33\xED\x8F\xAF\x2E\x4C\x77\xDE\x7A\xDB\x26\x19\x76\xA8\x39\xFE\x55\xAA\x5C\x90\x8B\x95\x00\xA7\x8F";"\x4A\x87\x2E\x9C\x01\xA6\xC4\x06\xE5\xDE\x0C\xF9\x4D\xC8\x23\x31\xDB\x1E";"\x11\xBA\xB0\x66\x85\xFA\xE6\x08\x9D\x9C\x31\xC5\xF9\x31\x77\x1D\xFE\x6A";"\x48\xBC\x12\x6B\xE2\xA8\xE1\x38\xD6\xB8\x2E\xCB\x0E\x2B\x4B\x67";"\x38\xC1\x25\x92\xFD\x86\xEC\x7E\xEB\xA7\x74\x9E\x0B\x83\x55\x2D\xA6\x3D\x2C\x9D\x3C\x8C\x34\xD1\x93\x29\xF6\xC5";"\x7A\x87\x10\xF5\x72\x62\x2E\xAC\xCA\xEE\x54\x91\x51\xF8\x83\x99\x33\xBB\x7D\xD6\x72\xD2\x4C\x78\x51\xBF";"\x43\x8F\x74\xC0\x41\x7B\xAC\x0B\xE8\xB9\x64\xFB\x25\xC0\xBA\xBB\xD6\x42\x45\xF1\x00\xB8\x77\x37\x32\xA9\xD9";"\x34\xFE\x58\x85\x5F\xDB\xD5\x7B\xE6\xC5\x0F\xE5\x12\xD3\xAE\x20\xC8\x37";"\x9C\x75\xE3\x4B\x8F\xE7\xA7\x75\x31\x71\xB7\x64\xB5\x0B\x0A\x47\xCF\x3B\x93\x0B\xE0\x31\x96\xF4\xEA";"\xFD\x55\xBA\x40\xEB\x87\xC8\x57\xB0\xFE\xAC\x7F\x81\x06\x61\x02\x86\x10\x1A\xBA\xBA";"\x07\x4F\xAE\x57\x8E\xEA\x8F\x08\xAF\x9F\x66\x4B\xE8\x52\x0E\x18\x95\x7F\x7D\xB3\x5C\x3A";"\xB1\x71\xC4\x00\x27\x5B\x5C\xF3\x76\x23\x95\x79\x9B\x52\xD4\xC6\x46\xE5\xD0\x6D\x82\x6B\xC8";"\xA3\x08\xBE\x13\x9C\x39\x0C\x91\x20\x48\xCF\x35\x8B\x0B";"\x1E\x58\xA9\x51\x8D\xEF\x80\x00\xB2\xFC\x35\x4A\xFF\x1F\x7C\x74";"\xC0\x66\xD3\x62\x35\x47\x64\xF1\x77\x30\x9D\x47\x84\x5A\xDC\xD5\x78\xFD\xAC\x65\xA3\x15\xB9\xA8\x4F\xCC\x6A\x4F\x84\x74\xAC\x4F";"\x0B\x48\xB6\x21\x87\xE2\x85\x0D\x97\x95\x3C\x3A\xE8\x22\x7C\x71\x9F\x11\x17\xAD\x59\x74\xB4\xF0\xE8\x6F\x85";"\x9B\x33\xC1\xFC\x25\x69\x6E\xEA\x0E\x23\xA6\x4A\x73\xB4\xD7\x8C\x65";"\xDB\x7A\xFC\x26\xDB\xB8\xBB\xD8\x56\x5C\xED\x01\xD7\x78\x6D\x36\xE4\xC1\x82\x61\x8F\x4E\xEB\x81\xA3";"\x90\x67\xE7\x21\xFF\xB1\xBA\xDE\x5A\x44\xEF\x05\xBC\x76\x31";"\x63\xAB\x16\xD6\x0E\x42\x1C\xDB\x30\xF8\x52\x9A\x5F\x9F";"\xC4\x01\xEA\x13\xCE\xAB\x40\xCC\x78\x14\xFD\x1D\xA6\x41\x2C\x3E\x5E\xD5\xC0";"\xB1\x15\xDB\x14\xD9\x40\x4F\xE2\x73\x44\x8A\x61\x95\x57\x33\xA7\x58\xAB";"\xD2\x6A\x9D\x37\xF9\xBA\xB1\xD9\x47\x08\xEF\x60\xF7\x6C\x64\x34\xAC\xCE\xF4\x5E\x9E\x44\xFE\x9C\x81\x33";"\xCA\x32\xAA\xFD\x51\x5D\x7F\xA8\x7D\x63\xF4\x3B\xFE\xB0\xD0\xCF\x15\xE0\xFD\x4B\xED\x5A\x8A";"\x77\xDF\x04\xC2\x62\x1F\x1E\xBF\x3B\xEE\x0A\xA9\x0B\x8D\xE5\x92\x5E\xBA\xFF\xAB\x74";"\xEC\x61\x95\x49\xEA\x81\xA5\x26\xB4\x74\xD7\x18\xC0\x1F\x1D\x13\xA8\x6E\x5D\x0B\xF2\x0E\xC4\xFB\xDC\x09\xB1\x8E";"\xE5\x21\x4E\xFF\x18\x21\x77\xF5\x74\x41\xC7\x5E\x72\xB2\xF2\xF9";"\xB2\x7A\xF6\x3E\xFA\xBA\xBF\xD9\x5A\x61\xF4\x02\xB1\x75\x34\x2E\xA0\xDD\xBA\x3C\xC5\x59\xEF\x82\xA7\x3B\xBF\x71";"\xA6\x61\xF6\x28\xCE\xA5\x47\xD7\x4D\x40\xEA\x7B\xBF\x73\x38\x3D\x58\xDC\x8E\x73\xCD";"\xE2\xDD\x28\xEC\x0A\x65\x00\x8D\x09\x0C\xA6\xBD\x63\xBF\xF1\xFA\x1A\x80\xF2\x23\xC6\xF1\x32\x72\x6B\xEF\x0B\x37\xA0";"\x86\x6F\xEC\x51\xF5\x88\xA5\x30\xB4\x70\xD5\x01\xDA\x00\x17\x16\xB0\x3F\x01\x4E\xBE\x4E";"\x9A\x28\xC4\xF5\x21\x73\x69\xE2\x03\x29\xA1\x52\xE3\xA4\xA5\x89\x11\xEF\xA8\x10\xDD\x03";"\xCB\x0B\x90\x51\xC0\xA9\x44\x97\x23\x16\xBF\x70\xDB\x35\x20\x65\x19\xCD\xD3\x03\xE8\x56\xFE\xA4\xA5";"\x62\x85\x0D\x81\x66\x6E\x02\xB4\x33\xF2\x55\xA4\x58\x82\x91\x93\x34";"\xCE\x06\xF3\x29\xCB\xAA\x4E\xC1\x50\x5C\xFC\x7B\xA7\x7B\x24\x38\x58\xDD\xE6\x6A\x87\x34";"\xD2\x02\xF4\x2D\xC1\xA6\x45\xD1\x54\x5C\xFC\x7D\xA0\x7C\x26\x25\x24\xC0\xE1\x6A\x85\x30\xF5";"\x8F\x76\x8B\x30\xED\x81\xAD\x29\x40\x72\xC6\x08\xC4\x64\x07\x16\xB1\x31";"\xE3\x67\x98\x4D\xE9\x9C\xA4\x33\xBE\x76\xD1\x12\x93\x0D\x5A\x4E\xED\x65\x11\x16\xAA\x54\x93\xEF\x8C\x02\xAB\x84\xDE\x33";"\xF1\x53\x9D\x47\x87\xE8\x9B\x34\xEE\xEB\xA9\x24\xB9\x57\x16\x67\x87\x24\x03\x44\xB0\x6D\x8B\xE7\x85\x06\x95\x94";"\x8B\x37\x37\xE0\x01\x62\x78\x90\x14\x1D\xB2\x49\x7B\xBA\xED\x8E\x7B\x81\xA1\x21\xCB\xF7\x2E\x55";"\x0D\xBF\xB5\x68\x87\x8B\x93\x54\x91\xF2\x2D\x3C\xFF\x3B\x75\x70";"\xC9\x1F\xE9\x34\xC9\xA1\x42\xD2\x52\x50\xF5\x65\xAC\x2C\x2E\x72\x00\x8E\xBF";"\x20\xBC\x19\x9F\xFB\xCE\xA2\x60\xF9\xF4\x0B\x8B\x0D\x8E\x48\x09\xA4\x2D\x2F\x8D\x60\x9C\x53\xD6\xCE\x5C\xE3";"\xBD\x60\xB9\xEB\x58\x57\x33\xE8\x47\x47\xE0\x3F\x85\xFA\xCB\x8B\x30\x9C\xBA\x6F\x90\x01\xA1\x45\x4A\xF9\x7C\x4A\x89";"\x12\xC3\x7E\xCD\x50\x17\x64\x83\x25\x0D\x40\xB5\x6A\x92\xFF\x86";"\xF4\x5D\x92\x40\xE1\x93\x99\x32\xA9\x7D\xD6\x27\xD0\x14\x17\x16\xEF\x3D\x7D\x38";"\xF1\x5D\x8A\x29\x92\xF9\xF3\x43\xD4\x03\xC3\x5F\xD8\x19\x7C\x1F\xFC\x2F\x76\x51\xE5\x30\xDD\xF2\xD7";"\xF6\x2B\x85\xFB\x53\x6C\x71\xE2\x00\x27\xA3\x57\x70\xAC\xC6\xE7\x6B\xE6\xBC\x4E\xBC\x43\x20\x30\x5C";"\xC0\x00\xEC\x2E\xCF\xAB\x44\xDA\x6E\x57\xFE\x71\xAF\x43\x3E\x57\x39\xD2\x99\x6E\xE8\x33\xF4\xBF\xB3\x21\x43";"\x6D\xE0\x08\xD0\x1E\x0C\x42\xD8\x6A\x9D\x54\x99\x4B\x9A\x97\x9F\x31\xB2\x82\xC8\x32\xD6\x17\x6B\x0A\x80\x28\x0B\x42\xDF\x05";"\xAA\x1F\xDE\x0E\x21\x58\x5E\xEC\x27\x31\xE5\x7A\xF2\x4B\x86\xC9\x34\xEC\x8C\x5D\xF5\x34\x81\xED\x4A\x9E\x72";"\x3B\xAD\x4F\x72\xAB\xCE\xFD\x6A\x83\xB2\x19\xD4\x1E\x66\x59\x36\xF0\x79\x3D\x90\x62\x9F\x4A\xD5\xD5\x43\xE3\xC3\x06";"\x81\xCA\x20\xD4\x16\x76\x15\x98\x29\x0C\x41\xBA\x69\x86\xF9\xED\x1F\x99\x92\x3F\x34\xF8\x3C\x74\x76\x96\x18\x20\xAE\x4E\x6B\xB4";"\x48\x5D\xCD\x1A\xDF\xF1\x8E\x1F\xF4\x98\x4A\x5D\x99\x5B\x2B\x39\xCD\x46\x1D\xC0\x2E\x12\xDC\x84\xBF\x3C\x9C\xB8\x3D\xC2\x6E";"\xD4\x79\xF2\x20\xC7\xA0\xBB\xD0\x5D\x54\xF0\x05\xD5\x1A\x74\x32\xC9\xDC\xE1\x6E\x89";"\xF9\x56\xAF\x44\x99\x95\x9B\x02\xA3\x9D\xC3\x28\xD0\x0E\x67\x06\x94";"\x38\x88\x67\x93\x51\xD2\xD2\x5F\xFF\xCD\x01\xF7\x29\xCE\xA7\x5B\xD5\x4B\x52\xF2\x7F\xAB\x7B\x3F\x22\x58\xDA\xE8";"\x76\xDC\x1A\xDB\x66\x1E\x1E\xB0\x3D\xF5\x21\xAE\x26\x8E\x8A\x90\x00\xA0\x89\xC5\x2E\xE8\x16\x74\x19\x8F\x15\x17\xBC\xBD";"\x2F\xF7\x54\x8B\xAF\xC3\xE7\x73\xED\xBF\x17\xD7\x1E\xDB\x5B\x39\xE2\x21\x41\xE1\x74\x99\x56\x29";"\xD5\x72\xF2\x29\xEF\xE7\xFA\xC7\x58\x58\xE6\x01\xBD\x73\x2E\x28\xA1\xC5\xE9";"\x09\x29\xB5\x6D\x89\xE9\x84\x1B\x8B\x92\x31\x3D\xE5\x3A\x76\x1B\xF5\x5F\x23\xC3\x4F\x7F\xBB\xCF";"\x4D\x84\x74\xAA\x5D\x27\xC1\x54\xDE\xD7\x70\xF8\x32\xB9\xE6\xE3\x86\x4B\x00";"\x6C\xCB\x1C\xDA\x14\x14\x12\xBD\x23\x1E\x34\xB0\x53\x93\xE9\x8D";"\x75\xD4\x1F\xD6\x19\x16\x1B\xBF\x38\x08\x4F\xCB\x39\xD7\x96\xE7\x1B\xA8\x89\xC0\x37\xEB\x0F\x7C\x1B\x8E\x13\x14\xB7\xB4\x61\xBE";"\x63\xE0\x04\xB4\x68\x13\x3E\xB5\xC2\xF4\x5E\x97\x46\xE3\x82\xF0\x2C\xF8\x7E\xB8\x20\xDB\x14\x14\x13\x8A\x24";"\xE3\xCC\x46\xC8\x12\x06\x07\x94\x4D\x18\x43\xF3\x10\xD9\xE0\x9D\x40\x9E\xE7\x27\x20";"\x79\xDF\x1B\xD8\x1A\x14\x13\xBD\x24\x01\x5F\xA8\x57\x96\xEA\x89\x0B\xAF\x8F\x31\x39\xEE\x0D\x67\x7E\x99\x14\x1D\xB6\xBC\x7B";"\xC3\x0D\x87\x7D\xC2\xF9\x58\x9B\x64\x4C\xF6\x73\xA4\x45\x23\x38\x5F\xD0";"\x23\xA8\x42\x75\xAE\xEC\xF1\x63\x85\xA3\x23\xD7\x0C\x31\x5D\x61\xF7\x73\x3F\x93";"\xCB\x69\x6E\xAC\x60\x6D\x1F\x92\x18\x23\xAD\x4A\x76\xB1\xC2\xED\x64\x9A\xAC\x1C\xDA\x03";"\x13\xF4\x16\xBF\x78\x39\x32\x5F\xD9\xEA\x61\x9D\x37\xF3\x8D\xA9\x20\x4A\x00\xC0\x57\xC9\x0D\x1A\x23\xB3\x33\xFE\x51";"\xE2\x4E\xF3\x1A\xD3\x50\x51\xC6\x61\x4E\x85\x68\xB9\x4A\x2A\xC7\x47\xD6\xDB\x72\xF0\x31\x95";"\x14\xB1\xBA\x7F\xC3\xE7\xF0\x11\x91\xA4\x2F\xC1\xEF\x2E\x75\x6C\xE2\x09\x28\xA0\x52\x90\xB4";"\xFB\x48\xA3\x54\x95\x8E\x8E\x05\xA7\x82\xC6\x30\xE7\x0B\x72\x7F\xF2\x1A\x43\xDF\xEA";"\xAC\x15\xD4\x0F\x24\x40\x69\xF1\x78\x28\xF3\x53\xC7\x43\xA9\xC8\x24\xFC\x81\x16\x9A";"\x07\x45\xA8\x3E\xE3\xAB\x8B\x62\xA9\x98\x3C\x33\xEC\x01\x60\x7F\x97";"\xFB\x2F\xD4\x0F\x2E\x45\x6B\xEC\x70\x32\x94\x5E\x96\x5F\xD8\xDE\x7C\xFE\xC1\x09\xE1\x04\x97\x0C\x19\x98\x7D\x12\xD4\x6C\xA8\x48";"\x41\x8B\x67\x97\x50\x30\xD0\x41\xEC\xCE\x04\xF5\x2E\xAA\xB9\x04\xD0\x3A\x50\xF0\x7D\xBF\x7D\x3E\x30\x5D";"\x89\x37\xAE\x33\xA7\xE9\xA9\x88\x54\x7D\xEA\x01\xB0\x7B\x36\x25\xBB\xD5\xF6\x64\x92\x4B\xE9\x87";"\x28\x88\x6F\x92\x55\x2C\xCC\x4B\xEA\xC7\x68\xF5\x28\xC1\xAF\xBE";"\x41\x87\x63\x9A\x4A\x2C\xC1\x4C\xF5\xD5\x7F\xF4\x26\xC1\xA0\xA0\xD0\x5E\x5A\xF3";"\x5F\xA5\x69\xF3\x58\x65\x32\x2A\xCA\xDD\x71\x87\x3F\xF1\xBA\xAF\xDB\x41\x67\xE4\x03\xBA\x77\x13";"\x96\x35\xC4\xF5\x31\x74\x6C\xE2\x00\x29\xEF\x5D\x89\xAE\xC0\xE0\x6E\xF6";"\x22\x96\x78\x91\x57\xD7\xC8\x42\xEB\xD3\x1D\xF1\x2C\xCD\xA4\x40\xCA\x54\x55\xF6\x7B\xAA\x7A\x37\x24\x5F\xDD";"\x72\xDF\x10\xC4\x74\x18\x1D\xB5\x37\xFD\x44\xA4\x36\x8A\xD3\x93\x6A\xA1\x8E\xC2\x28";"\xA3\x49\xD2\xB7\x2C\x24\x74\xEB\x0E\x38\x9A\x50\x85\xB8\xC6\xDA\x7E\xF8\xB2\x11\x8C\x14\xDA\x55\x51\xCB\x65\x44\x86\x6A\x9B\x4F";"\x2C\xA5\x49\x97\xE7\xCF\xF0\x61\xE5\xF1\x4C\x8E\x5D\xCE\x0E\x41\x8F\x64\x00\x97\x3A\x8C\x4B\x82\xD9\x5E\xEB\xCD\x0B\xF3\x28";"\xBC\x15\xE0\x09\x89\x5C\x02\xD3\x37\x18\xD1\x71\x97\x4E\x28\xC1\x4C\xE8\xCA\x79\xF3\x2E\xCB";"\xC6\x0D\xE9\x10\xC9\xAE\x4B\xCD\x7C\x4C\xFB\x75\xAD\x41\x24\x38\x3A\xBF\xD7\x35\x82\x55";"\x2D\xA5\x54\x8F\xA1\xC1\xFB\x70\xFE\xB0\x10\xDD\x05\xDF\x44\x5F\xFA\x7C\x46\x8D\x6E\x97\x5A\xD1\xCA\x4E\xEE\xC3";"\x66\x8A\x13\xDF\xF7\x85\xCD\x29\xA3\xEF\x42\xBE\x08\xB5\x5D\x27\xDA\x25\x5B\x9B\x64";"\x86\xC8\x20\xD5\x7C\x76\x4E\x86\x44\x10\xB4\xB3\x6E\x85\xE2\x87\x0C\x88\x85\x3F\x3E\xF9\x3D\x7C\x7C";"\x45\xFF\x74\xB6\x5E\x3A\xC6\x53\xD8\xD8\x77\xFE\x25\xE2\xC5\xB9\x9A\x5D\x7A";"\x85\x4A\x23\xB6\x44\x6F\x11\xE3\x18\x57\xD5\x56\x38\xD1";"\x7D\xD8\x16\xDA\x13\x0E\x0D\xA0\x23\x03\x48\xAA\x52\x96\xF4\x8A";"\xD1\x73\xFC\x24\x9B\xD6\xC1\xB2\x57\x22\xF9\x7E\xBB\x10\x61\x76\xCF\xD2\xEF\x5D\x92\x4A\xE4\x8F\xBC\x29\xAD\x7A";"\x77\xD9\x1D\xC8\x04\x05\x10\xBA\x3A\xFF\x48\xAC\x38\xF9\x98\xCB\x05\xC9\x97\xC5\x39";"\x23\xC6\x48\x83\x48\x0D\x42\xE3\x79\x57\x59\xF1\x00\x81\xBB\x86\x19";"\x1D\xB2\x45\x7B\xB2\xF0\xF4\x64\x80\xB2\x27\xCF\x09\x2D\x48\x62\xE6\x0C\x2E\x90";"\x5A\xEA\x63\xAE\x4B\x2A\xCC\x48\xD4\xD5\x7F\xFF\x34\xC8";"\xDC\x35\x55\xE1\x38\x7D\x76\x97\x05\x20\xB7\x51\x6C\xB3\xC8\xE9\x62\x8A\xAD\x04\xB9\x16\x61\x44\x35\xF3\x71";"\x00\x53\xBA\x55\x94\xE3\x8F\x07\xA9\xE1\xC8\x59\xAC\x05\x0B\x01";"\x33\x97\x40\x9F\x5E\xDB\xD6\x79\xF3\xAF\x15\xB9\x68\xCD\xEE";"\x4A\x87\x66\xA9\x4F\x2A\xC2\x58\xD5\xDC\x7E\xF9\x25\xFF\xBF\xD5\xC6\x1D";"\x11\xB0\xB6\x7F\xB8\xFF\x99\x73\x88\xF2\x3A\x98\xFC\x33\x4B\x6B\xEC\x08\x28\x9D\x56\x8A\xA5\xD3\xDF";"\x29\xAB\x52\x81\xAA\xC2\xE6\x7B\xEB\xB1\x14\xD9\x07\xD4\x5B\x46\x8D\x76\x05\x90\x7E\xEB\x2C\x37\x89\x47\x87\xC4\x00\xF7\x2E";"\xB9\x1D\xD0\x0D\x6D\x49\x5D\xF0\x75\x32\x9A\x65\x9A\x45";"\x2D\x90\x7A\xBB\x28\x5F\x97\x5A\xAA\xBC\x29\x84\x3C\xAE\xAA\xE6\xA0\x24\x0D\xFF\x0D\xC1\x70\x52\x3F";"\xD1\x1D\xE6\x7B\xF8\xD8\xBC\xDA\x41\x60\xEA\x0F\xB4\x6A\x0F\x3D\xAD\xCC\xE9\x5F\x96\x43\xE4\xE8\x92\x61\xD9\x3E\xD3\x4B\xDF";"\xC4\x6F\x83\x3C\xF5\xBD\xAE\x20\x43\x64\xEC\x11\xCA\x68\x04\x2A\xAE\x32\xF6\x55\x9A\x56\x9F\x99\x90";"\xFF\x5F\x9F\x40\x9E\x94\x93\x38\xBC\x86\xA4\x25\x8D\x09\x2E\x08\xEF\x2E\x0C\xBB";"\x36\x94\x5E\x9C\x59\xD5\xC2\x77\xF2\xC6\x0E\xE9\x12\xD2\xC7";"\xD6\x73\x82\x36\xFC\xB5\xAF\x22\x4E\x77\xE9\x19\xCE\x60\x05\x26\xB7\x36\xF7\x51\x99\x40\x99\x96\x91";"\x1C\xB3\x40\x71\xAD\xF5\xF4\x67\x87\xA6\x27\xCC\xE2\x69\x4C\x0D\xED\x0B\x39\x9D\x5E";"\x8B\x3A\x3C\xE1\x00\x61\x7F\x8A\x0A\x07\xB5\x48\x7A\xBC\xF3\xF1\x05\xD8\xA8\x7F\xD3";"\xD3\x73\x82\x38\xFC\xBA\xD8\x31\x2B\x74\x88\x01\xB3\x6B\x0F\x21\xAD\xCD\xF7\x51";"\x8F\x29\xEC\x77\xA3\xEA\xA6\x8D\x05\x35\xF8\x52\xEB\x31\x5E\x3D\xFC\x9A\xFC\x32\x9E\x49";"\xA8\x26\xC4\xF3\x30\x71\x71\xEE\x04\x29\xA6\x57\x89\xC5\xCC\x9E\x6B\xF4\xBF\x1D";"\xE3\x6B\x39\xF7\x03\x63\x7A\x97\x13\x1D\xAD\xA7\x62\xBC\xF6\xF1\x14\x84\xA1";"\x05\xB8\x65\xAC\x50\x5B\x58\x25\xB9\xCD\x68\x9D\x2C\x89\xF0\xE0";"\x9D\x37\x3F\xFC\x3D\x7F\x71\xF3\x68\x2E\xEE\x4B\x1A\xAD\xC0\xE9\x6D\x89";"\xC6\x03\xE9\x10\xC4\xB3\x47\xC8\x6B\x57\xFC\x74\xA3\x2F";"\xCD\x05\x92\x07\x87\xA6\x14\xD5\x3D\x12\xD7\x62\xFD\x57\x44\xCD\x07\xC1\x88\x34\xED\x59\xEC\xE8\xBA\xD9\x5B\x6A\xE8\x01\xB6";"\x5D\xEB\x00\xB3\x6D\x29\x52\xBF\xCB\xEB\x64\x99\x46\xF4\x83\xA6\x2A\xB3\x7D";"\x33\xF4\x35\xC2\xA3\xB1\xDE\x75\xFC\xB5\x0E\xEA\x19\xD7\x57\x44\xC6\x68\x48\x8F\x6E\xA5\x4F\x41\xC9";"\x1F\xA4\x4C\x7B\xB5\xF2\xE9\x64\xCD\xA4\x26\xCD\x0F\x29\x42";"\x21\xAC\x4D\x7B\xAF\xCA\xF2\x6D\x80\xB6\x17\xD7\x02\x3A\x11\x02\xA2\x6D\x6E\xCC\x35\x89\x0C\x8E\xC3\x1F\xB9";"\xC3\x34\x59\x8D\x5D\x11\x7C\x90\x1D\x1F\xAF\x42\x60\xAB\xF1\xF5\x63\x82\xAB\x27\xA3\x61\x70\x50\x17\xE3\x23\x2F\x99\x5B\x87\xA5";"\xCE\x04\xEB\x36\xCF\xAC\x45\xCE\x69\x56\x94\x64\xE2\x43\x51\x39\x50\xD7\xDC\x6F\x87";"\x50\x2A\xA3\x75\x9A\x81\xF5\x1B\x88\xCD\x44\x48\xED\x5F\x2C\x32\xF7\x12\x7A\xAD\x56\x65\xB9\xD9\x8D\x64\xCF\xDF\x29\xC8\x62\x67";"\x4F\xBE\x7B\xCA\x42\x3F\x32\x58\xD9\xC3\x6F\x82\x32\xF0\xB0\xC3\x2D\x5E\x60\xE0\x09\xC6\x6E\x0B\x3E\xAF\x34\xFD\x5B\x9C";"\x82\xC2\x2A\xD2\x1B\x68\x09\x8B\x2F\x10\xBA\xB5\x78\xE8\xF6\xFE\x04\xF0\x96\x37\xC2";"\x2B\x98\x2A\x9B\x51\x70\xBD\x01\x81\xD7\x2A\x98\x77\x96\xE2\x40\xC4\x00\x2A";"\xD7\x10\x99\x27\x81\xA4\xD5\xCD\x56\x51\xF3\x7B\xBC\x7B\x28\x30\x55\xC7\xE1\x68\x8F\x5D\xF3\xE3\xEC\x28\x22\x6E\xDE\x1D";"\x17\x40\xB1\x6B\x8E\xE5\x85\x11\x8F\x88\x35\x3A\xE5\x3E\x7D\x70\x80\x75\x3C\xEB\x44";"\xF1\x30\x47\x97\x69\x0A\x74\x9B\x7B\x01\xE0\xDA\x0A\xA8\xF8\xE7\x7D\xFB\xB2\x2E\xA5\x9C\x43\x19\x60\x8B\x15";"\x2F\xE4\x65\xD2\x53\x41\xD7\x47\xE8\xC8\x75\xF3\x2F\xDD\xA4\x46\xD4";"\x05\xB6\xBE\x7F\xBE\xF5\xF1\x19\x9C\xAF\x27\xC1\xF7\x38\x49\x6F\xE3\x09\x33\x94";"\x58\xEA\x6E\xA7\x32\x35\x5A\xBC\xC9\xEA\x6E\x8F\x4B\xEF\x97\xAD\x2C\xBC";"\x3C\x9A\x59\x85\x5C\xD0\xCD\x7B\xF8\xB9\x07\xEC\x11\xD0\x5D\x22\xDB\x38\x56";"\x26\x87\x49\xF0\xA9\xD8\xDE\x74\xFB\xBE\x13\xE2\x05\xD8\x51\x5B\xF8\x62\x40\x8F\x00\x81\x4F\x3D\xA4";"\xAC\x3F\xD3\x09\x20\x43\x6B\xF4\x6F\x2A\x90\x5D\x8B\x58\xDD\xD4\x7D\xFB\xC9\x0E\xE3";"\xB2\x58\x8E\x51\xD6\x3E\x52\xC0\x63\x42\x82\x71\xA9\x54\x3A\xDF\x4B\xD6\xDD\x77\xFD\x2A\xE7\xD2\xD4\x9D\x5A\x0B";"\xE8\x59\x97\x43\xF1\x82\x9B\x32\xB4\x7D\xD6\x24\xB3\x14\x49\x0A\xF8\x25";"\x15\xB7\xBE\x6A\xBC\xFF\xF6\x0D\x9A\xA2\x28\xC7\xF3\x36\x4C\x6C\x88\x10\x68\xA1\x39\x8A\xA5\xC1\xE0\x73\xF4\xB7\x1E\xDA";"\xB1\x75\x98\x9C\x57\x2B\x00\xF4\x1F\x37\xB0\x31\xE6\xB0\xA9\xF8\x18\x97\xDE\x50\x81";"\xCD\x68\xFE\x27\xF9\xB7\xBE\xD0\x36\x0C\xE5\x43\xB5\x19\x16\x24\xA4";"\x79\x45\xBA\x54\x97\xE9\x8E\x01\xAA\x97\xC0\x37\xEA\x04\x67\x08";"\x45\x82\x62\x9A\x45\x2B\xC5\x40\xE2\xD9\x65\xEF\x3A\xC3\xBE\xB8";"\xDD\xAE\x74\x85\x7A\x11\x6D\xE1\x6A\x6C\xA6\xD1\x17\x95\xF6\xE0\x04\xFD\x81\x33\xAF\x8E\x4D\x67\x32\x8F\x6A\x51\xFF";"\x61\xE0\x09\xB5\x6D\x1B\x27\xA8\xCD\xF8\x50\x95\x45\xE4\xF6\x84\x71\xBE\x17\xCE\x26\xD8";"\x3E\x96\x65\x98\x53\xD5\xCA\x45\xE7\xCF\x00\xE8\x26\xC8\xA6\x44\xD1\x29\x4C\xE6\x79\xA5\x7D\x3C\x31\x5F\xC4\xC7\x73";"\xD7\x79\xFC\x23\xC8\xB8\xBD\xDD\x5C\x48\xE9\x02\xBC\x73\x32\x35\xA7\xCC\xE5\x65\x8E\x49\xEF\x89\xAD\x26\xB0\x71\xD9\x0C\xC0\x61";"\x67\xE4\x16\xAB\x73\x07\x28\xAA\xCF\xF2\x5F\x8F\x00\xBB\xD1\xC2\x26\xC2\x67\x83";"\x01\x4C\xAF\x52\x84\xFB\x8E\x09\xA8\x98\x31\x3E\xE3\x6F\x16\x70\xD1\x1E\x77\xB0\x4A\x79\xB2\xF6\xF3\x7F\x82";"\x17\xAF\x41\x70\xB0\x98\xE2\x3C\x9A\xEE\x23\xBB\x08\x2B\x40\x64\xEE\x6C\x28\x92\x59\x83\x58";"\x74\xC3\x17\xC5\x6D\x0C\x18\xBE\x2E\xE9\x2C\xBC\x43\x9F\x94\x92\x3F\xA2\x8C\xD9\x33\xCE\x08\x69\x09\x8A\x2E\x10\xA6\xE2\x3B\x93";"\x08\x45\xA9\x75\x8F\xE3\x85\x17\x93\x95\x5B\x21\xB7\x42\x61\x33\x9D\x71\x21\xA8\x41";"\xAF\x1E\xD1\x17\x2E\x45\x65\xF4\x77\x38\x95\x43\x99\x5A\xDB";"\x90\x3E\x38\xFA\x35\x33\x7A\x9E\x1B\x22\xA1\x41\x75\xB3\xCF\xF7\x61\x88\xA4\x18\xD2\x1B\x77\x39\x6C";"\x2C\x89\x52\x88\xA5\xC0\xE3\x72\xF7\xBD\x0B\x83\x11\xDA\x55\x52\xF9\x6D\x4A\x97\x68\x98\x56\x2E\xCC\x48\xE5\xB6\x70\xFC";"\xAD\x0D\x8A\x36\xF4\xFF\xF5\x37\xB4\x62\xCC\x2D\xD0\x15\x13\x07\x9C\x20\x02\x44\xB1\x68\x81\xF2\xC6\x54\xC2\xCB\x24\x4D";"\xD0\x73\xEB\x3A\xFF\xB5\xB1\xDD\x46\x62\x87\x15\xF5\x72\x62\x36\xAA\xCE\xEA\x54\x90\x51\xE4";"\xE4\x01\xB9\x48\xC9\x03\x5E\xF8\x65\x46\x83\x6F\x88\x46\x2F\xC1\x4E";"\x95\x37\xD7\xF9\x36\x74\x76\xEB\x09\x21\xA2\x20\xE0\xE8\xCF\x8C\x72\x8F\xB3";"\x54\xE8\x61\x9A\x44\x27\xC7\x4D\xE2\xCC\x70\xFE\x2E\xC2\xB2\xB9\xDE\x2F\x51\xF6\x01\xBA\x70\x35\x34";"\x88\xC4\x2D\xEB\x0F\x66\x04\x8E\x17\x0C\xD9\xA7\x28\xF3\xAA\xA7\x4D\x88\xF5\x73\x85\xA1\x23\x2D\x3A\xF6";"\xAF\x05\xD4\x05\x25\x42\x5B\xFF\x73\x57\x8D\x24\x9C\x32\xD7\xD7\x7A\xE6\xC0\x0D\xF0\x0E\xCB\xAA\x4F\xC9";"\x09\x88\x64\xF8\x02\x30\x61\x34\x9D\x9C\x04\xCF\x48\xFC\x8B\xA9\x27\x4D\x6A\xD4\x14\xCD\x7B\x1F\x3C\xB8\x37\xFB\x55\x9F\x5D";"\x8D\x35\x37\xED\x1E\x64\x7F\x95\x16\x1C\xB3\xBB\x77\xBC\xF1\xF5\x1E\x86\xA6\x37\xB7\xE8\x32\x4E\x6E";"\xDD\x70\x80\x38\xF4\xB5\xB9\x26\x51\x23\xE4\x66\xD0\x6B\x0E\x20\xA9\xC8\xF3\x42\x9F\x45\xE6\x9D\x9D";"\x3D\xF4\x1D\xE0\x41\x4F\x3E\x53\xDE\xDF\x73\x83\x22\xE5\xB3\xB6";"\x4C\xDE\x22\xC9\x01\x6F\x94\x1A\xB2\xD4\x1D\xEC\x36\xDE\xE2\x15\x96\x14\x15\xA8";"\xEA\x64\x8B\x4C\xF7\x8D\xA3\x2D\xB3\x75\xDE\x19\xC9\x62\x11\x1C\xBD";"\xAB\x24\xD3\x1C\x2A\x43\x65\xFA\x73\x34\x90\x55\x9E\x5A\xDB";"\x0E\xDB\xB6\x16\xF8\xFF\x9C\x1C\x9E\xA3\x2F\xC8\xFF\x35\x42";"\x21\x9A\x35\x84\x19\x06\x67\x97\x60\x5F\x05\xF5\x2C\xD7\xF2\xF5\x14\xD7\x8C\x61\x65\xB7\x22\x34\x34\x85\x4E\x65\xF1\x15\x30\xEA";"\x12\xBF\xBE\x7B\xD1\xE1\xB3\x1D\xF1\xBF\x2B\xC8\xF4\x32\x4F\x69";"\xB6\x1B\xD1\x05\x23\x5C\x58\xF1\x69\x3A\x92\x6A\x90\x5E\xD7\xD2";"\xEF\x55\x96\x4A\xE4\x82\xB4\x35\xB4\x71\xD0\x1F\xDD\x18\x71\x08\xEA\x5B\x1F\x0E\xAB\x3A\x8D\xE8\x8C\x0F\xAB\x8D";"\x38\x89\x66\x9A\x53\xCE\xC8\x5D\x9D\xD0\x0F\xE7\x29\xC8\xA5\x43\xD5\x48\x5A\xFF\x79\xA2\x41\x3E\x22";"\xB0\x22\xDA\x96\x45\x3A\x72\xEC\x62\x3B\xE2\x4A\x95\xCE\xAB\x8D\x0D\x83\xAA\x1C\xCC";"\x67\x80\x0E\x92\x1A\xC3\x84\x23\xB0\xD4\x0D\xE3\x15\xCA\xA8\x4C\xC8\x74\x46\xF8\x77\xA6\x47";"\x3B\x90\x7D\x9A\x5D\xDA\xD5\x7F\xE3\xD9\x05\xEE\x10\xCF\xA8\x40\xCE\x68\x52\xF6\x63\xA6\x44\x24\x35\x50\xDF\xDB";"\x72\x95\x3D\x91\x16\x7E\x07\x85\x27\x08\x41\xB5\x73\x81\xE0\x87\x0C\x93\x91\x59\x27\xA7\x3C";"\xF9\x51\xA2\x5D\x9A\x90\x83\x47\xFE\xD3\x9B\x3C\x8B\x5B\x7E\x07\x8F";"\x9E\xD2\x34\xD5\x13\x6B\x0C\x8E\x2F\x17\xD0\xB9\x6B\x8D\xEF\xFE\x19\x95\x9B\x31\x36\xEA\x3B\x73\x77\x9C\x01\x21\xA2\x46";"\x75\xDC\x18\xC0\x64\x0C\x1A\xBE\x3F\xF6\x4D\xAD\x5A\x9D";"\x3D\x91\x62\x9B\x55\xD4\xD7\x47\xE8\xC3\x64\xE3\x2D\xC9\xA9";"\xC1\x04\xEC\x2B\xC3\xA4\x5F\xC6\x53\x55\xF9\x78\xA8\x47\x25\x38\x53\xDE\xD6\x64\x85\x3F\xE8";"\xFA\x0D\x90\x50\xA0\x92\xDB\x34\x3C\x68\x8D\x49\x93\x72\x59\x48\xF1\x79\xBE\x0D";"\xEC\x53\x9F\x59\x9A\x9E\x95\x3C\xB6\x80\xC8\x2D\xDE\x16\x6F\x0C\x81\x2B\x0B\xA9\xBA\x69\x85";"\x16\xBF\xA3\x63\x80\xE1\xF5\x10\x9D\x98\x5F\xAC\xF4\x7C\x73\x18\xE2\x00\x23\xAC\x4F\x71\xAC\xC7\xE4\x6D\x9E\xB0\x1B";"\x2F\xDE\x5B\xEA\xA2\xD1\xD2\x7D\xFF\xBE\x16\xF9\x18\xDD\x5F\x4D\xC7\x63\x24";"\x82\x7C\xC9\x87\x2D\x6B\x66\xE2\x02\x2E\xA5\x4D\x92\xB2\xDE\xE2\x6B\xF3\xB4\x1A\xD9\x19\xC6";"\xFB\x56\x96\x55\x82\xF6\x99\x59\xCE\xF7\xA7\x6C\xDC\x77\x02\x4C\xE6\x70\x03\xE6\xAC\x38\x99\x94\xE7\x63";"\xCE\x60\xC9\x98\x2B\x4F\x6D\xE9\x09\x35\x82\x53\x84\xA0\xCD\xDE\x73\x90\xD6\x56\xE3\x72\xDA\x51\x51\xC7\x64\x44\x82";"\x75\xD2\x77\xD9\x5B\x1A\x73\xB2\x3F\xFC\x48\xAD\x52\x89\x9D\x89\x04";"\x38\x94\x65\x91\x55\xD4\xCD\x46\xE6\xC0\x0F\xEF\x2F\xA1\xF9\x18";"\x8A\xAA\x37\xA8\x09\x07\x07\x8B\x1C\x13\xBD\xBC\x7A\x9D\xFA";"\xA6\x1E\xB5\x2B\xA3\xBC\x4B\xD0\x57\x55\xFC\x74\xBF\x65\x23\x3E\x5B\xDA\xE5\x60\x84\x2E\x9F\x97\xE9\x27\x27\x6D\xE7\x1A";"\xC9\x07\xE9\x2A\xC2\xA8\x4C\xC8\x59\x4E\xFC\x7B\xA6\x41\x3E\x3D\x40\xDF\xDA\x6C\x8C\x38\xF1\xBE\xAA";"\x1D\xA2\xB0\x60\x83\xED\xFA\x13\x86\x9D\x36\xC0\xF9\x38\x71\x6F\xBB\x0B\x27\xA5\x4A\x73\xAB";"\x13\x1B\xF7\x05\x80\xEB\x83\x0E\xAE\x8D\x35\x35\xE2\x06\x73\x7A\x95\x17\x1F";"\x08\x46\xB0\x69\x8F\xE7\x9B\x16\x94\x95\x34\x3E\xFE\x51";"\xDD\x38\xF1\x40\xC7\xA0\x40\xD8\x52\x59\xF3\x7D\xBE\x72\x29\x35\x5B\xC1\xEB\x62\x8D\x30\xF7\xE4";"\x45\x82\x64\x8F\x4A\x2D\xC1\x48\xE3\xD6\x61\xEB\x3A\xC5\xB3\xB5\xDC\x5F\x54\xE8\x00\xB9\x74\x35";"\xE7\x6D\x8B\x30\xE6\x89\xA4\x22\x48\x6F\xDB\x11\xC0\x63\x18\x07";"\xEB\x61\x8B\x46\xE3\x87\xB9\x30\xBD\x77\xDF\x1C\xC8\x1F\x03\x19\xB9\x3B\xFF\x4F\xA1\x57";"\xA5\x25\xCB\x0D\x2A\x4F\x66\xF5\x7D\x33\x99\x5A\x88\xA8\xDA\xD5\x76\xFC\xBE\x0E\xE7\x1A\xD3";"\x79\xCC\x24\xDD\x0A\x6A\x09\x84\x21\x00\x45\xAA\x6A\x96\xE9\x83\x0D\x95\x92";"\xBF\x1E\xC3\x04\xC6\x5E\x51\xFB\x60\x42\x88\x70\x8D\x2D\x31\xD6\x43\xEE\xC9\x79\xF3\x2B\xDE\xA1\xBB";"\x1D\xED\xB8\x69\xF1\xF4\xA2\x1B\xC7\x8B\x63\x9F\xAD\x28\x2F\x63\xB9\x0B\x74\xA9\x41\x00\xBD\x94\xEB\x1D\x9B\xE0\x46\x83";"\x29\xA3\x47\x86\xB7\xDB\xF8\x6C\xF6\xB6\x1A\xD8\x04\xC6\x0C";"\x47\xF4\x08\xBC\x7A\x30\x32\x47\xC2\xED\x66\x88\x31\xEF\xE2\xEE\x71\x11\x2C\x8A\x06\x95\x73\x50\x43\xA6\x4B\x90\x03\xCC\x45";"\xC6\x77\xEC\x61\xC6\xCE\xB6\xD3\x53\x52\xF0\x09\xA3\x70\x36";"\x65\xE0\x11\xCC\x67\x04\x35\xB3\x35\xF1\x57\x9A\x59\x99\x9F\xFA\x26\xFE\x80\xA2\x2C\xD1\x11\x63\x03\x87\x34\x10\xB8\xB4\x6B";"\x43\x8D\x62\x9B\x49\x2D\xD9\x14\xE5\xA9\x72\xFB\x66\xD3\xE5";"\x64\xD6\x39\xCB\x3E\x91\x89\x15\xF3\xDB\x14\x8D\x42\xAA\xD2\x41\xC5\x78\x59\xEB\x18\xBA";"\x58\xED\x44\xBC\x12\x30\x33\x5B\xC2\xE6\x64\x8B\x36\xE8\x86\xBC\x28";"\x50\xF1\x7F\xCE\x73\x69\x52\x1D\xDA\x8B\x72\x8F\x33\xF0\xB4\xAE\x2F\x56\x62\xE5\x12\xC8\x6E";"\x1C\x23\xB5\x48\x8C\xED\x89\x0F\xA1\x87\x39\x36\xE0\x11\x62\x7B\x90\x1B\x18\xB0\x47\x67\xA0\xE7";"\xB4\x13\xD9\x0B\xDD\x5F\x58\xF9\x6D\x42\x8F\x67\x94\x55\xDD\xCC\x43\xFD\x8F\x5A\xA4\x77\xD8\xE1\x4E\xD4\x53\x54\xF0\x7E\xA2\x79";"\x47\x8D\x6F\x9D\x5A\xDC\xD5\x02\xEF\xA0\x03\xF6\x21\xCC\xA6\x43\xD5\x54\x52\xF4";"\x78\xDE\x7B\xD8\x27\x06\x77\xAB\x3B\xFA\x52\xA4\x59\x90\x8C\x8B\x1E\xA0\x87\xC5\x2B\xD4\x0F";"\xCE\x6A\x2D\x97\x31\x0C\x6F\xF5\x03\x50\xA4\x16\x2F\xED\xDA\xB1\x69\xFE\xB5\x47\xCA\x50\x3A\x2D\x6C\xAF\x29";"\x97\x32\x39\xE5\x3E\x7D\x6A\xE5\x03\x20\xAA\x43\x76\xB3\xC9";"\xD9\x77\xEF\x33\x9C\xF4\xB2\x49\x40\x64\xE6\x0B\xCD\x69\x0B\x22\xAD\xCD\xE7";"\x0B\xBE\xB4\x6D\x86\xEF\x84\x7C\xFD\x95\x73\x3C\x97\x26\x7B\x7C\x9C\x02\x22";"\x05\xB1\x45\x7F\xB4\xF2\xF7\x63\x99\xEC\x25\xA5\x0E\x2A\x4E\x62\xE7\x71\x2E\x98\x58\x83\xA6\xD1\xD3\x16\xF3\xE5\x15";"\x27\xCF\x56\x75\xA9\xC7\xEE\x6D\x8C\xAD\x07\xCB\x02\x24\x4C\x55\xF6\x79\x22\xFF\x6A\xF2\x1C\xD3\xB8\x42\xE7\xC3\x00\xE4";"\xA8\x15\xDD\x08\x30\x4E\x59\xF9\x7B\x30\x93\x5E\xF2\x46\xB8\x91\x7F\x8F\xD9\x03\xED\x13\xCA\xA9\x40\xD1\x61\x48";"\x78\xE3\x68\xE6\x5F\xBE\x91\x2A\xEF\x98\x1D\x9B\x5C\xA4\xAF\x26\xD0\x3C\x20\x99\x76\xF9\x62\x54\x6E\x34\xD5\xB5\x73\xED\x60";"\xB7\x6D\xC4\x3C\x92\xAF\xB1\xD9\x43\x64\xE4\x0B\xA8\x6D\x0A\x2D\xA8\xCA\xF6\x32\x8F\x00\xE1\xEF\x94\x35\xBD\x7E\xD6\x22";"\xE8\x6D\x80\x3F\xBC\x86\xAA\x24\x4C\x6A\xEA\x13\xD3\x63\x05\x24\xB6\x35\xF5\x5F\x8D";"\xC1\x61\xED\x19\xD1\xAD\x4E\xCF\x6F\x49\xF5\x61\xAE\x4D\x20\x3D\x51\xD4\xDB\x1D\xE3\x7B\xF8\xD8\xA8\xDF\x40\x61";"\xC2\x2D\x3D\xF6\x63\x6B\x3C\xED\x05\x14\xDE\x2D\x15\xD4\xF3\xE9\x01\xDB\xA2\x5D\xBA\xE0\x31";"\xDE\x38\x87\x16\x67\x16\x39\xAE\x21\x24\xCA\x46\xC0\x52\xBF\xB3\x07\xE1\xBA\x0E\xEC\x12";"\x76\xD8\x17\xC4\x62\x18\x1C\xA8\x24\xE1\x52\xA5\x5D\x95\x92\x89\x1E\xA0\x83\xC6\x25\xEC\x0B\x64\x05";"\x6D\xEC\x09\xB6\x68\x0A\x3C\xA8\xC8\xF2\x56\x92\x4C\xE2\x87\x80\x5D\xAF\x6A";"\x55\xF2\x73\xB6\x79\x3D\x38\x5B\xD9\xE8\x69\x8A\x39\xF2\xB3\xAF\x2F\x4C\x6D\xF9\x10\xCF\x68\x09";"\x84\x1C\xA3\x47\xBC\xE7\xF8\xC6\x43\x4F\x8C\x65\xC9\x13\x3D\x73\xBB\xA0\x83\x79\xE8\x20\x87\xCD\xC8\x3C\xB6\x33\xD2";"\x0E\xB9\xBC\x60\x81\xF8\xFB\x06\x86\x83\x2B\xC2\xF2\x36\x7E\x6E\xF9\x0F\x2C\xA8\x4F";"\xBF\x0A\xE7\x1B\xCF\x4E\x0B\xCC\x3B\x50\xD0\x72\xF9\x52\x4C\xC9\x33\xCD\xD2\x7F\xFE\x26\xC0";"\xCB\x02\xEC\x2B\xCB\xAA\x44\xD0\x4C\x49\xFA\x78\xA0\x7D\x31\x38\x43\xD5\xD9\x6A\x8D\x37\xF2\xB0\xB4\x21\x47\x6A\xE9\x11\xCD\x6A";"\xB3\x10\xD1\x07\x28\x5D\x5C\x99\x12\x30\xC8\x61\xF0\x57\xD3\xD6";"\xFB\x57\xC8\x58\xC2\xFE\xCB\x05\xC9\x97\xC3\x32\xEA\x00\x63\x07\x91\x0F\x08\xB6\xB9\x66\xBF\xFF";"\xC5\x3D\xB5\x5D\x7C\x5E\x79\xF9\x7A\x6D\xF6\x59\x94\xBD\xC8\xBA\x21\x9F\xC2\x75\xFB\x75";"\x9F\x47\xDE\xF8\x34\x76\x77\xE3\x1B\x2B\xA5\x4C\x89\xA9\xA1\xFD\x2A\xF7\xD8\x12\xDF\x02\x25\x59\x5D\xF8\x79";"\x33\x9C\x5A\x89\xB9\xB4\xD0\x10\xBA\xBC\x66\xE0\x13\xDC\x55\x46\xDB";"\x62\xE9\x0D\xB9\x77\x12\x36\xA2\xCF\xED\x59\x92\x4C\x88\x9A\xE2\x2C\xF7\x7B\xBB\x1E\xDD\x18\x11\x15\xB8\x26\x0D\x4A\xA3\x45";"\x0C\xBC\xB5\x68\x82\xFC\x85\x19\x96\x90\x31\x38\xFD\x2B";"\xF3\x53\x80\x4A\x95\x9D\x9E\x3D\xBD\x83\xCF\x2E\xC2\x15\x6A\x0F\x82\x24\x0B\x42\xFF";"\x2A\x9E\x5A\x9A\x5D\xDA\xD6\x6F\x9B\xA9\x55\x83\x11\xD0\xA2\x4A\xC0\x6A\x50\xFB\x72\xA3\x46\x23\xC5";"\xBD\x15\xAE\x3A\xF0\xD7\xE8\xB9\x1B\x4D\xE5\x17\xD5\x75\x42\x52";"\xD3\x5F\xB7\x45\xC0\xFC\x15\x9F\x7E\x1B\xA1\x37\xFF\x55\x7F\x68\x40\xD2\xD1\x76\xFF\x37\xFB\xB7";"\xF7\x3D\x4C\x8F\x22\x10\x15\xC0\x69\x29\xD5\x2D\x1A\xA3\xB8\xFF\x3D\xD6\xEE\x5F\xD5\x18\x34";"\xB3\x1E\xDE\x02\x24\x5B\x4F\xF7\x79\x34\x8A\x6B\x98\x54\xC7\x8A\x4C\xA4";"\x81\x38\x3A\xE0\x3B\x7F\x7D\x92\x05\x6D\xA3\x42\x7D\xB4\xF0\xE8";"\xDC\x75\xFB\x31\xF7\xB2\xB4\xD4\x43\x67\xED\x0D\xB2\x72\x09\x28\xAA\xCC\xEB\x5E\x91\x59\xE1\x8C";"\x81\x7E\xDC\x63\xE4\xE4\xA1\x23\x4A\x63\xE4\x11\xCA\x60\x1F\x20";"\x41\x81\x66\xBA\x48\x24\xC7\x44\xDD\xD6\x7F\xFE\x30\xBB";"\xE6\x68\x83\x36\xE8\xA9\xA5\x2E\x4B\x6D\xEB\x18\xD5\x0D\x0C\x2B\xBB\x32\xFF\x56\x9B\x59\x80\x96\x9E\x3C";"\xC8\x6C\xE6\x26\xFA\xBC\xBC\xDA\x5C\x79\xF6\x41\xB9\x2D\x5F\x7E\xCB\x9F\xF7\x38\x9C\x18\xF4\xFC\xBB\x2E\xB7\x76\xDD\x1C\xC5";"\xCF\x79\xF5\x20\xA9\xB9\xFB\xD5\x39\x52\xF7\x05\xB7\x79\x30\x33";"\xDB\x75\xF6\x23\x87\xAB\xA8\xD9\x42\x65\xEF\x03\xB4\x74\x0C\x28\xAC\xCF\xEB\x5E";"\xB3\x1C\xDF\x05\x22\x58\x30\x98\x38\x3E\xF8\x61\x90\x5E\xD3\xD8\x41\xFA\xDA\x05";"\x51\xBB\x4F\x81\xA7\xC1\xE4\x77\xF7\xAA\x0E\xC0\x15\xD8\x5B\x51\xFE";"\xD2\x71\xFB\x3D\xC9\xBF\xBB\xD6\x57\x5A\xF5\x1F\xC6\x6E\x2A\x35";"\xBC\x17\xDA\x17\xC3\x4F\x28\xE5\x67\x43\x8B\x6E\x94\x4D\x33\xD5\x4E\xEB\xCA";"\x0F\xBC\xB6\x70\x85\xE5\xF8\x11\x90\x9E\x36\xC9\x93\x34";"\xBC\x0A\xD5\x23\xAC\x9E\xE6\x2E\xDC\x70\xD3\x12\xC7\x1F\x16\x04\xBC\x3F\x09\x4B\xA7\x55";"\x87\xCF\x2A\xD4\x04\x6B\x0C\x80\x2C\x04\xBD\xB7\x63\xEB\xFB\xC5\x13\xFB\x91";"\x4B\xFE\x72\xA8\x4D\x3B\x3B\x55\xD0\xDA\x79\xFE\x52\x97\xBE\xF1\xDF\x2F";"\xBF\x74\xAE\x4D\x85\xB8\xD1\xD6\x59\x5F\xE5\x03\xB8\x71\x33\x39\xA1\xD5\xE9\x62\x8F\x4C\xE2\x88\xA5\x2E\xD8\x1E";"\x4F\x97\x76\xAE\x4F\x24\xC9\x55\xD7\xD9\x72\xEB\x34\xFF\xBB\xB1\xDB\x47";"\xB0\x61\xD5\x50\xB2\xB5\xDA\x22\x42\x61\xE3\x09\xCE\x6D\x04\x20\xBB\x37\xF6\x5D\x9D\x41\xE0\x9C\xF6";"\xAE\x08\xDF\x05\xDC\x5F\x50\xFA\x62\x2C\x94\x23\x95\x39\x2A\xCB\x44\xE9\xCC\x02\xF2\x2B\xC5\xA0\x55\xD4\x56\x55";"\xF4\x5D\x95\x47\xEA\x9F\x8D\x4F\xB1\x21\xB8\x4B\xB5\x7E\x1D";"\x21\x87\x1B\x92\x75\x6A\x3E\xCE\x3C\xB5\x19\x87\x3E\x82\xE8\x80\x6C\xE6\xD4\xDF\x64\x81";"\x6F\xC1\x05\xC7\x69\x13\x1C\xB6\x3F\xE4\x21\xA8\x30\xD2\x95\xFA\x07\xA5\x8F\xC7\x2C\xEA\x0E\x6F";"\x95\x3F\x3E\x90\x51\x70\x33\x9D\x71\x3F\xAE\x48\x76\xB4\xCE\xEE\x7F\x88\xAD\x1C\xD5";"\x7B\xCF\x22\xD3\x0D\x12\x10\x87\x25\x01\x45\xC3\x61\x8D\xEE\x8D\x08\x9D\x91\x3E\x3C";"\x12\x5D\xAD\x6B\x88\xEA\x8D\x0C\xF9\x99\x6D\x51\xA4\x3D\x13\x79\x9C\x1F";"\xFC\x5C\xF7\x2D\xDB\x9A\xF3\x3C\xBB\x7D\xC6\x20\xDD\x14\x13\x0A\x92\x27\x02\x43\xB1\x6F\x89\xE1\xEF";"\x45\x85\x75\xAC\x45\x20\xC8\x53\xC4\xD6\x73\xFA\x39\xFB\xB9\xBE\xD8\x37\x6F";"\x41\x88\x76\xB6\x56\x3E\xCC\x4D\xD2\xD2\x7D\xFB\x3B\xFE\xBC\xBC\xD9\x5D\x5B\xE7\x0D\xBB\x72\x31\x2F\xA7\xCA\xE3\x60\x96";"\x73\xD2\x1B\xC4\x00\x1C\x10\xBB\x33\x07\x4E\xAA\x5E\x91\xE2\x8C\x00\xAE";"\x52\x53\xE3\x70\xE5\xFC\xC0\x0A\xF6\x8B\x41\x21\x9B\x25\x64\x22\xC3\x59\x77\xF0\x1E";"\x48\xFC\x72\xA4\x4D\x48\x32\x56\xD6\xDB\x78\x87\x3F\xFA\xB3\xAF\xDA\x40\x6D\xE6\x08\xB6\x60\x0E\x28\xAC\xCE\xF1\x56\x94\x40\xFE";"\xB9\x3D\xC6\x58\xB5\xC2\xF5\x63\xEA\x67\x83\x43\x89\x0C\x46\x1A\xE4\x21\x1A\x54\xAD\x55\x93\xEC\x8D\x03";"\xB8\x0F\xE0\x14\xC9\x50\x46\xC6\x61\x4E\x88\x6C\xD3\x51\x20\xC7\x4F\xDF\xD2\x74\xE6\x20\xFE";"\x20\x8F\x63\x9F\x57\xD3\xD1\x5C\xF8\xD5\x04\xEE\x28\xC9\xAC";"\x8A\x70\x31\xE6\x39\x78\x72\x98\x00\x23\xAF\x47\x7F\xBA\xC2\xEE";"\x3D\x89\x66\xF8\x39\x91\xCD\x2C\xE3\xCA\x09\xF7\x27\xCB\xA0\x40\xC8\x5E\x40\xF5\x7D\xA1";"\xAA\x2A\xC3\x38\xED\xC1\x96\x6E\xBD\x86\xB7\x5E\xB6\x09\x05\x10\x87\x05\x75\xAB\xD5\x3E\xDD\x93\xEE\x64\xE7\xFF";"\x45\x89\x68\x92\x4F\x2D\xCA\x42\x84\xC2\x63\xF2\x2C\xC3\xA3\xBE\xCC\x5A\x5A\xF4\x06\xBF\x79\x33\x36\x5C\xC1";"\xDA\x72\xFF\x22\xC6\xA4\xB2\xD2\x56\x5B\xE9\x0D\xD7\x69\x72\x2C\xCB\xC0";"\x97\x28\x24\xFF\x3B\x7B\x70\x99\x19\x29\xB1\x4B\x76\xB7\xC9\xED\x6D\x8E\xAC\x26\xCF\x0E\x22\x46\x69\xF4\x74\x27\xD2\x5F";"\x08\xF8\x4B\xCD\x72\x56\x57\xA4\xC9\xF8\x5F\x95\x47\xE1\x87\x98";"\xE6\x2B\x79\xF1\x46\x64\x69\x97\x05\x22\xAB\x49\x70\xAD\xD1\xF6\x63\x8A\xA8\x1E\xD2\x0E\x3C\x5F\x42\xF6\x71\x30\x96\x57";"\xD0\x65\xF7\x3C\xF2\xB3\xB3\xD8\x4C\x09\xF7\x4E\xB2\x04\x01\x2B\xA9\xCD\xE7\x59\x88\x4C\xE7\x86\x9C\x35\xB3";"\x9D\xD9\x2D\xDB\x0D\x6C\x0E\x90\x31\x0C\xC2\xAE\x63\x82\xE2\xFB\x16\x9D\x80\x2F\xC6\xFE\x39\x74\x73\xE3\x1F\x3A\xA6\x45\x76";"\xE7\x87\x30\x83\x1A\x68\x04\x9A\x12\x10\xB2\xA6\x75\xB8\xF5\xF1\x1F\x93\xCF\x44\xC5\xB2\x33\x21\x77\xED\x07\x2A\x9D";"\xF6\x43\x94\x5C\x9F\x9F\x9F\x3A\xBE\xEF\xD5\x4B\xA8\x0D\x19\x16\xC0";"\x6E\xD9\x16\xC8\x7F\x1B\x5C\xA9\x2D\xFE\x52\x96\x58\x98\x9B\x89\x26\xB8\x85\xCA\x2A\xD4";"\xD9\x02\x9E\x02\xB4\x59\x5F\xF2\x7C\x3E\x8B\x63\x95\x56\xC0\xCE\x43\xE2\xCF\x07\xF3\x2D";"\x42\x89\x73\x8C\x1E\x43\xC9\x48\xEB\xCB\x7B\xFC\x21\xC6\xB0\xB7\xD0\x56\x5D\xF0\x6D\xA3\x61\x2F";"\x9C\x75\x95\x34\xFA\xBF\xBC\xDD\x45\x78\xF7\x01\xB0\x73\x0E\x2E\xA9\xA3\xE3\x20\x8C\x49\xE5\x8F\x9E\x36\xA8\x64\xD8";"\xBB\x1D\xDF\x14\x21\x51\x5E\xFD\x79\x38\x8A\x09\x86\x11";"\xF8\x4A\xA3\x58\x96\x8A\x89\x1C\xA9\x88\xC6\x2C\xE8\x0B\x75\x1D\x92\x68\x0B\xA7\xBB\x61\x86\xFA\xF8\x1C\x83";"\xB3\x74\xB3\x65\x82\x23\x36\xFE\x01\x25\x92\x04\xF9\x33\xA7\xCD\x18\x87\xA8\x7B\x9F\x6C\xCD\xD1";"\xDD\x29\x9D\x60\xC1\xCF\xBF\xDF\x5C\x5E\xF0\x03\xA2\x65\x32\x3A\xA2\xC4\xE0\x6D\xE1\x5F\xA9\x8C\xCD\x2F";"\x2C\x91\x59\x9F\x5C\xDB\xD1\x74\xED\xA9\x06\xBC\x7B\x8B\xAA";"\xBC\x2C\xC0\xF4\x31\x48\x6C\xFC\x48\x74\xF6\x0C\x98\xFE\x96";"\xD5\x3A\x5C\xFA\x07\x7E\x7B\x9D\x1C\x1E\xA8\x47\x7D\xB1\xF8\xF6\x62\xEC\xBE\x62\xCF\x66\x2D\x48\x63\xE6";"\xED\x5A\x90\x56\xEE\x80\xA6\x39\xB9\x7B\xBA\x73\x98\x19\x77\x17\xBD";"\xD8\x1A\x81\x3A\xFF\xB0\xB2\xDD\x40\x64\xEC\x1E\xB1\x6D\x06\x2F\xAE\xCC\xF5\x32";"\x26\xAF\x45\x72\xB0\xA6\xF1\x0E\xC8\xAE\x48\xD0\x00\x25\x46\x62\xFB";"\xCA\x29\xC6\xF7\x30\x4F\x6E\xFE\x11\x2D\xA2\x52\x88\xAF\xC8\x8D\x1F\xFC\xF3\x14\xB6\x1A\xD4\x5A\x54\xFE\x72\x42\x88\x7D\x97\x54";"\x7D\xD4\x23\xD8\x13\x19\x09\xEF\x2C\x5C\x5E\xE9\x6F\xE7\xF0\x8F";"\x1D\xB2\xBF\x7A\xD3\xE3\xBD\x1B\xF3\xBD\x2B\xC3\xF5\x32\x7C\x6F\xFD\x09";"\x0D\xE2\x5D\xAC\x37\x36\x47\xAF\xCB\xEB\x61\x99\x4A\xF5\x88\xA5\x33\xB7\x73\xDD\x71\xDE\x59\x1C\x7D\xBC";"\x43\x9E\x14\xE6\x5A\xB2\xC0\x77\xF5\xA5\x6B\xB7\x0B\x92\xC8\x58\xCC";"\x04\x4A\xAE\x55\x84\xEB\x89\x00\xAA\x85\x39\x36\xEF\x6B\x0A\x0C\xD5\x12\x73\xB4";"\x31\xBB\x77\x91\x26\x16\x00\xA4\x5D\x87\x28\xBB\x23\xF3\x92\xE0\x5D\xD2\xFA\xCE\x26";"\xD2\x74\xF4\x20\xF5\xBC\xAB\xC0\x46\x65\xE9\x0F\xB4\x7B\x0E\x34\xC8\xD0\xA8\x61\xF9\x4F\xEF\x84";"\x6E\xD3\x23\xD9\x1B\x15\x15\x80\x26\x6B\x59\xE8\x50\xE6\xE6\x87\x0A\xA3\x91\x3F\x2C\xFA\x0A\x7A\x7F\x93\x19";"\xA4\x0C\x8B\x03\x8E\x11\x47\xE1\x76\x24\xCF\x7C\xFF\x0E\x44";"\x3F\xE0\x41\x39\xC6\x89\x8B\x65\xF8\xAD\x73\x89\x6A\x2F\x09\x56\x9E\x0E\x51\x9E\x06\x84\x3C\xA5\xBD\x4F";"\xD4\x65\x85\x38\xF4\xB4\xA1\x55\x4D\x2C\xFF\x17\x9A\x66\x52\x7D\xF2\x25\xA1\x57\xE8\x59\xB2\x80";"\x83\xC5\x2B\xEA\x15\x38\x59\xDB\x3A\x4B\xEF\xA8\x00\x91\xBE\xA2\x41\xC1\x8D\x70\x9C\xA8\x67";"\xE6\x7E\x8F\x36\xE8\x8C\xA0\x2C\x48\x61\x9C\x4F\x92\x3C\x0B\x4C\xB8\x3D\xFD\x52\xA4\x51\x9E\x97\x94";"\x2A\xA3\x4F\x1C\xAC\xA2\xAF\x69\xE5\xAF\x15\xD5\x03\x20";"\x94\x3C\x21\xFA\x08\x78\x7D\x92\x19\x1C\xB7\x5E\x78\xB4\xFE\xF3";"\x1B\xB2\x43\x78\xB8\xF4\xEF\x04\x9A\xA4\x27\xC8\xF5\x2F\x47\x70\x9D\x63\x5A";"\x72\xA3\x38\x6D\xA9\xFC\xEF\x64\x85\xAE\x20\xCD\x16\x34\x4A\x66\xE4\x7F\x35\x9C\x42\x9A\x42\xD9\xD8\x70\xF1";"\x59\xC1\x05\xC7\x02\x98\xD8\x6D\xE6\xD0\x69\x8D\x7E\xDC\xC6\x58\xBE\x7B\x5E\x8E\x7C\xAD";"\x04\x41\xA9\x56\x87\xF4\x80\x08\xAD\x95\x3F\x36\x89\x0E";"\xAA\x17\xDF\x1C\xD5\x55\x4C\xFE\x78\x40\x8D\x6F\xFB\x5C\x7C\xA1";"\x06\x4B\xA5\x5A\x9E\x89\x88\x00\xA8\x88\xC0\x39\xF2\x0C\x63\x04\x93\x13\x1F";"\x32\x96\x01\xD2\x1C\x4D\x29\x3C\xBA\xF8\x3A\xF4\x3D\xED\x89\xA9\x22\x48\x69\xD9\x11\xC0\x63\x10\x1E\xB1\x33";"\x15\xB6\xBB\x7B\xBF\xFE\xF7\x19\x84\xBE\x32\xD4\xF8\x33\x49\x6A\xED";"\x35\x96\x5E\x9F\x5A\xD5\xD2\x7D\xFE\xC2\x0A\xED\x16\xD3\xAF\x4A\xCF\x7E\x1B\xA1\x37\xFF";"\x47\x82\x6D\x9A\x4F\x37\xAB\x25\xAF\xD3\x13\xEA\x2F\xCA\xBB\xB5";"\xB8\x17\xD9\x16\xDF\x53\x40\xFC\x61\x44\x8E\x6C\x97\x4D\x20\xA5\x56\x82\x8B\x7C\x9E\x21";"\x76\xC0\x1C\xCE\x6C\x0E\x1B\xB7\x2A\xE5\x4D\x9D\x5D\x98\x9A\x97\x3B\xB9\x9C";"\x2A\x86\x44\x89\xA7\xD0\xD8\x73\xFC\xA5\x0F\xE2\x1A\xDC\x55\x4E";"\x68\xC7\x1A\xCE\x65\x02\x26\xB0\x33\xF6\x5A\x9F\x5A\x92\x9B\x94\x38";"\x7E\x81\x11\xF4\x24\x4E\x6F\xE6\x91\xFD\x0D\x8B\x2C\xFA\xCC\xC7\x3A\xEC\x64\xBF\x53\xC0\x66";"\x6C\xEA\x0D\xB3\x02\x14\x43\xEE\xCB\x84\x5D\x91\x43\xE0\x86\x9D\x34\xB1\x78\xD0\x35\xDF\x1F\x12\x11";"\xE7\x54\x92\x49\x88\xEB\xDA\x32\xD8\x64\xD5\x1E\xD8\x19\x11\x08\xA5\x39\x01\x4A\xA3\x57\x89\xF1\xE5\x07\xA1\x89\x3C";"\x9B\x1F\xCF\x4D\xA4\xFD\x86\x44\xAC\x2F\xDA\x7B\x9D\x4C\x7B\x0C\xBD\x41\x7F";"\xC2\x26\xCD\x09\x2C\x44\x67\xED\x73\x21\x9A\x5C\x80\x59\xD0\xDC\x7F\x94\xB2\x0F\xE3\x17\xD2\x52\x47\xC5";"\x6B\xE4\x0E\xCA\x6B\x06\x38\xAF\x30\xF5\x58\x9E\x45\xF2\x95\xC3\x22\xFD\x7D\xA5\x24\xD1\x1C\x1D";"\x40\x83\x7F\x97\x49\x29\xC0\x4D\xEA\xCA\x13\xF8\x73\xAF\xE1\xBD\xBC\x4F\x58\xF0\x02";"\x52\xFC\x77\xA7\x4D\x20\x37\x4E\xB8\xD7\x05\x9F\x7B\xE9\xE9\xBF\x8A\x5A\x0F\xF4";"\x66\xE3\x0C\xB8\x76\x14\x2C\xA8\xCB\xE7\x5C\x9C\x5E\xE6\x87\x9E\x35\xB4\x7E\xD3";"\xA6\x17\xD6\x04\x3F\x58\x5E\xFF\x7B\x3D\x94\x68\xF3\x45\x96\xD0\x17\xE6\xC3\x06\xE9\x11\xC8\xA7\x4D\xC9\x6E\x45\xFE\x73\xA1";"\x73\xC5\x7E\xD1\x1C\x46\x70\xD6\x78\x0B\x2D\xF8\x55\x94\xEA\x81\x5A\xD7";"\x5D\xFA\x1C\xA1\x65\x33\x34\xAA\xC3\xE0\x6C\x95\x57\xE0\xD3\xCD\x54\x26";"\x39\x8D\x61\x9C\x5C\xD7\xC4\x25\xEF\xCB\x01\xF4\x2D\xC0\xA0\x46\xD1\x56\x55\xF0\x78\xAB\x78\x3D\x25\x27";"\x02\x4C\xAE\x51\x90\xF1\x8B\x01\xA7\x8B\x39\x31\xEE\x06\x6F\x02\x96\x12\x18\xB3";"\x32\x9D\x5D\x86\x42\xDB\xD8\x7D\xFC\xC1\x09\xFD\x15\xDB\x52\x4B\xC0";"\xD7\x70\x80\x3C\xFF\xB4\xBB\xD9\x40\x65\xE2\x1E\xB1\x6F\x09\x2F\xAF";"\x81\xA1\x2B\xD5\x13\x6E\x03\x8D\x29\x0E\xBD\xB3\x7F\x84\xE3\xF9\x12";"\x7D\xCD\x27\xD5\x04\x51\x57\xD2\x7C\x1A\x2B\xBD\x6F\x89\xE2\x82\x0B\x96\x91\x29";"\x83\x1F\x81\x5D\x93\xFB\xBB\xB2\x5E\x68\xE9\x05\xB7\x6E\x32\x24\xA3\xCF\xEF\x0F\x9C";"\xE3\x67\x8E\x3A\xEF\x8B\xA1\x34\x4D\x77\xDD\x14\xC0\x63\x14\x49\xBB\x66\xE3\x06";"\xF1\x00\xC9\x1D\x9E\x8E\xB9\x33\xA2\x73\xC5\x7E\x99\x04\x70\x03\xC7\x55\x6A\x08";"\xEE\x5C\x95\x49\xEF\x84\xA8\x39\xB6\x71\xDE\x19\xDB\x13\x0C\x50\xBC\x4E\x0B\x4C";"\x66\xE4\x0D\xAE\x76\x12\x20\xAB\xCA\xF0\x5F\x91\x5D\xFF\xF9\x84\x30\xB5\x79";"\x98\x2E\xDD\x97\x58\x32\x6C\x8B\x0A\x2B\xA0\x49\x8E\xA8\xD8\xF8\x64\xF6\xB4\x1F\xDF\x02\xB2";"\x48\xA6\x72\xA1\x73\x3E\x3C\x5C\xCC\xE7\x71\x88\x35\xF7\x8B\xAF\x2D\x49\x6B\xCD\x50\x92\x30";"\xD9\x16\x8B\x70\xDB\xEC\x3E\xCC\x3A\x0D\x88\x04\xDC\x17\x61\x2E\x5D\xCF\xBB\x27\xF2\x6A\x8E\xF1\xD6";"\x5C\xF8\x66\xD2\x77\x36\x33\x58\xCC\xED\x6B\x8C\x2D\xED\x8A\xAB\x29\x4F\x66\xD2\x18\xC4\x64\x05\x1D\xBF\x30\xF8\x51\xBD\x46";"\xA6\x42\xAB\xB0\x31\x1F\x6A\xE2\x0A\x2F\xA1\x58\x8F\xA8\xD4\xE1\x72\xF3\xBE\x14\xDE\x06\xB0\x53\x57\xFF\x7F\x46";"\x71\xDD\x10\xC0\x61\x1F\x77\xA8\x7B\xFF\x27\xBE\x5D\x97\x94\x90\x04\xA5\x95\xDF";"\x27\x8E\x65\x98\x5F\xD7\xD0\x4A\x8C\xCA\x50\x86\x69\xCE\xC6\x5A\xC9\x6D\x51\xFB\x71\xA7\x5C\x22\x27\x52\xD8\xDE\x6F\x87\x32\xEF";"\x25\xAE\x4A\x7E\xAC\xD2\xF7\x65\x8A\xAA\x1B\xDB\x0D\x3F\x2A\x6A\x9A\x34\x3A\xFC\x43\x95\x58\xD8\xD2\x78\xE7\xD8\x03";"\xC3\x60\xBD\x4C\xC5\x08\x11\x84\x73\x18\x90\x2B\xF7\x1F\x7D\xD5\x2C\xD9\x82\x2A\xA6\x63\xAA\xA8\xEA";"\xFB\x51\xD9\x42\x88\x95\x8B\x07\xAA\x8E\xC8\x32\xF7\x17\x60\x05\x8E\x17\x14\xB3\xA3";"\x65\xE0\x09\xB3\x6A\x15\x22\xAB\xCE\xF7\x58\x96\x2A\xEF\xC0\x85\x71\xBE\x17\xD0\x24\xD0\x13\x19\x12\x8B\x23\x02\x53\xAE";"\xA4\x2F\xC9\xED\x29\x4C\x69\xED\x00\x2C\xF3\x49\xFE\xDA\xD9\xAC\x6B\xB5\xB7\x6C\xF8\x03\xD8\x50\x51\xFD\x65\x41\x99";"\x58\xFA\x75\xA7\x2E\x38\x78\x54\xB6\xDA\x75\x84\x38\xF1\xB4\xB6\x2A\x44\x6E\xF0\x0B\xB2\x64";"\x12\xB0\x44\x63\xA1\xEF\xF3\x19\x82\xA0\x24\xC3\xEA\x32\x48\x6F\xEF\x0A\x36\x96\x4D\x86\xAB\xC4\xDD\x75";"\x90\x3B\x22\xEF\x04\x79\x7C\x9D\x14\x18\xDE\x5E\x3C\xB5\x9B\xF7\x66\x85";"\xCA\x7C\xFA\x2B\xC7\xA7\x42\xD1\x54\x50\xF7\x7F\xA1\x73\x3C\x31\x5A\xC7\xEB\x76\x8D";"\x94\x3B\xC0\xFB\x37\x65\x71\xE3\x02\x2E\xA4\x4B\x8C\xA4\xA0\xFB\x04\xCE\xB0\x72\xC5";"\x09\x59\xAC\x6F\x88\xE2\x85\x14\x90\x8F\x2C\x23\xFA\x20\x7F\x76\x99\x1C\x20\xAA\x5C\x76\xB2\xCA\xE4\x63\x84\xB5\x3A\xCB\x11";"\xF7\x18\xB2\x04\x24\x5B\x5E\xFC\x76\x23\x88\x60\x98\x56\xD2\xCA\x2D\xFF\x8D\x02\x84\x2E\xC8\xA1\x44\xCF";"\x54\xF3\x79\xA5\x77\x2D\x3F\x5A\xDD\xDB\x6F\x80\x3D\x99\xD8\xEB\x25\x29\x77\xE5\x14\xCD\x6D\x05\x23\xB1\x2F\xE8\x50\x9F\x40\x9B";"\x46\x89\x56\x99\xB0\xBD\xA4\x68\xEC\xC4\x50\xB6\x71\xC8\x4F\x47\x9D\x7B\x45\xFC\x68";"\xF6\x49\xA1\x5D\x93\x85\xCB\x5F\xF7\xD4\xD1\x65\xF2\x7C\x6F\x5C\xD3\x53\x05\xED\xA7\x34";"\x33\xFC\x4C\x83\x49\xB1\xD9\x7D\xE4\xC4\x08\xE1\x12\xCD\xAA\x4A\xCC\x6C\x4C\xF8\x7F\xC9\x48\x3B\x3A\x55\xD4";"\xA9\x26\xC9\x0C\x2D\x4C\x7F\xE8\x77\x30\x99\x5D\x98\xBC\xA4\xC3\x66\xFB\xBD\x0D\xE5\x12\xD2\x4B\x56\xDD\x67\x4E";"\x50\x94\x68\x9C\x51\xD9\xD3\x45\xE2\xC5\x10\xEF\x13\xCA\xA9\x4F\xC1\x68\x3C\xF5\x2C\xBF\x06";"\x4D\xA4\x2D\x30\xB1\x9F\xED\x6F\x88\xAB\x22\xD0\x12\x35\x40\x6A\xF7\x71\x32\x93\x31\xEF\x50\x9A\xD4\x13\xF9\xC7\x00\xE3\x1F";"\xD2\x7F\xFB\x24\xC4\xA7\xBE\xD4\x59\x5E\xEC\x00\xD6\x1B\x73\x33\xCA\xC3\xE9\x66\x87\x4F\xED";"\xA4\x22\xC8\x08\x37\x48\x6F\xE9\x08\x30\x80\x06\x8B\xF3\xB1\xA8\x19\x8D\xB0\x6B\x88\x7F\xBB\x33\x5C\xBC\x78\x55\x83\x69";"\x44\xCB\x0C\x8A\xAB\x9B\xE0\x6D\xE7\xB8\x08\xB9\x68\x64\x5A\x3F\x8F\x6C\x22\x9F\x04\xEF\x2D\x96\x9A\x28\xF6\xAD\x07";"\x73\xDA\x13\xC7\x18\x1A\x11\xBE\x3D\xFB\x46\xB8\x5D\x9D\x92\x86\x04\xAB\x96\xBC\x28\xF3\x0A\x6A\x07\x8B\x12";"\x09\x4D\xBC\x54\x90\xE8\x8E\x00\xAF\x8A\xCB\x3A\xEF\x0E\x64\x08\x9A\x0D\x6A\xAE\xBE\x75\xB5\xF8";"\x33\x8D\x0E\xC4\x1E\x4E\x94\x40\xD5\xD4\x7B\xFD\x23\xFA\xB9\xA3\xDB\x5A\x5E\xEB\x04\xB4\x74\x31\x3F\xDB\xCF\x8E";"\x72\xDD\x15\xC7\x6A\x1F\x14\xB5\x35\xF8\x55\xA3\x50\x9F\x95\x95\x05\xAE";"\x44\xFE\x77\xC6\x4B\x71\xAA\x15\xD2\xB3\x6A\xF6\x3C\xFB\xB9\xB6\xD9\x5E\x6B\xEA\x09\xB4\x79\x0E\x46\xC6\x8A\xEC\x36";"\xE4\x55\x9E\x5B\x92\x95\x94\x36\xF3\x89\xD6\x2C\xD5\x0E\x6E\x00\x8F\x32\x09\xBB\xB4\x62\x81\xE7\xE3\x7C\x80\x80";"\x37\x9D\x5C\x80\xA4\xC9\x9F\x79\x95\xB6\x0B\xE0\x1E\xD0\x50\x53\xC8\x65\x4D";"\xB0\x0D\x87\x5C\x8D\x0E\x05\xE9\x1A\x4D\xE7\x7E\xD0\x4A\x88\x93\x15\xBC\x97\x12\x87\x24\x83\xEC\x1F\x8C\x05";"\x85\xC0\x2E\xD5\x09\x69\x12\x88\x28\x14\xBA\xBE\x6C\x84\x89\xE0\x52\x9F\xF0\x33\xC8\xFC\x3F\x76";"\x07\x4C\xA8\x5B\x94\xF7\xEB\x5D\xF7\xD2\x6D\x6E\xB1\x12\x72\x7A\x96\x18\x18";"\x2E\x85\x6E\x9B\x4D\x29\xC8\x54\xE9\xD5\x77\xF5\x21\xC2\xC9\xD1\x8D\x50\x3A\x99\x5D";"\x14\x49\xA3\x5F\x96\xEA\x8E\x03\xAE\xE1\xCE\x4F\xF0\x1A\x68\x05\x93\x17\x15\xB5\xA0\x65\xA1\xFA\xFE\x19\x92\xA4\x2A";"\x13\x45\xA6\x64\x8D\xEF\x80\x17\x89\x95\x3E\x3D\xE8\x08\x7B\x60\x9F\x16\x1C\xA5\x40\x7A\xB3";"\x9B\x36\x39\xF9\x23\x37\x77\xF6\x05\x2C\xAA\x4A\x74\xAC\xCD\xEA\x69\x8E\xBA\x19\xD3\x06\x2C\x4C\x59\xF0\x1F\x37\xCA\x78\xDA\x5B";"\x96\x3A\x31\xE0\x07\x7D\x79\x84\x5F\x63\xA1\x18\x63\xD7\x89\xED\x17\xFE\xB1\x45\xB0\x01\x7D\x27";"\x4A\x8B\x05\x8A\x15\x28\xA1\x4D\xEB\xCC\x7F\xF4\x2A\xDD\xBA\x48\xD5\x51\x5B\xF5\x7D\xD1\x62\x78\x36\x35\xC4\xE5\x6D";"\x8E\xC6\x27\xE4\x16\x74\x19\x8A\x17\x12\xB9\xBE\x61\x99\xE0\xA9\x16\xEC\xF5\x49\xA9\x88\x29\x2C\x63\xAB\x4E\x35";"\xAB\x4E\xDF\x5E\x4C\x04\x62\x99\x73\x33\x94\x5C\x86\x41";"\x41\x3E\xC2\x62\xDF\x9D\x99\x66\xD7\xEA\x56\x37\xB4\x41\x64\x13\xC7\x67\x72\xA3\x07\x0B\xA8\x9E\x96";"\x80\xCA\x2E\xD0\x12\x61\x0F\x89\x20\x0B\xBE\xD8\x68\x81\xED";"\x41\x80\x0A\x8B\x16\x29\xA6\x58\xEA\xCD\x06\xFB\x2A\xCE\xBD\x58\xCF";"\x73\xCF\x79\xC7\x67\x0E\x1F\xB1\x31\xFF\x4D\x9D\x57\x9B\x93\x9D\x39\xAF";"\xA5\x22\xC8\xF6\x25\x5B\x67\xEE\x08\x36\x9C\x53\x80\xB2\xA1\xD0\x1C\xE7";"\x4E\xD1\x71\xD5\x52\x42\xD6\x4F\xE8\xCD\x78\xF4\x2E\xDE\xA2\xB8\xD3\x54\x5D\xF7\x12";"\x3C\x86\x62\x95\x39\xD8\xC6\x46\xE4\xCE\x09\xF7\x29\xD4\xBA\x5F\xCE\x5F";"\xBF\x62\xCF\x4D\x4B\x57\x72\xEE\x63\x57\xE4\x0E\x9F\x32\xD3\xA7\x13";"\x26\xDC\x64\xD6\x7C\x1B\x1C\xD7\x30\x4F\x4A\xEB\x7C\xDA\xB2\xD0\x1E\xD2\x83\x61\x34\xA6\x10\x26\x39\x8B";"\x04\xF7\x40\x13\xB5\xF5\xF8\x61\x82\xA3\x27\xC5\x0A\x2B\x58\x66\xEE\x0F\x31";"\x99\x58\x98\x44\xE3\x98\x92\x37\xBB\x7D\xCE\x36\xDA\x17\x13";"\xE5\x1B\x85\x27\x91\xE1\xA9\x47\xA9\x18\xBA\x74\xCC\x3F\x12\x70\xE3\x53";"\xBB\x0A\xE1\x1C\xDE\x55\x59\xAC\x7C\x0C\x85\x05\xB1\x4E\x2A\xC7\x47\xD7\xD1\x61\xFC\x27\xC4\xB8\xBA\xD3\x33\x42\xA9";"\xC0\x05\xE7\x2E\xCE\xAD\x59\xD6\x48\x54\xFD\x7D\xA2\x48\x3C\x22\x42\x8F\xD3\x0A\xEF\x7A\x98\xDC\xB2";"\x53\xF6\x7D\xB4\x75\x39\x36\x32\xB7\xA6\x6B\xE3\x37\xF7\x8C\xA2\x25\x4F\x6D\xDE\x10\xC9\x73\x06\x20\xB0\x32\xF8\x51";"\xDA\x79\xFD\x3B\xC9\xBB\xBC\xD2\x5F\x5E\x81\x0E\xA6\x77\x3E\x38\xA4\xC7\xE0\x7C\x8F\x49\xEC\x8A\xAC\x26\xB6\x74\xD4";"\xBA\x65\xD2\x65\x34\x4A\x65\xE8\x7E\x34\x93\x40\x8B\x59\xDB\xD0\x71\xFF\xAD\x02\xBD\x0C\x97\x56\x27\xC3";"\xB1\x12\xC1\x1A\xC0\x5F\x56\xFA\x7E\x49\x80\x63\x8E\x4B\x5E\xC0\x22\x87\x96\x6E\xA3\x34\xB5\xAD\x35\xC2\x00\x09\xA2\x6D\xBA\x74";"\xA3\x46\xCC\x4E\x27\x2D\x56\xF0\x71\x3A\x98\x5F\x84\x47\xDB\xD5\x7F\xE7\xC7\x0C\x87\x0C\x8B\xAA\x23\xC3\x61\x48\xFF\x76\xAC\x59";"\xAA\x23\xCE\x0B\x2D\x4A\x64\xE7\x03\x35\x9C\x50\x8E\xA7\xC7\xC2\x69\xFE";"\x32\x9B\x50\x82\xCF\xB6\xD0\x31\xFE\xD7\x0E\xE5\x19\xD2\x51\x52\xCB\x7A\x40\x87\x68\xAC";"\x6E\xDD\x13\xC3\x65\x13\x16\xB6\x30\xFA\x54\x9E\x57\xF7\xFE\xD1\x3F\xCF\x8D\xCC\x28\xD7\x0B\x6F\x13\x97\x20";"\x72\xD8\x1E\xC1\x64\x13\x14\xA5\x78\xFE\x38\xBF\x51\x90\x92\x93\x06\xA9\x9C\xCF\x2A";"\x3B\x89\x0D\xD8\xF5\x97\xC3\x21\xA1\xE9\x1C\xB6\x45\x82\x4B\x07\x84\x3E\x1B\xC3\x37\xF3\x15\x34\xA3\x57\xA3\xB8";"\x31\x90\x5C\x9A\x5A\xD3\xDB\x2C\xF4\x80\x53\xBF\x4E\xDF\xF1\x1E\xDA";"\xA5\x4A\xC8\x4C\x96\x89\xCA\x65\xEA\x6E\xC8\x22\xDE\x16\x16\x06\x85\x21\x08\x55\xAD\x6D\x88\xE6";"\xB4\x1B\xE6\x1E\xD4\x53\x45\xC3\x65\x40\x86\x68\xA4\x4E\x25\xAA\x53\xAE";"\x00\x45\xC0\x60\xD7\xF5\xC3\x0D\xC1\x9B\x31\x30\xE5\x04\x7A\x67\x9D\x17\x15\xAC\x4B\x72";"\x97\x33\x65\xFA\x41\x3E\x2B\xCE\x03\x40\xE6\xAF\x76\xB9\xF4\xF4\x1A\x83\xBF\x22\xCB\xF2\x26\x4A\x69\xE2\x07";"\x5D\xE7\x1C\xF7\x18\x46\x20\x05\x88\xEA\x65\xF0\x25\xEE\x99\xCD\x31\x0E\x19\xB3\x15\x97\x62\x5B\x3F\xC7\x36";"\xB8\x17\xE9\x04\xC0\x4C\x5B\xC6\x67\x42\x86\x64\x8B\x20\x43\x82\x4A\x80";"\xAD\x19\xD6\x04\x2B\x43\x5A\x9B\x70\x26\x96\x64\x90\x5D\xD1\xD0\x58\xE0\xC6\x03\xEF\x11\xC8\xA6\x4A\xCC";"\x55\xC7\x2A\xFD\x19\x30\x9B\x5F\xB0\xBC\x2A\x96\x20\xFD\xBB\xB6\xD7";"\xA3\x45\xE5\x5E\xFC\x9F\x99\x35\xBB\x7C\xC9\x38\xDF\x11\x11\x16\x84\x21\x11\x16\xA3\x2C\x94\x9A\x94\x4E\x98\xD8\x6B";"\x83\xD1\x29\xD0\x07\x68\x0D\x8E\x2C\x17\xF1\xBB\x65\x82\xED\xFB\x13\x94";"\xDD\x74\xFE\x3C\xE0\xBD\xBD\xD9\x41\x65\xE3\x0D\xA1\x2F\x4B\x36\xAE\xCB\xE9\x54\x97\x4C\xFE\x87\x9F\x34\xB2\x7F";"\x93\x5C\xBA\x02\x9C\xA2\x45\xCE\x6A\x57\xF8\x7E\xA0\x4B\x3D\x3C\x40\xDD\xD4";"\xD0\x64\xEE\x2E\xC5\xA5\x47\xD6\x58\x41\xEE\x2B\xE2\x2F\x2C";"\x2C\x99\x5B\x8D\xA3\xCF\xE0\x73\xE0\xFC\x15\xB5\x1B\xDC\x5B\x50";"\xB1\x10\xC2\x01\xDA\x5F\x51\xFE\x6D\x4A\x97\x71\x8C\x51";"\xEE\x97\x24\x92\x08\x2B\x17\xF2\x37\x4D\xB0\xF0\x72\x9C\x87\x95\x53\xFE\x94\x6D\x2F\xBD\x37\x12\x1E\xEE";"\x60\xEB\x03\xBE\x71\x0E\x24\xAD\xC2\xBD\x73\xD6\x10\xB2\xDE\xB0\x6B\xE7\x67\x87";"\x17\xB9\xA3\x73\xD3\xEA\x8D\x7F\xFF\xE0\x28\xA5\x86\x26\x69\x7D\x87\x75\x26\xF2\x0E\xD0";"\x95\x39\x32\xEE\x01\x7B\x78\x91\x1B\x09\xB1\x43\x79\xB0\xF8\xF9\x6A\x83";"\x91\x6E\xA4\x28\xC5\xA1\xB9\xD3\x50\x53\xF2\x07\xBE\x6C\x30\x34\x5D\xC5\xE4\x61\x8A\x3A\xFE\xDA\xF5";"\x1E\xC9\x1A\xCB\x19\x16\x1E\xBF\x23\x01\x47\xAE\x54\x96\x93\xE1\x1A\xE9\x89";"\x5A\xB5\x5D\x1B\xDE\xA3\x83\x6D\xD7\xB9\x61\xC2\x0E\x2D\x47\x64\xE8\x77\x36\x93\x5F\x88\x4A\xD9\xDD\x78\xFE\xB9";"\x88\xB0\x55\xD8\x65\x0C\x77\xE4\x25\x6E\xC1\xAA\x0F\xCA\x9A\x91\x1B\xE5\xE5\x39\xAA";"\xE7\x14\xBE\x45\xAD\x4E\x30\xDF\x66\x54\x99\x7E\xF2\x56\x3A\xAE\x3E\xA9\x95\x12\xED\x5C\x99\xA6";"\x4F\x84\x6B\xA8\x4C\x2F\xA9\x43\xD3\xD0\x7F\xFA\x20\xC0\xA4\xA3\xC6\x56\x58\xE8\x04\xBD\x77\x2F\x60\xAD\xC1\xEC\x60\x87";"\x12\xB7\xBD\x7F\xB9\xFE\xF3\x19\x9C\xA6\x31\xDB\xEA\x34\x42\x6C\xED\x08\x24";"\x7A\xD5\x0B\xDD\x19\x1A\x14\xBF\x2C\x02\x4B\xC4\x5C\xC6\x82\xCF\x09\xC5\x8B\x35\x37\xE9\x06\x6F\x7A\x91\x16";"\x99\x35\xC1\xFC\x2C\x6D\x74\xEA\x04\x21\xA7\x4D\xE0\xC1\x89\xE5";"\x7E\x8E\x1F\xCE\x60\x03\x23\xB1\x33\xEC\x4B\x9B\x5A\x9F\x9F\x9F\x39\xA6\xF1\xC4\x29\xD6\x15\x6B\x08\x87\x28\x04\xB8\xB5\x7E";"\x28\xAD\x43\x72\xAF\x89\xF4\x6E\x8F\xA9\x2B\xD9\x0C\x35\x49\x64\xF4\x70\x30\x91\x45\x9E\x58\xDD\xDF\x71";"\xFF\x7C\xFE\x2E\xA9\x8C\xCD\x29\x49\x74\xD1\x16\xC6\x61\x1A\x1F\xB2\x29\xFD\x50\xA4\x50\x91\x90";"\x98\x03\xE4\x28\xBD\xB2\x5C\xC0\x31\x21\xFB\x0D\xEB\x2E\x20\x4F\x33\xCD";"\xA5\x21\xC5\xF3\x2D\x47\x65\xED\x03\x36\x9C\x56\x82\xA0\xCB\xA2\x0B\xF1\xE7\x0B\xA3\x66\xCB\x2C\x2E\xDB";"\x4B\x8A\x6D\x97\x4D\x2D\xCA\x49\xE6\xCB\x7B\xED\x36\xB8\xBE\xA3\xD2\x50\x5A\xF5\x7C\xA4\x67";"\x4D\x8A\x70\xAF\x4F\x29\xC4\x57\xD2\xD0\x68\xFA\x24\xF5\xBC\xB5\xDF\x47\x1C\xF0";"\x3E\x9E\x58\x95\x47\xD8\xD5\x7F\xFB\xC2\x0D\x85\x1D\xBA\xEE\x48";"\xFC\x0C\x93\x66\xB0\xCA\xB8\x57\x44\x6E\xD7\x11\xC7\x62\x07\x16\xB3\x32\xEF\x50\xA6\x58";"\xFB\x1A\x96\x50\xFE\xEE\xA2\x2B\x38\x7B\x86\x1C\x9C\x78\x50\x7D\xE7\x26\x92\x45\xC9\x4F\xC7";"\x52\x93\x5B\x9A\x5B\xD2\xD3\x7F\xE1\xC2\x1E\xEB\x17\xC6";"\x5D\xEF\x00\xBF\x7C\x36\x32\xA5\xAB\xFF\x21\x8E\x59\xEA\x8E\xAE\x2F\x4D\x74";"\x33\x9D\x50\x82\xAA\xC1\xC0\x72\xF9\xBA\x16\xE4\x1B\xD0\x58";"\x7D\x8D\x1F\xCF\x63\x03\x29\xB4\x37\xFD\x53\x97\x5F\x8E\x9E\x91\x3E\xA0\x8B\xC2\x28\xD8\x00\x2D\x53";"\xB8\x14\xE7\x11\xCE\x05\x0C\x81\x34\x1E\xD0\x7D\xFC\x40\x2C\xC7\x4E\xE3\xD6\x71\xF9\x3D\xC9";"\x35\x92\x53\x81\x5C\xD3\xD4\x7E\xF8\xC5\x06\xEE\x10\xC8\x55\x4E\xCF\x6A\x4B\x85\x74\xA9\x54\x5C\xDB\x50\xD3\xD6";"\x0D\xB9\xB1\x72\xC4\xEA\xDA\x09\xE9\x84\x4B\x27\xA1\x36";"\x55\xF0\x7A\xA1\x76\x52\x25\x1D\xDA\x8B\x72\x85\x34\xF6\xB3\xA5\x23\x56\x68\xE2\x17\xC9";"\x13\xBB\xBE\x64\x84\xE1\xF3\x15\x9D\x9B\x2E\xC5\xE7\x31\x7F";"\x73\xDE\x19\xDA\x1E\x1D\x11\xA3\x47\x1A\x4D\xA9\x51\x99\xE8\x88\x1F\xB2\x89\x3B\x31\xED\x0F\x61\x18";"\xA3\x2E\xCF\x0F\x2B\x4F\x77\xAB\x52\x67\xC7\x48\xC2\xA3\xB1\xDE\x72\xFB\xB5";"\x45\x8D\x6B\x92\x53\x2D\xC2\x51\xED\xCF\x7C\xFA\x2A\xC6\xA2\x49\xC8\x49\x4D\xEF\x7C\xB5\x7A\x34\x3C\x58\xC4\xEA\x6F";"\xD5\x7A\xE8\x62\xC3\xD1\xA7\xDC\x58\x5B\xE8\x04\xBD\x6B\x2F\x2C\xA9\xC7\xEE\x62\x8B\x4F\xF2\xE1\xA9\x78\xDE\x37";"\xB2\x34\xDD\x21\xF3\x8D\xAF\x2F\x46\x69\xC6\x10\xCD\x64\x0E\x1C\xB5\x3B\xE9\x0F\xDD\x42";"\x7F\xD3\x3C\xC1\x05\x14\x15\x83\x26\x0F\x43\xB5\x3F\x80\xB8\xED\x4C\xA9\xFA\x3E\x3E\xE5\x0B\x7E\x79\x94\x18\x18\xA6\x45";"\x69\xDC\xE7\x7A\xD5\x87\xBB\x60\xCC\xC5\x3E\xD4\xE8\x21\x14\x07\xBF\x5B\x29\xCD\x28\xEE\xE8\xC6\xF9\x7F\xFE\xCB";"\xF2\x34\x8B\x4C\xEA\x80\x9F\x31\xB8\x60\xDA\x28\xDD\x1D";"\xD4\x7F\xF3\x22\xCB\xA4\xB4\xCB\x5C\x5E\xFB\x01\xBB\x7C\x3F\x62\xB3\x82\xBE\x30\xD2\x22";"\x00\x40\xAC\x5B\x89\xEC\x9B\x10\xB6\x96\x3C\x30\xE1\x04\x7E\x64\xD1\x44\x49\xED\x52\x29\xBA\x97\x9B\x1F";"\x78\xD3\x25\xDA\x1A\x16\x17\x85\x2F\x01\x42\xA5\x56\x8D\xF3\x9E\x15\xAF\x96\x38\x31\xEF\x03\x62\x61";"\x40\x88\x63\x96\x51\x29\xCC\x5E\xED\xCC\x07\xF3\x2B\xC0\xA8\x2D\xBF\x5C\x13\xF4\x16\xA0\x7D\x38";"\x4E\x85\x71\xAC\x54\x20\xC2\x4A\xD6\xD1\x70\xE7\x22\xF7\xBA\xBE\xD1\x59";"\x88\x0B\xD3\x24\xF7\x81\xA1\x2F\xB2\x77\xDE\x07\xD8\x02\x1A\x1C";"\x63\xB8\x19\x9F\x36\x41\x06\xD8\x6F\x90\x41\xE7\x5D\xCA\xC6\xE5\x0F\xC9\x86\xAA\x41\x92\x08";"\x3C\x88\x7A\x87\x55\xD1\xD3\x44\xE5\xC8\x0E\xE6\x28\xCF\xB9\x45\xCA\x56\x52\xFE\x7D\xA7\x46\x77";"\x77\xC7\x67\xD8\x16\x1D\x1D\xBB\x3B\xFA\x53\xA4\x55\x94\x9C\x86\x02\xA4\x93\x9D\x4E\xE3\x5F\x09\x6A\xF2";"\xDA\x76\x85\x3B\xF1\xBF\xA6\x4D\x5A\x2D\xE2\x64\xD2\x6C\x0B\x24\xAB\x35\xFD\x46\x82\x5D\x99\x90\x99\x3C\xBE\x7F\xD7\x48";"\x7A\xAA\x32\xC2\x0B\x72\x7C\xD6\x39\x14\x07\xD5\x32\x83\xEA\xFB";"\x35\x9E\x5E\x9F\xE0\xA4\xD7\x22\x94\xC1\x72\x8E\x67\xA8\x5A\x50\xC4\x60\x4B";"\x30\xB1\x32\xFD\xBA\xA6\xB7\x1E\x9D\xEC\x47\xA4\x0F\xC0\x4F\x37\x8E\x66\x2F\xEE\x01";"\x15\xB1\xB8\x7D\x9C\xFF\xFA\x14\x98\x9A\x2B\xAE\x96\x40\x7A\x2A\xAF\x0D";"\xA3\x3A\xC7\xF7\x36\x7D\x6E\xE7\x0E\x28\xCF\x4D\xCD\xAA\xAA\xFE\x77\xF0\xB3\x15\xDA\x03\xC6";"\x39\xE3\x08\x98\x10\xD7\xA4\x5A\xEB\xCE\x03\xF3\x2E\xCA\xB9\x4B\xC8\x55\x50\xF1\x7C";"\xD9\x79\x9A\x3B\xA9\xFF\xBF\xBE\x5D\x5E\xF1\x01\xB9\x7F\x31\x37\xA7\xC8\xF2\x67";"\x78\xE8\x0E\xBD\x77\x35\x2F\xBD\xD0\xE3\x66\x95\x48\xE1\x84\xBA\x66\xBB\x2D\xCD\x48\xDE\x5E\x07\x4C\xA4\x41";"\x37\xA9\x50\x8D\xAE\xC4\xE4\x77\xF2\xB1\x15\xDE\x04\xD8\x5A\x49\x80\x06\x4D\xD9\x0D\xEB";"\x92\xC7\x2D\xEF\x0F\x65\x02\x8B\x2A\x7F\xB4\xEE\x0D\xC5\xF8\x91\x17\x9B\x99\x2E\xC5\xF3\x36\x7F\x74";"\x82\xDF\x73\x8A\x47\x04\x64\x8B\x45\x11\x5A\xAC\x6C\x8C\xE1\x84\x15\x95\x8D\x30\x38\xE2\x35\x7A\x7E\x81\x00\x70";"\x6F\x8A\x6F\x9E\x12\x72\x7A\xE9\x28\x0A\x25\xB2\x37\xEB\x8A\xF3\x69\xBE\xD7\xD1";"\x3D\x92\x62\x9B\x59\xD0\xD7\x46\xE1\xC2\x19\xED\x16\xC8\xAF\x40\xC0\x62\x53\xF1\x75\xB2\x43\x3F\x39\x56\xDC\xD9\x73\x83\x36\xF5";"\x45\xCA\x0A\x8E\xC0\xC4\xEC\x6B\xFC\xB3\x13\xC2\x1C\x28";"\xE3\x9B\x59\xAC\x47\x2B\x4F\xEB\x35\x61\xD8\xE1\x29\xD3";"\xF8\x26\x71\xF9\x06\x62\x7F\x9F\x17\x1A\xB6\x44\x76\xBF\xE7\xF3";"\x83\xCE\x3D\xD7\x14\x6A\x0D\x84\x2C\x0A\xB9\xBD\x6A\x86\xE7\x80\x14\x95\x99\x2A\x3B\xF4\x32\x7E\x70\x9C\x19\x25";"\x20\xF4\x13\xF4\x4F\x67\x5B\x03\x8E\xBE\x7F\xF9\x7D\x87\xEF\xEC";"\x58\x9E\x0F\xC5\x6F\x38\x38\xA2\xC1\xE3\x61\x90\x44\xEF\x89\xAE";"\x82\xCC\x35\xCE\x0C\x6C\x0B\x87\x2D\x0C\xBB\xAA\x72\x9A\xB9\xD8\x4D\x8C\xC6\x6E\x62\xEC\x62\x71\x2E\x86\x50";"\xB0\x11\xD7\x17\xDE\x56\x5C\xFE\x62\x59\x93\x77\x99\x4A\x20\xCA\x4E\xE8\xD6\x62\xF6\x27\xC7\xA2\xBB\xD6";"\x3A\x92\x65\x9C\x5E\xD1\xDA\x4D\xB7\xD6\x41\xB4\x47\x93\xBE\x17\xC5";"\x76\xE6\x4B\xD8\xBE\xA5\xA3\x69\xBF\xA0\x41\xFE\x7A\xA9\x5D";"\x5D\xEC\x6A\xC5\x4E\x36\xC5\x46\xEC\xCB\x06\xE9\x20\xC4\xA0\x47";"\x8C\xCF\x28\xEF\x16\x6D\x04\x8E\x11\x15\xB8\xBF\x0C\x9C\xBD\xF9\x70\x83\x99\x28\xC7\xF9\x3D\x77\x75\xE7\x06\x2A\xA6\x4E";"\xF9\x52\xA9\x58\x9F\x94\x9B\x16\xAF\x85\xC6\x2F\xDB\x08\x6C\x6B\x85\x29\x15";"\xB8\x3E\xDB\x52\xEF\x84\xA7\x2D\xB4\x73\xC0\x18\xC8\x16\x19\x1A\xBC\x3A\xEF\x11\xE7\x45\x95\x95\x8E\x04\xA1";"\x6C\xB9\x2F\xAC\x0F\x09\x45\xDE\x62\x52\x56\xFB\x60\xED\x86\xDB\x64\xA8\x93\x30\x3C\xEE\x02\x79\x7A\x94\x0A\x1C\xAC\x40\x7B";"\x5F\x84\x60\xBB\x44\x32\x39\x50\xDA\xDC\x71\x9B\x26\xF3\xB5";"\x03\x50\xB7\x51\x87\xE9\x80\x0C\xAD\xE2\x53\x38\xA1\x06\x0E\x7B\x91\x16\x12\xB2";"\x4F\x98\x71\xF9\x65\x7A\x34\x33\xDE\xE5\x69\x8E\x37\xF3\x90\xB0\x20\x48\x6D";"\x55\x14\xF0\x42\xF0\xE3\xE1\x18\xF7\xCE\x6B\x66\xBB\x12\x2A\x70\xD1\x4D\x4E\xEF\x17\x66\xEE\xAE\xB3\x37";"\x5F\xE1\x0B\xD5\xA2\xA1\xDA\x1E\xFC\xEB\x72\xB4\x14\xC8\x54\x51\x98\x72\x4C\x9D\x18\x82\x35\x45\xC8\x26\x92\xA9\x3E\x83\x48";"\xB1\x3D\xC6\x0D\x2D\x45\x62\xEE\x6D\x59\x87\x1E\x82\x34\xC5\xDE\x7D\xF8\xBF\x0F\xE2\x0E\xD2\x52\x4E\xC7\x66\x4A\xEC\x7D\xA7\x4A";"\x3E\xB8\x4B\x72\xA4\xC7\xE5\x61\x92\xBA\x73\xC5\x1C\x30\x36\x50\xFD\x7A\x34\x9B\x6A\x9B\x56\xD1\xD7";"\x6C\xFB\x12\xC6\x68\x07\x2D\xAA\x31\x99\x47\xDE\x42\xF4\x9E\x9D\x32\xB1\x7B\xC6";"\xCD\x66\xE7\x46\xA4\xEC\x4A\xA1\x6D\x4B\xF9\x7C\xA3\x44\x3E\x22\x53\xD6\xDD\x76\x84\x3A\x94\xDF\xF6\xDE\x2C\x62\xE4\x0C\xB5";"\x76\xCF\x06\xC4\x16\x1F\x1C\xB9\x39\x1C\x35\xAB\x52\x9A\x95\x8C";"\xD8\x0C\xE8\x13\xC6\xA8\x49\xD0\x3C\x5D\xA9\x1D\xE7\x2E\x67\x31\x4B\xD9\xDA\x72\x89\x3C\xFB\xAA\xB2\x25\x40";"\x81\xCD\x2A\xD4\x09\x61\x65\x93\x6D\x0D\xD5\xB0\x63\x8D\xE3\xFC\x1F\x96\x98\x32";"\x42\x86\x65\x92\x4B\x29\xDB\x50\xF6\xD4\x7A\xF6\x22\xC0\xB9\xA4\xC9\x21\x44\xEE\x01\xBD\x72\x32\x35\xA3\xDA";"\x73\xB4\xBA\x79\xBB\xF9\xFC\x1A\x83\xAA\x22\xDC\xF0\x36\x48\x62";"\xEB\x69\x8F\x3D\xFD\x88\xAA\x22\x4A\x6E\xD8\x16\xC9\x78\x1E\x03";"\xC0\x68\x80\x3F\xF1\xBF\xB2\x3A\x44\x6B\xE3\x07\xC9\x6B\x61\x38\xEA\x37\x98\x47\x9E\x45\xE1\x99\x99\x3C\xA3\x66\xD0\x23\xDE";"\x21\xE4\x12\xF9\x5E\x82\xDC\x10\xE0\xCA\x07\xF6\x28\xC9\xA8\x45\xD5\x4B\x50\xF0\x7F\xA6\x7D\x3D\x3A\x5A\xD2\xE4\x6F\x81\x31\xFA";"\x9E\x2A\xCB\xF9\x3F\x6C\x76\xE2\x06\x20\xAF\x4D\x87\xDA";"\xAA\x26\xC8\x10\x2A\x44\x61\xED\x76\x32\x93\x59\x82\xA4\xDB\xD9\x7E\xFD\xA3\x15\xF9";"\xE7\x63\x90\x4F\xF5\x93\xA7\x28\x4E\x74\xDF\x10\xC7\x7F\x03\x00\xB4\x3C\xFC\x53\xAB\x50\x93\x89\x89\x1E\xA6";"\xCC\x7D\xEF\x2B\xC3\xA3\xBD\xD3\x5B\x50\xF0\x71\xBD\x7D\x34\x31\x5A\xC7\xE2\x68\x8A\x39\xFA\x8A";"\x30\xBF\x50\x80\xAE\xC5\xE2\x75\x9B\xBB\x08\xDD\x02\xDE\x59\x52\xF8\x78\x5A\x89\x66\x9E\x56\x28\xCB\x4C\xE8\xC2\x06";"\xAD\x19\xD6\x0B\x2D\x4E\x5A\x9D\x6F\x5B\x92\x52\x9E\x58\xD4\xD5\x7D\xE0\xC0\x0B\xF7\x08\xD2\xAE\x4C\xCD\x69\x48\xE7\x3B\xA8\x59";"\xAC\x79\xCA\x58\x3F\x2C\x45\xAA\x22\x68\xC3\x3D\x89\x1C\xD3\xDE\x08\xAB\x9A\x5A\xBF\x43\x91\xBE\x35";"\x4E\x81\x77\xAD\x4E\x2B\xCB\x48\xD1\xDD\x72\xFC\x27\xEE\xFB\xBB\xB2\x5F\x66\xEE\x02\xB7\x7B\x35\x2E\xA4\xD8\xE8\x6B\x95\x4C";"\xF7\x60\x90\x4E\xEA\x8B\xA5\x2E\xDA\x69\x90\x19\xA8\x16\x17\x1A\xBA\x3C\x04\x52\xAE\x5C\x90\x97\x8D";"\xFB\x4E\xA7\x58\x9F\x93\x96\x07\xCC\x8A\x9D\x35\xA9\x0E\x06\x0E\x86\x22\x17\xB8\xB9\x6E\x82";"\x0A\xBD\xAD\x02\xFB\xEB\xA5\x08\xF1\xE7\x2C\x7F\x81\x23\x15\x0B\x90\x05\x20\xA3\x4E\x70\xAA\xC1\xEC\x77\x91\xB2\x1A\xD7";"\xEB\x73\xC7\x16\xB3\x90\xE2\x67\xF5\x32\x94\x43\xCD\x4D\x0D\x42\xE3\x79\x57\x59\xEA\x03\xD5\xAF\xC8\x5A\xBF\xD1\x24";"\xC5\x51\xCC\x10\x6F\x4E\x0F\xEF\x75\x30\x9D\x51\x88\xA4\xC2\xC6\x7A\xFE";"\x6B\xA8\xE5\x7F\xEC\x81\xE5\x45\x9A\xBC\x75\xDA\xAB\x4D\x68\x1B\xE4\x11\x7F\xBE\x36\x8B\xB4\xA6\x9D";"\x91\x3B\x38\xE5\x01\x7A\x7F\x8E\x19\x17\xAC\x40\x7F\xBC\xF7\x83\x7C\xE8\xED\x22\xA4\x07\x2A";"\x19\x43\xAE\x56\x8F\xED\x88\x13\xB0\x93\x75\x78\x84\x6F\x16\x12\x9A\x78\x0A\xEF\x4D\x19\xD2\xA0\x9F\x4E\x8A\xD8\x3C\xCE\xF3\x29";"\xC6\x07\x80\x31\xB5\xB1\x06\xB1\x76\x33\x87\x75\xDB\x59\x27";"\xE3\x4B\x81\xE6\x2D\x01\x60\x94\x1C\x28\xF2\x36\x1E\xBA\xAA";"\x48\x86\x60\xEA\x11\x77\x9C\x5C\x86\xCD\x16\xE7\x63\xE6\xD8\xA5\xAE\x44\x06\xF3\x67\xAD\x6A\x61\x70\xE5\x98";"\x04\xBC\x32\xE5\x1C\x2B\x3E\x56\xDE\xD4\x71\x86\x3D\xEA\xB5\xB8\x23\x49\x6F";"\xDC\x3D\xFA\x3D\xF8\xB9\xBE\xD8\x53\x66\xEF\x1D\xB5\x79\x0A\x22\xA4";"\x8C\x3A\x3C\xE6\x06\x6D\x64\x96\x1B\x1D\xB0\x43\x79\xBA\xEE\xFA";"\x9F\x36\xD9\xF8\x34\x74\x6A\xE9\x05\x30\xD5\x42\xD9\xC1\x99\x88\x04\xE8\xEC\x16\xD8\x03\xDB\x5E\x5B\xFD\x7F\x3A\x8D\x60";"\x53\xF2\x7D\xB8\x7A\x36\x31\x5E\xDE\x8D\x64\xED\x70\xF1\xDF\xAD\x26\x4E\x68\xE2\x16\xCA\x6B\x09\x25\xA6\x3E\xFF\x5D";"\xCC\x25\x9C\xEF\x76\x49\x06\xF8\x0F\x2B\xA1\x52\x88\xA3\xDD\xF8\x6F\xF2\xB0\x14\xDD\x1B\xD9\x44\x3A\xE3\x3E\x40";"\x45\xE2\x11\x22\xA9\x95\xFF\x6B\x9F\xE1\x38\x90\xEF\x75\x56\x35\xB6\x5B\x61\xC3\x46\xF9\xAE\xA2\xB7\x11\x90\xE2\x44\xF1\x64";"\x24\xAC\x42\x73\xB1\xCE\xEF\x75\xDB\xD2\x2E\x89\x10\x74\x3E\x7C\xB8\x0F\x2E\xE4\x23\x90\x0A\xB6\x80\x01\x97\x95";"\x61\xEF\x06\xB4\x74\x35\x28\xB6\x91\xB4\x31\xC0\x15\xF8\xE6\xAE\x6F\xAE\x20\xCA\x04\xDF\x1C\x17\x12\xB1\x3A\x07\x53\xA5\x51";"\xFA\x4C\xAC\x5B\x97\x8B\x96\x1D\xA7\x8B\xC0\x29\xEF\x13\x0E\x08\x90\x15\x14\xB8\xB9\x63\xBE\xFA";"\x57\xFB\x7A\xA5\x5B\x3B\x3E\x58\xDE\xD9\x6D\x85\x38\xFC\xB3\xA7\x25\x44\x69";"\x68\x83\x60\xF3\x03\x4F\x24\xF8\xD0\x86\x46\xD6\x58\xB2\x89";"\x0E\xB8\xB4\x6E\xC8\xEA\x9C\x17\x90\x9F\x34\x39\xFD\x20\x75\x75\x9C";"\xB5\x77\xD3\x41\x96\x94\xA1\x2A\xB4\x75\xDB\x19\xDC\x65\x10\x1D";"\xA5\x1C\xD5\x0E\x21\x43\x69\xF9\x6D\x39\x90\x5F\x9A\x53\xD4\xC4\x14\xE8\xA4\x61\x9D\x7C\x8B\xD7\x57\x95\x63\x53\xFA\x7D";"\xD4\x1E\xE1\x20\xFB\xBE\xB1\xD1\x5F\x7A\xEA\x01\xB6\x72\x08\x29\xC8\xC1\xB7\x7B\xD6\x4A\x8C\x9D\xA9";"\x02\x46\xA1\x56\x90\x90\x99\x02\xA4\x8E\xC3\x33\xED\x0A\x0C\x0E\xC8\x0E\x52";"\xE4\x54\xA4\x44\x98\xF4\x99\x68\xCA\x9A\xCC\x3C\x8C\x61\x04\x03\x89";"\xB9\x15\xDF\x1F\xB7\x4F\x11\xFF\x0F\x45\x8B\x6F\x94\x4D\x29\xD5\x4B\xE9\xCA\x7A\xF4\x24\xA9\xA8\xC2";"\x1C\xAD\x40\x7D\xB5\xF1\xE8\x75\x82\xA8\x22\xC8\x06\x2D\x43\x66\xF1\x05\x39\x9A\x5B\x87\x5B\xDA\xDC\x7C\xFB\xB7\x09\xF0";"\x7A\xA7\xB3\x1D\xE8\x89\xE2\x54\xEF\xF4\x22\xCD\xBE\x28\x15\x7B\xEB\x7A\x70\xD2\x59";"\xC1\x0F\xE5\x1C\xCF\x57\x4E\xC1\x69\x4A\x83\x78\xAF\x4F\x26\xD6\x52";"\x9E\xA3\x6F\xB4\x50\x02\x79\x91\x42\x16\xC2\xA6\x7C\xE8\x82";"\x74\xEA\x47\x1E\xB5\xFD\xE9\x60\x84\xA9\x26\xD0\x09\x3C\x43\x62\xEE\x71\x34";"\x96\x3E\x3C\xFA\x01\x79\x7E\x99\x1A\x1D\xAC\x44\x34\xB8\xEB\xEF\x64\x8B\xAC\x25\xC6\x14\x2C\x47\x63\xEA\x77\x33\x9C\x4A\xC4\x5D";"\x83\xCC\x2F\xD3\x16\x6D\x0B\x8C\x2F\x0D\xA9\xB4\x6E\x81\xE5";"\x2E\x96\x2D\x93\x3B\x21\xCA\x4C\xE9\xCE\x7D\xEF\x37\xCD\xA7\xB9\xD6\x57\x5D\x9D\x66\xFB\x78\x58\x3D";"\xBF\x0F\xE0\x1F\xD2\x53\x53\xDC\x62\x49\x8E\x6F\xAB\x49\x3C";"\x56\xFE\x6A\xA6\x45\x3A\x3C\x5D\xDA\xC5\x13\x8F\x6E\x9C\xEF\xDD\x7D\x5D\x22\x98\x00\xCF\x6C\x0D";"\x51\xFD\x77\xA3\x43\x2C\x3B\x3B\xC1\x9F\x70\xEA\x24\xF0\xB8\xB3\x20\x40\x60\xF8\x14\xAF\x65\x07\x26\xAC\xCB\xF5\x41\xFA\x5E";"\x6E\xE1\x1B\xCD\x0A\x6D\x2D\xF6\x33\x9C\x55\x98\x59\x94\x95\x91\x3B\xBA\x82\xDC\x2B\xD5\x15\x6D\x03\x8C\x2C\x60\xA0\xD8\x2F";"\x70\xDC\x14\xC2\x19\x1B\x16\xBB\x32\x14\x40\xA6\x55\x96\xED\x8C\x02\xC1\xE1\x87\x30\x83\x00\x67\x09\x93\x14\x11";"\x6C\xE1\x1A\xD8\x23\x02\x4B\xB3\x36\xFF\x55\x94\x5D\x9A\x9B\x94\x3C\xAF";"\xDD\x3B\xF4\x4F\xC2\xA7\xB8\xD2\x55\x5F\xF5\x00\xB1\x70\x24\x34\xAB\xC7\xEE\x6D\x8B\x3A\x80\x85\xCD\x6C\x49\x1A\xDB\x1E\xC2\x63";"\x69\xE4\x12\xC1\x68\x03\x22\xB4\x36\xF4\x54\x99\x4A\x9A";"\xFF\x3A\x3E\xE1\x3F\x78\x7B\x9D\x18\x17\xA6\x50\x74\xB5\xF6\xE8\x66\x80\xAC\x26\xBD\x03\x72\x5A\x26\xEE";"\xD7\x69\xE9\x37\xA3\xDD\xEA\x22\x28\x68\xE0\x0F\xCD\x6A\x05\x21\xB0\x35\xF4\x5B";"\x16\xEC\x18\x25\xA8\xA4\xAF\x20\xD3\xFF\x73\xDC\xF3\x2D";"\xBB\x01\xD7\x1F\xBC\xD0\x8E\x32\xBA\x7B\xD2\x1D\xDA\x13\x0E\x0D\xA0\x22\x06\x48\xAE\x57\x8C\xF1\x86\x5B\xB9\xCB\x66\x60";"\x15\xB3\xB8\x7A\x9D\xFD\xFE\x18\x9B\x96\x2A\xA9\xF7\x6E\x6E\x2A\xE2\x68\x28\xA0\x4E\x88\xA2\xC2";"\x74\xD7\xB4\x17\xEB\x9E\x96\x06\x86\x83\x2E\xC2\xFF\x30\x77\x6D\xFB\x00\x2F\xA5\x4A\x8E\xAE\xDA";"\x1F\xD3\x12\xC1\x17\x11\x1C\xA1\x24\xF7\x46\xA4\x53\x97\x95\xE2\x0A\xF9\x92\x85\x32\x85\x00\x62\x06\x8F\x1E\x16\xA9\xB2";"\x4C\x83\x6E\xA7\x57\x24\xC3\x4D\xD6\xD5\x7C\xE3\x4D\xE3\xCF\xD3\xA7\x41\x42\xEB\x07\xB1\x70\x3D\x26\xBA\xDA\xF7\x65";"\x24\xA6\x4D\x8E\xAF\xCE\xFE\x73\x97\xB3\x1F\xD9\x04\x23\x52\x41\xF6\x77";"\xBC\x65\xCF\x0E\x26\x5D\x54\xF6\x75\x27\x8E\x63\x98\x57\xD1\xD7";"\x7D\xAC\x05\xDC\x73\x0B\x28\xA2\xC8\xEE\x78\x8F\x49\xE7\x85\xA5\x31\xB1\x1A\xDB\x1C\xDB\x1C\x1B\x16\xB6\x3B\x00\x4D\xAC\x43\x90";"\x7A\xD3\x19\xDA\x7D\x18\x1F\xB9\x36\xF8\x48\xC9\x57\xC3\xFD\xCA\x02\xC8\x88\xC4\x2C\xE8\x0A";"\xE1\x02\x87\x19\xEF\xC1\x8D\x6A\xFE\x6C\x8D\x32\x82\x1A\x11\x12";"\x78\x91\x09\x9A\x51\xD5\xD0\x43\xE9\xCE\x00\xE8\x25\xD9";"\xCA\x05\xED\x2F\xCB\xA5\x59\xCC\x57\x50\xFB\x71\xA4\x2D\x34\x60\x43\x9A\xDC\x06\x99\x32\xF0\xB1";"\x2E\xCD\x53\xCB\xA8\xA8\xE4\x6E\xF3\xBC\x12\xDE\x01\xD8\x5E\x4D\xFC\x71\x36\x8A\x62\x95\x55\xB8\xD6\x03\xE0\xA1\x1C\xF3\x28";"\xF5\x57\x8F\x58\x9E\x9C\x81\x35\xB8\x72\xD4\x25\xDA\x05\x09\x0E\x80\x26\x02\x42";"\x38\x8B\x5E\x9F\x53\xD0\xD6\x7F\xE4\xC0\x1B\xBB\x1D\x85\xB8\x19\x94\x3D\x5F\xFF\x76\xAD\x44";"\x7F\xD1\x15\xDF\x05\x03\x11\xBF\x32\x08\x4D\xA7\x4E\x8E\xB5\xD4\x59\xBC\xFF\xCE\x64";"\x7D\xBA\x10\x27\xA0\x98\xE5\x6A\x8F\xAB\x1E\xD4\x0F\x21\x43\x43\xE8\x6E\x30\x96\x58\x96\x5F\xCA\x91\x25\xB1\x9A\x1B";"\x54\xF1\x1F\xB9\x71\x31\x36\xAA\xC0\xFB\x62\x88\x4F\xEF\x8B\xA1\x34\x57\x76";"\x0C\xBB\xBD\x63\x8C\xFD\xE3\x18\x91\x9F\x39\x3B\xFC\x31\x25\x78\x99";"\x8A\xC7\x27\xEC\x0B\x0E\x08\x85\x13\x13\xBE\xBD\x68\xB7\xE5\xE0\x07\x90\x9E\x28\xC5\xF1\x31";"\xE9\x75\xD6\x25\xF9\x99\xCD\x65\x1B\x08\x97\x0B\x95\x1F\x7C\x38\xD7\x54\x91\x3D\xC0\x3A\x8E";"\xFF\x17\x91\x33\xF5\x8D\xA2\x29\x4B\x75\xC0\x17\xCA\x6C\x01\x1C\xB3\x2A\x93\x5D\xC9\x34";"\x20\xA0\x45\x71\xA5\xCA\x8B\x65\x8E\xB0\x11\xD2\x04\x21\x40\x5E\xF7\x78\x3B\x94\x64";"\x1C\xA9\x41\x78\xB6\xFE\xF6\x65\xED\xB4\x63\xCC\x67\x22\x4A\x66\xE8\x70\x36\x92\x51";"\x0D\xB8\xB7\x72\xEB\xFB\xC5\x13\xFB\x85\x32\x3A\xFA\x3B\x75\x70\x83\x1D\x3E";"\x98\x36\xC7\xF8\x31\x77\x66\xE6\x04\x39\xE4\x4D\xE4\xAF\xC1\xE7";"\x27\x95\x66\x9D\x5F\xD5\xCB\x60\x9A\xDD\x19\xEE\x15\xCE\xAC\x4B\xCE\x73\x55\xFF\x73\xA2\x41\x25\x25\x36";"\xB7\x1C\xC4\x3C\x92\xB6\xB2\xD5\x46\x64\xE5\x16\xB7\x6E\x07\x20\xA8\xCD\x9D\x52\x92\x40\xE1\x8D\x9C\x37\xBA\x66\xCA\x3C";"\x6A\x4B\xB0\x6A\x8C\xE9\x86\x06\xB1\x90\x3D\x38\xEE\x00\x7D\x7C\x9C\x1D\x1C\xA4\x40\x78\xB0\xE7\xB5\x63";"\xFF\x5E\x9E\x5D\x98\x85\xD1\x33\xD1\x8F\x9C\x39\x87\x1D\x29\x16\xFF\x3E\x5B\xE1";"\xA0\x23\xCF\xF4\x2F\x49\x6A\xE1\x0F\x37\x83\x2B\x9C\xA6\xC2\xDB\x7E\xF9\xB8\x09\xFC\x1F\xDA\x53\x56\xC6\x65\x5F\x99\x71";"\x69\xEF\x63\xD0\x00\x48\x26\xC5\x31\xFA\x5C\x99\x43\xE0\x84\x9F\x32\xBB\x77";"\x23\xA8\x47\x70\xB2\xC5\xEC\x64\x8C\xAF\x25\xD1\x0E\x23\x5D\x67\xF2\x72\x34\x90\x54\x8D\x18\xDF\xBC\x77\xFF";"\x5E\xEB\x69\xA6\x31\x34\x45\xA9\xCB\xE9\x64\x8C\x47\xF1\x9E\xAC\x25\xB4\x77\xD2\x18\xAD\x12\x65\x00\xA7";"\xDE\x1B\x88\x76\x8E\xC3\x59\x96\x11\x39\xF6\x09\xE8\x5D\x27\xD3\x4D\xC2\xB8\x0B\xBA\x50\xE9\xFD\xD8\xB2\x31\x13";"\x6F\x9B\x79\x96\x41\x4C\x59\x97\x25\x0F\x49\xB9\x69\x8B";"\xC8\x6D\x92\x5E\x95\xA0\xA3\xCD\x55\x79\xF6\x6B\xA8\x2D\x7B\x55\xC5\xDA\xB5\x1B\xC5";"\x9E\x37\x37\xE0\x06\x64\x78\x90\x1E\x19\xA7\x46\x78\xBF\xF6\xF1\x60\x82\xB6\x61\xCE\x99\x2F\x4E\x66\xEF";"\x05\x49\xA8\x50\x97\xEF\x92\x5C\xA3\xD8\x56\x61\x87\x46\x6B\x25\x88\x4E\x05\xF2\xA6\x2A\xB7\xEE\xFD\x15\x84\xA7\x2A\xCB\xEB\x29";"\xE8\x67\x82\x30\xF1\xB1\xE2\x2B\x50\x6A\xE4\x18\xC8\x6C\x09\x38\xB7\x3F\xF5\x5D\x99\x45\x99\x8E\xD2\x3A\xD0";"\x31\xDB\x40\xF4\xA4\xDF\xE1\x68\xF7\xB7\x12\xDA\x18\xDD\x5B";"\xAB\x1F\xD3\x09\x25\x5D\x5F\xF3\x70\x3B\x93\x5A\x9D\x5F\xDF\xD4";"\xDA\x69\x8D\x3D\xF4\xBC\xAB\x29\x4B\x6D\xE7\x11\xC9\x6E\x00\x3F\xAE\x34";"\xEC\x1F\xE8\x5D\x85\xFA\x80\x72\xBF\x10\xD1\x21\xDF\x1D\x11\x08\x9E\x25\x06\x41\xAA\x54\xE0\xF2\xC2\x0A\xC0\x99\x3C\x34\xE4";"\x39\xE6\x0B\xB2\x62\x65\x25\x31\xA8\x83\x13\x94\x28\xE1\xD4\xFE\x48\x49\x17\xEF\x62";"\x32\xF8\x50\x11\xAD\x81\xF4\x7A\x91\xE0\x00\xAE\x17\x51\x5E";"\x49\x85\x70\xAE\x41\x28\xC2\x3E\xBB\xDB\x31\xFE\x49\xFB\xBC\xB2\xDF\x5F\x61\xE1\x04\xB0\x67\x08\x2B\xA0\xCF\xE8\x66";"\xC4\x0C\xEE\x10\xCA\xB3\x55\xCB\x69\x48\xFD\x72\xA5\x29\x39\x7B\x55\xB9\xC7\x78\x89\x37\xF8\xB3\xB2\xC7\x4E\x6C\xED\x0A\xB7";"\x27\xFF\x26\x04\xF6\xD1\xE3\x68\x9E\xD6\x68\xD5\x55\x77\x36\x5E\xB5\x70\x4E";"\x38\x9A\x4E\xEA\xBB\x9F\xDF\x1E\xE1\xB5\x15\xE0\x19\xDF\x57\x4B\xCB\x67\x45\x82\x68\xA4";"\x99\x29\x82\x2A\xE5\x85\xD0\x3C\xCE\x81\xCA\x28\xD0\x13\x6C\x03\x8B";"\xF6\x4E\xA0\x4F\x97\x97\x87\x05\xA7\x88\xC4\x27\xE1\x5B\x73\x41\xD5\x41";"\x06\x49\xB2\x53\x96\xEA\x8A\x0B\xA7\x89\x39\x3C\xED\x03\x65\x7B\x97\x0F\x11\xAE\xBD\x7A\xBC";"\x71\xE2\x02\xB9\x68\x0C\x2F\xA9\xD9\xAA\x20\x98\x13\x8F\xC2\xE1\x5A\xF5\x04\xDC\x22\xDC\x1F\x10\x16\xBD\x2E";"\x65\xD3\x1C\xC5\x16\x1E\x18\xBE\x25\x08\x49\xA4\x54\x91\x97\x82\x57\xBD\xCF\x9A\x64\xB7\x18\x30\x0E\x92\x15\x16\xB7\xB8\x6A\xBE";"\xDD\x7D\xE0\x21\xF6\xBA\xBD\xDC\x5B\x0D\x82\x42\xB6\x18\x29\x2F\xA1\xCD\xE2\x6B\x99\x54";"\xA5\x1A\xD7\x0B\x20\x40\x64\xE4\x77\x3E\x91\x56\x9F\x59\xB1";"\x24\xCB\x03\xDF\x19\x14\x17\xB6\x23\x1E\x52\xB4\x52\x92\xE1\x88\x03\xA6\x97\x6A\x39\x9B\x1D\x31";"\x60\xE0\x08\xC9\x69\x18\x2C\xAD\x3C\xF2\x5B\xF7\x2D\x92\xDC\x9A\x51\xB0\x79\xC6\x2C\xD2\x13\x08\x06\x81\x2A\x02\x46\xB9\x03\x95";"\xA1\x28\xC4\xF7\x34\x43\x68\xF5\x65\x21\xF8\x4A\xE8\xBB\x9F\xF9\x36\xF3\xDC\x15\xDC\x1A\xDE\x5A\x52";"\xD9\x65\x81\x21\xF4\xB1\xA6\x29\x41\x6F\x8D\x13\x8B\x68\x68\x2D";"\x9A\xD6\x54\xC9\x16\x60\x03\x8B\x27\x08\xA6\xA9\x6D\x80\xE4\xF6\x11\x92\x80\x2C\x42\xE7\x39\x71\x7D\x9D\x07\x20\xB0\x57\x73\xA7";"\xC6\x12\xC6\x5D\x34\x4F\x2D\xAE\x60\x7E\xCE\x71\x90\x44\xB7\xBD\x53\xF1\xCA\x15\xE5\x3E\xAB\xC0";"\x91\x3A\xC0\xF1\x32\x71\x75\xE7\x1C\x3F\xBB\x4E\x8A\xAA\xC8\xE1\x6B\x93\xF6\x1B";"\xFD\x21\x9E\x46\xE2\x8E\xA6\x35\xB0\x78\xD5\x1A\xDF\x0E\x1F\x16\xB9\x27\x00\x4D\xA9\x41\xD4\xB1\xDE\x55\xBE\xDF\x25\x56";"\x15\x5A\xAE\x75\x86\xE6\x83\x16\x91\x97\x2D\x3C\xFD\x3A\x7F\x70\x9C\x1D\x21\xA7\x45\x7F";"\x8C\x3B\x3D\xEC\x69\x08\x72\xD3\x10\x71\xB3\x44\x78\xB8\xF4\xF5\x1C\x83\xA4\x26\xDE";"\x2B\x85\x5B\x83\xA9\xDC\xD9\x6F\xFD\xB5\x08\xE2\x12\xD4\x5F\x51\xC1\x62\x49\x83\x6E\xAE\x57";"\x7D\xD2\x1A\xC5\x72\x15\x1A\xBD\x31\xF6\x4D\xA6\x57\x95\x90\x8E\x12\xA3\x8E\xC0\x33\xE8\x09\x60\x07\x82\x1A";"\xEA\xDF\x69\xEF\x67\x70\x0E\x89\x2C\x11\xBF\xB1\x7D\x88\xFC\xFC\x10\x99\x9A";"\xDF\x6A\x89\x3A\xF1\xB0\xB7\xD8\x2A\x68\xB2\x60\xF7\x6C\x64\x34\xA1\xCD\xF1";"\xE6\x38\x87\xFA\x2F\x4D\x69\xED\x09\x29\xA6\x49\x89\xA1\xC7\xE3\x73\xF9\xB6\x13\xCD\x4C\xD1\x0C\x47\xA0\x38\x52\xC9\x78\xC3\x0F";"\x68\xD5\x14\xCA\x61\x13\x1C\xB1\x35\xF0\x58\x97\x57\x9C\x9D\xC4\x2D\xE0\xDC\x9E\x74";"\xE0\x6F\x85\x34\xEB\xEA\xD3\x28\x1A\x07\x95\x6C\xA5\x23\x02\x4B\xAF\x36\xF1\x55\x9C\x5A\x81\x85\x8A\x38\xBC\x81\xCA\x21\xCF";"\xFC\x54\x8B\x5F\x9E\x94\x92\x3F\xA1\x9F\xB4\x24\xCC\x15\x6E\x0B";"\xD2\x7A\xF4\x27\xC3\xAE\xB4\xD0\x54\x5F\xF0\x00\xB9\x1A\x3D\x34\xA3\xC3\xE0\x61\x8A\x4B\xE9\x8C\xA1\x3A\x4B\x74\xD1\x1E";"\xB8\x7F\x90\x67\xFC\xD4\xBB\xDC\x5A\x67\xEA\x0E\xAF\x6E\x36\x29\xA4\xCB\xEC\x6B\xFC\x24\xE5\xC5\xA1\x58";"\x74\xB4\x48\xA0\x0B\x18\x7D\xF6\x8A\xBA\x4E\xC4\x48\x85\xEE\xC3";"\xEE\x61\x93\x55\xE6\x81\xA3\x33\xB4\x74\xBB\x16\xB6\x58\x1F\x7C\xBA\x3B\x03\x4C\xAF\x55\x98";"\x71\xE2\x12\xCC\x65\x04\x23\xB4\x21\xB3\x54\xF6\x54\x9D\x9E\x93\x3E\xBB\x99\xD4\x21\xD7\x12\x69\x03\x8C\x42\x00\xEA\xD8\x2F\x84";"\x25\xAD\x41\x70\xAA\xBE\xE1\x07\xE6\xD8\x4F\x99\x04\x62\x59\x25\xEF\x2F\x2F\xDF\x51\xFF\x45\xDC\xD0\x7E";"\x24\xED\x6D\xB1\x77\x37\x2F\xA7\xCD\xE3\x64\x96\x5C\xEB\x81\xAB\x35\xBF\x7F\xD6\x71\xDE\x59\x1C\x7D\xB9";"\xF8\x42\x9A\x5A\x9C\x95\x91\x39\xAC\xEE\xA7\x24\x95\x12\x02\x16\x89\x2E\x09\xB4\xB4\x62\x9E";"\x4E\x8F\x77\xEB\x46\x7A\xAF\x3D\xB8\x81\x77\xA2\x39\xB2\xA5\xDF\xC2\x34\x20\xF1\x55\xC4\x69\x61\x32\xD9\xCE\xF4";"\x9C\x36\x3E\xF9\x2E\x7D\x71\x97\x01\x27\xAA\x40\x71\xDD\xD5\xAF\x69\xE5\xB3";"\x83\xC5\x28\xE5\x0D\x70\x0E\x88\x22\x12\xBD\xBD\x7F\x98\xE3\xE3\x4D\xC9\x8D\x77";"\x2B\x9C\x49\x92\xB8\xC7\xDE\x71\xFB\xBF\x16\xDA\x06\xB7\x5E\x56\xF8\x6C\x41\x8E\x6F\x99\x4A\x2B\xC9\x5F\xEB\xCA\x78\xFD";"\xDE\x12\xF4\x19\xD7\xAD\x4D\xC9\x69\x57\xF6\x03\xA7\x43\x25\x37\x59\xD1\xD0\x72\xF8\x37\xEF\xB2\xB7\xDE\x44\x62\xE8";"\xF7\x56\x93\x50\x81\x9B\x94\x39\xBA\x82\xD2\x21\xDE\x14\x6E\x08\x8C\x2A\x1D\xED\xBE\x18\x96\xB6\xDF\x45\x8D\x99\x31";"\xC1\x3C\xD9\x08\x2F\x44\x62\xEF\x6C\x3C\x92\x5D\x84\x5D\xDA\xB4\x74\xA3\xD8\x4B\xE4\x7F\xD5\x51\x44\xC2\x6E\x4B\x83\x77";"\x07\xC9\x3D\xDC\x1E\x1A\x17\xBB\x27\x18\x5C\xB6\x51\x8C\xEC\x8E\x09\xAF\x89\x26\x74\xE9\x58\x7C\x05\x8A\x61\x02\xC1\x3F";"\x5E\xF0\x6C\xA5\x3C\x33\x58\xA0\xCE\xE4\x63\x8B\x33\xF6\x93\xA5";"\xAA\x29\xCC\x0B\x2E\x41\x69\xEB\x71\x3D\x9F\x53\x88\x44\xDE\xDD\x78\xFF\xBC\x0C\xE2\x09\xD1";"\xFB\x55\xA4\x56\x96\x96\x8A\x0F\xAB\x82\xD1\x74\xEC\x62\x7F\x03\x8C\x13\x13\xB2\xBE\x61\xA3\xE7\xE4\x18\x98";"\xD8\x78\xFB\x52\xF7\xE8\xAD\x99\x46\x0F\xEF\x0E\xB0\x6E\x0B\x33\xB7\xCD\xEC\x56\x94\x41\x89\x99\xDB\x35\xD9\x7B\xD4\x27\xDB\x1C";"\x22\xEB\x51\xBB\x0B\x09\x3B\xA5\xB7\xE3\x44\x85\x27\xB1\xF7\x8A\x58\xD4\x1C\x88\x33\xBA\x7B\x7C\x7C\x95\x57\x0F\x36\xDE";"\xE0\x6A\x85\x32\xE8\xB6\xAA\x21\x4E\x6B\xE5\x18\xCB\x60\x03\x26\xB2\x34\xF1\x49\xE1\x5A\x80\x96\x95\x3B\xBE";"\xB6\x11\xDF\x04\x20\x52\x5B\x99\x72\x66\x94\x27\x99\x3D\xD6\xD8\x41\xE4\xCD\x03\xE6\x28\xC9\xAE\x51\xC7\x5C\x54\xFB\x7D\xA4\x47";"\x99\x32\xC6\xE7\x25\x0F\x6A\x95\x00\x27\xAD\x4F\x75\xB3\xCE\xE9\x6B\x8F\xB8\x1D\xD5\x1D\x3F";"\x8D\xC8\x2B\xE8\x0B\x61\x18\x95\x09\x10\xB3\xBE\x69\xBE\xF0\xE1\x77\x94\x9E\x2E";"\x4E\xFB\x70\xA4\x44\x30\x3D\x50\xDB\xDC\x78\x84\x38\xFA\xBC\xB4\xDF\x42\x64\xE1\x0C\xB7\x73\x0A\x2B\xA9\xCF\xF2";"\x4D\xA0\x4A\x74\xAA\xCC\xE4\x75\x8E\xB7\x1E\xD0\x06\x23\x36\x30\x83\x17\x6D\xFE\x6F\xC3\x47\x81\xDD\x23\x8A\x9B\x6D\xF0\x2F";"\x46\xF0\x01\xBD\x7B\x31\x34\xBA\xDA\xAD\x28\x90\x34\xE5";"\x76\xE1\x10\xCA\x61\x06\x21\xDE\x2F\xB2\x57\xF7\x40\x9B\x99\x91\x3C\xBD\x82\xCC\x23\xC2\x1B\x62\x0C\x83\x29\x0F\x42\xDF";"\x13\xEE\x33\xA8\x0E\x3D\x26\x04\xDF\x92\x6A\xC6\x2E\xB1\xBF\xAF\xDA\x4F\x65\xED\x0C\xB7\x73\x17\x34\xAF\xC0\xF0";"\xE4\x53\x9D\x5F\x9F\x96\x95\x26\xA7\x86\xCB\x22\xD2\x0B";"\xC8\x0C\xE5\x1E\xC7\xA8\x4C\xC3\x6C\x4C\x84\x73\xC5\x2A\x64\xC2\x39";"\x6E\xE5\x14\xD1\x2D\x00\x26\xAB\xC9\xFA\x5C\x98\x43\xE4\x9E\x8F\x30\xB8\x74\xC9\x23\xDA\x1E\x1C\x7A\x93\x28";"\x23\x9B\x61\xBF\x2A\x70\x3A\xC3\xB8\x8F\x35\x9A\x19\x9C\x90\xF6\x67\xC2\x11\xDE";"\xF2\x4A\xA6\x5C\x9C\x94\x9B\x3D\xCA\x88\x92\x40\x97\x0C\x04\x0A\x8C\x2C\x15\xBA\xBE\x65\x8B\xE3\xE9\x17\x9A\x9F\x34\xC4";"\x26\xBF\x12\xC0\x3A\x7B\x5E\xDE\xC5\xA0\x2B\x84\x58\xF1\xE4\xC9\x42\xE9\x02\xAF\x74";"\x48\x89\x6E\x94\x4D\x2D\xC1\x4E\xE0\xCE\x6B\xFC\x20\xC7\xA0\xB6\xDF\x54\x4A\xB5\x58\xEB\x27\x22\x72\x40\x96\xE8";"\x60\xE3\x0F\xB5\x74\x63\x3A\xC3\x8F\xF3\x33\x9E\x40\xE7\x9F\x9C\x3D\xA7\x61\xDA\x25\xDD\x16\x15\x17\xEF\x4C\x0A\x02\xAF";"\x84\xC5\x25\xD6\x05\x7B\x07\x8A\x28\x17\xB9\xB3\x62\x85\x96\x90";"\xAA\x2D\xCA\xFE\x34\x43\x6F\xE6\x1A\x2C\x9C\x56\x88\xA3\xC0\xE5\x71\xFB\xCE\x1A\xDC\x1B\xDF\x54\x50\xF6\x7E\x5E";"\x5C\xFB\x55\x2C\xE2\xE5\xEA\x66\x8B\xA9\x27\xD9\x0E\x2A\x43\x65\xF9\x75\x37\x9D\x58\x83\x59\xDF\xD1\x77\xA9\xD0\x4B\xBE\x41";"\x02\xD0\x5C\x7F\xB3\xF7\xEB\x63\x80\xB4\x26\xCE\x09\x28\x4B\x64\xF4\x68\x29\x9E";"\xCB\x08\x9C\x1F\xAD\x43\x1D\xFB\x13\x42\x86\x62\x96\x5A\xD4\xD7\x5B\xEF\xC2\x06\xF0\x2E\xCB\xCC";"\xE0\x7B\x88\x47\xEE\x81\xAD\x25\xD9\x68\x9F\x18\xAB\x02\x19\x11\xBC\x3D\xE4";"\x55\xF1\x06\xBD\x74\x25\x32\xA5\xC9\xE1\x60\x88\x4C\x81\xE0\xAA\x6B\x48\x19\xD8\x11\xC1\x69\x1D\x1B\xB1";"\xDA\x1E\xF0\x2C\xCC\xAE\x41\xCD\x63\x56\xE0\x2D\xFA\x02\x6F\x2A\x05\xD2\xD5\x6A\x8B\x32\xF1\xB1\xAA\x24\x42";"\x55\xF3\x7B\xA0\x64\x20\x32\x58\xD9\xE0\x6F\x8F\x2F\xFA\xC8\xA7\x39\x4E\x6D\xD8\x10\xC3\x6F\x0F\x3A\xB0\x30\xFC\x54\x97\x5B\x98";"\x4C\xF6\x05\xDF\x24\x34\xD5\x44\xF8\xB2\x28\x8B\x2C\x95\xD2\xC6\x97\x37";"\xCA\x04\xEB\x2F\xC9\xA6\x4B\xCE\x55\x52\xF6\x6B\xF6\x20\x6B\x29\x0C\x84\xA3\x3A\x96\x6D\xA5\xA4\xFD\x2A\x49\x6B\xE0\x15\xCC";"\xEB\x69\x8D\x56\xF4\x80\xAA\x2B\xB3\x77\xD5\x02\xCD\x13\x1D\x10\xB0\x3B\x08\x48\xAE\x5D\x90\x81\x8D\x02\xAF\x88";"\x24\xAD\x42\x68\xAC\xCE\xEB\x6A\x80\xB3\x72\xBB\x40\x21\x2F\x59";"\x64\xA8\xB7\x7A\xBB\xF0\xF4\x15\x9F\xB9\x22\xCA\xF6\x2D\x4C\x6F\xF3\x15\x2C\x9E\x5C\x8C\xAD\xC3\xDE";"\x43\x8B\x66\x91\x5B\xCF\xCD\x47\xE5\xC9\x04\xF4\x29\xCD\xEF\x4E\xD0\x57\x50\xF6\x7F\xA2\x66";"\xC3\x0A\xF8\x43\x8F\xFE\x5A\x91\x31\x19\xEC\x26\xF5\x12\x37\x94\x0D\x93\x8D\x67\xA7\x6A\xEB\xED\xB8\xD9\x42\x65\xEE";"\xA8\x11\xDB\x0B\xDB\x5C\x40\xE0\x64\x5D\x87\x65\x94\x5A\xD5\xC4\x5D\xEE\xC9\x03\xF3\x2D\xCA\xA6\x42";"\x6E\xFC\x0C\xCF\x6D\x0B\x22\xBE\x62\xFE\x11\xC3\x59\xB3\x80\xD6\x5F\xA2\x2F\xD1\x51\xC6\x46\x1B\x0B\x85\x24\x0D";"\x87\x39\x54\xF0\x21\x6C\x16\x89\x10\x5C\xA2\x41\x12\xB1";"\x3F\xB6\x42\x71\xAE\xCA\xEC\x07\x82\xC4\x5A\xD7\x6E\x2C\x40\x5B\xFF\x7A";"\xC1\x03\xEB\x1B\xA0\xB2\x02\xCA\x00\x4C\xFB\x7E\xA4\x40\x3E\x39\x4E\xDF\xD5\x70\x81\x39\xF2\xDD\xAC\x66\x43\x0C\xE5\x0C\xCB\x6A";"\xA8\x27\xC1\xF0\x28\x75\x6F\xEF\x08\x23\xA1\x58\x8D\xE6\xCC\xE1\x7A\xF0\xBF\x1D\xDE\x00\xDA\x58\x51\xED\x7A\x47\x81\x64\x95";"\xFA\x74\x8C\x31\xF4\x8E\xA2\x2C\x54\x69\xDE\x13\xCC\x6E\x06\x38\xF7\x3D\x9F\x3C\xC7";"\xF1\x41\x9C\x40\x96\x98\x9F\x3C\xBB\x9C\x91\x7F\x88\x0F\x4A";"\x21\xBC\x4F\x70\xB1\xC8\xEB\x67\x8A\xC0\x11\x85\x60\x62\x45\x0A\xEC\x78\x3E\x93\x56\x9F\x5C\xC1\xCC\x63\xED\xC5\x0F\xE9";"\x00\xF7\x40\x13\xAA\xF2\xF1\x66\x85\xAF\x21\xD0\x15\x31\x4F\x66\xEB\x0C\x35\x91\x41\xEB\xAC\xA7\xC2\x69\xF6";"\x72\x5F\xEA\x16\x9B\x93\xFE\x1F\x93\x9F\x34\x34\xF9\x38\x78";"\xD6\xD9\x7D\x88\x45\x7A\x5F\xD8\x6C\x58\xAC\xEA\x3D\x96\xB6\x8F\x15\x93\x98";"\xCF\x79\xF0\x26\xCC\xC8\xD2\xDA\x16\x58\x9A\x02\xBB\x79\x35\x31\x5F\xC5\xE6\x6C\x8D\x26";"\xFE\x50\xB1\x0C\xC6\xC5\x83\x56\xFA\xC5\x90\x3C\x8B\x5B";"\x9B\x32\x3F\xE5\x15\x78\x73\x9C\x17\x16\xAB\x43\x7B\xA5\xA9\xAC\x70\x8A\xAF\x29\xCB\x07\x2D\x47\x78\xF5\x69\x32\x93\x5A\x89";"\x60\xD5\x1B\xCB\x1C\x1E\x11\xBA\x3C\x6D\x53\xCD\x10\x91\xFF\x8A\x0F\xAF";"\xA3\x45\x9B\x11\x25\x58\x5B\xF8\x78\x3B\x8A\x66\x9F\x40\xD4\xCB\x40\xE5";"\xD7\x57\xE0\x73\xD0\x51\x56\xC5\x62\x4F\x9D\x70\xAA\x4D\x2B\xC0\x4D\xEB\xBF\x14\xF5\x62\xC3\xD1\xBF\xDC\x57";"\x2B\xBF\x49\x94\xAB\xC8\xE2\x77\xF5\xB6\x0C\xB1\x1E\xBD\x20\x4A\xA6";"\x08\xA0\x09\xD8\x6F\x0C\x20\xAE\xC0\xF5\x44\x8B\x45\xE0\x8D\x9A\x3E\xB8\x16\xCE\x65\xDB\x73\x19";"\xBB\x62\xF1\x25\xC3\xA0\xBB\xD1\x46\x5C\xF3\x01\xBD\x70\x39\x5E\xBF\x82\xE4\x0E\x84";"\x37\x9C\x58\x8A\x4E\x80\x9B\x69\xFC\xC0\x08\xE1\x10\xDB\x56\x51\xC1\x6C\x4D\x83\x73\xA1\x58\x61\xCE\x08\xC6\x83\x29\xBF\x77";"\x36\x96\x46\x86\x56\xDB\xDB\x7F\xF0\xAD\x02\xBD\x0C\x97\x56\x27\xC5\x6E\x4F\x81\x75\xAF";"\x56\xE8\x64\xBF\x7C\x3F\x30\x5C\xDD\xE3\x71\x89\x36\xF1\x83\xAB\x2C\x4E\x6D\xE4";"\xB5\x61\xEE\x4D\xBD\x13\x53\xAA\x7D\x49\x82\x6A\xAE\x4B\x29\xD9\x56\xC8\xD2\x7F\xFD\x22";"\x0A\xA9\x68\xA4\x2C\x02\x4F\xEB\xCB\xF2\x36\xD0\x58\xEE\x94\xFE\x31\xD7\x7D";"\x3D\x98\x5D\x83\x27\xCB\xD2\x7B\xEC\xC7\x03\xE8\x0B\xD2\xA0\x4A\xC9\x68\x4E\xF9\x6C\xB9\x59";"\x13\xB2\xBE\x67\xB7\x95\xE4\x5E\x9B\xF4\x2A\xC3\xF0\x33\x76\x6A\xFC";"\x77\xE5\x16\xCA\x6E\x05\x26\xB5\x73\xAD\x01\xC5\x53\xC7\xC9\x89\x68\xB4\x81\xCE\x20\xD0\x1B\x10";"\x22\xCC\x04\xC5\xF4\xCA\xB3\x79\xE2\xBA\x0E\xE4\x1E\xD7\x53\x4C\xD9\x7D\x4F\x85\x69\xA9\x4A\x2A\xDD\x34\xD8\x8E\x11\x90";"\x7F\xC5\x25\xDB\x78\x1B\x58\xEB\x67\x0B\x2B\xAB\x69\x83\xE0\x84\x0F\x94\x9D\x2E\x3B\xE2\x39";"\xBF\x48\xC7\x99\x69\x4C\x0D\xED\x0B\x39\x9E\x51\x85\xBF\xDE\xDD";"\xC7\x69\x2C\xB9\x30\x63\x77\x98\x1A\x28\xA1\x44\x70\xAF\xD3\xF0\x64\x8C\xAD\x2A\xDB\x0B\x2F\x59\x3C\xAD";"\x89\x25\x3F\xE5\x0A\x78\x74\x9D\x05\x00\xB1\x4B\x70\xB5\xF5";"\xFC\x53\xA2\x5B\x95\x95\x8D\x1A\xBC\x8F\xC4\x2D\xEC\x0F\x64\x1E\x81\x7B\x02\xFD\xE0\x33\xDF\xEA\x81\x19\xFE\xF6\x77\xAE\xBA\x2A";"\x74\x58\xAB\x6B\x8D\xEB\x87\x0C\x89\x91\x3B\x38\xE6\x36\x71\x61\xF0\x14";"\xC4\x30\x8F\x0A\x7F\x26\x1F\xFB\x23\x6B\xEC\x2B\xFC\xD3\xA9\x8C\x03\x83\xAC\x11\xF6\x7A\xDC\x04\x12\xCF\x01";"\xA1\x27\xDD\xF6\x36\x7D\x64\xE2\x05\x2D\xA7\x56\x8A\xAA\xC9\xE6\x7B\xEA\xCB\x0D\xC1";"\x7C\xD6\x1B\xC6\x77\x0F\x44\xBF\x38\x62\x49\xB6\x14\x8D\x83";"\xA8\x28\xC6\xF2\x2A\x07\x61\xBD\x15\x75\xBE\x03\x90\xFC";"\xEA\x24\x4D\xEA\x6E\x6C\x1A\xD4\x40\x46\xB4\x50\x73\xA5";"\xF4\x57\x9F\x45\x94\x99\x95\x3B\xAE\x80\xCC\x22\xD7\x13\x6D\x0D\x8D\x41\x01\x15\xD9\x2C\x85";"\xB8\x23\xC2\xF2\x2E\x49\x6D\xF0\x11\x7A\xE1\x5B\xDF\xBB";"\x56\xF1\x60\xA3\x55\x40\xD4\x49\xCB\xD2\x1A\xEA\x56\x8A\xE9\xA1\xC7";"\x8C\x7B\x34\x8F\x1E\x62\x78\x92\x1F\x1E\xB7\x5A\x7F\xBC\xF5";"\x60\xED\x0C\xDC\x6B\x11\x36\xA8\xCF\xE8\x5B\x95\x51\xE6\x87\x98";"\x6C\xD8\x13\xCC\x6D\x18\x07\xAA\x30\xF9\x57\xA7\x57\x9D";"\xB9\x16\xDF\x1E\xD2\x45\x39\x93\x34\x4E\x88\x6F\x94\x56\x29\xC8\x4A\xEA\xCB\x7B\xE1\x2B\xC7\xA3";"\xC0\x06\xE1\x17\xDA\x44\x08\xC4\x06\x4D\x84\x77\xAA\x4F\x26\xDE\x55\xD0";"\x8F\x57\x32\xE2\x06\x64\x06\x95\x10\x10\xBE\xB6\x69\xBA\xFF\xF0\x1E\x83\xA5\x28";"\xF3\x2E\x8B\x5A\xF2\x88\xAC\x29\x4E\x6C\xDE\x16\xCF\x67\x13\x1F\xB4\x32\xF0\x56\x9D\x5D";"\x85\xC0\x34\xEE\x03\x69\x02\x96\x14\x16\xB2\xA0\x65\xA1\xFA";"\x41\xEC\x02\xBD\x70\x3B\x31\x5F\xAA\xE8\x32\xE0\x77\xEC\xE4\xAD\x2C\x49\x70\xDC\x14\xD9\x67\x01\x1C\xBE\x38\xF3\x3F\xCC\x1D\x9A";"\x1B\xC2\x17\xC0\x66\x02\x1F\xB1\x20\xE3\x4F\xA0\x5D\x9D\x96\x9B\x00\xBF\xEB\xC8\x51\xCA\x10\x67";"\x9E\xCD\x21\xD2\x19\x61\x0A\x85\x23\x0F\xB9\xB3\x6D\x81\xE4\xF6\x11\x8E\x81\x2D\x3E\xF7\x39\x76\x6C\xD9\x06\x4F\xB6\x42\x79";"\x74\xDC\x1D\xCF\x68\x1F\x0F\xB3\x3D\xFA\x49\xA0\x53\x96\xFA\x9C\x57\xCB\xCC\xC5\x45\xED\x03";"\x14\xA0\xBD\x61\xBD\xF7\xF4\x18\x92\xA5\x45\xAA\xB3\x30\x20\x70\xE4\x0B\x2B\xAB\x54\x88\xBA\xD8";"\x69\xE6\x08\xCE\x69\x0B\x24\xAA\x32\xF4\x5A\x90\x42\xE2\x84\x99\x33\xBB\x7C\xCB\x20\xC6\x17\x16\x06\x82\x21";"\xF8\x39\x6D\x88\x7A\x7D\x12\x90\x1F\x20\xAF\x42\x71\xAE\xFD\xEA\x6F\x85\xA8";"\x43\xF6\x21\xF2\xB0\xC7\xCF\x15\x87\xDB\x4B\xB0\x64\x87\x3C\x47\xAE\x73\x21\xD6\x3F\xD5\x29\x6D";"\xBD\x09\xC3\x1E\xDD\x5F\x5F\xFE\x7A\x41\x96\x7A\x91\x54\xD0\xCA\x47\xED";"\xC2\x08\xEF\x10\xCF\xAA\x53\xCB\x68\x49\xFB\x7C\xA3\x40\x20\x2F\x02\x8C\x8E\x61\xD5\x60\xAD\xA2\xE7\x80\x04\x30\xF4\x52\xE5";"\x95\x2A\xCA\xFD\x30\x7F\x61\xA5\x58\x7D\xF9\x5E\xD7\xA6";"\xC4\x01\xBF\x77\x3D\x5B\x5B\xF5\x77\x3F\x91\x5C\x82\x42\xCE\xD1\x74\xED\xC3\x0A\xEE";"\xA7\x1A\xDD\x05\x24\x41\x5A\xF4\x70\x3D\x98\x7D\x86\x44\xD3\xD2\x7C\xE4\xCC\x05\xEE";"\x0F\xC7\x33\xF7\x58\x47\xD3\x06\x88\x82\x69\xAA\x67\xA3\xED\xF2\x81\x04\x3F\xF0\x60\xAB\x0F\x12";"\xCD\x3C\xF5\x4C\xC3\xBE\xBF\xD7\x5D\x58\xF2\x05\xBC\x7E\x25";"\xF9\x4E\xA1\x45\xC0\x98\xEE\x6C\xD1\xE7\x82\x3D\xBA\x11\x3F\x1E\xCE\x0E\x57\xA8\xC7\x6E\xA3\xFC\xFB";"\x9B\xBA\x34\xB0\x01\x3B\x6C\xCD\x47\x6E\xB4\xE3\x7E\xFB\xE6\x93\x0D\xE6\x90\x7A\xA8\x87\x5B\x3E\x0F\xFD\x7C\x25\xDA";"\x01\x48\xA6\x51\x87\xEF\x8B\x07\xAA\x8A\xC1\x36\xF8\x72\x7C\x47\x9F\x75\x1B\xC4\xA1\x7F\xBC\xFB\xF3\x17";"\x4B\xFE\x70\xF7\x5D\x7F\xCB\x4E\xE9\xD7\x70\xF4\x2F\xC4\xA6\xA5\xC8";"\x6B\xED\x09\xAD\x78\x08\x2F\xA6\xCB\xEC\x55\x83\x15\xEB\xE6\xCA\x6A\xDD\x0B\xDA\x40\xD1\x16\x4E\x04\xEF\x28\x70";"\x5A\xE2\x7C\xBB\x79\x3B\x33\x5E\xA8\xEE\x31\x91\x75\xF2\xE2\xB6\x28\x4B\x68";"\xD1\x1E\xB9\x00\x93\x52\x3B\xCA\x60\x46\x82\x64\xB6\x51\x25\xC7\x46\xE3\xDA\x14\xE4\x62\xC3\xD1\xA7\xDD\x5B\x5B\xED";"\x56\x8F\x19\xA4\x7C\x30\x37\xA2\xC0\xE0\x7E\x8F\x37\xE4\x8D";"\x24\x9A\x5A\x9E\xA7\xCF\xE8\x70\xF6\xB9\x1F\xDD\x00\x90\x11\x4D\xB9";"\x67\xE5\x09\xCB\x6E\x0E\x2E\xAE\xD7\xEA\x44\x9B\x4F\xE7\x98";"\x14\xD7\xA0\x25\x82\x92\xFA\x1A\x9C\x9D\x28\xC5\xFA\x37\x72\x6D\xF5\x07\x21\xA6\x4C";"\xD2\x19\xDB\x17\xDE\x50\x57\xE6\x79\x4D\x8F\x62\x92\x4B\x20\xA5\x47\xE8\xC7\x78\xF0\x26\xC2\xBE\xBE\xD3\x55\x5B\xF6\x04";"\xD7\x6A\x8D\x32\xEE\xB7\xA8\x25\x4B\x61\xE8\x0B\xC7\x68\x02\x23\xAF\x32\xF6\x47\x9B\x41\x9A\x9E\x9F\x32\xB8\x7B\xCA\x24";"\x28\xC3\x71\xBA\x7A\x58\x62\xBB\x40\xE3\x53\xA0\x5F\x9A";"\x59\xCF\x4D\x28\xD2\xA6\x8C\x71\xC5\xDB\x29\x90\xEB\x57\x31\x75\x96\x76\x29\xC2\x28\x89\xF5\xAF\x9E";"\x54\xFE\x7E\xA7\x41\x39\x27\x52\xD8\xDB\x6D\x83\x38\xE6\xED\xBC";"\xDE\x28\xA8\x69\x90\xB6\xE4\xDD\x40\x2B\xE0\x0A\xB2\x67\x3B";"\x03\x4A\xAE\x4A\x91\xE9\x8D\x0C\xAF\x8A\xDA\x55\x83\x4D\x0D\x0D\xDA\x01\x4E\xBB\xC0";"\x2B\xD4\x54\x25\xB4\xA6\x98\x74\xEC\xCF\x04\xAF\x79\x3E\x0E\x41\x88\x7E\x31\x9A\x63\x90\x52\xD8\xD8\x59";"\xDF\x18\x89\x7D\xC7\xC5\x5C\x9B\x37\x3A\xAE\x30\xD2\x33\x2B\x2B\x28\x86\x99\x25\x8D\x4A\x85\xCE\xAC\x86\x19";"\xD3\x73\xFB\x21\xFB\xBA\xA5\xC2\x44\x5D\xEE\x06\xBC\x77\x35\x36\xBB\xBF\xF2\x7C\x91\x4E\xEC\x84\xA4\x2A\xAA\x6D";"\x5C\xEA\x0C\xB7\x7C\x20\x2C\xA2\xC1\xEC\x68\x95\x49\x84\xEF\xE6";"\x2E\xA1\x49\x94\xE8\xCF\x8C\x72\x8C\xB5\x1A\xDF\x00\x21\x41\x5C\xF3\x7C\x34\x8A\x61\xF6\x5B\x8C\xC9\x05\xE2\xA3\x04\xED";"\xC6\x79\xF4\x2E\xC0\xAE\xBC\xD6\x57\x5B\xF7\x78\xAF\x2B\x31\x38\x06\xDC\x93\x69\x96\x56\xED\x91";"\x07\x41\xAC\x6F\x8C\xEF\x8E\x0B\xB6\x93\x3F\x3B\xE1\x09\x7D\x72\x89\x18\x14\xAA\x41\x7B\xB6";"\x00\x40\xA2\x52\x8C\x82\xE4\x4D\xAA\xFB\x3D\x32\xE2\x04\x62\x7D\x91\x1B";"\xDB\x66\x84\x35\xFD\xB4\xC2\x3B\x13\x01\xFC\x16\xCF\x68\x01\x24\xAC\x2A\xED\x49\x9D\x42\x9F\x9C\x9F\x3B\xA1";"\x6A\xD3\x74\xCC\x1B\x79\x1D\x9B\x41\x18\x5D\xA2\x0E\xEF\xE5\xE5\x53\xC7\x8A\x28\x54\x99\x7C\x6D\x72\x8B\x78\x31\xC3\x51";"\x72\xDC\x09\xDF\x0C\x7F\x74\xD4\x57\x75\x35\xA6\x3B\x93\xE2\x93\x79\xFA\xED\xAE\x23\x9C\x7E\x03\x0B\x81";"\x82\x23\x30\xED\x01\x65\x7F\x93\x09\x13\xB6\x44\x77\xB9\xFA\xF5\x12";"\xFB\x53\xB4\x58\x91\x97\x96\x01\xAE\x83\xA8\x21\x84\x66\x2A\x04\xE3\x28\x13\xBA\xB7\x65\x85\xF2\xF8";"\x30\x8F\x2E\xFA\xAE\x9F\xC4\x33\x83\xA7\x55\x9F\x00\x9C\x53\x38\xDE\x65\x47";"\xA1\x52\x90\x47\xE0\x80\x9B\x32\xBB\x66\xCA\x3C\xDA\x11\x17\x13\x85\x20\x1F\x10\xF0\x11\xD8\xB7\xD0\x18";"\x02\xBA\xB3\x6D\x85\xE7\xFA\x0C\x90\x9F\x32\xC4\xFF\x31\x75\x7C\x9A\x07\x21\xA1\x43\x76\xB5\xCD\xE8\x6D";"\x94\x33\x34\xE7\x3E\x78\x6A\x99\x1E\x23\xA0\x4F\x77\xB5\xCC\xEF\x65\x8F\xAF\x21\xD3\x15\x3F\x5D\x62\xF5\x70";"\xC3\x09\xED\x0B\xD7\xA3\x4D\xCC\x66\x4B\x91\x6F\xE9\x5A\x63\xC3\x3A\xD8\xD1\x77\xFE\x3E\xFC\xBE\xBC\xDD\x50\x60\xEE\x00\xB1";"\x0A\xB9\xB7\x67\x81\xFF\xF5\x17\x8C\xEA\x3E\x99\x96\x61\x60\x21\xEF\x41\x3A\xD0\x5D\xFB\xB0\x8D\xEA";"\x74\xD2\x1A\xDD\x19\x11\x14\xB5\x23\x04\x4A\xBF\x51\x8A\xE0\x8E\x03\xAA\x8F\x3E\x29\x82\x6F";"\x35\xA9\x06\xD1\x7C\x32\x28\xA4\xC2\xEC\x7B\x92\x46\xEE\x85";"\x63\xCF\x21\xDE\x1C\x16\x09\x9B\x21\x0C\x45\xAE\x69\x89\xF3\xC0\x00\xD3\x8B\x48\x2A\x93\x32\x0C\x6D\xC4\x09\x49\xA3\x1B\x2C";"\x28\xCA\x53\x8E\xAB\xC7\xE7\x6D\xF2\xBC\x14\xD9\x16\xDF\x5A\x5B\xF9\x7B\x45\x86\x61\xF9\x5E\x82\xA7\x02";"\x43\x8C\x6D\x9E\x59\x2E\xC9\x4A\xED\xCC\x74\xF5\x2F\xCE\xAE\x5C\xD3\x56";"\x14\xB1\xBF\x64\x83\xFA\xE1\x16\x9A\x9F\x2F\xC4\xFD\x32\x76\x72\xE6\x06\x29\xA6\x48\x90\xA2\xCF";"\x1D\x59\xAF\x55\x8A\xEE\x90\x15\xA9\x97\x3A\x35\xE1\x05\x62\x74\x9F\x1C\x0E\xB3";"\x85\x21\x31\xEB\x05\x60\x09\x92\x0C\x1B\xB3\xBF\x79\xBA\xFD\xF1\x1D\x81\xA6\x2E\xCC\xF8\x39\x54\x6A\xEB\x0E\x2D";"\x39\x9C\x54\x8E\xA5\xC0\xC0\x7D\xFF\xB5\x11\xE4\x1A\xCE\x1A\x5D\xA5\x0A\x01\xEB\x34";"\xFA\x4D\xA6\x52\x9C\x90\x97\x6D\xAE\x8A\xC9\x2A\xEC\x0A\x61";"\x18\xBF\x59\x3E\xCF\xE3\xF8\x01\x9A\xC4\x30\xB0\x06\x34\x19\x76\xE5\x67\x53\x90\x26\xD2\xC0\xC6\xD5\x08\xA0\xCB";"\xC5\x03\xF6\x21\xC7\xBB\x47\xDA\x52\x57\xF1\x7C\xB8\x6C\x79\x6F\x0A\x84\xF2\x32\x85\x57\x9A\xD6\xC1\x25\x47";"\x0B\x59\xC2\x73\xE1\xA7\x87\x66\x93\x9C\x33\x39\xE1\x39\x65\x7F\x92\x11\x1F";"\x94\x5E\x3D\xE2\x3E\x76\x76\x98\x1E\x26\xAF\x52\x73\xB1\xC9\xE8";"\x85\xC7\x37\xD4\x0A\x67\x03\x8B\x28\x7C\xD5\xBA\x20\x92\xAE\xA3\x41\x8C\xC9\x6F\x81\xAD\x27\x29\x26\xF2\x50\x2B\xAF\x45\x8E\xA5";"\x33\xA4\x74\xB7\x1E\x14\x40\xA3\x7A\x80\x51\xFF\x24\x8C\xF7\xF0\x0D";"\x63\x98\x7C\x8D\x04\x8B\xC1\x5F\xF4\xA6\x66\x82\x04\xBF\xD5\x31\x94\x39\x0E\x87\x64\xAB\x00\x48\x38\x2F\xB4";"\x82\xD8\x2C\x93\x11\x7F\x04\x8F\x13\x14\xBD\xB2\x7E\xA6\xE2\xFC\x1E\x91\xA3";"\x49\xE5\x68\xA6\x44\x23\x39\x5F\xCB\xC6\x0C\x98\x23\xFE\xB1\xB7";"\x33\x91\x54\x8F\xCF\xC7\x99\x77\x97\xB8\x1A\xE3\x1D\xD1\x51\x57\xC4\x60\x52\x85\x6E\xAF";"\x6A\xB8\x2F\x2B\xB4\xA8\xAD\x37\x9D\xF4\x60\xA6\xE1\x2F";"\xDD\x70\x87\x39\xEC\xB2\xB7\x20\x42\x66\xEE\x04\x83\x61\x0A\x24\xAC\xCC\xF1\x42\x99\x46\xE7\x9F";"\xF5\x5E\x99\x41\xE7\x82\x98\x3D\xBA\x7E\xC9\x27\xB7\x18\x11\x0C";"\xC6\x2F\xD9\x01\x2C\x42\x60\xFB\x6B\x3E\x9D\x58\x81\x5F\xDB\xDD\x29\xF6\xDC\x0A\xE0\x11\xD7\xAE\x4A\xD8";"\x96\x28\xCC\xF7\x31\x70\x02\xEA\x54\x41\xE5\x52\xE5\xA8\xCA\xE7";"\x21\x9A\x36\xAA\x2C\x26\xC4\x5B\xD1\xD2\x7E\xE0\x3B\xF8\xB5\xBE\xD6";"\x5C\xEF\x6E\xA7\x1D\x73\x33\xCA\xC9\xEF\x6F\x87\x4C\xE3\x97\xB9\x27\xB2\x7B\xDC\x11\xC8\x0D\x74\x16\xFF\x3C";"\x6D\xDB\x12\xC3\x67\x03\x73\xAC\x77\xFB\x3B\x9E\x5C\x9C\x9A\x93\x3E\xA7\x85\xDE\x2B\xD2\x0B\x6D\x09\x8A\x28\x62\xB3\xB4\x6C";"\xCB\x48\xC1\x84\x46\x29\x0D\x95\x66\x5C\x83\x4F\x9A\xA6\xD8\xDB\x73\xE7";"\x01\x41\xA8\x5F\x8C\xEE\x89\x03\xAE\x8C\x3A\x23\xAE\x0B\x3C\x19\xD6\x0C\x6B\xAE";"\x3E\x89\x70\x94\x56\xD5\xCC\x47\xE5\xCB\x08\x9D\x23\xC8\xA5\x4A\xC5";"\xA9\x1E\xD3\x07\xDB\x51\x5B\xE3\x14\x32\x87\x6D\x9D\x5C\xDD\xC6";"\x28\xA9\x45\x73\xB7\xF7\xF9\x64\x85\xAD\x25\xD5\x0C\x2B\x48\x6D\xFE\x74\x37";"\x79\xD5\x27\xDA\x1A\x01\x57\x81\x4D\x01\x45\xAB\x57\x8C\xEE\x9D\x15\xAC\x91\x3F\x34\xE6\x0A";"\x39\x98\x56\x84\x59\xD6\xD3\x7E\xE5\xC6\x66\xF6\x54\xCD";"\x0D\x4E\xAB\x5C\x89\xEA\x8A\x08\xA9\x88\x37\x31\xE5\x11\x64\x79\x97\x14\x1D\xB5\x44\x76\xA9\xB6\xF0\x77\x86\xA6\x23\xC2";"\x3D\x9E\x34\x98\x0F\xC5\x9E\x19\xB6\xDA\x46\xE0\x75\xC4\xA3\x42\xCB\x54\x57\xF5\x60\xA5\x7D\x39\x3D\x5D";"\x78\xD6\x20\xDF\x13\x05\x11\x83\x22\x01\x42\xA5\x69\x8C\x80\xEA\x4B\xA8\xF9\x38\x3A";"\xBB\x0A\xDD\x14\xDE\x5E\x53\xFA\x79\x42\x8C\x6B\x92\x54\x2E\xC3\x42\xEF\xCC\x74\xF6\x22\xCC";"\xB1\x7B\x91\x5F\x7A\x10\x74\x88\x78\x65\xDF\x07\xD2\xE4\x80\x84\x25\xE6\xD8\x11";"\xC4\x67\x91\x24\xA1\xDE\x3B\xA0\x59\x05\x85\x66\xCB\x08\x46\x55";"\xC6\x0C\xEA\x13\xD4\xBC\x4A\xC2\x6C\x4B\xFF\x73\xA2\x47\x36\x7A\x52\xB8\xDC\x74\xFE\x39";"\xE2\x69\x8B\x20\xB0\xCA\xB8\x2B\x48\x6C\xDD\x15\xC0\x60\x00\x02\xBE\x36\xFC\x50\xA4\x59\x89\xC7\xCE\x7F\xF2\x95\xA5";"\x1B\xB6\x40\x7C\xBE\xF9\xF5\x61\x82\xAE\x2C\xCA\xF7\x3D\x14\x6B\xB3\x13";"\x7F\xAB\x30\xCD\x18\x62\x76\x95\x77\x44\x06\xBE\x59\x9F\x8E\xEA\x1F\xDD\x85\x7D\x4F";"\x47\xFF\x39\x8E\xA0\xC7\xE1\x74\xF0\xAA\x10\xDA\x1A\xDD\x58\x51\x92\x17\x4F\xC9\x78\xE0\x4D\x7B\xC7\x1A\xB6\x91\x60";"\x24\xEE\x57\xD6\x34\x82\xB5\x2F\xF4\xE4\x16\xB1\x09\x97\x4C\x15";"\xE8\x69\xEF\x23\xBF\x93\xFA\x24\x41\x78\xD8\x10\xC5\x61\x00\x01\xB5\x39\xF2\x56\xA8\x50\x84\xD9\x83\x56\xFA\xC5";"\x4A\xBF\xDF\x77\x83\xE3\xFC\x14\x9A\x9A\x2B\x39\xFA\x38\x76\x7D";"\x6A\x4B\xFB\x06\xC8\xEF\xEC\x0D\xAD\x95\x3F\x3E\xE4\x04\x79\x79\x81\x19\x1C\xAB\x43\x79\xB1\xF0\x9C\x0C";"\x82\x56\xB8\x54\x9C\x94\x8D\x0E\xA3\x91\xC0\x32\xE8\x0A\x65\x06\x95\x53\x17\xDF\xBF\x6B\xB7\xFC\xFF\x19\x9F";"\x39\xE4\x4D\xE4\xB7\xC4\xE7\x69\xFC\xB0\x1B\xC1\x07\xDD\x5C\x51\xF9\x7B\x52\x83\x3E\x8D\x10\xD7\xA4\x44\xE5\xCB\x02\xF1\x27";"\xE9\xCE\x2B\xD6\x12\x6A\x08\x87\x2D\x18\xB8\xBB\x6D\x8E\xE1\x86\x19\xFD\x81\x73\x3C\x97\x3D\x7C\x74\x9F\x00\x25\xB1\x54\x77\xB0";"\xFF\x25\x7C\xE4\x6A\x7B\x7C\x9D\x16\x15\xAA\x47\x7A\xBE\xE2\xF3\x60\x82\xAC\x2F\xCC\x0B\x46\x50\x20\xEC\x1E\x31\x9F\x5E\x83";"\x45\x8C\x65\x90\x4A\x33\xCE\x4B\xE2\xD9\x7C\xF3\x4A\xDE\xFF\xBF\xBE\x41\x58\xF6\x0B\xB9\x75";"\xF6\x4D\x87\x08\xD3\x83\xE4\x21\xBC\x80\xCE\x27\xD3\x10\x09\x08\x83\x28\x02\x46\xB6\x70\x94\x9C\x9B\x0E\x93\x90\x36\x34";"\x51\xB6\x23\x7C\xCD\xD1\xF6\x62\x8E\xAE\x14\xD0\x09\x38\x5E";"\x3A\x9E\x5D\x81\xBC\xD8\xDC\x7C\xF8\xB8\x0A\xF3\x5C\x8E\x0E";"\xBF\x7F\xF3\x24\x8B\x99\xB2\x2E\xA3\x17\xC8\x5F\x8C\x5E\x71\x05\xE6\x31";"\xB8\x73\xC7\x16\xB3\x90\xF5\x6E\xF2\x22\xC6\x44\x8B\x0C\x4C\x19\xB6\x3C";"\x5A\x8E\x6B\xAD\x4F\x25\xC5\x52\xF2\xCF\x71\xFE\x26\xC5\xBC\xBF";"\x37\x94\x59\x81\x56\x84\xDB\x79\xFB\xC1\x0D\xE2\x1E\xD3\xAC\x4A\xC7\x79\x4A\x86\x75\xAA\x43\x29";"\x57\xEA\x05\xB2\x19\x58\x6B\xA5\xA9\xF7\x69\x95\x4F\xE9";"\x2B\xC2\x14\xCD\x7A\x46\x4A\xAB\x50\x01\x10\xAE\x5F\xD8\xBE\xE1\x68\xB3\x95\x34\x5F\xF6\x7D";"\x8C\x3D\x3D\xE8\x00\x0B\x73\xCB\x0B\x5D\xB2\xD4\x62\xB8";"\x4B\xBF\x41\x7D\xBB\xF6\xF4\x1F\x83\xA5\x27\xC9\xE6\x2B";"\xC2\x0E\xE8\x0A\xCD\xAF\x43\xCA\x6E\x4B\xF4\x19\xC7\x01\x24\x55\x4D\xDA\xDD\x79\xFF\x38\xFD\xAE\xAD\xC0\x4D\x60\xE2\x0B";"\x8F\xC4\x34\xEE\x0F\x65\x04\x95\x10\x02\xB1\xBC\x7D\xBB\xFF\xF0\x1C\x8A\xE2\x24\x8F\xFB\x3C\x39\x7A\xB5\x02\x6D\x8C\x02\xD5";"\x2A\xA2\x48\x88\xAE\xCD\xED\x7E\x80\xBE\x40\xB2\x56\x4D\x2B\x56\x8E\x6E\x6B\xD3\x30\x8A\x00\x88\x9A\x50\xB6\x97";"\xF7\x58\x92\x4D\xE6\x82\x9D\x35\xBC\x6E\xD3\x24\xD0\x1B\x18\x1A\x82\x26\x0A\x58\xA4";"\xAB\x2C\xCA\xF5\x30\x43\x71\xF9\x06\x28\x9E\x51\x8E\xA6\xAA\xFD\x35\xF2\xD3\x0A\xD6\x1B\xD8\x5F\x51\xFD\x7E\x4B";"\xEA\x65\x91\x52\xF5\x85\xA7\x35\xB7\x75\xD4\x71\xDE\x5B\x60\x1B\xC5\x23\x09\x41\xA1\x54\x94\xEB\x96\x18\xA5";"\x62\xEA\x19\xC8\x6E\x02\x2A\xB3\x33\xEB\x5D\x9C\x4A\x98\x9C\x93\x28\xE4\x8C\x93\x3F\x8F";"\x8F\x6A\xE9\x28\xEC\xDF\xA5\x88\x51\x18\x83\x11\xCD\x18\x29\x77\xBB\xD1\x9D\x32\x8F\x5B\xF4\x93";"\x86\x31\xEF\x60\xAD\xDA\x59\xD5\x52\x5A\xF5\x7B\xB9\x66\x38\x33\x58\xCC\xE7\x6C\x90\x5C\xFD";"\x1E\xFE\xBB\x0A\x86\xF9\xFE\x1E\x9C\x96\x30\xC2\xFA\x30\x72\x6B\xE2\x6E\x35\xCB\x0B\x8D\xC1\xC2\xE7\x68\xFD\xB4\x13\xD2";"\xB1\x17\xDB\x05\xDF\x59\x4B\xFF\x79\x46\x8E\x63\x90\x3F\x20\xA6\x01\xEE\xA7\x06\xF3\x2D\xC4\xA7\x44\xC9\x4C\x52\xF7\x78";"\x3F\x93\x67\x98\x5B\xD4\xC2\x18\xEA\x9E\x1C\x9E\x0F\x94\xB6\x3B\xC4\x3E\x3B\x9B\x1B\xCE\x3D\x29\x3F\x55\xD5\xDA\x77\x86\x22\xF9";"\xF4\x50\x9B\x45\x9A\x97\x9E\x3E\xBF\x86\xCB\x26\xD1\x1B\x76\x0C\x85\x2F\x05\x4B\xB7\x6C";"\x6B\xB0\x0D\x8E\x67\x6D\x1B\xB2\x31\xFF\x59\x96\x58\x8F\x96\x97\x3F\xA2\x8C\xCE";"\x40\xB9\xC6\x7B\xBD\xF7\xFE\x18\x9B\xA6\x32\xC2\xF0\x32\x7C\x65\xE1";"\x7B\xD9\x23\x81\xE1\xB2\xEF\x05\xAC\xCD\x77\xD4\x47\x5E\x45\x30";"\x13\xBD\xAA\x3F\xFD\xE8\xF0\x1C\x9D\x99\x2A\xCD\xF7\x33";"\x36\xEA\x24\xD2\x46\x24\xC6\x47\xD0\xD1\x73\xE2\x20\xC4";"\x7D\xD0\x1C\xD5\x1A\x1E\x01\xB7\x2C\x04\x4C\xA1\x51\x97\x84";"\x74\xDD\x57\xCC\x69\x18\x19\xBB\x3A\xF9\x4E\xB9\x59\x96\x90\x89\x08\xAB\x99\xA7\x51\xE2";"\xA5\x21\xCE\x0A\x2F\x44\x66\xE7\x0B\x33\x8C\x59\x87\xA8\xDF\xD9\x72\xF8\xB8\x61\xEE\x40\xCE\x13\x53\xAA\x61\x48\x87";"\xD9\x74\xF6\x39\xEB\xE7\xCA\xD3\x1E\x7B\xBC\x77\xAD\x1A\x77\x32\xEF\xB0\xE3\x0B\xFF\x11\x9B\xEB\xC5\x4E\xBE";"\x9A\x31\x3E\xE3\x6C\x66\x3E\x96\x74\x00\xA4\x44\x7F\xB3\xF2\xF3\x7A\x88\xAF\x23\xC8\x04\x2B\x21\x7D\xAA\x77\x58\x9B\x5D\x83";"\x9C\x26\x22\xFD\x3D\x7B\x7B\x9F\x10\x1B\xB7\x5C\x1F\xB9\x92\x84";"\x34\xEF\x5E\xFA\xBE\xB4\xF8\x35\xF2\xD3\x13\xD6\x15\xDF\x5A\x56\xE5\x78\x47\x82\x60\x95\x50\x21\xA6\x57";"\x47\x97\x24\xF4\x1E\x73\x36\x44\xD6\xC9\x12\xD8\x5C\x9A\xB4\xC9\x3D\x5F\x39\x8A\x7A\xB4\x1E\x0C\x74\xB3\xBD\xAF\x4B\xFA";"\x66\xD6\x16\xCD\x6C\x00\x16\xB2\x33\xEF\x59\xA4\x59\x90\x95\x92\x3C\xA9\x84\xCC\x2B\xD2\x0C\x6D\x00\x94\x2C\x14";"\xBE\x11\xE6\x1B\xD6\x58\x57\xC4\x62\x4E\x87\x6B\xAF\x4F\x3D\xAD\x42\x8D\xB9\x0D\x95\x41\xC3\xA6\xFA\xAA\x43\x09\xF0";"\x8E\x39\x3F\xE7\x08\x7F\x7F\x80\x1D\x1A\xAD\x47\x7D\xB0\xF2\xEC\x67\x81\xA8\x22\xC8";"\xCB\x09\xF5\x2F\xD0\xCF\x4F\xCD\x55\x55\xF0\x7C\xA4\x79\x36\x24\x58\xD8\xE1\x6B\x85\x31\xFA\xB8\xAD\x25\x4E\x69\xE0\x10\xCA";"\x53\xFF\x77\xA2\x40\x27\x21\x4E\xC0\xD9\x76\x87\x31\xF1\xB5\xAA\x3A\x5A\x1B\xFD\x0B";"\xE3\x12\xBB\x4C\x88\x45\x1A\x99\x36\x5A\xD0\x7D\xC9\x22\x5F\xAF\x19\x89\x81\x64\xAE\x7D\xAA";"\x26\xA4\x50\x95\xB1\xC5\xEF\x6E\x8A\xBA\x19\xC1\x6B\x2C\x5F\x5F\xF0\x7C\x3E\x8B\x6A\x9A\x43\xD6\xD5";"\xA0\x0D\xEA\x1A\xD1\x5F\x54\xDC\x78\x55\x86\x6D\xAB\x4B\x2B\xCC\x57\xCC\x99\x77\x9E\x4A\x99\xD4\xE2";"\xBB\x7C\xF3\x24\xC5\xAD\xB8\xCB\x5E\x5E\xF2\x04\xB9\x7F\x5C\x3E\xF5\xAD\xA2\x67\xE7\x2F\xEF\x8A\xAE\x28\x4A\x74\xC3";"\x1F\xB4\x47\x64\xA0\xEC\xF5\x65\x8F\xA2\x21\xCB\xEB\x23\x47\x61\xEE\x0B\x38\x9D\x4C\x9A\xA1\xD3\xD5\x77\xFF\xB5\x03\xA6";"\x77\x98\x32\x9C\xA6\xDC\xDA\x78\xF9\xB8\x10\xFC\x07\xD3\x53\x4F\xC5\x67\x41\x99\x02\xA2\x49\x24\xC5\x4C\xD6\xD6\x73";"\xCC\x06\xE8\x25\xD0\xA9\x44\xCE\x57\x5B\xFD\x79\xBD\x3D\x21\x26\x59";"\xFE\x54\x88\x5C\x9A\x99\x90\x3A\xBC\x84\xC8\x45\xCA\x7A\x2E\x08\xEF\x2E\x0F\xBC\xB1\x6B\x84\xEF\x87\x14\x85\x9E";"\xF4\x5A\x9B\x48\xFB\x84\x9C\x33\xB9\x7E\xCF\x2C\xC3\x4C\x40\x1E\xE2\x2E\x04\x52\xDD\x7D\xCE\xBB\xD0\x53\x84\xD0\x36\x4D\xF8";"\x4D\xD4\x33\x18\xBF\xFC\xE2\x69\x93\xC7\x28\xB8\x56\x29\x37\x25\x8E\x5F\x60\xD8\x3E";"\xCA\x65\xBD\x26\xC2\xA3\x49\xD8\x58\x59\xF4\x77\xBA\x6E";"\x49\x87\x62\xEE\x0A\x32\x53\x41\xAF\xF8\x28\x9F\x2D\x99\xB9\xD8\x3E\x54";"\x0E\x45\xAA\x69\x89\xE8\x99\x16\x88\x95\x38\x3D\xE4\x07\x7E\x62\x87\x75";"\xF3\x47\x81\x5C\xE6\x9B\x9C\x3F\xBE\x7E\xD4\x38\xA7\x0D\x1F\x08\x84\x21\x01\x46\xB4\x72\x8B\xE3\x84";"\x0B\xB7\xB4\x6D\x82\xE3\xFE\x0B\xD9\xE9\x3A\x93\xF5\x67\x6E\x18\x80\x5C\x2E\xF3";"\x5B\xC3\x71\xFC\x41\x5E\xDB\x11\xB3\x8E\x65\xA6\x7F\x9D\xA6\xA7\xD3\x5E\x58\xEF\x00\xBC\x6D\x31\x32\xA0\xC1\xEF\x67";"\x68\xFA\x0E\xB5\x7F\x1D\x29\xB1\x33\xF7\x52\x99\x46\x94\x9A";"\xA6\x1E\xD5\x1F\x24\x47\x5E\xF5\x74\x3E\x94\x59\x8F\x1E";"\x49\x92\x6A\xE0\x41\x4F\x21\x55\xD4\xDA\x71\x83\x3D\xE5\xA9\xAE\x20\x4F\x67\xE1\x0E\xB2\x74\x63\x3F";"\x11\xBC\xB9\x15\xAE\xE1\xE5\x7F\xD8\xA9\x31\xB1\xE5\x30\x0F\x67\xF9\x7D\x3C\xF3\x4D\xE5\xD2\x85\xF0";"\x75\x9A\x3C\x86\xA2\xD8\xD8\x77\xFF\xB8\x0E\xE3\x18\xD4\x55\x51\xCB\x68\x2A\x8B\x3B\xC6\x08\x2F\xAC\x47\xED\xDA\x78\xFA\x22";"\x3A\xDC\x41\x0F\xB5\xCD\xE5\x60\x8B\xB8\x1C\xCC\x1A\x21\x52";"\xDF\x7E\xFE\x25\xC7\xBC\xBE\xCF\x5E\x5A\xE8\x00\xBA\x7E\x3F";"\x29\x92\x5F\x84\x58\xDD\xD0\x63\xE0\xFF\x03\x82\x7E\xA2\x38\x39\xCA\x1F";"\xD4\x26\x94\x61\x97\xED\xB8\xA0\x5C\x79\xE8\x03\xB2\x6F\x0F\x2C\xB7\xD1\xF2\x5D\x96\x42\xE7\x83\x9C";"\x30\x92\x42\xE1\x43\xDA\xD5\x78\xE4\xC0\x08\xF2\x0C\xD6\xAE\x4A\xCB\x6B\x47\xE4\x68\xD7\x5D\x24";"\x0C\x4F\xA6\x6A\x96\xEF\x87\x0A\x93\x9B\x39\x54\xFD\x44\x7B\x10\x86\x1A\x1E\xA8\x43\x7A\xAE\xF2\xEE\x67\x84\xAD\x4D";"\x99\x70\xD8\x20\x91\xAB\xEA\x3A\x27\x71\xB6\x03\xBA\x00";"\xE6\xC9\x5A\xAD\x0A\x0A\x07\x91\x14\x12\xBC\xBA\x7F\xB9\xFC";"\x0B\xF2\x03\xBC\x7A\x3C\x25\xAE\xD6\xEE\x6B\x91\x49\xEE\x81\xCE\x2A\xF2\x74\xBE\x1F\xC6\x19\x1C\x11\xB1\x20\x1C\x4B\xA3\x53\x93";"\x7D\xC5\x20\xDE\x0E\x17\x0D\x82\x20\x0C\x48\xAF\x6F\x96\xFE\x8D\x0B\x96\x96\x3E\x3D\xFB\x3A\x78";"\xA4\x23\xD7\xEF\x25\x46\x62\xE0\x02\x39\xF5\x4E\xC3\xA0\xB0\xDB\x7C\xFB\xBC\x12\xFF\x1E\xDE\x54";"\xF5\x49\xCE\x47\xF2\x8B\xF8\x1D\xD5\xF6\xDB\x6A\xEE\x60\x71\x05\x89\x1D";"\x54\xF8\x1A\xAA\x14\x50\x79\x57\xB7\xDE\x73\x8A\x3A\xFE\xB4\xB9\x20\x41\x67\xF3\x04\xC5\x6E\x08\x25\xAC";"\x0D\xCB\x28\x2A\xDD\xF4\xF5\x60\x86\xA8\x26\xD5\x11\x28\x48\x65\xE8\x75\x33\xF7\x34\x9D\xC7\xB2\x8A\x10\xF6\xBA\x0F";"\xC3\x24\xC8\x0F\x2C\x4F\x64\xF3\x76\x35\x99\x5C\x85\xA9\xB4\xC7\x3F\xFC\xD5\x10";"\x37\x93\x41\x81\x5F\xDC\xDB\x7E\xFE\xB7\x63\xF9\x7E\x90\x57\x24\xCE\x6B\x43\x80\x76\xB3";"\xEF\x60\xFD\x23\xE4\xC6\xA0\x47\xB6\x70\xD6\x1F\xC0\x1F\x16\x19\xB8\x30\x15\x49\xA4\x50\x94\x96";"\x3D\x85\x67\x99\x40\xD7\xC9\x46\xE0\xCC\x08\xEE\x2C\xD6\xF8\x55\x98\x0A\x00\xEB\x2F\xFC";"\xE4\x0E\x8E\x36\xED\x8E\xA6\x2A\x56\x73\xDB\x1E\xCF\x6A\x12\x70\xB8\x6A\x97\x17\xA0\x33\x92\x97";"\xB0\x1C\xD8\x13\x8B\x03\x1A\xAC\x68\x11\x82\x61\x9D\x54\xD3\xCF";"\xC3\x38\xC9\x6B\x35\x1F\x6F\x91\x6F\x28\x92\x53\x81\x5C\xD9\xDF\x62\xFE";"\xB6\x16\xD5\x0A\xDA\x5B\x52\xFF\x6B\x19\x85\x31\xFC\x35\x55\xA0\x22\x92\xC1\x06\xF2\x20\xC7\xA3\x46\xC9\x53\x56";"\xA5\x22\x9D\x11\xB3\xDE\xF6\x73\x5A\x05\xD4\x5B\x82\x23\x43\x44\xE3\x21\xBE\x09\xF1\x4B\xCA\xC8\xC2\x50\xFC\x98";"\xD0\x0A\xF0\x2A\xC4\xA8\x40\xC9\x58\x50\xF7\x74\xBC\x78\x3F\x32\x59\xD9\xE6\x61\x81\x2A\xF0\x88\xAE\x21\x49\x64";"\x73\xC1\x7A\xCC\x09\x5F\x1F\xDE\x3D\xFC\x51\xA2\x5E\x93\x93\x99\x17\xA3\x82\xC3\x2C\xE8\x04";"\xB7\x1E\xDB\x06\xD7\x41\x44\xE7\x7A\x3F\x8A\x6C\x92\x53\xCE\xCD\x45\xE3\xCE\x06\xF8\x2A\xC1\xA6\x42\xC4\x5E\x5D";"\x39\xF6\x3D\xB0\x2E\x24\x63\x57\xDF\xDC\x6F\x8C\x35\xF0\xBC\xB2\x3F\x5F\x63\xE7\x12\xCA\x69\x04\x3B";"\x07\x5E\xAB\x59\x8B\xE8\x8B\x03\xAC\x88\x70\x38\xEC\x07\x65\x78\x92";"\x3D\x95\x61\x99\x4C\xD1\xD1\x4A\xE4\xC2\x03\xE4\x24\xC0\xAC\x42\xCF\x69\x52\xFA\x71\xA1\x5C";"\xD3\x72\x9A\x6B\x70\x57\x25\xE4\x2E\x63\xD8\x73\x9A\x57\xDE\xD4\x41\xE9";"\x74\xB6\x5D\x94\x32\x40\x08\xBF\x2D\x9D\x28\xC7\x5B\x8B\xF1\x9D\x1B\xA0\x87\x85\x4F\xBD\x67\x7B\x04\x8B\x6E\x79";"\x0D\x43\xBB\x06\xD2\xAC\xDC\x50\xFE\x80\x6E\x3A\xF9\x02\x64\x7D\x91\x18\x18";"\x0E\xB5\xB3\x6F\x84\xE1\xFE\x00\xC5\x94\x51\x54\xA3\x51\x76\x77\x99\x06\x23\xAF\x4F\x77\xA6";"\x7A\xCB\x20\xDC\x09\x0D\x12\x83\x25\x0E\x46\xB5\x67\x90\xFE\xFF";"\xFE\x4E\xA3\x5F\x93\x9B\x93\x02\xA2\x80\xCE\x2A\xEB\x0A\x64\x05\x9B\x17\x15\xBA";"\x54\xF1\x70\xAE\x47\x26\x25\x48\xD5\xDC\x76\x83\x3A\xF5\xA9";"\x44\x8A\x62\x93\x55\xDD\xCE\x4D\x87\xC6\x04\xF2\x2A\xC1\xA9\x43\xCE\x50";"\xE0\x6A\x8F\x2E\xB6\x89\xC6\x38\x49\x6F\xEA\x16\xCD\x62\x1D\x38\xAF";"\xB7\x6D\xD8\x22\x86\xCC\xAE\x8B\x4A\x78\xE6\x03\xB0\x6B\x06";"\x64\xD0\x24\xDA\x1E\x1E\x10\x86\x23\x09\x4E\xA7\x64\x8D\xEF\x99";"\x07\x4F\xA5\x42\x93\xE2\x8A\x04\xA8\x8F\xCB\x36\xF8\x43\x62";"\x56\xFE\x78\xB9\x7F\x34\x22\x5D\xDE\xE1\x6D\x80\x36\xF4\x8D\xBA\x45\x24\x36\xB1\x1E\x9A\x76\x56";"\x9D\x28\xC7\xE0\x2B\x72\x79\xE9\x00\x2A\xA1\x23\x87\xC0\x88\xE6\x05\xF4\xB3\x1E\xD1\x01";"\xD7\x7D\xF4\x25\xC6\xA0\xBC\xD0\x59\x5A\xF2\x02\xBA\x72\x20\x74\xA0\xAA\xE4\x65\x89\x4B\xEE\x89\xA7\x27\x4F\x7B\xCC\x19";"\x3F\x97\x5A\x9B\x37\xCF\x91\x7F\x8F\xC5\x0D\xEB\x15\xCD\xAE\x4B\xCF\x7C\x49\xFA\x73\xA5\x4D\x2C";"\x0E\xE5\x4D\xB8\x32\x0C\x51\xCB\x92\x80\x4E\x98\x59\x86\xF9\xDA\x29\xC9\x72\xBB\x09\xD8\x76\x11\x6B\xB4\x4F\x5A\x2B\xFD\x5E";"\x8F\xC3\x24\xE4\x61\x00\x0A\xCB\x28\x79\xBF\xBE\x66\x86\xF2\xF8\x09\x99\x9B\x2C\xC4";"\x7C\xF0\x1A\xB4\x71\x0D\x28\xA1\xC8\xF5\x6D\x8F\x4D\xE6\x82\xA6\x35\xB7\x6C\xD1";"\x29\xA1\x57\x80\xA1\xC6\xE7\x72\xEB\xAE\x08\xD8\x01\xDE\x5B\x55\xFD\x62\x5D\xF5\x7F\x8A\x51\x23\xC8";"\x98\x38\x37\xE2\x07\x7A\x10\xF8\x11\x58\xB1\x29\x65\xB6\xF8\xF9\x66\x89\xA5";"\xA7\x29\xC5\xF0\x5F\x46\x36\xFD\x48\x2E\xC8\x53\x8B\xAE\xC3\xE6\x76\xF8\xBE\x14\xDE\x08\xDB\x58\x50";"\xC9\x75\xE6\x2A\xC4\xA0\x49\xD8\x53\x5C\xF0\x13\xD1\x76\x78\x36\x35\xC4\xE7\x68\x8C\x35\xF2";"\x71\xD2\x1B\xC7\x6B\x60\x16\xA6\x3A\xFB\x45\xAC\x53\x90\x8D\x8A\x05\xAB\x80";"\xD7\x7F\xFE\x34\x9F\xDA\xB1\x80\x36\x33\x8C\x6C\xD1\x06\x3C\x2E\xA0\xC0\xE0\x6C\x88\x33\xF6\x8F\xA7";"\xDA\x1C\xFF\x35\xFD\xB9\xB5\xD9\x40\x65\xE8\x0B\xA4\x71\x0B\x2C\xAD\xCE\xE6\x5A\x9D\x27\xE8\xDD\x86\x74\xB1\x12\xD3\x1D\xDD\x1F";"\x05\xEA\x0F\xC9\x6B\x0C\x25\xAA\x35\xF1\x47\x81\x5C\xE5\x9B\x98\x33\xB9\x79\xD4\x2A\xD9\x17\x16\x0B\x83\x27\x0E";"\x6B\xE7\x0A\xD4\x6E\x03\x21\xB4\x37\xFF\x38\xF1\x06\x9F\xF5\x95\x39";"\xA5\x6A\xEC\x2A\xF6\x8F\xA8\x22\x4C\x6D\xFE\x0A\xD5\x63";"\xF1\x54\x9A\x4B\x8B\x96\x9E\x31\xBA\x81\xCD\x21\xB9\x18\x7F\x48\x84\x46\x09\x47\xB4\x69\x81\xE8";"\x43\x83\x6F\xAF\x51\x35\xDA\x4B\xEA\xD6\x7E\xFB\x26\xD8\xD7\xA6\x90\x5D\x36\xEF\x04\xB9\x76\x32\x33\xBA";"\x23\x92\x15\xD6\x24\x5E\x53\x45\xA5\xB9\x75\x98\x7E\x8E\xDC\xA0\xD7\x55\x05\xF2\x1D\xB2\x6A\x01\x3B\xB5\xDA\x90\x20\x80\x49\xA6";"\x10\x42\xBA\x36\xCC\xA8\xE3\x69\xC1\xDD\x34\x6B\xBB\x13\x37\x43\xF7\x75\x78\xAD\xCC";"\x83\x7A\x8C\x4A\xEF\x89\xA1\x2E\xAE\x71\xDC\x1D\xC7\x67";"\xBA\x1B\xE1\x1E\xD6\x58\x49\xDB\x0B\x4A\xE1\x06\xD9\x21\x59\xCA\x32\xF2\xCF\x70\xFD\x27\xC4\xBD\xB2\xCF";"\xD9\x6F\x82\x35\xEF\xA8\xA7\x2F\x44\x6A\xE5\x14\xA3\x75\x46\x20\xC7\x32\xF5\x51\x98\x4A\x96\x84\x84\x3C\xB8\x85";"\x0E\x41\xA9\x47\x85\xEC\x87\x0C\xA9\x94\x31\x5A\xEA\x5B\x67\x00\x8D\x01\x19\xB6\x42\x7E";"\x51\xF9\x7E\xA3\x44\x31\x2E\x53\xDC\xD6\x6C\x85\x32\xF0\xDB\xB7\x64\x41\x02\xE7\x0A\xCA\x6C";"\xFF\x6F\x8B\x4F\xEE\x8B\xA5\x32\x4B\x72\xD8\x1F\xC6\x62\x1B\x03\xD9\x75\xF0\x2F\xBB\x5F\x90\x9F\x97\x07\xA1\x89\xC4\x2B\xEE\x1E";"\xEA\x65\x94\x49\xEC\x8A\xA6\x39\xB6\x74\xD4\x1D\xCA\x18\x1A\x19\xD4\x55\x44\x4D\xCD";"\x4A\x8E\x64\xC0\x5D\x7A\x26\x36\xC3\x81\x70\xE4\x27\x9E\xAB\xC7\x3D\x11\x74\xBC\x12\xB2\x77\x74\x38\xDA\x29\xA5";"\xEE\x4C\x9D\x46\x9E\x9B\x91\x3E\xA3\x9D\xC9\x23\xD4\x17\x1C\x0A\x9F\x5B\x60";"\x05\xAE\x41\x7F\xB7\xF2\xF9\x7C\x82\xAF\x2F\xC7\x0E\x23\x55\x78\x93\x6D\x2E\x99\x5D\x88\xA8\xD0\xDB\x66";"\xDD\x76\x83\x3C\xFB\xB6\xBA\x2A\x56\x22\xE7\x67\xAF\x6C\x0E\x25\xA9\xC2\xF3\x5D\x8C\x46\xE2\x98\x9F\x35\xBB\x79";"\x1B\xBF\xBE\x66\x9D\xF1\xFE\x1C\x9C\x9A\x24\x8A\xF7\x32\x7F\x6A\xE6\x00\x2E\xBB\x4B\x86\xA9\xC6\xE1\x69\xFD";"\xB5\x2F\xCC\x04\x2B\x4B\x61\x83\x69\x58\xDE\x5B\xEA\xBD\xDC\xD9\x7B\xF8\xBD\x0A";"\x2F\xA0\x5F\xDE\xA7\x90\xF5\x3C\xAA\xE0\x0B\x8F\x10\x8C";"\x6B\x9C\x3E\x86\xAD\xC6\xD6\x7F\xFA\xB9\x14\xF5\x19\xD1\x55";"\xDF\x00\x9C\x04\x4A\x47\x5B\xF7\x7B\x35\x8C\x61\x80\x57\xD4\xD5\x49\xE1\xCF\x6A\xE3\x7A\xA0\xE8\x46\xA5\x57\x51";"\x10\xFD\x6E\xC0\x39\x39\xB7\x2C\xDC\x81\x1D\x9B\x43\x91\xEC\xC9\xD2\x5B\x67\xE8\x0F\xB4\x79\x08\x29\xB9\xD7\xF0\x58\x97\x4B\xEF";"\x4F\xF9\x77\xA3\x40\x26\x3F\x42\xD1\xD8\x76\x87\x36\xFB\xB6\xBE\xD1\x46\x64\xE0\x0A\xBB\x6C\x0E\x2E\xA0\xCA\xE5\x5E\x95";"\x3F\x94\x68\x98\x5D\xCC\xD2\x43\xE2\xC0\x0D\xEC\x11\xA0\xB2\x02\xCA\x00\x50\xF0\x77\xA5\x43\x3E\x20\x54\xD4\xDC\x72\x82\x3D\x9A";"\x59\xFB\x00\xBD\x71\x34\x33\xCE\xAB\xA2\x67\xE7\x2F\xE8\x89\xA2\x2A\x4D\x74";"\xB8\x36\xD6\x27\xA7\x9A\xDA\x4E\xAF\x3D\xD2\x74\xDC\x1A\x13\x1D\xB5\x21\x19\x48\xAA";"\x60\x8B\x00\xB0\x74\x05\x20\xA8\xCE\xEF\x5F\x9B\x43\xE9\x99\x83\x28\xBE\x7A\xC9\x24\xD8\x13\x1E\x15\x9C\x28";"\x35\x97\x58\x87\x30\xB3\xDB\x3C\xF9\xAA\x15\xE6\x14\xD5\xAB\x4E\xC1\x71\x54\x9E\x73\xAB\x40\x22\xC4\x54";"\x38\x9C\x05\xBF\x3A\x3D\x52\x5F\xD8\xE9\x67\x82\x37\xEE\xB2\xAC\x2F\x4B\x6A\xEA\x7C\xC4\x6C\x02\x20\xBA\x33";"\x24\x87\x41\xCD\x4A\x10\x16\xB7\x3B\x00\x4E\xAC\x50\x90\xEC\x9F\x05\xAF\x8D";"\x2C\xA3\x48\x7B\xAC\xC6\x84\x64\xD3\xA8\x5B\xD4\x6F\x27\x41\x58\xF5\x74\x3B\x89\x7C\x9D\x5D\xD5\xD2\x40\xE1\xAB\x19\xA8\x10";"\xEE\x60\x94\x55\xE8\x81\xA4\x2F\xB5\x70\xD2\x1E\xD3\x5A\x47\x4C\xE7\x28\x59\x19\xB6\x55\x97\x91\x84\x03\xAB\x83";"\xA9\x42\x8C\xF4\x5A\x49\x6B\xED\x0A\x24\x9D\x48\x96\xA5\xC6\xE8\x75\xF0\xB8\x7A\xB3\x11\x9F";"\xB2\x1B\xD9\x0E\x29\x5D\x41\xF5\x7F\x3F\x8E\x63\x93\x57";"\xBD\x44\xCE\x40\x21\x2F\x5F\xF0\x7F\x38\x94\x64\x9F\x5B\xD3\xC6\x40\xE4\xC6\x03\xEB\x15\xC8\xC3\x5A";"\xB2\x1A\xD0\x0E\x25\x41\x58\xF5\x7F\x38\x8B\x62\x93\x5E\xD1\xD2\x41\xE6\xCD\x00\xF2\x51";"\x0C\x43\xB5\x6D\x83\xE4\x9B\x0F\x90\x97\x30\x3F\xFE\x3E\x7D\x6E\xEB\x71\x48\xC4\x45\x33\xA1\xBE\xF6\x13\xF1\xB1\x49";"\xC2\x07\xE6\x79\xCF\x10\x4E\xAD\x70\x42\x83\x77\xAF\x4B\x25\xDE\x4B\xCB\xDF\x74\xFA\x25\xF8\xBA\xAF\xB5\x56\x7C\xEE\x03";"\x03\x41\xBE\x4E\x9F\x8E\xE4\x60\xFA\xFA\x4F\x22\x9C\x7D";"\xA2\x21\xD5\x0D\x32\x5F\x66\xE4\x70\x3D\x91\x5F\xEE\x33\xD2\x9D\x7B\x93\xDD\x0E\xEE\x15\xD4\x53\x45\xDD\x6C\x43\x83\x78\xAE\x41";"\x29\xCA\x02\xDF\x4E\x8A\x85\x3A\xAD\xD0\x4C\xFA\x49\xDE\x29\x54\xC3";"\xF6\x5A\x92\x40\x9C\x91\x8D\x33\xB9\x7F\xCB\x26\xD4\x1C\x05\x53\xD8\x71\x5B\x1D\xA0\x13\x84";"\x07\xA9\xCB\x13\x83\x80\x99\x78\xDF\xF5\x41\xD0\xE4\x25\x10\x12\xB7\x15\x4F\xAA\x11\xF9\xE9\xAF\xFE";"\x07\x48\xB6\x69\x8B\xE5\x80\x05\x94\x80\x35\x3D\xE6\x38\x7E\x79\x91\x1C\x30\xFE\x4B\x25\xA3\xAB";"\x8B\x61\xAA\x77\x92\xE0\xFC\x84\x03\x1E\xAE\x42\xAE\x14\x5F\x22\x1E\x92\xA1\x21\xC9\x6D\xF6\xD9\xEC\x77\x1B\x34\x86\x49";"\x5E\xE9\x6E\xD6\x27\x3A\x60\xB1\x91\xB6\x33\x9E\x44\xEF\x89\xAC\x26\xB4\x77\xDC\x1A\xD4\x61\x1B\x1A";"\x28\x82\x57\x84\xA2\xC2\xDE\x71\xFE\xA2\x56\xE3\x72\xC5\x58\x5A\xCA\x65\x43\x86\x77\x9B\x44\x27\xC5\x40\xE8\xBC\x75\xAC";"\x71\xB9\x16\xC2\x19\x19\x11\xB0\x30\x05\x4D\xA2\x55\x86\x95\x8B\x0F\xAB\x8F\xC2\x39\xE1\x04\x64\x0A\x95";"\xB5\x22\xCD\x0A\x2B\x45\x65\xF3\x6D\x2E\x9E\x51\x80\xA1\xDC\xD8\x62\xE7\xEC\x00\xBF\x02\xA7\x4A\x2A\xD9";"\x08\x41\xA9\x64\x8A\xEF\xCA\x03\x94\x95\x33\x3C\xE5\x07\x7F\x7A\x9F\x17\x0B\xA4\x43\x78\xB2\xFF\xEB\x61\x93\xED\x22\xA4\x0E";"\x63\xCF\x22\xD2\x14\x10\x07\x83\x23\x03\x41\xA5\x6C\x89\xE2\x86\x0D\x91";"\x7C\x9D\x38\xC5\x06\x87\x92\x50\x82\xC4\x44\xBE\x7D\x96\xF6\x5B\x9E\x0B\x0A\xA8\x2B\xE4";"\x16\xA6\x42\x74\xBC\xE8\xE6\x65\x8A\xAB\x21\xD9\x12\x34\x47\x65\xE9\x73\x30\x93\x40\x82\x5A\xD8\xDA\x7A";"\x9D\x5D\x98\x49\xE9\x8C\x9D\x2A\xDB\x94\xC1\x5E\xB6\x79\x0B\x0F\x81\x7E\x00\x5E\xA9\x33\x95\xFC\x92\x72\x8E\x8A\x64\x49";"\x8E\xD2\x76\xCE\x77\x16\x14\xF6\x4B\x5A\xC3\xA7\x79\x96\x85\x93\x05\x8D\xF5\x3F\xDE\xF9\x52\x30\x78\xCB\x67\x78\xD4";"\x28\xB7\x18\xE7\xF0\xA1\xE9\x30\xE5\xF4\x06\xAA\x0C\x7E\x00\x07\xE7";"\x7A\xD2\x23\xC3\x0A\x13\x12\x80\x22\x0E\x42\xC0\x00\x81\xA9\x85\x64\xB7\x97\x39\x3D\xE6\x08\x7F\x61\x91\x1F\x18\xAF";"\x87\x36\x34\xE2\x01\x64\x7C\x96\x07\x18\xB1\x49\x77\xBD\xF2\xF4\x71\x9B\xE7\x5A\xD7\x80\x32\x0B\x6B";"\xA4\x32\xC4\xF3\x31\x75\x65\xE2\x11\x22\xA2\x50\x8F\xAE\xC4\xEB";"\xD1\x60\xE4\x63\xCC\xA7\xBE\xDD\x5C\x5F\xE9\x0A\xA0\x72\x3E\x32\xA3\xC8\xE8\x6C\xE5";"\x0D\xC8\x70\xF5\x26\x53\xDE\x4F\xE3\xD7\x7E\xF6\x3C\xDF\xBA\xBE\xD6\x5F\x54";"\xED\x46\xB9\x45\x7A\x42\x29\xA2\x6C\x22\x9F\x04\x87\x2F\x96\xAD\x28\x96";"\xFD\x53\x93\x45\x96\x82\x9B\x3D\xBA\x86\xCD\x21\xCD\x0F\x69\x14\x9B\x2F\x0D";"\x11\xD0\x28\xDF\x1B\x1B\x13\xBD\x20\x03\x46\xBE\x52\x8E\xED\x8D\x0B\xAC\x93\x36\x5B\xF8\x47\x66\x17\x97\x1B\x1F\xB5\x46";"\xD0\x0B\xB0\x22\xD7\xA1\x40\xCD\x51\x52\xE0\x78\xA5\x7E\x39\x3D\x51\x8A\xD2\x6F\x86\x31\xFD\xBD\xAE\x3C";"\x12\xD4\xB1\x6C\x85\xE0\xF4\x14\x99\x92\x35\xD4\xFF\x30\x72\x7B";"\x0A\xFD\x39\xCD\x2C\x4F\x79\x2E\xCC\xD5\x7F\xE4\x23\x8E\xB8\xFD\x55\x5C\x1B\x95\x7E\x9F\x65\x7E";"\xBA\x0C\xE5\x1F\xB8\x5B\x15\xD8\x27\x4B\xEB\x68\xAC\x4B\x2B\xC4\x4D\xCF";"\xF5\x3F\x9F\xA2\x23\x25\x60\xEF\x0A\x2E\xA6\x51\x8B\xB3\xC0\xE0\x76\xF6\xB1\x16";"\x33\xC8\x34\x2E\xA9\xBE\x84\x06\xFD\xA5\x4A\x97\x09\x4B\x57\x73\xAF\x05\x69\x89\x0A\xE2\x36\xAB\xCE\x6D\xE6\xD0\x69";"\x41\x8D\x6C\x90\x59\x20\xCA\x56\xF6\xD3\x78\xF6\x2F\xC2\xAF\xA7\xDC\x4E\x51\xF1\x77\xBC\x72\x28\x36\x59\xCC";"\x57\xB5\x02\xD5\x70\x30\x33\x5B\xC1\xEC\x79\x82\x31\xEF\x89";"\x95\x6C\x26\x9E\x39\x60\x34\x9C\x1C\x67\xA8\x22\x6C\xB5\xCF\xE9\x6E\x8D\xAC\x00\xCC\x17\x20\x40\x5C";"\xC9\x01\xF5\x39\x8C\xA3\x28\xD7\x57\x54\xF7\x7C\xAA\x7D\x39\x31\x4D\xD8\xE2\x6A\x83\x35\xF7";"\x82\x53\xC3\x2E\xA0\x87\xF4\x3E\xB2\x7A\xD0\x26\xDD\x11\x14\x12\xA9\x26\x06\x46\xA8\x54";"\xCA\x2B\x89\x0F\x47\x4E\x64\xEC\x0E\x34\x9E\x51\x85\xA7\xDE\xCF";"\x80\xC4\x2C\xD5\x0E\x66\x47\x84\x2F\x18\xB9\xB4\x6C\x8B\xFF\xF8\x17\x9D\x99\x3B\xC6\xE9\x7C\x73\x18\xFE\x02";"\x3A\xCF\x4F\xD9\x12\x11\x06\x80\x2A\x14\x43\xA8\x68\x8F\xEA\x86\x60\x99\xCF\x23\x7E\xE2\x54\x7B\x70";"\xB2\x27\xCD\x04\x2A\x4F\x6F\xEB\x02\x5F\x85\x1C\x84\xCA\xDB\xDA\x70\xFF\xBA\x09\xE1\x06\xD7\x57\x55\xC1\x67\x48";"\x73\xB5\x53\xC5\x09\x06\x1A\xB3\x35\xFA\x57\xA0\x45\x8F\x8D\x97\x04\xA8\x80\xCE\x2C\xF4\x61";"\xEB\x53\x98\x47\x9A\x9F\xFB\x24\xD0\xC5\xCA\x4C\xCA\x17\x6B\x0D\x87\x2A\x0D";"\x4A\x84\x68\xA8\x49\x2B\xD8\x33\xCD\xCE\x7B\xF9\x24\xC6\xBD\xBE\xDA\x43";"\xFE\x3A\x85\x30\xF0\x8A\xA2\x22\x4A\x6E\xDC\x06\xCE\x67\x04\x22\xB2\x32\xF3\x02\x93\x41\x93\x9B\x90\x38\xA5\x87";"\x05\x41\xA8\x65\x89\xF0\x9F\x12\xA8\x90\x3E\x3D\xEF\x06\x63\x17\xF9\x44\x10\xE7\x12\x63\xC0\xEE\xBC\x21\x9C\xF9\x2A";"\x10\xB9\xB5\x6F\x85\xFA\xFA\x1D\x80\xF7\x21\xDA\xEA\x5A\x7D\x75\xE0\x07\x27\xA2\x48\x88";"\x0B\xBC\xA1\x6B\x81\xE6\xFB\x14\x95\x98\x34\x23\xFC\x38";"\x95\x31\x3A\xF9\x3C\x7C\x70\x91\x18\x23\xA0\x42\x39\xBF\xC3\xEA\x6D\x8F";"\x28\xCA\x4D\x8D\xAC\xCB\xE0\x6F\xFF\xA8\x0C\xC6\x00\xDB\x56\x5D\xFE\x7E\x59\xE2\x6B\xE9\x4B";"\xFF\x4E\xA7\x45\xEA\xEB\x82\x5C\xBA\xC3\xBF\x2C\x96\x77\x7B\x61\xF2\x1A\x43\xDF\xC5\x1D\xD3\x81";"\xD7\x6E\x84\x3C\xF7\xBD\xB2\x2F\x42\x6B\xE6\x18\xCB\x04\x6F\x2F\xE8\x35\x9E\x50\x9D";"\x1F\xB4\xAA\x7E\xBF\xFA\xF2\x1B\x8D\xAD\x23\xA7\x9D\x68\x45\x1C\xF2\x5F";"\x79\xD7\x1A\xD8\x1A\x1A\x13\xA5\x2C\x0B\x43\xAA\x55\x96\xF0\xE6\x17\xF0\xDB\x7A\x74\xA8\x5A\x2E\x37\x8C\x58\x07\xAE\xA1\x32\xA6";"\xF1\x61\x9B\x51\xEA\xF5\xA7\x6E\x37\x2E\xDC\x47\x99\x63\x5D";"\x31\x97\x5B\x8A\x5C\xD7\xC2\x64\xFC\xC3\x0F\xE1\x11\xD3\x39\x50\xAD\x29\x49\xE9\x74\xAB\x4B";"\xFF\x4C\xB8\x43\x9A\x9B\x94\x39\xA2\x86\xDD\x32\xCF\x0C\x66\x0A\x88\x2E\x19\xB8";"\x50\xFC\x70\xA0\x2C\x37\x61\x4C\x9B\xDF\x07\x81\x3F\xF2\xB5\xB2\x24\x46\x6B\xF2\x0F\xC9\x6F\x09\x23\xA6\x58";"\x69\xB7\x1D\x89\x34\x58\x79\xBF\x89\xFF\x28\x80\x05\xF8";"\x6E\xE7\x14\xC9\x6F\x03\x3B\xB0\x4A\xED\x49\x9E\x44\x9D\x9E\x9E\x3E\xA3\x85\xCE\x2E\xD6\x15\x17\x15\x9A\x2C\x03\x47\xB1";"\x66\xD0\x23\xDF\x12\x10\x0C\x82\x3A\x15\x46\xA7\x67\x8A\xE2\x87\x16\x95\x9C\x3B\x3E\xE7\x3D\x78";"\xA7\x64\x9A\x17\x83\x3D\x35\xBE\x0E\x32\xFE\x62\xB2\x4D\x27\xC4\x4B\xD7";"\x81\xD8\x63\x8F\x47\x35\x1D\xD7\x21\x0D\x41\xB5\x60\x85\xE5\x9B\x13\x91\x9E\x34\x38\xF8\x3E\x75\x7B\x96\x1C\x20";"\x00\xAD\x44\x7F\xB2\xF1\xF8\x7A\x81\xAF\x23\xC8\x0D\x22\x21\x78\x85\x31\x31\xF1\x44\x88\xA8\xDE\xD3\x79\xF6\xA3\x15\xF9\x13";"\x43\x8D\x05\x91\xB4\xDB\xF3\x11\xEA\xA7\x1F\xB2\x0E\xC7\x0C\x33\x99\x1A\x47\xE9\x75\xC8\x42\x22\xD9\x2B\xB4";"\x87\x9A\x28\xAA\x0B\x09\x0B\x89\x1E\x1D\xB6\xBC\x7E\xB7\xFA\xF0\x11\x99\xA8\x42\xDA\xB0\x31\x1F\x6F\xE7\x0E\x22\xAA\x53";"\x5D\xE9\x07\xBC\x77\x30\x43\xB9\x87\xEB\x0B\x8A\x4A\xE2\x87\xA4\x2C\xB2\x72\xDB\x0F\xC1\x19\x1C\x1A";"\x25\xD7\x17\xDD\x02\x68\x4B\xA8\x32\xED\x2E\xF0\x54\xCB\xCF\xE1\x59\xC3\xD4\xC2\x3F\xFB\x75\x38";"\x17\xB1\xB9\x61\xB9\xFA\xF4\x11\x9D\xBD\x2D\xC3\xF3\x3A\x49\x69\xEC\x11\x24";"\x03\x4C\xAC\x4D\x8C\xEB\x8A\x0D\xA6\x84\x3D\x2A\x98\x0B\x00\x6A\xCF\x7D\x46\xBA\xCD\x64\xE9\xE5\xA2\x02\xD4\xAE\x74\xD5\xAF\x20";"\x8E\x3A\x28\xEA\x07\x64\x08\x97\x11\x1A\xB0\xB0\x71\xB8\xFF\xFD\x18\x83\xA1\x31\xCA\xF5\x33\x40\x6A\xED\x0A";"\x0C\xBA\xB1\x60\x84\xFE\xFC\x05\xC6\x91\x64\xD7\xAB\x27\x37\x7D\xB8\x11\x6D\xAB\x0A\x96\xE4\xDD\xB4\x62\xE0\xD9\x53\xB5\x51\x2C";"\x42\xA8\x6D\xE3\x71\x39\x35\x56\xDE\xE0\x6E\x8D\x36\xF9\x8F\xB7\x3C\x52\x6B\xD5\x11\xC9\x67\x06\x38";"\xCC\x72\x82\x3D\xF3\xB3\xB3\x2B\x44\x7A\xE4\x0F\xCC\x64\x0F\x26\xA1\x9B\xE2\x1D\xC0\x13\xBF\x8A\xC3\x39\xC2\x65";"\x35\xF9\x56\xD8\x46\x9B\xDB\x12\xFC\xC4\x0D\xEF\x15\xD7\x49\x48\xC2\x6F\x4C\x80\x72\xC4\x54";"\x69\xE8\x19\xCE\x04\x09\x49\xE8\x35\x9E\x51\x99\x44\x9C\x96\x99\x3A\xB0\x85\xDA";"\xB9\x1B\xE0\x1E\xD1\x50\x4A\xCF\x6B\x40\x81\x6E\x91\x4B\x2D\xC1\x4B\xED";"\xA1\x19\xCB\x6C\x2D\x58\x5C\xFF\x7C\x39\x8B\x64\x9A\x51";"\x25\xAC\x4A\x70\xA8\xD3\xF5\x7C\x8A\xA4\x1E\xD7\x02\x24\x47\x67\xF4\x65\x3A\x90\x5D\x9C\x58";"\xBE\x13\xDE\x18\xDB\x5C\x4A\xE7\x67\x41\x88\x68\x9E\x54";"\xE0\x69\x88\x30\xF9\x88\xAF\x2B\x5B\x6F\xD8\x15\xCE\x64\x01\x19\xB8\x5E\xF2\x3B\xDB\x5D\xF1\x92";"\xE6\x70\x85\x36\xEB\x8D\xA6\x29\x4A\x1C\xC4\x53\xC5\x09\x06\x1E\xB4\x3D";"\x39\xC0\x42\xC4\x5D\xB3\xC5\x7E\xF0\xB7\x08\xED\x14\xC9\x4D\x52\xC3\x6B\x42";"\x2C\x84\x68\xAB\x45\x2E\xC1\x48\xED\xD4\x7E\xED\x27\xC2\xB2\xB2\xDC\x5B\x5A\xEF\x6E\xA7\x1D\x73\x33\xCA\xDD\xE1\x61\x89\x4D";"\x2B\xD5\x76\xAC\x11\x76\x44\xB8\x49\xE1\x06\xB2\x0F\x9A\xFA\x88\x5B\xB8\xDD\xAD\x58\x80\x01\x3A\x17\xD8\x27\x01\xCB\xA8\x3F\x8C";"\xC5\x07\xED\x14\xD2\xBC\x2E\xD5\x75\x55\xFD\x77\xA6\x44\x39\x24\x4B\xD8\xD9\x73\x83\x31\xE1\xE5\xEC\x33\x30\x0D\x82\x67\xCF";"\x84\xD3\x2A\xE8\x09\x64\x04\x88\x2B\x7F\xD4\xFC\x64\xEA\xF8\xFA\x17\x9A\x99\x28\xDE\xF9\x36\x74";"\x7F\x9A\x2D\x86\x05\xCC\x91\x73\x91\xDB\x4D\xF0\x65\xDD\xC8\x20\x97\x05\x4D\xFC\x7D\xAF\x46\x2F\x37";"\x4C\x89\x77\xA6\x4F\x23\xD7\x4B\xD7\xDD\x7C\xF2\x2B\xF7\xD2\xA5\x9D\x5A\x0B\xF2";"\xF2\x31\x38\xFD\x3C\x72\x72\x9A\x07\x21\xBE\x4D\x71\xA6\xCA\xEC\x6A\x88\xC2\x02\x95\x19\x60\x47";"\x15\xB1\xB4\x7F\xBB\xE1\x8A\x07\x93\xA0\x29\xCF\xF1\x31\x57\x63\xE3\x0A";"\x81\x3A\xC3\xFD\x35\x75\x79\xF9\x08\x26\xA3\x4E\x89\xAD\xA0\xEA\x34\x92\xF6\x1B\xB3\x1B\x20\x59\x5D";"\xFE\x50\x85\x41\x99\x94\x9C\x37\xA5\x85\xD3\x6D\xD3\x7B\x74\x0D\x8B\x2F\x0F\xB4\xB7\x71\x83\xE6\xFF";"\x33\x96\x45\xC6\x05\x8B\x88\x68\xA2\x97\x18\xB6\x1B\xCF\xAE\x4D\xC6\x6D\x4B\x86\x69\xA9\x47";"\x30\x9D\x59\x8E\xA4\xD8\xD3\x71\xFB\xBE\x08\xE3\x1F\xD5\x4A\x50\xC7\x65\x49\x8F\x6F\xBC\x0F\x2E\xAF\x4F\xD5\xDB\x73";"\x96\x35\x3F\xFB\x38\x7C\x6C\x9E\x19\x20\xA1\x4F\x75\xDC\xD3\xAE\x66\xE4\xAF\x1C\xD6\x0F\x27\x46\x60\xF6";"\x82\xC0\x37\xE9\x0E\x7D\x52\x9E\x1F\x16\xB2\xBF\x65\xBD\xE5\xEB\x11\x9B\xA6\x2B\xC5\xF7\x39\x20\x7F\xFA";"\x77\xDA\x14\xC3\x6A\x0E\x1B\xB5\x34\xFF\x54\xA2\x5E\xFA\x9D";"\x34\xAF\x44\x73\xB6\xCF\xEA\x65\xE1\xA1\x75\xB9\x4C\x25\x2B\x7D";"\x9D\x38\xC9\xFE\x38\x6F\x6A\x81\x06\x2D\xA4\x4A\x72\xA8\xD6\x84\x75\xCC\xB2\x74\xDF\x03\x27\x4C\x5C\xF3\x7C\x3E\x94";"\xC4\x01\xEE\x0F\xBC\xA7\x11\xDC\x2B\x4F\x97\x7A\xA2\x43\x20\xC8\x59\xD3\xDA\x72\xEB\x3A\xFE\xB9\xB5\xDD\x45";"\x6E\xF2\x0F\xC9\x63\x0A\x20\xA6\x3D\xFB\x37\xF4\x05\xE2\xF2\x9A\x3B";"\xB5\x18\xDD\x1A\x23\x5C\x52\xF3\x78\x38\xE0\x78\xF1\x11\xD4\xA5\x5D\xEA\xCB\x03\xEE\x2F\xCB\xB8\x4C\xCF";"\x94\x36\x3F\xE1\x3C\x7B\x71\x98\x75\x39\xEB\x44\x1F\xAE\xF6\xEC\x61\x8D\xA2\x20\xCA\x0B\x28\x46\x61\xF0\x7F\x5B\x98\x0A\xE9";"\xA0\x67\x8F\x44\xC5\xDB\x3D\xD8\x3D\x36\x8B\x11\xAF\x22\x40\x2A\x33\xB2\x9F\x05\x8A\x4C\x8C";"\x0D\xFF\xB8\x0B\xB8\xFF\xF1\x1A\x9D\x9C\x33\xC2\xF2\x3C\x7D\x6F\xE1";"\xC2\x7E\x97\x66\xDA\x0B\x48\xB0\x1F\x5B\xD1\x13\xB4\x16\x53\xCA\x19\x81";"\x05\xD9\x4F\x2E\xDC\xB5\x9D\x22\xFF\xBB\x50\xB3\x11\x76\x51\x3B\x91\x07\x31\x90\x50\x83\xA6\xDA\xDC\x76";"\x96\x3A\x30\xF8\x6D\x74\x2D\xF0\x5A\x1C\xC6\x42\x73\xB7\xFE\xED\x64\x9E\xAF\x29\xCD\x08\x2C\x41";"\x50\xEF\x66\xAB\x7C\x3A\x3A\x51\xDE\xF9\x0E\xED\x6F\x9E\xB9";"\xD7\x60\xFD\x78\x92\xF9\x5B\x99\x2F\x0C\xAA\x3C\xFF\x1E\x64\x22\x33\xC3\xA0\x75\xDF\x64\xA5\xE6\xED\x31\x37\x65\xB1\x16\xB1";"\x5C\xB2\x67\xED\x4F\x38\x3C\x50\xDD\xDE\x71\x9F\x3B\xF6\xB5\xB1\x20\x43\x77\xBF\x00\x87\x62\x4B\x37\xE5\xC7\xA1\x44\xDE";"\xF2\x5D\x92\x46\xE1\x93\xF0\x2C\xF8\x7E\xB8\x2A\xD9\x11";"\xAD\x09\xE5\x38\xDD\x93\x86\x3E\xEC\xDA\xC5\x3F\xC6\x18\x06\x6C\xEA";"\x53\xF9\x7D\xA3\x7D\x3B\x55\x46\x9D\xDD\x05\x84\x31\xF1\xBC\xAE\x25\x40\x6F\xE3\x14\xDB\x68\x06\x23\xAA\x31\xF7\x57\x93";"\x63\xF5\x5D\xBF\x2D\x13\x50\xB8\xBD\xED\x18\x9A\x16\xFE\xE6\x85\x28\xB4\x7C\xD5\x20";"\x76\x84\x4A\xB3\x66\x7C\x79\xFD\x2B\x07\x47\xAE\x5A\x8F\xED\x83\x0D\xB6\x98\x39\x35\xE5\x04\x7C\x71\x98\x1D\x19\xB3\x44\x70\xB7";"\xBC\x7A\x84\x18\x76\x4C\x68\xF5\x70\x34\x90\x5E\x86\x5D\xDE\xD0\x7D\xFC\xC6\x0D\xE1\x06\x95\xF2\x1F\x9A";"\x12\xBD\xB8\x61\x87\xFC\xFE\x1D\x9B\x88\x28\xC6\xF2\x31\x70\x78\xE0\x4E\x25\xBA\x4D\x8F\xA3\xC5\xE5";"\x1A\xBF\xB7\x7F\xBC\xF8\xED\x5A\x87\xC8\x29\xCD\xF4\x32\x4C\x6A\xF6\x0D";"\x51\x80\x70\xAC\x49\x2B\xC2\x45\xBA\xC9\x30\xF9\x48\xFF\xB6\xBF\xDF\x5C\x62";"\x7E\xC7\x22\xCE\x09\x1D\x0C\x86\x22\x0B\x44\xA9\x72\xF4\xFA\x87\x04\x94\x94\x32\x3B\xF8";"\xC1\x19\x82\x7A\x94\xF7\x55\x98\x0A\x00\xEB\x2F\xFC\x3C\x6D\x28\x03\x8F\xCF";"\x81\x25\xA1\x2F\xA3\xE5\xA5\xDC\x42\x62\xE8\x0D\xB6\x67\x01\x21\xA9\xDC\xEE\x58\x90\x40\xE0\x82\x98\x30\xBC\x2B\xC1\x64\x86\x4C";"\xBA\x4F\xCF\x5B\x96\x92\x87\x01\xA4\x8B\xC4\x2C\xFA\x0B\x60\x07\x8F\x13\x15\xB3\xD7\x7C\xFB\xFA\x93\x1B\x9A\x9E\x27\xCD\xF0";"\xDA\x78\xFE\x25\xDA\xB3\xB8\xDC\x5F\x5F\xE8\x03\xAB\x27\x3A\x6F\xB1\x91\xB6";"\xE9\xD7\x6E\xD2\x64\x75\x01\x8C\x2A\x09\xB8\xB7\x7E\x8D\xE3\xFC\x1F\x90\x9C\x5C\xCD";"\x6A\xE1\x07\xCD\x63\x6E\x28\xD0\x2C\xE9\x5A\x9F\x45\x98\x9B\x9A\x27";"\xC9\x08\xEC\x3A\xC9\xA4\x45\xCA\x53\x53\xF2\x17\xBC\x3B\x3A\x53\x47\xDC\xD6\x6D\x85\x3D\xF7\xAE\xAA\x2E\x41\x6A\xE8\x15";"\x05\x49\xA2\x5E\x94\xF2\x91\x07\xA8\x8E\xC3\x33\xE1\x00\x60\x09\x92\x15\x15\xB4\xBF\x60\xA4\xE0\xF6\x16";"\x0A\x47\xB5\x6F\x9C\xE3\x87\x0A\x97\x94\x32\x3F\xE2\x53\x63\x3D\x9B\x73\x3D\xAE\x46\x70\xB0\xF7\xEE\x6F\x96\xAA";"\x6E\xF2\x08\xCB\x6E\x0C\x25\xAC\x30\x9E\x37\xDD\x43\x8B\x84\x9A\x3D\xB8";"\x44\xF5\x76\xBE\x79\x35\x37\x45\xC7\xE1\x69\x8F\x36\xF1\x88\xAC\x2D\x47\x6B";"\x59\xEC\x0B\xB2\x6F\x43\x3C\xCB\xD8\xF1\x23\x8C\x27\xF6\x85\xA6\x2D\xB4\x76\xDE\x04\xD9\x7D\x10\x19\xB8\x3D\xFC";"\x29\x9A\x30\xB7\x7A\x1D\x7D\xED\x55\x1A\x5B\xBC\x0C\xDA\xBB\x95\x04\x8E\xF0\x56";"\x65\x95\x0E\x86\x21\xCF\x95\x4D\xE0\xC8\x04\xEE\x2F\xCD";"\x63\xCB\x02\xDC\x36\x87\xAA\x23\xEB\xB4\x1C\x85\x6D\x90\x08\x4B\x9D\x1B\x3F\xD3";"\xFA\x42\x9E\x43\xE1\x9C\x9D\x30\xD2\x70\x97\x3B\x9F\x14\x7C\x18";"\x77\xDB\x15\xA9\x7F\x40\x1E\xDD\x38\xFA\x56\xA7\x5B\x90\x8A\x8E\x06\xA7\x82\xC0\x2E\xD6\x60\x77\x42";"\x32\x9E\x4A\x9F\xBF\xD3\xDB\x75\xFB\xBC\x11\xFB\x01\xCB";"\x92\x22\x85\xFB\x53\x6C\x72\xE4\x06\x2F\xA4\x4F\x6F\xB5\xD3";"\xC9\x3B\x6B\x96\x6E\x10\x05\xE1\x06\x70\xA4\x35\x6E\xB8\xCC\xE8\x6D\x89\xA9\x07\xCE\x0A\x26\x46";"\x07\xBF\xB0\x6C\x8A\xE4\xFE\x1E\x9A\x9D\x37\xC7\xE3\x21\x6F\x77\x9D\x01\x21\xA6\x48\x6A\xEA\xCD\x82\x68\x8D\xB3";"\xEF\x49\xE1\x5A\x9F\x9F\x91\x31\xBD\x83\xD5\x25\xD0\x10\x63\x0D\x81\x35\x10\x3E\xAA\x75\x81\xE9";"\x03\x40\xA9\x50\x98\xE8\x91\x05\xA6\x8C\x3B\x31\xEF\x6B\x0A\x45\x93\x7B\x1B\xB2\xBB\x7B\xB2\xF8\xEF";"\x6E\xD3\x29\xD9\x19\x14\x13\x81\x4B\x1A\x2E\xE8\x50\xE6\xEF\x8E\x01\xAF";"\xA1\x6B\x9F\x30\xF1\xB7\xB3\x23\x46\x7A\xFE\x10\xC5\x6D";"\x2A\xB9\x1A\x7B\xF5\xD2\xF3\x33\x82\xD0\x04\xD1\x0C\x2F\x42";"\x76\x9D\x71\x9B\x76\x0E\x0D\xD7\x2C\xEC\x56\xF8\x59\xCC\xEB\xE7\x31\xE7\xE4\xD5\x79\x90\x1D\x18\x1D\xEA\x3B\x6A\xA1\xC0\x0D\xEF";"\xA6\x18\xD7\x04\x34\x01\x07\xA2\x2C\x2A\xC0\x78\xFC\x45\x92\xCA\x1B\xFE\xDC\x51\xB5\x47\xDE\xFA\x17\x9D";"\x9B\x31\xC3\xFD\x3A\x6C\x6B\xFE\x07\x26\xA5\x4F\x76\xA8\xC6\xFF\x05\x80\xDA\x5C\xD5\x6C\x21\x59\x5F";"\x71\xB2\x49\x7B\xB1\xF4\xF2\x07\x9A\xA6\x2D\xCE\xFB\x2C\x4D\x04\x84\x4C\x32\xF4\x4B";"\xAB\x3A\xD4\x09\x2D\x44\x66\xE9\x72\x33\x91\x5E\x81\x5A\xDE\xC5\x04\xE0\xDD\x08\xE5\x1D\xD0\x52\x4F\xDB\x75\x56\x84\x79";"\x74\xD8\x1D\xC4\x79\x15\x16\xA6\x3D\xF7\x4B\xA7\x5A\x94\x8D\x8F\x00\xAB\x8E\xC6\x2C\xED\x0C\x73\x41\x8F\x7F\x09";"\x40\x9E\x39\x80\x2D\xCC\xB9\x5B\xA5\xC5\x6D\xEF\x2D\xC5\xAA\x46\xCC\x6B\x52\xF0\x78\xB3\x40";"\xB5\x09\xCD\x5B\xB7\x8A\xA9\x37\xB0\x7E\xD3\x1C\xC7\x18\x19\x16\xB9\x22\x0B\x4A";"\x01\x4B\xA2\x51\x92\xED\x8E\x10\xAE\x8E\xC1\x3B\xEA\x06\x63\x05\x82\x55\x15\xDD";"\x54\xF3\x74\xA4\x7C\x25\x31\x5A\xDB\xE1\x6E\x81\x37\xF7\x8C\xAA\x23\x4B\x6A\xF3\x56";"\x4E\x88\x6A\x96\x53\x2B\xCF\x42\xE8\xD0\x64\xEE\x2A\xC7\xA1\x49\xD4\x50\x41\xB3\x26\xE9";"\x42\x81\x79\x9B\x4F\x29\xC7\x4E\xE8\xD9\x15\x9A\x63\xC0\xD0\xBC\xD0\x5A\x5C\xF2\x07\xA3\x6A\x31\x35\xA7\xC8\xEE\x61";"\xDC\x76\x90\x7A\xA1\xE7\xEC\xCC\x16\x68\xED\x0D\xB3\x6F\x07\x20\xAF";"\x9B\xCD\x21\xD2\x16\x10\x0B\x80\x3D\x6C\x40\xBC\x32\x90\x9C\x81\x0F\xC7\x94\x2C\x63\x9C";"\xA9\x72\xC2\x59\xBD\xDF\xF7\x23\xE3\x28\x81\x0C\x97\x43\x4A\x06\xED\x67\x42\x1D\xB7\x0E\xC4\xFB\xDC";"\xDF\x66\x90\x77\xD8\x3C\x5E\xB3\x6E\x0D\x98\x76\xE8\x47\x5E\xDD\x4C\xD7\xD5\x7A\xFC\x28\xE2\xB9\xB0\xDC\x59\x5B\xE6\x1C\xF0";"\x12\xBF\xB5\x66\x86\xE1\xFC\x1F\xFF\x86\x75\xC2\x95\x24\x75\x77\x9E\x00\x22\xA3\x50\x74\xAB\xCD";"\x82\x04\xE8\x47\xEE\xC5\xBE\x2D\x5F\x0B\xEC\x11\xAA\x74\x6D\x31\xD1\x3B\xA8\x3D\xCC\x11\x96\xFC";"\xAB\x26\xCF\x05\x2A\x5C\x31\xB0\x21\x23\xCF\x07\xD5\xB0\x8C\x85\x2F\xEE\xEB\x51\xA7\x4F\xC5\x0F\x18\xD0\x32\x45\x84\x6C\xAB\x4E";"\x20\xE0\x37\xA9\x2D\x23\xC5\x51\xD3\xDF\x75\xE3\x38\xFF\xBC\xB5\xDE\x4D\x0E\xF3\x4D\xB3\x1B";"\x0C\xD7\x34\x2D\xD1\xE7\xF3\x75\xE2\xAB\x57\xB1\x0D\x72\x42\x0E\x80\x03\x76\x9D\x2E\xC7\x58\xB7\xA5";"\xD3\x36\xFB\x20\x98\xA2\xD4\x5C\x29\x72\x8D\x02\xA2\x7B\x69\x54\xD1\x24\x98\x5E";"\x58\xD2\x63\xB1\x4F\x2F\xC3\x4B\xD3\xD3\x61\xFD\x22\xC5\xBE\xBD";"\xED\x5A\x93\x4E\xF9\x84\x98\x33\xB2\x78\xD2\x1F\xDF\x1E\x1A\x1D\xBC\x2D\x07\x56\xB2\x4D\x8C\xEE\x8A";"\x62\xAE\x56\x8E\xA2\xC9\xE4\x75\xF3\xAA\x0E\xC0\x1C\xD9\x55\x51\xFD\x7C\x5B\x95\x75\x95\x57\x2E\xC2\x46\xEA\xD6\x7D\xF6";"\xAD\x1A\xD1\x0C\x25\x2A\x0C\xB5\x72\x53\x8A\x57\x9E\x5B\xD4\xD7\x7F\xFE\xCA";"\xAB\x4F\xF7\x41\xE2\x9D\xC6\x69\xFB\xEA\x97\x31\xA9\x0E\x06\x06\x87\x2E\x16\xBB\xB9\x6E\x82\xF3\xFC\x01\x98\x9F\x2F\xC1";"\xFE\x51\x95\x42\x95\xF3\x8A\x7C\xB9\xEA\xC9\x27\xD6\x12\x6F\x0E\x8D\x37\x11\x42\xB2\x69\x87\xE4\x83\x10\xFC\x8E";"\x6F\xE7\x10\xD5\x71\x0C\x27\xAE\xCC\xFA\x59\x99\x5F\x8C\x83\xDE\x36\xD4\x7A\xCF\x26\xDD\x1E\x1E\x0C";"\x09\x42\xA6\x6F\x9B\x9F\x89\x49\x98\x9E\x64\x29\xB0\x0D\x0A\x6B";"\xD9\x7A\x86\x38\xF2\xB9\xB5\x2B\x54\x6F\xE0\x0A\xCB\x6F\x04\x25\xC2\xD6\x86\x45\xDC\x44\x8A\x87\x9F\x36\xB6\x78\xCC\x22\xC0";"\x60\xCF\x27\xDA\x1A\x11\x11\x82\x4B\x0B\x1E\xB4\x16\x8F\x85\x8F\x0B\xAF\x95\x3C\x34\xFC\x1F\x72\x7E";"\x4C\xF3\x7F\xBA\x7B\x3B\x34\x5B\xC3\xEA\x6E\x8C\x32\xE9\x8C\xA9\x31\x40";"\x3C\x94\x2F\xCF\x3E\x70\xD3\x45\x9F\xAF\x24\x8E\x7F\xBF\xB7\xA3\xC5\x32\x4C\x8D\x01";"\xB4\x27\xC6\x0F\x2E\x41\x67\xF1\x2C\x39\x98\x5D\x88\x57\xDF";"\x40\xFD\x71\xAA\x45\x21\xC7\x51\xD1\xD1\x7E\xF8\x3D\xFD\xB9\xA9\xD9\x44\x6B\xEB\x00\xB5\x60";"\xEA\x66\x9B\x4F\xE2\x83\xBD\x35\xB0\x73\xD0\x1C\xDD\x05\x61\x69";"\xBF\x17\xE1\x16\xC2\x51\x57\xFD\x6F\x41\x85\x6F\x96\x4C\x26\xCC\x4E\xE8";"\xF5\x5B\x97\x4C\xEB\x9D\x97\x5D\xAF\x7B\xC0\x4C\xD4\x1B\x15\x13\x84\x27\x0E";"\xB0\x66\xF8\x03\xDE\x51\x58\xC1\x63\x4E\x9A\x66\xAA\x42\x2C\xC7\x4B\xCC\x8A\x2C\xE9\x4B\xCD\xB4\xBA";"\xFA\x4B\xA6\x4B\xC3\xCB\xD2\x54\xB0\xD9\xDB\x70\xE1\x6F\x70\x76\x9E\x44\x1E\xC8\xA9\x30\xDE\xAD\xEB";"\xEA\x64\x9A\x4E\xEF\x81\xA7\x30\xB7\x67\x92\x1F\xB6\x18\x1E\x14\xB7\x3C\x02\x52\xB5\x52\x92\xE9\x8C\x0D\xA7\xE0\x31\x68\xF3\x42";"\xA3\x05\xE9\x28\xC3\xAA\x42\xCF\x52\x51\xEF\x7B\xA5\x45\x3D\x3A\x5D\xDE\xB3\x00\xC0\x38";"\x16\xD0\xA7\x68\xBE\xF9\xF1\x18\x9C\x84\x26\xC4\xF4\x3D\x70\x6B\x8A\x0F\x57\xB9\x4D\x8F\xAE\xCB\xE4\x6A\xF1\xAE\x15\xD9";"\xA3\x2E\xA5\xEF\x75\x48\x01\xE5\x0F\x2C\x9D\x54\x82\xA4\xC4\xE8\x78\xE5\xBC\x17\xDF\x19\xDB\x58\x5D\x93\x68\x3E\x92\x61\x90\x57";"\x7D\xDA\x21\xDC\x0C\x0D\x17\x83\x20\x0F\x4F\xA4\x00\x90\xA9\x85\x64\xAE\x95\x3B\x3A\xEF\x02\x67\x7E\x93\x1D\x1D\xA8\x41\x16\xAA";"\xEA\x40\x8C\x57\xE2\x8E\x9C\x38\xB7\x71\xC9\x72\xD4\x71\x57\x17\xD6\x2C\x04\x4C\xAC\x57\x8C\xF5\x80";"\x1B\xB4\x29\x77\xE3\x9D\xAA\x62\xE8\xAD\x26\xC9\x07\x29\x40\x78\xE9\x72\x32\x9C\x5C\x87\x32\xB5\x9C\x78\x92\xB9\x0B";"\xFA\x37\x24\xE2\x00\x7D\x7A\x93\x1A\x03\xB5\x59\x79\xB5\xF2\xEC\x62\x85\xB0\x3C\x9D\x02\x37\x45\x62\xE4\x70\x35\x9D\x41\x86";"\xCA\x0B\xF7\x35\xDF\xBD\x43\xD7\x58\x50\xF6\x7C\xA4\x60\x35\x31\x5E\xDD\xE6\x6C\x93\x37\xF4\x83\xA8\x27\x4A\x64\xDA\x13\xC2\x61";"\xC3\x02\xE9\x17\xD3\xA8\x42\xC9\x7B\x4F\xFC\x76\xAA\x41\x27\x36\x59\xBE\xD2\x1B\xBB";"\x77\xA8\x04\x7C\xD2\xF3\xF3\x1F\x86\xA7\x27\xD6\xF2\x2F\x4D\x60\xEF\x01\x5D\x92\x4B\x86\xA2\xCD\xDE\x77\xFA\xA0\x13\xE3";"\x42\x8F\x17\xE6\x4B\xB9\xCC\x14\x9F\xDB\x7C\x93\x31\xBE\xBD\x00\x97\x33\x0E";"\xAE\x24\xD6\x0E\x20\x54\x61\xF1\x75\x37\x94\x5F\x85\x5D\xCE\x92\x20\xAE\x9F\x18\x94\x1A";"\x5A\xE5\x0B\xB3\x6B\x2F\x2C\xA9\xC8\xE9\x65\x8B\x55\x86\x90\xE0\x2C\xDE\x72\xD8";"\xE3\x3B\xAD\x1B\x82\xD5\x82\x79\xAA\x84\xC2\x2E\xD1\x0E\x6F\x0A\x8F\x2E";"\xBA\x08\xE5\x17\xDD\x53\x4A\xC7\x77\x4E\x89\x79\xAF\x4C\x2B\xC5\x21\xCB\x8A\x0A\xE7\x67\xFC\xD4\xBB\xDF\x5B\x69";"\xC7\x5F\xBF\x67\x58\x54\x12\x88\x64\x7B\x9A\x4C\x80\x49\xBC\xDE\x13\x9B\x80\x03\xE3\x05\xD8";"\x64\xD2\x1F\xDC\x1E\x11\x12\xA0\x3C\x19\x49\xAA\x53\x8A\xEB\x81\x13\xC4\xE2\x7A\x37\x8E\x02\x64\x7C\x91\x17\x1A\xAC\x46\x7F\xBA";"\x7C\xD1\x18\xCC\x47\x43\x47\xEF\x79\x13\x2B\xA4\x2C\x9E\xEF\x8A\x0D\xAE\x86\x3C\x2F\xF7\x03\x67\x78\x90\x1B\x19\xA0";"\xA6\x31\xDD\x68\xE1\xD3\xFC\x34\x48\x69\xDD\x17\xCB\x61\x07\x3C\xA9\x2D\xFC\x55\x97";"\x48\x8C\x6E\x95\x54\x2C\xCE\x47\xF9\xCD\x02\xF0\x28\xC5\xA6\x48\xBF\x48\x13\xF4\x16";"\x31\x96\x5B\x99\x52\xD8\xD3\x13\x88\x83\x07\xFA\x67\xC0\xDF\x46\xCA\x6E\x4D";"\x62\xE3\x18\xCE\x61\x1D\x5F\xBE\x37\xF6\x55\x9F\x42\x9E\x96\x8B\x39\xBB\x81\xCB\x27\xD4\x11";"\x00\x44\xAD\x54\x8B\xF7\x9A\x15\xAC\x94\x3B\x34\xE2\x01\x60";"\x9B\x57\x34\xE0\x02\x71\x78\x9F\x19\x1F\xAE\x47\x72\xB7\xF7\xE6\x60\x9E\xAE\x25\xC6\x0D\x2E\x47\x79\xB7\x68\x3C\x9A";"\x67\x87\x10\xDF\x1E\x1F\x11\xBD\x39\x19\x48\xA9\x54\x99\xE8\x83\x01\xAB\x9D\x69\x6F\xA8";"\xBE\x38\xC9\xF3\x29\x4D\x64\xED\x12\x5C\x84\x13\x85\xC9\xDA\xD9\x75\xFE\xB8\x12\xEA\x1E\xD0\x58\x45\xC4\x66\x43\x84\x6E\xA4\x4B";"\xFD\x47\xA6\x5C\x93\x97\x89\x12\xA0\x8E\xC2\x31\xEE\x09\x66\x05\x9C\x53\x17\xDF\xBD\x60\xB9\xFB";"\x36\x9D\x5F\x80\xA7\xD8\xCD\x20\xA2\xE8\x03\xB7\x44\x94\x05\x40\x9B\x37\x57\xD7\x61\xAB\x49\x28\xC4\x47\xEE\xD2";"\x6E\xE0\x12\xCB\x6F\x19\x20\xAA\x31\xF1\x50\x92\x43\x98\x96\x9A\x3E\xBE\x81\xCA";"\xC8\x66\xF5\x2D\xC1\xA0\xB7\xD7\x3E\x45\x94\x63\xFB\x78\x58\x28\x5C\xC4\xE5\x6C\x89\x38";"\xED\x81\x2E\xB9\x0E\x66\x05\x80\x2C\x10\xA5\xB4\x6F\x81\xF3\xF9\x11\xF1\xF1\x3E\x86\xFA\x5C\x6D\x77\xE6\x02\x2F\xAF\x4D\x90";"\x47\xFF\x6D\xB6\x38\x3E\x3D\x53\xD1\xDD\x71\xFE\x24\xE7\xB0\xBD\xDA\x47\x65\xEF\x13\xF4\x6D\x63\x21\xA3\xC9\xEE\x5A\x93\x45\xE5";"\xF0\x30\xC4\xF1\x31\x76\x70\xE4\x03\x27\xA4\x59\x73\xAD\xC8\xE3\x6F\x88\xB4\x1D\xBA\x1B\x66\x59\x36\xF2\x7D";"\xEF\x5B\x94\x4C\xE3\x8C\x9D\x3E\xB6\x72\xD6\x29\xC3\x1D\x12\x12\xB5\x20\x0D\x54\xCB\x5E\xD8";"\xFE\x26\x7D\xE3\x6B\x7E\x72\x9E\x1F\x1E\xAC\x44\x72\xB3\xE3\xEF\x65\x8A\xA9\x22\xCF";"\x4D\x85\x70\xB5\x4A\x27\xC6\x5B\xD2\xD0\x76\xFA\x26\xF5\xB6\xB6\xD8\x59\x7C\xF0\x1A\xB0\x74\x0C\x2A\xA3";"\x28\xA1\x54\x8C\xAF\xC2\xFE\x6B\xEB\xB5\x16\xD9\x05\xD9\x5B\x4F\x95\x62\x05\x8A\x0C\x92";"\x55\xF8\x76\xAD\x53\x56\x31\x00\xB6\xBF\x1F\xFC\x47\xE4\xE5\xAF\x47\x5A\x01\x9B\x10";"\x19\x00\xA9\x38\x93\xEB\x8D\x0E\xAB\x96\x3F\x2B\xFC\x1E\x60\x78\x91\x19\x1C\xB4\x58\x14\xA1\xB5";"\x92\xC5\x2D\xEF\x0D\x65\x03\xE0\x79\x19\xFF\xB8\x0B\xB6\xF8\xFC\x1B\x9B\x9F\x35\xD8\xFC\x34";"\x80\x7F\x99\x41\xE8\x88\xA7\x32\xAD\x7E\xDD\x1D\xC3\x18\x17\x7B\xB5\x38";"\x53\xDB\x37\xC5\x40\x28\xCB\x4B\xE9\xCE\x7B\xFD\x2B\xCC\xB3\xBF\xD3";"\xCB\x0E\xE9\x2D\xCA\xA4\x29\xA3\x58\x17\xF8\x12\xA8\x40\x3D\x3E\x5F\xDA\xC3\x64\x84\x3E\xF6\xBE\xAE\x4D\x5F\x02\xA4";"\xD7\x1C\x9D\x06\xDC\x5B\x56\xFA\x6F\x4C\x9F\x76\x95\x4A\x26\xCC\x40\xED\xC9\x63\xF4\x22\xC1\xA6\xBE\xDE\x5E\x5D\xF0\x02\xB9";"\x93\xDA\x2B\xEC\x0A\x6B\x04\x88\x78\x1E\xEC\xD2\x25\x82\x92\xE6\x1A\x9E\x9A\x2F\xCD\xF3\x33\x6B\x76\xFD\x02\x29";"\x6A\xE3\x1B\xCD\x60\x07\x3B\xB7\x34\xF3\x51\x95\x5D\x85\xE9\x9A\x4E\xA2\xF6\xD0\x6F\xDB\x60\x72\x4D";"\xEF\x63\x89\x4D\xFA\xD6\xFB\x79\xA4\x21\x85\x4E\xD0\x4A\x44\x5B\xEF\x29\xA6";"\x39\x90\x61\x9F\x43\xD4\xD4\x41\xE1\xC0\x1C\xA9\x1F\x96\xB6\x01\xD4\x18";"\x36\xEB\x45\xBB\x13\x30\x3B\xA7\xC7\xE7\x62\x84\x3A\xEA\x9B\xA5\x2C\x4C\x72\xD1\x16\xCE\x0F\x07";"\x90\x5B\x4A\xB3\x7D\x71\x25\x8F\x18\x1F\xB8\x45\x21\xC4\x8F";"\xEA\x5F\x91\x47\xE7\x99\x94\x7B\xB1\x61\xD6\x26\xD8\x1E\x10\x15\x99\x26\x02\x41\xAF\x64";"\x55\xF2\x7D\xAA\x7A\x3A\x33\x5E\xDD\xFD\x75\x83\x31\xF0\x8B\xA8\x23\x57\x68\xE5";"\x51\xF2\x66\xB9\x75\x3A\x31\x58\xDE\x8F\x62\xE3\x72\xF3\xE1\xA8\x25\x46\x68\xDD\x12\xCB\x62\x0E\x20";"\xE4\x63\x90\x55\xF1\x89\xAE\x2A\x42\x7A\xD9\x01\xDF\x24\x17\x6B\xAC\x7A\xE4\x08\xA1\x30\x8B\x90\x94\x08\xA8";"\x81\xC9\x21\xD0\x10\x12\x17\x87\x2B\x0C\x44\xB7\x61\xE5\xEC\x84\x14\x96\x91\x36\x3B\xEA";"\xFC\x15\xB5\x14\xD3\x5B\x56\xFB\x6D\x5E\x82\x61\x96\x51\x2A\xCC\x26\xF2\x8A\x7F\x9F\x2E\xC4\xA4\xBB\xD2\x50\x58\xF4";"\xAE\x1E\xDC\x01\x24\x47\x4A\xF3\x75\x38\x91\x69\x9D\x34\xBF\xDF\x38\xE5\xAE\x19\xEA";"\x3D\x93\x56\x8D\x58\xDA\xD8\x72\xF8\xBE\x0B\xF8\x13\xD4\x57";"\x38\xD2\x5C\xD4\x29\x09\x14\xB5\x3D\xFF\x53\xA1\x50\x9C\x96\x86\x00\xA0\x83\xCD\x2D\xDB\x05\x7E\x40";"\x98\x55\x50\xBF\x55\x7D\x78\x9D\x1C\x29\xA8\x41\x77\xA6\xF5\xE5\x62\x84\xA2\x25\xD8\x64\x45\x1F\x7F\xA8\x7B\x2B\x92\x5B\x8B";"\xD4\x7F\x87\x68\xDA\x5F\x5F\xFD\x7A\x47\x92\x62\x94\x55\xD0\xCE\x40\x80";"\x3A\xF0\x43\xB5\x19\x16\x28\xA0\xCC\xED\x60\x97\x53\xE2\x85\xA0\x33";"\x09\xA4\xB0\x61\x89\xFA\xF2\x1C\xF2\xF0\x68\xC1\x90\x2B\x74";"\x70\xC1\x07\x79\xDD\xEA\xF5\x61\x82\xA0\x24\xC6\x11\x33\x51";"\xAC\x21\xC9\x05\x2B\x4A\x09\xE3\x74\x31\x98\x5A\x80\xA1\xD8\xD2\x66\xE6\xA3\x04\xED\x19\xD7\x56\x47\xD9\x6D";"\xD1\x10\xE0\x1E\xD8\x56\x55\xFF\x7A\x44\x84\x6B\x92\x4D\x26\xCE\x24\xF1\x94\x7D\x9D";"\xAA\x24\xD0\x00\x24\x42\x7D\xF4\x76\x35\x90\x55\x98\x31\xC1\x93";"\x7E\xD5\x29\xDF\x11\x12\x1C\xED\x37\x41\x1C\xFE\x0D\x9E\x93\x84\x14\xAA\x97\x36\x33";"\x7A\xA7\xC6\x7A\xD5\xEC\xEA\x0A\xFB\xCF\x4D\xD2\x94\x54\x1C\x0F\xE9\x76\x76\xA5\x2C\x80\xC4";"\xAC\x65\xE5\x4B\xEE\x8A\xA7\x29\xB4\x6E\xDD\x1C\xC7\x63\x19\x18\xD6\x33";"\x3E\x91\x0C\x92\x33\x95\xD1\x28\xE5\xC0\x0D\xE4\x15\xCB\xA7";"\x55\xF9\x1A\xCA\x4F\x7F\x3F\x3E\xDE\xDE\x75\x83\x3C\xF7\xB6\xB1\x25\x49\x72\xEF\x0C\xCC\x64\x08\x20\xAC\xA7\xEE\x32\xDC\x44\x8A";"\xEC\x1A\x88\x77\x98\x31\x3D\xE2\x1F\x4E\x97\x68\x91\x53\x21\xC9\x42\xEC\xD5";"\x29\xCE\x59\xE3\xE3\xC2\x8B\x77\xF9\xB4\x10\xDA\x1B\xDC\x5E\x5F\xEA";"\x96\x3B\xCC\xF5\x35\x77\x6B\xE7\x07\x64\xAC\x55\x87\xA1\xC2\xE2\x6A\xEC\xB4\x16\xD2\x05\xD6\x5C\x5A";"\x0D\xA8\xBF\x61\xB9\xFC\xFE\x19\xF6\xBD\x6C\xC5\x9C\x33\x4C\x69\xEC";"\xA6\x29\xC8\xE5\x2E\x4A\x68\xE3\x00\x2A\x97\x53\x8B\xF5";"\x0B\x4A\xAC\x5E\x8C\xE2\x8F\x0D\xAE\x84\x3A\x5E\xE6\x5D\x7F\x45\x93\x7B\x1C\xBE\xB6\x7C\xB3\xFE\xEF";"\x02\x27\xA4\x07\xFB\xAD\x89\x60\xB3\x86\x39\x31\xEB\x04\x64\x63\x88\x0E\x11\xB4\xBA\x7D\xBB\xF3\xEC\x70\xE9\xE0\x29";"\x10\xAF\xA4\x61\xC1\xE5\xF5\x17\x92\xA6\x2C\xC9\xEB\x32\x4E";"\xB0\x64\xCD\x64\x2B\x40\x67\xE8\x7D\x32\x92\x52\x83\x5A\xCD\xD1\x7F\xFA\xB6";"\x9A\x2C\xC0\xFD\x34\x73\x6B\xE2\x07\x3C\xA1\x4F\x8B\xAA";"\x0A\xBD\xBC\x77\x9D\xFB\xF6\x16\x93\x9F\x36\x3B\xE6\x57\x6A\x31\x9F\x6F";"\xFC\x58\xA5\x58\x96\x92\x8F\x07\xA0\x80\xAD\x22\xF2\x08\x65\x06\x85\x16\x11\xA0\xBB";"\x93\x74\x96\x39\xFD\xB4\xB6\xD6\x5D\x79\xF4\x0C\xB7\x78";"\xEA\x63\x8C\x47\xF7\x9B\xB8\x29\xB2\x77\xDE\x1D\xC0\x06\x75\x13\xD1\x7D\xFD\x25\xB8";"\x55\xE5\x05\xBE\x43\x3C\x3D\x55\xDA\xD4\x77\x9E\x38\xF4\xB6\xB9\x25\x48";"\xB2\x6E\xE6\x2E\xA8\xD2\x10\xBC\x0E\x32\x99\x6E\xB6\x64\x4B\x6C\x4A\xC7\xF3\x08\xD3\x64\xE3\xD0\xC6\x2D\x33";"\x97\x9C\x20\x8A\x67\x3A\x6A\xFD\x27\x0F\xBB\xBB\x60\x86";"\x6D\xDB\x14\xCC\x79\x1D\x02\xB1\x32\xFD\x56\xA9\x58\x80\x8B\xE6\x31\xCD\x9D\xDD\x6C\xCF\x5C\x73";"\xBE\x10\xFB\x03\xDC\x56\x5A\xFA\x60\x46\xE9\x72\xD7\x4C\x44\xD4\x4A\xEE\xD6\x78\xF2\x22\xDE\xBC\xA1";"\xE5\x60\x84\x4D\xE5\x84\xAF\x27\x5F\x77\xDF\x1E\xC4\x69\x1C\x19\xD9\x32\xAB\x27\xE7\x59";"\x1E\xAD\x46\x7D\xFB\xFB\xED\x60\x83\xAA\x28\xCB\x0A\x37\x42\x65\xE9\x75";"\x41\x85\x6D\xAD\x4E\x4E\xD9\x09\xD6\xBF\x79\xFC\x28\xFA\xB8\xBB\xC7\x5B\x59\xE6\x01\xB6\x7D";"\xF5\x43\x99\x58\x9E\x03\x47\xA4\x6A\x17\xD7\x3C\x8A\x07\x6F\x94\x17";"\x9D\x3D\x3F\xE3\x3A\x7A\x7A\x84\x00\x3D\xAA\x46\x73\xBA\xED\xA8\x64\xE6\xB6\x26\xD9\x01\x2B\x47\x6B\xE8\x72\x3E\x9D\x5F\x8B";"\x45\xF3\x7D\xBC\x7D\x3F\x34\x45\xC1\xE0\x6A\x8E\x33\xF5\xE4\xA6\x7D\x25\x2A\xDF";"\x7A\xD8\x25\xD9\x12\x16\x08\x84\x27\x00\x2D\xA2\x39\xE1\xA7\x87\x66\x90\x96\x3F\x3E";"\x29\xA4\x54\x9C\xAF\xC4\xE6\x74\xF4\xBE\x10\xCC\x5B\xD0\x2B\x58\xAF\x6B\x34\x85";"\x65\xF9\x01\xA2\x0F\x7B\x7F\xDE\xCD\xF1\x33\xF3\x5E\x88\x97\xE8\x5B\xA0\x7A";"\x1D\xAF\x40\x7B\xB0\xFE\xF4\x0C\x8D\xD5\x3F\xCA\x0E\x22\x4A\x63\xE7\x6E\x2E\x9E\x51\x85\xA5\xDF\xD2\x62\x87\xB3\x5B\x8F\x66";"\x31\x91\x35\x8B\xF7\xB1\x9E\x76\x94\xB8\x04\xE7\x12\xD2\x4A\x54\xC9\x63\x41\x85\x03\xC1\x0F\x2E\xAF\x4A\xD0\xD0";"\xC9\x01\xED\x2D\xCC\xBC\x00\xCC\x3E\x4E\xFD\x7D\xA3\x42\x3F";"\x56\xF9\x71\xC9\x5F\x60\x3E\x3D\xC0\xD2\x7A\x86\x3E\xFF\xB1\xAE\x3B\x5B\x6F\xED\x0B\xBB";"\x21\x8F\x76\x82\x40\x07\x14\x88\x25\x0E\x40\xAF\x6E\x88\xEA\x8C\x1B\x97\x94\x33\x39\xE3\x06\x78\x7E\x95\x4F\x0E";"\x5A\xDC\xAD\x7B\xB7\xE1\xFE\x0F\xE4\xE1\x2D\xD9\xA9\x7B\x3C\x6B\xAB";"\x59\xF0\x03\xBE\x7C\x37\x35\xA1\xC2\xE6\x6C\x90\x4F\xF5\x93\xA1\x2D\x43\x70\xDC\x1E\xDC\x65\x1B\x1E\xB1\x39\xF9\x4A";"\xA6\x66\xD3\x62\x29\x44\x61\xF2\x72\x3E\x93\x5C\x97\x5C\xDA\xDF\x79\xFD\xC2\x65\xFB";"\x23\xAD\x46\x75\xBA\xC8\xFD\x25\x81\xDA\x38\x89\x18\x51\x4D\x7D\xF1\x72\x32";"\xA2\x2F\xCA\xEB\x2D\x4C\x6D\xE2\x0F\x2E\xF3\x58\x84\xAD\xC6\xDC\x72\xF3\xBC\x14\xE9";"\xA0\x0F\xE9\x1A\xD8\x54\x51\xC3\x0B\x4B\xD3\x07\xD6\x4F\x45\xC2\x40";"\xBC\x79\x83\xAA\x60\x30\x35\xB9\x53\x33\xC5\x4D\xF4\xB1\x9D\xBC\x20\xA7\xEA\x05\xAB\x0F\x8B\x46\x2B\xE1\x27";"\xFE\x5F\xF0\x41\xCF\xE3\x8B\x7B\xB8\xE9\xC8\x2D\xD4\x10\x68\x0A\x8D\x26\x18\xB4\xBB\x6F\x82\xE6\xEC\x0D";"\x0F\xF2\xBF\x16\xA1\xFA\xF2\x1D\x93\xA6\x2D\xD3\xF1\x34\x48\x63";"\x24\xAA\x51\x88\xA6\xAD\xFC\x36\xF3\xDC\x0B\xDC\x1B\xDC\x54";"\xBE\x17\xE8\x11\xD9\x52\x56\xC3\x73\x47\x85\x6B\x92\x45\x2C";"\x2D\xA7\x4F\x8A\xA8\xC0\xFE\x6E\xF7\xB6\x19\xDF\x02\xDC\x51\x5F\xF9\x7D\x37\x87\x65\x89\x56\xDC\xCD\x47\xE1\xCE\x05";"\xAF\x24\xD6\x0E\x2E\x44\x64\xFC\x73\x36\x91\x5D\x9A\x5F\xDE\xCA\x67\xE7\xC5\x0B\xEF\x16\xD7\xAE\x53\x80\x6D\x26\xE1\x7A";"\xAD\x1B\xDB\x02\x24\x46\x74\xF0\x78\x3F\x91\x59\x94\x5C\xD9";"\x30\x93\x50\x84\xA8\xD8\xC7\x06\xE6\xA3\x0C\xE4\x1B\xD6\x53\x48\xC1\x78\x40\x85\x67\xA7\x4F\x25\xDC\x51\xD5";"\x85\xCD\x2E\xD5\x13\x63\x67\x98\x44\x49\xBE\xD8\x6A\x83\xEF\x87\x16\x93\x98\x33\x37\xFB\x2E\x75\x72\x99\x00";"\x46\x96\x7A\xE9\x4B\xD2\xC4\x41\xEE\xC3\x03\xEC\x2E\xCC\xA3\x42\xD7\x51\x4F\xB0\x71\xF9\x65\x79\x2A";"\x92\x32\xC4\xF9\x54\x6B\x36\x9E\x6C\x38\xA1\x4E\x7A\xA6";"\x0D\xBB\xBD\x63\x95\xA2\xFC\x7B\x94\x9D\x31\x36\xF9\x21\x6E\x72\x99\x04\x24\xA3\x27\x7D\xF4\xD0\xAC\x68\xE2\xA7\x17\xD3\x06\x25";"\xA1\x17\xE5\x1A\xD2\x53\x49\xAF\x6C\x5A\x82\x6D\xA8\x45\x24\xCE\x54\xEE\xD4\x71\xFA\x20\xC0";"\xA0\x6F\xAE\x58\xB6\xFA\x5A\xB8\x27\x31\xE8\x0B\xB8\x08\x64\x60\x4C\xCE";"\xA6\x2F\xCB\xF1\x29\x24\x72\xAF\x0C\x45\x94\x5D\x8D\xA6\xC7\xD7\x79\xF6\xBC\x05\xDB\x1C\xDD";"\x85\xC5\x2B\xD7\x04\x66\x1D\x81\x22\x17\xB0\xB5\x62\x83\xFC\xF9\x1C\x9E\x95\x36\xD2\x92\x3A\x26\x1B\xA7\x6C\x62\xBA";"\x47\x49\xF0\x40\xE8\xBA\x92\x13\xBC\x85\x2F\x54\x96\x7C\x32\x20\xC0\x67\x69\xD1\xAC\x19\xBE\x8E";"\xAD\x42\x81\x1F\xBE\xA5\x2D\x96\x06\x5C\xAA\x7C\xCC\x30\x56\x30\x31\xD7\xB7\x06\xEF\x35\xAD";"\xBC\x7D\xB4\x1E\x7D\x4C\x4F\x92\x76\x5D\xEE\x3B\xF1\x22\x87\xAD\x19\xEA\xC4\x6B\xB6\x02\xC4\xBA\x28\xC7\x6D\x49\xF0\x20";"\x99\x73\x8B\x30\xEE\x8C\xA0\x2A\x4F\x74\xC3\x14\xC5\x62\x0C\x19\xB1\x33\xE3\x4D\xBD\x5F\x98";"\xA7\x50\xDC\x5E\xE0\xF0\xFD\x38\xC8\xD1\xD6\x20\xC1\x6E\x60\x03\xFB\x6B\x10\xFC\xE0\x1E\x84\xE4";"\x94\x34\x39\xFC\x33\x73\x72\x86\x07\x2D\xA2\x4F\x77\xA7\xCD\xF8\x2E\x8B\xC4\x03\xD7\x06\x23\x46\x5A";"\x68\xDB\x0C\xDC\x2C\x7B\x12\xE1\x59\xAF\x2F\xCD\x0B\xE7\x8E\xD6\x3E\xCC\x84\xC6\x2C\xD4\x0E\x68\x08\x8E\x21\x18\xAA\xB0\x6D\x84";"\x92\x23\xA8\x11\x96\xFE\x88\x02\xA6\x88\xC9\x30\xF3\x0E\x67\x06\x8C\x1E\x17\xD9\xA7\x08\xFA";"\x77\xE0\x10\xC7\x61\x0B\x2A\xA5\x2E\x91\x59\xC0\x5B\xEB\x83\xC3\x20\xCA\x8D\x99\x4D\xB0\x7E\x46\x10\xF5\x31\x5A\x3C";"\xC4\x79\xF5\x2D\xDD\xAE\x48\xD4\x57\x5A\xF5\x77\xAC\x3F\x64\x61\x00\xD5\xBA\x3C\x99\x60\xFC\x88\xAC\x2A\x4D\x67\xDD\x16";"\x8F\x3D\x3B\xEF\x05\x6E\x06\x99\x14\x1C\xA2\xBF\x7F\xBD\xF9\xF6\x1A\x8D\xA5\x47\xC4";"\x53\x01\xF5\x00\xCA\xB6\xD6\x57\xB0\xF6\x23\x6A\xF8\x6B\x78\x1E\x8F\x5F\x4E\xF6\x04\x3B\xE6\xE1\xA2\x7B\xE1\xBA\x6E\xAA\xEE\x71";"\x50\xF5\x7A\xBF\x7B\x3D\x2F\x5D\xC3\xE2\x68\x8F\x31\xF0\x99\xEF\x73\x1B\x30\xCD\x4D\x9C\x75\x07\x17\xB4\x36\xFB\x53\x99\x42";"\xB6\x17\xD6\x03\x23\x59\x5B\xF4\x7F\x33\x9A\x67\x80\x44\x8F\x8A\x1F\xF6\xA7\x6E\x88\x7F\xC0\xF4\x56\x94\x15";"\xF4\x26\x63\xE9\x1E\x63\x7F\x9E\x15\x12\xBA\x5C\x61\xA5\xF6\xF0\x6B\x8E\xAF\x2C\xD5";"\x4C\xFF\x76\xB0\x45\x20\x3B\x50\xD2\xDF\x77\xED\x53\xF4\xF6\xB0\xB7\x45\x65\xE0\x08\xBB\x6B\x08\x2C\xA8\xC8\xE5\x5E\x93\x40";"\x0B\x47\xB0\x6E\x98\x84\x8E\x6F\x83\xEC\x25\x58\xEF\x58\x6E\x23\xC6";"\xE6\x50\xA6\x53\x91\x9F\x88\x02\xBA\x90\x9A\x22\x88\x61\x3A\x68\xFB\x16\x08\xCC\xC4";"\xC0\x79\xD4\xAF\x6B\x22\x7E\xB5\x5D\x7D\xB0\x1A\xD1\xFE\xD3\xB0\x33\xA0\xA4\x4E\x84\x54\xCF\x0D";"\x2C\xAA\x42\x70\xAC\xD8\xB7\x28\x99\xAD\x18\xDC\x06\x22\x45\x5A\xEA\x73\x3F\x97\x63";"\xE1\x54\xA1\x5E\x99\x95\x94\x37\xCC\x97\xD2\x39\xBE\x03\x6B\x09\x8E\x2A\x17\xBB\xB5\x6D\x8A\xF1\xF8\x10";"\x0B\x40\xB6\x6A\x8F\xE0\x85\x7F\xFC\x9A\x72\x3F\x96\x21\x78\x75\x97\x1C\x24";"\x06\xE1\x62\xD0\x2A\x5C\x2C\xA9\xC2\xEE\x61\x8C\x4F\xF0\x84\xA6\x28\xB3\x71\xDE\x74\xAC\x36\x14";"\x57\xFB\x71\xEA\x72\x3E\x31\x52\xDE\xDE\x66\x81\x3C\xF5\xA0\xA9\x22\x41";"\x2D\xC1\x6E\xF9\x4A\x2E\xC1\x4D\xE2\xD2\x63\xEA\x20\xC2\xBC\xBE\xD3";"\xFB\x57\xA2\x4B\x90\x9A\x94\x3A\xAE\x81\xC5\x46\xCF\x4A\x6D\x62\x80\x20";"\x8F\x3E\x32\xEA\x6B\x0A\x45\x93\x7B\x1A\xBE\xBE\x7E\xBC\xF8\xF5\x1F\x85\xB6\x2B\xC9";"\xBA\x07\xE0\x16\xC1\x54\x4C\xC1\x64\x4A\x84\x78\xC3\x44\x74\xA9\x08\xD5\xBE\x7D\xFB\x27\xF8\xBA\xBF\xC2\x45\x69\xEF\x02\xB0\x72";"\xAF\x18\xD0\x06\x24\x58\x47\xEA\x7A\x3A\x97\x65\x9D\x58\xCB\xB6\x71\xB5\xDD\x71\xF7\x49\xD7\xDA\x44\x97\x70\x22\xE3";"\xAD\x02\x81\x7F\x82\x3F\x51\xC0\x69\x4B\x8B\x74\xAD\x55\x39\xDE\x55\xD2";"\x4F\x86\x6B\xC1\x46\x77\xDC\x0A\xD7\xB8\x79\xF8\x26\xC9\xB1\xB9\xC0\x43\x5D\xEC\x03\xB2\x77";"\xAF\x0F\x9A\x63\xC0\x2F\x4B\xBB\x78\x29\x94\x6E\x94\x59\x22\xCF\x45\xF4\xCB\x7E\xFB\x22\xC6\xA1\x2C\xCD\x12\x44";"\xDE\x75\x89\x3A\xF8\xB9\xB0\x3E\x4E\x6E\xE7\x09\xB0\x6D\x1E";"\x2A\xF0\x59\xDC\xCE\x82\xDC\x1B\xF5\xBD\x11\xD6\x1E\xD9\x4E\x53\xF9\x65\x43\x83\x6B\xFD\x22\x6C\xCA\x21\xEA\xCE\x7C\xF4\x24\xC6";"\xFB\x4D\xF6\x38\x88\xD0\xDF\x55\xDF\x1F\x96\x2D\xA9\x1F\x76\x47\x90\x3A\x14\x4E\xBE\x32\xF5\x9D\x87\x06\xF1\xFB";"\xCF\x02\xF2\x27\xCB\xA5\x43\xCB\x50\x48\xFE\x7B\xA6\x7E\x3F\x3D\x5D\xDE\xDD\x6E\x85\x34\xFD\xA0\xAA\x20\x41\x6F";"\xD7\x7F\xF4\x49\xAE\xE0\xBE\xBD\x5B\x52\xFB\x03\xB8\x7D\x2C\x35";"\x7E\xB5\xBA\x66\xBE\xFD\xFA\x04\x99\xA1\x2B\xCF\xF2\x34\x19\x70\xA2\x0F\x40\xA4\x58\x8E\xAF\xC7\xE0\x68\xEB\xB0\x1C\xDB";"\xE0\x4A\xAB\x5F\x9F\x9F\x91\x1A\xA6\x80\xC2\x2E\xE5\x03\x01";"\x4C\x81\x71\xB4\x4A\x25\xC6\x57\xD4\xD3\x6C\xB8\x20\x96\xBA\xB7\xDB\x5B\x67\xE0\x01\xBE\x73\x1E";"\xC1\x1A\x9F\x64\x93\xFD\xCB\xC4\x3C\x32\xFA\x12\xD3\x63\x20\x3C\xBC";"\xF6\x5E\x9B\x5D\x9A\x88\x96\x3E\xBC\x84\xC8\x2A\xD5\x17\x07\x13\xC0\x2D\x66\xA1";"\x93\x3B\x39\xE5\x14\x72\x72\x97\x1A\x1A\xAB\x46\x16\xAA\xB3\xF3\x0A\x87\xAE\x2F\xC9\x0D\x2D\x4D\x64\xEA\x60\x36";"\x1D\xA1\x1F\x3C\xA9\xF7\xF5\x1B\x8F\xA0\x27\xCA\xEE\x26\x46\x60\xEB\x0B\x36\x8F";"\x89\x23\x4B\xFC\x0A\x64\x7B\x95\x1A\x1F\xA9\x5C\x70\xBE\xF3\xF1\x62";"\xB0\x04\xCE\x03\x2E\x40\x60\xF5\x78\x21\x8B\x25\x91\x46\xDA\xD7\x7F\xE6\xC2\x0F\xF4\x09\xCD\xAF\x48\xCA\x6D\x4C";"\x4A\xF4\x7C\xBA\x7C\x3F\x34\x51\x8B\xF2\x2D\xD0\x63\xAF\x9A\xDC\x29\x2E\x06\x80\x78\xCA\x6F\x02\x28\xB2\x37\xFA\x51\x9B\x55\x8E";"\x8E\xC4\x28\xEF\x0F\x75\x53\x83\x43\x78\xEF\xD4\x1D\x9C\xA3\xE7\x5F\x9C\xF5\x24\xC6\xFE\x3C\x74";"\x50\xE4\x0C\xB1\x2E\x3C\x84\x50\xBA\xD6\x76\xFD\x39\xFF\xB4\xB2\xC2\x5B\x62\xE9\x0C\xB5\x70\x0B";"\x8B\x3B\x39\xE3\x08\x7E\x78\x98\x05\x03\xAC\x44\x72\xB6\xF2\xEA\x69\x9A\xDA\x2D\x99\x64\x74\x2E\x3B\xE0\x09";"\xBD\x1F\xD8\x08\xB2\x44\x20\x84\x74\x39\x8B\x6C\x9D\x56\xD6\xCA\x41\xEA\xCF\x04\xF3\x29\xD4\xAB\x4A\xCC\x51\x51\xF5";"\x32\x8A\x61\x98\x50\xD7\xD0\x75\xE6\xC7\x4A\xE6\x1A\xC7\xA6\x41\xC0\x69\x4B\xF7\x75\xA0\x4A\x2D\x3C\x5F\xC1\xD8\x7A\x80\x38";"\xBC\x09\xEA\x19\xD1\x52\x50\xC9\x0D\x25\x8A\x2A\xAE\x20\x2E\xC6\x48\xD5\xD2\x7B\xFD\x20\xC8\xAC\xBE\xD8\x56\x5F\xEF\x06\xB9";"\x1B\xCE\x0F\xD9\x06\x0B\x29\xB3\x5C\x94\x14\xE0\x04\xFE\x9B\xF4\x20\xE5\xC3\xBD\x31\xA4";"\x6D\xE3\x02\xB4\x66\x0A\x21\xBC\xCA\xF5\x5F\x92\x45\xEA";"\x3C\x88\x64\x80\x5E\xD2\xD3\x45\xE0\xCB\x6A\xE3\x28\xCE\xAF\x46\xCB\x52\x51\xFC\x70\xA9\x55";"\x23\xC3\x6C\xC7\x4E\x25\xC3\x48\xDC\xDB\x7E\xFD\x34\xC3\xBA\xB9\xDB\x5B\x5A\xE8\x69";"\xB6\x6E\xE7\x23\xB0\xED\xF7\x3F\xD6\x1C\x85\x70\x97\x11\x7C\x7C\xD5\x57\x44\x44\xCF\x3D\xC8\x87\xD3\x09\xE9\x95\x66\x2A\xAD";"\x51\xF7\x64\xBE\x7B\x33\x35\x5A\xC3\xE7\x69\x84\x61\xFF\xCC\xF0\x7F\x17\x7F\xBA\x18\xB0\x74\x50\x03";"\x01\x4F\xBD\x29\x8E\x86\x84\x0F\xAA\x97\x3B\x31\xEE\x01\x7D\x7A";"\x9C\x75\x95\x3E\xF8\xBA\xB1\xDA\x46\x6B\xEC\x01\xA4\x72\x0D\x2A\xA8\xC9\xEF\x5C\xF9\x27\xA1\x84";"\xB7\x5A\xD7\x6E\x25\x45\x5C\xF1\x70\x3B\x93\x62\x98\x59\xC7\xD7\x7B\xE5\xC1\x0D\xE9\x1A\xA3";"\x9E\x31\xC0\xE9\x7C\x29\x26\xBD\x16\x4C\xB9\x38\x7F\xB0\xCB\xE1\x61\x88";"\x14\xEA\x0D\xC4\x6A\x09\x25\xA9\x3C\xF6\x5E\x9F\x54\xE1\x9F\x98\x3B\xBA\x7F\xC5\x21\xCA\x6E\x1B\x6B\x95\x5F\x19\x32\xA2\x14\x9A";"\x4D\x95\x76\xA1\x46\x20\x3B\x51\xC9\xC7\x72\x84\x3C\xFB\xB5\xB7\xB1\x2A\x68\xA0\x09\xD8";"\x16\x3C\xBE\x32\xF8\xAF\xE8\x11\xBA\x9B\x2D\x56\xE0\x09\x13\x1A\x99\x6B\x64\xBF\x4E\x7D\xAA\xED\xE1";"\xF8\x51\xBD\x58\x98\x95\x97\x3C\xA1\xE8\xD8\x40\x97\x0C\x04\x0D\x8C\x29\x10\xBE\xBF\x79";"\xAC\x22\xC6\x19\x28\x4F\x60\xE9\x71\x37\x9F\x34\x9D\xE4\xDB";"\x71\xD4\x04\xD6\x18\x15\x1D\xB4\x2C\x69\x40\xC1\x14\x8D\x83\x8E\x09\xA9\x8D\x36\x37\xFE\x19\x63\x7C\x97\x13\x1C\xB6\x2D\x13";"\x9C\x55\x99\x5A\x9B\x9E\x8C\x22\xB9\x86\xCC\x20\xD2\x7C\x67\x5C\xEF";"\x4E\x82\x70\xB5\x51\x2A\xC2\x4E\xEF\xD4\x70\xE1\x3F\x90\xB7\xFA\xCB";"\x14\xFD\x1D\xA0\x43\x24\x3F\x50\xDE\xC0\x6F\x85\x39\xF8\xB3\xB0\x22\x2B\x7A\xB8\x72\xBF\x10\x16\x3B\xA1\xCA\xF4\x5E";"\x46\x9B\x08\xD9\x71\x41\x6C\x46\xBC\xB6\x3E\x83\x2C\xAB\xBB\xD9\x65\x50\x61\xF3\x70\xBB\x2C\x43\x4E\xBB\x4C";"\x42\x8F\x73\x97\x50\x2E\xCC\x44\xE9\xCC\x72\xF7\x29\xC5\xAF\x43\xD9\x58\x5A\xF4\x6B\xB5\x7A\x3B\x32\x59\xCD\xEB\x7A\xCD\x33\x9B";"\x6D\xE3\x0E\xCF\x6E\x1A\x48\xC0\x70\xF6\x30\x87\x41\x9F\x9A\x98\x32\xB9\x7E";"\x6F\xDC\x13\xCE\x64\x6A\x2C\xEA\x28\xBC\x55\xF5\x58\x9F\x9A";"\x5D\x99\x62\x97\x46\x2D\xCE\x41\xF1\xDC\x7E\xF4\x21\xC3\xAC\xBE";"\x2B\xA7\x4B\x8B\xAC\xC5\xF9\x11\xF9\xB1\x1D\xD2\x06\xD7\x5D\x45\xFF\x7F\x37\x88\x64\x91\x48\xBE\xDD\x54\xF0\xA7\x0C\xF9";"\xF3\x4A\xC6\x44\x3F\x15\x51\xBD\x26\x76\x8E\x06\xF2\x25\xC9\xD4\x4A\xE2\xC1\x04\xE8\x09\xD0\xA6\x42\xC1";"\x42\x8A\x6A\x97\x4E\x33\xCB\x4C\xE8\xCC\x7A\xF5\x48\xD8\xE1\xBD\xBC\x53\x5B\xF4\x02\xBE\x78\x37\x33\x5F\xC5\xF0\x61\x8E";"\x32\x9C\x5A\x97\x54\xDE\xD2\x7C\xFD\xC8\x09\x8A\x1A\xD7\xA8\x49\xC4\x6E\x44\x8A\x6F\xA0\x41\x28\xC8\x50\x9F\xDA\x70\xFA";"\x6A\xE3\x18\xCB\x6A\x01\x2E\xA1\x30\xF0\x5C\x9E\x45\x9B\x84\x9C\x3F\xB9\x84";"\x80\x74\xEA\x26\xC2\xB9\xB8\xD7\x58\x5F\xE8\x04\xBE\x77\x34\x30\xA5\xC3\xF7\x22\xD5\x18\xB2\x9D\xF1\x22\x4B\x76\xDD";"\x25\xD7\x60\xF3\x50\xD0\xD3\x45\xE9\xC2\x1D\xF0\x2A\xCC\xAE\x42\xCC\x62\x3F\xF4\x2E\xCD\x05\x38\x51\x49\xDE\xDE\x6F\x82";"\x2D\xBC\x2D\x84\x09\x56\x10\xD7\x23\x05\x46\xAB\x5B\x8C\xE7\x8D\x01\xBD\x92\x3D\x34\xE5\x07";"\xB0\x1B\xD4\x11\x26\x47\x5E\xF0\x7C\x38\x90\x0C\xF4\x1C\xD3\xB8\x42\xE4\xC3\x0D\xEB\x1B\xC8\xAD";"\x3F\xF4\x7B\xA4\x47\x33\x3E\x57\xC4\xDC\x6C\x84\x3B\xF0\xB3\xB2\x22\x44";"\x23\xE1\x30\xA8\x2E\x27\x38\x51\xD5\xDF\x75\xFA\x3D\xFC\xBB\xA0\xDC\x44";"\x42\xE4\x6F\x9C\x5B\xD7\xC9\x47\xF0\xC2\x0A\xF9\x2B\xCE\xA0\x2E\xDE\x0D\x4E\xB1\x7E\xC9\x75\x3A\x37\x5F\xDA\xE4\x73\x9A\x3F\xF6";"\x50\xE8\x60\xAF\x55\x4D\xCD\x50\xD7\xD3\x71\xFA\x3E\xFC\xBF\xBE";"\xF6\x4D\xCA\xAC\x50\x25\x37\xC8\x0C\x4E\xB1\x32\x2D\xDE\xA9\x94\x7B\x83\xA2\x7F\x8C\x76\x3F\x22\x5E\xF1";"\x1E\xAF\x54\x2F\xE9\xB5\xBB\x39\xD5\xB9\x71\xC3\x0C\x28\x43\x63\xEF\x76\x30\x98\x59\x87\x4A\xD9\xDA\x7F";"\x3C\x9A\x50\x81\xAA\xDF\xDD\x7C\xF5\xBD\x06\xE0\x19\xD6\x53\x52\xCB\x61\x57\xDD\x60\xCC\x27\x71\xAC\x4A\xEA\xD2";"\xBA\x0E\xE4\x15\xC4\x0A\x0D\xD7\x66\x4C\x80\x72\xA8\x49\x3F\xDA\x51\xD3\xD5\x76\xF2\x23\xFB\xA6\xEC\x87\x0C\x70\xBA\x5A\xF7";"\x9B\x39\x36\xF8\x3C\x68\x76\x9E\x04\x25\xAD\x4B\x1D\xB3\x8C\xEA\x01";"\x92\x34\x3C\xF4\x35\x68\x7E\x99\x1A\x21\xA8\x49\x75\xDC\xD3\xAE\x66\xE4\xAF\x1F\xD0\x0F";"\xDC\x1F\x9C\x66\xAF\xFA\xB0\x9E\x23\x44\x88\x1B\xF5\x2A\x3D\x7B\xD5\xD9\xA6\x7F\xC0\x32\xE1";"\xB7\x0C\x98\x5A\x88\x00\x46\xA6\x76\x30\x90\x39\x8E\x36\x26\x93";"\x48\xFA\x12\xDE\x3A\x28\x23\x5D\xC7\x84\x6A\xE7\x5F\xE1";"\xC0\xDE\x66\xC2\x5E\x63\x4C\x84\x26\x59\xA8\xE4\x6A\xD7\xEB\xAC\x4B\xC8\x8C\x60\xD2\xAD\x3A\x38\x7C\xEF";"\x60\xC9\xB9\x10\x81\xB0\x93\x73\xEC\x95\x70\x32\x88\x45\x61\x69\x8F\x64\x66\xF5\x2B\x77\xB0";"\x36\xAA\x5A\x6A\xA3\xAA\x8D\x0E\xF6\xA9\x61\xAF\x01\x2C\x38\x1A\x83\x2D\x6E\xCE\x59\xF2\x30\xCE\xC8\x6C\x85\xAA";"\x5F\xE5\x7E\xBD\x79\x30\x37\x5A\xC0\xE3\x06\xE7\x3D\xAB\x8A\xC3\x37\x4C\x6C\xDC\x1C";"\xAF\x7F\xD0\x25\x85\xA9\xAE\x24\x45\x6E\xE1\x05\xB5\x70\x16\x3B";"\xE8\x50\x9D\x46\x98\x9F\x9B\x54\xB5\x84\xC6\x21\xD6\x16\x0F\x09\x8F\x2B\x0C\x47\xB0\x61\x8F\xE6\x8A\x16\x92\x9F\x29\x41\xFA\x20";"\x84\x28\x22\xF8\x39\x71\x76\x95\x1D\x49\xC6\x47\x34\xAD\xA3\xEE\x6C\x89\xA8\x1C\xD7\x18\x22\x43\x5F\xF2\x75\x3C\xFC";"\xE7\x76\xEB\x59\xB7\xB6\xC7\x27\x4D\x6A\xE7\x15\xCA\x6F\x1A\x3E\xB2\x36";"\x5D\xF4\x63\xB4\x7B\x3C\x35\x5E\xC2\x8E\x61\xE2\x75\xF2\xE2\xAA\x2F\x4A\x6A\xD5\x1C\xCD\x65\x01\x1D\xA5\x32\xF9\x57\x97";"\x2A\xF1\x5E\xDD\xCD\x83\xE3\x1A\xF5\xBB\x15\xDF\x14\xDF\x41\x51";"\xA0\x2A\xCA\x9C\x2C\x0D\x69\x80\x13\x2A\x9E\x5D\x8C\xA6\xC3";"\xB3\x05\xCF\x1A\x2B\x5E\x54\xF7\x7A\x3B\x8A\x7E\xF3\x45\xD3\xC2\x2F\xEC\xDA\x07\xED\x2C\xCA\xAD\x44\xC9\x71\x53\xF9\x79\xA0\x41";"\xF3\x54\x9F\x44\x9A\xF3\x8F\x7C\xB9\xEA\xD5\x23\xDE\x10\x69\x09\x98\x34\x11";"\xAB\x32\x95\x0B\x43\x5C\x65\xF3\x77\x35\x90\x58\x99\x5B\xDE";"\xFD\x59\x9B\x55\x9E\x9D\x9B\x3F\xBD\x78\xCA\x27\xB8\x79\x18\x4B\x85\x49\x08\x47\xB6\x6E\x89\xE3\x9F\x0E\x91\x90\x3D\x39\xE0";"\xF2\x58\x94\x46\xE6\x93\x98\x30\xB8\x79\xC6\x23\xDE\x16\x12\x14\x8B\x23\x04\x2B\xA0\x3B\xE7\xA9\x85\x64\xAE";"\x87\xC6\x2E\xD6\x06\x15\x0E\x82\x25\x0B\x4A\xB4\x6B\xE5\xEA\xE8";"\x55\xFC\x7F\xA0\x4B\x32\x24\x26\xD1\xBB\x18\xDC\x55\xA9\xAC\xE2\x2F\x3C\x7F\xE4\x04\xC4\x64\x08\x23\xB4\xD7\xF1\x5C\x9C";"\xA5\x4B\xFB\x2B\xEC\xF5\x95\x7D\xA9\x21\xC3\x42\xBE\x46\x78\x5D\x8A\x5F\x12\x5C\xB5\x67\x81\xE0\x83\x09";"\x23\xE4\x66\xD0\x64\x0F\x23\xAA\xCC\xF3\x42\x90\x44\xE5";"\x00\xCD\xF1\x69\x8C\xBB\xFD\x1F\xD4\x8A\x2B\x2C\x9C\x2A\x1A\x0A\xE2\x65\x77\xB7\x47\x09\xC0\xCD\xE9";"\x9A\x2F\xDE\xE3\x2B\x7E\x75\xE7\x03\x2A\xA2\x57\xE1\xB2\x88\xE6\x05\xF4\xB5\x1C\xD0\x02\x28\x51\x5F\xF2\x7D\x2B\x8C\x62\x9A\x50";"\x73\x88\x14\xB6\x30\x5F\x58\xCF\xDD\x9F\x09\xC9\x5A\xEC\x92\xC0\x42\xC3\x18\xB2\x59\xB7\x67";"\x2A\xE4\x7C\xD9\x54\xCF\xD0\x75\xEE\xC5\x0C\xEC\x08\xCC\xA6\x40\xCA\x6C\x53\xE3\x28\xFD\x1F\x34\x48\x5B";"\x6D\xE7\x0A\xA1\x77\x48\x26\xC5\x36\xF1\x59\x99\x49\xE9\x90\x9C\x3C\xAB\x7F\xC8\x27";"\xEE\x5B\xA3\x5D\x99\x92\x91\x07\xCB\xEB\xC8\x68\xD0\x66\x73\x0E\x8D\x22\x15\xB8\xB3\x7C\x8A\xFE\xF4\x11";"\xF5\x58\x91\x54\xA7\x86\xF7\x32\xB9\x7A\xD1\x21\xDF\x03\x0C\x17\x87\x27\x06\x41\xA9\x3F\x80\xB8\xED\x4C\xA9\xFA\x25\x31";"\x59\x82\x03\x99\xFF\xC8\xB9\x1C\xEF\xBF\x13\xE2\x19\xD0\x53\x49\xF9\x65\x47\x83\x62";"\xC0\x5C\xDE\x78\x2B\x4A\x3F\xE1\x21\x35\xD7\x4E\xCD\x05";"\x41\x8C\x62\x95\x4B\x32\x91\x1A\xBF\x9D\x5F\xE2\x55\xCA\xFC\x58\xCA\x07\x42\xEE\x7C\xBC\x7C\x3E\x37\x59\xD8\xFF\x68\x88\x35";"\x44\x8A\x30\xF9\x38\xCB\xCF\x39\xEA\xA0\x06\xE2\x25\xDB\xC2\x32\x89\x12\x4A\x90\x17\xB4\x26\x5F\x58";"\x4E\x43\xDB\x73\x8A\xE2\x82\x09\x97\x8E\x37\x3B\xE3\x36";"\x7E\xCE\x27\xD2\x11\x15\x0A\x82\x22\x0D\x45\xAC\x6F\xE6\x81\x89\x4A\x97\xF8\x3C\x3B\xE8\x02\x79\x78";"\x25\xEE\x7F\xC7\x64\x49\x4D\xBF\xA0\x98\x79\xCA\x4C\xF1\xD5\xD8\x34\x29\x73\xC4\x63";"\xD8\x08\xED\x19\xD7\xAF\x4F\xA6\x63\x15\xE5\x30\xA8\x2E\x27\x3B\x59\xD5";"\x83\xC3\x34\xEA\x13\x60\x03\x96\x15\x11\xB6\xBF\x64\xB3\xF8\xF4\x11\x98\xA4\x2B\xC7";"\x18\xAF\x58\x7A\xB5\xF4\xF5\x61\x81\xC5\x4A\x8A\x0E\x40\x51";"\x57\x87\x75\xA6\x4F\x21\xC7\x21\xCB\x80\x68\xBF\x21\x95\xA2\xBA\xD0\x59\x63\xEA";"\x92\x49\xAE\xB2\x59\x27\x73\xA0\x0F\x57\xB9\x4D\x88\xA9\xCB\xE2\x6E\xF3\xAE\x11\xDE\x07\xDF\x5B";"\x68\xDE\x08\xD6\x61\x01\x26\xB3\x35\xF8\x3A\xF3\x18\x99\xF7\x89\x3D";"\x4B\xAB\x61\xCE\x71\x3E\x35\x5A\xDF\xEA\x6E\x81\x35\xF5\x8E\xAD\x26\x48\x6D\xC1\x16\xCF\x61\x0F";"\x51\x98\x09\xDC\x55\xBB\xCD\x43\xE2\xC0\x07\xEF\x29\xD1\xB5\x5A\xCE\x69\x55\xFB\x7F\xA5\x58\x57\x57\x59\x9B\xDF\x07";"\x23\xA1\x21\x6B\xE9\xCC\x8D\x6F\x83\xB6\x1E\xDE\x02\x39\x46\x5A\xFD\x7B\x39\x96\x65";"\xE1\x63\x9F\x39\xEC\x8F\xAA\x28\x4D\x6B\xB3\x18\x9E\x7C\x41\x1D\xDC\x3A\xF9\x59\xA0\x5E\x90";"\x88\xCA\x38\xE1\x0E\x7A\x05\x97\x10\x11\xB0\xBA\x67\xB3\xAF\xE6\x5C\xC3";"\x2C\xAE\x27\x7D\xF4\xD0\xAC\x68\xE2\xA7\x1E\xD0\x02\x23\x42\x42\xFF\x72\x3F\x97\x66\x9C\x34";"\x70\xFA\x08\xC8\x6F\x09\x21\xA6\x28\xEB\x47\x9C\x49\xE9\x9F";"\x07\x4E\xAA\x51\x9D\xF7\x82\x05\xA8\x8B\x3B\x36\xF0\x07\x65\x07\x96\x19\x18\xBF\xB6";"\xE0\x79\x81\x22\x8F\x99\xC3\x4B\x5C\x39\x8B\x04\xA3\x75\x50\x0D";"\x92\x32\x80\x1A\xFA\xDB\xC4\x44\xCE\x6F\xC7\x31\xBB\x7F\x53\x12\x87\x2F\x09\x2E\xBC\x67";"\xDB\x0D\xE4\x10\xD7\x53\x4A\xDF\x71\x56\x83\x73\xA1\x4B\x22\xC1\x48\xD4\xD5\x74\xFE\x24\xF5\xBD";"\x1D\xA7\x42\x7D\xB4\xF6\xF6\x7E\x9E\xD7\x39\xCD\x0F\x2D\x45\x66\xE5\x72\x2E\x9D";"\x43\x83\x04\xE5\x3B\x21\x3E\x4F\xA4\x9A\x1F\xF2\x72\x83\xE4\xFD";"\xD1\x45\xB9\x1D\x52\x55\x48\xEA\x67\x50\xFF\x0C\x8A\x5C\xC2\xB0\x4D\xFC\xDE\x04\x86\x3E\xD6\xB0\x58\xBF\x0A\x29\xEB\x64\xB4";"\x9F\x2D\x27\xE2\x3E\x70\x77\x99\x06\x26\xB2\x53\x6C\xD2\xD0\xF5\x6E\x8E";"\x23\xCF\x69\xA2\x07\x7A\x6A\xA7\x58\x7D\x47\xFF\x3A\xC1\x97\xE6\x6D\xD0\x83\x66\x2C\xB6\x7B\x7A\x16\xEE\x0A\x6E\xCE\xB2\x29";"\x93\x37\x30\x88\x2C\x7F\x6B\xF4\x15\x3D\xAC\x4F\x74\xB4\xF7\xE9\x7B\x95\xB6\x21\xD8\x09\x20\x40\x60";"\x24\xA8\x4E\x77\xB1\xC8\xF3\x09\x93\xE9\x1E\xB8\x0F\x21\x4E\x65\xF5\x77\x23\x8A\x5A\x9B\x52\xDE\xDC";"\x2F\x9B\x50\x8A\xA4\xC7\x8C\x1C\xB4\xBA\x7C\xDD\x15\xDF\x54\x5C\xFC\x6D\x4A\x8D\x7C\x93\x53\x29\xC2\x49\xEB\xC8\x10\xF9\x57";"\x5C\xFD\x7A\xCE\x62\x7B\x3B\x32\xDF\xE5\x6F\x81\x34\xFA";"\x4D\x80\x6D\x9B\x4E\x28\xD4\x41\xEC\xD6\x79\xF1\x22\xAE\xB8\xF8\xD4\x36\x5E\xFB\x07\xB9\x70\x37\x28\xBE\xC3\xEF\x60\x85";"\x14\xB2\x45\x6D\xB6\xF6\xF7\x64\x86\xA6\x25\xC8\x60\x41\x40\x23\xED\x61";"\x23\xD9\x56\xE1\xB8\xCE\xD6\x71\xF4\xB0\x0B\xD7\x17\xD9\x5B\x56\x90\x78\x2F\xCF\x68\xFB\x49";"\x7A\xD2\x25\xD7\x74\x1F\x44\xD7\x63\x07\x2F\xA9\x51\x89\xEC\x8F\x0F\xAA\x92\x3F\x23";"\xAD\x3B\x96\x04\x73\x59\x10\xEF\x28\x2F\xE6\x51\x83\x55\xDE\xD0\x7B\xFD";"\xFC\x50\x96\x5B\x9A\x9B\xF9\x53\xE1\x81\xA1\x21\xD5\x11\x6A\x03\x89\x35\x13\xB5\xB0\x6B";"\x58\xF0\x05\xBE\x1A\x2C\x74\xA0\xAA\xE6\x64\x89\x49\xE4\x8B\xA1\x29\x4D\x74\xCC\x10\xC0\x65\x1E\x13\xB4\x38\x90\x55\xE7\x59\xFD";"\x4D\x85\x63\x9A\x46\x2B\xCB\x55\x95\xC8\x7E\xF6\x20\xC7\xA6\xB5\xDE\x46\x46\xF3\x01\xB0\x71\x31\x3A\xA3\xDF\xB1";"\x53\x93\x76\xA1\x45\x33\x3E\x5C\xC7\xC1\x72\x84\x3F\xF0";"\x06\x46\xB2\x4F\x8C\xED\x8B\x0E\xAC\x92\x3B\x3E\xE1\x04\x64\x7C\x90\x1D\x06\xBB\x44\x7A\xBC";"\x6B\xC7\x18\xC8\x67\x10\x1D\xA2\x22\xFB\x4E\xA6\x5C\x95\x97\x86\x1D\xBB\x94\xC4\x2C\xE8\x08\x6A\x07\x94\x1A\x19\xB2\xBF\x60";"\x23\xA6\x51\x6A\xB0\xCA\xE3\x6D\x8D\xB1\x1A\xCE\x43\x20\x30\x5E\xF5\x7E\x35\x90\x64\x9F\x51\xD1\xC5\x4A\xE0\xCF\x01\xE9";"\x38\x9E\x68\x89\x36\xC4\xD5\x33\xBB\x97\x74\x94\x52\x95\xB2\x37\xDD\x2F\x17\xE8\x72\xB3\x20";"\x97\x38\x3E\xE4\x52\x15\x75\xDE\x1B\x74\xAB\x44\x7C\xB0\xF1\xE7\x65\x85\xAC";"\x01\xE2\xC1\x63\xDE\x8D\xEC\x6E\xFA\xA9\x7D\xA1\xAE\x51\x25\x0C\x94\x04\x74\x86\x0F\xFB";"\x50\xEF\x7B\xA7\x47\x39\x33\x58\xD7\xB3\x00\x89\x7E\xF7\xDD\xB3\x21\x43\x6D\xE3\x0C";"\xD8\x2F\xE3\x67\xFC\xD4\xA4\xDE\x5D\x66\xE6\x03\xB6\x6E\x2C\x31";"\xCC\x73\xFD\x3D\xF8\xBD\xB3\xB2\x37\x6F\xAD\x0A\xDD\x70\x02\x2B\xAD\xC8\xEA\x54\x92\x4D";"\xB7\x20\xD3\x0A\x20\x47\x61\xE7\x17\x38\x97\x5E\x85\x58\xDC\xD1\x78\xF9\xC4\x1A\xE2\x12";"\x9F\xCF\x29\xD9\x07\x6F\x0E\xE7\x24\x0E\xBE\xB5\x65\x86\xE3\xF7\x14\x9B\x9F\x32";"\xA8\x21\xD2\x0D\x2F\x55\x61\xF4\x77\x37\x97\x5D\x9C\x58\xB0\xCB\x3B\xF8\xA9";"\x85\x6A\xFD\x7E\xDA\xB3\x3F\xA5\x0E\x3E\xEB\x04\xB5\x5E\x29\x5D\x39\xCE\xAB\x2F\xE3\x5F\xFD\xAC\xB2\x28\x30\x3A\xB4";"\x64\xEB\x0F\xAA\x70\x0A\x2B\xA6\xCB\xEE\x0E\x9F\x41\xEE\x87\xA1";"\x24\xA3\x4B\x71\xA6\xD3\xF5\x62\x89\xA7\x1E\xD3\x03\x49\x48\x09\x9C\x36\x38\xFA\x66\x9B\x5D\xDB\xD4\x7A\xFA\xC3";"\x9D\x0F\xEC\x28\xC8\xA1\x47\xDA\x50\x5E\xEE\x7D\xA2\x7D\x3B\x36\x58\xDB\xF1\x1E\x8A\x6C\xE7\xDD\xBD\x77";"\x37\x8E\x79\x94\x51\xD6\xC7\x41\xE3\xCE\x06\xF5\x2A\xDC\xA3\x40\xC4\x53\x52\xF5\x7A\xAB\x70\x38\x3D\x59";"\x99\x25\x3E\xF9\x3E\x70\x70\x9C\x0C\x49\xB2\x0E\x72\xC4\xCC\xE0\x6F\x8B\xA8\x19\xD5\x01\x20\x50\x59\xF3\x75";"\xF4\x44\x91\x4E\xE6\x98\x9B\x36\xD2\x30\xBB\x5D\xC7\x40\x69\x0D\xDA\x5E\x05\x3A\xB6\x65\x83\xE9\x83\x0D\x93\x88\x27\x38\xE1\x04";"\x30\xAB\x0F\x8E\xC3\xD1\xEE\x7F\x94\xE5\x44\xC6\x7F\x85\x34\x34\x96\x6B\x2C\x8F\x25\xED\x07\xC0\x8A\x58\xE1\x8B";"\x9B\x33\xC4\xFA\x2C\x73\x78\xE0\x09\x24\xA0\x44\x85\xAF";"\x22\xA2\x54\x92\xA9\xC1\xE5\x73\xF6\xB3\x78\xC0\x69\x99\x5C\x3D\xF9\x73\x45\x8B\x67\x93\x56\x2A\xC8\x43\xF9";"\x0C\x41\xA8\x74\x97\xEB\x84\x0B\x96\x94\x3B\x23\x8D\x6A\x24\x3B\xCF";"\x6D\xE4\x16\xC8\x6E\x19\x3F\xAA\x30\xF0\x51\x9E\x42\xF3";"\x57\xEE\x00\xB5\x70\x37\x2A\xA0\xD7\xEB\x64\x98\x4D\xE1\x85\xAB\x2E\xDA\x69\x90\x19\xA8\x1D\x1D\x19\xBA\x3B";"\x5A\xF6\x3E\xE7\xA8\x83\xCE\x04\xFE\xC4\x08\xC2\x18\xDE\x53\x52\xFA";"\xBD\x58\x8B\x5E\x78\x57\x38\xA7\x60\x31\x95\x5D\x9B\x5D\xDC\xD4\x63\xFD\xDE\x03\xEF\x14\xD9\xAF\x48";"\x75\xDE\x1E\xD1\x62\x01\x15\xB1\x3B\xF9\x57\xA3\x34\xF5\xD5\x91\x68\xBB\x87\xC7\x2E\xD6\x05\x69\x1D\x89";"\xE9\x5A\x92\x4E\xE2\x85\xBC\x29\xAD\x7E\xD1\x1C\xDC\x1A\x1B\x0D\xFA\x27\x68\x57\xAC\x50";"\x6C\xD0\x15\xCE\x66\x19\x1D\xAC\x20\xF9\x55\xA2\x5B\x94\x98\x8B\x03\xA6\x8E\xC0\x25\xEC\x0A\x69\x01\x88\x28\x16\xBE";"\xD8\x2F\xE3\x5E\x80\xA3\xE8\xA7\x41\x06\x91\x0B\xA9\x70\x3D\x2F\xAE\xC9\xEC\x79\x92\x48\xEA\x86\xA4\x32";"\x18\xB6\xBF\x65\xBC\xFC\xFC\x1C\x85\xA7\x29\xC6\xF7\x3B\x75\x22\xEB\x0C\x2F\xA3\x53\x8B\xA9\xC6\xE3\x74\xF1";"\x4F\x97\x70\xAB\x43\x20\xC8\x4A\xCD\xDB\x77\xFD\x3B\xFD\xD1\xD9";"\x99\x37\x31\xE7\x00\x09\x65\xD2\x1F\x70\xAF\x49\x7B\xB1\xF3\xF7\x64\x9D\xAE\x27\xC5\xF6\x2C\x46";"\xEA\x6C\x8D\x36\xF2\x8F\xAC\x28\x4D\x7B\xDF\x17\xC2\x61\x05\x1F\xB6\x32\xF7\x52\x97\x5A\x9E\x91\x97\x3F\xA2\x80\xCE";"\x1D\xF2\x14\xA2\x7C\x32\x30\x54\xCC\xE7\x70\x8C\x31\xE9\x88\xA0\x2F\x24\x73\x9A\x17\xAE\x79\x02\x16\xB1\x35\xFF\x54\xBD";"\x2E\xBC\x5A\xDE\x70\x1D\x14\xBE\x23\x05\x49\xAB\x4C\x91\xE9\x8B\x0D\xAB\x8C\x35\x59\x87";"\xC4\x01\xE0\x7B\xDC\xFC\x21\x80\x6D\x26\xFD\x73\xAA\x44\x2F\xC1\x52\xCB\xC5\x76\xFE\x3D\xF9\xBA\xB2\xD9\x28\x0E\xAE\x0B";"\x30\x98\x5A\x89\xA3\xC7\xE5\x6A\xF3\xBA\x1F\xD7\x1C\xDE\x5E\x57\xF6";"\xBE\x04\xE3\x19\xD0\x42\x55\xC3\x60\x4E\x85\x6B\xA4\x26\x21\xC5\x4E\xD7\xD4\x7A\xF8\x25\xC5\xA4\xA3\xC6\x5F\x5B\xED";"\xF2\x53\x9A\x2D\x92\xCE\xF3\x7E\xBB\x14\xD3\x27\xDD\x11\x17";"\x6C\x82\x2F\xB9\x7C\x4C\x7B\x81\x20\x05\x4F\xAF\x69\x88\xEA\x84\x0D\xBF\x93\x3A\x3B\xE7\x04\x73";"\xEC\x61\x87\x4C\x86\x95\xE0\x2C\xDE\x74\xD9\x1E\xC9\x64\x11";"\x37\xA8\x53\x88\xA0\xC3\xE6\x75\x9A\xBE\x7F\x9F\x01\xB5\x5D\x5E\xFF\x71\x42\x8E\x66\x9C\x51\xC1\xCD";"\xFB\x65\x9D\x22\xE7\x82\xA1\x28\xB5\x70\xDD\x1B\xC0\x18\x11\x0D\xBB\x38";"\xE3\x6F\x89\x35\xF8\x8B\xA2\x3B\x3B\x63\x98\x01\x90\x75\x62\x13\xF5\x2E\x8C\x40";"\x5C\xEB\x06\xB6\x75\x37\x28\xBB\xBF\xF2\x66\x99\x48\xEC\x86\xA5\x37\xAA\x7D\xD1\x1A\xC1\x1F\x1D\x00\xA5\x25\x06\x46";"\xCF\x70\x91\x5B\x9B\xAE\xE0\x46\x38\x32\xFE\x14\xC3\x75\x70\x53\xB4\x23\x88\x57\xC3\x58\xED\xE9\x89\x27";"\x11\xCC\x25\xDC\x18\x17\x16\xBA\x3C\x00\x46\xAA\x56\x8B\xEF\xE4\x04\xD5\x88\x3E\x32\xED\x07\x62\x7C\x8D";"\x68\xE9\x13\xCA\x6F\x06\x3B\xB0\x4A\xED\x53\x9A\x43\x98\x96\x9A\x24\xBF\x86\xCA\x20\xD6\x1B\x0D\x68";"\xCB\x7A\xFC\x2C\xC4\xA2\xAB\xD8\x57\x59\xF5\x79\xB7\x17\x3E\x6E";"\x23\xCB\x20\x80\xE8\xCF\x8C\x69\x88\xB4\x1B\xD8\x0F\x3A\x47\x5C\xF6\x7A\x34\x8B\x6A\xF6\x4A\xBC";"\x86\xCF\x2C\xD0\x18\x6F\x10\x83\x2F\x0A\xBD\xB1\x6E\x84\xF6\xAF\x1D\xC2";"\xA2\x0C\xE6\x13\xDC\x52\x4A\xDA\x7A\x57\x83\x73\xA8\x40\x2B";"\xCA\x08\xEC\x08\xDE\xF8\x5B\x8F\x36\x1B\xA3\x64\xF1\x59\x70\x33\x2D\xCB\xD1\x79\xF7\x3D\xFC\xB5\xA8\xD4\x41\x67\xEA";"\xE6\x55\xF9\x47\xB3\xED\xDA\x32\xD8\x64\xD5\x1B\xD8\x1E\x10\x13\xA0\x3C\x19\x4E\xAE";"\xFD\x61\x8F\x49\xEE\x8A\xA2\x29\xBE\x08\xD7\x04\xC7\x69\x19\x1F\xBE\x3B\xE3\x55\xB9\x5C\x9C\x96\x8A\x06\xA2";"\xBB\x66\x89\x5C\x76\x51\x3A\xA5\x6B\x31\x93\x55\x8B\x54\xD6\xCD\x79\xF8\xC2\x08\xE0\x14\xD2\xA2\x43\x94\x7C\x08\xDB\x27";"\xC6\x68\x80\x39\xF7\xB5\xB6\x38\x3B\x16\xEA\x55\xD4\x33\x72\x38\xC9\x37";"\x16\x97\x2E\xB0\x0C\x21\xC6\x48\xD1\xD7\x78\xF0\x21\xC0\xAC\xB9\xDD\x5A\x5A\xEF";"\x9D\x33\xCC\xFD\x39\x75\x73\x98\x0E\x27\xAD\x42\x66\xAC\xCB\xEA";"\x9A\x35\x3D\xFE\x3D\x6A\x38\x81\x4F\x2C\xAB\x48\x77\xAB\xC1\xEC\x63\x8D\xBA\x1F\xD1\x00\x2D\x40\x5B\xF3\x71\x31\x90";"\x13\xBA\xBE\x65\xEC\xE6\xBE\x16\xF4\x9F\x2C\xC5\xFC\x32\x76\x79\xE6\x00\x2F\xB2\x47\x8B\xAE\xCD\xED\x69\xF0\xDE\x17";"\x97\x7A\x37\x8E\x05\x65\x78\x90\x1A\x18\xB3\x42\x7E\xAC\xF7\xF4\x1B\x85";"\x59\x82\x76\xAA\x47\x27\xC8\x57\xD6\xBA\x7B\xA6\x25\xB8";"\x69\xE5\x12\xC0\x6D\x09\x2B\xB3\x35\xE3\x54\x98\x46\x9C\x96\x9E\x30\xBA";"\xE6\x5D\x9D\x45\xED\x9E\x82\x33\xBB\x79\xD6\x29\xD7\x12\x4E\x1F\xA1\x2E\x05\x46\xAD\x51\x86\xF2\x91\x14\xA1\x90\x3D\x30\xE7\x02";"\xB6\x5B\xF3\x5B\xE0\x9E\x93\x36\xB6\x7A\xD7\x22\xDF\x1F\x14\x11\x83\x4D\x65\x4A\xEA\x6E\xE0\xF1\x8C\x06\x94";"\x69\xDA\x1A\xC4\x68\x18\x18\xB2\x31\xAC\x5C\xE7\x03\xC3\xC9\x81\x41\xAD\xF5\xDF\x2A\xEB\x08\x6E\x0C";"\x8D\xC6\x37\xED\x6A\x6D\x56\xF9\x55\x15\xDD\xBA\x7B\xBB\xF9";"\xC0\x27\xEB\x4E\xB8\xBB\x3B\xAF\x49\x27\x89\x62\xF8\x79\x57\x37\x5F\xC3\xE4\x6F\x8F\x35\xF6\x8A\xAB\x3E\x4F";"\x23\xA3\x49\x8E\xA5\xCB\xFE\x3A\xD6\xF1\x4C\xC8\x41\x3D";"\xBA\x12\xE7\x1C\xDB\x56\x4E\xC5\x61\x42\x8D\x6F\x90\x03";"\x71\x88\x3A\x9C\x69\x0C\x4B\xFC\x38\x43\x44\xC6\x70\x8D\xEC\x81\x0C\xAA\x91\x24\x20\xFB\x00\x7B\x7C\x97\x1D\x15";"\x5C\xF3\x79\xA9\x7F\x3F\x23\x52\xD1\xDC\x67\x84\x33\x99\xB8";"\xE8\x52\xAE\x9F\x48\x6B\x2F\x9F\x1C\x5D\xD9\x43\x85\xAF\xC9\xEC\x6C\xFC\xA8\x1D\xD0\x07\x23\x5D\x59\xF8\x72\x33\x88\x60";"\x95\x25\xC5\xF2\x37\x75\x68\xB7\x0D\x42\xCC\x3A\xE1\xC1\xC1\xA0\x76\xEC\xD2\x71\xB3\x6C\x2D\x0F\x4B\xAD\x73\x5D\x95\x79\x93\x54";"\xBD\x06\xDB\x00\xDE\x59\x59\xF8\x79\x52\x92\x21\x97\x3F\xD7\xCD\x46\xE3\xC8\x01\xF1\x29\xCF\xAA\x57";"\xBE\x18\xE1\x18\xC0\x4B\x3F\xE0\x2C\x1E\xC9\x3E\xCD\x1A\x3F\x9C\x15\xAB\x85\x6F\xAF\x72\xD3\xA2\xBA\xD4\x54\x59\xF3";"\xDB\x7D\xFE\x3A\xC7\xBC\xBD\xD3\x56\x58\xF1\x72\xB7\x7D\x3F\x29\xA5\xC1\xEF\x66\x8F\x4C";"\x5F\xF7\x76\xBD\x79\x2C\x68\x01\x96\xB2\x36\x99\x5B\xFD\x88\xAE\x2F\x4E\x69\xDD\x16\xC8\x6D\x06\x0B\xB1";"\x17\xB5\xBF\x6B\xB7\xF7\xE4\x1B\x9E\xA9\x27\xC5\xF1\x2A\x30\x6E\x8D\x0E\x2F";"\x1A\x8E\x15\xC3\x2D\x4D\x9E\x5F\xA9\xCF\x75\xFD\x3D\xFF\xB9\xBE\xDE";"\xAE\x3E\xCA\x15\x25\x43\x68\xFA\x73\x37\x8F\x44\x81\x2E\xCD\x9D\x72\xB2\xA9";"\x7A\xCD\x27\xC8\x11\x17\x0D\x83\x21\x0E\x2C\xBD\x35\x91";"\x92\x2C\xC7\xF1\x33\x7D\x6D\xFC\x06\x2B\xA0\x58\x87\xAD\xC0\xF2\x39\xA9\xE1\x04\x8E\x5D\x8A\x4F\x0C";"\x0F\xE3\x07\xDE\x63\x69\x46\x43\xAF\xA1\x63\x98\x33\xFC\xB6\xAD\x2E\x4B\x71\xE3\x19\xCB\x6B\x01";"\x4E\x86\x6A\xAB\x43\x2B\xCC\x44\xDC\xD5\x7E\xF2\x26\xE3\xC5\xA0\xC7\x5E\x56\xE7\x05\xB2\x74\x2E";"\x96\x5F\xE4\x49\xDC\x93\xF8\x1E\xA4\x81\xC0\x24\xD2\x0E\x73\x1E\x95\x29\x16\xBE\xB7\x62\x83\xE2\x90\x09\xD8\x9E\x58\xC4";"\xFC\x53\x9E\x5A\x99\x96\x93\x2D\xE4\x89\xAA\x41\x8C\x64\x6A\x0C\x82\x2C\x06\xBE\xAE\x78\x86\xE1\xF7\x12\x9A\x9D\x5C";"\x08\xDF\x29\xDD\x10\x18\x16\x8B\x27\x0F\x46\xB9\x53\x88\xE9";"\xB8\x05\xD4\x0E\x21\x5F\x5B\x98\x11\x31\xD7\x60\xF3\x50\xD9\xD2\x42\xE3\xDC\x1B\xEA\x24\xCC";"\x85\xC4\x39\xDB\x0B\x6D\x0F\x89\x2D\x17\xD5\xAB\x23\x80\x90\xE0\x1D\x94\x9A\x31\xCB\xFF\x2C\x78\x78\xE4\x02\x2F";"\x6D\xE3\x08\xB4\x74\x00\x21\xA3\xC0\xEA\x5A\xF8\x48\xBF\x9D\xDB\x35\xD9";"\xD5\x7C\xFC\x20\xC2\xD7\xD7\xD9\x1B\x5F\x87\x1E\xB8\x73\x3E";"\x45\x8C\x60\x97\x50\x22\xCA\x4B\xBD\xDC\x47\xAA\x7D\x99";"\x8C\xC1\x2B\xD3\x0C\x6D\x14\x91\x35\x19\xBA\xB6\x64\x86";"\x94\x62\xCE\xFA\x32\x75\x73\xE3\x04\x21\xA0\x4D\x88\xBE\xCD\xE0\x68\xFD\xBA\x1D\xD9\x06\x30";"\x7D\xD6\x12\xC6\x6B\x07\x19\xB3\x20\xFF\x5B\xA8\x5B\x99\x92\x83\x47\xA4\xED\xC6\x2B\xD4\x0A\x69\x1D\x95\x28\x16\xBC";"\xC2\x06\xC0\x38\x9E\xB4\xAE\x29\x4B\x6A\xE9\x12\xCD\x6A\x0A\x22\xAF\x34\x99\x36\x97\x04\x9D\xF3";"\x0E\x29\xBC\x35\xD0\x97\xF9\x5B\xB8\xDA\xB7\x24\xB2\x6B\x72\x78\x95\x0A\x0D\xA9\xC5\x08\xBD\xA1";"\x42\x8F\x68\x90\x52\x22\xDA\x00\xED\xA6\x7E\xF4\x23\xC3\xA2\x47\xD8\x59\x5F\xF3\x6B\xBD\x7B\x35\x32\x58\xCD\xE2";"\xDF\x77\x80\x39\xF8\xB5\xDE\x4E\x4B\x22\xE7\x67\xB3\x6D\x0E\x24\xA8\xC9\xEC\x59\x97\x47\xE3\x93\x9B\x58\xA0";"\xD0\x73\xFB\x3B\xE7\xBB\xB3\xDD\x5C\x67\xEC\x11\xAA\x73\x02\x22\xA7\xC6\xE5\x5F\x93\x43\xE6\x84\xA9\x33";"\x30\x9B\x50\x80\xA2\xDA\xC7\x76\xFD\xB5\x09\xE6\x1E\xBB\x3A";"\x95\x80\x73\x86\x50\x7F\x50\xDF\x38\x41\xB3\xBE\x63\x8B\xE6\xFD\x14\x9A\x86";"\x52\xF6\x10\xEB\x25\x71\x67\x05\x91\xF5\x6D\x8D\x30\xE6\x87\xAC\x32";"\xF2\x59\x91\x46\xE4\x9F\x98\x3C\xBD\x7C\xD8\x25\xDB\x12\x15\x0A\x85\x26\x0B\x0E\xA2\x68";"\xAC\x76\xD5\x0A\x22\x46\x56\xF9\x73\x31\x91\x5A\x8A\x5F\xDA\xDD\x7F\xE2\xC6\x02\x87";"\xAE\x1C\xD1\x01\x25\x45\x5F\xEB\x77\x38\x95\x65\x9B\x5F\xC9\xD3\x7F\xEE\xC7\x01\xEB\x14\xCA";"\xC4\x44\xED\x44\xC8\xAA\x43\xCA\x5D\x5C\xE0\x67\xA2\x76\x3E\x3E\x5A\xD9\xB2\x72\xEE\x71\xF6\xDE\xAB\x2F";"\xB7\x02\x9C\x79\xE5\xD8\xBF\xA1\x5F\x67\xED\x08\xB3\x6A\x06\x34\xAA\xCC\xF7\x56\x9E\x41\xFA\x98\x9D\x34\xBF\x7F\xD4\x28\xDA\x1A";"\x26\xD4\x67\xD9\x7D\x11\x14\x86\x24\x0D\x45\xB3\x6A\x8E\xEB\x86\x0A\x96\xFE\x26\x7D\xE3\x6B\x64\x7A\x9A\x1B\x19\xA8\x47\x61\xB4";"\xD6\x55\x8B\x6E\xCA\x3F\x4A\xF5\x2E\x1B\xFA\x3A\xC3\x07\x5B\xD8\x29\xFE\xB9\x1D\xA0\x3A\xDB\xB2";"\xB3\x11\xD5\x18\xD5\x5F\x4A\xE7\x67\x47\x8A\x68\x97\x55\x33\xBE\x49\x85\xD5\x65\xAB\x37\xA1\xD9\x5D\xB7";"\xAC\x23\xD3\xEC\x2E\x40\x6E\xE3\x01\x28\x9A\x50\x84\xB1\xC4\xDD\x72\xF5\xB9\x14\xE5\x1D\xC9\x24\x5F\xA7\x09\x13";"\xEA\x61\x93\x4B\xF3\x80\xA2\x35\xB2\x7E\xDC\x1B\xC4\x11\x1D\x1F\xB0\x32\x07";"\x82\xC2\x31\xE8\x1C\x6A\x06\x8D\x1E\x10\xB5\xBC\x7F\xE0\xF2\xFB\x1B\x9E\xA8\x26\xC4\xF2\x31\x70\x79\xE7\x0E";"\x90\x40\xF8\x58\x81\xED\xFE\x35\xA5\x1A\x92\x0D\xC3\x08\x73\x73\xD0\x53\x1B\x19";"\xC5\x0E\xE7\x14\xD6\x44\x08\x9E\x38\x15\x92\x28\xFF\x58\x70\xCF\x55\xD7\xD4\x76\xF5\x27\xFD\xA3\xAE";"\x69\xFC\x0C\xC4\x6A\x0B\x24\xA6\x58\xFE\x58\x90\x46\xE6\x9C\x92\x20\xBC";"\x85\x7B\xCA\x4E\x80\x91\xA5\x2E\xB5\x71\xD8\x1E\xC3\x7D\x01";"\x65\xE1\x02\xAE\x6E\x76\x35\xB8\xCD\xEE\x62\x97\x4A\xE0\x9B\xA6\x34\xB7\x74\xD3\x04\xC1\x61";"\x67\xEC\x00\xB5\x6B\x0F\x22\xAF\xCC\xEB\x5E\x92\x44\xE4\x80\x9F\x36\xB6\x71\xCB\x1C\xDC\x13\x1A\x13\xBF\x24\x14\x0F\xA8\x3B\x8D";"\x1D\x4A\xAE\x55\x96\x97\x8D\x0D\xC6\x99\xCD\x23\x84\x05";"\xAF\x19\xD5\x02\x23\x44\x4B\xF3\x71\x3C\x94\x5A\x9E\x53\xBE\xCC\x39\xE6\xAF\x16";"\x42\x8A\x6F\x9F\x58\x47\xC7\x12\x84\x89\x7E\x98\x36\xC7\xAF\x43\xD7\x57\x5A\xEA\x66\xA1\x7A\x34\x36\x59\xC2\xEB\x73\xE4";"\x00\xA4\x67\xC5\x4F\x70\x70\x09\x83\x8F\x22\xDE\x28\xAC\xBD\xB2\x24";"\x38\xA3\x4C\x70\xAD\xCE\xEA\x70\xE5\xDD\x5B\xD4\x6F\x22\x44\x5D\xF1\x7F";"\x65\xEF\x0E\xB6\x1E\x59\x21\xE2\xCF\x80\x7F\x94\x40\xE9\x83\xA2\x33\xAD\x73\xDC\x1D\xC0\x1B\x18\x7B\xB3\x50\x45\x4A\xCC\x4A";"\xE5\x4A\x8F\x3D\x9E\x94\xF6\x5B\xBE\x80\x8B\x47\xDF\x71\x38\x02\xF6\x4F\x67\xC7";"\xBA\x06\xEB\x10\xCE\xAC\x4F\xCB\x6E\x54\xFD\x77\xA7\x47";"\xD8\x5D\xBF\x76\x59\x4D\x3B\xEA\x38\x49\x8A\x25\xE3\x45\xA9\xA9\x72\xF2\xC6\x08\xE9";"\x62\xE0\x0A\xB1\x78\x0F\x2E\xA8\xCA\xF0\x5D\x94\x47\xFE\x99\x9D\x30\xBA\x78\xDB";"\xA9\x1A\xD5\x03\x27\x47\x63\xF6\x70\x2D\x96\x5E\x94\x5E\xDA";"\x38\x8E\x62\x9A\x57\xCB\xD7\x43\xE1\xCC\x05\xEB\x31\xCD\xAE\x45\xCA\x57\x56\xEA\x2C\xAC";"\x5F\xEC\x7F\xBC\x72\x3D\x35\x59\xA8\xFA\x2E\x8B\x5A\xF1\x8F\xAC\x2A\x4F\x6C\xDE\x1D\xC9\x66";"\x81\x66\xAA\x6E\xD3\xDE\x36\xC7\x74\x4A\xFF\x74\xA5\x4D\x3E\x3D\x55\xDA\xDF\x78\x85\x3D\xFB\xB1\xBB\xD4\x4E\x65\xE1";"\x53\xBA\x27\x2A\xC0\x99\xE2\x73\xE9\xFB\x28\xB1\x62\x40\x53\x7F\xE1\x16\x5A\x82\x37\x90\x41\xCC\xB6\x15\xAF\xC0\x03";"\x8D\x61\x2B\xA3\x00\x10\x7E\x91\x14\x1B\xB2\x4A\x63\xAA";"\x01\x22\xBA\x10\x91\xFF\x91\x01\xA4\x8A\xC3\x31\xE0\x15\x79\x1E\x94\x1F\x17\xB6\xBD\x63\xA4\x93\xEF\x5C";"\xD2\x3D\xEC\x4D\xD9\xD1\xA7\xC9\x06\x05\xB3\x2A\xE6\x2C\x23\x48\x50\xC9\xE2\x6F\x83\x36\xED\x8B\xB5\x2C\x4D";"\x80\xC8\x2A\xD6\x19\x72\x0A\x8A\x2D\x07\xB5\xB0\x63\x8C\xE8\xFA\x13\x9B\x9C\x39\x37\xF8\x3B\x7A";"\xA1\x11\xD2\x0F\x2F\x43\x63\xF6\x75\x3A\x95\x59\x89\x58\xDE\xD5\x7D\xE6\xC6\x0E\xE9\x01\x85\xD7\x46\x90\x76\x0D\x83\x68";"\x3A\x91\x7B\xC5\x5A\x86\xBB\x00\x8C\xBB\x0B\xB6\x35\xB6\xB1\x2E\xD6\x13\x5F";"\xE4\x6D\x8D\x33\xE8\xCE\xA8\x4F\x52\x6F\xD8\x1B\xCC\x65\x0F";"\x47\xAC\x4D\x89\xAD\xCA\xEB\x65\xF4\xAE\x1C\xD3\x03\xDA\x59\x5F\xFF\x74\x4D\x88\x6F\x95";"\x9B\x2A\xDD\xB4\x38\x7F\x6E\xE2\x00\x2A\xA1\x54\x89\xAF\xC1\xE3\x69\xF7\xB4\x0B\x9E\x02\xB4\x51\x5F";"\x46\xF0\x02\xBC\x70\x3E\x26\xA4\xDA\xF5\x62\x86\x4C\xE3\x8B\xA7\x36\xB5\x72\xDA\x1A\xC3\x16\x1C\x1F\xB3\x3A\xFA\x47";"\xB2\x18\xD1\x1A\x4A\x48\x53\xE6\x12\x30\x85\x65\x9B\x5E\xD7\xD3\x5C\xE9\xCE\x07\xE9\x2F\xC2\xB0";"\x2D\xB2\x43\x71\xB4\xF0\xE5\x6F\x96\xAE\x27\xD6\x0C\x2F\x47\x7F";"\x85\xD6\x3A\xA9\x0B\x13\x0F\x84\x2F\x08\x40\xAC\x6E\x80\xE7\x8A\x13\x9E\x8F\x5F";"\x90\x31\x55\xFA\x6A\x3E\x78\xFF\x1B\x14\xA5\x47\x73\xB4\xEC\xEC\x65\x89\xA1\x24\xCE\x0B\x46\x21\x69\xAA\x77\x58\x9D\x58\x89";"\xCC\x05\xA5\x53\xBF\xFB\xCC\xB4\x29\x20\xB3\x13\xD3\x2D\x71\x4C\x5F\xD6\xF8";"\x02\x46\xB9\x6C\x92\xE1\x84\x04\x9E\x91\x30\x56\xEE\x23\x7D\x7E";"\x42\x8F\x67\xF9\x3E\xD9\x88\x44\x86\xCA\x00\xF7\x2A\xC1\xA3\x47\xD0\x57\x56\xE0\x74\xA5";"\xB2\x67\xC9\x24\x86\x99\xCA\x40\x12\x05\xDF\x12\xCE\x65\x0F\x1B\xB7\x37\xFF\x45\x9E\x5C\x92\x9A\x9C\x3A";"\xB4\x1A\xE6\x1E\xD5\x49\x3D\xCF\x60\x40\x80\x64\xA9\x48\x2B\xC4\x4A";"\xD3\x1F\xFB\x74\x83\x39\x5D\xD5\x69\x58\xE1\x2B\xD1\x08\x37\xAA\x45\xC6\xD1\x19\x9E\x7B\xA9\xB3\xCD\x88\x4A\x6B\xFD\x66\xDE";"\x7C\xD0\x39\xDD\x10\x19\x13\x82\x25\x1B\x45\xA8\x6E\x8F\xEE\x8E\x14\xB7\x91\x3C\x3B\xE5\x02\x7D\x6A";"\xE6\xCF\x6A\x97\x14\x0A\x55\xED\x7B\x1B\xDF\xC2\x7E\xD6\x8F\x88\x75\x96\xD5\x56\xDB\x9C";"\x99\x22\x88\x4B\x8D\xF8\xDC\x4C\xDF\x6C\xCE\x47\xD0\x15\x65\x71\xF9";"\x6E\xE9\x57\x14\xC5\xB2\xF1\x74\x8B\xB9\x19\xD0\x03\x20\x59\x44\xEB\x7E\x3F";"\x32\xD7\x77\xC0\x1B\x16\x14\xB9\x32\x05\x48\xA2\x42\x96\xE8\x84\x02\xAC\x8F\xC4\x5F\x85";"\x12\xB6\xB0\x74\xC7\xBC\xA9\x48\x8D\xFE\x2E\xA8\xF4\x69\x6D\x7A\xEB\x07\x2F\xA7\x4B\x73\xA9\xCF\xF3\x69\x8A";"\x53\xA8\x1F\xFD\x65\x57\x45\xFC\xA8\xE8\x60\x8F\x4B\xE8\x87\xA6\x2B\xB0\x7C\xCE\x12\xC5\x17\x1B\x1A\xBD\x30\x92\x23\xA8\x21\x84";"\x4D\x87\x6E\xB6\x56\x78\xDE\x55\xD3\xD5\x7A\xFD\x26\xFA\xA5\xBF\xDB\x58\x58";"\x95\x3F\x21\xE6\x3A\x78\x7B\x9F\x1C\x0F\xF1\x07\x65\xBD\xF3\xE8\x65\x86\xB1\x20\xD1\x0A\x29\x45\x65\xEB\x7E\x29\xE8\x4B";"\x78\xED\x08\xB2\x6C\x07\x29\xC4\xA5\xFD\x1B\x94\x2F\xE1\x81\x9B\x32\xB8\x7C\xD5\x25\xD9\x0D\x18\x1A\x83\x24\x04\x44\xAE\x3F\x91";"\x30\xDA\x08\xEF\x28\xBA\xA5\x3F\xED\xD5\x04\xE9\x28\xC9\xA9\x43\xD5\x54\x56\xF9\x70";"\x7E\xC4\x49\x23\xBA\xF3\xEC\x6D\xF5\xD1\x74\xC0\x53\x72\x1D\x34\x9F\x20\x26\x90\x48\xE0\x38\xC4\xBC\x2B";"\x17\x3F\xA9\x6C\x8A\xE8\x83\x1B\x91\x8D\x28\x39\xEA\x3E\x77\x74\x90\x02\x4B\xA5\x11\x1C\xF7\xA6\x9E\x68\xD7\xB4";"\xCB\x0D\xC1\x03\xDD\x5B\x50\xF8\x78\x42\x95\x7F\x8A\x53\x2B";"\xF1\x51\xA1\x5E\x97\x90\x96\x02\xA1\x82\xCE\x38\xEF\x0D";"\x4A\xFF\x72\xA8\x5F\x3B\xC4\x50\xD2\xDC\x76\xFE\x27\xFE\xB4\xB7\xD7\x43\x6A\xEC\x0A\xB0\x72\x0C\x23\xAA\xDE\x88\x23\x99";"\x9E\x34\x3D\xF4\x51\x61\x33\x9D\x71\x3F\xAE\x4C\x72\xB4\xCD\xEA\x79\x97\xB0\x1B\xD7\x0F\x21\x44\x63\xE8\x1D\x35";"\xC7\x0D\xE2\x10\xC7\xAF\x4E\xCE\x6B\x59\xFC\x77\xA3\x46\x38\x21\x52\xD4\xDB\x70\x80\x3F\xE3";"\xD6\x74\xEE\x20\xF7\xB6\xBB\xDF\x5F\x60\x82\x0B\xEF\x6B\x70\x2E";"\xFF\x55\xA1\x5E\x9C\x98\x88\x07\xA1\x86\xC2\x24\xD5\x60\x63\x02\x81\x2B";"\xF0\x53\x93\x46\x9D\x9C\x90\x2A\xFD\x7D\xA5\x2C\xDC\x1C\x14\x09\x80\x25";"\x58\x88\x1F\x81\x35\xD8\xD9\x71\xFD\xC4\x0D\xFD\x09\xD4\x54\x44\xC5\x68\x4F\xEF\x6D\xD0\x36\x3D\x80\x4F\x92\xD4\x1E\xFA\x24";"\x70\xED\x0D\xB6\x6A\x07\x21\xAD\xA5\xFD\x09\xFD\x00\xE1\xEF\x81\x37\xBB\x72\xD3\x25\xC4\x00\x0C";"\xC0\x07\xE6\x42\xD6\xE7\x47\xA6\x49\x50\xFC\x7C\xA6\x7A\x30\x25\x42\xC4\xDB\x69\x83\x3D\xF1\xB1\xB6\x4A\x5B\x2E\xE3\x7B\xCF\x6F";"\xEC\x09\xEC\x72\x9F\xDD\xA0\x56\x5C\x39\xBF\x51\x9D\x77\x51\x2D\xAF\x30\xF7\x57\x9C\x5D\x9F\x9C\x8C\x3E\xBA\x80\xC0\x21";"\xE6\x6F\x93\x2B\xF5\x8E\xAE\x20\x4A\x68\xC5\x56\xC6\x3D\x1F\x66\xAD";"\xCF\x7A\xF5\x2C\xDE\xA3\xBF\xD1\x5A\x5C\xF1\x12\xB2\x2C\x58\x71\x5F\xAF\xF9\x68\x8E\x36\xEA\x89\xA9\x37\x51\x72\xDD\x11\xC3";"\xD4\x7C\xFE\x29\xEA\xB9\xBC\xDA\x5C\x5C\xED\x01\xD8\x19\x38\x6B\xA5\xA9\xE8\x67\x97\x48\xED\x83\xB9\x31\xB5\x73\xD3\x1E\xCA";"\x7F\xBE\x10\xD1\x7D\x74\x33\xB6\xCF\xEB\x5B\x93\x51\xF8\x83\x9D\x32\xB3\x78\xC9\x45\xD2\x79\x0B\x14\xBC\x27\x00\x4B\xA8\x59";"\x20\x84\x76\xA1\x4A\x28\xDE\x55\xD1\xD3\x7D\xF8\x4F\xE1\xFA\xB4";"\xF2\x58\x9E\x44\xE4\x81\x9E\x3E\xB9\x73\xC7\x20\xDD\x1A\x17\x13\x81";"\xD9\x69\x87\x32\xF6\xB0\xA9\x21\x44\x7C\xE1\x09\xC7\x62";"\x89\xCA\x3A\xE8\x02\x62\x1B\x97\x18\x1F\xB5\xBF\x7C\xD1\xF0\xA1\x74\xDE\xA0\x42\xCA\xF4\x36";"\x7F\xCD\x20\xDB\x14\x12\x0F\x99\x3F\x74\x58\xA8\x68\x8D\xEB\x87\x09\x8F\x89\x33\x39";"\xD4\x09\xE5\x10\xD6\xA9\x4B\xC3\x6E\x21\x9F\x36\xAA\x2C\x3D\xC1\x55";"\x27\xA2\x4F\x6F\xD3\xD7\xF4\x6B\x8B\xB1\x19\xD6\x04\x3E\x5C\x41\xF7";"\x8A\xC3\x2C\xD9\x7D\x64\x5D\xE0\x6A\x0C\xD6\xA9\x69\x84\xE1\xF9\x11\x95\x84\x28\x22\xFC\x3B\x74\x7C\x9A\x00\x3D\xC6\x27\x34";"\x3A\xE1\x77\xAA\x4C\x2E\x3B\x57\xDA\xDC\x76\xF8\x2A\xFB\xB0\xBD";"\x15\xBF\xB3\x75\xBE\xFD\xFE\x1B\x9D\x9B\x26\xC7\xF9\x29\x70\x6F\xE4\x01\x2B\xA3\x4B\x8D\xA8\xC6\xE4\x6A\xF3\xB4\x08\xDE\x01\xD7";"\x89\x74\x8F\x37\xF0\x89\xA8\x20\x54\x6A\xDD\x12\xCF\x66\x02\x4C\xBC\x66\x93\x13\x9C\x37\x9D\x94\x95";"\x5F\xF5\x7F\xA0\x7B\x3F\x2F\x35\xC7\xA5\x6A\xEC\x35\xF4\x82\xA5\x26\x51\x6E\xE5\x15\xC8\x60\x6D\x39\xF6\x33\x9C\x57\x9A\x55\x9B";"\xC6\x78\xD4\xAB\x27\x71\x31\xE6\x65\x69\xCD\x42\x9C\xA2\xD0\x82\x73\xA9\xCC\x1A\x8D\x0F\xB5\x43\x02\xEA\x71\x55\x84\x7C\xF7";"\xAB\x54\xC4\x59\xDE\x36\x51\xFE\x79\x42\x80\x75\x90\x50\x2A\xC2\x41\x82\xD1\x38\xF1\x40";"\xB3\x1A\xC7\x09\xDC\x5D\x50\xFC\x70\x2F\xFA\x68\xD0\x3A\xA3\xDF\x11\xEF\xA0\x1E\x84\x3E\xBD";"\x5D\x4D\xC6\x3A\xE1\xE0\xD2\x13\xC1\xC6\x54\x35\xA5\x0A\x11\x27\xF9\x12\x5F\xA7\x28\x02\xDB";"\xCA\x7D\xF5\x22\xCC\xA1\xA2\xD6\x51\x5E\xF8\x00\xBE\x65\x31\x3B\x5B\xC3\xE4\x64\x8F\x33\xE7\x88\xBC\x2B\x48\x79\xD9";"\x12\x40\xAC\x6C\x84\xE5\x8E\x0A\xA1\xF9\x2B\x30\xF4\x6C\x77\x7F\x90\x18\x15\xA9\x47\x78\xB1\xF0";"\xB0\x0E\xC8\x30\x86\x8B\xA6\x20\x4D\x78\xDA\x1F\xC5\x66\x0E\x14\xB1\x3E\xFC\x51\xA1\x5B\xFA\xFD\xD4\x00\xCA\x86";"\x4A\xEC\x04\xB1\x70\x36\x2E\xAF\xDE\x8F\x6C\x99\x46\xEF\x8A\xA6\x25\xB6\x7D\xDC\x0E";"\xB1\x10\xDA\x0B\xD4\x59\x4F\x95\x67\x05\x8A\x0C\x90\x55\x2C\xC5";"\xC1\x0F\xEB\x12\xC6\xAC\x25\xD3\x2D\x4D\x95\x74\xA5\x44\x27\x38\x54";"\xDF\xBB\x30\x94\x73\x77\x42\x8A\x40\x13\xBA\xB3\x63\x81\xFB\xF9\x14\x99\x9D\x26\xCB\xFF\x32\x77\x78\xE6\x05\x4A\xAB\x30\x95\xB1";"\xA9\x59\xEB\x7A\xD5\xF0\x5C\x90\x39\x01\x8F\x3A\xDE\x2F\x23\x2A\x51\xCB\xBF\x6C\xFB\x34\xE9\xD9\xB8";"\x46\x88\x62\x9E\x1E\x38\x8C\x12\xBC\x91\x6E\xA4\x28\xC6\xA7\xBC\xD1\x55\x52\xF0\x03\xBE\x78\x27\x33";"\xAD\x16\xDB\x1D\xDD\x58\x5C\xFE\x63\x2E\x81\x02\xD5\x52\x42\xD6\x4C\xED\xCE\x74\xF7";"\x0D\xBB\xBC\x64\x99\xE3\xFD\x14\x9A\x9C\x5C\xAD\xF3\x7D";"\x44\x92\x37\xEF\xFF\xAF\xD8\x77\xF4\xB9\x13\xE1\x04\xDC\x50\x5A\xC1\x66\x40\xE8\x01\xE1\x40\x4F\xAD\x14\x80\xD7\x7F\xF4\x20\xC7";"\x0A\x27\xA4\x2C\x88\xEF\x83\x0E\xAA\x88\x34\x29\xED\x01\x66\x7C\x97\x14\x00\xAC";"\x94\x68\xBE\x1F\xAA\xC5\x34\xA5\x19\x5C\x85\x6F\xBA\x43\x3A";"\x75\xDD\x1E\xAB\x7D\x5E\x18\xDF\x36\xF9\x4B\xAA\x5E\x95\x9F\x96\x01\xB5\x8D\xCF\x2F\xE9\x0D\x6A\x03\xE3\x09\x75\xB8";"\x5F\x9F\x5D\x89\x5C\xDD\xDE\x61\xE4\xBB\x09\xEC\x17\xD7\x53\x22\xDE\x26";"\x6E\xE2\x0D\xC9\x6B\x05\x3A\xB7\xD7\xFA\x51\x9D\x41\xE8\x99\x83\x2D\xEC\x03\xC1\x75\xB0\x5C";"\x85\xCA\x2D\xD0\x0C\x6C\x09\x8B\x29\x0B\xAB\xB0\x62\x82\xE0\xFD\x15\x94\xF7\x3A\xAB\xBA\x3B\x19\x7B\x9F\x06\x20\xA4\x4C\x68";"\x14\xBD\xBF\x66\x87\xED\x91\x0A\xD9\x99\x59\xDC\xFB\x38\x71\x75\xE2\x03\x3D\xA7\x4C\x72\xAB\xCD\xEF\x05\x92\xF5\x1A\xBC";"\x8E\x65\x8E\x30\xE9\x8C\xA9\x20\x4A\x77\xDD\x03\xC3\x64\x02\x18\xB7\x35\xF3\x3F\xAC\x02";"\xA2\x2D\xC5\xFA\x28\x40\x6B\xE0\x0D\x39\x9E\x50\x85\xA2\xC6\xC5\x68\xFD\xBC\x10\xE7\x1D\xD0\x54\x49\x80\x6C\x1C\x9E\x14";"\xD9\x74\xFC\x3B\xF2\xD1\xD9\xD3\x01\x61\x81\x01\xB5\x73";"\xF1\x37\xC5\x2A\xF4\x88\xA5\x23\x4C\x65\xF8\x16\xCC\x65\x01\x27\xB3\x39\xE7\x03\xC1\x1E\xC9\xC4\xC1\x2F\xEB\x8E\xC1\x2A\xD3\x13";"\x73\xD2\x1E\xC1\x18\x04\x5A\xB7\x24\xF9\x4A\xA1\x56\x95\x9C\x94\x01\xA6\x8E\xC2\x33\xEE\x15\x05";"\x9E\x43\xC8\xA3\x5F\x31\x6D\x8C\x03\x28\xA6\x55\x88\xAF\xD9\xFF\x6D\xF5\xB2\x17\xD8\x07\xB3\x32\x1D\xFB\x13\x5D";"\xCD\x19\xEC\x21\xCF\xA5\x42\xD6\x4F\x27\x8B\x71\xF4\x16";"\x52\xEA\x04\xB7\x71\x32\x2C\xAE\xC1\xE8\x74\x93\x4E\xE8\x83\xA6\x24\xB0\x65\xA2\x16\x98\x04";"\x71\xB0\x43\x7F\xB9\xF6\xF1\x07\x9A\xA4\x27\xCB\xFB\x2F\x46\x04\xF0\x4C\x32\xF4\x57\x87\xA0\xC2\xDF\x7F\xFB";"\x99\x31\x3F\xF9\x38\x79\x74\x98\x68\x2E\xFC\x22\x35\xB2\xA2";"\x9A\x30\x39\xEF\x04\x17\x77\x9D\x1B\x18\xA5\x40\x7F\xB2\xEA\xF3\x66\x86\xA9\x21\xC9\x00\x26\x4F\x64\xE9\x7D\x3A";"\xE3\x03\x80\x31\xF4\x82\xAE\x24\x51\x6B\xE5\x14\xCF\x64\x02\x4D\xBF\x67\x9C\x12";"\xB7\x10\xDC\x6F\xD0\x23\x4E\xE5\x78\x46\x81\x67\x9E\x5B\x36\xD5\x58\xEF\xCE\x07\xF1\x2A\xC5\xB9\x59";"\xAF\x28\xD5\x0D\x34\x43\x64\xE9\x70\x33\x93\x36\x8E\x43\xDE\xD0\x7F\xFC\xC2\x0E\xFD\x15\xD0\x52";"\x90\x76\xCD\x33\x9B\x8B\xAC\x2A\x4B\x68\xD5\x09\xC8\x62\x07\x1B\xB1\x3A\x94\x4C\xCA";"\x4D\x90\x79\xB7\x42\x2E\x3F\x55\xD1\xC4\x68\xE2\x37\xFC\xB7\xB4\xDF\x44\x7D\xE7\x07\xB9\x6D\x01\x2D";"\x09\xE1\x3C\xA4\x2A\x39\x39\x54\xDE\xDF\x64\x98\x26\xF5\xB4\xB1\x21\x47\x6F\x8A\x12\x88\x69\x67\x21";"\xC3\x01\xEB\x24\xCE\xA5\x40\xCE\x6C\x47\xF8\x7A\xA3\x40\x3C\x39\x50\xDC\xB0";"\xCB\x3E\xE1\x46\xE0\xEF\xAB\x9B\x24\x7E\xB6\x14\xDE\x0F\x16\x55\xDA\xD3";"\x59\xED\x06\xBC\x77\x36\x36\xCA\xC9\x81\x25\x92\x25\xF4\x8A\xA0\x2C\xB6\x7D\xD4\x00\xCB\x1C\x1F";"\xEF\x67\x89\x4D\xED\xE0\xAC\x44\x0E\x70\xB2\x19\xC4\x68\x1F\x19\xB4\x37\xF9\x44\xA0\x4E\x93";"\x64\x97\x54\xD8\xB0\x88\xC7\x1F\xE2\xCB\x00\xBE\x0A\x84\x08\x1A\xDD\x61\x48\x87\x6C\xAF\x4A\x38\xC4\x4F\xD6\xD1\x7D\xFF";"\x28\xF2\x20\x2C\xC3\x8B\x97\x64\xF5\xA8\x1A\xD5\x03\x21\x47\x41\xF7\x7D\x33\x96\x69\x9F\x41\xB6";"\x84\xC2\x2F\xE8\x03\x63\x02\x8F\x15\x10\xAE\xBE\x65\xBA\xFC\xFA\x13\x91\x8F\x6A\xC7\x9E\x32";"\x99\x35\xDC\xE1\x25\x77\x72\xE1\x0F\x22\xA3\x55\x10\xD3\xC3\xB0\x03\xCB\xCF\x75\xA1\x79";"\x82\xCF\x26\xCD\x7E\x0D\x48\x84\x46\x08\x43\xB6\x68\x88\xE6\x84\x16\x9F\x83\x31\x3C\xE4\x38\x7A\x7E\x9A\x76\x2C";"\xD1\x0A\xEE\x15\xCC\xAF\x4A\xC3\x69\x53\x83\x6D\xB8\x4C\x21\x3A\x5E\xDA\xD3\x6C\x98";"\xFF\x6B\x89\x31\xF7\x8B\xB1\x39\x4C\x6E\xDD\x11\xCE\x7F\x51\x5F\xBC\x66\x93\x3D\xE0\x31\xF1\xE2\x88\x7A";"\x96\x3D\x30\xE0\x00\x67\x62\x89\x1D\x19\xA8\x4B\x7D\xBF\xEE\x9C\x6C\x87\xAF\x25\xCC\x0D\x29\x48\x79\xF6\x68\x3A\x99";"\xA7\x2A\xC1\x84\x22\x55\x6A\xEE\x0D\x28\x98\x5D\x98\xBC\xD8\xDD\x73\xF6\xB2\x13\xE0\x07\xD2\x0E\x5F\xFD\x62\x46\x85\x63\x9A";"\xE3\x6C\xE7\x2C\x84\xCC\xAA\x41\x4F\x6B\xDE\x12\xC1\x63\x1E\x02\xB1\x36\xFA\x57\xA8\x58\xF4\xFF\x9F\x78\xA5";"\x3D\x99\x62\x99\x57\xD3\xD4\x42\xE3\xCD\x1B\xE8\x2A\xC2\xAD\x4C";"\x0D\xA9\x3D\xF8\x1F\x67\x2B\x26\xC6\xA3\x74\xC6\x6F\xB1\xF3\xEC\x7E\x53\x0E\x8B\x72\xD4\x68\x07\x20\xAC\x34\xF2\x5F\x9F\x49\x8A";"\x41\x8F\x74\x98\x54\x29\xC3\x4F\xEB\xA3\x64\xB0\x28\xAE\xA5\xBB\xD4\x53\x5F\xF2\x7C\xBC\x7D\x26\x32\x5E\xC3\xE2";"\x55\x90\x66\x9B\x53\xD2\xCF\x43\xFE\xD1\x1D\xED\x2E\xCC\xA5\x46\xCE\x4D\x39\xE7";"\x3A\x89\x64\xF7\x58\xD4\xCC\x43\xEB\xC9\x00\xF4\x2A\xCB\xA2\x45\xCD\x5C\x54\xB5\x77\xA1\x7A\x30";"\x31\x82\x5B\x95\x52\xD4\xD2\x7A\xE6\xAE\x13\xAD\x13\xBB\xA8\x4B\xC9\x6D\x48\xFF\x72\xB1\x58\x27\x3E\x52\xD0\xDA\x78\xF6\x52\xF7";"\xFC\x54\x9F\x43\x9D\x98\x82\x38\xB9\x81\xCB\x2E\xD3\x14\x14\x0F\x80\x2E\x0D\x43\xB9\x75\x8E\xE3\x86\x16\x97\x93\x2E\x3E";"\xE8\x67\x9A\x4B\xE4\x89\xBD\x33\xB1\x77\xDF\x1E\xDC\x15\x0D\x6D\xB2\x6C\x69\x20\xC5\x3E\xEF\xF6\xE3\x09\xAD";"\xFE\x4B\xA7\x51\x9D\x9C\x8A\x06\xBE\xFE\xCC\x2D\xEC\x09\x62\x01\x8B\x16\x0E\xB6\xBB\x63\xBD\xF6\xFF\x05\xD8\xAD\x26\xCE";"\x1A\xA5\x23\xEA\x29\x77\x29\x1E\x91\xA0\x36\xDF\x74\xBE\xCC";"\xBE\x11\xDE\x06\xC1\x5A\x5F\xFB\x72\x47\x80\x05\x8F\x15\x28\xA1\x47\xEA\xCE\x7B\xF5\x2A\xC1\xAE\x43\xD4\x45";"\x27\xBF\x20\xD8\xF0\x8E\xB2\x7F\xD4\xBF\x18\xD8\x0E\x20\x58\x5A\xF7\x7B\x3A\x8B\x76\x9A\x55\xDF\xD7";"\xD6\x76\xFB\x21\xFD\xB6\xBD\xCC\x59\x61\xEF\x05\xB4\x7A\x32\x2A\xCB\xD4\xAF\x60\xFA\x4B\xEA\x86\xA6";"\x56\xF6\x75\xB9\x60\x38\x3F\x59\xDC\xE8\x6C\xEA\x5A\xFF\xCF\xAF\x4E\x51\x69\xE2";"\x30\x94\x31\x9B\x19\xDC\xBD\x65\xF2\xC5\x0F\xEF\x14\xD4\xB6\x55\xD8\x65\x48\x8B\x72\xA1\x4E\x39\xAD\x5F";"\x40\x91\x4E\x8C\xA7\xCF\xE2\x76\xF9\xA3\x16\xDD\x1F\xDE\x54\x54\xFA\x66\x0D\x87\x68\x96\x54\x21\xCC\x4E\xEF\xCC";"\x5D\xB2\xD4\x7E\xBA\xF0\xFC\x14\x87\xAC\x30\xD7\xF1\x2F\x4B\x61\xE3\x0B\x2A\xF3\x38\x88\xE0\xC7\xB4\x71\xF3\xBD\x14";"\x27\xAA\x4E\x74\xAF\xD1\xF4\x17\x91\xAA\x17\xD6\x04\x24\x45\x42\xF1\x76\x3D\x98";"\xE9\x68\x8F\x34\xE9\x8E\xA8\x22\x40\x6A\xDF\x00\xC4\x63\x01\x16\xB5\x32\xFF\x53\xBC\x5F\x99\x92\x90\x3F\xA4\x81\xDF";"\xD1\x02\xFB\x21\xC7\xA7\x49\xBF\x5C\x01\x9D\x39\xBF\x17\x3C\x35\x5F\xD8\xE1\x6D\x8E\x3F\xF5\x8D\xBF\x2C\x46";"\x66\x80\x08\xB0\x6E\x0E\x2A\xAD\xCF\xEC\x59\x92\x50\xE5\x81\x9F\x3E\xBB\x72\xD2\x23\xB3\x14\x15\x10\xB8\x21\x00\x41\xA8\x4E";"\xA1\x3E\xD5\x0F\x27\x41\x62\xFB\x6A\x30\x91\x5D\x9C\x5F\xDC\xC7\x3A\xF7\xA3\x62\xB4\x7D\xD0\xAA\x4A";"\xD6\x7D\xF8\x2A\xFC\xBA\xB2\xDB\x5E\x69\xE8\x06\xB0\x6E\x09\x29\xA3\xC9\xEC\x6B\x95\x4B";"\x81\xCF\x24\xCC\x0F\x68\x08\x87\x25\x0E\x47\xAB\x2C\x85\x8B\x89\x17\x94\x95\x31\x3C\xE0\x35";"\x1F\x5C\xB0\x1A\xCF\x97\xEB\x18\xDF\xE7\x30\x32\x97\x13\x66\x68\xF4\x65\x70\xFC\x3B\x0E\xB7\x87\x89\x07\xF8\xF7";"\x39\x98\x53\x9D\xF4\xC9\x8F\x6D\xBA\xAB\x41\xEC\x1B\xDE\x56\x5A\xC3\x61";"\xDC\x72\xF3\x23\xE6\xDF\xD3\x90\x34\x52\xA8\x15\xE0\x28\x76\x7A\xFE\x94\xFA\x30\x9C\x4B\xE8";"\xC2\x01\xEF\x10\xCD\xBF\x1C\x97\x3C\x40\xAA\x2A\xE7\x16\x7D\x6A\x46\xBA\xD6\x7F\x93\x34\xEA\xF5\xEB\x76\x18";"\x4C\xFD\x74\xAA\x5A\x5A\xD9\x59\xD8\xD9\x71\xFB\x39\xE0\xA1\xBD\xDD\x43\x60\xE3\x0F";"\xB9\x1E\xDA\x71\xD6\x0A\x3F\xBA\x67\x28\x97\x6C\x96\x52\x2E\xCC\x43\xF3\xD6\x60\xF1\x2D\xC7\xA1\xB6\xD2\x4A\x34\x9D\x3B\xBD";"\x93\x3F\x5B\xE9\x04\x67\x7B\x96\x15\x12\xA9\x43\x7D\xBD\xF5\xF1\x6A\x82\xAE\x20\xCB\xF2\x2C\x4D\x7A\xEB\x0A\x38\x98\x52\x84\xA0";"\x84\x45\xEF\x1B\xFF\x91\xCF\x60\xAE\x77\xC1\x42\xB3\x74\x44";"\x42\x83\x69\x96\x5B\x2E\xC9\x4D\xEE\xD4\x7C\xF5\x2C\xDF\xFD\xB1\xCB\x5A\x5B\xFB\x08\xB8\x7E\x2C";"\xA5\x22\xCA\xE9\x28\x47\x66\xEE\x0E\x39\x9C\x47\xC3\xA0\xB0\xDC\x77\xFD\xB4\x10\xEA\x1E\xD3\x51\x59";"\x91\x30\x3A\xE5\x3F\x7A\x70\x84\x00\x3D\xA8\x46\x70\xBB\xFD\xE4\x7F\xD2\xE9\x32\xD6\x00\x2E";"\xF9\x52\xCE\xFD\x31\x71\x73\xE8\x02\x2A\xA0\x4C\x8C\xAF\xCB\xE5\x73";"\x80\x64\x3B\xBF\x18\x19\x6C\xC3\x43\x4F\xA2\x3C\x12\xDF\x9C\xFE\x02\x9E\xC4";"\xA3\x0D\x9D\x06\xD8\x52\x56\xFD\x64\x4C\x84\x70\x8E\x4F\x2F\xC0\x4F\xEA\xD6\x7C\xEF\x38\xBE\xBC\xA1\xD7\x5D\x5F";"\xCA\x08\xEC\x36\xAF\xAE\x22\xA6\x28\x39\x81\x77\xC1\x14\x4B\x55\x33\xD4\x94\x14\x9D\x55\xE8\xEA\xB6\x6A\x3E\x67\x84\x08\xB9\x71";"\x14\xFF\x53\xDE\x77\x1E\x44\xBD\x59\xE1\x22\xF2\x19\x98\x94\x89\x27";"\x4D\x93\x78\xF3\x2F\x61\x3D\x3C\xCF\xD2\x74\x80\x3A\xFA\xBA\xAF\xC4\x5A\x6D\xE1\x0B\xB6\x66";"\x83\xD2\x36\xAD\x17\x75\x00\x8B\x2E\x07\xBF\xBC\x7E\x83\xE3\xFC\x17\x96\x9D\x28\x91";"\xCC\x1D\x86\x1E\x95\xB7\x0D\xCB\x03\x4D\xFA\x77\xA0\x41\x26\x38\x4B";"\x0A\xB5\xB2\x6A\x80\xE2\x8F\x10\x92\x9C\x33\x3A\xFB\x3C\x7E\x69";"\xA3\x2B\xC8\xF5\x29\x4F\x7D\xEC\x0D\x2E\x9C\x51\x83\xA4\xA8\xC3\x33\xF0\xD1\x0C";"\x41\x89\x6D\xAE\x43\x36\xC4\x4C\xD7\xD3\x7C\xF9\x23\xFE\xA4\xBF\xDE\x5C\x5D\xE7\x0D\xAE\x7D";"\xD8\x08\xF9\x66\x93\xA5\x35\xBC\x14\x55\x8C\x67\xB9\x56\x45\x52\x5D\xA1\xA3\x1B\xFD\x3B\xEA\xE9\xA0\xD7\x55\x05\x91\x71\xC1\x16";"\xE0\x5E\x92\x5D\x9A\x91\x97\x35\xA1\x9F\xCC\x2F\xD2\x09\x68\x00\x8B\x39\x4B";"\xB7\x6D\xC4\x3C\x92\xB7\xB0\xDE\x43\x6C\xE6\x16\xB6\x6C\x0D\x2D\xAB\xC9\x9D\x52\xEB\x5C\xEA\x83\x95\x37\xB5\x7D\xCF\x20\xD9";"\xA3\x21\xCC\xF0\x2D\x57\x7A\xA3\x46\x28\xEA\x5A\xD9\xBA\xBF\xC1\x00\xE5\xE2\x1E\xA6\x00\xCE\x31\x3B\x9C\x0C\x4A\xF4";"\xA3\x22\xCA\x08\x2E\x49\x62\xF6\x74\x5B\x8C\x18\x80\x36\xC3";"\x1B\xA6\x45\x60\xB6\xF4\xEB\x61\x80\xAC\x28\xC0\x4A\x2B\x29\x6B\xE4\x72";"\x7F\xD6\x15\xDE\x60\x06\x0B\xBA\x39\x02\x41\xA3\x53\x89\xEA\x8B\x0C\xAC\x85\xC3\x2B\xF4\x02\x67\x08\x97\x14\x11\xAD";"\xAE\x1A\xF4\x13\xCD\xAF\x45\xC9\x69\x56\xE3\x6A\xA6\x42\x3A";"\xCE\x66\xC1\x55\xEA\xDD\xA4\x31\x4D\x74\x85\x78\xB4\x63\x63\x7D";"\x1F\xA6\x78\xB1\x12\x12\x0F\x84\x21\x0B\x5B\xB2\x68\x8E\xE2\x81\x0F\x94\xF9\x56\x6C";"\x02\x49\xA1\x57\x8A\x88\xF1\x1E\xA4\x83\xC0\x35\xEA\x0A\x7A\x1E\x92\x16\x15\xB2";"\x8B\x2D\x21\xEA\x3E\x76\x70\x9E\x1D\x38\xA4\x45\x75\xB3\xCF\xEE\x63\x84\xB1\x22\xD5\x01\x2E\x48\x63\xE2\x10\x5C\xCD\x30\x90\x1C";"\x6F\xA1\xA5\x61\x81\xF3\xFD\x13\x9B\x80\x34\xDE\xFD\x33\x73\x78\xE7\x00\x31\xBE\x52\xF1\xB3\xC8\xE5\x69\xF3\xB0\x1F\xC2\x1C\x24";"\x06\xBB\x42\x7C\xBB\xF9\xF5\x78\x82\xA0\x22\xCA\xF1\x2E\x48\x7A";"\x08\x4A\xA5\x51\x92\xE8\x8D\x01\xB9\x8D\xCA\x3B\xE8\x07\x68\x02\x94\x01";"\x06\xC6\xB1\x60\xB9\xF7\xF1\x1C\x9D\xA4\x2F\xC6\xFE\x27\x49\x64\xE4\x05\x2B\xA6";"\x95\x38\x31\xE3\x1D\x7B\x79\x9D\x1C\x18\xAB\x29\x17\xF1\xF4\x85\x7D\x8A\xAC\x29\xC7\x07\x23\x58\x6C\xE8";"\x58\xF3\x7C\xA1\x7F\x3F\x24\x5E\xDF\xE1\x66\x83\x3F\x92\xB9\xAD\x23\x44\x6F\xE3\x11\xCE\x6D\x04\x20\xA6\x30\xFE\x52";"\x96\x27\x58\xE8\x63\x6E\x14\xEA\x0A\x1F\xB2\x49\x78\xBF\xF2";"\xDA\x46\xF5\x56\xCF\xC5\x44\xCD\x6A\x59\xFA\x77\xA3\x45\x33\x3D\x40\xDD\xD9\x76\x86\x3C\xF3\xB7\xB3\x4F";"\x62\xE3\x0E\xFF\x7D\x0D\x29\xA8\xCB\xEB\x5D\x96\x57\xFD\x9B\x9F\x38\xB4\x7B\xD5\x1F\xC6\x60";"\x0E\x9E\x04\xA4\x17\x7D\x48\xA0\x65\x8A\x50\xF1\x37\xE1\xF5\x95\x5C\xC7\x74\xA5";"\xB4\x1C\xDB\x05\x23\x5C\x5C\xE7\x03\x26\x90\x60\x9D\x52\xD3\xCE\x47\xFE\xD1\x1D\xEB\x2D\xC8\xA4\x45";"\xBE\x18\xE2\x1B\xDB\x47\x53\xFC\x65\x46\x84\x63\x90\x46";"\x25\xAB\x41\x74\xAC\xC8\xEC\x6F\x8F\xAF\x06\xD1\x0F\x20\x44";"\xA5\x31\xCA\xF6\x2C\x4C\x68\xE0\x08\x38\x8F\x03\xD8\xE0\x91\xCC\x23\xE1\xF1\x1F\xBF\x46\x9C\x41\x0A\xDF";"\x47\xF9\x75\xAE\x47\x3B\x26\x4D\xD0\xD0\x74\xFC\x3B\xFC\xAA\xD8\xD0\x1F\x7C";"\x08\x43\xA6\x6F\x83\xE7\x81\x0E\xF9\x99\x3D\x3D\xE5\x3A\x71\x7D\x9D\x04\x07\xB3\x41\x74\xB6\xFD\xE9\x6E\x9B\xE4\x2C\xD1\x0C";"\x81\xCD\x25\xD2\x09\x67\x07\x9D\x2A\x15\xBC\xB5\x61\x84\xFA\xFF\x78\x80\xD8\x31\xA9\xE5\x36\x70\x71\xE4\x04";"\xC0\x37\x80\x53\xF3\xB9\xB8\x2A\x42\x62\xE6\x05\xCE\x79\x0C";"\x11\xB3\xBF\x7A\xBC\xEE\xF6\x1E\x83\xAD\x2A\xCF\xE9\x33\x35\x70\xF7\x0D\x2A\x9F\x57\x8C";"\xBF\x14\xA3\x15\xB9\xB6\x45\xCC\x6A\x4D\x87\x77\xB5\x5F\x3D\xC8\x5B\xD7";"\xDC\x6A\xFF\x3C\xFA\xBB\xB3\xD9\x45\x68\x81\x1B\xB4\x62\x64\x26\xB6";"\x7B\xD8\x1A\xD6\x1E\x15\x1C\xA8\x25\x07\x4E\xAC\x55\x8A\xEA\xE5\x16\xC1";"\xFC\x4A\xAA\x5D\x97\x8C\x90\x03\xA0\x88\xC1\x27\xED\x07\x61\x05\x87\x1C\x12\xB2\xBF\x67\x83\xF8\xFD\x0E\x9F";"\x9C\x3B\x39\xE4\x2F\x2D\x24\xD9\x4C\x0F\xEE\x48\x14\xDF\xAE\x82\x14\x8F";"\xF2\x16\xF2\x42\xAE\xEC\xBB\x35\x5A\x10\xD5\x17\x85\x27\x51\x4F\xD0\x4C\xA5";"\x23\xE4\x66\xD0\x6D\x0F\x25\xAE\xC8\xFA\x44\x80\x5B\xE0\x98\x98\x36\xBD\x7A\xD5\x4E\xD6\x14\x14\x17\x85\x22\x00\x5A";"\x36\x93\x55\x9C\x5E\xDC\xDF\x7F\xEA\x97\x57\xBC\x06\x84\xF6";"\xF2\x41\x9D\x46\xE7\x91\x9E\x3D\xBD\x6E\x89\x26\xB1\x08\x1F\x0B\x86\x27\x09\x49\xB4\x66\x8F\xE5\x80\x0D\x96\xF9\x36\x6C";"\xCF\x6F\xE8\x6D\xCA\xCA\x44\xD0\x50\x5E\xF1\x78\xB9\x60\x39\x35\x5E\xD3\xE0\x60\xEA\x3A\xF3\x8B\xAC\x22\x4D\x69\xE0\x09\xC9";"\xCA\x0D\xE0\x1F\xD1\xA3\x5F\xC5\x6E\x4D\xF5\x74\xA8\x46\x20\xDD\x3A\xC2\xCC\x65\x93\x31\xF2";"\xDC\x3F\xAD\xAE\x4B\x13\x29\xE8\x66\x5E\xF6\x44\x98\xB1\xA4\xDD\x77\xE3\xEC\x1A\xB5";"\xBF\x5C\xC4\x8C\x28\x54\x62\xEC\x0B\x29\x9A\x5C\x91\xAC\xC4\xDF\x70\xF0";"\x28\xA2\x45\x8C\xAC\xCB\xE5\x6F\xF3\xBC\x13\xCB\x6A\xD3\x04\x41\x99\x64\x1F\x96\x24\x99\x57\xD0\xCC\x43\xE9";"\xC0\x6D\xE2\x79\xA1\xE7\x47\xA6\x49\x51\xF3\x7D\xA2\x62\x20\x25\x5C\xD9\xDF\x6C\x9C\x58\x99\xF1\xAD";"\xE9\x69\x88\x4F\xEE\x83\xA0\x25\xA9\x6C\xC6\x12\xC9\x1C\x10\x1F\xA3\x25\x82";"\xEE\x47\x96\x49\xEE\x80\xA7\x34\xDD\x73\xBC\x5A\xDE\x70\x01\x15\xBF\x2C\x03\x4C\xAE\x4C\x88\xF4\x8A\x0A\xA7\x8F\x3A\x34";"\xD5\xAA\x23\xAE\x00\x07\x7D\xE3\x18\x6F\xA6\xD2\x1B\xED\xF4\x92\x07\xF5\xFE\x40\xC9\xA5\x29\x1D\x36\x8D\x0E";"\x93\x38\x21\xFD\x38\x79\x70\x9D\x19\x1E\xC3\x28\x31\xB6\x9E\xF2\x65\x8B\xA9\x27\xD0\x0C\x32\x40\x6B\xEF";"\x19\xB6\xBB\x67\xA6\xF9\xF3\x17\x8D\xAA\x23\xA4\xED\x74\x4B\x00\xE8\x07\x27\x9F\x5C\x8D\xA6\xCE\xCB\x74\xF0\xBD\x10\xDF\x17\xB7";"\xFA\x3A\x9D\x2F\x82\xDE\xC9\x31\xB3\x70\xD3\x13\xCA\x1B\x04\x1D\xBC\x3F\x08\x46\xAE\x39\xFE";"\x65\xDD\x17\xC3\x62\x07\x34\xB0\x30\xFA\x56\x9B\x55\x9B\xF1\xF9\x7A\xA7\xE8\xD7\x2E\xD3\x16\x6C\x03\x88\x35\x09\xBF\xB2\x62\x80";"\xE2\x65\x8B\x20\xE1\xF0\xBF\x2E\x4B\x72\xD1\x1C\xDB\x67\x1F\x12\xB1\x36\xE4\x50\xA2\x59\x9E\x94\x93\x01\xA4\x8C\xC2\x2B\xF9";"\xC8\x00\xF0\x2A\xA4\xBB\x06\xCE\x3C\x48\xF2\x7E\xA3\x77\x3F\x39\x44\xC0\xFD\x69\x83\x35\xF3\xB7\xAB\x3F\x20\x66\xB4";"\x31\xBB\x25\x9E\xB0\xDE\x89\x63\xE8\xB2\x12\xDB\x08\x20";"\x1F\xC7\x5E\x7A\xB3\xF0\xF8\x62\x84\xB5\x3F\xD3\x0D\x2E\x44\x64\xEB\x72\x2A\xF7\x45\xC5\xA2\xB2";"\x21\xC5\x72\xC5\x54\x2A\xCB\x4B\xD7\xD2\x74\xE6\x3B\xE3\xB7\xB0\xDE\x59\x66\xE6\x1F\xD9\x1E\x39\x68\xA4\xA6\xF6\x63\x91\x4C";"\xD4\x7B\xF1\x3C\xDF\xBD\xBE\xD4\x59\x5D\xFA\x6F\xA4\x33\x32\x5B\xBF\xC0\xEE\x60\x88\x48\xE8\x96\xA6\x26\x4C\x77\xDE\x1A";"\x9F\x2E\xC4\xFE\x3F\x74\x61\xA6\x0D\x42\xBA\x3A\x9C\xC1\xD0\xBA\x63\xAB\xEA\x46\xC5";"\xDF\x71\xF4\x3B\xFB\xBF\xAC\xD7\x5D\x6B\xEE\x01\xB4\x1C\x07\x71\xBC";"\xE5\x6A\x8F\x32\xEA\x95\xAA\x2C\x4F\x6C\xD7\x15\xDC\x78\x18\x19\xB2";"\x07\x30\xA8\x3A\x90\x9B\x8F\x7D\x8F\xEC\x2D\x6E\xBF\x7D\x2A\x20\xCF\x08\x21\xAB\x45"}
-local _illIII11_l2={0xCF,0x73,0x8F,0x42,0x90,0xE4,0xF1,0x6C,0xFA}
-local _I11_l_i1il3={0x2E4,0x984,0x348,0x464,0x93D,0x99A,0xA06,0x74E,0x98D,0x47B,0xDF,0x1DF,0x75A,0x2BD,0x637,0x8B3,0x341,0xA27,0x14,0xE3,0x357,0x85A,0xA33,0x7F0,0x97E,0x336,0x57D,0x61,0x16D,0x130,0x86C,0x9BE,0xB20,0x6BD,0x380,0xB54,0x413,0x13F,0xB04,0x4AA,0xA80,0xBE6,0x23C,0x6A5,0xB16,0x8D5,0x218,0xB67,0xC0E,0x684,0xA23,0x308,0x612,0x768,0xA9F,0x2F9,0x43F,0xC7A,0x304,0xC37,0x30,0x3A8,0xA0,0x362,0x6E5,0x7AE,0xADE,0x172,0x7FE,0x1C1,0x9C1,0x7EC,0x532,0x91D,0x54F,0x4F4,0x524,0x798,0x438,0x267,0x3AC,0xA26,0xDA,0x7D4,0x7E2,0x503,0x98E,0x82E,0x11,0x4B2,0x1AB,0x52A,0x1E,0x9A,0x1E0,0xAF1,0x76B,0x77A,0x322,0xC81,0x64E,0x995,0xA6D,0x8A0,0x71D,0x6AE,0x6B,0x219,0x7E4,0x730,0x1D1,0xA04,0xB3,0xB3D,0xBEE,0xBC8,0x340,0x897,0x15F,0x5F2,0x81F,0x83A,0x6ED,0x592,0x4CA,0xA93,0x707,0x76,0x157,0x95B,0x395,0x982,0xB50,0xAE4,0x2F2,0x443,0x765,0x135,0x3EA,0xAA5,0xAC0,0xC98,0x3C2,0x142,0x2F6,0x152,0x144,0x99D,0x95C,0x9B4,0xC90,0xCBA,0x442,0x239,0x512,0xB77,0x209,0xF,0x738,0xA4B,0x5E4,0xA12,0x904,0x87C,0x394,0x1C0,0x65B,0x694,0x843,0x483,0x481,0x26D,0x22F,0xEB,0xD0,0xF9,0x192,0x89F,0x26F,0x1F3,0xB21,0xABC,0xB4F,0x6D3,0x574,0x7B0,0xC89,0x4CE,0x561,0x5DE,0x8E3,0xAB9,0xABE,0x4F5,0x6A2,0x5D4,0x34E,0x4,0xC05,0x8F2,0xBD5,0x65D,0x6C4,0xB53,0x6A0,0x8BD,0x39,0xB93,0x233,0xC2C,0x59E,0xB35,0x5E1,0x36D,0x68,0xCB4,0xB70,0x654,0x23E,0x3F6,0xAF,0x3F5,0x208,0x6CE,0xBFD,0x302,0x649,0x756,0x51B,0x2E3,0x72A,0x9EF,0x4A9,0x15B,0x2C5,0x8E8,0xB1E,0x8B9,0x913,0x7AB,0x364,0xC02,0x5EE,0x4FE,0x94C,0x38,0x2A,0xAFD,0x33B,0x28,0x865,0x39B,0x493,0x5C8,0x75C,0xB33,0xBDA,0x10C,0x1FD,0x869,0x255,0xC63,0x48B,0x26B,0x659,0x79B,0x727,0xBA1,0x3B1,0x2D7,0x623,0x92C,0x15,0x89E,0xAD9,0x1CF,0x31F,0x86E,0x690,0x5DB,0x779,0x935,0x1BE,0xA34,0xBD9,0xA51,0xB15,0x5FD,0x7D2,0xBA6,0x474,0xB2A,0x3B9,0x953,0xAD3,0x19E,0x32E,0x296,0xCB0,0x15D,0x5B,0x1D6,0x3F8,0x619,0x7AD,0xC6A,0x663,0x294,0x832,0x73,0x4FB,0xC82,0x77C,0xC31,0xB9C,0x998,0xB6D,0x9DE,0x735,0x428,0x1F,0x3AD,0xA38,0x49A,0xBF9,0xA42,0xC47,0xCA1,0x8E6,0xE6,0x80A,0x377,0x265,0x1C6,0x12D,0x10B,0x98B,0x365,0xBE0,0x515,0xCB9,0x37,0xFF,0x64C,0x602,0x373,0x916,0xB90,0x342,0x8C0,0xB2,0x425,0x26A,0x5E9,0x627,0x9F,0x993,0x9CB,0x65F,0x77F,0x115,0x86,0x129,0x6F3,0x155,0xAAF,0x475,0x38C,0x20E,0x6C6,0xBFA,0x5F0,0x9AA,0x817,0xC60,0x5E0,0x414,0x8E5,0xCC7,0x3B5,0x557,0x4C,0x50D,0x1F5,0x703,0xBE,0x33D,0x9AC,0x55C,0xBB3,0x1C,0xB57,0xFB,0x839,0x6E7,0x1B8,0xAD0,0x5D0,0x3CE,0x787,0x323,0xC33,0x943,0x297,0x4B6,0x245,0x1ED,0x4DF,0x1C3,0x82B,0x5C0,0xB09,0x25D,0x206,0x53F,0xAE9,0x32A,0x5F9,0x72,0x5B7,0x747,0x912,0x56F,0x6F5,0x861,0x975,0xBB4,0x3E2,0x7A0,0x56,0x379,0xA39,0xA8D,0x6CB,0x7A2,0xB3C,0x9CC,0x3B2,0x2ED,0xC7D,0x1B5,0x815,0x1B,0xC0A,0x5B3,0x6E2,0x67F,0x725,0x411,0x769,0x46A,0xBE3,0x8E2,0xA6,0x981,0x578,0x4EA,0x5A2,0xA4D,0x49F,0x399,0x4D1,0x1D8,0x925,0x6D9,0x99,0x764,0x273,0x74A,0x2DC,0x63A,0x48C,0xC97,0x189,0x300,0x2EB,0x799,0xC9,0x67D,0x800,0xBF1,0xA13,0xC86,0x339,0x964,0x42B,0x147,0x965,0x3D5,0xA9A,0x25,0x8A9,0x633,0x21F,0x11F,0x566,0x64,0x90A,0xAAB,0x37B,0x6BA,0x13A,0x1D,0xAC7,0x61B,0x9EC,0x8D0,0x41B,0x674,0x882,0x217,0x38A,0xA1,0xE7,0x78D,0xC1,0x3F1,0x38B,0x55E,0x794,0x20F,0xC55,0xF0,0x5BA,0x36E,0xB40,0xA46,0x560,0x7F3,0x661,0xBDB,0x697,0x2CE,0x3BF,0x82F,0xC06,0x6F7,0x491,0x70D,0x236,0x8BA,0x58E,0xBB6,0x88C,0x3B8,0x54C,0x329,0x58F,0x577,0x410,0x4D3,0x856,0xC9F,0x818,0x723,0x325,0x372,0xBBE,0x26E,0x131,0xB17,0x6E6,0x73E,0x5D7,0x405,0xB98,0x80D,0x6F8,0x825,0x9AB,0x3AB,0x9F8,0x5A9,0xB4B,0x19F,0xC7E,0x48A,0xC7,0x8A4,0xB0E,0x65E,0x39F,0x450,0x9EB,0x461,0x3F4,0x7DD,0x89,0xBB2,0x3CC,0xB8D,0x985,0x20C,0x225,0x75,0xC1B,0x840,0x124,0x10F,0xEF,0xA2,0x1C4,0x538,0x755,0x283,0x43A,0x4A1,0x312,0xC28,0x5A,0x631,0x7C9,0x9FB,0x4A3,0x66,0x7F6,0x858,0x65A,0x8E,0x59,0xA1E,0x550,0x2D5,0x708,0x351,0x8CD,0xB7,0xC9E,0xA4E,0xB9A,0xBD7,0x132,0x9F1,0xB02,0x197,0xB7A,0xCC3,0xB73,0xC77,0x4FA,0x6B7,0x6C1,0xC3B,0x153,0x4E1,0x201,0xC2E,0xA77,0x7CF,0x9C6,0x9D5,0x9B2,0xA49,0x6C,0x2DD,0xCCB,0x8AB,0x39D,0x2B7,0x448,0x175,0xB91,0x8D,0x4C1,0x8B7,0x419,0xB9F,0x587,0x422,0x576,0x8B4,0x7F8,0x5D3,0x24F,0x8,0xB18,0x75D,0x719,0x598,0x932,0x1AA,0x5BE,0xAC8,0x718,0x8EA,0x616,0x21,0x5F,0x52,0x7E3,0x122,0x771,0xA11,0x62,0xCCD,0x71,0xC93,0xA94,0x842,0xC8F,0x363,0x27F,0xAF5,0x60,0xD3,0x3,0xA76,0x9ED,0x85E,0xC,0x58B,0x5AB,0xB1D,0x63E,0x7F9,0x506,0xB36,0x545,0xC11,0x6A7,0xA21,0xB45,0xBFB,0x1FC,0x2B9,0x8E1,0x796,0x4CD,0xC3D,0x6EC,0x6FE,0x383,0x258,0xA9E,0x4A5,0xA19,0x894,0xAD8,0xACA,0x9D2,0x893,0xC58,0x8FB,0x848,0x5D1,0x9CD,0x4F7,0x449,0xBCE,0x76F,0xB9,0xA3A,0xC22,0xB19,0x99C,0x9BC,0x888,0xA65,0xACF,0x93E,0x6A9,0x838,0xA24,0x4F2,0x85D,0x59A,0x8D6,0x658,0x7C0,0x72C,0xB0A,0x393,0xBA8,0x43D,0x921,0x215,0x18,0x5BC,0x870,0x136,0xA7F,0x6C5,0xB1,0x29A,0x458,0x423,0x287,0x807,0x84C,0x269,0xC38,0x253,0x751,0x962,0x40B,0x64A,0x603,0xA5,0x720,0x171,0x93F,0x4AE,0x750,0xCE,0x5DC,0x575,0x939,0x980,0x22D,0x1F2,0x221,0x140,0x36B,0x4D7,0x7D1,0xBEB,0x72E,0x884,0x301,0x4EF,0x2E6,0x728,0x2C2,0x636,0x91F,0x203,0x7A7,0xC88,0x933,0x295,0x213,0x5B9,0x15C,0x918,0x45F,0xB1C,0x93C,0x84F,0x3ED,0x4B3,0x9DB,0x3A4,0x2DE,0x9F9,0x600,0xAFA,0xC03,0xAD2,0xA05,0x541,0x513,0xC46,0x17C,0xCBB,0xC8B,0x7A5,0x994,0xC6D,0xA2F,0x774,0x83B,0xA47,0x8EC,0x2CB,0xB8,0x52B,0xC08,0x673,0x5F5,0x30C,0xC0B,0x268,0xA6F,0x92,0x5C5,0xBBD,0xBD3,0x262,0x3E6,0x12F,0xC09,0x162,0x480,0x886,0x25A,0x65C,0xA88,0xBCD,0x44,0x919,0x98F,0x407,0xD7,0x361,0xBB7,0xD5,0x35F,0x828,0xC7B,0x9C5,0x9E,0x504,0x381,0xC84,0x4C5,0xAEA,0xA50,0x2D8,0x477,0x4B,0x743,0x87F,0xC99,0xC4A,0x520,0xAA8,0x4EB,0xC00,0x5A0,0xCA9,0xB1F,0x306,0xA28,0x96A,0x983,0xA20,0x241,0xB7E,0x71C,0x230,0x909,0x8B1,0x1C9,0x917,0xC7C,0x63B,0xC9B,0xA54,0x47A,0x7CE,0x184,0x84E,0x9C7,0x90C,0x61F,0x98A,0x104,0xBC3,0x3D0,0x628,0x8D3,0x182,0x704,0xEC,0xAFB,0x6F0,0x7E8,0xACC,0x8E4,0xAC5,0x91B,0x543,0x313,0xB30,0x234,0x2CA,0xB31,0x664,0x711,0x343,0x3B3,0xAF6,0x3CA,0x7BF,0x863,0x41F,0x378,0xBB9,0x4E8,0x729,0xA1C,0x7D0,0x18A,0x8D8,0x724,0x749,0x1A4,0x9FD,0x24,0x5C6,0x5FA,0x610,0xA59,0x604,0xC80,0x64B,0x127,0x164,0x54B,0x8E0,0x335,0xADB,0x5C1,0xCB1,0x638,0x39E,0x2BF,0x22B,0x39A,0x535,0x866,0x3DA,0x134,0xBD,0x30F,0x173,0x737,0x797,0x6E8,0x1A6,0xB95,0x3A7,0x668,0x4E6,0x2AA,0x471,0xAC9,0xBEF,0x6D6,0x44D,0x5E8,0x8F9,0xA0D,0xBCB,0x8CF,0x360,0xB10,0x81B,0x401,0x966,0xACD,0x291,0x552,0x588,0x76D,0xC1F,0x3A0,0x1B3,0x960,0xA71,0x1E6,0x77B,0x37E,0x7BC,0x338,0x903,0x8D9,0x102,0x3B0,0x17D,0xAE6,0x165,0x9F0,0xC18,0x5ED,0x68D,0x2C,0x76E,0x334,0xDC,0x4E7,0x611,0x834,0x479,0x820,0xED,0x456,0x7FD,0x6C2,0xB62,0x896,0x3A2,0x60A,0xADF,0x274,0x143,0xA69,0x3FF,0x32B,0xA22,0x494,0x883,0x537,0xA53,0x6EE,0x212,0x50B,0x9D8,0x1AD,0x666,0xC87,0x56D,0x1AC,0xA03,0x21D,0x240,0x445,0x24B,0x8A7,0xB29,0xB6E,0x6D0,0x62B,0x195,0x6FA,0x62D,0x8F,0xB5F,0x437,0x354,0xB13,0x462,0x52D,0x51C,0x669,0x105,0x902,0x4A7,0x69,0x5C3,0x4C7,0x829,0x945,0x5C,0xB78,0x62F,0x49E,0x5B0,0x736,0x6EF,0xC1C,0xDE,0x6DC,0x68B,0x1E4,0x50E,0x404,0x864,0x66C,0x625,0x16B,0x8B0,0x2D2,0x8BB,0x85,0x4E9,0x1E8,0x53C,0x385,0x2A5,0xC96,0x20,0x2F0,0x83E,0x440,0x31,0x906,0xC85,0x9BA,0xB92,0x4D2,0x67,0x8C6,0xC51,0xBE7,0x7DE,0xABB,0xCB5,0x9A9,0x41C,0x137,0x57B,0x936,0x7A8,0x606,0xA95,0xB03,0xA09,0x8AE,0x2E2,0x271,0x835,0x682,0x748,0xA02,0x85B,0x6AC,0xBBC,0xA30,0x1B6,0xAC,0x9F7,0x2B5,0x2BB,0x435,0x19A,0x4E4,0x2BA,0x190,0x490,0xBDC,0xBBB,0x5B6,0xC0F,0x32D,0x3D3,0x4B8,0x991,0x876,0x942,0x803,0x64F,0x391,0x2AC,0xC4F,0xA0B,0x4B5,0xA32,0x8F6,0x8D4,0xA2C,0x330,0x2BC,0x57C,0x387,0xBDE,0xD4,0x3D9,0x27,0x6CD,0xCA3,0x713,0xAEB,0x77D,0xB44,0x853,0x84B,0x3C9,0x548,0x881,0xAE8,0x123,0x28B,0xAB3,0x23F,0x996,0x433,0xC2D,0x344,0x5BB,0x256,0x4B1,0xCA,0x92A,0x7FC,0xA4A,0x4FC,0x591,0x4E0,0x99E,0x4DB,0x8AF,0x311,0x49C,0x788,0x74,0x9B9,0x73B,0x25C,0x745,0x971,0x665,0x46B,0xAD,0xC3E,0x5DF,0xA75,0x5A5,0x8F7,0x7E,0x48F,0xB55,0x1DE,0xAA6,0xA18,0xAA0,0x2D3,0xAA,0xB51,0x7FB,0x66D,0x657,0x685,0xC26,0x1E9,0x555,0x910,0x5E,0x4CC,0x8F1,0xAEC,0xC71,0x9AD,0xA5D,0x1DB,0x7C6,0x6AB,0x8FE,0xBBA,0x33A,0x2C9,0xAAC,0x691,0x66A,0x822,0x207,0x35A,0xE9,0x243,0x5A6,0x25E,0xCAF,0x1F0,0x52C,0x48D,0x3C8,0x7D6,0x89C,0x28D,0x263,0xA16,0x278,0x91A,0xC12,0x511,0x519,0x7EB,0x80B,0x51A,0x907,0x758,0x974,0x259,0x2B4,0x7F2,0x68A,0xA67,0xC5B,0xBAD,0x1D0,0x116,0x6AD,0x101,0x809,0x4AD,0x1D4,0x3A9,0x688,0x782,0x7C5,0x42D,0x2A7,0x439,0x53E,0x4A2,0x68E,0x242,0x452,0x2A6,0x58A,0x920,0xCA6,0x484,0x4C2,0x204,0x289,0xCC2,0x272,0xC92,0x28A,0x50F,0x946,0xBF8,0xB74,0x5A1,0x397,0xC5E,0x648,0xAA9,0x722,0xBE9,0x1B1,0x93,0x486,0x6E,0xC49,0xBE8,0x9C4,0x126,0x824,0x8A3,0x87,0x427,0x31C,0xAEE,0xB6,0x4B0,0x605,0x43,0xB69,0x3F7,0x460,0x9E8,0xBAF,0x928,0x13E,0x83F,0x7A1,0x1E5,0xB86,0xC5D,0x86B,0xC36,0xC40,0x8FC,0x1A0,0x546,0x8F0,0x8A,0xBF3,0x453,0xAC2,0x6DD,0x8BC,0xBA2,0xBCF,0x898,0x841,0x63F,0x59B,0x1F8,0x3BC,0x892,0x27C,0xCAD,0x70C,0x4D6,0x12B,0x4CB,0x31B,0x345,0x49D,0xC74,0xC14,0x739,0x459,0x87A,0x27B,0x762,0x95,0xA36,0xBAA,0x78C,0x79C,0x6F1,0x28F,0x75B,0x968,0x33C,0x6CC,0xC10,0x353,0x4C3,0x6D4,0x7DA,0x5D,0x21B,0xB9E,0x9BB,0x5AF,0xA1F,0x7C7,0x8AD,0xCA8,0x567,0x3C,0x845,0x4DA,0x47,0x496,0x754,0x94F,0xE5,0x15E,0x89B,0x37D,0x19B,0x9A7,0x776,0x27D,0xA3D,0x583,0x369,0x321,0x9A0,0x867,0x299,0x766,0x5BF,0xCB2,0x4BD,0x179,0x75E,0x2A2,0x2FB,0x103,0x17E,0x436,0x13,0x31A,0x793,0x7D3,0xD,0xAE3,0x1F4,0x7D8,0x285,0x36F,0xB11,0x6DF,0x596,0x384,0x7F,0x2C7,0xA2D,0xA90,0xC7F,0x9D7,0xB94,0x826,0x93B,0x642,0x9FA,0x544,0x176,0x2FE,0x35D,0x145,0x193,0xBE4,0x2FA,0xCC5,0x626,0x54E,0x9BF,0x827,0x1DD,0xB59,0x508,0x5EC,0x855,0x25F,0xC5F,0xA17,0xBAE,0x46E,0x879,0x327,0x5FF,0x7AC,0x553,0x752,0x46F,0xC62,0x226,0xA56,0x224,0x3A,0xA3E,0x3E,0x1E2,0x1CA,0xA7,0x4F0,0xB8E,0x9FE,0x183,0xB42,0x80F,0x2EA,0x816,0xA0C,0x9,0xCCA,0x96C,0xCA0,0x804,0x96,0x564,0xAAD,0x1A7,0x5C9,0x376,0xA5C,0xA3F,0x3E5,0x5F4,0xB52,0xC9A,0x944,0x2DA,0x42,0x10E,0x9D,0xA1D,0x228,0x434,0x18F,0x908,0x60B,0x874,0x392,0xA5B,0x349,0xC42,0xB2E,0x6EB,0x692,0x1,0x987,0x412,0x4C0,0x9F5,0x429,0x646,0xAAA,0x734,0x51,0x7E1,0x595,0x261,0x9FF,0xBF5,0xB41,0xC8E,0xBC4,0x402,0x563,0x767,0x4B7,0x78F,0xCB8,0xAB1,0x529,0x715,0x67E,0x986,0x526,0x70A,0x2DB,0x8C8,0xA9B,0x41A,0x70E,0xAB,0xEE,0xAD5,0x196,0xC01,0x3BD,0x2B0,0x33,0x63C,0x9E0,0xA0E,0x2E7,0x7EF,0x5B2,0x502,0x36C,0xAF4,0x6A,0x5E3,0x497,0xA43,0x5FB,0xCD,0xF1,0x7B7,0x91E,0xA7A,0x8BF,0x14D,0x457,0x472,0x3FC,0xBEC,0x696,0xA15,0xC16,0x113,0x7B5,0x2EF,0x589,0xFA,0x148,0x1D3,0x7F4,0x3E4,0x571,0x63,0x9D4,0xB37,0xA99,0xBF6,0x430,0x3E0,0x62A,0x712,0x118,0x63D,0x55B,0x9DC,0x280,0x679,0xB6B,0xC34,0xB1B,0x8FD,0x451,0x614,0x326,0xF7,0x671,0x20B,0xA86,0x328,0xA79,0x6FD,0x315,0x3E9,0xC43,0x314,0x9A6,0x624,0x3F3,0x78E,0x205,0x629,0x111,0x78A,0xBD1,0x7E5,0x9DF,0xC53,0x6,0x85C,0xB24,0x166,0x6B0,0x558,0x492,0x352,0x14E,0x709,0x70,0x759,0x5EB,0x5D2,0xC79,0x2FD,0x7B4,0xB72,0x89D,0x55D,0x2C3,0x92D,0x823,0xA58,0x54,0x499,0xFC,0xAE,0x3DF,0x97A,0x698,0x878,0x19,0x266,0xAE1,0xB4,0x42A,0x630,0x6FB,0x997,0x740,0x6D7,0xA7B,0x8B2,0x5CD,0x454,0x79F,0x8DD,0x1A5,0xB0B,0x400,0xA52,0x4D0,0xAA2,0x2B6,0x1B9,0xBA5,0x8C2,0xB28,0x585,0x26C,0x556,0xA4,0x146,0xB65,0x2D6,0x857,0xA87,0xAE5,0x65,0x11E,0xE4,0xA31,0xB61,0x681,0xA41,0x29,0x7E7,0x305,0x8EF,0x35B,0x4B9,0x80,0x590,0x8DA,0xA81,0x651,0x710,0x52F,0x635,0x6F2,0x3FB,0x23D,0x2E8,0x418,0xDB,0x9EA,0x282,0xB5A,0xB0C,0x128,0x9DA,0x17A,0xA7D,0x47F,0x8CE,0x29F,0x408,0xC95,0x7AA,0x90,0x40C,0xABA,0x34A,0x854,0x8DF,0x117,0x3EF,0xCBE,0x580,0x5EA,0x3AA,0xB07,0x547,0x528,0x4AB,0xA6E,0x74B,0x568,0x7BD,0x72D,0x2E0,0x288,0x5E6,0x281,0x806,0x71E,0x9D9,0x23,0x9C0,0x706,0x517,0x947,0xC2A,0x8EB,0x4DE,0x9A4,0x6DB,0x46,0x42F,0x678,0x963,0x9B,0xB6F,0xAC6,0xE2,0x2A3,0x22C,0xA,0xA07,0x686,0x11A,0x7D,0x7B9,0x551,0x3DB,0x216,0x389,0x252,0x71A,0x655,0xA9D,0x899,0xB14,0xF6,0x530,0x784,0x3FA,0x621,0xBC0,0x972,0x16F,0x8DC,0xA00,0x5,0xC75,0xA2B,0x8E9,0x86F,0x91C,0x246,0x9F4,0xCB7,0x41,0x22,0x8B6,0x53B,0xA9C,0x73F,0x12A,0x773,0x8BE,0x2F5,0x7D9,0xBB8,0x811,0xA4F,0x4DD,0xA8A,0x581,0xC8C,0xA55,0x805,0x956,0x662,0x8AC,0x599,0x549,0x914,0x7,0xBA3,0xA08,0xB63,0xAA1,0x7C1,0x6D,0xC6E,0x4E,0xC5,0xB88,0xB87,0xBF,0xC9D,0x3C4,0xF4,0x99B,0x447,0xC5C,0x30A,0xBE2,0x2B8,0x8CC,0x16,0x17F,0x34B,0xA68,0xB06,0x9F6,0x78B,0x139,0x6CF,0xB96,0xAF9,0x86D,0x13B,0xB12,0x6F4,0x47D,0x320,0x6A3,0xC6C,0xC4C,0xA4C,0x1C8,0x96F,0x84A,0x693,0x45D,0x40A,0x992,0x4F3,0x18B,0x5AC,0xB4C,0xA62,0x931,0x275,0xA7C,0xC5A,0xB7B,0x2DF,0xAAE,0x3EB,0xB9B,0x237,0x71F,0x72B,0x18D,0x54D,0xC3F,0x3B6,0x3BB,0xCCC,0xA73,0xB75,0xB5E,0x970,0x333,0xCC8,0x26,0x95F,0x97D,0x3AE,0x76A,0xBDF,0x303,0xD6,0x56A,0x3AF,0x7CB,0x13C,0x509,0x4DC,0x7B,0x726,0x19C,0x9A2,0xAE0,0x2FC,0x901,0x7C8,0x6E4,0x41D,0x254,0x5CB,0x14C,0x34D,0x9E1,0x6A4,0x76C,0x757,0x2CC,0x8DB,0x2,0x82A,0x270,0x877,0xBC1,0xB5B,0xB49,0x7DC,0x95D,0xCBD,0x819,0x514,0x4FF,0x670,0xADD,0x66B,0x8EE,0x94A,0x821,0xA5E,0x622,0x639,0x37F,0x60E,0x4C4,0x660,0xA37,0xA0A,0x69D,0xA48,0x276,0x22A,0x36,0x222,0xB89,0x34F,0x9FC,0xC4,0x3E7,0x284,0x108,0x836,0xCC6,0x56B,0x4BE,0x6B9,0x4A,0x4D4,0x999,0x229,0x66F,0x6E3,0x43E,0xD8,0xA1B,0x4A0,0x231,0x473,0x2E,0xBAC,0x7FF,0x3FE,0x8AA,0x683,0x28C,0x6F9,0x181,0x8D2,0x478,0x198,0x59D,0x539,0x88,0xCAB,0x3EE,0x47E,0xA7E,0x872,0x8F8,0xC8A,0x1F6,0x396,0x468,0x56E,0xBB1,0x9E5,0xC07,0x5A3,0x36A,0x4C6,0xD9,0x967,0x88A,0xB34,0x85F,0x8E7,0x2B1,0x7E0,0xA89,0x37A,0xC35,0x4BA,0x831,0xB32,0xADA,0x7CC,0xBFE,0xBD8,0x45B,0x482,0x1BC,0xB5,0x3D8,0x527,0x390,0x34,0x465,0x87D,0x687,0x57,0x83,0x94B,0xA45,0xF5,0x607,0x859,0x6D1,0x615,0x927,0x702,0xB58,0xC3C,0xABF,0x3A1,0xC83,0x763,0x9E3,0x5C4,0x9AF,0x416,0xA3B,0xA3,0xBE1,0xB0,0xB7F,0x409,0x1F9,0x88E,0xB8C,0x7F7,0x672,0xC13,0x59F,0x121,0xAEF,0x90E,0x41E,0x785,0x533,0x8C1,0x2AD,0xB71,0xB05,0x45E,0x185,0x3F,0x169,0x94,0xDD,0x6BF,0x9D6,0xA60,0x487,0x699,0x1CD,0x6C3,0xB85,0x388,0x2F4,0x90F,0xC29,0x24C,0x44C,0x1CE,0x814,0x375,0x875,0x6E9,0x2D,0x28E,0x7BE,0x2EE,0x846,0xF8,0x3C3,0xC64,0x186,0x5A8,0x9CF,0x5DD,0xAFF,0x57A,0xB0D,0xA5F,0x180,0x7A6,0xA29,0x634,0x1D7,0x202,0x318,0x244,0x9D0,0x69E,0xB2B,0x3A5,0x2A8,0xB1A,0x319,0xA6C,0x7CA,0x7D7,0xA8F,0x7EA,0x7AF,0x46C,0x1F7,0x31E,0x6C0,0x83D,0x485,0xFE,0x346,0xA8C,0x525,0x957,0x67A,0xB8A,0xAB7,0x1BB,0x90D,0x667,0xC4D,0x618,0x98,0x9C8,0x44B,0xB01,0xAF8,0x88F,0xBA0,0x8CA,0x3A6,0x39C,0x1B2,0x653,0xB26,0x1D5,0x55A,0x617,0x2D4,0x5AD,0xE1,0xAF7,0x523,0xC1A,0xC50,0x81,0x7BA,0x368,0x2C6,0x3C7,0xC21,0x4FD,0x979,0x32,0x470,0x64D,0xE0,0x4D8,0xB60,0x81E,0xCA7,0x58C,0x17B,0x424,0x1C2,0x5F8,0xBF0,0xC4E,0xE8,0x2D1,0x701,0xAF2,0x5F1,0x89A,0x924,0x415,0x57F,0xB2C,0xBA9,0xB46,0xCAA,0x96B,0x50,0x9EE,0x70F,0x158,0x495,0x59C,0x778,0x3F0,0x21C,0x45C,0x7DB,0x9CA,0x4ED,0xBD4,0x559,0x8C7,0x8C9,0xA1A,0x49,0x2E5,0x3C1,0x6F6,0x5F3,0x95A,0x3F9,0x56C,0x83C,0x9A1,0x6FF,0xAD6,0x8C4,0x96E,0x741,0x403,0x4E2,0x1EF,0x68F,0x87B,0x1BA,0x2D9,0xC67,0x1EA,0x82D,0x1D9,0xAB8,0xBC5,0x9A5,0xB7C,0x27E,0x292,0xB4E,0x873,0x77E,0x11B,0xCAC,0xA2E,0x731,0x167,0x161,0xA64,0x290,0xAB2,0x214,0x57E,0xAA3,0x7F1,0x251,0x18C,0x3D,0x1A9,0x9AE,0x14A,0x889,0x8CB,0xC4B,0x8A2,0x17,0xB8B,0xBF7,0x35E,0x69F,0x5AA,0x849,0x331,0xB4A,0x29D,0x929,0x1AE,0xA01,0x3E1,0xC2,0x82,0x4A4,0x579,0xBD0,0x8A1,0xBC6,0x92B,0x5D9,0x4D,0xC17,0xC15,0x3E3,0x9DD,0x733,0x16C,0x2A4,0x5CE,0x790,0x463,0x1E1,0xC48,0xA72,0x94E,0xBC9,0x2AF,0x3CB,0x3CD,0x43C,0x8FF,0x772,0x293,0x1DC,0x2A9,0x801,0xB80,0xC1D,0x444,0x58,0x716,0x9B7,0x61E,0x9E7,0x168,0x7A9,0x572,0x1A2,0x100,0x37C,0x30D,0x309,0x941,0x4BC,0xAD7,0x6D5,0x1C5,0x2E1,0x705,0x298,0x6AF,0xC32,0xC54,0x62E,0x1FF,0x210,0xC20,0x1A1,0x498,0x6BC,0x29E,0x199,0x1E7,0x5B1,0x961,0xF2,0xBB5,0x86A,0xD2,0x2AB,0xAC1,0x3DE,0x6F,0xB0F,0xB43,0x7A3,0x5CA,0x871,0x951,0x5B8,0x562,0x2F3,0x976,0x40,0xA97,0xA3C,0x6BE,0x133,0x7A,0xBA4,0x597,0xA8E,0x16E,0x695,0x60F,0x8DE,0x3B,0x30B,0x6C8,0x9C2,0x31D,0x955,0x38E,0xAB6,0x74D,0x4A8,0xAF3,0x5DA,0x81D,0x112,0xC25,0x40D,0xC27,0xC76,0xB08,0xB66,0x71B,0xBDD,0x2B2,0x45,0x54A,0x4F,0xA25,0x29C,0x8A5,0xB39,0x593,0x91,0x7B2,0x7C3,0x746,0xC70,0x4E3,0xBA,0xBB,0xA96,0x51F,0x1BD,0x5E7,0xC66,0x98C,0x6B1,0xC8,0x9E2,0x446,0x781,0xC19,0x6B5,0x90B,0x989,0x350,0x38D,0xC94,0xC23,0xCC4,0xC52,0x500,0x2F7,0x11D,0x4A6,0x29B,0xCC1,0x277,0xC2B,0x5CC,0x6B3,0xC91,0x69A,0x19D,0x601,0x677,0x32C,0x645,0x232,0x2C0,0x565,0x4F8,0x151,0x72F,0x82C,0x48,0x8FA,0x700,0x1D2,0x9E6,0x12C,0x154,0x570,0xACB,0x4AC,0x55F,0xBA7,0x374,0x382,0x1CC,0x32F,0xA70,0xD1,0xC72,0xAFE,0xBCA,0x852,0x949,0x178,0xC56,0xBFF,0x69B,0x6A1,0x9CE,0x5B5,0x188,0xA5A,0x367,0x507,0x55,0xB3E,0xCF,0x220,0xBEA,0x187,0x44F,0x608,0x714,0x2AE,0x257,0xC1E,0x21E,0xFD,0x78,0xB27,0x467,0x238,0xB38,0x640,0xAF0,0x125,0x21A,0xBE5,0x753,0x6D8,0x22E,0xC61,0x34C,0x860,0x94D,0x7DF,0x27A,0xB8F,0x542,0x80E,0x952,0x644,0x802,0x109,0xA83,0xBCC,0x8F4,0xB2D,0x80C,0x8F5,0x676,0x44A,0xB22,0x3EC,0xC3,0x3CF,0x1DA,0x3E8,0x250,0xB2F,0x33F,0x5E5,0x6AA,0x777,0x24A,0x5D6,0x9A3,0x2C4,0x7FA,0xCC9,0xB79,0xAD1,0xCBF,0x5E2,0xA74,0x1E3,0x937,0x3F2,0x656,0x1B4,0x959,0x5EF,0x79,0x5D5,0xB00,0x99F,0xA82,0xB5C,0xAE2,0xBC7,0xB99,0x3B7,0x317,0x10D,0x248,0x844,0x521,0x2A1,0x58D,0x969,0xA63,0x9C9,0x7EE,0xA85,0x641,0xA40,0x84D,0x4F6,0x950,0x675,0xB6A,0x92E,0x33E,0x9A8,0xB6C,0xC39,0xB25,0x279,0x42C,0xB48,0x9BD,0x2B3,0x9B1,0x120,0x69C,0xAB4,0x156,0x138,0x643,0x5F7,0xC57,0xA66,0x1FE,0x455,0x501,0x4F9,0x2C1,0x1F1,0x20A,0x7BB,0xBBF,0xBFC,0x11C,0x44E,0x9B5,0x260,0x911,0xC45,0x6B6,0x107,0xA0F,0x837,0x531,0x97,0xAC3,0x2C8,0x40E,0x978,0x6CA,0x6BB,0x10A,0x505,0x159,0x489,0xBD2,0x97F,0x926,0x7B8,0xB84,0xB5D,0xC3A,0x74F,0x760,0x652,0x795,0x5BD,0x79E,0x973,0x60C,0x812,0x84,0x10,0xA14,0x990,0x8C3,0xC65,0x7B1,0x3D6,0x958,0x3A3,0x307,0xC41,0xC0C,0xAD4,0xB97,0x1B0,0xA91,0x2BE,0xAA7,0x68C,0x488,0x66E,0x177,0x61D,0x24D,0xBC2,0x9E4,0xB68,0x850,0xC6F,0x73C,0x783,0x52E,0x573,0x23A,0x6E1,0xB3F,0x310,0x75F,0x6EA,0x5C2,0x3D4,0xA44,0x2D0,0x406,0x830,0x9D1,0x50A,0x8B5,0x92F,0x7C,0x324,0x45A,0xBC,0xAFC,0xC0,0x200,0xB76,0x1A,0x938,0x3D7,0x47C,0xB47,0x923,0xCAE,0x9B6,0xADC,0x2F,0x38F,0xC24,0x5D8,0xAB5,0xF3,0x6C7,0x7D5,0xBED,0x386,0x466,0x88D,0x813,0xAB0,0x4AF,0x2FF,0x359,0x5A7,0x170,0x905,0xA61,0x770,0xC9C,0x1BF,0x3DD,0x4B4,0x8A6,0x67C,0x194,0x286,0x6DE,0x594,0xA10,0x650,0x79D,0x940,0x761,0x50C,0x417,0x7E6,0x62C,0x780,0xC44,0x885,0xB4D,0x67B,0xCBC,0x4D5,0xC69,0x6E0,0x7E9,0x5CF,0x891,0x7B6,0xA9,0x18E,0x40F,0xB82,0x934,0x5FC,0xB56,0x6B2,0x1A8,0x247,0x4EC,0x3C6,0x4BF,0x43B,0x53D,0x235,0x1C7,0x12E,0x93A,0x3B4,0xABD,0x536,0xCC0,0xCA5,0x358,0x35C,0x97C,0x35,0x2B,0xE,0x584,0xB81,0xA92,0x6B8,0x4F1,0xC68,0xC78,0xBD6,0x689,0x4C9,0x441,0xA6B,0x9E9,0x13D,0x890,0x680,0x868,0x1B7,0x2CD,0x73A,0xC73,0xB64,0x789,0x516,0x988,0x191,0xAC4,0x8C,0xA2A,0xC8D,0x160,0xC30,0x5C7,0x862,0x49B,0x7A4,0x8D7,0xB83,0xC6,0x8B,0xA84,0x3C0,0x81A,0x88B,0xBF4,0x15A,0x6DA,0x9C,0x3BA,0x4D9,0x7B3,0xCA4,0xA8,0xC59,0xCC,0x119,0x61A,0x81C,0x1FA,0xCB,0x96D,0x149,0x791,0x4C8,0x954,0x174,0x6FC,0x8B8,0x316,0x744,0x732,0x61C,0x900,0x2E9,0x42E,0x9F2,0x3BE,0xC0D,0xA98,0x9B0,0x24E,0x25B,0x51E,0xBF2,0x7F5,0x469,0x6A6,0xC2F,0x70B,0x8D1,0x534,0xC04,0x3C5,0xA35,0xB7D,0x106,0x7CD,0x1EC,0x97B,0xAED,0x476,0x915,0x211,0xA8B,0x620,0x922,0x569,0x264,0x775,0x420,0x930,0x833,0x426,0x647,0x110,0x332,0x431,0x5F6,0x887,0xBAB,0x2CF,0xA6A,0x1FB,0xB9D,0x370,0x742,0x522,0xB3A,0xB,0x3D2,0x421,0x851,0xCB3,0x4E5,0x53A,0xCB6,0x223,0x51D,0x6C9,0x5B4,0x14F,0xAA4,0x4BB,0x1AF,0x810,0x895,0x847,0x20D,0x2EC,0x1CB,0x4CF,0x2F8,0x8ED,0x114,0x977,0x586,0x9F3,0x554,0x808,0x5AE,0x510,0x8A8,0x721,0x46D,0x2F1,0x3DC,0x2A0,0x948,0x6B4,0x432,0x1EE,0xB23,0x95E,0xBB0,0x371,0x77,0x786,0x337,0x9C3,0x74C,0x87E,0x53,0x518,0x9B8,0x23B,0x632,0xCCE,0x582,0x540,0xB3B,0x14B,0xEA,0x16A,0xA57,0x30E,0x12,0x249,0xA78,0x1A3,0x3FD,0x6D2,0x613,0xAE7,0x347,0x355,0x5A4,0xACE,0x60D,0x227,0x609,0x7ED,0x48E,0x73D,0x9D3,0x8C5,0x6A8,0x366,0x7C4,0x141,0x4EE,0x792,0x8F3,0x880,0xCA2,0x163,0x79A,0x717,0x7C2,0x5FE,0x398,0x150,0x1EB,0x9B3,0xC6B,0x3D1,0x356}
-local _1_l_i1illI2s={0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4,0x3,0x22,0x41,0x60,0x7F,0x9E,0xBD,0xDC,0xFB,0x1A,0x39,0x58,0x77,0x96,0xB5,0xD4,0xF3,0x12,0x31,0x50,0x6F,0x8E,0xAD,0xCC,0xEB,0xA,0x29,0x48,0x67,0x86,0xA5,0xC4,0xE3,0x2,0x21,0x40,0x5F,0x7E,0x9D,0xBC,0xDB,0xFA,0x19,0x38,0x57,0x76,0x95,0xB4,0xD3,0xF2,0x11,0x30,0x4F,0x6E,0x8D,0xAC,0xCB,0xEA,0x9,0x28,0x47,0x66,0x85,0xA4,0xC3,0xE2,0x1,0x20,0x3F,0x5E,0x7D,0x9C,0xBB,0xDA,0xF9,0x18,0x37,0x56,0x75,0x94,0xB3,0xD2,0xF1,0x10,0x2F,0x4E,0x6D,0x8C,0xAB,0xCA,0xE9,0x8,0x27,0x46,0x65,0x84,0xA3,0xC2,0xE1,0x0,0x1F,0x3E,0x5D,0x7C,0x9B,0xBA,0xD9,0xF8,0x17,0x36,0x55,0x74,0x93,0xB2,0xD1,0xF0,0xF,0x2E,0x4D,0x6C,0x8B,0xAA,0xC9,0xE8,0x7,0x26,0x45,0x64,0x83,0xA2,0xC1,0xE0,0xFF,0x1E,0x3D,0x5C,0x7B,0x9A,0xB9,0xD8,0xF7,0x16,0x35,0x54,0x73,0x92,0xB1,0xD0,0xEF,0xE,0x2D,0x4C,0x6B,0x8A,0xA9,0xC8,0xE7,0x6,0x25,0x44,0x63,0x82,0xA1,0xC0,0xDF,0xFE,0x1D,0x3C,0x5B,0x7A,0x99,0xB8,0xD7,0xF6,0x15,0x34,0x53,0x72,0x91,0xB0,0xCF,0xEE,0xD,0x2C,0x4B,0x6A,0x89,0xA8,0xC7,0xE6,0x5,0x24,0x43,0x62,0x81,0xA0,0xBF,0xDE,0xFD,0x1C,0x3B,0x5A,0x79,0x98,0xB7,0xD6,0xF5,0x14,0x33,0x52,0x71,0x90,0xAF,0xCE,0xED,0xC,0x2B,0x4A,0x69,0x88,0xA7,0xC6,0xE5,0x4,0x23,0x42,0x61,0x80,0x9F,0xBE,0xDD,0xFC,0x1B,0x3A,0x59,0x78,0x97,0xB6,0xD5,0xF4,0x13,0x32,0x51,0x70,0x8F,0xAE,0xCD,0xEC,0xB,0x2A,0x49,0x68,0x87,0xA6,0xC5,0xE4}
-local _i1illIII114={0x1,0x1,0x1,0x2,0x1,0x3,0x1,0x4,0x1,0x5,0x1,0x6,0x1,0x7,0x1,0x8,0x1,0x9,0x1,0xA,0x1,0xB,0x1,0xC,0x1,0xD,0x1,0xE,0x1,0xF,0x1,0x10,0x1,0x11,0x1,0x12,0x1,0x13,0x1,0x14,0x1,0x15,0x1,0x16,0x1,0x17,0x1,0x18,0x1,0x19,0x1,0x1A,0x1,0x1B,0x1,0x1C,0x1,0x1D,0x1,0x1E,0x1,0x1F,0x1,0x20,0x1,0x21,0x1,0x22,0x1,0x23,0x1,0x24,0x1,0x25,0x1,0x26,0x1,0x27,0x1,0x28,0x1,0x29,0x1,0x2A,0x1,0x2B,0x1,0x2C,0x1,0x2D,0x1,0x2E,0x1,0x2F,0x1,0x30,0x1,0x31,0x1,0x32,0x1,0x33,0x1,0x34,0x1,0x35,0x1,0x36,0x1,0x37,0x1,0x38,0x1,0x39,0x1,0x3A,0x1,0x3B,0x1,0x3C,0x1,0x3D,0x1,0x3E,0x1,0x3F,0x1,0x40,0x1,0x41,0x1,0x42,0x1,0x43,0x1,0x44,0x1,0x45,0x1,0x46,0x1,0x47,0x1,0x48,0x1,0x49,0x1,0x4A,0x1,0x4B,0x1,0x4C,0x1,0x4D,0x1,0x4E,0x1,0x4F,0x1,0x50,0x1,0x51,0x1,0x52,0x1,0x53,0x1,0x54,0x1,0x55,0x1,0x56,0x1,0x57,0x1,0x58,0x1,0x59,0x1,0x5A,0x1,0x5B,0x1,0x5C,0x1,0x5D,0x1,0x5E,0x1,0x5F,0x1,0x60,0x1,0x61,0x1,0x62,0x1,0x63,0x1,0x64,0x1,0x65,0x1,0x66,0x1,0x67,0x1,0x68,0x1,0x69,0x1,0x6A,0x1,0x6B,0x1,0x6C,0x1,0x6D,0x1,0x6E,0x1,0x6F,0x1,0x70,0x1,0x71,0x1,0x72,0x1,0x73,0x1,0x74,0x1,0x75,0x1,0x76,0x1,0x77,0x1,0x78,0x1,0x79,0x1,0x7A,0x1,0x7B,0x1,0x7C,0x1,0x7D,0x1,0x7E,0x1,0x7F,0x1,0x80,0x1,0x81,0x1,0x82,0x1,0x83,0x1,0x84,0x1,0x85,0x1,0x86,0x1,0x87,0x1,0x88,0x1,0x89,0x1,0x8A,0x1,0x8B,0x1,0x8C,0x1,0x8D,0x1,0x8E,0x1,0x8F,0x1,0x90,0x1,0x91,0x1,0x92,0x1,0x93,0x1,0x94,0x1,0x95,0x1,0x96,0x1,0x97,0x1,0x98,0x1,0x99,0x1,0x9A,0x1,0x9B,0x1,0x9C,0x1,0x9D,0x1,0x9E,0x1,0x9F,0x1,0xA0,0x1,0xA1,0x1,0xA2,0x1,0xA3,0x1,0xA4,0x1,0xA5,0x1,0xA6,0x1,0xA7,0x1,0xA8,0x1,0xA9,0x1,0xAA,0x1,0xAB,0x1,0xAC,0x1,0xAD,0x1,0xAE,0x1,0xAF,0x1,0xB0,0x1,0xB1,0x1,0xB2,0x1,0xB3,0x1,0xB4,0x1,0xB5,0x1,0xB6,0x1,0xB7,0x1,0xB8,0x1,0xB9,0x1,0xBA,0x1,0xBB,0x1,0xBC,0x1,0xBD,0x1,0xBE,0x1,0xBF,0x1,0xC0,0x1,0xC1,0x1,0xC2,0x1,0xC3,0x1,0xC4,0x1,0xC5,0x1,0xC6,0x1,0xC7,0x1,0xC8,0x1,0xC9,0x1,0xCA,0x1,0xCB,0x1,0xCC,0x1,0xCD,0x1,0xCE,0x1,0xCF,0x1,0xD0,0x1,0xD1,0x1,0xD2,0x1,0xD3,0x1,0xD4,0x1,0xD5,0x1,0xD6,0x1,0xD7,0x1,0xD8,0x1,0xD9,0x1,0xDA,0x1,0xDB,0x1,0xDC,0x1,0xDD,0x1,0xDE,0x1,0xDF,0x1,0xE0,0x1,0xE1,0x1,0xE2,0x1,0xE3,0x1,0xE4,0x1,0xE5,0x1,0xE6,0x1,0xE7,0x1,0xE8,0x1,0xE9,0x1,0xEA,0x1,0xEB,0x1,0xEC,0x1,0xED,0x1,0xEE,0x1,0xEF,0x1,0xF0,0x1,0xF1,0x1,0xF2,0x1,0xF3,0x1,0xF4,0x1,0xF5,0x1,0xF6,0x1,0xF7,0x1,0xF8,0x1,0xF9,0x1,0xFA,0x1,0xFB,0x1,0xFC,0x1,0xFD,0x1,0xFE,0x1,0xFF,0x1,0x100,0x1,0x101,0x1,0x102,0x1,0x103,0x1,0x104,0x1,0x105,0x1,0x106,0x1,0x107,0x1,0x108,0x1,0x109,0x1,0x10A,0x1,0x10B,0x1,0x10C,0x1,0x10D,0x1,0x10E,0x1,0x10F,0x1,0x110,0x1,0x111,0x1,0x112,0x1,0x113,0x1,0x114,0x1,0x115,0x1,0x116,0x1,0x117,0x1,0x118,0x1,0x119,0x1,0x11A,0x1,0x11B,0x1,0x11C,0x1,0x11D,0x1,0x11E,0x1,0x11F,0x1,0x120,0x1,0x121,0x1,0x122,0x1,0x123,0x1,0x124,0x1,0x125,0x1,0x126,0x1,0x127,0x1,0x128,0x1,0x129,0x1,0x12A,0x1,0x12B,0x1,0x12C,0x1,0x12D,0x1,0x12E,0x1,0x12F,0x1,0x130,0x1,0x131,0x1,0x132,0x1,0x133,0x1,0x134,0x1,0x135,0x1,0x136,0x1,0x137,0x1,0x138,0x1,0x139,0x1,0x13A,0x1,0x13B,0x1,0x13C,0x1,0x13D,0x1,0x13E,0x1,0x13F,0x1,0x140,0x1,0x141,0x1,0x142,0x1,0x143,0x1,0x144,0x1,0x145,0x1,0x146,0x1,0x147,0x1,0x148,0x1,0x149,0x1,0x14A,0x1,0x14B,0x1,0x14C,0x1,0x14D,0x1,0x14E,0x1,0x14F,0x1,0x150,0x1,0x151,0x1,0x152,0x1,0x153,0x1,0x154,0x1,0x155,0x1,0x156,0x1,0x157,0x1,0x158,0x1,0x159,0x1,0x15A,0x1,0x15B,0x1,0x15C,0x1,0x15D,0x1,0x15E,0x1,0x15F,0x1,0x160,0x1,0x161,0x1,0x162,0x1,0x163,0x1,0x164,0x1,0x165,0x1,0x166,0x1,0x167,0x1,0x168,0x1,0x169,0x1,0x16A,0x1,0x16B,0x1,0x16C,0x1,0x16D,0x1,0x16E,0x1,0x16F,0x1,0x170,0x1,0x171,0x1,0x172,0x1,0x173,0x1,0x174,0x1,0x175,0x1,0x176,0x1,0x177,0x1,0x178,0x1,0x179,0x1,0x17A,0x1,0x17B,0x1,0x17C,0x1,0x17D,0x1,0x17E,0x1,0x17F,0x1,0x180,0x1,0x181,0x1,0x182,0x1,0x183,0x1,0x184,0x1,0x185,0x1,0x186,0x1,0x187,0x1,0x188,0x1,0x189,0x1,0x18A,0x1,0x18B,0x1,0x18C,0x1,0x18D,0x1,0x18E,0x1,0x18F,0x1,0x190,0x1,0x191,0x1,0x192,0x1,0x193,0x1,0x194,0x1,0x195,0x1,0x196,0x1,0x197,0x1,0x198,0x1,0x199,0x1,0x19A,0x1,0x19B,0x1,0x19C,0x1,0x19D,0x1,0x19E,0x1,0x19F,0x1,0x1A0,0x1,0x1A1,0x1,0x1A2,0x1,0x1A3,0x1,0x1A4,0x1,0x1A5,0x1,0x1A6,0x1,0x1A7,0x1,0x1A8,0x1,0x1A9,0x1,0x1AA,0x1,0x1AB,0x1,0x1AC,0x1,0x1AD,0x1,0x1AE,0x1,0x1AF,0x1,0x1B0,0x1,0x1B1,0x1,0x1B2,0x1,0x1B3,0x1,0x1B4,0x1,0x1B5,0x1,0x1B6,0x1,0x1B7,0x1,0x1B8,0x1,0x1B9,0x1,0x1BA,0x1,0x1BB,0x1,0x1BC,0x1,0x1BD,0x1,0x1BE,0x1,0x1BF,0x1,0x1C0,0x1,0x1C1,0x1,0x1C2,0x1,0x1C3,0x1,0x1C4,0x1,0x1C5,0x1,0x1C6,0x1,0x1C7,0x1,0x1C8,0x1,0x1C9,0x1,0x1CA,0x1,0x1CB,0x1,0x1CC,0x1,0x1CD,0x1,0x1CE,0x1,0x1CF,0x1,0x1D0,0x1,0x1D1,0x1,0x1D2,0x1,0x1D3,0x1,0x1D4,0x1,0x1D5,0x1,0x1D6,0x1,0x1D7,0x1,0x1D8,0x1,0x1D9,0x1,0x1DA,0x1,0x1DB,0x1,0x1DC,0x1,0x1DD,0x1,0x1DE,0x1,0x1DF,0x1,0x1E0,0x1,0x1E1,0x1,0x1E2,0x1,0x1E3,0x1,0x1E4,0x1,0x1E5,0x1,0x1E6,0x1,0x1E7,0x1,0x1E8,0x1,0x1E9,0x1,0x1EA,0x1,0x1EB,0x1,0x1EC,0x1,0x1ED,0x1,0x1EE,0x1,0x1EF,0x1,0x1F0,0x1,0x1F1,0x1,0x1F2,0x1,0x1F3,0x1,0x1F4,0x1,0x1F5,0x1,0x1F6,0x1,0x1F7,0x1,0x1F8,0x1,0x1F9,0x1,0x1FA,0x1,0x1FB,0x1,0x1FC,0x1,0x1FD,0x1,0x1FE,0x1,0x1FF,0x1,0x200,0x1,0x201,0x1,0x202,0x1,0x203,0x1,0x204,0x1,0x205,0x1,0x206,0x1,0x207,0x1,0x208,0x1,0x209,0x1,0x20A,0x1,0x20B,0x1,0x20C,0x1,0x20D,0x1,0x20E,0x1,0x20F,0x1,0x210,0x1,0x211,0x1,0x212,0x1,0x213,0x1,0x214,0x1,0x215,0x1,0x216,0x1,0x217,0x1,0x218,0x1,0x219,0x1,0x21A,0x1,0x21B,0x1,0x21C,0x1,0x21D,0x1,0x21E,0x1,0x21F,0x1,0x220,0x1,0x221,0x1,0x222,0x1,0x223,0x1,0x224,0x1,0x225,0x1,0x226,0x1,0x227,0x1,0x228,0x1,0x229,0x1,0x22A,0x1,0x22B,0x1,0x22C,0x1,0x22D,0x1,0x22E,0x1,0x22F,0x1,0x230,0x1,0x231,0x1,0x232,0x1,0x233,0x1,0x234,0x1,0x235,0x1,0x236,0x1,0x237,0x1,0x238,0x1,0x239,0x1,0x23A,0x1,0x23B,0x1,0x23C,0x1,0x23D,0x1,0x23E,0x1,0x23F,0x1,0x240,0x1,0x241,0x1,0x242,0x1,0x243,0x1,0x244,0x1,0x245,0x1,0x246,0x1,0x247,0x1,0x248,0x1,0x249,0x1,0x24A,0x1,0x24B,0x1,0x24C,0x1,0x24D,0x1,0x24E,0x1,0x24F,0x1,0x250,0x1,0x251,0x1,0x252,0x1,0x253,0x1,0x254,0x1,0x255,0x1,0x256,0x1,0x257,0x1,0x258,0x1,0x259,0x1,0x25A,0x1,0x25B,0x1,0x25C,0x1,0x25D,0x1,0x25E,0x1,0x25F,0x1,0x260,0x1,0x261,0x1,0x262,0x1,0x263,0x1,0x264,0x1,0x265,0x1,0x266,0x1,0x267,0x1,0x268,0x1,0x269,0x1,0x26A,0x1,0x26B,0x1,0x26C,0x1,0x26D,0x1,0x26E,0x1,0x26F,0x1,0x270,0x1,0x271,0x1,0x272,0x1,0x273,0x1,0x274,0x1,0x275,0x1,0x276,0x1,0x277,0x1,0x278,0x1,0x279,0x1,0x27A,0x1,0x27B,0x1,0x27C,0x1,0x27D,0x1,0x27E,0x1,0x27F,0x1,0x280,0x1,0x281,0x1,0x282,0x1,0x283,0x1,0x284,0x1,0x285,0x1,0x286,0x1,0x287,0x1,0x288,0x1,0x289,0x1,0x28A,0x1,0x28B,0x1,0x28C,0x1,0x28D,0x1,0x28E,0x1,0x28F,0x1,0x290,0x1,0x291,0x1,0x292,0x1,0x293,0x1,0x294,0x1,0x295,0x1,0x296,0x1,0x297,0x1,0x298,0x1,0x299,0x1,0x29A,0x1,0x29B,0x1,0x29C,0x1,0x29D,0x1,0x29E,0x1,0x29F,0x1,0x2A0,0x1,0x2A1,0x1,0x2A2,0x1,0x2A3,0x1,0x2A4,0x1,0x2A5,0x1,0x2A6,0x1,0x2A7,0x1,0x2A8,0x1,0x2A9,0x1,0x2AA,0x1,0x2AB,0x1,0x2AC,0x1,0x2AD,0x1,0x2AE,0x1,0x2AF,0x1,0x2B0,0x1,0x2B1,0x1,0x2B2,0x1,0x2B3,0x1,0x2B4,0x1,0x2B5,0x1,0x2B6,0x1,0x2B7,0x1,0x2B8,0x1,0x2B9,0x1,0x2BA,0x1,0x2BB,0x1,0x2BC,0x1,0x2BD,0x1,0x2BE,0x1,0x2BF,0x1,0x2C0,0x1,0x2C1,0x1,0x2C2,0x1,0x2C3,0x1,0x2C4,0x1,0x2C5,0x1,0x2C6,0x1,0x2C7,0x1,0x2C8,0x1,0x2C9,0x1,0x2CA,0x1,0x2CB,0x1,0x2CC,0x1,0x2CD,0x1,0x2CE,0x1,0x2CF,0x1,0x2D0,0x1,0x2D1,0x1,0x2D2,0x1,0x2D3,0x1,0x2D4,0x1,0x2D5,0x1,0x2D6,0x1,0x2D7,0x1,0x2D8,0x1,0x2D9,0x1,0x2DA,0x1,0x2DB,0x1,0x2DC,0x1,0x2DD,0x1,0x2DE,0x1,0x2DF,0x1,0x2E0,0x1,0x2E1,0x1,0x2E2,0x1,0x2E3,0x1,0x2E4,0x1,0x2E5,0x1,0x2E6,0x1,0x2E7,0x1,0x2E8,0x1,0x2E9,0x1,0x2EA,0x1,0x2EB,0x1,0x2EC,0x1,0x2ED,0x1,0x2EE,0x1,0x2EF,0x1,0x2F0,0x1,0x2F1,0x1,0x2F2,0x1,0x2F3,0x1,0x2F4,0x1,0x2F5,0x1,0x2F6,0x1,0x2F7,0x1,0x2F8,0x1,0x2F9,0x1,0x2FA,0x1,0x2FB,0x1,0x2FC,0x1,0x2FD,0x1,0x2FE,0x1,0x2FF,0x1,0x300,0x1,0x301,0x1,0x302,0x1,0x303,0x1,0x304,0x1,0x305,0x1,0x306,0x1,0x307,0x1,0x308,0x1,0x309,0x1,0x30A,0x1,0x30B,0x1,0x30C,0x1,0x30D,0x1,0x30E,0x1,0x30F,0x1,0x310,0x1,0x311,0x1,0x312,0x1,0x313,0x1,0x314,0x1,0x315,0x1,0x316,0x1,0x317,0x1,0x318,0x1,0x319,0x1,0x31A,0x1,0x31B,0x1,0x31C,0x1,0x31D,0x1,0x31E,0x1,0x31F,0x1,0x320,0x1,0x321,0x1,0x322,0x1,0x323,0x1,0x324,0x1,0x325,0x1,0x326,0x1,0x327,0x1,0x328,0x1,0x329,0x1,0x32A,0x1,0x32B,0x1,0x32C,0x1,0x32D,0x1,0x32E,0x1,0x32F,0x1,0x330,0x1,0x331,0x1,0x332,0x1,0x333,0x1,0x334,0x1,0x335,0x1,0x336,0x1,0x337,0x1,0x338,0x1,0x339,0x1,0x33A,0x1,0x33B,0x1,0x33C,0x1,0x33D,0x1,0x33E,0x1,0x33F,0x1,0x340,0x1,0x341,0x1,0x342,0x1,0x343,0x1,0x344,0x1,0x345,0x1,0x346,0x1,0x347,0x1,0x348,0x1,0x349,0x1,0x34A,0x1,0x34B,0x1,0x34C,0x1,0x34D,0x1,0x34E,0x1,0x34F,0x1,0x350,0x1,0x351,0x1,0x352,0x1,0x353,0x1,0x354,0x1,0x355,0x1,0x356,0x1,0x357,0x1,0x358,0x1,0x359,0x1,0x35A,0x1,0x35B,0x1,0x35C,0x1,0x35D,0x1,0x35E,0x1,0x35F,0x1,0x360,0x1,0x361,0x1,0x362,0x1,0x363,0x1,0x364,0x1,0x365,0x1,0x366,0x1,0x367,0x1,0x368,0x1,0x369,0x1,0x36A,0x1,0x36B,0x1,0x36C,0x1,0x36D,0x1,0x36E,0x1,0x36F,0x1,0x370,0x1,0x371,0x1,0x372,0x1,0x373,0x1,0x374,0x1,0x375,0x1,0x376,0x1,0x377,0x1,0x378,0x1,0x379,0x1,0x37A,0x1,0x37B,0x1,0x37C,0x1,0x37D,0x1,0x37E,0x1,0x37F,0x1,0x380,0x1,0x381,0x1,0x382,0x1,0x383,0x1,0x384,0x1,0x385,0x1,0x386,0x1,0x387,0x1,0x388,0x1,0x389,0x1,0x38A,0x1,0x38B,0x1,0x38C,0x1,0x38D,0x1,0x38E,0x1,0x38F,0x1,0x390,0x1,0x391,0x1,0x392,0x1,0x393,0x1,0x394,0x1,0x395,0x1,0x396,0x1,0x397,0x1,0x398,0x1,0x399,0x1,0x39A,0x1,0x39B,0x1,0x39C,0x1,0x39D,0x1,0x39E,0x1,0x39F,0x1,0x3A0,0x1,0x3A1,0x1,0x3A2,0x1,0x3A3,0x1,0x3A4,0x1,0x3A5,0x1,0x3A6,0x1,0x3A7,0x1,0x3A8,0x1,0x3A9,0x1,0x3AA,0x1,0x3AB,0x1,0x3AC,0x1,0x3AD,0x1,0x3AE,0x1,0x3AF,0x1,0x3B0,0x1,0x3B1,0x1,0x3B2,0x1,0x3B3,0x1,0x3B4,0x1,0x3B5,0x1,0x3B6,0x1,0x3B7,0x1,0x3B8,0x1,0x3B9,0x1,0x3BA,0x1,0x3BB,0x1,0x3BC,0x1,0x3BD,0x1,0x3BE,0x1,0x3BF,0x1,0x3C0,0x1,0x3C1,0x1,0x3C2,0x1,0x3C3,0x1,0x3C4,0x1,0x3C5,0x1,0x3C6,0x1,0x3C7,0x1,0x3C8,0x1,0x3C9,0x1,0x3CA,0x1,0x3CB,0x1,0x3CC,0x1,0x3CD,0x1,0x3CE,0x1,0x3CF,0x1,0x3D0,0x1,0x3D1,0x1,0x3D2,0x1,0x3D3,0x1,0x3D4,0x1,0x3D5,0x1,0x3D6,0x1,0x3D7,0x1,0x3D8,0x1,0x3D9,0x1,0x3DA,0x1,0x3DB,0x1,0x3DC,0x1,0x3DD,0x1,0x3DE,0x1,0x3DF,0x1,0x3E0,0x1,0x3E1,0x1,0x3E2,0x1,0x3E3,0x1,0x3E4,0x1,0x3E5,0x1,0x3E6,0x1,0x3E7,0x1,0x3E8,0x1,0x3E9,0x1,0x3EA,0x1,0x3EB,0x1,0x3EC,0x1,0x3ED,0x1,0x3EE,0x1,0x3EF,0x1,0x3F0,0x1,0x3F1,0x1,0x3F2,0x1,0x3F3,0x1,0x3F4,0x1,0x3F5,0x1,0x3F6,0x1,0x3F7,0x1,0x3F8,0x1,0x3F9,0x1,0x3FA,0x1,0x3FB,0x1,0x3FC,0x1,0x3FD,0x1,0x3FE,0x1,0x3FF,0x1,0x400,0x1,0x401,0x1,0x402,0x1,0x403,0x1,0x404,0x1,0x405,0x1,0x406,0x1,0x407,0x1,0x408,0x1,0x409,0x1,0x40A,0x1,0x40B,0x1,0x40C,0x1,0x40D,0x1,0x40E,0x1,0x40F,0x1,0x410,0x1,0x411,0x1,0x412,0x1,0x413,0x1,0x414,0x1,0x415,0x1,0x416,0x1,0x417,0x1,0x418,0x1,0x419,0x1,0x41A,0x1,0x41B,0x1,0x41C,0x1,0x41D,0x1,0x41E,0x1,0x41F,0x1,0x420,0x1,0x421,0x1,0x422,0x1,0x423,0x1,0x424,0x1,0x425,0x1,0x426,0x1,0x427,0x1,0x428,0x1,0x429,0x1,0x42A,0x1,0x42B,0x1,0x42C,0x1,0x42D,0x1,0x42E,0x1,0x42F,0x1,0x430,0x1,0x431,0x1,0x432,0x1,0x433,0x1,0x434,0x1,0x435,0x1,0x436,0x1,0x437,0x1,0x438,0x1,0x439,0x1,0x43A,0x1,0x43B,0x1,0x43C,0x1,0x43D,0x1,0x43E,0x1,0x43F,0x1,0x440,0x1,0x441,0x1,0x442,0x1,0x443,0x1,0x444,0x1,0x445,0x1,0x446,0x1,0x447,0x1,0x448,0x1,0x449,0x1,0x44A,0x1,0x44B,0x1,0x44C,0x1,0x44D,0x1,0x44E,0x1,0x44F,0x1,0x450,0x1,0x451,0x1,0x452,0x1,0x453,0x1,0x454,0x1,0x455,0x1,0x456,0x1,0x457,0x1,0x458,0x1,0x459,0x1,0x45A,0x1,0x45B,0x1,0x45C,0x1,0x45D,0x1,0x45E,0x1,0x45F,0x1,0x460,0x1,0x461,0x1,0x462,0x1,0x463,0x1,0x464,0x1,0x465,0x1,0x466,0x1,0x467,0x1,0x468,0x1,0x469,0x1,0x46A,0x1,0x46B,0x1,0x46C,0x1,0x46D,0x1,0x46E,0x1,0x46F,0x1,0x470,0x1,0x471,0x1,0x472,0x1,0x473,0x1,0x474,0x1,0x475,0x1,0x476,0x1,0x477,0x1,0x478,0x1,0x479,0x1,0x47A,0x1,0x47B,0x1,0x47C,0x1,0x47D,0x1,0x47E,0x1,0x47F,0x1,0x480,0x1,0x481,0x1,0x482,0x1,0x483,0x1,0x484,0x1,0x485,0x1,0x486,0x1,0x487,0x1,0x488,0x1,0x489,0x1,0x48A,0x1,0x48B,0x1,0x48C,0x1,0x48D,0x1,0x48E,0x1,0x48F,0x1,0x490,0x1,0x491,0x1,0x492,0x1,0x493,0x1,0x494,0x1,0x495,0x1,0x496,0x1,0x497,0x1,0x498,0x1,0x499,0x1,0x49A,0x1,0x49B,0x1,0x49C,0x1,0x49D,0x1,0x49E,0x1,0x49F,0x1,0x4A0,0x1,0x4A1,0x1,0x4A2,0x1,0x4A3,0x1,0x4A4,0x1,0x4A5,0x1,0x4A6,0x1,0x4A7,0x1,0x4A8,0x1,0x4A9,0x1,0x4AA,0x1,0x4AB,0x1,0x4AC,0x1,0x4AD,0x1,0x4AE,0x1,0x4AF,0x1,0x4B0,0x1,0x4B1,0x1,0x4B2,0x1,0x4B3,0x1,0x4B4,0x1,0x4B5,0x1,0x4B6,0x1,0x4B7,0x1,0x4B8,0x1,0x4B9,0x1,0x4BA,0x1,0x4BB,0x1,0x4BC,0x1,0x4BD,0x1,0x4BE,0x1,0x4BF,0x1,0x4C0,0x1,0x4C1,0x1,0x4C2,0x1,0x4C3,0x1,0x4C4,0x1,0x4C5,0x1,0x4C6,0x1,0x4C7,0x1,0x4C8,0x1,0x4C9,0x1,0x4CA,0x1,0x4CB,0x1,0x4CC,0x1,0x4CD,0x1,0x4CE,0x1,0x4CF,0x1,0x4D0,0x1,0x4D1,0x1,0x4D2,0x1,0x4D3,0x1,0x4D4,0x1,0x4D5,0x1,0x4D6,0x1,0x4D7,0x1,0x4D8,0x1,0x4D9,0x1,0x4DA,0x1,0x4DB,0x1,0x4DC,0x1,0x4DD,0x1,0x4DE,0x1,0x4DF,0x1,0x4E0,0x1,0x4E1,0x1,0x4E2,0x1,0x4E3,0x1,0x4E4,0x1,0x4E5,0x1,0x4E6,0x1,0x4E7,0x1,0x4E8,0x1,0x4E9,0x1,0x4EA,0x1,0x4EB,0x1,0x4EC,0x1,0x4ED,0x1,0x4EE,0x1,0x4EF,0x1,0x4F0,0x1,0x4F1,0x1,0x4F2,0x1,0x4F3,0x1,0x4F4,0x1,0x4F5,0x1,0x4F6,0x1,0x4F7,0x1,0x4F8,0x1,0x4F9,0x1,0x4FA,0x1,0x4FB,0x1,0x4FC,0x1,0x4FD,0x1,0x4FE,0x1,0x4FF,0x1,0x500,0x1,0x501,0x1,0x502,0x1,0x503,0x1,0x504,0x1,0x505,0x1,0x506,0x1,0x507,0x1,0x508,0x1,0x509,0x1,0x50A,0x1,0x50B,0x1,0x50C,0x1,0x50D,0x1,0x50E,0x1,0x50F,0x1,0x510,0x1,0x511,0x1,0x512,0x1,0x513,0x1,0x514,0x1,0x515,0x1,0x516,0x1,0x517,0x1,0x518,0x1,0x519,0x1,0x51A,0x1,0x51B,0x1,0x51C,0x1,0x51D,0x1,0x51E,0x1,0x51F,0x1,0x520,0x1,0x521,0x1,0x522,0x1,0x523,0x1,0x524,0x1,0x525,0x1,0x526,0x1,0x527,0x1,0x528,0x1,0x529,0x1,0x52A,0x1,0x52B,0x1,0x52C,0x1,0x52D,0x1,0x52E,0x1,0x52F,0x1,0x530,0x1,0x531,0x1,0x532,0x1,0x533,0x1,0x534,0x1,0x535,0x1,0x536,0x1,0x537,0x1,0x538,0x1,0x539,0x1,0x53A,0x1,0x53B,0x1,0x53C,0x1,0x53D,0x1,0x53E,0x1,0x53F,0x1,0x540,0x1,0x541,0x1,0x542,0x1,0x543,0x1,0x544,0x1,0x545,0x1,0x546,0x1,0x547,0x1,0x548,0x1,0x549,0x1,0x54A,0x1,0x54B,0x1,0x54C,0x1,0x54D,0x1,0x54E,0x1,0x54F,0x1,0x550,0x1,0x551,0x1,0x552,0x1,0x553,0x1,0x554,0x1,0x555,0x1,0x556,0x1,0x557,0x1,0x558,0x1,0x559,0x1,0x55A,0x1,0x55B,0x1,0x55C,0x1,0x55D,0x1,0x55E,0x1,0x55F,0x1,0x560,0x1,0x561,0x1,0x562,0x1,0x563,0x1,0x564,0x1,0x565,0x1,0x566,0x1,0x567,0x1,0x568,0x1,0x569,0x1,0x56A,0x1,0x56B,0x1,0x56C,0x1,0x56D,0x1,0x56E,0x1,0x56F,0x1,0x570,0x1,0x571,0x1,0x572,0x1,0x573,0x1,0x574,0x1,0x575,0x1,0x576,0x1,0x577,0x1,0x578,0x1,0x579,0x1,0x57A,0x1,0x57B,0x1,0x57C,0x1,0x57D,0x1,0x57E,0x1,0x57F,0x1,0x580,0x1,0x581,0x1,0x582,0x1,0x583,0x1,0x584,0x1,0x585,0x1,0x586,0x1,0x587,0x1,0x588,0x1,0x589,0x1,0x58A,0x1,0x58B,0x1,0x58C,0x1,0x58D,0x1,0x58E,0x1,0x58F,0x1,0x590,0x1,0x591,0x1,0x592,0x1,0x593,0x1,0x594,0x1,0x595,0x1,0x596,0x1,0x597,0x1,0x598,0x1,0x599,0x1,0x59A,0x1,0x59B,0x1,0x59C,0x1,0x59D,0x1,0x59E,0x1,0x59F,0x1,0x5A0,0x1,0x5A1,0x1,0x5A2,0x1,0x5A3,0x1,0x5A4,0x1,0x5A5,0x1,0x5A6,0x1,0x5A7,0x1,0x5A8,0x1,0x5A9,0x1,0x5AA,0x1,0x5AB,0x1,0x5AC,0x1,0x5AD,0x1,0x5AE,0x1,0x5AF,0x1,0x5B0,0x1,0x5B1,0x1,0x5B2,0x1,0x5B3,0x1,0x5B4,0x1,0x5B5,0x1,0x5B6,0x1,0x5B7,0x1,0x5B8,0x1,0x5B9,0x1,0x5BA,0x1,0x5BB,0x1,0x5BC,0x1,0x5BD,0x1,0x5BE,0x1,0x5BF,0x1,0x5C0,0x1,0x5C1,0x1,0x5C2,0x1,0x5C3,0x1,0x5C4,0x1,0x5C5,0x1,0x5C6,0x1,0x5C7,0x1,0x5C8,0x1,0x5C9,0x1,0x5CA,0x1,0x5CB,0x1,0x5CC,0x1,0x5CD,0x1,0x5CE,0x1,0x5CF,0x1,0x5D0,0x1,0x5D1,0x1,0x5D2,0x1,0x5D3,0x1,0x5D4,0x1,0x5D5,0x1,0x5D6,0x1,0x5D7,0x1,0x5D8,0x1,0x5D9,0x1,0x5DA,0x1,0x5DB,0x1,0x5DC,0x1,0x5DD,0x1,0x5DE,0x1,0x5DF,0x1,0x5E0,0x1,0x5E1,0x1,0x5E2,0x1,0x5E3,0x1,0x5E4,0x1,0x5E5,0x1,0x5E6,0x1,0x5E7,0x1,0x5E8,0x1,0x5E9,0x1,0x5EA,0x1,0x5EB,0x1,0x5EC,0x1,0x5ED,0x1,0x5EE,0x1,0x5EF,0x1,0x5F0,0x1,0x5F1,0x1,0x5F2,0x1,0x5F3,0x1,0x5F4,0x1,0x5F5,0x1,0x5F6,0x1,0x5F7,0x1,0x5F8,0x1,0x5F9,0x1,0x5FA,0x1,0x5FB,0x1,0x5FC,0x1,0x5FD,0x1,0x5FE,0x1,0x5FF,0x1,0x600,0x1,0x601,0x1,0x602,0x1,0x603,0x1,0x604,0x1,0x605,0x1,0x606,0x1,0x607,0x1,0x608,0x1,0x609,0x1,0x60A,0x1,0x60B,0x1,0x60C,0x1,0x60D,0x1,0x60E,0x1,0x60F,0x1,0x610,0x1,0x611,0x1,0x612,0x1,0x613,0x1,0x614,0x1,0x615,0x1,0x616,0x1,0x617,0x1,0x618,0x1,0x619,0x1,0x61A,0x1,0x61B,0x1,0x61C,0x1,0x61D,0x1,0x61E,0x1,0x61F,0x1,0x620,0x1,0x621,0x1,0x622,0x1,0x623,0x1,0x624,0x1,0x625,0x1,0x626,0x1,0x627,0x1,0x628,0x1,0x629,0x1,0x62A,0x1,0x62B,0x1,0x62C,0x1,0x62D,0x1,0x62E,0x1,0x62F,0x1,0x630,0x1,0x631,0x1,0x632,0x1,0x633,0x1,0x634,0x1,0x635,0x1,0x636,0x1,0x637,0x1,0x638,0x1,0x639,0x1,0x63A,0x1,0x63B,0x1,0x63C,0x1,0x63D,0x1,0x63E,0x1,0x63F,0x1,0x640,0x1,0x641,0x1,0x642,0x1,0x643,0x1,0x644,0x1,0x645,0x1,0x646,0x1,0x647,0x1,0x648,0x1,0x649,0x1,0x64A,0x1,0x64B,0x1,0x64C,0x1,0x64D,0x1,0x64E,0x1,0x64F,0x1,0x650,0x1,0x651,0x1,0x652,0x1,0x653,0x1,0x654,0x1,0x655,0x1,0x656,0x1,0x657,0x1,0x658,0x1,0x659,0x1,0x65A,0x1,0x65B,0x1,0x65C,0x1,0x65D,0x1,0x65E,0x1,0x65F,0x1,0x660,0x1,0x661,0x1,0x662,0x1,0x663,0x1,0x664,0x1,0x665,0x1,0x666,0x1,0x667,0x1,0x668,0x1,0x669,0x1,0x66A,0x1,0x66B,0x1,0x66C,0x1,0x66D,0x1,0x66E,0x1,0x66F,0x1,0x670,0x1,0x671,0x1,0x672,0x1,0x673,0x1,0x674,0x1,0x675,0x1,0x676,0x1,0x677,0x1,0x678,0x1,0x679,0x1,0x67A,0x1,0x67B,0x1,0x67C,0x1,0x67D,0x1,0x67E,0x1,0x67F,0x1,0x680,0x1,0x681,0x1,0x682,0x1,0x683,0x1,0x684,0x1,0x685,0x1,0x686,0x1,0x687,0x1,0x688,0x1,0x689,0x1,0x68A,0x1,0x68B,0x1,0x68C,0x1,0x68D,0x1,0x68E,0x1,0x68F,0x1,0x690,0x1,0x691,0x1,0x692,0x1,0x693,0x1,0x694,0x1,0x695,0x1,0x696,0x1,0x697,0x1,0x698,0x1,0x699,0x1,0x69A,0x1,0x69B,0x1,0x69C,0x1,0x69D,0x1,0x69E,0x1,0x69F,0x1,0x6A0,0x1,0x6A1,0x1,0x6A2,0x1,0x6A3,0x1,0x6A4,0x1,0x6A5,0x1,0x6A6,0x1,0x6A7,0x1,0x6A8,0x1,0x6A9,0x1,0x6AA,0x1,0x6AB,0x1,0x6AC,0x1,0x6AD,0x1,0x6AE,0x1,0x6AF,0x1,0x6B0,0x1,0x6B1,0x1,0x6B2,0x1,0x6B3,0x1,0x6B4,0x1,0x6B5,0x1,0x6B6,0x1,0x6B7,0x1,0x6B8,0x1,0x6B9,0x1,0x6BA,0x1,0x6BB,0x1,0x6BC,0x1,0x6BD,0x1,0x6BE,0x1,0x6BF,0x1,0x6C0,0x1,0x6C1,0x1,0x6C2,0x1,0x6C3,0x1,0x6C4,0x1,0x6C5,0x1,0x6C6,0x1,0x6C7,0x1,0x6C8,0x1,0x6C9,0x1,0x6CA,0x1,0x6CB,0x1,0x6CC,0x1,0x6CD,0x1,0x6CE,0x1,0x6CF,0x1,0x6D0,0x1,0x6D1,0x1,0x6D2,0x1,0x6D3,0x1,0x6D4,0x1,0x6D5,0x1,0x6D6,0x1,0x6D7,0x1,0x6D8,0x1,0x6D9,0x1,0x6DA,0x1,0x6DB,0x1,0x6DC,0x1,0x6DD,0x1,0x6DE,0x1,0x6DF,0x1,0x6E0,0x1,0x6E1,0x1,0x6E2,0x1,0x6E3,0x1,0x6E4,0x1,0x6E5,0x1,0x6E6,0x1,0x6E7,0x1,0x6E8,0x1,0x6E9,0x1,0x6EA,0x1,0x6EB,0x1,0x6EC,0x1,0x6ED,0x1,0x6EE,0x1,0x6EF,0x1,0x6F0,0x1,0x6F1,0x1,0x6F2,0x1,0x6F3,0x1,0x6F4,0x1,0x6F5,0x1,0x6F6,0x1,0x6F7,0x1,0x6F8,0x1,0x6F9,0x1,0x6FA,0x1,0x6FB,0x1,0x6FC,0x1,0x6FD,0x1,0x6FE,0x1,0x6FF,0x1,0x700,0x1,0x701,0x1,0x702,0x1,0x703,0x1,0x704,0x1,0x705,0x1,0x706,0x1,0x707,0x1,0x708,0x1,0x709,0x1,0x70A,0x1,0x70B,0x1,0x70C,0x1,0x70D,0x1,0x70E,0x1,0x70F,0x1,0x710,0x1,0x711,0x1,0x712,0x1,0x713,0x1,0x714,0x1,0x715,0x1,0x716,0x1,0x717,0x1,0x718,0x1,0x719,0x1,0x71A,0x1,0x71B,0x1,0x71C,0x1,0x71D,0x1,0x71E,0x1,0x71F,0x1,0x720,0x1,0x721,0x1,0x722,0x1,0x723,0x1,0x724,0x1,0x725,0x1,0x726,0x1,0x727,0x1,0x728,0x1,0x729,0x1,0x72A,0x1,0x72B,0x1,0x72C,0x1,0x72D,0x1,0x72E,0x1,0x72F,0x1,0x730,0x1,0x731,0x1,0x732,0x1,0x733,0x1,0x734,0x1,0x735,0x1,0x736,0x1,0x737,0x1,0x738,0x1,0x739,0x1,0x73A,0x1,0x73B,0x1,0x73C,0x1,0x73D,0x1,0x73E,0x1,0x73F,0x1,0x740,0x1,0x741,0x1,0x742,0x1,0x743,0x1,0x744,0x1,0x745,0x1,0x746,0x1,0x747,0x1,0x748,0x1,0x749,0x1,0x74A,0x1,0x74B,0x1,0x74C,0x1,0x74D,0x1,0x74E,0x1,0x74F,0x1,0x750,0x1,0x751,0x1,0x752,0x1,0x753,0x1,0x754,0x1,0x755,0x1,0x756,0x1,0x757,0x1,0x758,0x1,0x759,0x1,0x75A,0x1,0x75B,0x1,0x75C,0x1,0x75D,0x1,0x75E,0x1,0x75F,0x1,0x760,0x1,0x761,0x1,0x762,0x1,0x763,0x1,0x764,0x1,0x765,0x1,0x766,0x1,0x767,0x1,0x768,0x1,0x769,0x1,0x76A,0x1,0x76B,0x1,0x76C,0x1,0x76D,0x1,0x76E,0x1,0x76F,0x1,0x770,0x1,0x771,0x1,0x772,0x1,0x773,0x1,0x774,0x1,0x775,0x1,0x776,0x1,0x777,0x1,0x778,0x1,0x779,0x1,0x77A,0x1,0x77B,0x1,0x77C,0x1,0x77D,0x1,0x77E,0x1,0x77F,0x1,0x780,0x1,0x781,0x1,0x782,0x1,0x783,0x1,0x784,0x1,0x785,0x1,0x786,0x1,0x787,0x1,0x788,0x1,0x789,0x1,0x78A,0x1,0x78B,0x1,0x78C,0x1,0x78D,0x1,0x78E,0x1,0x78F,0x1,0x790,0x1,0x791,0x1,0x792,0x1,0x793,0x1,0x794,0x1,0x795,0x1,0x796,0x1,0x797,0x1,0x798,0x1,0x799,0x1,0x79A,0x1,0x79B,0x1,0x79C,0x1,0x79D,0x1,0x79E,0x1,0x79F,0x1,0x7A0,0x1,0x7A1,0x1,0x7A2,0x1,0x7A3,0x1,0x7A4,0x1,0x7A5,0x1,0x7A6,0x1,0x7A7,0x1,0x7A8,0x1,0x7A9,0x1,0x7AA,0x1,0x7AB,0x1,0x7AC,0x1,0x7AD,0x1,0x7AE,0x1,0x7AF,0x1,0x7B0,0x1,0x7B1,0x1,0x7B2,0x1,0x7B3,0x1,0x7B4,0x1,0x7B5,0x1,0x7B6,0x1,0x7B7,0x1,0x7B8,0x1,0x7B9,0x1,0x7BA,0x1,0x7BB,0x1,0x7BC,0x1,0x7BD,0x1,0x7BE,0x1,0x7BF,0x1,0x7C0,0x1,0x7C1,0x1,0x7C2,0x1,0x7C3,0x1,0x7C4,0x1,0x7C5,0x1,0x7C6,0x1,0x7C7,0x1,0x7C8,0x1,0x7C9,0x1,0x7CA,0x1,0x7CB,0x1,0x7CC,0x1,0x7CD,0x1,0x7CE,0x1,0x7CF,0x1,0x7D0,0x1,0x7D1,0x1,0x7D2,0x1,0x7D3,0x1,0x7D4,0x1,0x7D5,0x1,0x7D6,0x1,0x7D7,0x1,0x7D8,0x1,0x7D9,0x1,0x7DA,0x1,0x7DB,0x1,0x7DC,0x1,0x7DD,0x1,0x7DE,0x1,0x7DF,0x1,0x7E0,0x1,0x7E1,0x1,0x7E2,0x1,0x7E3,0x1,0x7E4,0x1,0x7E5,0x1,0x7E6,0x1,0x7E7,0x1,0x7E8,0x1,0x7E9,0x1,0x7EA,0x1,0x7EB,0x1,0x7EC,0x1,0x7ED,0x1,0x7EE,0x1,0x7EF,0x1,0x7F0,0x1,0x7F1,0x1,0x7F2,0x1,0x7F3,0x1,0x7F4,0x1,0x7F5,0x1,0x7F6,0x1,0x7F7,0x1,0x7F8,0x1,0x7F9,0x1,0x7FA,0x1,0x7FB,0x1,0x7FC,0x1,0x7FD,0x1,0x7FE,0x1,0x7FF,0x1,0x800,0x1,0x801,0x1,0x802,0x1,0x803,0x1,0x804,0x1,0x805,0x1,0x806,0x1,0x807,0x1,0x808,0x1,0x809,0x1,0x80A,0x1,0x80B,0x1,0x80C,0x1,0x80D,0x1,0x80E,0x1,0x80F,0x1,0x810,0x1,0x811,0x1,0x812,0x1,0x813,0x1,0x814,0x1,0x815,0x1,0x816,0x1,0x817,0x1,0x818,0x1,0x819,0x1,0x81A,0x1,0x81B,0x1,0x81C,0x1,0x81D,0x1,0x81E,0x1,0x81F,0x1,0x820,0x1,0x821,0x1,0x822,0x1,0x823,0x1,0x824,0x1,0x825,0x1,0x826,0x1,0x827,0x1,0x828,0x1,0x829,0x1,0x82A,0x1,0x82B,0x1,0x82C,0x1,0x82D,0x1,0x82E,0x1,0x82F,0x1,0x830,0x1,0x831,0x1,0x832,0x1,0x833,0x1,0x834,0x1,0x835,0x1,0x836,0x1,0x837,0x1,0x838,0x1,0x839,0x1,0x83A,0x1,0x83B,0x1,0x83C,0x1,0x83D,0x1,0x83E,0x1,0x83F,0x1,0x840,0x1,0x841,0x1,0x842,0x1,0x843,0x1,0x844,0x1,0x845,0x1,0x846,0x1,0x847,0x1,0x848,0x1,0x849,0x1,0x84A,0x1,0x84B,0x1,0x84C,0x1,0x84D,0x1,0x84E,0x1,0x84F,0x1,0x850,0x1,0x851,0x1,0x852,0x1,0x853,0x1,0x854,0x1,0x855,0x1,0x856,0x1,0x857,0x1,0x858,0x1,0x859,0x1,0x85A,0x1,0x85B,0x1,0x85C,0x1,0x85D,0x1,0x85E,0x1,0x85F,0x1,0x860,0x1,0x861,0x1,0x862,0x1,0x863,0x1,0x864,0x1,0x865,0x1,0x866,0x1,0x867,0x1,0x868,0x1,0x869,0x1,0x86A,0x1,0x86B,0x1,0x86C,0x1,0x86D,0x1,0x86E,0x1,0x86F,0x1,0x870,0x1,0x871,0x1,0x872,0x1,0x873,0x1,0x874,0x1,0x875,0x1,0x876,0x1,0x877,0x1,0x878,0x1,0x879,0x1,0x87A,0x1,0x87B,0x1,0x87C,0x1,0x87D,0x1,0x87E,0x1,0x87F,0x1,0x880,0x1,0x881,0x1,0x882,0x1,0x883,0x1,0x884,0x1,0x885,0x1,0x886,0x1,0x887,0x1,0x888,0x1,0x889,0x1,0x88A,0x1,0x88B,0x1,0x88C,0x1,0x88D,0x1,0x88E,0x1,0x88F,0x1,0x890,0x1,0x891,0x1,0x892,0x1,0x893,0x1,0x894,0x1,0x895,0x1,0x896,0x1,0x897,0x1,0x898,0x1,0x899,0x1,0x89A,0x1,0x89B,0x1,0x89C,0x1,0x89D,0x1,0x89E,0x1,0x89F,0x1,0x8A0,0x1,0x8A1,0x1,0x8A2,0x1,0x8A3,0x1,0x8A4,0x1,0x8A5,0x1,0x8A6,0x1,0x8A7,0x1,0x8A8,0x1,0x8A9,0x1,0x8AA,0x1,0x8AB,0x1,0x8AC,0x1,0x8AD,0x1,0x8AE,0x1,0x8AF,0x1,0x8B0,0x1,0x8B1,0x1,0x8B2,0x1,0x8B3,0x1,0x8B4,0x1,0x8B5,0x1,0x8B6,0x1,0x8B7,0x1,0x8B8,0x1,0x8B9,0x1,0x8BA,0x1,0x8BB,0x1,0x8BC,0x1,0x8BD,0x1,0x8BE,0x1,0x8BF,0x1,0x8C0,0x1,0x8C1,0x1,0x8C2,0x1,0x8C3,0x1,0x8C4,0x1,0x8C5,0x1,0x8C6,0x1,0x8C7,0x1,0x8C8,0x1,0x8C9,0x1,0x8CA,0x1,0x8CB,0x1,0x8CC,0x1,0x8CD,0x1,0x8CE,0x1,0x8CF,0x1,0x8D0,0x1,0x8D1,0x1,0x8D2,0x1,0x8D3,0x1,0x8D4,0x1,0x8D5,0x1,0x8D6,0x1,0x8D7,0x1,0x8D8,0x1,0x8D9,0x1,0x8DA,0x1,0x8DB,0x1,0x8DC,0x1,0x8DD,0x1,0x8DE,0x1,0x8DF,0x1,0x8E0,0x1,0x8E1,0x1,0x8E2,0x1,0x8E3,0x1,0x8E4,0x1,0x8E5,0x1,0x8E6,0x1,0x8E7,0x1,0x8E8,0x1,0x8E9,0x1,0x8EA,0x1,0x8EB,0x1,0x8EC,0x1,0x8ED,0x1,0x8EE,0x1,0x8EF,0x1,0x8F0,0x1,0x8F1,0x1,0x8F2,0x1,0x8F3,0x1,0x8F4,0x1,0x8F5,0x1,0x8F6,0x1,0x8F7,0x1,0x8F8,0x1,0x8F9,0x1,0x8FA,0x1,0x8FB,0x1,0x8FC,0x1,0x8FD,0x1,0x8FE,0x1,0x8FF,0x1,0x900,0x1,0x901,0x1,0x902,0x1,0x903,0x1,0x904,0x1,0x905,0x1,0x906,0x1,0x907,0x1,0x908,0x1,0x909,0x1,0x90A,0x1,0x90B,0x1,0x90C,0x1,0x90D,0x1,0x90E,0x1,0x90F,0x1,0x910,0x1,0x911,0x1,0x912,0x1,0x913,0x1,0x914,0x1,0x915,0x1,0x916,0x1,0x917,0x1,0x918,0x1,0x919,0x1,0x91A,0x1,0x91B,0x1,0x91C,0x1,0x91D,0x1,0x91E,0x1,0x91F,0x1,0x920,0x1,0x921,0x1,0x922,0x1,0x923,0x1,0x924,0x1,0x925,0x1,0x926,0x1,0x927,0x1,0x928,0x1,0x929,0x1,0x92A,0x1,0x92B,0x1,0x92C,0x1,0x92D,0x1,0x92E,0x1,0x92F,0x1,0x930,0x1,0x931,0x1,0x932,0x1,0x933,0x1,0x934,0x1,0x935,0x1,0x936,0x1,0x937,0x1,0x938,0x1,0x939,0x1,0x93A,0x1,0x93B,0x1,0x93C,0x1,0x93D,0x1,0x93E,0x1,0x93F,0x1,0x940,0x1,0x941,0x1,0x942,0x1,0x943,0x1,0x944,0x1,0x945,0x1,0x946,0x1,0x947,0x1,0x948,0x1,0x949,0x1,0x94A,0x1,0x94B,0x1,0x94C,0x1,0x94D,0x1,0x94E,0x1,0x94F,0x1,0x950,0x1,0x951,0x1,0x952,0x1,0x953,0x1,0x954,0x1,0x955,0x1,0x956,0x1,0x957,0x1,0x958,0x1,0x959,0x1,0x95A,0x1,0x95B,0x1,0x95C,0x1,0x95D,0x1,0x95E,0x1,0x95F,0x1,0x960,0x1,0x961,0x1,0x962,0x1,0x963,0x1,0x964,0x1,0x965,0x1,0x966,0x1,0x967,0x1,0x968,0x1,0x969,0x1,0x96A,0x1,0x96B,0x1,0x96C,0x1,0x96D,0x1,0x96E,0x1,0x96F,0x1,0x970,0x1,0x971,0x1,0x972,0x1,0x973,0x1,0x974,0x1,0x975,0x1,0x976,0x1,0x977,0x1,0x978,0x1,0x979,0x1,0x97A,0x1,0x97B,0x1,0x97C,0x1,0x97D,0x1,0x97E,0x1,0x97F,0x1,0x980,0x1,0x981,0x1,0x982,0x1,0x983,0x1,0x984,0x1,0x985,0x1,0x986,0x1,0x987,0x1,0x988,0x1,0x989,0x1,0x98A,0x1,0x98B,0x1,0x98C,0x1,0x98D,0x1,0x98E,0x1,0x98F,0x1,0x990,0x1,0x991,0x1,0x992,0x1,0x993,0x1,0x994,0x1,0x995,0x1,0x996,0x1,0x997,0x1,0x998,0x1,0x999,0x1,0x99A,0x1,0x99B,0x1,0x99C,0x1,0x99D,0x1,0x99E,0x1,0x99F,0x1,0x9A0,0x1,0x9A1,0x1,0x9A2,0x1,0x9A3,0x1,0x9A4,0x1,0x9A5,0x1,0x9A6,0x1,0x9A7,0x1,0x9A8,0x1,0x9A9,0x1,0x9AA,0x1,0x9AB,0x1,0x9AC,0x1,0x9AD,0x1,0x9AE,0x1,0x9AF,0x1,0x9B0,0x1,0x9B1,0x1,0x9B2,0x1,0x9B3,0x1,0x9B4,0x1,0x9B5,0x1,0x9B6,0x1,0x9B7,0x1,0x9B8,0x1,0x9B9,0x1,0x9BA,0x1,0x9BB,0x1,0x9BC,0x1,0x9BD,0x1,0x9BE,0x1,0x9BF,0x1,0x9C0,0x1,0x9C1,0x1,0x9C2,0x1,0x9C3,0x1,0x9C4,0x1,0x9C5,0x1,0x9C6,0x1,0x9C7,0x1,0x9C8,0x1,0x9C9,0x1,0x9CA,0x1,0x9CB,0x1,0x9CC,0x1,0x9CD,0x1,0x9CE,0x1,0x9CF,0x1,0x9D0,0x1,0x9D1,0x1,0x9D2,0x1,0x9D3,0x1,0x9D4,0x1,0x9D5,0x1,0x9D6,0x1,0x9D7,0x1,0x9D8,0x1,0x9D9,0x1,0x9DA,0x1,0x9DB,0x1,0x9DC,0x1,0x9DD,0x1,0x9DE,0x1,0x9DF,0x1,0x9E0,0x1,0x9E1,0x1,0x9E2,0x1,0x9E3,0x1,0x9E4,0x1,0x9E5,0x1,0x9E6,0x1,0x9E7,0x1,0x9E8,0x1,0x9E9,0x1,0x9EA,0x1,0x9EB,0x1,0x9EC,0x1,0x9ED,0x1,0x9EE,0x1,0x9EF,0x1,0x9F0,0x1,0x9F1,0x1,0x9F2,0x1,0x9F3,0x1,0x9F4,0x1,0x9F5,0x1,0x9F6,0x1,0x9F7,0x1,0x9F8,0x1,0x9F9,0x1,0x9FA,0x1,0x9FB,0x1,0x9FC,0x1,0x9FD,0x1,0x9FE,0x1,0x9FF,0x1,0xA00,0x1,0xA01,0x1,0xA02,0x1,0xA03,0x1,0xA04,0x1,0xA05,0x1,0xA06,0x1,0xA07,0x1,0xA08,0x1,0xA09,0x1,0xA0A,0x1,0xA0B,0x1,0xA0C,0x1,0xA0D,0x1,0xA0E,0x1,0xA0F,0x1,0xA10,0x1,0xA11,0x1,0xA12,0x1,0xA13,0x1,0xA14,0x1,0xA15,0x1,0xA16,0x1,0xA17,0x1,0xA18,0x1,0xA19,0x1,0xA1A,0x1,0xA1B,0x1,0xA1C,0x1,0xA1D,0x1,0xA1E,0x1,0xA1F,0x1,0xA20,0x1,0xA21,0x1,0xA22,0x1,0xA23,0x1,0xA24,0x1,0xA25,0x1,0xA26,0x1,0xA27,0x1,0xA28,0x1,0xA29,0x1,0xA2A,0x1,0xA2B,0x1,0xA2C,0x1,0xA2D,0x1,0xA2E,0x1,0xA2F,0x1,0xA30,0x1,0xA31,0x1,0xA32,0x1,0xA33,0x1,0xA34,0x1,0xA35,0x1,0xA36,0x1,0xA37,0x1,0xA38,0x1,0xA39,0x1,0xA3A,0x1,0xA3B,0x1,0xA3C,0x1,0xA3D,0x1,0xA3E,0x1,0xA3F,0x1,0xA40,0x1,0xA41,0x1,0xA42,0x1,0xA43,0x1,0xA44,0x1,0xA45,0x1,0xA46,0x1,0xA47,0x1,0xA48,0x1,0xA49,0x1,0xA4A,0x1,0xA4B,0x1,0xA4C,0x1,0xA4D,0x1,0xA4E,0x1,0xA4F,0x1,0xA50,0x1,0xA51,0x1,0xA52,0x1,0xA53,0x1,0xA54,0x1,0xA55,0x1,0xA56,0x1,0xA57,0x1,0xA58,0x1,0xA59,0x1,0xA5A,0x1,0xA5B,0x1,0xA5C,0x1,0xA5D,0x1,0xA5E,0x1,0xA5F,0x1,0xA60,0x1,0xA61,0x1,0xA62,0x1,0xA63,0x1,0xA64,0x1,0xA65,0x1,0xA66,0x1,0xA67,0x1,0xA68,0x1,0xA69,0x1,0xA6A,0x1,0xA6B,0x1,0xA6C,0x1,0xA6D,0x1,0xA6E,0x1,0xA6F,0x1,0xA70,0x1,0xA71,0x1,0xA72,0x1,0xA73,0x1,0xA74,0x1,0xA75,0x1,0xA76,0x1,0xA77,0x1,0xA78,0x1,0xA79,0x1,0xA7A,0x1,0xA7B,0x1,0xA7C,0x1,0xA7D,0x1,0xA7E,0x1,0xA7F,0x1,0xA80,0x1,0xA81,0x1,0xA82,0x1,0xA83,0x1,0xA84,0x1,0xA85,0x1,0xA86,0x1,0xA87,0x1,0xA88,0x1,0xA89,0x1,0xA8A,0x1,0xA8B,0x1,0xA8C,0x1,0xA8D,0x1,0xA8E,0x1,0xA8F,0x1,0xA90,0x1,0xA91,0x1,0xA92,0x1,0xA93,0x1,0xA94,0x1,0xA95,0x1,0xA96,0x1,0xA97,0x1,0xA98,0x1,0xA99,0x1,0xA9A,0x1,0xA9B,0x1,0xA9C,0x1,0xA9D,0x1,0xA9E,0x1,0xA9F,0x1,0xAA0,0x1,0xAA1,0x1,0xAA2,0x1,0xAA3,0x1,0xAA4,0x1,0xAA5,0x1,0xAA6,0x1,0xAA7,0x1,0xAA8,0x1,0xAA9,0x1,0xAAA,0x1,0xAAB,0x1,0xAAC,0x1,0xAAD,0x1,0xAAE,0x1,0xAAF,0x1,0xAB0,0x1,0xAB1,0x1,0xAB2,0x1,0xAB3,0x1,0xAB4,0x1,0xAB5,0x1,0xAB6,0x1,0xAB7,0x1,0xAB8,0x1,0xAB9,0x1,0xABA,0x1,0xABB,0x1,0xABC,0x1,0xABD,0x1,0xABE,0x1,0xABF,0x1,0xAC0,0x1,0xAC1,0x1,0xAC2,0x1,0xAC3,0x1,0xAC4,0x1,0xAC5,0x1,0xAC6,0x1,0xAC7,0x1,0xAC8,0x1,0xAC9,0x1,0xACA,0x1,0xACB,0x1,0xACC,0x1,0xACD,0x1,0xACE,0x1,0xACF,0x1,0xAD0,0x1,0xAD1,0x1,0xAD2,0x1,0xAD3,0x1,0xAD4,0x1,0xAD5,0x1,0xAD6,0x1,0xAD7,0x1,0xAD8,0x1,0xAD9,0x1,0xADA,0x1,0xADB,0x1,0xADC,0x1,0xADD,0x1,0xADE,0x1,0xADF,0x1,0xAE0,0x1,0xAE1,0x1,0xAE2,0x1,0xAE3,0x1,0xAE4,0x1,0xAE5,0x1,0xAE6,0x1,0xAE7,0x1,0xAE8,0x1,0xAE9,0x1,0xAEA,0x1,0xAEB,0x1,0xAEC,0x1,0xAED,0x1,0xAEE,0x1,0xAEF,0x1,0xAF0,0x1,0xAF1,0x1,0xAF2,0x1,0xAF3,0x1,0xAF4,0x1,0xAF5,0x1,0xAF6,0x1,0xAF7,0x1,0xAF8,0x1,0xAF9,0x1,0xAFA,0x1,0xAFB,0x1,0xAFC,0x1,0xAFD,0x1,0xAFE,0x1,0xAFF,0x1,0xB00,0x1,0xB01,0x1,0xB02,0x1,0xB03,0x1,0xB04,0x1,0xB05,0x1,0xB06,0x1,0xB07,0x1,0xB08,0x1,0xB09,0x1,0xB0A,0x1,0xB0B,0x1,0xB0C,0x1,0xB0D,0x1,0xB0E,0x1,0xB0F,0x1,0xB10,0x1,0xB11,0x1,0xB12,0x1,0xB13,0x1,0xB14,0x1,0xB15,0x1,0xB16,0x1,0xB17,0x1,0xB18,0x1,0xB19,0x1,0xB1A,0x1,0xB1B,0x1,0xB1C,0x1,0xB1D,0x1,0xB1E,0x1,0xB1F,0x1,0xB20,0x1,0xB21,0x1,0xB22,0x1,0xB23,0x1,0xB24,0x1,0xB25,0x1,0xB26,0x1,0xB27,0x1,0xB28,0x1,0xB29,0x1,0xB2A,0x1,0xB2B,0x1,0xB2C,0x1,0xB2D,0x1,0xB2E,0x1,0xB2F,0x1,0xB30,0x1,0xB31,0x1,0xB32,0x1,0xB33,0x1,0xB34,0x1,0xB35,0x1,0xB36,0x1,0xB37,0x1,0xB38,0x1,0xB39,0x1,0xB3A,0x1,0xB3B,0x1,0xB3C,0x1,0xB3D,0x1,0xB3E,0x1,0xB3F,0x1,0xB40,0x1,0xB41,0x1,0xB42,0x1,0xB43,0x1,0xB44,0x1,0xB45,0x1,0xB46,0x1,0xB47,0x1,0xB48,0x1,0xB49,0x1,0xB4A,0x1,0xB4B,0x1,0xB4C,0x1,0xB4D,0x1,0xB4E,0x1,0xB4F,0x1,0xB50,0x1,0xB51,0x1,0xB52,0x1,0xB53,0x1,0xB54,0x1,0xB55,0x1,0xB56,0x1,0xB57,0x1,0xB58,0x1,0xB59,0x1,0xB5A,0x1,0xB5B,0x1,0xB5C,0x1,0xB5D,0x1,0xB5E,0x1,0xB5F,0x1,0xB60,0x1,0xB61,0x1,0xB62,0x1,0xB63,0x1,0xB64,0x1,0xB65,0x1,0xB66,0x1,0xB67,0x1,0xB68,0x1,0xB69,0x1,0xB6A,0x1,0xB6B,0x1,0xB6C,0x1,0xB6D,0x1,0xB6E,0x1,0xB6F,0x1,0xB70,0x1,0xB71,0x1,0xB72,0x1,0xB73,0x1,0xB74,0x1,0xB75,0x1,0xB76,0x1,0xB77,0x1,0xB78,0x1,0xB79,0x1,0xB7A,0x1,0xB7B,0x1,0xB7C,0x1,0xB7D,0x1,0xB7E,0x1,0xB7F,0x1,0xB80,0x1,0xB81,0x1,0xB82,0x1,0xB83,0x1,0xB84,0x1,0xB85,0x1,0xB86,0x1,0xB87,0x1,0xB88,0x1,0xB89,0x1,0xB8A,0x1,0xB8B,0x1,0xB8C,0x1,0xB8D,0x1,0xB8E,0x1,0xB8F,0x1,0xB90,0x1,0xB91,0x1,0xB92,0x1,0xB93,0x1,0xB94,0x1,0xB95,0x1,0xB96,0x1,0xB97,0x1,0xB98,0x1,0xB99,0x1,0xB9A,0x1,0xB9B,0x1,0xB9C,0x1,0xB9D,0x1,0xB9E,0x1,0xB9F,0x1,0xBA0,0x1,0xBA1,0x1,0xBA2,0x1,0xBA3,0x1,0xBA4,0x1,0xBA5,0x1,0xBA6,0x1,0xBA7,0x1,0xBA8,0x1,0xBA9,0x1,0xBAA,0x1,0xBAB,0x1,0xBAC,0x1,0xBAD,0x1,0xBAE,0x1,0xBAF,0x1,0xBB0,0x1,0xBB1,0x1,0xBB2,0x1,0xBB3,0x1,0xBB4,0x1,0xBB5,0x1,0xBB6,0x1,0xBB7,0x1,0xBB8,0x1,0xBB9,0x1,0xBBA,0x1,0xBBB,0x1,0xBBC,0x1,0xBBD,0x1,0xBBE,0x1,0xBBF,0x1,0xBC0,0x1,0xBC1,0x1,0xBC2,0x1,0xBC3,0x1,0xBC4,0x1,0xBC5,0x1,0xBC6,0x1,0xBC7,0x1,0xBC8,0x1,0xBC9,0x1,0xBCA,0x1,0xBCB,0x1,0xBCC,0x1,0xBCD,0x1,0xBCE,0x1,0xBCF,0x1,0xBD0,0x1,0xBD1,0x1,0xBD2,0x1,0xBD3,0x1,0xBD4,0x1,0xBD5,0x1,0xBD6,0x1,0xBD7,0x1,0xBD8,0x1,0xBD9,0x1,0xBDA,0x1,0xBDB,0x1,0xBDC,0x1,0xBDD,0x1,0xBDE,0x1,0xBDF,0x1,0xBE0,0x1,0xBE1,0x1,0xBE2,0x1,0xBE3,0x1,0xBE4,0x1,0xBE5,0x1,0xBE6,0x1,0xBE7,0x1,0xBE8,0x1,0xBE9,0x1,0xBEA,0x1,0xBEB,0x1,0xBEC,0x1,0xBED,0x1,0xBEE,0x1,0xBEF,0x1,0xBF0,0x1,0xBF1,0x1,0xBF2,0x1,0xBF3,0x1,0xBF4,0x1,0xBF5,0x1,0xBF6,0x1,0xBF7,0x1,0xBF8,0x1,0xBF9,0x1,0xBFA,0x1,0xBFB,0x1,0xBFC,0x1,0xBFD,0x1,0xBFE,0x1,0xBFF,0x1,0xC00,0x1,0xC01,0x1,0xC02,0x1,0xC03,0x1,0xC04,0x1,0xC05,0x1,0xC06,0x1,0xC07,0x1,0xC08,0x1,0xC09,0x1,0xC0A,0x1,0xC0B,0x1,0xC0C,0x1,0xC0D,0x1,0xC0E,0x1,0xC0F,0x1,0xC10,0x1,0xC11,0x1,0xC12,0x1,0xC13,0x1,0xC14,0x1,0xC15,0x1,0xC16,0x1,0xC17,0x1,0xC18,0x1,0xC19,0x1,0xC1A,0x1,0xC1B,0x1,0xC1C,0x1,0xC1D,0x1,0xC1E,0x1,0xC1F,0x1,0xC20,0x1,0xC21,0x1,0xC22,0x1,0xC23,0x1,0xC24,0x1,0xC25,0x1,0xC26,0x1,0xC27,0x1,0xC28,0x1,0xC29,0x1,0xC2A,0x1,0xC2B,0x1,0xC2C,0x1,0xC2D,0x1,0xC2E,0x1,0xC2F,0x1,0xC30,0x1,0xC31,0x1,0xC32,0x1,0xC33,0x1,0xC34,0x1,0xC35,0x1,0xC36,0x1,0xC37,0x1,0xC38,0x1,0xC39,0x1,0xC3A,0x1,0xC3B,0x1,0xC3C,0x1,0xC3D,0x1,0xC3E,0x1,0xC3F,0x1,0xC40,0x1,0xC41,0x1,0xC42,0x1,0xC43,0x1,0xC44,0x1,0xC45,0x1,0xC46,0x1,0xC47,0x1,0xC48,0x1,0xC49,0x1,0xC4A,0x1,0xC4B,0x1,0xC4C,0x1,0xC4D,0x1,0xC4E,0x1,0xC4F,0x1,0xC50,0x1,0xC51,0x1,0xC52,0x1,0xC53,0x1,0xC54,0x1,0xC55,0x1,0xC56,0x1,0xC57,0x1,0xC58,0x1,0xC59,0x1,0xC5A,0x1,0xC5B,0x1,0xC5C,0x1,0xC5D,0x1,0xC5E,0x1,0xC5F,0x1,0xC60,0x1,0xC61,0x1,0xC62,0x1,0xC63,0x1,0xC64,0x1,0xC65,0x1,0xC66,0x1,0xC67,0x1,0xC68,0x1,0xC69,0x1,0xC6A,0x1,0xC6B,0x1,0xC6C,0x1,0xC6D,0x1,0xC6E,0x1,0xC6F,0x1,0xC70,0x1,0xC71,0x1,0xC72,0x1,0xC73,0x1,0xC74,0x1,0xC75,0x1,0xC76,0x1,0xC77,0x1,0xC78,0x1,0xC79,0x1,0xC7A,0x1,0xC7B,0x1,0xC7C,0x1,0xC7D,0x1,0xC7E,0x1,0xC7F,0x1,0xC80,0x1,0xC81,0x1,0xC82,0x1,0xC83,0x1,0xC84,0x1,0xC85,0x1,0xC86,0x1,0xC87,0x1,0xC88,0x1,0xC89,0x1,0xC8A,0x1,0xC8B,0x1,0xC8C,0x1,0xC8D,0x1,0xC8E,0x1,0xC8F,0x1,0xC90,0x1,0xC91,0x1,0xC92,0x1,0xC93,0x1,0xC94,0x1,0xC95,0x1,0xC96,0x1,0xC97,0x1,0xC98,0x1,0xC99,0x1,0xC9A,0x1,0xC9B,0x1,0xC9C,0x1,0xC9D,0x1,0xC9E,0x1,0xC9F,0x1,0xCA0,0x1,0xCA1,0x1,0xCA2,0x1,0xCA3,0x1,0xCA4,0x1,0xCA5,0x1,0xCA6,0x1,0xCA7,0x1,0xCA8,0x1,0xCA9,0x1,0xCAA,0x1,0xCAB,0x1,0xCAC,0x1,0xCAD,0x1,0xCAE,0x1,0xCAF,0x1,0xCB0,0x1,0xCB1,0x1,0xCB2,0x1,0xCB3,0x1,0xCB4,0x1,0xCB5,0x1,0xCB6,0x1,0xCB7,0x1,0xCB8,0x1,0xCB9,0x1,0xCBA,0x1,0xCBB,0x1,0xCBC,0x1,0xCBD,0x1,0xCBE,0x1,0xCBF,0x1,0xCC0,0x1,0xCC1,0x1,0xCC2,0x1,0xCC3,0x1,0xCC4,0x1,0xCC5,0x1,0xCC6,0x1,0xCC7,0x1,0xCC8,0x1,0xCC9,0x1,0xCCA,0x1,0xCCB,0x1,0xCCC,0x1,0xCCD,0x1,0xCCE,0x2,0x3}
-local __i1illIII16,_lIII11_l_i17,__l_i1illII8=string.char,string.byte,table.concat
-local _II11_l_i1i5
-do
- local _b32=bit32
- if _b32 and _b32.bxor then _II11_l_i1i5=_b32.bxor
- else _II11_l_i1i5=function(a,b) local r,p=0,1 for _=1,8 do local x,y=a%2,b%2 if x~=y then r=r+p end a=(a-x)/2 b=(b-y)/2 p=p*2 end return r end
- end
+(function()
+local Players = game:GetService('Players'); local player = Players.LocalPlayer; local TweenService = game:GetService('TweenService'); local Lighting = game:GetService('Lighting');
+local M = {}
+-- ============================================================
+-- INTRO SAFIRA TOP 1 HUB  (pura GUI, SIN VideoFrame)
+-- Recrea el video de 5s: textos morados, barra de progreso, estrellas y Skip.
+-- AUDIO: sube https://files.catbox.moe/n08l19.mp3 a Roblox como Audio
+-- y pega el ID abajo. Se reproduce del segundo 20 al 25.
+-- ============================================================
+M.INTRO_MUSIC_ID = "rbxassetid://1234567890" -- <-- PON AQUÍ EL ID DEL MP3 subido a Roblox
+M.INTRO_MUSIC_TITLE = "Audio de la intro SAFIRA HUB"
+_G.PrimeHubFeKlan = M
+
+local function playCinematicIntro()
+    _G.PrimeHubIntroFinished = false
+    _G.PrimeHubForceMobileVisible = false
+    _G.PrimeHubIntroActive = true
+    _G.PrimeHubIntroDoneCallbacks = _G.PrimeHubIntroDoneCallbacks or {}
+
+    local introSound = nil
+
+    local function finishIntro()
+        if _G.PrimeHubIntroFinished then return end
+        _G.PrimeHubIntroActive = false
+        _G.PrimeHubIntroFinished = true
+        _G.PrimeHubForceMobileVisible = true
+        if introSound then
+            pcall(function() introSound:Stop() end)
+            pcall(function() introSound:Destroy() end)
+            introSound = nil
+        end
+        for _, fn in ipairs(_G.PrimeHubIntroDoneCallbacks or {}) do pcall(fn) end
+        _G.PrimeHubIntroDoneCallbacks = {}
+        pcall(function() game:GetService("StarterGui"):SetCore("TopbarEnabled", true) end)
+    end
+
+    local ok, err = pcall(function()
+        local player = game:GetService("Players").LocalPlayer
+        local starterGui = game:GetService("StarterGui")
+        local TweenService = game:GetService("TweenService")
+        local SoundService = game:GetService("SoundService")
+        pcall(function() starterGui:SetCore("TopbarEnabled", false) end)
+
+        -- ===== AUDIO: segundos 20 → 25 del MP3 =====
+        pcall(function()
+            if M.INTRO_MUSIC_ID and M.INTRO_MUSIC_ID ~= "rbxassetid://1234567890" then
+                introSound = Instance.new("Sound")
+                introSound.Name = "SAFIRAIntroSFX"
+                introSound.SoundId = M.INTRO_MUSIC_ID
+                introSound.Volume = 0.85
+                introSound.TimePosition = 20
+                introSound.Looped = false
+                introSound.Parent = SoundService
+                introSound:Play()
+                -- Cortar exactamente a los 5 segundos (20→25)
+                task.delay(5, function()
+                    if introSound and introSound.Parent then
+                        pcall(function() introSound:Stop() end)
+                        pcall(function() introSound:Destroy() end)
+                        introSound = nil
+                    end
+                end)
+            end
+        end)
+
+        local pg = player:FindFirstChild("PlayerGui") or player:WaitForChild("PlayerGui", 5)
+        if not pg then finishIntro(); return end
+
+        local old = pg:FindFirstChild("SAFIRAHUBIntro")
+        if old then old:Destroy() end
+
+        local screenGui = Instance.new("ScreenGui")
+        screenGui.Name = "SAFIRAHUBIntro"
+        screenGui.ResetOnSpawn = false
+        screenGui.IgnoreGuiInset = true
+        screenGui.DisplayOrder = 1000
+        screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        screenGui.Parent = pg
+
+        -- Fondo negro
+        local bg = Instance.new("Frame")
+        bg.Name = "Background"
+        bg.Size = UDim2.fromScale(1, 1)
+        bg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        bg.BorderSizePixel = 0
+        bg.Parent = screenGui
+
+        -- Estrellas
+        local starsFolder = Instance.new("Folder")
+        starsFolder.Name = "Stars"
+        starsFolder.Parent = bg
+
+        local function createStar(x, y, size, transparency)
+            local star = Instance.new("Frame")
+            star.Size = UDim2.fromOffset(size, size)
+            star.Position = UDim2.fromScale(x, y)
+            star.AnchorPoint = Vector2.new(0.5, 0.5)
+            star.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            star.BackgroundTransparency = transparency or 0.3
+            star.BorderSizePixel = 0
+            star.Parent = starsFolder
+            local corner = Instance.new("UICorner")
+            corner.CornerRadius = UDim.new(1, 0)
+            corner.Parent = star
+            return star
+        end
+
+        math.randomseed(os.clock() * 1000)
+        for i = 1, 90 do
+            createStar(math.random(), math.random(), math.random(1, 3), math.random(25, 75) / 100)
+        end
+
+        local purple = Color3.fromRGB(180, 80, 255)
+
+        -- SAFIRA
+        local titleSafira = Instance.new("TextLabel")
+        titleSafira.Name = "SAFIRA"
+        titleSafira.Size = UDim2.new(1, 0, 0, 70)
+        titleSafira.Position = UDim2.new(0, 0, 0.28, 0)
+        titleSafira.BackgroundTransparency = 1
+        titleSafira.Text = "SAFIRA"
+        titleSafira.Font = Enum.Font.GothamBlack
+        titleSafira.TextSize = 64
+        titleSafira.TextColor3 = purple
+        titleSafira.TextTransparency = 1
+        titleSafira.TextStrokeTransparency = 0.55
+        titleSafira.TextStrokeColor3 = Color3.fromRGB(90, 0, 160)
+        titleSafira.Parent = bg
+
+        -- TOP 1
+        local titleTop = Instance.new("TextLabel")
+        titleTop.Name = "TOP1"
+        titleTop.Size = UDim2.new(1, 0, 0, 70)
+        titleTop.Position = UDim2.new(0, 0, 0.40, 0)
+        titleTop.BackgroundTransparency = 1
+        titleTop.Text = "TOP 1"
+        titleTop.Font = Enum.Font.GothamBlack
+        titleTop.TextSize = 64
+        titleTop.TextColor3 = purple
+        titleTop.TextTransparency = 1
+        titleTop.TextStrokeTransparency = 0.55
+        titleTop.TextStrokeColor3 = Color3.fromRGB(90, 0, 160)
+        titleTop.Parent = bg
+
+        -- HUB (aparece más tarde)
+        local titleHub = Instance.new("TextLabel")
+        titleHub.Name = "HUB"
+        titleHub.Size = UDim2.new(1, 0, 0, 60)
+        titleHub.Position = UDim2.new(0, 0, 0.52, 0)
+        titleHub.BackgroundTransparency = 1
+        titleHub.Text = "HUB"
+        titleHub.Font = Enum.Font.GothamBlack
+        titleHub.TextSize = 56
+        titleHub.TextColor3 = purple
+        titleHub.TextTransparency = 1
+        titleHub.TextStrokeTransparency = 0.55
+        titleHub.TextStrokeColor3 = Color3.fromRGB(90, 0, 160)
+        titleHub.Parent = bg
+
+        -- Porcentaje
+        local percentLabel = Instance.new("TextLabel")
+        percentLabel.Name = "Percent"
+        percentLabel.Size = UDim2.new(1, 0, 0, 28)
+        percentLabel.Position = UDim2.new(0, 0, 0.64, 0)
+        percentLabel.BackgroundTransparency = 1
+        percentLabel.Text = "0%"
+        percentLabel.Font = Enum.Font.GothamBold
+        percentLabel.TextSize = 20
+        percentLabel.TextColor3 = purple
+        percentLabel.TextTransparency = 1
+        percentLabel.Parent = bg
+
+        -- Barra fondo
+        local barBg = Instance.new("Frame")
+        barBg.Name = "BarBg"
+        barBg.Size = UDim2.new(0.35, 0, 0, 4)
+        barBg.Position = UDim2.new(0.325, 0, 0.685, 0)
+        barBg.BackgroundColor3 = Color3.fromRGB(60, 30, 90)
+        barBg.BackgroundTransparency = 1
+        barBg.BorderSizePixel = 0
+        barBg.Parent = bg
+        Instance.new("UICorner", barBg).CornerRadius = UDim.new(1, 0)
+
+        -- Barra relleno
+        local barFill = Instance.new("Frame")
+        barFill.Name = "BarFill"
+        barFill.Size = UDim2.new(0, 0, 1, 0)
+        barFill.BackgroundColor3 = purple
+        barFill.BorderSizePixel = 0
+        barFill.Parent = barBg
+        Instance.new("UICorner", barFill).CornerRadius = UDim.new(1, 0)
+
+        -- Créditos
+        local credits = Instance.new("TextLabel")
+        credits.Name = "Credits"
+        credits.Size = UDim2.new(1, 0, 0, 22)
+        credits.Position = UDim2.new(0, 0, 0.72, 0)
+        credits.BackgroundTransparency = 1
+        credits.Text = "By Leo  •  https://discord.gg/pMJzYKryX"
+        credits.Font = Enum.Font.Gotham
+        credits.TextSize = 14
+        credits.TextColor3 = Color3.fromRGB(220, 220, 230)
+        credits.TextTransparency = 1
+        credits.Parent = bg
+
+        -- Botón Skip (igual que en el video)
+        local skipBtn = Instance.new("TextButton")
+        skipBtn.Name = "SkipButton"
+        skipBtn.Size = UDim2.fromOffset(80, 32)
+        skipBtn.Position = UDim2.new(1, -100, 0, 20)
+        skipBtn.BackgroundColor3 = Color3.fromRGB(130, 60, 220)
+        skipBtn.Text = "Skip"
+        skipBtn.Font = Enum.Font.GothamBold
+        skipBtn.TextSize = 16
+        skipBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        skipBtn.BorderSizePixel = 0
+        skipBtn.AutoButtonColor = true
+        skipBtn.ZIndex = 5
+        skipBtn.Parent = bg
+        Instance.new("UICorner", skipBtn).CornerRadius = UDim.new(0, 8)
+
+        local skipped = false
+        local function cleanupAndFinish()
+            if skipped then return end
+            skipped = true
+            -- Parar el audio de la intro al saltar o terminar
+            if introSound then
+                pcall(function() introSound:Stop() end)
+                pcall(function() introSound:Destroy() end)
+                introSound = nil
+            end
+            pcall(function()
+                local fadeInfo = TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                TweenService:Create(bg, fadeInfo, {BackgroundTransparency = 1}):Play()
+                for _, child in ipairs(bg:GetDescendants()) do
+                    if child:IsA("TextLabel") or child:IsA("TextButton") then
+                        TweenService:Create(child, fadeInfo, {TextTransparency = 1, BackgroundTransparency = 1}):Play()
+                    elseif child:IsA("Frame") and child ~= bg then
+                        TweenService:Create(child, fadeInfo, {BackgroundTransparency = 1}):Play()
+                    end
+                end
+            end)
+            task.delay(0.4, function()
+                if screenGui and screenGui.Parent then screenGui:Destroy() end
+                pcall(function() starterGui:SetCore("TopbarEnabled", true) end)
+                finishIntro()
+            end)
+        end
+
+        skipBtn.Activated:Connect(cleanupAndFinish)
+
+        -- Tocar en cualquier lado también salta
+        local fullSkip = Instance.new("TextButton")
+        fullSkip.Name = "FullSkip"
+        fullSkip.Size = UDim2.fromScale(1, 1)
+        fullSkip.BackgroundTransparency = 1
+        fullSkip.Text = ""
+        fullSkip.ZIndex = 1
+        fullSkip.Parent = bg
+        fullSkip.Activated:Connect(cleanupAndFinish)
+
+        -- ========== ANIMACIÓN (imita el video de ~5s) ==========
+        task.spawn(function()
+            if skipped then return end
+
+            local fadeIn = TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+            TweenService:Create(titleSafira, fadeIn, {TextTransparency = 0}):Play()
+            task.wait(0.12)
+            if skipped then return end
+            TweenService:Create(titleTop, fadeIn, {TextTransparency = 0}):Play()
+            task.wait(0.08)
+            if skipped then return end
+            TweenService:Create(percentLabel, fadeIn, {TextTransparency = 0}):Play()
+            TweenService:Create(credits, fadeIn, {TextTransparency = 0}):Play()
+            TweenService:Create(barBg, fadeIn, {BackgroundTransparency = 0.25}):Play()
+
+            -- Progreso 0 → 100%
+            local startTime = tick()
+            local duration = 2.15
+            while not skipped do
+                local t = math.clamp((tick() - startTime) / duration, 0, 1)
+                percentLabel.Text = math.floor(t * 100) .. "%"
+                barFill.Size = UDim2.new(t, 0, 1, 0)
+                if t >= 1 then break end
+                task.wait()
+            end
+            if skipped then return end
+
+            percentLabel.Text = "100%"
+            barFill.Size = UDim2.new(1, 0, 1, 0)
+
+            task.wait(0.12)
+            if skipped then return end
+            TweenService:Create(titleHub, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+
+            task.wait(1.85)
+            if not skipped then
+                cleanupAndFinish()
+            end
+        end)
+    end)
+
+    if not ok then
+        warn("[SAFIRA HUB Intro] " .. tostring(err))
+        finishIntro()
+    end
 end
-local _illIII11_l11
-local function _llIII11_l_9(_i1illIII115,_1_l_i1illI2) local _I11_l_i1il4={} for _illIII11_l3=1,#_i1illIII115 do local z=_lIII11_l_i17(_i1illIII115,_illIII11_l3) z=_II11_l_i1i5(z,_illIII11_l2[((_illIII11_l3-1)%#_illIII11_l2)+1]) z=_II11_l_i1i5(z,(_1_l_i1illI2+(_illIII11_l3-1)*13)%256) _I11_l_i1il4[_illIII11_l3]=__i1illIII16(z) end return __l_i1illII8(_I11_l_i1il4) end
-local _I11_l_i1il12,_1_l_i1illI10=1,{}
-while _I11_l_i1il12<=#_i1illIII114 do local _i1illIII1113=_i1illIII114[_I11_l_i1il12] if _i1illIII1113==1 then local _II11_l_i1i6=_i1illIII114[_I11_l_i1il12+1] _1_l_i1illI10[_II11_l_i1i6]=_llIII11_l_9(_1_l_i1illI1[_I11_l_i1il3[_II11_l_i1i6]],_1_l_i1illI2s[_II11_l_i1i6]) _I11_l_i1il12=_I11_l_i1il12+2 elseif _i1illIII1113==2 then _illIII11_l11=__l_i1illII8(_1_l_i1illI10) _I11_l_i1il12=_I11_l_i1il12+1 elseif _i1illIII1113==3 then break else _I11_l_i1il12=_I11_l_i1il12+1 end end
-local __l_i1illII0=__i1illIII16(108,111,97,100,115,116,114,105,110,103)
-local _llIII11_l_1=getfenv and getfenv() or _ENV or _G
-local _lIII11_l_i116=loadstring or load
-if not _lIII11_l_i116 and _llIII11_l_1 then _lIII11_l_i116=_llIII11_l_1[__l_i1illII0] end
-if not _lIII11_l_i116 and getrenv then local r=getrenv() _lIII11_l_i116=r.loadstring or r.load end
-if not _lIII11_l_i116 then error("sin loadstring") end
-local _II11_l_i1i14,__i1illIII115=_lIII11_l_i116(_illIII11_l11)
-if not _II11_l_i1i14 then error(__i1illIII115) end
-if setfenv and getfenv then pcall(setfenv,_II11_l_i1i14,getfenv()) end
-return _II11_l_i1i14()
-end end
-return _M()
+_G.PrimeHubIntroActive = false; _G.PrimeHubIntroFinished = true
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UIS = game:GetService("UserInputService")
+local PRIMEHUB_MOBILE = UIS.TouchEnabled == true
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local HS = game:GetService("HttpService")
+local player = Players.LocalPlayer
+
+function M.sendSpamChatMessage()
+    local message = "SAFIRA HUB new generation"
+    local sent = false
+    pcall(function()
+        local textChatService = game:GetService("TextChatService")
+        local channels = textChatService:FindFirstChild("TextChannels")
+        local general = channels and channels:FindFirstChild("RBXGeneral")
+        if general then
+            general:SendAsync(message)
+            sent = true
+        end
+    end)
+    if not sent then
+        pcall(function()
+            local events = game:GetService("ReplicatedStorage"):FindFirstChild("DefaultChatSystemChatEvents")
+            local sayMessage = events and events:FindFirstChild("SayMessageRequest")
+            if sayMessage then
+                sayMessage:FireServer(message, "All")
+                sent = true
+            end
+        end)
+    end
+    if not sent and M.notify then
+        pcall(function() M.notify("Chat is unavailable") end)
+    end
+end
+local task_wait, task_spawn, task_delay = task.wait, task.spawn, task.delay
+local math_floor, math_abs, math_rad = math.floor, math.abs, math.rad
+local Vector3_new, CFrame_new, Color3_fromRGB = Vector3.new, CFrame.new, Color3.fromRGB
+local Instance_new = Instance.new
+M.introSoundEnabled = false
+M.introSongChoice = 3
+M.introGUIEnabled = false
+if isfile and isfile("primehub_fe_klan_config.json") then
+    local ok, data = pcall(function() return HS:JSONDecode(readfile("primehub_fe_klan_config.json")) end)
+    if ok and type(data) == "table" then
+        if data.introSoundEnabled ~= nil then M.introSoundEnabled = data.introSoundEnabled end
+        if data.introSongChoice then M.introSongChoice = data.introSongChoice end
+        if data.introGUIEnabled ~= nil then M.introGUIEnabled = data.introGUIEnabled end
+        if type(data.Theme) == "string" then M._savedTheme = data.Theme end
+        if type(data.colorScheme) == "string" then M._savedTheme = data.colorScheme end
+    end
+end
+M.CANDY_SKY_TAG = "MoveeSkyTheme"
+M.currentSkyTheme = "Night"
+M.skyThemesEnabled = true
+M._skyOriginalLighting = nil
+M.CANDY_SKY_PRESETS = {
+    ["Off"]={kind="off"},
+    ["Night"]={clock=22,brightness=2,ambient={110,100,130},outAmb={120,110,140},sky={stars=4000,moon=18,sun=0,moonTex=true},atm={dens=0.45,color={120,60,180},decay={60,20,100},glare=0.5,haze=1.2}},
+    ["Aurora"]={clock=14,brightness=3,ambient={150,120,150},outAmb={160,130,150},atm={dens=0.55,color={255,80,200},decay={255,20,150},glare=2.5,haze=3},clouds={cover=0.7,dens=0.7,color={255,240,250}}},
+    ["Sunset"]={clock=17.2,brightness=2.5,ambient={170,120,100},outAmb={180,130,110},sky={stars=0,sun=25,moon=0},atm={dens=0.5,color={255,130,60},decay={255,80,30},glare=2,haze=2.5},clouds={cover=0.55,dens=0.55,color={255,200,140}}},
+    ["Galaxy"]={clock=0,brightness=1.5,ambient={70,60,100},outAmb={80,70,110},sky={stars=10000,moon=30,sun=0},atm={dens=0.15,color={40,20,80},decay={20,10,50},glare=0.3,haze=0.5}},
+    ["Cyber"]={clock=21,brightness=2.2,ambient={90,130,170},outAmb={100,140,180},sky={stars=2000,moon=12},atm={dens=0.4,color={0,200,255},decay={150,0,255},glare=2,haze=2},clouds={cover=0.4,dens=0.6,color={100,200,255}}},
+    ["Sakura"]={clock=11,brightness=3.5,ambient={170,150,160},outAmb={180,160,170},sky={sun=8},atm={dens=0.3,color={255,200,220},decay={255,170,200},glare=1,haze=1.5},clouds={cover=0.6,dens=0.4,color={255,250,252}}},
+    ["Pink Night"]={clock=23,brightness=2.2,ambient={120,60,110},outAmb={140,70,120},sky={stars=5000,moon=22,sun=0,moonTex=true},atm={dens=0.5,color={255,80,180},decay={140,30,100},glare=0.7,haze=1.4},clouds={cover=0.3,dens=0.5,color={180,90,150}}},
+    ["Blood Moon"]={clock=22.5,brightness=1.6,ambient={130,40,40},outAmb={150,50,50},sky={stars=1500,moon=28,sun=0,moonTex=true},atm={dens=0.6,color={220,30,30},decay={120,10,10},glare=1.4,haze=2},clouds={cover=0.5,dens=0.7,color={120,30,30}}},
+    ["Emerald Dawn"]={clock=6.5,brightness=2.8,ambient={130,170,140},outAmb={140,180,150},sky={sun=18,moon=0,stars=0},atm={dens=0.4,color={80,200,140},decay={40,150,90},glare=1.8,haze=2.2},clouds={cover=0.5,dens=0.5,color={200,255,220}}},
+    ["Volcanic"]={clock=19,brightness=2,ambient={180,80,40},outAmb={200,90,50},sky={stars=200,sun=12,moon=0},atm={dens=0.75,color={255,60,0},decay={180,20,0},glare=3,haze=3.5},clouds={cover=0.8,dens=0.9,color={120,40,20}}},
+    ["Arctic"]={clock=9,brightness=3.2,ambient={200,220,235},outAmb={210,230,245},sky={sun=10,stars=0,moon=0},atm={dens=0.3,color={180,220,255},decay={140,200,240},glare=1.5,haze=1.8},clouds={cover=0.7,dens=0.6,color={250,253,255}}},
+    ["Midnight Ocean"]={clock=1.5,brightness=1.7,ambient={60,90,130},outAmb={70,100,140},sky={stars=6000,moon=24,sun=0,moonTex=true},atm={dens=0.5,color={20,60,140},decay={10,30,90},glare=0.6,haze=1.5}},
+    ["Vaporwave"]={clock=19.5,brightness=2.4,ambient={180,120,200},outAmb={190,130,210},sky={stars=1000,moon=14},atm={dens=0.45,color={255,100,220},decay={120,60,255},glare=2.2,haze=2.4},clouds={cover=0.55,dens=0.55,color={200,150,255}}},
+    ["Toxic"]={clock=13,brightness=2.5,ambient={140,180,80},outAmb={150,190,90},atm={dens=0.55,color={100,220,40},decay={60,150,20},glare=1.8,haze=2.6},clouds={cover=0.65,dens=0.7,color={180,255,120}}},
+    ["Solar Eclipse"]={clock=12,brightness=0.9,ambient={50,40,60},outAmb={60,50,70},sky={stars=3500,sun=22,moon=0},atm={dens=0.5,color={255,140,40},decay={30,20,40},glare=2.8,haze=1.8}},
+    ["Hellscape"]={clock=18,brightness=1.8,ambient={200,60,30},outAmb={220,70,40},sky={stars=100,sun=30,moon=0},atm={dens=0.85,color={255,30,0},decay={120,0,0},glare=3.5,haze=4},clouds={cover=0.95,dens=0.95,color={80,20,10}}},
+    ["Heaven"]={clock=12,brightness=4,ambient={240,235,210},outAmb={250,245,220},sky={sun=16,moon=0,stars=0},atm={dens=0.25,color={255,250,220},decay={255,240,200},glare=3,haze=1.5},clouds={cover=0.85,dens=0.5,color={255,255,255}}},
+    ["Storm"]={clock=15,brightness=1.4,ambient={90,90,110},outAmb={100,100,120},sky={stars=0,sun=6,moon=0},atm={dens=0.65,color={80,90,120},decay={40,50,80},glare=0.5,haze=3},clouds={cover=0.95,dens=0.95,color={60,65,80}}},
+    ["Sunrise"]={clock=6.2,brightness=2.8,ambient={220,180,130},outAmb={230,190,140},sky={sun=22,stars=0,moon=0},atm={dens=0.45,color={255,180,100},decay={255,140,80},glare=2.4,haze=2.2},clouds={cover=0.4,dens=0.4,color={255,220,180}}},
+    ["Deep Space"]={clock=0,brightness=1,ambient={30,25,50},outAmb={40,35,60},sky={stars=15000,moon=0,sun=0},atm={dens=0.08,color={15,5,40},decay={5,0,20},glare=0.2,haze=0.3}},
+    ["Lavender Dream"]={clock=18.5,brightness=2.6,ambient={180,160,220},outAmb={190,170,230},sky={stars=800,moon=16,sun=0},atm={dens=0.4,color={200,160,255},decay={160,120,220},glare=1.4,haze=1.8},clouds={cover=0.55,dens=0.5,color={220,200,255}}},
+    ["Inferno"]={clock=17.5,brightness=2.2,ambient={220,100,40},outAmb={235,110,50},sky={sun=26,moon=0,stars=0},atm={dens=0.6,color={255,90,20},decay={200,40,0},glare=3,haze=3.2},clouds={cover=0.7,dens=0.7,color={200,80,40}}},
+    ["Mint Sky"]={clock=10,brightness=3.2,ambient={180,230,210},outAmb={190,240,220},sky={sun=10},atm={dens=0.32,color={150,255,210},decay={100,220,180},glare=1.6,haze=1.6},clouds={cover=0.55,dens=0.45,color={240,255,250}}},
+}
+M.SkyOrder = {"Off","Night","Aurora","Sunset","Galaxy","Cyber","Sakura","Pink Night","Blood Moon","Emerald Dawn","Volcanic","Arctic","Midnight Ocean","Vaporwave","Toxic","Solar Eclipse","Hellscape","Heaven","Storm","Sunrise","Deep Space","Lavender Dream","Inferno","Mint Sky"}
+local function candyColor(rgb) return Color3.fromRGB(rgb[1],rgb[2],rgb[3]) end
+function M.CandyApplyCustomSky(mode)
+    if not M._skyOriginalLighting then
+        M._skyOriginalLighting = {
+            ClockTime = Lighting.ClockTime, Brightness = Lighting.Brightness,
+            OutdoorAmbient = Lighting.OutdoorAmbient, Ambient = Lighting.Ambient,
+            FogStart = Lighting.FogStart, FogEnd = Lighting.FogEnd, FogColor = Lighting.FogColor,
+            ColorShift_Top = Lighting.ColorShift_Top, ColorShift_Bottom = Lighting.ColorShift_Bottom,
+            GlobalShadows = Lighting.GlobalShadows,
+        }
+    end
+    for _,child in ipairs(Lighting:GetChildren()) do if child:GetAttribute(M.CANDY_SKY_TAG) then pcall(function() child:Destroy() end) end end
+    local terrain=workspace:FindFirstChildOfClass("Terrain")
+    if terrain then for _,child in ipairs(terrain:GetChildren()) do if child:GetAttribute(M.CANDY_SKY_TAG) then pcall(function() child:Destroy() end) end end end
+    local preset=M.CANDY_SKY_PRESETS[mode]
+    if not preset or preset.kind=="off" then
+        local original = M._skyOriginalLighting
+        if original then
+            Lighting.ClockTime = original.ClockTime
+            Lighting.Brightness = original.Brightness
+            Lighting.OutdoorAmbient = original.OutdoorAmbient
+            Lighting.Ambient = original.Ambient
+            Lighting.FogStart = original.FogStart
+            Lighting.FogEnd = original.FogEnd
+            Lighting.FogColor = original.FogColor
+            Lighting.ColorShift_Top = original.ColorShift_Top
+            Lighting.ColorShift_Bottom = original.ColorShift_Bottom
+            Lighting.GlobalShadows = original.GlobalShadows
+        end
+        return
+    end
+    Lighting.FogStart=0;Lighting.FogEnd=100000;Lighting.FogColor=Color3.fromRGB(200,200,200);Lighting.ColorShift_Top=Color3.fromRGB(0,0,0);Lighting.ColorShift_Bottom=Color3.fromRGB(0,0,0);Lighting.GlobalShadows=true
+    Lighting.ClockTime=preset.clock or 14;Lighting.Brightness=preset.brightness or 2
+    if preset.outAmb then Lighting.OutdoorAmbient=candyColor(preset.outAmb) end
+    if preset.ambient then Lighting.Ambient=candyColor(preset.ambient) end
+    if preset.sky then
+        local skyInst=Instance.new("Sky");skyInst:SetAttribute(M.CANDY_SKY_TAG,true)
+        if preset.sky.stars then skyInst.StarCount=preset.sky.stars end
+        if preset.sky.moon then skyInst.MoonAngularSize=preset.sky.moon end
+        if preset.sky.sun then skyInst.SunAngularSize=preset.sky.sun end
+        if preset.sky.moonTex then skyInst.MoonTextureId="rbxasset://sky/moon.jpg" end
+        skyInst.Parent=Lighting
+    end
+    if preset.atm then
+        local atm=Instance.new("Atmosphere");atm:SetAttribute(M.CANDY_SKY_TAG,true)
+        atm.Density=preset.atm.dens or 0.3;atm.Color=candyColor(preset.atm.color);atm.Decay=candyColor(preset.atm.decay);atm.Glare=preset.atm.glare or 1;atm.Haze=preset.atm.haze or 1;atm.Parent=Lighting
+    end
+    if preset.clouds and terrain then
+        local clouds=Instance.new("Clouds");clouds:SetAttribute(M.CANDY_SKY_TAG,true)
+        clouds.Cover=preset.clouds.cover or 0.5;clouds.Density=preset.clouds.dens or 0.5;clouds.Color=candyColor(preset.clouds.color);clouds.Parent=terrain
+    end
+end
+M.PACKS = {
+    ["Adidas Sports"] = {
+        WalkAnim = 18537392113,
+        RunAnim  = 18537384940,
+        JumpAnim = 18537380791,
+        FallAnim = 18537367238,
+        SwimIdle = 18537387180,
+        Swim     = 18537389531,
+        Animation1 = 18537376492,
+        Animation2 = 18537371272,
+        ClimbAnim = 18537363391,
+    },
+    ["Adidas Community"] = {
+        WalkAnim = 122150855457006,
+        RunAnim  = 82598234841035,
+        JumpAnim = 75290611992385,
+        FallAnim = 98600215928904,
+        SwimIdle = 109346520324160,
+        Swim     = 133308483266208,
+        Animation1 = 122257458498464,
+        Animation2 = 102357151005774,
+        ClimbAnim = 88763136693023,
+    },
+    ["Adidas Aura"] = {
+        WalkAnim = 83842218823011,
+        RunAnim  = 118320322718866,
+        JumpAnim = 109996626521204,
+        FallAnim = 95603166884636,
+        SwimIdle = 94922130551805,
+        Swim     = 134530128383903,
+        Animation1 = 110211186840347,
+        Animation2 = 114191137265065,
+        ClimbAnim = 97824616490448,
+    },
+    ["Wicked Popular"] = {
+        WalkAnim = 92072849924640,
+        RunAnim = 72301599441680,
+        JumpAnim = 104325245285198,
+        FallAnim = 121152442762481,
+        Animation1 = 118832222982049,
+        ClimbAnim = 131326830509784,
+        SwimIdle = 113199415118199,
+        Swim = 99384245425157,
+        Animation2 = 76049494037641,
+    },
+    Elder = {
+        WalkAnim = 10921111375,
+        RunAnim  = 10921104374,
+        JumpAnim = 10921107367,
+        FallAnim = 10921105765,
+        SwimIdle = 10921110146,
+        Swim     = 10921108971,
+        ClimbAnim = 10921100400,
+        Animation1 = 10921101664,
+        Animation2 = 10921102574,
+    },
+    Zombie = {
+        WalkAnim = 10921355261,
+        RunAnim  = 616163682,
+        JumpAnim = 10921351278,
+        FallAnim = 10921350320,
+        SwimIdle = 10921353442,
+        Swim     = 10921352344,
+        Animation1 = 10921344533,
+        Animation2 = 10921345304,
+        ClimbAnim = 10921343576,
+    },
+    Mage = {
+        WalkAnim = 10921152678,
+        RunAnim  = 10921148209,
+        JumpAnim = 10921149743,
+        FallAnim = 10921148939,
+        SwimIdle = 10921151661,
+        Swim     = 10921150788,
+        ClimbAnim = 10921143404,
+        Animation1 = 10921144709,
+        Animation2 = 10921145797,
+    },
+    ["Catwalk Glam"] = {
+        WalkAnim = 109168724482748,
+        RunAnim  = 81024476153754,
+        JumpAnim = 116936326516985,
+        FallAnim = 92294537340807,
+        SwimIdle = 98854111361360,
+        Swim     = 134591743181628,
+        ClimbAnim = 119377220967554,
+        Animation1 = 133806214992291,
+        Animation2 = 94970088341563,
+    },
+    Astronaut = {
+        WalkAnim = 10921046031,
+        RunAnim  = 10921039308,
+        JumpAnim = 10921042494,
+        FallAnim = 10921040576,
+        SwimIdle = 10921045006,
+        Swim     = 10921044000,
+        ClimbAnim = 10921032124,
+        Animation1 = 10921034824,
+        Animation2 = 10921036806,
+    },
+    ['Wicked "Dancing Through Life"'] = {
+        WalkAnim = 73718308412641,
+        RunAnim  = 135515454877967,
+        JumpAnim = 78508480717326,
+        FallAnim = 78147885297412,
+        SwimIdle = 129183123083281,
+        Swim     = 110657013921774,
+        ClimbAnim = 129447497744818,
+        Animation1 = 92849173543269,
+        Animation2 = 132238900951109,
+    },
+    Werewolf = {
+        WalkAnim = 10921342074,
+        RunAnim  = 10921336997,
+        JumpAnim = nil,
+        FallAnim = 10921337907,
+        SwimIdle = 10921341319,
+        Swim     = 10921340419,
+        ClimbAnim = 10921329322,
+        Animation1 = 10921330408,
+        Animation2 = 10921333667,
+    },
+    Superhero = {
+        WalkAnim = 10921298616,
+        RunAnim  = 10921291831,
+        JumpAnim = 10921294559,
+        FallAnim = 10921293373,
+        SwimIdle = 10921297391,
+        Swim     = 10921295495,
+        ClimbAnim = 10921286911,
+        Animation1 = 10921288909,
+        Animation2 = 10921290167,
+    },
+    Toy = {
+        WalkAnim = 10921312010,
+        RunAnim  = 10921306285,
+        JumpAnim = 10921308158,
+        FallAnim = 10921307241,
+        SwimIdle = 10921310341,
+        Swim     = 10921309319,
+        ClimbAnim = 10921300839,
+        Animation1 = 10921301576,
+        Animation2 = nil,
+    },
+    ["No Boundaries"] = {
+        WalkAnim = 18747074203,
+        RunAnim  = 18747070484,
+        JumpAnim = 18747069148,
+        FallAnim = 18747062535,
+        SwimIdle = 18747071682,
+        Swim     = 18747073181,
+        ClimbAnim = 18747060903,
+        Animation1 = 18747067405,
+        Animation2 = 18747063918,
+    },
+    NFL = {
+        WalkAnim = 110358958299415,
+        RunAnim  = 117333533048078,
+        JumpAnim = 119846112151352,
+        FallAnim = 129773241321032,
+        SwimIdle = 79090109939093,
+        Swim     = 132697394189921,
+        ClimbAnim = 134630013742019,
+        Animation1 = 92080889861410,
+        Animation2 = 74451233229259,
+    },
+    ["Amazon Unboxed"] = {
+        WalkAnim = 90478085024465,
+        RunAnim  = 134824450619865,
+        JumpAnim = 121454505477205,
+        FallAnim = 94788218468396,
+        SwimIdle = 129126268464847,
+        Swim     = 105962919001086,
+        ClimbAnim = 121145883950231,
+        Animation1 = 98281136301627,
+        Animation2 = nil,
+    },
+    Vampire = {
+        WalkAnim = 10921326949,
+        RunAnim  = 10921320299,
+        JumpAnim = 10921322186,
+        FallAnim = 10921321317,
+        SwimIdle = 10921325443,
+        Swim     = 10921324408,
+        ClimbAnim = 10921314188,
+        Animation1 = 10921315373,
+        Animation2 = nil,
+    },
+    Ninja = {
+        Run=656118852, Walk=656121766, Jump=656117878, Fall=656115606,
+        Swim=656119721, SwimIdle=656121397, Climb=656114359,
+        Idle={656117400,656118341,886742569}
+    },
+    Robot = {
+        Run=616091570, Walk=616095330, Jump=616090535, Fall=616087089,
+        Swim=616092998, SwimIdle=616094091, Climb=616086039,
+        Idle={616088211,616089559,885531463}
+    },
+    Levitation = {
+        Run=616010382, Walk=616013216, Jump=616008936, Fall=616005863,
+        Swim=616011509, SwimIdle=616012453, Climb=616003713,
+        Idle={616006778,616008087,886862142}
+    },
+    Stylish = {
+        Run=616140816, Walk=616146177, Jump=616139451, Fall=616134815,
+        Swim=616143378, SwimIdle=616144772, Climb=616133594,
+        Idle={616136790,616138447,886888594}
+    },
+    Bubbly = {
+        Run=910025107, Walk=910034870, Jump=910016857, Fall=910001910,
+        Swim=910028158, SwimIdle=910030921, Climb=909997997,
+        Idle={910004836,910009958,1018536639}
+    },
+    Cartoon = {
+        Run=742638842, Walk=742640026, Jump=742637942, Fall=742637151,
+        Swim=742639220, SwimIdle=742639812, Climb=742636889,
+        Idle={742637544,742638445,885477856}
+    },
+}
+M.animPack = "Mage"
+M.animPackEnabled = true
+M.savedAnimate = nil
+M.headlessEnabled = false
+M.korbloxEnabled = false
+local HEADLESS_MESH_ID = "rbxassetid://1095708"
+local KORBLOX_MESH_ID = "rbxassetid://101851696"
+local KORBLOX_TEXTURE_ID = "rbxassetid://101851254"
+local DARK_GREY_COLOR = Color3.fromRGB(64, 64, 64)
+local function removeFace(head)
+    local face = head:FindFirstChild("face")
+    if face then face:Destroy() end
+end
+function M.applyHeadlessToChar(char, enabled)
+    if not char then return end
+    local head = char:FindFirstChild("Head")
+    if not head then return end
+    if enabled then
+        head.Transparency = 1
+        head.CanCollide = false
+        removeFace(head)
+        for _, child in ipairs(head:GetChildren()) do
+            if child:IsA("SpecialMesh") and child.MeshId == HEADLESS_MESH_ID then
+                child:Destroy()
+            end
+        end
+        local mesh = Instance.new("SpecialMesh")
+        mesh.MeshType = Enum.MeshType.FileMesh
+        mesh.MeshId = HEADLESS_MESH_ID
+        mesh.Scale = Vector3.new(0.001, 0.001, 0.001)
+        mesh.Name = "HeadlessMesh"
+        mesh.Parent = head
+        head:GetPropertyChangedSignal("Transparency"):Connect(function()
+            if head.Transparency ~= 1 then
+                head.Transparency = 1
+            end
+        end)
+        head.ChildAdded:Connect(function(child)
+            if child.Name == "face" and child:IsA("Decal") then
+                child:Destroy()
+            end
+        end)
+    else
+        head.Transparency = 0
+        head.CanCollide = true
+        for _, child in ipairs(head:GetChildren()) do
+            if child:IsA("SpecialMesh") and child.Name == "HeadlessMesh" then
+                child:Destroy()
+            end
+        end
+        removeFace(head)
+    end
+end
+function M.applyKorbloxToChar(char, enabled)
+    if not char then return end
+    local humanoid = char:FindFirstChildOfClass("Humanoid")
+    if not humanoid then return end
+    if enabled then
+        if humanoid.RigType == Enum.HumanoidRigType.R6 then
+            local rightLeg = char:FindFirstChild("Right Leg")
+            if rightLeg then
+                for _, child in ipairs(rightLeg:GetChildren()) do
+                    if child:IsA("SpecialMesh") or child:IsA("CharacterMesh") then
+                        child:Destroy()
+                    end
+                end
+                rightLeg.Color = DARK_GREY_COLOR
+                rightLeg:GetPropertyChangedSignal("Color"):Connect(function()
+                    if rightLeg.Color ~= DARK_GREY_COLOR then
+                        rightLeg.Color = DARK_GREY_COLOR
+                    end
+                end)
+                local mesh = Instance.new("SpecialMesh")
+                mesh.MeshType = Enum.MeshType.FileMesh
+                mesh.MeshId = KORBLOX_MESH_ID
+                mesh.TextureId = KORBLOX_TEXTURE_ID
+                mesh.Scale = Vector3.new(1, 1, 1)
+                mesh.Name = "KorbloxMesh"
+                mesh.Parent = rightLeg
+            end
+        elseif humanoid.RigType == Enum.HumanoidRigType.R15 then
+            local rightUpperLeg = char:FindFirstChild("RightUpperLeg")
+            if rightUpperLeg then
+                rightUpperLeg.Transparency = 1
+                local rightLowerLeg = char:FindFirstChild("RightLowerLeg")
+                local rightFoot = char:FindFirstChild("RightFoot")
+                if rightLowerLeg then rightLowerLeg.Transparency = 1 end
+                if rightFoot then rightFoot.Transparency = 1 end
+                local oldKorblox = char:FindFirstChild("KorbloxLeg")
+                if oldKorblox then oldKorblox:Destroy() end
+                local korbloxLeg = Instance.new("Part")
+                korbloxLeg.Name = "KorbloxLeg"
+                korbloxLeg.Size = Vector3.new(1, 2, 1)
+                korbloxLeg.Anchored = false
+                korbloxLeg.CanCollide = false
+                korbloxLeg.Color = DARK_GREY_COLOR
+                korbloxLeg.Parent = char
+                local mesh = Instance.new("SpecialMesh")
+                mesh.MeshType = Enum.MeshType.FileMesh
+                mesh.MeshId = KORBLOX_MESH_ID
+                mesh.TextureId = KORBLOX_TEXTURE_ID
+                mesh.Scale = Vector3.new(1, 1, 1)
+                mesh.Name = "KorbloxMesh"
+                mesh.Parent = korbloxLeg
+                local weld = Instance.new("Weld")
+                weld.Part0 = rightUpperLeg
+                weld.Part1 = korbloxLeg
+                weld.C0 = CFrame.new(0, -0.8, 0)
+                weld.Name = "KorbloxWeld"
+                weld.Parent = korbloxLeg
+            end
+        end
+    else
+        if humanoid.RigType == Enum.HumanoidRigType.R6 then
+            local rightLeg = char:FindFirstChild("Right Leg")
+            if rightLeg then
+                for _, child in ipairs(rightLeg:GetChildren()) do
+                    if child:IsA("SpecialMesh") and child.Name == "KorbloxMesh" then
+                        child:Destroy()
+                    end
+                end
+                rightLeg.Color = Color3.fromRGB(255, 235, 248)
+            end
+        elseif humanoid.RigType == Enum.HumanoidRigType.R15 then
+            local rightUpperLeg = char:FindFirstChild("RightUpperLeg")
+            if rightUpperLeg then
+                rightUpperLeg.Transparency = 0
+                local rightLowerLeg = char:FindFirstChild("RightLowerLeg")
+                local rightFoot = char:FindFirstChild("RightFoot")
+                if rightLowerLeg then rightLowerLeg.Transparency = 0 end
+                if rightFoot then rightFoot.Transparency = 0 end
+                local korbloxLeg = char:FindFirstChild("KorbloxLeg")
+                if korbloxLeg then korbloxLeg:Destroy() end
+            end
+        end
+    end
+end
+function M.applyCharterToChar(char)
+    if not char then return end
+    M.applyHeadlessToChar(char, M.headlessEnabled)
+    M.applyKorbloxToChar(char, M.korbloxEnabled)
+end
+player.CharacterAdded:Connect(function(char)
+    task.wait(0.15)
+    M.applyCharterToChar(char)
+    task.defer(function()
+        if M.normalizeCameraState then pcall(M.normalizeCameraState) end
+    end)
+    task.delay(0.45, function()
+        if player.Character == char and M.normalizeCameraState then pcall(M.normalizeCameraState) end
+    end)
+end)
+M.NS = 59
+M.CS = 29
+M.LAGGER_SPEED = 30
+M.LAGGER_CARRY_SPEED = 15
+M.speedProfile = M.speedProfile or "Normal"
+M.NormalSpeedNorm = M.NormalSpeedNorm or 59
+M.NormalSpeedSteal = M.NormalSpeedSteal or 29
+M.LaggerSpeedNorm = M.LaggerSpeedNorm or 30
+M.LaggerSpeedSteal = M.LaggerSpeedSteal or 15
+M.CustomSpeedNorm = M.CustomSpeedNorm or 66
+M.CustomSpeedSteal = M.CustomSpeedSteal or 34
+M.speedMethod = "Velocity"
+M.speedMethodList = {
+    "Velocity", "AssemblyLinearVelocity", "Velocity Lerp", "AssemblyLinearVelocity Lerp",
+    "CFrame", "CFrame Lerp", "Hyper CFrame", "Anchored CFrame", "PivotTo", "Model PivotTo", "Tween CFrame",
+    "WalkSpeed", "Humanoid Move", "Humanoid MoveTo",
+    "BodyVelocity", "BodyPosition", "BodyForce", "BodyThrust",
+    "LinearVelocity", "VectorForce", "AlignPosition",
+    "ApplyImpulse", "RocketPropulsion",
+}
+M.hyperMult = 4
+M._lastSpeedMethod = nil
+M._speedHRP = nil
+M._anchoredBySpeed = nil
+M._bodyVel = nil
+M._bodyPosition = nil
+M._bodyForce = nil
+M._bodyThrust = nil
+M._linearVel = nil
+M._vectorForce = nil
+M._alignPos = nil
+M._rocket = nil
+M._rocketTarget = nil
+M._attLinVel = nil
+M._attVecForce = nil
+M._attAlign = nil
+M._speedTween = nil
+M.carrySpeedActive = false
+M.laggerModeEnabled = false
+M.laggerCarryActive = false
+M.antiRagdollEnabled = false
+M.antiRagdollMode = "V1"
+M.infJumpEnabled = false
+M.infJumpMode = "hold"
+M.medusaCounterEnabled = false
+M.batCounterEnabled = false
+M.unwalkEnabled = false
+M.medusaDebounce = false
+M.medusaLastUsed = 0
+M.dropActive = false
+M.dropMode = "Fling"
+M.DROP_ASCEND_DURATION = 0.22
+M.DROP_ASCEND_SPEED = 160
+M._dropConn = nil
+M._dropFlingThread = nil
+M._lastDropTime = 0
+M.autoLeftEnabled = false
+M.autoRightEnabled = false
+M.autoBatEnabled = false
+M.autoSwingEnabled = true
+M.autoMoveSwingEnabled = false
+M.autoMoveSwingInterval = 0.3
+M._alSwingDebounce = false
+M._arSwingDebounce = false
+M.antiLagEnabled = false
+M.nukeOptimiserEnabled = false
+M.antiVoidEnabled = false
+M.bodyLockEnabled = false
+M.bodyLockRadius = 60
+M.antiLagV2Enabled = false
+M.antiSummerBaseEnabled = false
+M.antiSummerBaseConn = nil
+M._antiSummerCleaned = {}
+M.removeAccessoriesEnabled = false
+M.antiLagDescConn = nil
+M.antiLagV2DescConn = nil
+M.stretchRezEnabled = false
+M.stretchRezConn = nil
+M.unwalkSavedAnimate = nil
+M._unwalkOffLock = true
+M.pcKeyStatusEnabled = false
+M.pcKeyPanelScale = 1
+M.pcKeyPanelScaleRef = nil
+M.pcKeyPanelPosition = nil
+M._anyKeyListening = false
+M.autoTPHeight = 20
+M.autoTPConn = nil
+M.guiTransparencyEnabled = false
+M.mobileButtonsEnabled = true
+M.mobileButtonsLocked = false
+M.mobileButtonsSize = 100
+M.mobBtnRefs = {}
+M.mobGuiRef = nil
+M.fovValue = 80
+M.fovEnabled = true
+M.fovOriginalValue = nil
+M.fovOptions = {"Desactivado", 80, 90, 120}
+M.fovIndex = 2
+M.laggerModePillRef = nil
+M.carryModePillRef = nil
+M.autoSwitchSpeedEnabled = false
+M.autoTurnOffSpeedEnabled = false
+M.autoSwitchLaggerSpeedEnabled = false
+M.AUTO_SWITCH_THRESHOLD = 25
+M._autoSwitchSpeedConn = nil
+M.customFontSelected = "None"
+M._fontOrig = {}
+M._fontConn = nil
+M._fontMy = nil
+M.FONT_NAMES = {"None", "Coding Font", "Summer", "Beachy", "Scary", "Bangers"}
+M.mobBtnTransparencyEnabled = false
+M.perButtonDragEnabled = true
+M.antiKickEnabled = false
+M.brainrotDetected = false
+M.safeModeEnabled = false
+M.mirrorTPDownEnabled = false
+M.mirrorTPPreviousY = {}
+M.mirrorTPLastTeleport = 0
+M.MIRROR_TP_DROP_THRESHOLD = 3
+M.MIRROR_TP_DOWN_Y = -7.00
+M.activeBatBillboard = nil
+M.activeMedusaBillboard = nil
+M.ragdollGuiEnabled = true
+M.persistentRagdollGui = nil
+M.uiLocked = false
+M.uiTransparencyEnabled = true
+M.mobButtonsTransparencyEnabled = true
+M.holdInfJumpConn = nil
+M.DROP_ASCEND_DURATION = 0.2
+M.DROP_ASCEND_SPEED = 150
+M.bypassAimbotEnabled = false
+M.bypassAimbotConn = nil
+M._bypassGodConn = nil
+M._bypassGodHealthConn = nil
+M._bypassGodDiedConn = nil
+M._bypassGodCharConn = nil
+M.bypassPrevAutoRotate = nil
+M.bypassHitCD = false
+M.bypassSwingCD = 0.35
+M.bypassHitDist = 8
+M._bypassTarget = nil
+
+M._savedButtonPositions = {}
+
+
+M.autoRadiusEnabled = false
+function M.getAutoRadius()
+    local radius = math.clamp((tonumber(M.NS) or 60) + 1, 1, 500)
+    return math.floor(radius * 10 + 0.5) / 10
+end
+
+M.playerESPEnabled = false
+M.espList = {}
+M.pingPopupActive = false
+M.pingPopupGui = nil
+M.pingCycleTimer = nil
+M.Conns = {antiRag=nil, batCounter=nil, anchor={}}
+M._persistentConns = {}
+M.alConn = nil
+M.arConn = nil
+M.alPhase = 1
+M.arPhase = 1
+M.aimbotConn = nil
+M.lastMoveDir = Vector3.new(0,0,0)
+M.batCounterDebounce = false
+M.speedLabel = nil
+M.KB = {
+    DropBrainrot={kb=nil,gp=nil},
+    AutoLeft={kb=nil,gp=nil},
+    AutoRight={kb=nil,gp=nil},
+    AutoBat={kb=nil,gp=nil},
+    TPFloor={kb=nil,gp=nil},
+    GuiHide={kb=nil,gp=nil},
+    LaggerToggle={kb=nil,gp=nil},
+    LaggerCarry={kb=nil,gp=nil},
+    BypassAimbot={kb=nil,gp=nil},
+    InstaReset={kb=nil,gp=nil},
+    BatTP={kb=Enum.KeyCode.E,gp=nil},
+    BatV2={kb=Enum.KeyCode.N,gp=nil},
+    SpeedNormal={kb=Enum.KeyCode.G,gp=nil},
+    SpeedLagger={kb=Enum.KeyCode.R,gp=nil},
+    SpeedCustom={kb=Enum.KeyCode.Three,gp=nil},
+}
+M.AP_L1 = Vector3.new(-476.47,-6.28,92.73)
+M.AP_L2 = Vector3.new(-483.12,-4.95,94.81)
+M.AP_R1 = Vector3.new(-476.16,-6.52,25.62)
+M.AP_R2 = Vector3.new(-483.06,-5.03,25.48)
+M.MEDUSA_COOLDOWN = 25
+M.BAT_COUNTER_SLAP_LIST = {"Bat","Slap","Iron Slap","Gold Slap","Diamond Slap","Emerald Slap","Ruby Slap","Dark Matter Slap","Flame Slap","Nuclear Slap","Galaxy Slap","Glitched Slap"}
+M.fovConn = nil
+M.defLightBrightness = nil
+M.defLightClock = nil
+M.defLightAmbient = nil
+M.mainFrame = nil
+M.normalBox = nil
+M.carryBox = nil
+M.laggerBox = nil
+M.radInput = nil
+M.autoTPHeightBox = nil
+M.durationBox = nil
+M.modeValLbl = nil
+M.setInstaGrab = nil
+M.setInfJumpVisual = nil
+M.setAntiRagVisual = nil
+M.setMedusaVisual = nil
+M.setUnwalkVisual = nil
+M.setAntiLagVisual = nil
+M.setAutoSwingVisual = nil
+M.setTranspVisual = nil
+M.setLockVisual = nil
+M.setMobVisual = nil
+M.setCircleBtnsVisual = nil
+M.setMedusaResetVisual = nil
+M.antiKickSetVisual = nil
+M.autoLeftSetVisual = nil
+M.autoRightSetVisual = nil
+M.autoBatSetVisual = nil
+M.setAutoTPVisual = nil
+M.setStretchRezVisual = nil
+M.setAutoResetOnDeath = nil
+M.setBypassVisual = nil
+M._autoSwitchWasSteal = false
+M.MOB_POS_FILE = "primehub_fe_klan_btnpos.json"
+M.MOVE_KEYS = {
+    [Enum.KeyCode.W]=true,
+    [Enum.KeyCode.A]=true,
+    [Enum.KeyCode.S]=true,
+    [Enum.KeyCode.D]=true,
+    [Enum.KeyCode.Up]=true,
+    [Enum.KeyCode.Left]=true,
+    [Enum.KeyCode.Down]=true,
+    [Enum.KeyCode.Right]=true
+}
+M.showPlayerSpeeds = false
+M.playerSpeedGuis = {}
+M.playerSpeedUpdateConn = nil
+M.removeAccEnabled = false
+M.removeAccConn = nil
+M.removedAccessories = {}
+M.uiScale = 0.8
+if UIS.TouchEnabled and not UIS.KeyboardEnabled then
+    M.uiScale = 0.7
+end
+M.uiScaleSliderRef = nil
+M.uiScaleLabelRef = nil
+M.uiScaleBoxRef = nil
+M.lineESPEnabled = false
+M.menuOpen = false
+M.speedESPEnabled = false
+function M.addShimmerToLabel(lbl,color1,color2)
+    local gr=Instance.new("UIGradient",lbl)
+    gr.Color=ColorSequence.new({ColorSequenceKeypoint.new(0,color1 or Color3.fromRGB(100,100,100)),ColorSequenceKeypoint.new(0.5,color2 or Color3.fromRGB(255,255,255)),ColorSequenceKeypoint.new(1,color1 or Color3.fromRGB(100,100,100))})
+    gr.Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,0.3,0),NumberSequenceKeypoint.new(0.5,0,0),NumberSequenceKeypoint.new(1,0.3,0)})
+    return gr
+end
+function M.applyFOV()
+    if M.fovConn then M.fovConn:Disconnect(); M.fovConn = nil end
+    local cam = workspace.CurrentCamera
+    if cam and M.fovOriginalValue == nil then M.fovOriginalValue = cam.FieldOfView end
+    if M.fovEnabled ~= true then
+        if cam and M.fovOriginalValue then cam.FieldOfView = M.fovOriginalValue end
+        return
+    end
+    M.fovConn = RunService.RenderStepped:Connect(function()
+        local currentCam = workspace.CurrentCamera
+        if currentCam then currentCam.FieldOfView = tonumber(M.fovValue) or 80 end
+    end)
+end
+M.ragdollTimerThread = nil
+M.ragdollTimerRemaining = 0
+M.isRagdollActive = false
+
+-- Anti-Sammy style recovery timer billboard
+M.ragdollGuiEnabled = M.ragdollGuiEnabled ~= false
+M._activeBatBillboard = nil
+M._activeMedusaBillboard = nil
+
+function M.createRagdollBillboard(duration, labelText, color)
+    if not M.ragdollGuiEnabled then return nil end
+    local guiName = "PrimeHubRecovery_" .. tostring(labelText)
+    for _, oldName in ipairs({guiName}) do
+        pcall(function()
+            local old = game:GetService("CoreGui"):FindFirstChild(oldName)
+            if old then old:Destroy() end
+        end)
+        pcall(function()
+            local pgui = player:FindFirstChild("PlayerGui")
+            local old = pgui and pgui:FindFirstChild(oldName)
+            if old then old:Destroy() end
+        end)
+    end
+
+    -- Black theme, white text
+    local BLACK = Color3.fromRGB(10, 10, 12)
+    local WHITE = Color3.fromRGB(255, 255, 255)
+    local GRAY = Color3.fromRGB(180, 180, 185)
+    local BAR_BG = Color3.fromRGB(40, 40, 45)
+
+    local sg = Instance.new("ScreenGui")
+    sg.Name = guiName
+    sg.ResetOnSpawn = false
+    sg.IgnoreGuiInset = true
+    sg.DisplayOrder = 40
+    pcall(function()
+        if syn and syn.protect_gui then syn.protect_gui(sg) end
+    end)
+    local okParent = pcall(function() sg.Parent = game:GetService("CoreGui") end)
+    if not okParent then
+        pcall(function() sg.Parent = player:FindFirstChild("PlayerGui") end)
+    end
+
+    local card = Instance.new("Frame", sg)
+    card.Name = "RecoveryTimer"
+    card.AnchorPoint = Vector2.new(0.5, 0)
+    card.Position = UDim2.new(0.5, 0, 0, 58)
+    card.Size = UDim2.fromOffset(196, 48)
+    card.BackgroundColor3 = BLACK
+    card.BackgroundTransparency = 0.08
+    card.BorderSizePixel = 0
+    Instance.new("UICorner", card).CornerRadius = UDim.new(0, 11)
+    local cardStroke = Instance.new("UIStroke", card)
+    cardStroke.Color = WHITE
+    cardStroke.Thickness = 1.2
+    cardStroke.Transparency = 0.35
+
+    local accentBar = Instance.new("Frame", card)
+    accentBar.Position = UDim2.fromOffset(0, 7)
+    accentBar.Size = UDim2.fromOffset(3, 34)
+    accentBar.BackgroundColor3 = WHITE
+    accentBar.BorderSizePixel = 0
+    Instance.new("UICorner", accentBar).CornerRadius = UDim.new(1, 0)
+
+    local titleLbl = Instance.new("TextLabel", card)
+    titleLbl.Position = UDim2.fromOffset(14, 6)
+    titleLbl.Size = UDim2.new(1, -70, 0, 18)
+    titleLbl.BackgroundTransparency = 1
+    titleLbl.Text = labelText or "RAGDOLL"
+    titleLbl.TextColor3 = WHITE
+    titleLbl.Font = Enum.Font.GothamBold
+    titleLbl.TextSize = 13
+    titleLbl.TextXAlignment = Enum.TextXAlignment.Left
+
+    local subLbl = Instance.new("TextLabel", card)
+    subLbl.Position = UDim2.fromOffset(14, 24)
+    subLbl.Size = UDim2.new(1, -70, 0, 16)
+    subLbl.BackgroundTransparency = 1
+    subLbl.Text = "Recovering..."
+    subLbl.TextColor3 = GRAY
+    subLbl.Font = Enum.Font.Gotham
+    subLbl.TextSize = 11
+    subLbl.TextXAlignment = Enum.TextXAlignment.Left
+
+    local timerLbl = Instance.new("TextLabel", card)
+    timerLbl.AnchorPoint = Vector2.new(1, 0)
+    timerLbl.Position = UDim2.new(1, -10, 0, 7)
+    timerLbl.Size = UDim2.fromOffset(48, 18)
+    timerLbl.BackgroundTransparency = 1
+    timerLbl.Text = string.format("%.1fs", duration)
+    timerLbl.TextColor3 = WHITE
+    timerLbl.Font = Enum.Font.GothamBold
+    timerLbl.TextSize = 12
+    timerLbl.TextXAlignment = Enum.TextXAlignment.Right
+
+    local fillBg = Instance.new("Frame", card)
+    fillBg.Position = UDim2.new(0, 14, 1, -8)
+    fillBg.Size = UDim2.new(1, -28, 0, 3)
+    fillBg.BackgroundColor3 = BAR_BG
+    fillBg.BorderSizePixel = 0
+    Instance.new("UICorner", fillBg).CornerRadius = UDim.new(1, 0)
+
+    local fill = Instance.new("Frame", fillBg)
+    fill.Size = UDim2.new(1, 0, 1, 0)
+    fill.BackgroundColor3 = WHITE
+    fill.BorderSizePixel = 0
+    Instance.new("UICorner", fill).CornerRadius = UDim.new(1, 0)
+
+    local startTime = tick()
+    local conn
+    conn = RunService.Heartbeat:Connect(function()
+        local remaining = duration - (tick() - startTime)
+        if remaining <= 0 then
+            if conn then conn:Disconnect() end
+            pcall(function() sg:Destroy() end)
+            return
+        end
+        if timerLbl and timerLbl.Parent then
+            timerLbl.Text = string.format("%.1fs", remaining)
+            fill.Size = UDim2.new(remaining / duration, 0, 1, 0)
+            if remaining < 1 then
+                cardStroke.Transparency = 0.15
+                timerLbl.TextColor3 = WHITE
+            end
+        end
+    end)
+    return sg
+end
+
+function M.updateRagdollTimer(duration)
+    if M.ragdollTimerThread then
+        task.cancel(M.ragdollTimerThread)
+        M.ragdollTimerThread = nil
+    end
+    if duration <= 0 then
+        M.isRagdollActive = false
+        if M.headIndicator and M.headIndicator.ragdollTimer then
+            M.headIndicator.ragdollTimer.Text = ""
+        end
+        return
+    end
+    M.isRagdollActive = true
+    local startTime = tick()
+    M.ragdollTimerRemaining = duration
+    M.ragdollTimerThread = task.spawn(function()
+        while M.isRagdollActive and M.ragdollTimerRemaining > 0 do
+            local elapsed = tick() - startTime
+            local remaining = math.max(0, duration - elapsed)
+            M.ragdollTimerRemaining = remaining
+            if M.headIndicator and M.headIndicator.ragdollTimer then
+                M.headIndicator.ragdollTimer.Text = string.format("%.1fs", remaining)
+            end
+            if remaining <= 0 then
+                M.isRagdollActive = false
+                if M.headIndicator and M.headIndicator.ragdollTimer then
+                    M.headIndicator.ragdollTimer.Text = ""
+                end
+                break
+            end
+            task.wait(0.05)
+        end
+        M.ragdollTimerThread = nil
+    end)
+end
+function M.onHumanoidStateChanged(old,new)
+    local char=player.Character;if not char then return end
+    local hum=char:FindFirstChildOfClass("Humanoid");if not hum then return end
+    local isRag=(new==Enum.HumanoidStateType.Physics or new==Enum.HumanoidStateType.Ragdoll or new==Enum.HumanoidStateType.FallingDown)
+    if isRag and not hum.PlatformStand then
+        M.updateRagdollTimer(2.6)
+        if M.createRagdollBillboard and not M._activeBatBillboard then
+            M._activeBatBillboard = M.createRagdollBillboard(2.6, "RAGDOLL", Color3.fromRGB(255,255,255))
+            task.delay(2.98, function()
+                if M._activeBatBillboard then pcall(function() M._activeBatBillboard:Destroy() end); M._activeBatBillboard = nil end
+            end)
+        end
+    end
+end
+function M.onMedusaStateChanged()
+    local char=player.Character;if not char then return end
+    local hum=char:FindFirstChildOfClass("Humanoid")
+    if hum and hum.PlatformStand then
+        M.updateRagdollTimer(4.5)
+        if M.createRagdollBillboard and not M._activeMedusaBillboard then
+            M._activeMedusaBillboard = M.createRagdollBillboard(4.5, "STONE", Color3.fromRGB(255,255,255))
+            task.delay(4.88, function()
+                if M._activeMedusaBillboard then pcall(function() M._activeMedusaBillboard:Destroy() end); M._activeMedusaBillboard = nil end
+            end)
+        end
+    end
+end
+function M.setupRagdollTriggers()
+    local char=player.Character;if not char then return end
+    local hum=char:FindFirstChildOfClass("Humanoid")
+    if hum then
+        hum.StateChanged:Connect(M.onHumanoidStateChanged)
+        hum:GetPropertyChangedSignal("PlatformStand"):Connect(M.onMedusaStateChanged)
+    end
+end
+function M.waitForAnimate(char)
+    for _ = 1, 40 do
+        local a = char:FindFirstChild("Animate")
+        if a and a:FindFirstChild("idle") and a:FindFirstChild("run") and a:FindFirstChild("walk") then
+            return a
+        end
+        task.wait(0.1)
+    end
+    return nil
+end
+function M.setAnim(animObj, id)
+    if animObj and id then
+        animObj.AnimationId = "rbxassetid://" .. tostring(id)
+    end
+end
+function M.stopAllTracks(hum)
+    if not hum then return end
+    for _, t in ipairs(hum:GetPlayingAnimationTracks()) do
+        pcall(function() t:Stop(0) end)
+    end
+end
+function M.ensureAnim(folder, name)
+    if not folder then return nil end
+    local a = folder:FindFirstChild(name)
+    if not a then
+        a = Instance.new("Animation")
+        a.Name = name
+        a.Parent = folder
+    end
+    return a
+end
+function M.ensureIdleSlots(idleFolder, n)
+    if not idleFolder then return end
+    n = n or 2
+    for i=1,n do
+        M.ensureAnim(idleFolder, "Animation" .. i)
+    end
+end
+function M.pick(pack, ...)
+    for i = 1, select("#", ...) do
+        local k = select(i, ...)
+        local v = pack[k]
+        if v ~= nil then return v end
+    end
+    return nil
+end
+function M.saveOriginalAnimate(char)
+    if not char then return end
+    if M.savedAnimate then return end
+    local animate = char:FindFirstChild("Animate")
+    if animate then
+        M.savedAnimate = animate:Clone()
+    end
+end
+function M.restoreOriginalAnimate(char)
+    if not char then return end
+    local template = M.savedAnimate
+    if not template then
+        pcall(function()
+            local starter = game:GetService("StarterPlayer"):FindFirstChild("StarterCharacterScripts")
+            local defaultAnimate = starter and starter:FindFirstChild("Animate")
+            if defaultAnimate then template = defaultAnimate end
+        end)
+    end
+    if not template then return end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    if hum then M.stopAllTracks(hum) end
+    local currentAnimate = char:FindFirstChild("Animate")
+    if currentAnimate then currentAnimate:Destroy() end
+    local newAnimate = template:Clone()
+    newAnimate.Parent = char
+    newAnimate.Disabled = true
+    task.wait(0.06)
+    if newAnimate.Parent then newAnimate.Disabled = false end
+end
+function M.resetAnimations(char)
+    if not char then return end
+    if M.unwalkEnabled == true and M._unwalkOffLock ~= true then
+        M.startUnwalk()
+        return
+    end
+    M.restoreOriginalAnimate(char)
+end
+local applyingAnim = false
+function M.applyAnimPack(packName)
+    if M.unwalkEnabled == true and M._unwalkOffLock ~= true then return false end
+    if not M.animPackEnabled then
+        local char = player.Character
+        if char then
+            M.resetAnimations(char)
+        end
+        return false
+    end
+    if applyingAnim then return false end
+    applyingAnim = true
+    local pack = M.PACKS[packName]
+    if not pack then
+        applyingAnim = false
+        return false
+    end
+    local char = player.Character or player.CharacterAdded:Wait()
+    M.saveOriginalAnimate(char)
+    local animate = M.waitForAnimate(char)
+    if not animate then
+        applyingAnim = false
+        return false
+    end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    M.stopAllTracks(hum)
+    local runObj   = M.ensureAnim(animate:FindFirstChild("run"),   "RunAnim")
+    local walkObj  = M.ensureAnim(animate:FindFirstChild("walk"),  "WalkAnim")
+    local jumpObj  = M.ensureAnim(animate:FindFirstChild("jump"),  "JumpAnim")
+    local fallObj  = M.ensureAnim(animate:FindFirstChild("fall"),  "FallAnim")
+    local climbObj = M.ensureAnim(animate:FindFirstChild("climb"), "ClimbAnim")
+    local swimObj  = M.ensureAnim(animate:FindFirstChild("swim"),     "Swim")
+    local swimIdleObj = M.ensureAnim(animate:FindFirstChild("swimidle"), "SwimIdle")
+    local idleFolder = animate:FindFirstChild("idle")
+    M.setAnim(walkObj,  M.pick(pack, "WalkAnim", "Walk"))
+    M.setAnim(runObj,   M.pick(pack, "RunAnim", "Run"))
+    M.setAnim(jumpObj,  M.pick(pack, "JumpAnim", "Jump"))
+    M.setAnim(fallObj,  M.pick(pack, "FallAnim", "Fall"))
+    M.setAnim(climbObj, M.pick(pack, "ClimbAnim", "Climb"))
+    M.setAnim(swimObj,      M.pick(pack, "Swim"))
+    M.setAnim(swimIdleObj,  M.pick(pack, "SwimIdle") or M.pick(pack, "Swim"))
+    if idleFolder then
+        local a1 = M.pick(pack, "Animation1")
+        local a2 = M.pick(pack, "Animation2")
+        if a1 or a2 then
+            M.ensureIdleSlots(idleFolder, 2)
+            local id1 = a1 or a2
+            local id2 = a2 or a1 or id1
+            M.setAnim(idleFolder:FindFirstChild("Animation1"), id1)
+            M.setAnim(idleFolder:FindFirstChild("Animation2"), id2)
+        elseif pack.Idle and #pack.Idle > 0 then
+            M.ensureIdleSlots(idleFolder, math.max(2, #pack.Idle))
+            M.setAnim(idleFolder:FindFirstChild("Animation1"), pack.Idle[1])
+            M.setAnim(idleFolder:FindFirstChild("Animation2"), pack.Idle[2] or pack.Idle[1])
+            for i = 3, #pack.Idle do
+                local a = idleFolder:FindFirstChild("Animation" .. i)
+                if a then M.setAnim(a, pack.Idle[i]) end
+            end
+        end
+    end
+    animate.Disabled = true
+    task.wait(0.06)
+    animate.Disabled = false
+    if hum then
+        pcall(function()
+            hum:ChangeState(Enum.HumanoidStateType.Landed)
+            task.wait(0.06)
+            hum:ChangeState(Enum.HumanoidStateType.Running)
+        end)
+    end
+    M.animPack = packName
+    applyingAnim = false
+    return true
+end
+function M.createPlayerSpeedGui(plr)
+    if plr == player then return end
+    if M.playerSpeedGuis[plr] then return end
+    local char = plr.Character
+    if not char then return end
+    local head = char:FindFirstChild("Head")
+    if not head then return end
+    local old = head:FindFirstChild("MoveePlayerSpeedBB")
+    if old then old:Destroy() end
+    local bb = Instance.new("BillboardGui")
+    bb.Name = "MoveePlayerSpeedBB"
+    bb.Size = UDim2.new(0, 80, 0, 24)
+    bb.StudsOffset = Vector3.new(0, 2.2, 0)
+    bb.AlwaysOnTop = true
+    bb.Adornee = head
+    bb.Parent = head
+    local label = Instance.new("TextLabel", bb)
+    label.Size = UDim2.new(1,0,1,0)
+    label.BackgroundTransparency = 1
+    label.Text = "0"
+    label.TextColor3 = CHERRY_ACCENT or Color3.fromRGB(255,255,255)
+    label.Font = Enum.Font.GothamBold
+    label.TextScaled = true
+    label.TextStrokeTransparency = 0
+    M.addShimmerToLabel(label, CHERRY_ACCENT or Color3.fromRGB(255,255,255), Color3.fromRGB(255,255,255))
+    local conn
+    conn = char.AncestryChanged:Connect(function(_, parent)
+        if not parent then
+            M.removePlayerSpeedGui(plr)
+            if conn then conn:Disconnect() end
+        end
+    end)
+    M.playerSpeedGuis[plr] = {gui = bb, label = label, conn = conn}
+end
+function M.removePlayerSpeedGui(plr)
+    local data = M.playerSpeedGuis[plr]
+    if data then
+        if data.conn then data.conn:Disconnect() end
+        if data.gui then data.gui:Destroy() end
+        M.playerSpeedGuis[plr] = nil
+    end
+end
+function M.updatePlayerSpeed(plr)
+    if not M.showPlayerSpeeds then return end
+    local data = M.playerSpeedGuis[plr]
+    if not data then return end
+    local char = plr.Character
+    if not char then M.removePlayerSpeedGui(plr); return end
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    local speed = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z).Magnitude
+    data.label.Text = string.format("%.1f", speed)
+end
+function M.updateAllPlayerSpeeds()
+    for plr, _ in pairs(M.playerSpeedGuis) do M.updatePlayerSpeed(plr) end
+end
+function M.startPlayerSpeedUpdates()
+    if M.playerSpeedUpdateConn then return end
+    local _acc = 0
+    M.playerSpeedUpdateConn = RunService.Heartbeat:Connect(function(dt)
+        _acc = _acc + (dt or 0.016)
+        if _acc < 0.12 then return end
+        _acc = 0
+        M.updateAllPlayerSpeeds()
+    end)
+end
+function M.stopPlayerSpeedUpdates()
+    if M.playerSpeedUpdateConn then M.playerSpeedUpdateConn:Disconnect(); M.playerSpeedUpdateConn = nil end
+end
+function M.togglePlayerSpeeds(on)
+    M.showPlayerSpeeds = on
+    if on then
+        for _, plr in ipairs(Players:GetPlayers()) do
+            if plr ~= player then M.createPlayerSpeedGui(plr) end
+        end
+        M.startPlayerSpeedUpdates()
+    else
+        for plr, _ in pairs(M.playerSpeedGuis) do M.removePlayerSpeedGui(plr) end
+        M.stopPlayerSpeedUpdates()
+    end
+end
+function M.addESP(plr)
+    if plr == player then return end
+    if M.espList[plr] then return end
+    local char = plr.Character
+    if not char then return end
+    local head = char:FindFirstChild("Head")
+    if not head then return end
+    local nameBB = Instance.new("BillboardGui")
+    nameBB.Size = UDim2.new(0, 120, 0, 30)
+    nameBB.StudsOffset = Vector3.new(0, 2.8, 0)
+    nameBB.AlwaysOnTop = true
+    nameBB.Adornee = head
+    nameBB.Parent = head
+    local nameLbl = Instance.new("TextLabel", nameBB)
+    nameLbl.Size = UDim2.new(1,0,1,0)
+    nameLbl.BackgroundTransparency = 1
+    nameLbl.Text = plr.Name
+    nameLbl.TextColor3 = Color3.fromRGB(255,255,255)
+    nameLbl.Font = Enum.Font.GothamBold
+    nameLbl.TextScaled = true
+    nameLbl.TextStrokeTransparency = 0
+    nameLbl.TextStrokeColor3 = Color3.fromRGB(0,0,0)
+    local highlight = Instance.new("Highlight")
+    highlight.Adornee = char
+    highlight.FillTransparency = 1
+    highlight.OutlineTransparency = 0.3
+    highlight.OutlineColor = Color3.fromRGB(255,255,255)
+    highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    highlight.Parent = char
+    M.espList[plr] = {nameBB = nameBB, highlight = highlight}
+end
+function M.removeESP(plr)
+    local data = M.espList[plr]
+    if data then
+        if data.nameBB then data.nameBB:Destroy() end
+        if data.highlight then data.highlight:Destroy() end
+        M.espList[plr] = nil
+    end
+end
+function M.clearESP()
+    for plr, _ in pairs(M.espList) do M.removeESP(plr) end
+end
+function M.toggleESP(on)
+    M.playerESPEnabled = on
+    if on then
+        for _, plr in ipairs(Players:GetPlayers()) do
+            if plr ~= player then M.addESP(plr) end
+        end
+        if not M._espPlayerAdded then
+            M._espPlayerAdded = Players.PlayerAdded:Connect(function(p)
+                if p ~= player and M.playerESPEnabled then
+                    p.CharacterAdded:Connect(function()
+                        task.wait(0.5)
+                        M.addESP(p)
+                    end)
+                    if p.Character then task.wait(0.5); M.addESP(p) end
+                end
+            end)
+            M.trackConn(M._espPlayerAdded)
+        end
+        if not M._espPlayerRemoved then
+            M._espPlayerRemoved = Players.PlayerRemoving:Connect(function(p)
+                M.removeESP(p)
+            end)
+            M.trackConn(M._espPlayerRemoved)
+        end
+    else
+        M.clearESP()
+        if M._espPlayerAdded then M._espPlayerAdded:Disconnect(); M._espPlayerAdded = nil end
+        if M._espPlayerRemoved then M._espPlayerRemoved:Disconnect(); M._espPlayerRemoved = nil end
+    end
+end
+M.headIndicator = nil
+function M.setupHeadIndicator(char)
+    local head=char:WaitForChild("Head",5);if not head then return end
+    if head:FindFirstChild("MoveeHeadIndicator") then head.MoveeHeadIndicator:Destroy() end
+    local bb=Instance.new("BillboardGui",head)
+    bb.Name="MoveeHeadIndicator"
+    -- Indicador sobre la cabeza: solo velocidad; la imagen va en el botón del menú.
+    bb.Size=UDim2.new(0,120,0,30)
+    bb.StudsOffset=Vector3.new(0,2.35,0)
+    bb.AlwaysOnTop=true
+    bb.Parent=head
+    local accent = M.currentAccent or Color3.fromRGB(58, 128, 245)
+    local speedLbl=Instance.new("TextLabel",bb)
+    speedLbl.Name="Speed"
+    speedLbl.Size=UDim2.new(1,0,1,0)
+    speedLbl.Position=UDim2.new(0,0,0,0)
+    speedLbl.BackgroundTransparency=1
+    speedLbl.Text="0.0"
+    speedLbl.TextColor3=Color3.new(1,1,1)
+    speedLbl.Font=Enum.Font.LuckiestGuy
+    speedLbl.TextSize=16; speedLbl.TextScaled=false
+    speedLbl.TextStrokeTransparency=0
+    speedLbl.TextStrokeColor3 = Color3.new(0,0,0)
+    M.headIndicator = {bb=bb, speed=speedLbl}
+end
+function M.updateHeadTheme()
+    if not M.headIndicator then return end
+    local accent = UI_ACCENT or CHERRY_ACCENT or Color3.fromRGB(255,255,255)
+    if M.headIndicator.PrimeHub then
+        M.headIndicator.PrimeHub.ImageColor3 = Color3.new(1,1,1)
+    end
+    if M.headIndicator.speed then
+        M.headIndicator.speed.TextColor3 = accent
+    end
+    if M.headIndicator.ragdollTimer then
+        M.headIndicator.ragdollTimer.TextColor3 = accent
+    end
+    if M.headIndicator.divider then
+        M.headIndicator.divider.BackgroundColor3 = accent
+    end
+end
+local speedUpdateConn = nil
+function M.startHeadSpeedUpdates()
+    if speedUpdateConn then return end
+    speedUpdateConn = task.spawn(function()
+        while true do
+            task.wait(0.25)
+            local char = player.Character
+            if char and M.headIndicator and M.headIndicator.speed then
+                local displaySpeed
+                if M.autoLeftEnabled or M.autoRightEnabled then
+                    displaySpeed = (M.getAutoPathSpeed and M.getAutoPathSpeed()) or M.NS
+                else
+                    displaySpeed = M.getActiveMoveSpeed()
+                end
+                M.headIndicator.speed.Text = string.format("%.1f", displaySpeed)
+            end
+        end
+    end)
+end
+function M.stopHeadSpeedUpdates()
+    if speedUpdateConn then
+        pcall(task.cancel, speedUpdateConn)
+        speedUpdateConn = nil
+    end
+end
+M.autoGrabV1Enabled = false
+M.autoGrabMode = "V1"
+M.autoGrabV1Busy = false
+M.autoGrabV1Progress = 0
+M.autoGrabV1Ready = false
+M.autoGrabV1Conn = nil
+M.autoGrabV1Gui = nil
+M.autoGrabV1Fill = nil
+M.autoGrabV1Label = nil
+M.NORMAL_STEAL_PERCENT = M.NORMAL_STEAL_PERCENT or {["75"]=0.75,["80"]=0.80,["86"]=0.86,["90"]=0.90}
+M.normalStealVersion = M.normalStealVersion or "86"
+local ZenXSteal = {AutoStealEnabled=false, StealRadius=62, StealDuration=1.3, GrabMode="V1", Mode="half", HalfFireRange=10, HalfHoldMin=1.3, HalfHoldMax=2.6, HalfEntryDelay=0.3, Data={}}
+local zenXStealing = false
+local zenXStealStartTime = nil
+local zenXStealPaused = false
+local zenXLastPrompt = nil
+local zenXNextPromptTime = 0
+local function zenXOwnPlot(name)
+    local plots=workspace:FindFirstChild("Plots"); local plot=plots and plots:FindFirstChild(name); local sign=plot and plot:FindFirstChild("PlotSign"); local base=sign and sign:FindFirstChild("YourBase")
+    return base and base:IsA("BillboardGui") and base.Enabled==true
+end
+local function zenXPromptDistance(prompt)
+    local char=player.Character; local root=char and char:FindFirstChild("HumanoidRootPart"); if not root or not prompt then return math.huge end
+    local parent=prompt.Parent; if parent and parent:IsA("Attachment") then parent=parent.Parent end
+    if parent and parent:IsA("BasePart") then return (parent.Position-root.Position).Magnitude end
+    local ok,pos=pcall(function() return prompt.Parent and prompt.Parent.WorldPosition end)
+    return ok and pos and (pos-root.Position).Magnitude or math.huge
+end
+local function zenXFindNearestPrompt()
+    local char=player.Character; local root=char and char:FindFirstChild("HumanoidRootPart"); local plots=workspace:FindFirstChild("Plots"); if not root or not plots then return nil end
+    local nearest,dist=nil,math.huge
+    for _,plot in ipairs(plots:GetChildren()) do
+        if plot:IsA("Model") and not zenXOwnPlot(plot.Name) then
+            local pods=plot:FindFirstChild("AnimalPodiums")
+            if pods then for _,pod in ipairs(pods:GetChildren()) do
+                local base=pod:FindFirstChild("Base"); local sp=base and base:FindFirstChild("Spawn")
+                if sp and sp:IsA("BasePart") then
+                    local d=(sp.Position-root.Position).Magnitude
+                    if d<=ZenXSteal.StealRadius and d<dist then
+                        local found
+                        local att=sp:FindFirstChild("PromptAttachment")
+                        if att then for _,pr in ipairs(att:GetChildren()) do if pr:IsA("ProximityPrompt") and pr.Enabled and tostring(pr.ActionText):lower():find("steal") then found=pr; break end end end
+                        if not found then for _,pr in ipairs(pod:GetDescendants()) do if pr:IsA("ProximityPrompt") and pr.Enabled and (tostring(pr.ActionText).." "..tostring(pr.ObjectText)):lower():find("steal") then found=pr; break end end end
+                        if found then nearest,dist=found,d end
+                    end
+                end
+            end end
+        end
+    end
+    return nearest
+end
+local function zenXUpdateBar()
+    -- exported below as M.zenXUpdateBar
+    local pct=math.clamp(tonumber(M.autoGrabV1Progress) or 0,0,1)
+    local preset = tostring(M.normalStealVersion or "86")
+    local pingMs = 0
+    pcall(function()
+        pingMs = math.floor((player:GetNetworkPing() or 0) * 1000 + 0.5)
+    end)
+    M._lastPingMs = pingMs
+
+    if M.autoGrabV1Fill then
+        M.autoGrabV1Fill.Size = UDim2.new(pct, 0, 1, -4)
+        M.autoGrabV1Fill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    end
+    if M.autoGrabV1Label then
+        M.autoGrabV1Label.RichText = true
+        if M.autoGrabV1Ready then
+            M.autoGrabV1Label.Text = string.format("<font color=\"#000000\">READY</font>  %s%%", preset)
+        else
+            M.autoGrabV1Label.Text = string.format("%d%% / %s%%", math.floor(pct * 100 + 0.5), preset)
+        end
+        M.autoGrabV1Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+        M.autoGrabV1Label.TextSize = 13
+    end
+    if M.stealBarPingLbl then
+        M.stealBarPingLbl.Text = tostring(pingMs) .. " ms"
+        -- subtle color by ping (like Anti-Sammy severity, but small)
+        if pingMs > 150 then
+            M.stealBarPingLbl.TextColor3 = Color3.fromRGB(255, 80, 80)
+        elseif pingMs > 100 then
+            M.stealBarPingLbl.TextColor3 = Color3.fromRGB(255, 205, 110)
+        else
+            M.stealBarPingLbl.TextColor3 = Color3.fromRGB(115, 235, 175)
+        end
+    end
+    if M.autoGrabDesign2Fill then
+        M.autoGrabDesign2Fill.Size = UDim2.new(pct, 0, 1, 0)
+        M.autoGrabDesign2Fill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        if M.autoGrabDesign2Percent then
+            M.autoGrabDesign2Percent.Text = string.format("%d%%", math.floor(pct * 100 + 0.5))
+            M.autoGrabDesign2Percent.TextColor3 = Color3.fromRGB(255, 255, 255)
+        end
+        if M.autoGrabDesign2Status then
+            M.autoGrabDesign2Status.RichText = true
+            M.autoGrabDesign2Status.Text = M.autoGrabV1Ready and string.format("<font color=\"#000000\">READY</font> %s%%", preset) or ("STEAL " .. preset .. "%")
+        end
+    end
+    if M.autoGrabDesign2Ping then
+        M.autoGrabDesign2Ping.Text = tostring(pingMs) .. " ms"
+        if pingMs > 150 then
+            M.autoGrabDesign2Ping.TextColor3 = Color3.fromRGB(255, 120, 120)
+        elseif pingMs > 100 then
+            M.autoGrabDesign2Ping.TextColor3 = Color3.fromRGB(255, 200, 120)
+        else
+            M.autoGrabDesign2Ping.TextColor3 = Color3.fromRGB(180, 180, 185)
+        end
+    end
+end
+M.zenXUpdateBar = zenXUpdateBar
+
+-- El borde de Auto Steal sigue únicamente el acento activo del tema del menú.
+function M.updateStealBarTheme()
+    local accent = UI_ACCENT or CHERRY_ACCENT or Color3.fromRGB(255, 255, 255)
+    if M._stealBarStroke and M._stealBarStroke.Parent then
+        M._stealBarStroke.Color = accent
+    end
+end
+
+-- Keep steal-bar ping fresh (Anti-Sammy: LocalPlayer:GetNetworkPing()*1000)
+task.spawn(function()
+    while true do
+        task.wait(0.5)
+        if M.stealBarPingLbl or M.autoGrabDesign2Ping then
+            local pingMs = 0
+            pcall(function()
+                pingMs = math.floor((player:GetNetworkPing() or 0) * 1000 + 0.5)
+            end)
+            M._lastPingMs = pingMs
+            if M.stealBarPingLbl and M.stealBarPingLbl.Parent then
+                M.stealBarPingLbl.Text = tostring(pingMs) .. " ms"
+                if pingMs > 150 then
+                    M.stealBarPingLbl.TextColor3 = Color3.fromRGB(255, 80, 80)
+                elseif pingMs > 100 then
+                    M.stealBarPingLbl.TextColor3 = Color3.fromRGB(255, 205, 110)
+                else
+                    M.stealBarPingLbl.TextColor3 = Color3.fromRGB(115, 235, 175)
+                end
+            end
+            if M.autoGrabDesign2Ping and M.autoGrabDesign2Ping.Parent then
+                M.autoGrabDesign2Ping.Text = tostring(pingMs) .. " ms"
+            end
+        end
+    end
+end)
+
+function M.ensureAutoGrabV1Gui()
+    if M.autoGrabV1Gui and M.autoGrabV1Gui.Parent then return end
+    local pg=player:WaitForChild("PlayerGui")
+    for _,name in ipairs({"MoveeStealBar"}) do
+        local a=game:GetService("CoreGui"):FindFirstChild(name); if a then a:Destroy() end
+        local b=pg:FindFirstChild(name); if b then b:Destroy() end
+    end
+    local WHITE=Color3.fromRGB(255,255,255)
+    local gui=Instance.new("ScreenGui"); gui.Name="MoveeStealBar"; gui.ResetOnSpawn=false; gui.IgnoreGuiInset=true; gui.DisplayOrder=200
+    if not pcall(function() gui.Parent=game:GetService("CoreGui") end) then gui.Parent=pg end
+    gui.Enabled = not _G.PrimeHubIntroActive
+
+    M.stealBarWidth = math.clamp(tonumber(M.stealBarWidth) or 360, 260, 560)
+    -- V2 uses the same configurable width as V1.
+    local barWidth = M.stealBarWidth
+    local barHeight = 40
+
+    local frame=Instance.new("Frame",gui); frame.Name="StealProgressGui"; frame.Size=UDim2.new(0,barWidth,0,barHeight); frame.Position=UDim2.new(0.5,-barWidth/2,0.06,0); frame.BackgroundColor3=Color3.fromRGB(14,16,24); frame.BackgroundTransparency=0.02; frame.BorderSizePixel=0; frame.ZIndex=20; frame.ClipsDescendants=true
+    local frameCorner=Instance.new("UICorner",frame); frameCorner.CornerRadius=UDim.new(0,12)
+    -- Borde limpio y sutil para separar la barra del fondo.
+    local stroke=Instance.new("UIStroke",frame); stroke.Name="StealBarStroke"; stroke.Color=UI_ACCENT or CHERRY_ACCENT or Color3.fromRGB(255,255,255); stroke.Thickness=1.25; stroke.Transparency=0.18
+    local frameGradient=Instance.new("UIGradient",frame); frameGradient.Color=ColorSequence.new(Color3.fromRGB(28,22,42),Color3.fromRGB(12,18,30)); frameGradient.Rotation=90
+    local fill=Instance.new("Frame",frame); fill.Name="ProgressFill"; fill.Position=UDim2.new(0,2,0,2); fill.Size=UDim2.new(0,0,1,-4); fill.BackgroundColor3=Color3.fromRGB(255,255,255); fill.BorderSizePixel=0; fill.ZIndex=21; Instance.new("UICorner",fill).CornerRadius=UDim.new(1,0)
+    local gradient=Instance.new("UIGradient",fill)
+    -- White fill with subtle moving plomo shimmer (solo el relleno, no el borde)
+    gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(0.35, Color3.fromRGB(190, 192, 200)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(150, 154, 165)),
+        ColorSequenceKeypoint.new(0.65, Color3.fromRGB(190, 192, 200)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255)),
+    })
+    gradient.Rotation = 0
+    gradient.Offset = Vector2.new(-1, 0)
+    task.spawn(function()
+        while frame and frame.Parent do
+            local t = tick() * 6
+            if gradient and gradient.Parent then
+                local off = ((t * 0.32) % 2) - 1
+                gradient.Offset = Vector2.new(off, 0)
+            end
+            task.wait(0.06)
+        end
+    end)
+    local section=Instance.new("Frame",frame); section.Size=UDim2.new(0,barWidth-24,1,-4); section.Position=UDim2.new(0,12,0,2); section.BackgroundTransparency=1; section.ZIndex=25
+    local hubLabel=Instance.new("TextLabel",section); hubLabel.Size=UDim2.new(0,92,1,0); hubLabel.Position=UDim2.new(0,0,0,0); hubLabel.BackgroundTransparency=1; hubLabel.Text="AUTO STEAL"; hubLabel.TextColor3=Color3.fromRGB(255,225,250); hubLabel.Font=Enum.Font.GothamBold; hubLabel.TextSize=11; hubLabel.TextXAlignment=Enum.TextXAlignment.Left; hubLabel.TextYAlignment=Enum.TextYAlignment.Center; hubLabel.ZIndex=26
+    local pct=Instance.new("TextLabel",section); pct.Size=UDim2.new(0,92,1,0); pct.Position=UDim2.new(0,98,0,0); pct.BackgroundTransparency=1; pct.Text="0%"; pct.TextColor3=Color3.fromRGB(255,255,255); pct.Font=Enum.Font.GothamBlack; pct.TextSize=14; pct.TextXAlignment=Enum.TextXAlignment.Left; pct.TextYAlignment=Enum.TextYAlignment.Center; pct.ZIndex=26
+
+    -- V2: wide card design.
+    local design2=Instance.new("Frame",frame); design2.Name="AutoGrabDesign2"; design2.Size=UDim2.fromScale(1,1); design2.BackgroundColor3=Color3.fromRGB(22,31,45); design2.BackgroundTransparency=0.04; design2.BorderSizePixel=0; design2.ZIndex=30; design2.Visible=M.autoGrabMode=="V2"
+    local d2Corner=Instance.new("UICorner",design2); d2Corner.CornerRadius=UDim.new(0,8)
+    local d2Gradient=Instance.new("UIGradient",design2); d2Gradient.Color=ColorSequence.new(Color3.fromRGB(46,35,65),Color3.fromRGB(23,20,34)); d2Gradient.Rotation=8
+    local d2Scale=Instance.new("UIScale",design2); d2Scale.Scale=math.clamp(barWidth/320,0.6,1)
+    local d2Divider=Instance.new("Frame",design2); d2Divider.Position=UDim2.new(0,100,0,0); d2Divider.Size=UDim2.new(0,1,1,0); d2Divider.BackgroundColor3=Color3.fromRGB(110,135,165); d2Divider.BackgroundTransparency=0.45; d2Divider.BorderSizePixel=0; d2Divider.ZIndex=31
+    local d2Status=Instance.new("TextLabel",design2); d2Status.Name="Status"; d2Status.Position=UDim2.new(0,12,0,2); d2Status.Size=UDim2.new(0,78,0,14); d2Status.BackgroundTransparency=1; d2Status.Text="STEAL"; d2Status.TextColor3=Color3.fromRGB(205,220,235); d2Status.Font=Enum.Font.GothamBold; d2Status.TextSize=10; d2Status.TextXAlignment=Enum.TextXAlignment.Left; d2Status.ZIndex=32
+    local d2Percent=Instance.new("TextLabel",design2); d2Percent.Name="Percent"; d2Percent.Position=UDim2.new(0,12,0,16); d2Percent.Size=UDim2.new(0,78,0,14); d2Percent.BackgroundTransparency=1; d2Percent.Text="0%"; d2Percent.TextColor3=Color3.fromRGB(240,248,255); d2Percent.Font=Enum.Font.GothamBlack; d2Percent.TextSize=14; d2Percent.TextXAlignment=Enum.TextXAlignment.Left; d2Percent.ZIndex=32
+    local d2Track=Instance.new("Frame",design2); d2Track.Position=UDim2.new(0,120,0,6); d2Track.Size=UDim2.new(0,170,0,18); d2Track.BackgroundColor3=Color3.fromRGB(28,28,32); d2Track.BackgroundTransparency=0.1; d2Track.BorderSizePixel=0; d2Track.ZIndex=31; Instance.new("UICorner",d2Track).CornerRadius=UDim.new(1,0)
+    local d2Fill=Instance.new("Frame",d2Track); d2Fill.Name="ProgressFill"; d2Fill.Size=UDim2.new(0,0,1,0); d2Fill.BackgroundColor3=Color3.fromRGB(255,255,255); d2Fill.BorderSizePixel=0; d2Fill.ZIndex=32; Instance.new("UICorner",d2Fill).CornerRadius=UDim.new(1,0)
+    local d2FillGradient=Instance.new("UIGradient",d2Fill)
+    d2FillGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(0.35, Color3.fromRGB(175, 178, 188)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(130, 134, 145)),
+        ColorSequenceKeypoint.new(0.65, Color3.fromRGB(175, 178, 188)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255)),
+    })
+    d2FillGradient.Offset = Vector2.new(-1, 0)
+    -- solo shimmer en el fill blanco (sin movimiento en borde)
+    task.spawn(function()
+        while d2Track and d2Track.Parent do
+            local t = tick() * 6
+            if d2FillGradient and d2FillGradient.Parent then
+                local off = ((t * 0.32) % 2) - 1
+                d2FillGradient.Offset = Vector2.new(off, 0)
+            end
+            task.wait(0.06)
+        end
+    end)
+    M.autoGrabDesign2Fill=d2Fill; M.autoGrabDesign2Percent=d2Percent; M.autoGrabDesign2Status=d2Status
+
+    -- no +/- or lock on bar; lock uses menu M.uiLocked; size in menu
+    function M.resizeStealBar(delta)
+        barWidth = math.clamp((M.stealBarWidth or barWidth) + (delta or 0), 260, 560)
+        M.stealBarWidth = barWidth
+        if frame and frame.Parent then
+            local cx = frame.Position.X.Offset + frame.Size.X.Offset / 2
+            frame.Size = UDim2.new(0, barWidth, 0, 40)
+            frame.Position = UDim2.new(frame.Position.X.Scale, cx - barWidth / 2, frame.Position.Y.Scale, frame.Position.Y.Offset)
+            if d2Scale then d2Scale.Scale=math.clamp(barWidth/320,0.6,1) end
+        end
+        if M.saveConfig then pcall(M.saveConfig) end
+    end
+
+    local dragging=false; local dragStart; local frameStart
+    frame.InputBegan:Connect(function(input)
+        if M.uiLocked then return end
+        if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then
+            dragging=true; dragStart=input.Position; frameStart=frame.Position
+            input.Changed:Connect(function() if input.UserInputState==Enum.UserInputState.End then dragging=false end end)
+        end
+    end)
+    UIS.InputChanged:Connect(function(input)
+        if M.uiLocked or not dragging then return end
+        if input.UserInputType==Enum.UserInputType.MouseMovement or input.UserInputType==Enum.UserInputType.Touch then
+            local delta=input.Position-dragStart
+            frame.Position=UDim2.new(frameStart.X.Scale,frameStart.X.Offset+delta.X,frameStart.Y.Scale,frameStart.Y.Offset+delta.Y)
+        end
+    end)
+
+    
+    -- Ping next to % (small, readable) — GetNetworkPing()*1000
+    local pingLbl = Instance.new("TextLabel", section)
+    pingLbl.Name = "PingLbl"
+    pingLbl.Position = UDim2.new(0, 198, 0, 0)
+    pingLbl.Size = UDim2.new(0, 72, 1, 0)
+    pingLbl.BackgroundTransparency = 1
+    pingLbl.Text = "-- ms"
+    pingLbl.TextColor3 = Color3.fromRGB(115, 235, 175)
+    pingLbl.Font = Enum.Font.GothamMedium
+    pingLbl.TextSize = 11
+    pingLbl.TextXAlignment = Enum.TextXAlignment.Left
+    pingLbl.TextYAlignment = Enum.TextYAlignment.Center
+    pingLbl.ZIndex = 27
+    M.stealBarPingLbl = pingLbl
+    -- design2: ping beside percent
+    if design2 and d2Percent then
+        local d2ping = Instance.new("TextLabel", design2)
+        d2ping.Name = "PingLbl"
+        d2ping.Position = UDim2.new(0, 55, 0, 16)
+        d2ping.Size = UDim2.new(0, 50, 0, 14)
+        d2ping.BackgroundTransparency = 1
+        d2ping.Text = "-- ms"
+        d2ping.TextColor3 = Color3.fromRGB(115, 235, 175)
+        d2ping.Font = Enum.Font.GothamMedium
+        d2ping.TextSize = 11
+        d2ping.TextXAlignment = Enum.TextXAlignment.Left
+        d2ping.ZIndex = 35
+        M.autoGrabDesign2Ping = d2ping
+        d2Percent.TextColor3 = Color3.fromRGB(255, 255, 255)
+        d2Percent.TextSize = 14
+        d2Status.TextColor3 = Color3.fromRGB(240, 240, 245)
+    end
+
+    M.autoGrabV1Gui,M.autoGrabV1Fill,M.autoGrabV1Label=gui,fill,pct
+    M._stealBarFrame = frame
+    M._stealBarStroke = stroke
+    M.autoGrabDesign2 = design2
+    M.updateStealBarTheme()
+    if M.autoGrabMode == "V2" then section.Visible=false; fill.Visible=false else design2.Visible=false end
+    zenXUpdateBar()
+end
+local function zenXExecuteSteal(prompt)
+    if zenXStealing then return end
+    if not ZenXSteal.Data[prompt] then
+        ZenXSteal.Data[prompt] = {hold={}, trigger={}, ready=true}
+        if getconnections then
+            pcall(function()
+                for _,c in ipairs(getconnections(prompt.PromptButtonHoldBegan)) do
+                    if c.Function then table.insert(ZenXSteal.Data[prompt].hold, c.Function) end
+                end
+                for _,c in ipairs(getconnections(prompt.Triggered)) do
+                    if c.Function then table.insert(ZenXSteal.Data[prompt].trigger, c.Function) end
+                end
+            end)
+        end
+    end
+    local data = ZenXSteal.Data[prompt]
+    if not data.ready then return end
+    data.ready = false
+    zenXStealing = true
+    zenXStealPaused = false
+    zenXStealStartTime = tick()
+    M.autoGrabV1Ready = false
+    M.autoGrabV1Progress = 0
+    if M.zenXUpdateBar then M.zenXUpdateBar() else zenXUpdateBar() end
+
+    -- Anti-Sammy safe steal: hold to preset %, wait until close, finish
+    local spawnPosition = nil
+    do
+        local parent = prompt.Parent
+        if parent and parent.Name == "PromptAttachment" then parent = parent.Parent end
+        if parent and parent.Name == "Spawn" and parent:IsA("BasePart") then
+            spawnPosition = parent.Position
+        elseif parent and parent:IsA("BasePart") then
+            spawnPosition = parent.Position
+        end
+    end
+
+    local duration = math.max(tonumber(ZenXSteal.StealDuration) or 1.3, 0.05)
+    local presetKey = tostring(M.normalStealVersion or "86")
+    local percents = M.NORMAL_STEAL_PERCENT or {["75"]=0.75,["80"]=0.80,["86"]=0.86,["90"]=0.90}
+    local stopRatio = percents[presetKey] or 0.86
+    local stopPoint = duration * stopRatio
+
+    task.spawn(function()
+        for _,fn in ipairs(data.hold) do task.spawn(fn) end
+
+        -- Phase 1: hold until preset %
+        local started = tick()
+        while zenXStealing and M.autoGrabV1Enabled and prompt.Parent do
+            local elapsed = tick() - started
+            M.autoGrabV1Progress = math.clamp(elapsed / duration, 0, stopRatio)
+            pcall(function() getgenv()._AS_StealProgress = M.autoGrabV1Progress end)
+            if M.zenXUpdateBar then M.zenXUpdateBar() else zenXUpdateBar() end
+            if elapsed >= stopPoint then break end
+            task.wait()
+        end
+
+        M.autoGrabV1Progress = stopRatio
+        pcall(function() getgenv()._AS_StealProgress = stopRatio end)
+        zenXStealPaused = true
+        if M.zenXUpdateBar then M.zenXUpdateBar() else zenXUpdateBar() end
+
+        -- Phase 2: wait until close to target (safe)
+        local function isClose()
+            if not spawnPosition then return true end
+            local char = player.Character
+            local root = char and char:FindFirstChild("HumanoidRootPart")
+            return root and (spawnPosition - root.Position).Magnitude <= (ZenXSteal.HalfFireRange or 9)
+        end
+
+        local closeEnough = isClose()
+        local waitDeadline = tick() + 2
+        while zenXStealing and M.autoGrabV1Enabled and prompt.Parent and not closeEnough and tick() < waitDeadline do
+            closeEnough = isClose()
+            task.wait()
+        end
+
+        -- Phase 3: finish remaining % and trigger
+        if closeEnough and zenXStealing and M.autoGrabV1Enabled and prompt.Parent then
+            zenXStealPaused = false
+            local remaining = math.max(duration - stopPoint, 0.01)
+            local finishStarted = tick()
+            while zenXStealing and M.autoGrabV1Enabled and prompt.Parent do
+                local finishAlpha = math.clamp((tick() - finishStarted) / remaining, 0, 1)
+                M.autoGrabV1Progress = stopRatio + finishAlpha * (1 - stopRatio)
+                pcall(function() getgenv()._AS_StealProgress = M.autoGrabV1Progress end)
+                if M.zenXUpdateBar then M.zenXUpdateBar() else zenXUpdateBar() end
+                if finishAlpha >= 1 then break end
+                task.wait()
+            end
+            if zenXStealing and M.autoGrabV1Enabled and prompt.Parent then
+                for _,fn in ipairs(data.trigger) do task.spawn(fn) end
+            end
+        end
+
+        task.wait(0.05)
+        data.ready = true
+        zenXStealing = false
+        zenXStealPaused = false
+        zenXStealStartTime = nil
+        zenXLastPrompt = prompt
+        zenXNextPromptTime = tick() + 0.5
+        M.autoGrabV1Progress = 0
+        M.autoGrabV1Ready = M.autoGrabV1Enabled
+        pcall(function() getgenv()._AS_StealProgress = 0 end)
+        if M.zenXUpdateBar then M.zenXUpdateBar() else zenXUpdateBar() end
+    end)
+end
+
+function M.startAutoGrabV1()
+    M.autoGrabV1Enabled = true
+    ZenXSteal.AutoStealEnabled = true
+    if _G.PrimeHubIntroActive then
+        _G.PrimeHubIntroDoneCallbacks = _G.PrimeHubIntroDoneCallbacks or {}
+        table.insert(_G.PrimeHubIntroDoneCallbacks, function()
+            if M.autoGrabV1Enabled then
+                pcall(function()
+                    M.ensureAutoGrabV1Gui()
+                    if M.autoGrabV1Gui then M.autoGrabV1Gui.Enabled = true end
+                    M.autoGrabV1Ready = true
+                    zenXUpdateBar()
+                    if not M.autoGrabV1Conn then
+                        M.autoGrabV1Conn = RunService.Heartbeat:Connect(function()
+                            if not M.autoGrabV1Enabled or zenXStealing then return end
+                            local p = zenXFindNearestPrompt()
+                            if p then
+                                M.autoGrabV1Ready = false
+                                zenXExecuteSteal(p)
+                            else
+                                M.autoGrabV1Ready = true
+                                M.autoGrabV1Progress = 0
+                                zenXUpdateBar()
+                            end
+                        end)
+                    end
+                end)
+            end
+        end)
+        return
+    end
+    M.ensureAutoGrabV1Gui()
+    if M.autoGrabV1Gui then M.autoGrabV1Gui.Enabled = true end
+    M.autoGrabV1Ready = true
+    zenXUpdateBar()
+    if M.autoGrabV1Conn then return end
+    M.autoGrabV1Conn = RunService.Heartbeat:Connect(function()
+        if not M.autoGrabV1Enabled or zenXStealing then return end
+        local p = zenXFindNearestPrompt()
+        if p then
+            M.autoGrabV1Ready = false
+            zenXExecuteSteal(p)
+        else
+            M.autoGrabV1Ready = true
+            M.autoGrabV1Progress = 0
+            zenXUpdateBar()
+        end
+    end)
+end
+function M.stopAutoGrabV1()
+    M.autoGrabV1Enabled=false; ZenXSteal.AutoStealEnabled=false; M.autoGrabV1Busy=false; M.autoGrabV1Ready=false; M.autoGrabV1Progress=0
+    if M.autoGrabV1Conn then M.autoGrabV1Conn:Disconnect(); M.autoGrabV1Conn=nil end
+    zenXUpdateBar()
+end
+task.defer(function()
+    while _G.PrimeHubIntroActive do task.wait(0.1) end
+    task.wait(0.05)
+    if M.autoGrabV1Enabled ~= false then
+        pcall(M.startAutoGrabV1)
+    end
+end)
+function M.findBat()
+    local char=player.Character;if not char then return nil end
+    for _,tool in ipairs(char:GetChildren()) do if tool:IsA("Tool") and (tool.Name:lower():find("bat") or tool.Name:lower():find("slap")) then return tool end end
+    local bp=player:FindFirstChild("Backpack");if bp then for _,tool in ipairs(bp:GetChildren()) do if tool:IsA("Tool") and (tool.Name:lower():find("bat") or tool.Name:lower():find("slap")) then return tool end end end
+    return nil
+end
+function M.findMedusa()
+    local c=player.Character;if not c then return nil end
+    for _,t in ipairs(c:GetChildren()) do if t:IsA("Tool") then local n=t.Name:lower();if n:find("medusa") or n:find("head") or n:find("stone") then return t end end end
+    local bp=player:FindFirstChild("Backpack");if bp then for _,t in ipairs(bp:GetChildren()) do if t:IsA("Tool") then local n=t.Name:lower();if n:find("medusa") or n:find("head") or n:find("stone") then return t end end end end
+    return nil
+end
+function M.useMedusaCounter()
+    if M.medusaDebounce then return end;if M.MEDUSA_COOLDOWN>(tick()-M.medusaLastUsed) then return end
+    local c=player.Character;if not c then return end;M.medusaDebounce=true
+    local med=M.findMedusa();if not med then M.medusaDebounce=false;return end
+    if med.Parent~=c then local hum2=c:FindFirstChildOfClass("Humanoid");if hum2 then hum2:EquipTool(med) end end
+    pcall(function() med:Activate() end);M.medusaLastUsed=tick();M.medusaDebounce=false
+end
+function M.onAnchorChanged(part)
+    return part:GetPropertyChangedSignal("Anchored"):Connect(function()
+        if part.Anchored and part.Transparency==1 then
+            if M.medusaCounterEnabled then M.useMedusaCounter() end
+        end
+    end)
+end
+function M.setupMedusa(char)
+    for _,c in pairs(M.Conns.anchor) do pcall(function() c:Disconnect() end) end;M.Conns.anchor={}
+    if not char then return end
+    for _,part in ipairs(char:GetDescendants()) do if part:IsA("BasePart") then table.insert(M.Conns.anchor,M.onAnchorChanged(part)) end end
+    table.insert(M.Conns.anchor,char.DescendantAdded:Connect(function(part) if part:IsA("BasePart") then table.insert(M.Conns.anchor,M.onAnchorChanged(part)) end end))
+end
+function M.stopMedusaCounter() for _,c in pairs(M.Conns.anchor) do pcall(function() c:Disconnect() end) end;M.Conns.anchor={} end
+function M.findBatForCounter()
+    local c=player.Character;if not c then return nil end;local bp=player:FindFirstChildOfClass("Backpack")
+    for _,name in ipairs(M.BAT_COUNTER_SLAP_LIST) do local t=c:FindFirstChild(name) or (bp and bp:FindFirstChild(name));if t then return t end end
+    for _,ch in ipairs(c:GetChildren()) do if ch:IsA("Tool") and ch.Name:lower():find("bat") then return ch end end
+    if bp then for _,ch in ipairs(bp:GetChildren()) do if ch:IsA("Tool") and ch.Name:lower():find("bat") then return ch end end end
+    return nil
+end
+function M.swingBatForCounter(bat,char)
+    local hum2=char:FindFirstChildOfClass("Humanoid")
+    if bat.Parent~=char then if hum2 then pcall(function() hum2:EquipTool(bat) end) end;task.wait(0.05) end
+    local remote=bat:FindFirstChildOfClass("RemoteEvent") or bat:FindFirstChildOfClass("RemoteFunction")
+    if remote and remote:IsA("RemoteEvent") then pcall(function() remote:FireServer() end);task.wait(0.15);pcall(function() remote:FireServer() end)
+    else pcall(function() bat:Activate() end);task.wait(0.15);pcall(function() bat:Activate() end) end
+end
+function M.startBatCounter()
+    if M.Conns.batCounter then return end
+    M.Conns.batCounter=RunService.Heartbeat:Connect(function()
+        if not M.batCounterEnabled or M.batCounterDebounce then return end
+        local char=player.Character;if not char then return end;local hum2=char:FindFirstChildOfClass("Humanoid");if not hum2 then return end
+        local st=hum2:GetState()
+        if st==Enum.HumanoidStateType.Physics or st==Enum.HumanoidStateType.Ragdoll or st==Enum.HumanoidStateType.FallingDown then
+            M.batCounterDebounce=true;task.spawn(function() local bat=M.findBatForCounter();if bat then M.swingBatForCounter(bat,char) end;task.wait(0.5);M.batCounterDebounce=false end)
+        end
+    end)
+end
+function M.stopBatCounter() if M.Conns.batCounter then M.Conns.batCounter:Disconnect();M.Conns.batCounter=nil end;M.batCounterDebounce=false end
+
+-- ==================== BAT COUNTER V2 (CLEAN) ====================
+M.batCounterV2Enabled = M.batCounterV2Enabled == true
+M._batCounterV2Conn = nil
+M._batCounterV2Debounce = false
+M._batCounterV2HitCD = false
+M.BAT_COUNTER_V2_SWING_CD = 0.08
+
+local function _bc2HasAnimal(plr)
+    if not plr or not plr.Character then return false end
+    for _, child in ipairs(plr.Character:GetChildren()) do
+        if child:IsA("Tool") then
+            local n = child.Name:lower()
+            if child:FindFirstChild("Handle") or n:find("animal") or n:find("pet") or n:find("brainrot") then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+local function _bc2GetAttacker()
+    local myChar = player.Character
+    if not myChar then return nil end
+    local myRoot = myChar:FindFirstChild("HumanoidRootPart")
+    if not myRoot then return nil end
+    local closest, minDist = nil, math.huge
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= player and plr.Character and _bc2HasAnimal(plr) then
+            local tRoot = plr.Character:FindFirstChild("HumanoidRootPart")
+            local hum = plr.Character:FindFirstChildOfClass("Humanoid")
+            if tRoot and hum and hum.Health > 0 then
+                local dist = (tRoot.Position - myRoot.Position).Magnitude
+                if dist < 12 and dist < minDist then
+                    minDist = dist
+                    closest = plr
+                end
+            end
+        end
+    end
+    return closest
+end
+
+local function _bc2GetBat()
+    local char = player.Character
+    if not char then return nil end
+    for _, child in ipairs(char:GetChildren()) do
+        if child:IsA("Tool") then
+            local n = child.Name:lower()
+            if n:find("bat") or n:find("slap") or n:find("sword") or n:find("knife") then return child end
+        end
+    end
+    local bp = player:FindFirstChild("Backpack")
+    if bp then
+        for _, child in ipairs(bp:GetChildren()) do
+            if child:IsA("Tool") then
+                local n = child.Name:lower()
+                if n:find("bat") or n:find("slap") or n:find("sword") or n:find("knife") then return child end
+            end
+        end
+    end
+    return nil
+end
+
+local function _bc2TryHit()
+    if M._batCounterV2HitCD then return end
+    M._batCounterV2HitCD = true
+    pcall(function()
+        local bat = _bc2GetBat()
+        local char = player.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if bat and hum and bat.Parent ~= char then pcall(function() hum:EquipTool(bat) end) end
+        if bat then
+            pcall(function() bat:Activate() end)
+            local ev = bat:FindFirstChildWhichIsA("RemoteEvent")
+            if ev then pcall(function() ev:FireServer() end) end
+        end
+    end)
+    task.delay(M.BAT_COUNTER_V2_SWING_CD or 0.08, function() M._batCounterV2HitCD = false end)
+end
+
+function M.startBatCounterV2()
+    if M._batCounterV2Conn then return end
+    M.batCounterV2Enabled = true
+    M._batCounterV2Conn = RunService.Heartbeat:Connect(function()
+        if not M.batCounterV2Enabled or M._batCounterV2Debounce then return end
+        local attacker = _bc2GetAttacker()
+        if not attacker then return end
+        local aChar = attacker.Character
+        local aHum = aChar and aChar:FindFirstChildOfClass("Humanoid")
+        if aHum then
+            local st = aHum:GetState()
+            if st == Enum.HumanoidStateType.Physics or st == Enum.HumanoidStateType.Ragdoll or st == Enum.HumanoidStateType.FallingDown then
+                return
+            end
+        end
+        M._batCounterV2Debounce = true
+        local myChar = player.Character
+        local hrp = myChar and myChar:FindFirstChild("HumanoidRootPart")
+        local attRoot = aChar and aChar:FindFirstChild("HumanoidRootPart")
+        if hrp and attRoot then
+            local targetPos = attRoot.Position + Vector3.new(0, 0.9, 0)
+            if (hrp.Position - targetPos).Magnitude > 8 then
+                pcall(function() hrp.CFrame = CFrame.new(targetPos) end)
+            end
+            if sethiddenproperty then
+                pcall(function() sethiddenproperty(hrp, "PhysicsRepRootPart", attRoot) end)
+            end
+            _bc2TryHit()
+            task.delay(0.05, _bc2TryHit)
+            task.delay(0.1, _bc2TryHit)
+        end
+        task.delay(0.35, function() M._batCounterV2Debounce = false end)
+    end)
+end
+
+function M.stopBatCounterV2()
+    M.batCounterV2Enabled = false
+    if M._batCounterV2Conn then
+        M._batCounterV2Conn:Disconnect()
+        M._batCounterV2Conn = nil
+    end
+    M._batCounterV2Debounce = false
+    M._batCounterV2HitCD = false
+end
+
+M.aimbotSpeed = M.aimbotSpeed or 58
+M.laggerAimbotSpeed = M.laggerAimbotSpeed or 40
+M._aimbotSwingCooldown = false
+function M.findBatForAimbot()
+    local char = player.Character
+    if not char then return nil end
+    local SlapList = {"Bat","Slap","Iron Slap","Gold Slap","Diamond Slap","Emerald Slap","Ruby Slap","Dark Matter Slap","Flame Slap","Nuclear Slap","Galaxy Slap","Glitched Slap"}
+    for _, name in ipairs(SlapList) do
+        local t = char:FindFirstChild(name)
+        if t and t:IsA("Tool") then return t end
+    end
+    for _, t in ipairs(char:GetChildren()) do
+        if t:IsA("Tool") and (t.Name:lower():find("bat") or t.Name:lower():find("slap")) then
+            return t
+        end
+    end
+    local bp = player:FindFirstChildOfClass("Backpack")
+    if bp then
+        for _, name in ipairs(SlapList) do
+            local t = bp:FindFirstChild(name)
+            if t and t:IsA("Tool") then return t end
+        end
+        for _, t in ipairs(bp:GetChildren()) do
+            if t:IsA("Tool") and (t.Name:lower():find("bat") or t.Name:lower():find("slap")) then
+                return t
+            end
+        end
+    end
+    return nil
+end
+function M.getClosestTargetAimbot()
+    local char = player.Character
+    if not char then return nil end
+    local root = char:FindFirstChild("HumanoidRootPart")
+    if not root then return nil end
+    local closest, minDist = nil, math.huge
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= player and plr.Character then
+            local tRoot = plr.Character:FindFirstChild("HumanoidRootPart")
+            local hum = plr.Character:FindFirstChildOfClass("Humanoid")
+            if tRoot and hum and hum.Health > 0 then
+                if not (M._isProtectedBatTarget and M._isProtectedBatTarget(plr.Character)) then
+                    local dist = (tRoot.Position - root.Position).Magnitude
+                    if dist < minDist then
+                        minDist = dist
+                        closest = tRoot
+                    end
+                end
+            end
+        end
+    end
+    return closest
+end
+function M._isProtectedBatTarget(character)
+    return character and (character:FindFirstChild("Anti-Bat") or character:FindFirstChild("AntiBat") or character:FindFirstChild("Shield")) ~= nil
+end
+function M._swingBatTool(char)
+    pcall(function()
+        if not char then return end
+        local currentTool = char:FindFirstChildOfClass("Tool")
+        if currentTool then
+            local n = currentTool.Name:lower()
+            if not (n:find("bat") or n:find("slap")) then
+                return
+            end
+        end
+        local bat = M.findBatForAimbot()
+        if bat then
+            if bat.Parent ~= char then
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum then pcall(function() hum:EquipTool(bat) end) end
+            end
+            pcall(function() bat:Activate() end)
+        end
+    end)
+end
+function M.startBatAimbot()
+    if M.aimbotConn then
+        pcall(function() M.aimbotConn:Disconnect() end)
+        M.aimbotConn = nil
+    end
+    if M.safeModeTryStart and not M.safeModeTryStart() then return end
+    M.autoBatEnabled = true
+    local oldAimbotSwingCooldown = false
+    local hum0 = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+    if hum0 then hum0.AutoRotate = false end
+
+    -- 7UP Aimbot Old behavior
+    M.aimbotConn = RunService.RenderStepped:Connect(function()
+        if not M.autoBatEnabled then return end
+        local char = player.Character
+        if not char then return end
+        local root = char:FindFirstChild("HumanoidRootPart")
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if not root or not hum then return end
+        local bat = char:FindFirstChildOfClass("Tool") or M.findBatForAimbot()
+        if bat and bat.Parent ~= char then pcall(function() hum:EquipTool(bat) end) end
+        local target = M.getClosestTargetAimbot()
+        if not target then return end
+        local targetVel = target.AssemblyLinearVelocity
+        local myPos = root.Position
+        local targetPos = target.Position
+        local predictPos = targetPos + targetVel * 0.14 + target.CFrame.LookVector * 0.3
+        local direction = predictPos - myPos
+        if direction.Magnitude < 0.01 then return end
+        local flatDir = Vector3.new(direction.X, 0, direction.Z)
+        if flatDir.Magnitude < 0.01 then return end
+        flatDir = flatDir.Unit
+        local chaseSpeed = math.clamp(tonumber(M.aimbotSpeed) or 60, 1, 500)
+        local desiredHeight = targetPos.Y + 3.7
+        local yVel = (desiredHeight - myPos.Y) * 19.5 + targetVel.Y * 0.8
+        if hum.FloorMaterial ~= Enum.Material.Air then yVel = math.max(yVel, 13) end
+        yVel = math.clamp(yVel, -70, 110)
+        root.AssemblyLinearVelocity = root.AssemblyLinearVelocity:Lerp(Vector3.new(flatDir.X * chaseSpeed, yVel, flatDir.Z * chaseSpeed), 0.8)
+        local predictTime = math.clamp(targetVel.Magnitude / 150, 0.05, 0.2)
+        local predictedPos = targetPos + targetVel * predictTime
+        local toPredict = predictedPos - myPos
+        if toPredict.Magnitude > 0.1 then
+            local goalCF = CFrame.lookAt(myPos, predictedPos)
+            local diffCF = root.CFrame:Inverse() * goalCF
+            local rx, ry, rz = diffCF:ToEulerAnglesXYZ()
+            root.AssemblyAngularVelocity = root.CFrame:VectorToWorldSpace(Vector3.new(math.clamp(rx, -2.5, 2.5) * 42, math.clamp(ry, -2.5, 2.5) * 42, math.clamp(rz, -2.5, 2.5) * 42))
+        end
+        if M.autoSwingEnabled and bat and not oldAimbotSwingCooldown then
+            oldAimbotSwingCooldown = true
+            pcall(function() bat:Activate() end)
+            task.delay(0.08, function() oldAimbotSwingCooldown = false end)
+        end
+    end)
+    if M.autoBatSetVisual then M.autoBatSetVisual(true) end
+    if M.mobBtnRefs and M.mobBtnRefs.autoBat then M.mobBtnRefs.autoBat(true) end
+end
+function M.stopBatAimbot()
+    if M.aimbotConn then
+        pcall(function() M.aimbotConn:Disconnect() end)
+        M.aimbotConn = nil
+    end
+    M.autoBatEnabled = false
+    M._aimbotSwingCooldown = false
+    local char = player.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    if hum then
+        hum.AutoRotate = (M._aimbotPrevAutoRotate == nil) and true or M._aimbotPrevAutoRotate
+        hum.PlatformStand = false
+        pcall(function() hum:ChangeState(Enum.HumanoidStateType.Running) end)
+    end
+    if root then
+        root.AssemblyLinearVelocity = Vector3.new(0, -0.1, 0)
+        root.AssemblyAngularVelocity = Vector3.zero
+    end
+    M._aimbotPrevAutoRotate = nil
+    if M.autoBatSetVisual then M.autoBatSetVisual(false) end
+    if M.mobBtnRefs and M.mobBtnRefs.autoBat then M.mobBtnRefs.autoBat(false) end
+end
+function M.queueAutoBatStart()
+    if M.safeModeTryStart and not M.safeModeTryStart() then return end
+    if M.antiKickEnabled and M.brainrotDetected then return end
+    if M.autoLeftEnabled then
+        M.autoLeftEnabled = false
+        if M.autoLeftSetVisual then M.autoLeftSetVisual(false) end
+        M.stopAutoLeft()
+    end
+    if M.autoRightEnabled then
+        M.autoRightEnabled = false
+        if M.autoRightSetVisual then M.autoRightSetVisual(false) end
+        M.stopAutoRight()
+    end
+    M.startBatAimbot()
+end
+function M.swingCurrentBatAimbot(char)
+    if not M.autoSwingEnabled then return end
+    local bat = M.findBatForAimbot()
+    if bat and bat.Parent == char then
+        pcall(function() bat:Activate() end)
+    end
+end
+M._bypassTarget = nil
+M._bypassHRP = nil
+M._bypassHum = nil
+M.tpBatRange = M.tpBatRange or 1e9
+M.tpBatClose = M.tpBatClose or 6
+M.tpBatOffset = M.tpBatOffset or 2.4
+M._tpBatLastSwing = 0
+M._bypassSwingCooldown = false
+function M._bypassFindBat()
+    local char = player.Character
+    if not char then return nil end
+    for _, tool in ipairs(char:GetChildren()) do
+        if tool:IsA("Tool") and (tool.Name:lower():find("bat") or tool.Name:lower():find("slap")) then
+            return tool
+        end
+    end
+    local bp = player:FindFirstChild("Backpack") or player:FindFirstChildOfClass("Backpack")
+    if bp then
+        for _, tool in ipairs(bp:GetChildren()) do
+            if tool:IsA("Tool") and (tool.Name:lower():find("bat") or tool.Name:lower():find("slap")) then
+                return tool
+            end
+        end
+    end
+    return nil
+end
+function M._bypassGetClosest()
+    local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    if not root then return nil, math.huge end
+    local closest, minDist = nil, math.huge
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= player and plr.Character then
+            local tRoot = plr.Character:FindFirstChild("HumanoidRootPart")
+            local hum = plr.Character:FindFirstChildOfClass("Humanoid")
+            if tRoot and hum and hum.Health > 0 and not M._isProtectedBatTarget(plr.Character) then
+                local dist = (tRoot.Position - root.Position).Magnitude
+                if dist < minDist then
+                    minDist = dist
+                    closest = tRoot
+                end
+            end
+        end
+    end
+    return closest, minDist
+end
+function M._bypassClearGodConns()
+    for _, key in ipairs({"_bypassGodConn", "_bypassGodHealthConn", "_bypassGodDiedConn", "_bypassGodCharConn"}) do
+        local c = M[key]
+        if c then pcall(function() c:Disconnect() end); M[key] = nil end
+    end
+end
+function M._bypassProtectCharacter(char)
+    if not char then return end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    if not hum then return end
+    pcall(function()
+        hum.MaxHealth = math.max(hum.MaxHealth, 100)
+        if hum.Health < hum.MaxHealth then hum.Health = hum.MaxHealth end
+    end)
+    if M._bypassGodHealthConn then pcall(function() M._bypassGodHealthConn:Disconnect() end) end
+    M._bypassGodHealthConn = hum:GetPropertyChangedSignal("Health"):Connect(function()
+        if not M.bypassAimbotEnabled then return end
+        if hum.Health < hum.MaxHealth then
+            pcall(function() hum.Health = hum.MaxHealth end)
+        end
+    end)
+    if M._bypassGodDiedConn then pcall(function() M._bypassGodDiedConn:Disconnect() end) end
+    M._bypassGodDiedConn = hum.Died:Connect(function()
+        if not M.bypassAimbotEnabled then return end
+        pcall(function()
+            hum.Health = hum.MaxHealth
+            hum:ChangeState(Enum.HumanoidStateType.Running)
+            hum.PlatformStand = false
+        end)
+    end)
+end
+function M.enableBypassGodmode()
+    M._bypassClearGodConns()
+    local char = player.Character
+    if char then M._bypassProtectCharacter(char) end
+    M._bypassGodCharConn = player.CharacterAdded:Connect(function(c)
+        if not M.bypassAimbotEnabled then return end
+        task.wait(0.15)
+        M._bypassProtectCharacter(c)
+    end)
+    M._bypassGodConn = RunService.Heartbeat:Connect(function()
+        if not M.bypassAimbotEnabled then return end
+        local char = player.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if not hum then return end
+        pcall(function()
+            if hum.Health < (hum.MaxHealth or 100) then
+                hum.Health = hum.MaxHealth or 100
+            end
+            if hum:GetState() == Enum.HumanoidStateType.Dead then
+                hum:ChangeState(Enum.HumanoidStateType.Running)
+            end
+        end)
+    end)
+end
+function M.disableBypassGodmode()
+    M._bypassClearGodConns()
+end
+
+-- ==================== ANTI DESYNC (from Void TP Bat) ====================
+function M.closestRoot()
+    local char = player.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    if not root then return nil, math.huge end
+    local best, dist = nil, math.huge
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p ~= player and p.Character then
+            local tr = p.Character:FindFirstChild("HumanoidRootPart")
+            local hum = p.Character:FindFirstChildOfClass("Humanoid")
+            if tr and hum and hum.Health > 0 then
+                local d = (tr.Position - root.Position).Magnitude
+                if d < dist then dist = d; best = tr end
+            end
+        end
+    end
+    return best, dist
+end
+
+function M.tpHit()
+    if M._tpHitCD then return end
+    M._tpHitCD = true
+    pcall(function()
+        local char = player.Character
+        if not char then return end
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        local bat = char:FindFirstChildOfClass("Tool")
+        if not bat then
+            local bp = player:FindFirstChildOfClass("Backpack")
+            if bp then
+                for _, t in ipairs(bp:GetChildren()) do
+                    if t:IsA("Tool") then
+                        local n = t.Name:lower()
+                        if n:find("bat") or n:find("slap") then bat = t; break end
+                    end
+                end
+            end
+        end
+        if not bat then return end
+        if bat.Parent ~= char and hum then pcall(function() hum:EquipTool(bat) end) end
+        for _ = 1, 3 do
+            pcall(function() bat:Activate() end)
+            local ev = bat:FindFirstChildWhichIsA("RemoteEvent")
+            if ev then pcall(function() ev:FireServer(0) end) end
+            for _, d in ipairs(bat:GetDescendants()) do
+                if d:IsA("RemoteEvent") then pcall(function() d:FireServer(0) end) end
+            end
+        end
+    end)
+    task.delay(0.08, function() M._tpHitCD = false end)
+end
+
+local function _forceAimbotOffForTP()
+    M.autoBatEnabled = false
+    if M.aimbotConn then pcall(function() M.aimbotConn:Disconnect() end); M.aimbotConn = nil end
+    if M.stopBatAimbot then pcall(M.stopBatAimbot) end
+    pcall(function()
+        if M.autoBatSetVisual then M.autoBatSetVisual(false) end
+        if M.mobBtnRefs and M.mobBtnRefs.autoBat then M.mobBtnRefs.autoBat(false) end
+    end)
+end
+
+-- ===== TP BAT (Anti-Sammy style) =====
+M._adaptTpBatCooldown = false
+M._adaptTpBatCharacter = nil
+M._adaptTpBatHumanoid = nil
+M._adaptTpBatRoot = nil
+M._blessTpBatConn = nil
+M.tpBatVersion = M.tpBatVersion or "V1"  -- V1 = distance>8, V2 = distance>3
+
+function M._antiSammyGetBat()
+    local char = player.Character
+    if not char then return nil end
+    local tool = char:FindFirstChild("Bat")
+    if tool then return tool end
+    local bp = player:FindFirstChild("Backpack")
+    if bp then
+        tool = bp:FindFirstChild("Bat")
+        if tool then
+            tool.Parent = char
+            return tool
+        end
+    end
+    if M._bypassFindBat then
+        return M._bypassFindBat()
+    end
+    return nil
+end
+
+function M._adaptTpBatTryHit()
+    if M._adaptTpBatCooldown then return end
+    M._adaptTpBatCooldown = true
+    pcall(function()
+        local bat = M._antiSammyGetBat()
+        if bat then
+            bat:Activate()
+            local ev = bat:FindFirstChildWhichIsA("RemoteEvent")
+            if ev then
+                pcall(function() ev:FireServer() end)
+            end
+        end
+    end)
+    task.delay(0.08, function() M._adaptTpBatCooldown = false end)
+end
+
+function M.restoreCharacterMovement(char)
+    char = char or player.Character
+    if not char then return end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    local root = char:FindFirstChild("HumanoidRootPart")
+    if root then
+        pcall(function()
+            root.Anchored = false
+            root.AssemblyLinearVelocity = Vector3.zero
+            root.AssemblyAngularVelocity = Vector3.zero
+            root.Velocity = Vector3.zero
+            root.RotVelocity = Vector3.zero
+        end)
+    end
+    if hum then
+        pcall(function()
+            hum.PlatformStand = false
+            hum.Sit = false
+            hum.AutoRotate = true
+            if hum.WalkSpeed <= 0 then hum.WalkSpeed = 16 end
+            if hum.UseJumpPower and hum.JumpPower <= 0 then hum.JumpPower = 50 end
+            if not hum.UseJumpPower and hum.JumpHeight <= 0 then hum.JumpHeight = 7.2 end
+            hum:ChangeState(Enum.HumanoidStateType.GettingUp)
+        end)
+        task.defer(function()
+            if hum.Parent and hum.Health > 0 then
+                pcall(function()
+                    hum.PlatformStand = false
+                    hum.Sit = false
+                    hum.AutoRotate = true
+                    hum:ChangeState(Enum.HumanoidStateType.Running)
+                end)
+            end
+        end)
+    end
+end
+
+function M.startBypassAimbot()
+    if M.safeModeTryStart and not M.safeModeTryStart() then return end
+    if M.bypassAimbotConn then
+        pcall(function() M.bypassAimbotConn:Disconnect() end)
+        M.bypassAimbotConn = nil
+    end
+    if M._blessTpBatConn then pcall(function() M._blessTpBatConn:Disconnect() end); M._blessTpBatConn = nil end
+    if M._tpShieldConn then pcall(function() M._tpShieldConn:Disconnect() end); M._tpShieldConn = nil end
+    if M._tpAntiDieConn then pcall(function() M._tpAntiDieConn:Disconnect() end); M._tpAntiDieConn = nil end
+    if M._tpCharConn then pcall(function() M._tpCharConn:Disconnect() end); M._tpCharConn = nil end
+    if _forceAimbotOffForTP then pcall(_forceAimbotOffForTP) end
+
+    if M.batV2Enabled and M.stopBatV2 then
+        pcall(function()
+            M.stopBatV2()
+            M.batV2Enabled = false
+            if M.mobBtnRefs and M.mobBtnRefs.batV2 then M.mobBtnRefs.batV2(false) end
+            if M.setBatV2Visual then M.setBatV2Visual(false) end
+        end)
+    end
+
+    -- Luckbroom-style predictive bypass: estimate target velocity, compensate for ping,
+    -- predict jumps/quick turns, then follow and swing when within range.
+    M.bypassAimbotEnabled = true
+    M._adaptTpBatCooldown = false
+    local state = {
+        target = nil, lastPos = nil, velocity = Vector3.zero,
+        smoothVelocity = Vector3.zero, acceleration = {}, airborne = {},
+        previousDirection = nil, lastDirectionChange = 0,
+        airborneTime = 0, lastSwing = 0, swingLocked = false,
+    }
+    local cfg = {
+        followSpeed = tonumber(M.bypassAimbotSpeed) or tonumber(M.BYPASS_AIMBOT_SPEED) or 55,
+        activateDistance = 13, minFollowDistance = 1, predictionTime = 0.242,
+        predictAhead = 3, maxVelocityChange = 150, smoothing = 0.2,
+        maxHorizontalVelocity = 80, serverTick = 1/60,
+        minPing = 0.03, maxPing = 0.25, accelWeight = 0.3,
+        turnWindow = 0.12, quickTurn = 1.5, gravity = 196.2,
+        airFactor = 0.8, minAirTime = 0.08, swingCooldown = 0.08,
+    }
+    local function average(list)
+        if #list == 0 then return Vector3.zero end
+        local sum = Vector3.zero
+        for _, v in ipairs(list) do sum = sum + v end
+        return sum / #list
+    end
+    local function push(list, value, max)
+        list[#list + 1] = value
+        if #list > max then table.remove(list, 1) end
+    end
+    local function findTarget(myRoot)
+        local nearest, distance = nil, math.huge
+        for _, p in ipairs(Players:GetPlayers()) do
+            if p ~= player and p.Character then
+                local tr = p.Character:FindFirstChild("HumanoidRootPart")
+                local th = p.Character:FindFirstChildOfClass("Humanoid")
+                if tr and th and th.Health > 0 then
+                    local d = (tr.Position - myRoot.Position).Magnitude
+                    if d < distance then nearest, distance = tr, d end
+                end
+            end
+        end
+        return nearest, distance
+    end
+    local function findBat()
+        if M._bypassFindBat then
+            local ok, bat = pcall(M._bypassFindBat)
+            if ok and bat then return bat end
+        end
+        local char = player.Character
+        if not char then return nil end
+        local tool = char:FindFirstChildOfClass("Tool")
+        if tool then
+            local n = tool.Name:lower()
+            if n:find("bat") or n:find("slap") then return tool end
+        end
+        local bp = player:FindFirstChildOfClass("Backpack")
+        if bp then
+            for _, t in ipairs(bp:GetChildren()) do
+                if t:IsA("Tool") and (t.Name:lower():find("bat") or t.Name:lower():find("slap")) then return t end
+            end
+        end
+        return nil
+    end
+    local function swing()
+        local now = tick()
+        if state.swingLocked or now - state.lastSwing < cfg.swingCooldown then return end
+        state.swingLocked, state.lastSwing = true, now
+        pcall(function()
+            local char = player.Character
+            local bat = findBat()
+            local hum = char and char:FindFirstChildOfClass("Humanoid")
+            if bat and char and bat.Parent ~= char and hum then hum:EquipTool(bat) end
+            if bat then
+                bat:Activate()
+                local remote = bat:FindFirstChildWhichIsA("RemoteEvent")
+                if remote then remote:FireServer() end
+            end
+            if M._adaptTpBatTryHit then M._adaptTpBatTryHit() end
+        end)
+        task.delay(cfg.swingCooldown, function() state.swingLocked = false end)
+    end
+
+    M.bypassAimbotConn = RunService.RenderStepped:Connect(function(dt)
+        if not M.bypassAimbotEnabled then return end
+        -- La velocidad se puede modificar desde el ajuste Bat Bypass Speed de la interfaz.
+        cfg.followSpeed = math.clamp(tonumber(M.bypassAimbotSpeed) or cfg.followSpeed or 55, 10, 150)
+        local char = player.Character
+        local root = char and char:FindFirstChild("HumanoidRootPart")
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if not root or not hum or hum.Health <= 0 then return end
+        local target = findTarget(root)
+        if not target or not target.Parent then state.target = nil; state.lastPos = nil; return end
+        local targetChar = target.Parent
+        local targetHum = targetChar:FindFirstChildOfClass("Humanoid")
+        if not targetHum or targetHum.Health <= 0 then return end
+        if state.target ~= target then
+            state.target, state.lastPos = target, nil
+            state.velocity, state.smoothVelocity = Vector3.zero, Vector3.zero
+            state.acceleration, state.airborne = {}, {}
+            state.previousDirection, state.airborneTime = nil, 0
+        end
+        local ping = 0.1
+        pcall(function()
+            ping = math.clamp(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue()/1000, cfg.minPing, cfg.maxPing)
+        end)
+        local pos = target.Position
+        local step = math.max(dt or 1/60, 1/240)
+        if state.lastPos then
+            local instant = (pos - state.lastPos) / step
+            local delta = instant - state.velocity
+            if delta.Magnitude > cfg.maxVelocityChange then instant = state.velocity + delta.Unit * cfg.maxVelocityChange end
+            local horizontal = Vector3.new(instant.X, 0, instant.Z)
+            if horizontal.Magnitude > cfg.maxHorizontalVelocity then
+                horizontal = horizontal.Unit * cfg.maxHorizontalVelocity
+                instant = Vector3.new(horizontal.X, instant.Y, horizontal.Z)
+            end
+            push(state.acceleration, (instant - state.velocity) / step, 4)
+            state.velocity = instant
+            state.smoothVelocity = state.smoothVelocity:Lerp(instant, cfg.smoothing)
+        end
+        state.lastPos = pos
+        local inAir = targetHum.FloorMaterial == Enum.Material.Air
+        state.airborneTime = inAir and (state.airborneTime + step) or 0
+        if inAir and state.airborneTime >= cfg.minAirTime then push(state.airborne, state.velocity, 6)
+        elseif not inAir then state.airborne = {} end
+        local velocity = state.smoothVelocity
+        if inAir and #state.airborne > 0 then
+            local avg = average(state.airborne)
+            velocity = Vector3.new(avg.X, state.velocity.Y, avg.Z) * cfg.airFactor
+        end
+        local horizontal = Vector3.new(state.velocity.X, 0, state.velocity.Z)
+        local quick = false
+        if horizontal.Magnitude > 5 then
+            local dir = horizontal.Unit
+            if state.previousDirection and state.previousDirection:Dot(dir) < 0.5 then
+                quick = tick() - state.lastDirectionChange < cfg.turnWindow
+                state.lastDirectionChange = tick()
+            end
+            state.previousDirection = dir
+        end
+        local delay = ping + cfg.serverTick
+        if quick then delay = delay * cfg.quickTurn end
+        local predicted = pos + velocity * delay + average(state.acceleration) * (delay * delay * 0.5 * cfg.accelWeight)
+        predicted = predicted + velocity * cfg.predictionTime
+        if inAir then predicted = predicted + Vector3.new(0, -0.5 * cfg.gravity * cfg.predictionTime * cfg.predictionTime, 0) end
+        local hv = Vector3.new(velocity.X, 0, velocity.Z)
+        if hv.Magnitude > 1 then predicted = predicted + hv.Unit * cfg.predictAhead end
+        local direction = predicted - root.Position
+        if direction.Magnitude > 0.01 then
+            local cross = root.CFrame.LookVector:Cross(direction.Unit)
+            root.AssemblyAngularVelocity = cross.Magnitude > 0.01 and cross.Unit * math.asin(math.clamp(cross.Magnitude, -1, 1)) * 80 or Vector3.zero
+        end
+        if (pos - root.Position).Magnitude <= cfg.activateDistance then swing() end
+        if direction.Magnitude > cfg.minFollowDistance then
+            root.AssemblyLinearVelocity = direction.Unit * cfg.followSpeed
+        else
+            root.AssemblyLinearVelocity = Vector3.new(0, root.AssemblyLinearVelocity.Y * 0.5, 0)
+        end
+    end)
+    if M.setBypassVisual then M.setBypassVisual(true) end
+    if M.mobBtnRefs and M.mobBtnRefs.bypass then M.mobBtnRefs.bypass(true) end
+    if M.mobBtnRefs and M.mobBtnRefs.tpBat then M.mobBtnRefs.tpBat(true) end
+end
+
+function M.stopBypassAimbot()
+    M.bypassAimbotEnabled = false
+    M._adaptTpBatCooldown = false
+    if M.bypassAimbotConn then pcall(function() M.bypassAimbotConn:Disconnect() end); M.bypassAimbotConn = nil end
+    if M._blessTpBatConn then pcall(function() M._blessTpBatConn:Disconnect() end); M._blessTpBatConn = nil end
+    if M._tpShieldConn then pcall(function() M._tpShieldConn:Disconnect() end); M._tpShieldConn = nil end
+    if M._tpAntiDieConn then pcall(function() M._tpAntiDieConn:Disconnect() end); M._tpAntiDieConn = nil end
+    if M._tpCharConn then pcall(function() M._tpCharConn:Disconnect() end); M._tpCharConn = nil end
+    local char = player.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    if hum then pcall(function() hum.AutoRotate = true end) end
+    if root then
+        pcall(function() root.AssemblyAngularVelocity = Vector3.zero end)
+        if sethiddenproperty then pcall(function() sethiddenproperty(root, "PhysicsRepRootPart", root) end) end
+    end
+    if M.restoreCharacterMovement then pcall(function() M.restoreCharacterMovement(char) end) end
+    M._adaptTpBatCharacter, M._adaptTpBatHumanoid, M._adaptTpBatRoot = nil, nil, nil
+    if M.setBypassVisual then M.setBypassVisual(false) end
+    if M.mobBtnRefs and M.mobBtnRefs.bypass then M.mobBtnRefs.bypass(false) end
+    if M.mobBtnRefs and M.mobBtnRefs.tpBat then M.mobBtnRefs.tpBat(false) end
+end
+
+function M.toggleBypassAimbot()
+    if M.bypassAimbotEnabled then M.stopBypassAimbot() else M.startBypassAimbot() end
+    if savePrimeHubFeKlanConfig then pcall(savePrimeHubFeKlanConfig) elseif M.saveConfig then pcall(M.saveConfig) end
+    return M.bypassAimbotEnabled
+end
+
+
+function M.doAutoTPDown(force)
+    local char=player.Character;if not char then return end;local hrp=char:FindFirstChild("HumanoidRootPart");if not hrp then return end
+    local hum2=char:FindFirstChildOfClass("Humanoid");if not hum2 then return end
+    hrp.CFrame=CFrame.new(hrp.Position.X,-7.00,hrp.Position.Z)*CFrame.Angles(0,select(2,hrp.CFrame:ToEulerAnglesYXZ()),0);hrp.Velocity=Vector3.zero
+end
+function M.runTPFloor() pcall(function() M.doAutoTPDown(true) end) end
+function M.enableStretchRez()
+    M.stretchRezEnabled=true;if M.stretchRezConn then M.stretchRezConn:Disconnect() end
+    pcall(function() RunService:UnbindFromRenderStep("Movee_Stretch") end)
+    pcall(function() RunService:BindToRenderStep("Movee_Stretch",Enum.RenderPriority.Last.Value-1,function() local cam=workspace.CurrentCamera;if cam then cam.CFrame=cam.CFrame*CFrame.new(0,0,0,1,0,0,0,0.8,0,0,0,1) end end) end)
+end
+function M.disableStretchRez() M.stretchRezEnabled=false;pcall(function() RunService:UnbindFromRenderStep("Movee_Stretch") end) end
+function M.isSummerBaseName(name)
+    if not name then return false end
+    local n = tostring(name):lower()
+    return n == "summerbase"
+        or n == "summer_base"
+        or n:find("summerbase", 1, true) ~= nil
+        or n:find("summer_base", 1, true) ~= nil
+end
+function M.isAnchorName(name)
+    if not name then return false end
+    local n = tostring(name):lower()
+    return n == "anchor" or n == "anchors"
+end
+function M.stripBlockingAnchor(obj)
+    if not obj or not obj.Parent then return end
+    local key = tostring(obj:GetFullName())
+    if M._antiSummerCleaned[key] then return end
+    M._antiSummerCleaned[key] = true
+    pcall(function()
+        if obj:IsA("BasePart") or obj:IsA("MeshPart") then
+            obj.CanCollide = false
+            obj.CanQuery = false
+            obj.CanTouch = false
+            obj.Transparency = 1
+        end
+        obj:Destroy()
+    end)
+end
+function M.cleanSummerBaseAnchors()
+    if not M.antiSummerBaseEnabled then return end
+    local plots = workspace:FindFirstChild("Plots")
+    if not plots then return end
+    for _, plot in ipairs(plots:GetChildren()) do
+        local isSummer = M.isSummerBaseName(plot.Name)
+        if not isSummer then
+            for _, d in ipairs(plot:GetDescendants()) do
+                if M.isSummerBaseName(d.Name) then
+                    isSummer = true
+                    break
+                end
+            end
+        end
+        if not isSummer then     end
+        for _, d in ipairs(plot:GetDescendants()) do
+            if M.isAnchorName(d.Name) then
+                M.stripBlockingAnchor(d)
+            end
+        end
+    end
+end
+function M.enableAntiSummerBase()
+    M.antiSummerBaseEnabled = true
+    M._antiSummerCleaned = {}
+    M.cleanSummerBaseAnchors()
+    if M.antiSummerBaseConn then
+        pcall(function() M.antiSummerBaseConn:Disconnect() end)
+        M.antiSummerBaseConn = nil
+    end
+    M.antiSummerBaseConn = workspace.DescendantAdded:Connect(function(obj)
+        if not M.antiSummerBaseEnabled then return end
+        if not M.isAnchorName(obj.Name) then return end
+        task.defer(function()
+            if not M.antiSummerBaseEnabled or not obj.Parent then return end
+            local p = obj
+            local underPlots, nearSummer = false, false
+            while p and p ~= workspace do
+                if p.Name == "Plots" or (p.Parent and p.Parent.Name == "Plots") then underPlots = true end
+                if M.isSummerBaseName(p.Name) then nearSummer = true end
+                p = p.Parent
+            end
+            if underPlots and nearSummer then
+                M.stripBlockingAnchor(obj)
+            end
+        end)
+    end)
+    task.spawn(function()
+        while M.antiSummerBaseEnabled do
+            M.cleanSummerBaseAnchors()
+            task.wait(5)
+        end
+    end)
+end
+function M.disableAntiSummerBase()
+    M.antiSummerBaseEnabled = false
+    if M.antiSummerBaseConn then
+        pcall(function() M.antiSummerBaseConn:Disconnect() end)
+        M.antiSummerBaseConn = nil
+    end
+end
+function M._isUnderPlots(obj)
+    local p = obj
+    while p and p ~= workspace do
+        if p.Name == "Plots" then return true end
+        p = p.Parent
+    end
+    return false
+end
+function M._disableCartonPostEffect(obj)
+    if not obj then return end
+    if obj:IsA("PostEffect") or obj:IsA("BlurEffect") or obj:IsA("SunRaysEffect") or obj:IsA("ColorCorrectionEffect")
+        or obj:IsA("BloomEffect") or obj:IsA("DepthOfFieldEffect") then
+        obj.Enabled = false
+    end
+end
+function M._refreshCartonTerrain()
+    local terrain = workspace:FindFirstChildOfClass("Terrain")
+    if not terrain then return end
+    pcall(function()
+        terrain.Decoration = false
+        terrain.WaterWaveSize = 0
+        terrain.WaterWaveSpeed = 0
+        terrain.WaterReflectance = 0
+        terrain:SetMaterialColor(Enum.Material.Grass, Color3.fromRGB(35, 190, 45))
+        terrain:SetMaterialColor(Enum.Material.Ground, Color3.fromRGB(35, 190, 45))
+        terrain:SetMaterialColor(Enum.Material.Slate, Color3.fromRGB(35, 190, 45))
+    end)
+end
+-- Anti-Lag 7UP implementation
+M._newAntiLagConn = nil
+M.antiLagEnabled = false
+
+function M._applyAntiLagObj(obj)
+    pcall(function()
+        if not obj or not obj.Parent then return end
+        if obj:IsA("BasePart") then
+            obj.Material = Enum.Material.Plastic
+            obj.Reflectance = 0
+            obj.CastShadow = false
+        elseif obj:IsA("Decal") or obj:IsA("Texture") then
+            obj.Transparency = 1
+        elseif obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam")
+            or obj:IsA("Fire") or obj:IsA("Smoke") or obj:IsA("Sparkles") then
+            obj.Enabled = false
+        elseif obj:IsA("PointLight") or obj:IsA("SpotLight") or obj:IsA("SurfaceLight") then
+            obj.Enabled = false
+        end
+    end)
+end
+
+function M.enableAntiLag()
+    M.antiLagEnabled = true
+    M._antiLagState = M._antiLagState or {}
+    local S = M._antiLagState
+    S.active = true
+    S.defBrightness = S.defBrightness or Lighting.Brightness
+    S.defFog = S.defFog or Lighting.FogEnd
+    S.defDiffuse = S.defDiffuse or Lighting.EnvironmentDiffuseScale
+    S.defSpecular = S.defSpecular or Lighting.EnvironmentSpecularScale
+    pcall(function()
+        Lighting.GlobalShadows = false
+        Lighting.FogEnd = 1e10
+        Lighting.EnvironmentDiffuseScale = 0
+        Lighting.EnvironmentSpecularScale = 0
+    end)
+    for _, e in pairs(Lighting:GetChildren()) do
+        pcall(function()
+            if e:IsA("BlurEffect") or e:IsA("SunRaysEffect") or e:IsA("ColorCorrectionEffect")
+                or e:IsA("BloomEffect") or e:IsA("DepthOfFieldEffect") then
+                e.Enabled = false
+            end
+        end)
+    end
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        M._applyAntiLagObj(obj)
+    end
+    if S.conn then pcall(function() S.conn:Disconnect() end) end
+    S.conn = workspace.DescendantAdded:Connect(function(obj)
+        if S.active then M._applyAntiLagObj(obj) end
+    end)
+    M._newAntiLagConn = S.conn
+end
+
+function M.disableAntiLag()
+    M.antiLagEnabled = false
+    local S = M._antiLagState or {}
+    S.active = false
+    if S.conn then pcall(function() S.conn:Disconnect() end); S.conn = nil end
+    M._newAntiLagConn = nil
+    pcall(function()
+        Lighting.GlobalShadows = true
+        if S.defBrightness then Lighting.Brightness = S.defBrightness end
+        if S.defFog then Lighting.FogEnd = S.defFog end
+        if S.defDiffuse then Lighting.EnvironmentDiffuseScale = S.defDiffuse end
+        if S.defSpecular then Lighting.EnvironmentSpecularScale = S.defSpecular end
+        for _, e in pairs(Lighting:GetChildren()) do
+            pcall(function()
+                if e:IsA("BlurEffect") or e:IsA("SunRaysEffect") or e:IsA("ColorCorrectionEffect")
+                    or e:IsA("BloomEffect") or e:IsA("DepthOfFieldEffect") then
+                    e.Enabled = true
+                end
+            end)
+        end
+    end)
+end
+
+function M.enableNukeOptimizer()
+    M.nukeOptimiserEnabled = true
+    pcall(function() M.enableAntiLag() end)
+    pcall(function() if M.CandyApplyCustomSky then M.CandyApplyCustomSky("Off") end end)
+    if M._nukeConns then
+        for _, c in ipairs(M._nukeConns) do pcall(function() c:Disconnect() end) end
+    end
+    M._nukeConns = {}
+    pcall(function()
+        for _, obj in ipairs(workspace:GetDescendants()) do
+            M._applyAntiLagObj(obj)
+        end
+    end)
+    table.insert(M._nukeConns, workspace.DescendantAdded:Connect(function(o)
+        if M.nukeOptimiserEnabled then M._applyAntiLagObj(o) end
+    end))
+    task.spawn(function()
+        while M.nukeOptimiserEnabled do
+            pcall(function()
+                if type(setfpscap) == "function" then setfpscap(240) end
+            end)
+            task.wait(3)
+        end
+    end)
+    if M.notify then pcall(function() M.notify("Nuke Optimizer ON") end) end
+end
+
+function M.disableNukeOptimizer()
+    M.nukeOptimiserEnabled = false
+    if M._nukeConns then
+        for _, c in ipairs(M._nukeConns) do pcall(function() c:Disconnect() end) end
+        M._nukeConns = {}
+    end
+end
+
+function M.antiVoidSaveSafe()
+    local char = player.Character
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    if not hum or not root or hum.Health <= 0 then return end
+    if hum.FloorMaterial ~= Enum.Material.Air then
+        M._antiVoidSafeCFrame = root.CFrame
+    end
+end
+
+function M.stopAntiVoid()
+    M.antiVoidEnabled = false
+    if M._antiVoidConn then
+        pcall(function() M._antiVoidConn:Disconnect() end)
+        M._antiVoidConn = nil
+    end
+end
+
+function M.startAntiVoid()
+    M.stopAntiVoid()
+    M.antiVoidEnabled = true
+    M.antiVoidSaveSafe()
+    local _avSkip = 0
+    M._antiVoidConn = RunService.Heartbeat:Connect(function()
+        if not M.antiVoidEnabled then return end
+        _avSkip = _avSkip + 1
+        if _avSkip < 2 then return end
+        _avSkip = 0
+        local char = player.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        local root = char and char:FindFirstChild("HumanoidRootPart")
+        if not hum or not root or hum.Health <= 0 then return end
+        local voidY = workspace.FallenPartsDestroyHeight + 30
+        if hum.FloorMaterial ~= Enum.Material.Air and root.Position.Y > voidY + 12 then
+            M._antiVoidSafeCFrame = root.CFrame
+        elseif root.Position.Y <= voidY and M._antiVoidSafeCFrame then
+            root.AssemblyLinearVelocity = Vector3.zero
+            root.AssemblyAngularVelocity = Vector3.zero
+            root.CFrame = M._antiVoidSafeCFrame + Vector3.new(0, 4, 0)
+            hum.PlatformStand = false
+            hum.Sit = false
+            pcall(function() hum:ChangeState(Enum.HumanoidStateType.GettingUp) end)
+        end
+    end)
+end
+
+function M.setAntiVoid(on)
+    if on then M.startAntiVoid() else M.stopAntiVoid() end
+end
+
+M.bodyLockRadius = tonumber(M.bodyLockRadius) or 60
+function M.getNearestBodyLockTarget()
+    local character = player.Character
+    local root = character and character:FindFirstChild("HumanoidRootPart")
+    if not root then return nil end
+    local nearest, shortest = nil, math.huge
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= player and plr.Character then
+            local tr = plr.Character:FindFirstChild("HumanoidRootPart")
+            local hum = plr.Character:FindFirstChildOfClass("Humanoid")
+            if tr and hum and hum.Health > 0 then
+                local d = (tr.Position - root.Position).Magnitude
+                if d <= (M.bodyLockRadius or 60) and d < shortest then
+                    shortest = d
+                    nearest = plr
+                end
+            end
+        end
+    end
+    return nearest
+end
+
+function M.startBodyLock()
+    if M._bodyLockConn then return end
+    M.bodyLockEnabled = true
+    M._bodyLockConn = RunService.Heartbeat:Connect(function()
+        if not M.bodyLockEnabled then return end
+        local character = player.Character
+        local myRoot = character and character:FindFirstChild("HumanoidRootPart")
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+        if not myRoot or not humanoid or humanoid.Health <= 0 then return end
+        local target = M.getNearestBodyLockTarget()
+        if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+            local targetPos = target.Character.HumanoidRootPart.Position
+            local myPos = myRoot.Position
+            local offset = Vector3.new(targetPos.X, myPos.Y, targetPos.Z) - myPos
+            if offset.Magnitude > 0.1 then
+                humanoid.AutoRotate = false
+                local lookDir = offset.Unit
+                local currentDir = myRoot.CFrame.LookVector
+                local cross = currentDir:Cross(lookDir)
+                local currentVel = myRoot.AssemblyAngularVelocity
+                myRoot.AssemblyAngularVelocity = Vector3.new(currentVel.X, cross.Y * 40, currentVel.Z)
+            end
+        else
+            humanoid.AutoRotate = true
+        end
+    end)
+end
+
+function M.stopBodyLock()
+    M.bodyLockEnabled = false
+    if M._bodyLockConn then
+        pcall(function() M._bodyLockConn:Disconnect() end)
+        M._bodyLockConn = nil
+    end
+    local hum = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+    if hum then hum.AutoRotate = true end
+end
+
+function M.setBodyLock(on)
+    if on then M.startBodyLock() else M.stopBodyLock() end
+end
+
+
+function M.forceNoSplatterReset()
+    local char = player.Character
+    if not char then return end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    local root = char:FindFirstChild("HumanoidRootPart")
+    if not hum or not root or hum.Health <= 0 then return end
+    pcall(function()
+        hum:ChangeState(Enum.HumanoidStateType.GettingUp)
+        root.Velocity = Vector3.zero
+        root.RotVelocity = Vector3.zero
+        root.AssemblyLinearVelocity = Vector3.zero
+        root.AssemblyAngularVelocity = Vector3.zero
+        for _, obj in ipairs(char:GetDescendants()) do
+            if obj:IsA("Motor6D") then obj.Enabled = true end
+            if obj:IsA("Constraint") then obj.Enabled = true end
+        end
+        workspace.CurrentCamera.CameraSubject = hum
+        local PM = player.PlayerScripts:FindFirstChild("PlayerModule")
+        if PM then
+            local CM = require(PM:FindFirstChild("ControlModule"))
+            if CM then CM:Enable() end
+        end
+        hum.AutoRotate = true
+        hum.PlatformStand = false
+        hum.Sit = false
+    end)
+end
+M.instaResetBusy = false
+-- Insta Reset (Ice Hub style): huge upward AssemblyLinearVelocity
+function M.doInstaReset()
+    if M.instaResetBusy then return end
+    local char = player.Character
+    if not char then return end
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    M.instaResetBusy = true
+    pcall(function()
+        hrp.AssemblyLinearVelocity = Vector3.new(
+            hrp.AssemblyLinearVelocity.X,
+            10000000,
+            hrp.AssemblyLinearVelocity.Z
+        )
+    end)
+    -- short debounce so mobile/keybind spam doesn't stack
+    task.delay(0.35, function()
+        M.instaResetBusy = false
+    end)
+end
+-- ==================== ANTI RAGDOLL CLEAN V1 / V2 ====================
+local AR_BOOST_SPEED = 400
+local AR_DEFAULT_SPEED = 16
+local _arV1 = {
+    active = false,
+    isBoosting = false,
+    cached = nil,
+    conns = {},
+}
+local _arV2 = {
+    enabled = false,
+    conn = nil,
+    resetCooldown = 0,
+}
+
+local function _arV1Disconnect()
+    for _, c in ipairs(_arV1.conns) do pcall(function() c:Disconnect() end) end
+    _arV1.conns = {}
+end
+
+local function _arV1Cache()
+    local char = player.Character
+    if not char then return false end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    local root = char:FindFirstChild("HumanoidRootPart")
+    if not hum or not root then return false end
+    _arV1.cached = { character = char, humanoid = hum, root = root }
+    return true
+end
+
+local function _arV1IsRagdolled()
+    if not _arV1.cached or not _arV1.cached.humanoid then return false end
+    local st = _arV1.cached.humanoid:GetState()
+    return st == Enum.HumanoidStateType.Physics
+        or st == Enum.HumanoidStateType.Ragdoll
+        or st == Enum.HumanoidStateType.FallingDown
+end
+
+local function _arV1ForceExit()
+    if not _arV1.cached or not _arV1.cached.humanoid or not _arV1.cached.root then return end
+    local hum, root, char = _arV1.cached.humanoid, _arV1.cached.root, _arV1.cached.character
+    pcall(function()
+        player:SetAttribute("RagdollEndTime", workspace:GetServerTimeNow())
+    end)
+    for _, d in ipairs(char:GetDescendants()) do
+        if d:IsA("BallSocketConstraint") or (d:IsA("Attachment") and d.Name:find("RagdollAttachment")) then
+            pcall(function() d:Destroy() end)
+        end
+    end
+    if not _arV1.isBoosting then
+        _arV1.isBoosting = true
+        hum.WalkSpeed = AR_BOOST_SPEED
+    end
+    if hum.Health > 0 then
+        pcall(function() hum:ChangeState(Enum.HumanoidStateType.Running) end)
+    end
+    root.Anchored = false
+end
+
+local function _arV1Loop()
+    while _arV1.active do
+        task.wait()
+        if _arV1IsRagdolled() then
+            _arV1ForceExit()
+        elseif _arV1.isBoosting and not _arV1IsRagdolled() then
+            _arV1.isBoosting = false
+            if _arV1.cached and _arV1.cached.humanoid then
+                _arV1.cached.humanoid.WalkSpeed = AR_DEFAULT_SPEED
+            end
+        end
+    end
+end
+
+local function _arV1Start()
+    if _arV1.active then return end
+    _arV1Disconnect()
+    if not _arV1Cache() then return end
+    _arV1.active = true
+    _arV1.isBoosting = false
+    local camConn = RunService.RenderStepped:Connect(function()
+        local cam = workspace.CurrentCamera
+        if cam and _arV1.cached and _arV1.cached.humanoid then
+            cam.CameraSubject = _arV1.cached.humanoid
+        end
+    end)
+    table.insert(_arV1.conns, camConn)
+    local respawnConn = player.CharacterAdded:Connect(function()
+        _arV1.isBoosting = false
+        task.wait(0.5)
+        _arV1Cache()
+    end)
+    table.insert(_arV1.conns, respawnConn)
+    task.spawn(_arV1Loop)
+end
+
+local function _arV1Stop()
+    _arV1.active = false
+    if _arV1.isBoosting and _arV1.cached and _arV1.cached.humanoid then
+        _arV1.cached.humanoid.WalkSpeed = AR_DEFAULT_SPEED
+    end
+    _arV1.isBoosting = false
+    _arV1Disconnect()
+    _arV1.cached = nil
+end
+
+local function _arV2Start()
+    if _arV2.conn then return end
+    _arV2.enabled = true
+    _arV2.conn = RunService.Heartbeat:Connect(function()
+        if not _arV2.enabled then return end
+        local char = player.Character
+        if not char then return end
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        local root = char:FindFirstChild("HumanoidRootPart")
+        if not hum or not root then return end
+        if hum.Health <= 0 or hum:GetState() == Enum.HumanoidStateType.Dead then return end
+        local state = hum:GetState()
+        local now = tick()
+        if state == Enum.HumanoidStateType.Physics
+            or state == Enum.HumanoidStateType.Ragdoll
+            or state == Enum.HumanoidStateType.FallingDown then
+            if now - _arV2.resetCooldown > 0.15 then
+                _arV2.resetCooldown = now
+                pcall(function()
+                    if hum:GetState() == Enum.HumanoidStateType.GettingUp then return end
+                    if hum.Health <= 0 or hum:GetState() == Enum.HumanoidStateType.Dead then return end
+                    hum:ChangeState(Enum.HumanoidStateType.GettingUp)
+                    root.Velocity = Vector3.zero
+                    root.RotVelocity = Vector3.zero
+                    root.AssemblyLinearVelocity = Vector3.zero
+                    root.AssemblyAngularVelocity = Vector3.zero
+                    for _, obj in ipairs(char:GetDescendants()) do
+                        if obj:IsA("Motor6D") then obj.Enabled = true end
+                        if obj:IsA("Constraint") then obj.Enabled = true end
+                    end
+                    workspace.CurrentCamera.CameraSubject = hum
+                    local PM = player:FindFirstChild("PlayerScripts") and player.PlayerScripts:FindFirstChild("PlayerModule")
+                    if PM then
+                        local CM = require(PM:FindFirstChild("ControlModule"))
+                        if CM then CM:Enable() end
+                    end
+                    hum.AutoRotate = true
+                    hum.PlatformStand = false
+                    hum.Sit = false
+                end)
+            end
+        end
+    end)
+end
+
+local function _arV2Stop()
+    _arV2.enabled = false
+    if _arV2.conn then
+        _arV2.conn:Disconnect()
+        _arV2.conn = nil
+    end
+    _arV2.resetCooldown = 0
+end
+
+-- Modes: "V1" | "V2" (CLEAN). Legacy "Splatter"/"No Splatter" map to V1/V2.
+function M.setAntiRagdollMode(mode)
+    mode = tostring(mode or "V1")
+    if mode == "Splatter" then mode = "V1" end
+    if mode == "No Splatter" then mode = "V2" end
+    if mode ~= "V1" and mode ~= "V2" then mode = "V1" end
+    _arV1Stop()
+    _arV2Stop()
+    M.antiRagdollMode = mode
+    if M.antiRagdollEnabled then
+        if mode == "V1" then _arV1Start() else _arV2Start() end
+    end
+end
+
+function M.startAntiRagdoll()
+    M.antiRagdollEnabled = true
+    local mode = M.antiRagdollMode or "V1"
+    if mode == "Splatter" then mode = "V1" end
+    if mode == "No Splatter" then mode = "V2" end
+    M.antiRagdollMode = mode
+    _arV1Stop()
+    _arV2Stop()
+    if mode == "V1" then _arV1Start() else _arV2Start() end
+end
+
+function M.stopAntiRagdoll()
+    M.antiRagdollEnabled = false
+    _arV1Stop()
+    _arV2Stop()
+end
+
+M.infJumpThread = nil
+M._infJumpBoosting = false
+M._infJumpLastBoost = 0
+M.INF_JUMP_BOOST_FORCE = 25
+M.INF_JUMP_BOOST_FRAMES = 2
+M.INF_JUMP_BOOST_COOLDOWN = 0.12
+local function M_applyInfJumpBoost(root)
+    if not root or M._infJumpBoosting then return end
+    local now = tick()
+    if now - M._infJumpLastBoost < M.INF_JUMP_BOOST_COOLDOWN then return end
+    M._infJumpLastBoost = now
+    M._infJumpBoosting = true
+    local bv = Instance.new("BodyVelocity")
+    bv.MaxForce = Vector3.new(0, math.huge, 0)
+    bv.P = 1250
+    bv.Velocity = Vector3.new(root.Velocity.X, M.INF_JUMP_BOOST_FORCE, root.Velocity.Z)
+    bv.Parent = root
+    local frameCount = 0
+    local conn
+    conn = RunService.Heartbeat:Connect(function()
+        if frameCount < M.INF_JUMP_BOOST_FRAMES then
+            frameCount = frameCount + 1
+            if bv and bv.Parent then
+                bv.Velocity = bv.Velocity + Vector3.new(0, 0.01, 0)
+            end
+        else
+            if bv then pcall(function() bv:Destroy() end) end
+            if conn then conn:Disconnect() end
+            M._infJumpBoosting = false
+        end
+    end)
+end
+
+function M.stopManualInfJumpLoop()
+    if M.infJumpThread then
+        M.infJumpThread:Disconnect()
+        M.infJumpThread = nil
+    end
+    M.jumpHeld = false
+    M._infJumpBoosting = false
+end
+function M.startHoldInfJump()
+    if M.holdInfJumpConn then M.holdInfJumpConn:Disconnect() end
+    M.holdInfJumpConn = RunService.Heartbeat:Connect(function()
+        if not M.infJumpEnabled or M.infJumpMode ~= "hold" then return end
+        local char = player.Character
+        if not char then return end
+        local root = char:FindFirstChild("HumanoidRootPart")
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if not root or not hum then return end
+        local isJumpHeld = UIS:IsKeyDown(Enum.KeyCode.Space) or (hum.Jump == true)
+        if isJumpHeld and root.AssemblyLinearVelocity.Y < 35 then
+            root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, 55, root.AssemblyLinearVelocity.Z)
+        end
+        if root.AssemblyLinearVelocity.Y < -120 then
+            root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, -120, root.AssemblyLinearVelocity.Z)
+        end
+    end)
+end
+function M.stopHoldInfJump()
+    if M.holdInfJumpConn then
+        M.holdInfJumpConn:Disconnect()
+        M.holdInfJumpConn = nil
+    end
+end
+function M.startUnwalk()
+    if M.unwalkEnabled ~= true or M._unwalkOffLock == true or M.animPackEnabled ~= true then return end
+    M._unwalkOffLock = false
+    local c=player.Character;if not c then return end;local hum=c:FindFirstChildOfClass("Humanoid")
+    if hum then for _,t in ipairs(hum:GetPlayingAnimationTracks()) do t:Stop() end end
+    local anim=c:FindFirstChild("Animate")
+    if anim then
+        if not M.unwalkSavedAnimate then M.unwalkSavedAnimate=anim:Clone() end
+        anim:Destroy()
+    end
+end
+function M.stopUnwalk()
+    M.unwalkEnabled = false
+    M._unwalkOffLock = true
+    local c = player.Character
+    if not c then return end
+    local hum = c:FindFirstChildOfClass("Humanoid")
+    if hum then
+        for _, track in ipairs(hum:GetPlayingAnimationTracks()) do
+            pcall(function() track:Stop(0) end)
+        end
+    end
+    local currentAnimate = c:FindFirstChild("Animate")
+    if currentAnimate then currentAnimate:Destroy() end
+    local saved = M.unwalkSavedAnimate or M.savedAnimate
+    if saved then
+        local restoredAnimate = saved:Clone()
+        restoredAnimate.Disabled = true
+        restoredAnimate.Parent = c
+        task.wait(0.06)
+        if restoredAnimate.Parent then restoredAnimate.Disabled = false end
+    end
+    M.unwalkSavedAnimate = nil
+    if c and not c:FindFirstChild("Animate") then M.restoreOriginalAnimate(c) end
+end
+function M.hasBrainrotInHand()
+    local char = player.Character
+    if not char then return false end
+    local ok, val = pcall(function() return player:GetAttribute("Stealing") end)
+    if ok and val == true then return true end
+    local ok2, val2 = pcall(function() return char:GetAttribute("Stealing") end)
+    if ok2 and val2 == true then return true end
+    for _, name in ipairs({"Carrying", "IsCarrying", "Grabbed", "Holding", "StealHold", "HasGrab"}) do
+        local v = char:FindFirstChild(name, true)
+        if v then
+            if v:IsA("BoolValue") and v.Value then return true end
+            if v:IsA("ObjectValue") and v.Value then return true end
+            if v:IsA("StringValue") and v.Value ~= "" then return true end
+        end
+    end
+    for _, item in ipairs(char:GetChildren()) do
+        if item:IsA("Tool") then
+            local name = item.Name:lower()
+            if name:find("brainrot", 1, true) or name:find("skibidi", 1, true) or name:find("toilet", 1, true) then
+                return true
+            end
+        end
+    end
+    return false
+end
+function M.forceLaggerCarryWhileHolding()
+    if not M.hasBrainrotInHand() then
+        M._manualCarryOffLock = false
+        return false
+    end
+    if M._manualCarryOffLock then return false end
+    M.manualCarryActive = true
+    M.carrySpeedActive = false
+    M.laggerModeEnabled = false
+    M.laggerCarryActive = true
+    return true
+end
+function M.toggleCarryMode()
+    if M.manualCarryActive or M.carrySpeedActive or M.laggerCarryActive then
+        M._manualSpeedModeLock = false
+        M.manualCarryActive = false
+        M._manualCarryOffLock = true
+        M.carrySpeedActive = false
+        M.laggerCarryActive = false
+        M.laggerModeEnabled = false
+        M.setModeNormalFlags()
+        M.refreshWalkSpeedAutoSwitch()
+        M.refreshSpeedModeLabel()
+        if M.mobBtnRefs.carrySpeed then M.mobBtnRefs.carrySpeed(false) end
+        if M.mobBtnRefs.laggerCarry then M.mobBtnRefs.laggerCarry(false) end
+        if M.carryModeBtn then M.carryModeBtn.Text = "Carry Off" end
+        if M.laggerCarryBtn then M.laggerCarryBtn.Text = "L.Carry Off" end
+        savePrimeHubFeKlanConfig()
+        return
+    end
+    M._manualCarryOffLock = false
+    M._manualSpeedModeLock = true
+    M.carrySpeedActive = not M.carrySpeedActive
+    M.manualCarryActive = M.carrySpeedActive == true
+    if M.carrySpeedActive then
+        M.laggerCarryActive = false
+        M.laggerModeEnabled = false
+        M.syncProfileToNSCS()
+    end
+    M.refreshSpeedModeLabel()
+    if M.mobBtnRefs.carrySpeed then M.mobBtnRefs.carrySpeed(M.carrySpeedActive) end
+    if M.mobBtnRefs.laggerCarry then M.mobBtnRefs.laggerCarry(M.laggerCarryActive) end
+    if M.carryModeBtn then
+        M.carryModeBtn.Text = M.carrySpeedActive and "Carry On" or "Carry Off"
+    end
+    if M.laggerCarryBtn then
+        M.laggerCarryBtn.Text = M.laggerCarryActive and "L.Carry On" or "L.Carry Off"
+    end
+    savePrimeHubFeKlanConfig()
+end
+function M.toggleLaggerMode()
+    M._manualSpeedModeLock = not M.laggerModeEnabled
+    M.laggerModeEnabled = not M.laggerModeEnabled
+    if M.laggerModeEnabled then
+        -- Lag Mode: usa M.LAGGER_SPEED (campo Lagger Normal Speed)
+        M.laggerCarryActive = false
+        M.carrySpeedActive = false
+        M.manualCarryActive = false
+        M._manualCarryOffLock = false
+    else
+        M.manualCarryActive = false
+        -- al apagar, walk vuelve al NS del perfil elegido
+        M.syncProfileToNSCS()
+    end
+    M.refreshSpeedModeLabel()
+    if M.mobBtnRefs.lagger then M.mobBtnRefs.lagger(M.laggerModeEnabled) end
+    if M.mobBtnRefs.laggerCarry then M.mobBtnRefs.laggerCarry(M.laggerCarryActive) end
+    if M.laggerModeBtn then
+        M.laggerModeBtn.Text = M.laggerModeEnabled and "Lag On" or "Lag Off"
+    end
+    if M.laggerCarryBtn then
+        M.laggerCarryBtn.Text = M.laggerCarryActive and "L.Carry On" or "L.Carry Off"
+    end
+    if M.laggerNormalStatusLabel then
+        M.laggerNormalStatusLabel.Text = M.laggerModeEnabled and "ON" or "OFF"
+        M.laggerNormalStatusLabel.TextColor3 = M.laggerModeEnabled and Color3.fromRGB(255, 135, 215) or Color3.fromRGB(255, 235, 248)
+    end
+    if M.laggerCarryStatusLabel then
+        M.laggerCarryStatusLabel.Text = M.laggerCarryActive and "ON" or "OFF"
+        M.laggerCarryStatusLabel.TextColor3 = M.laggerCarryActive and Color3.fromRGB(255, 135, 215) or Color3.fromRGB(255, 235, 248)
+    end
+    savePrimeHubFeKlanConfig()
+end
+function M.cycleLaggerModeBind()
+    M._manualSpeedModeLock = true
+    if not M.laggerCarryActive and not M.laggerModeEnabled then
+        M.laggerCarryActive = true
+        M.manualCarryActive = true
+        M.laggerModeEnabled = false
+        M.carrySpeedActive = false
+    elseif M.laggerCarryActive then
+        M.laggerCarryActive = false
+        M.manualCarryActive = false
+        M.laggerModeEnabled = true
+    else
+        M.laggerModeEnabled = false
+        M.laggerCarryActive = true
+        M.manualCarryActive = true
+        M.carrySpeedActive = false
+    end
+    M.refreshSpeedModeLabel()
+    if M.mobBtnRefs.carrySpeed then M.mobBtnRefs.carrySpeed(M.carrySpeedActive) end
+    if M.mobBtnRefs.lagger then M.mobBtnRefs.lagger(M.laggerModeEnabled) end
+    if M.mobBtnRefs.laggerCarry then M.mobBtnRefs.laggerCarry(M.laggerCarryActive) end
+    if M.carryModeBtn then M.carryModeBtn.Text = M.carrySpeedActive and "Carry On" or "Carry Off" end
+    if M.laggerModeBtn then M.laggerModeBtn.Text = M.laggerModeEnabled and "Lag On" or "Lag Off" end
+    if M.laggerCarryBtn then M.laggerCarryBtn.Text = M.laggerCarryActive and "L.Carry On" or "L.Carry Off" end
+    savePrimeHubFeKlanConfig()
+end
+function M.toggleLaggerCarry()
+    M._manualSpeedModeLock = not M.laggerCarryActive
+    M.laggerCarryActive = not M.laggerCarryActive
+    if M.laggerCarryActive then
+        -- Lag Carry: usa M.LAGGER_CARRY_SPEED (campo Lagger Carry Speed)
+        M.laggerModeEnabled = false
+        M.carrySpeedActive = false
+        M.manualCarryActive = false
+    else
+        M.manualCarryActive = false
+        M.syncProfileToNSCS()
+    end
+    M.refreshSpeedModeLabel()
+    if M.mobBtnRefs.carrySpeed then M.mobBtnRefs.carrySpeed(M.carrySpeedActive) end
+    if M.mobBtnRefs.lagger then M.mobBtnRefs.lagger(M.laggerModeEnabled) end
+    if M.mobBtnRefs.laggerCarry then M.mobBtnRefs.laggerCarry(M.laggerCarryActive) end
+    if M.laggerCarryStatusLabel then
+        M.laggerCarryStatusLabel.Text = M.laggerCarryActive and "ON" or "OFF"
+        M.laggerCarryStatusLabel.TextColor3 = M.laggerCarryActive and Color3.fromRGB(255, 135, 215) or Color3.fromRGB(255, 235, 248)
+    end
+    if M.laggerNormalStatusLabel then
+        M.laggerNormalStatusLabel.Text = M.laggerModeEnabled and "ON" or "OFF"
+        M.laggerNormalStatusLabel.TextColor3 = M.laggerModeEnabled and Color3.fromRGB(255, 135, 215) or Color3.fromRGB(255, 235, 248)
+    end
+    savePrimeHubFeKlanConfig()
+end
+function M.stopAutoLeft()
+    M.autoLeftEnabled = false
+    if M.alConn then M.alConn:Disconnect(); M.alConn = nil end
+    M.alPhase = 1
+    local char = player.Character
+    if char then
+        local h = char:FindFirstChildOfClass("Humanoid")
+        if h then h:Move(Vector3.zero, false) end
+    end
+    if M.autoLeftSetVisual then M.autoLeftSetVisual(false) end
+    if M.mobBtnRefs.autoLeft then M.mobBtnRefs.autoLeft(false) end
+end
+function M.stopAutoRight()
+    M.autoRightEnabled = false
+    if M.arConn then M.arConn:Disconnect(); M.arConn = nil end
+    M.arPhase = 1
+    local char = player.Character
+    if char then
+        local h = char:FindFirstChildOfClass("Humanoid")
+        if h then h:Move(Vector3.zero, false) end
+    end
+    if M.autoRightSetVisual then M.autoRightSetVisual(false) end
+    if M.mobBtnRefs.autoRight then M.mobBtnRefs.autoRight(false) end
+end
+function M.startAutoLeft()
+    if M.alConn then M.alConn:Disconnect() end
+    M.alPhase = 1
+    M.autoLeftEnabled = true
+    M.alConn = RunService.Heartbeat:Connect(function()
+        if not M.autoLeftEnabled then return end
+        local char = player.Character
+        if not char then return end
+        local hrp = char:FindFirstChild("HumanoidRootPart")
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if not hrp or not hum then return end
+        local spd = (M.getAutoPathSpeed and M.getAutoPathSpeed()) or (M.NS or 60)
+        if M.alPhase == 1 then
+            local tgt = Vector3.new(M.AP_L1.X, hrp.Position.Y, M.AP_L1.Z)
+            if (tgt - hrp.Position).Magnitude < 1 then
+                M.alPhase = 2
+                local d = M.AP_L2 - hrp.Position
+                local mv = Vector3.new(d.X, 0, d.Z)
+                if mv.Magnitude > 0.01 then mv = mv.Unit end
+                hum:Move(mv, false)
+                if M._speedLVSet then
+                    M._speedLVSet(hrp, mv.X * spd, mv.Z * spd)
+                else
+                    if M._speedLVSet then
+                        M._speedLVSet(hrp, mv.X * spd, mv.Z * spd)
+                    else
+                        hrp.AssemblyLinearVelocity = Vector3.new(mv.X * spd, hrp.AssemblyLinearVelocity.Y, mv.Z * spd)
+                    end
+                end
+                return
+            end
+            local d = M.AP_L1 - hrp.Position
+            local mv = Vector3.new(d.X, 0, d.Z)
+            if mv.Magnitude > 0.01 then mv = mv.Unit end
+            hum:Move(mv, false)
+            if M._speedLVSet then
+                M._speedLVSet(hrp, mv.X * spd, mv.Z * spd)
+            else
+                hrp.AssemblyLinearVelocity = Vector3.new(mv.X * spd, hrp.AssemblyLinearVelocity.Y, mv.Z * spd)
+            end
+        elseif M.alPhase == 2 then
+            local tgt = Vector3.new(M.AP_L2.X, hrp.Position.Y, M.AP_L2.Z)
+            if (tgt - hrp.Position).Magnitude < 1 then
+                hum:Move(Vector3.zero, false)
+                if M._speedLVClear then M._speedLVClear(hrp) end
+                hrp.AssemblyLinearVelocity = Vector3.zero
+                M.autoLeftEnabled = false
+                if M.alConn then M.alConn:Disconnect(); M.alConn = nil end
+                M.alPhase = 1
+                if M.autoLeftSetVisual then M.autoLeftSetVisual(false) end
+                if M.mobBtnRefs.autoLeft then M.mobBtnRefs.autoLeft(false) end
+                return
+            end
+            local d = M.AP_L2 - hrp.Position
+            local mv = Vector3.new(d.X, 0, d.Z)
+            if mv.Magnitude > 0.01 then mv = mv.Unit end
+            hum:Move(mv, false)
+            if M._speedLVSet then
+                M._speedLVSet(hrp, mv.X * spd, mv.Z * spd)
+            else
+                hrp.AssemblyLinearVelocity = Vector3.new(mv.X * spd, hrp.AssemblyLinearVelocity.Y, mv.Z * spd)
+            end
+        end
+        if M.autoMoveSwingEnabled and not M._alSwingDebounce then
+            M._alSwingDebounce = true
+            local bat = M.findBat and M.findBat() or (M.findBatForAimbot and M.findBatForAimbot())
+            if bat then
+                if bat.Parent ~= char then pcall(function() hum:EquipTool(bat) end) end
+                pcall(function() bat:Activate() end)
+            end
+            task.delay(M.autoMoveSwingInterval or 0.3, function() M._alSwingDebounce = false end)
+        end
+    end)
+end
+function M.startAutoRight()
+    if M.arConn then M.arConn:Disconnect() end
+    M.arPhase = 1
+    M.autoRightEnabled = true
+    M.arConn = RunService.Heartbeat:Connect(function()
+        if not M.autoRightEnabled then return end
+        local char = player.Character
+        if not char then return end
+        local hrp = char:FindFirstChild("HumanoidRootPart")
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if not hrp or not hum then return end
+        local spd = (M.getAutoPathSpeed and M.getAutoPathSpeed()) or (M.NS or 60)
+        if M.arPhase == 1 then
+            local tgt = Vector3.new(M.AP_R1.X, hrp.Position.Y, M.AP_R1.Z)
+            if (tgt - hrp.Position).Magnitude < 1 then
+                M.arPhase = 2
+                local d = M.AP_R2 - hrp.Position
+                local mv = Vector3.new(d.X, 0, d.Z)
+                if mv.Magnitude > 0.01 then mv = mv.Unit end
+                hum:Move(mv, false)
+                if M._speedLVSet then
+                    M._speedLVSet(hrp, mv.X * spd, mv.Z * spd)
+                else
+                    if M._speedLVSet then
+                        M._speedLVSet(hrp, mv.X * spd, mv.Z * spd)
+                    else
+                        hrp.AssemblyLinearVelocity = Vector3.new(mv.X * spd, hrp.AssemblyLinearVelocity.Y, mv.Z * spd)
+                    end
+                end
+                return
+            end
+            local d = M.AP_R1 - hrp.Position
+            local mv = Vector3.new(d.X, 0, d.Z)
+            if mv.Magnitude > 0.01 then mv = mv.Unit end
+            hum:Move(mv, false)
+            if M._speedLVSet then
+                M._speedLVSet(hrp, mv.X * spd, mv.Z * spd)
+            else
+                hrp.AssemblyLinearVelocity = Vector3.new(mv.X * spd, hrp.AssemblyLinearVelocity.Y, mv.Z * spd)
+            end
+        elseif M.arPhase == 2 then
+            local tgt = Vector3.new(M.AP_R2.X, hrp.Position.Y, M.AP_R2.Z)
+            if (tgt - hrp.Position).Magnitude < 1 then
+                hum:Move(Vector3.zero, false)
+                if M._speedLVClear then M._speedLVClear(hrp) end
+                hrp.AssemblyLinearVelocity = Vector3.zero
+                M.autoRightEnabled = false
+                if M.arConn then M.arConn:Disconnect(); M.arConn = nil end
+                M.arPhase = 1
+                if M.autoRightSetVisual then M.autoRightSetVisual(false) end
+                if M.mobBtnRefs.autoRight then M.mobBtnRefs.autoRight(false) end
+                return
+            end
+            local d = M.AP_R2 - hrp.Position
+            local mv = Vector3.new(d.X, 0, d.Z)
+            if mv.Magnitude > 0.01 then mv = mv.Unit end
+            hum:Move(mv, false)
+            if M._speedLVSet then
+                M._speedLVSet(hrp, mv.X * spd, mv.Z * spd)
+            else
+                hrp.AssemblyLinearVelocity = Vector3.new(mv.X * spd, hrp.AssemblyLinearVelocity.Y, mv.Z * spd)
+            end
+        end
+        if M.autoMoveSwingEnabled and not M._arSwingDebounce then
+            M._arSwingDebounce = true
+            local bat = M.findBat and M.findBat() or (M.findBatForAimbot and M.findBatForAimbot())
+            if bat then
+                if bat.Parent ~= char then pcall(function() hum:EquipTool(bat) end) end
+                pcall(function() bat:Activate() end)
+            end
+            task.delay(M.autoMoveSwingInterval or 0.3, function() M._arSwingDebounce = false end)
+        end
+    end)
+end
+function M.enableAntiKick()
+    M.antiKickEnabled = true
+    task.spawn(function()
+        while M.antiKickEnabled do
+            task.wait(0.5)
+            local char = player.Character
+            if char then
+                local found = false
+                for _, tool in ipairs(char:GetChildren()) do
+                    if tool:IsA("Tool") then
+                        local n = tool.Name:lower()
+                        if n:find("brainrot") or n:find("skibidi") or n:find("toilet") then
+                            found = true
+                            break
+                        end
+                    end
+                end
+                M.brainrotDetected = found
+                if found then
+                    if M.autoBatEnabled then M.stopBatAimbot() end
+                    if M.autoLeftEnabled then M.autoLeftEnabled=false; if M.autoLeftSetVisual then M.autoLeftSetVisual(false) end; M.stopAutoLeft() end
+                    if M.autoRightEnabled then M.autoRightEnabled=false; if M.autoRightSetVisual then M.autoRightSetVisual(false) end; M.stopAutoRight() end
+                end
+            end
+        end
+    end)
+end
+function M.disableAntiKick()
+    M.antiKickEnabled = false
+    M.brainrotDetected = false
+end
+function M.safeModeGetCountdownLabel()
+    local ok, label = pcall(function()
+        local pg = player:FindFirstChild("PlayerGui")
+        if not pg then return nil end
+        local top = pg:FindFirstChild("DuelsMachineTopFrame")
+        if not top then return nil end
+        local inner = top:FindFirstChild("DuelsMachineTopFrame")
+        if not inner then return nil end
+        local timer = inner:FindFirstChild("Timer")
+        if not timer then return nil end
+        return timer:FindFirstChild("Label")
+    end)
+    return (ok and label) or nil
+end
+function M.safeModeCountdownNumber(text)
+    local t = tostring(text or ""):upper():gsub("^%s+", ""):gsub("%s+$", "")
+    if t == "GO" or t == "START" or t == "READY" then return true end
+    local n = tonumber(t)
+    return n ~= nil and n >= 0 and n <= 10
+end
+function M.safeModeInDuelCountdown()
+    local label = M.safeModeGetCountdownLabel()
+    return label and M.safeModeCountdownNumber(label.Text) or false
+end
+M.SAFE_MODE_BLOCKED_TOOLS = {
+    bat=true, slap=true, sword=true, gun=true, pistol=true, rifle=true,
+    medusa=true, hammer=true, axe=true, knife=true, katana=true, blade=true, fist=true,
+}
+function M.safeModeIsCarryableTool(tool)
+    if not tool or not tool:IsA("Tool") then return false end
+    local name = tool.Name:lower()
+    for word in pairs(M.SAFE_MODE_BLOCKED_TOOLS) do
+        if name:find(word, 1, true) then return false end
+    end
+    return true
+end
+function M.safeModeHoldingBrainrot()
+    local ok, val = pcall(function() return player:GetAttribute("Stealing") end)
+    if ok and val == true then return true end
+    local ok2, val2 = pcall(function() return player:GetAttribute("AntiKick") end)
+    if ok2 and val2 == true then return true end
+    local char = player.Character
+    if not char then return false end
+    local ok3, val3 = pcall(function() return char:GetAttribute("Stealing") end)
+    if ok3 and val3 == true then return true end
+    if M.brainrotDetected then return true end
+    if M.hasBrainrotInHand and M.hasBrainrotInHand() then return true end
+    for _, name in ipairs({"Carrying", "IsCarrying", "Grabbed", "Holding", "StealHold", "HasGrab"}) do
+        local v = char:FindFirstChild(name, true)
+        if v then
+            if v:IsA("BoolValue") and v.Value then return true end
+            if v:IsA("ObjectValue") and v.Value then return true end
+            if v:IsA("StringValue") and v.Value ~= "" then return true end
+        end
+    end
+    for _, child in ipairs(char:GetChildren()) do
+        if child:IsA("Model") and child:FindFirstChildWhichIsA("BasePart", true) then
+            local n = child.Name:lower()
+            if n:find("brainrot") or n:find("animal") or n:find("carry") or n:find("grab") or n:find("steal") or n:find("hold") then
+                return true
+            end
+        end
+    end
+    return false
+end
+function M.safeModeIsLocked()
+    if not M.safeModeEnabled then return false end
+    return M.safeModeInDuelCountdown() or M.safeModeHoldingBrainrot()
+end
+function M.safeModeForceStop(reason)
+    local stopped = false
+    if M.autoBatEnabled then
+        M.stopBatAimbot()
+        stopped = true
+    end
+    if M.bypassAimbotEnabled then
+        M.stopBypassAimbot()
+        stopped = true
+    end
+    if M.autoLeftEnabled then
+        M.autoLeftEnabled = false
+        if M.autoLeftSetVisual then M.autoLeftSetVisual(false) end
+        M.stopAutoLeft()
+        stopped = true
+    end
+    if M.autoRightEnabled then
+        M.autoRightEnabled = false
+        if M.autoRightSetVisual then M.autoRightSetVisual(false) end
+        M.stopAutoRight()
+        stopped = true
+    end
+    if stopped then
+        pcall(function()
+            if type(showActionNotification) == "function" then
+                showActionNotification(reason or "SAFE MODE LOCK")
+            end
+        end)
+    end
+end
+function M.safeModeTryStart()
+    if M.safeModeIsLocked() then
+        M.safeModeForceStop("SAFE MODE LOCK")
+        return false
+    end
+    return true
+end
+function M.enableSafeMode()
+    M.safeModeEnabled = true
+end
+function M.disableSafeMode()
+    M.safeModeEnabled = false
+end
+if not M._safeModeMonitorStarted then
+    M._safeModeMonitorStarted = true
+    RunService.Heartbeat:Connect(function()
+        if M.safeModeEnabled and M.safeModeIsLocked() then
+            M.safeModeForceStop("SAFE MODE LOCK")
+        end
+    end)
+end
+function M.mirrorTPAimbotActive()
+    return M.autoBatEnabled == true or M.bypassAimbotEnabled == true
+end
+function M.mirrorTPTeleportDown()
+    local char = player.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    local humanoid = char and char:FindFirstChildOfClass("Humanoid")
+    if not root or not humanoid or humanoid.Health <= 0 then return end
+    local now = tick()
+    if now - (M.mirrorTPLastTeleport or 0) < 0.08 then return end
+    M.mirrorTPLastTeleport = now
+    local _, yaw = root.CFrame:ToEulerAnglesYXZ()
+    local y = (M.MIRROR_TP_DOWN_Y or -7) + (math.random() * 0.6 - 0.3)
+    root.CFrame = CFrame.new(root.Position.X, y, root.Position.Z) * CFrame.Angles(0, yaw, 0)
+    root.AssemblyLinearVelocity = Vector3.new((math.random()-0.5)*0.4, 0, (math.random()-0.5)*0.4)
+end
+if not M._mirrorTPStarted then
+    M._mirrorTPStarted = true
+    RunService.Heartbeat:Connect(function()
+        if not M.mirrorTPDownEnabled or not M.mirrorTPAimbotActive() then
+            if next(M.mirrorTPPreviousY) then
+                table.clear(M.mirrorTPPreviousY)
+            end
+            return
+        end
+        for _, plr in ipairs(Players:GetPlayers()) do
+            if plr ~= player and plr.Character then
+                local root = plr.Character:FindFirstChild("HumanoidRootPart")
+                if root then
+                    local currentY = root.Position.Y
+                    local previousY = M.mirrorTPPreviousY[plr.UserId]
+                    if previousY and previousY - currentY >= (M.MIRROR_TP_DROP_THRESHOLD or 3) then
+                        pcall(M.mirrorTPTeleportDown)
+                        table.clear(M.mirrorTPPreviousY)
+                        return
+                    end
+                    M.mirrorTPPreviousY[plr.UserId] = currentY
+                end
+            end
+        end
+    end)
+end
+function M.setMirrorTPDown(enabled)
+    M.mirrorTPDownEnabled = enabled == true
+    if not M.mirrorTPDownEnabled then
+        table.clear(M.mirrorTPPreviousY)
+    end
+    if M.setMirrorTPVisual then M.setMirrorTPVisual(M.mirrorTPDownEnabled) end
+end
+function M.isStealState()
+    return M.hasBrainrotInHand() == true
+end
+-- Perfil (Normal/Lagger/Custom): solo alimenta NS/CS para walk + Carry Speed
+-- Lag Mode / Lag Carry: independientes (siempre LaggerSpeedNorm / LaggerSpeedSteal)
+function M.getProfileNorm(profile)
+    local p = profile or M.speedProfile or "Normal"
+    if p == "Lagger" then
+        return tonumber(M.LaggerSpeedNorm) or 30
+    elseif p == "Custom" then
+        return tonumber(M.CustomSpeedNorm) or 66
+    end
+    return tonumber(M.NormalSpeedNorm) or 59
+end
+
+function M.getProfileSteal(profile)
+    local p = profile or M.speedProfile or "Normal"
+    if p == "Lagger" then
+        return tonumber(M.LaggerSpeedSteal) or 15
+    elseif p == "Custom" then
+        return tonumber(M.CustomSpeedSteal) or 34
+    end
+    return tonumber(M.NormalSpeedSteal) or 29
+end
+
+function M.syncProfileToNSCS()
+    local p = M.speedProfile or "Normal"
+    M.NS = M.getProfileNorm(p)
+    M.CS = M.getProfileSteal(p)
+end
+
+function M.getActiveMoveSpeed()
+    -- PRIORIDAD:
+    -- LAG CARRY  -> SOLO M.LAGGER_CARRY_SPEED  (Controls: "Lagger Carry Speed")
+    -- LAG MODE   -> SOLO M.LAGGER_SPEED        (Controls: "Lagger Normal Speed")
+    -- Carry btn  -> CS del perfil elegido
+    -- Walk       -> NS del perfil elegido
+    -- Nunca mezclar con LaggerSpeedNorm / LaggerSpeedSteal del card de perfiles
+    if M.laggerCarryActive == true then
+        local v = tonumber(M.LAGGER_CARRY_SPEED)
+        if v and v > 0 then return v end
+        return 15
+    end
+    if M.laggerModeEnabled == true then
+        local v = tonumber(M.LAGGER_SPEED)
+        if v and v > 0 then return v end
+        return 30
+    end
+    if M.carrySpeedActive == true or M.manualCarryActive == true then
+        local v = tonumber(M.CS) or (M.getProfileSteal and M.getProfileSteal(M.speedProfile))
+        if v and v > 0 then return v end
+        return 29
+    end
+    if M.autoSwitchSpeedEnabled and M.isStealState and M.isStealState() then
+        local v = tonumber(M.CS) or (M.getProfileSteal and M.getProfileSteal(M.speedProfile))
+        if v and v > 0 then return v end
+        return 29
+    end
+    local v = tonumber(M.NS) or (M.getProfileNorm and M.getProfileNorm(M.speedProfile))
+    if v and v > 0 then return v end
+    return 59
+end
+
+function M.getAutoPathSpeed()
+    if M.laggerCarryActive == true then
+        local v = tonumber(M.LAGGER_CARRY_SPEED)
+        if v and v > 0 then return v end
+        return 15
+    end
+    if M.laggerModeEnabled == true then
+        local v = tonumber(M.LAGGER_SPEED)
+        if v and v > 0 then return v end
+        return 30
+    end
+    local v = tonumber(M.NS) or (M.getProfileNorm and M.getProfileNorm(M.speedProfile))
+    if v and v > 0 then return v end
+    return 59
+end
+
+function M.setModeNormalFlags()
+    M.carrySpeedActive = false
+    M.manualCarryActive = false
+    M.laggerModeEnabled = false
+    M.laggerCarryActive = false
+    -- no forzar profile; solo apaga toggles y resincroniza NS/CS del perfil actual
+    if not M.speedProfile then M.speedProfile = "Normal" end
+    M.syncProfileToNSCS()
+    if M.mobBtnRefs and M.mobBtnRefs.carrySpeed then M.mobBtnRefs.carrySpeed(false) end
+    if M.mobBtnRefs and M.mobBtnRefs.lagger then M.mobBtnRefs.lagger(false) end
+    if M.mobBtnRefs and M.mobBtnRefs.laggerCarry then M.mobBtnRefs.laggerCarry(false) end
+    if M.carryModeBtn then M.carryModeBtn.Text = "Carry Off" end
+    if M.laggerModeBtn then M.laggerModeBtn.Text = "Lag Off" end
+    if M.laggerCarryBtn then M.laggerCarryBtn.Text = "L.Carry Off" end
+    if M.refreshSpeedModeLabel then M.refreshSpeedModeLabel() end
+end
+
+function M.setModeCarryFlags()
+    M.carrySpeedActive = true
+    M.laggerModeEnabled = false
+    M.laggerCarryActive = false
+    if M.mobBtnRefs.carrySpeed then M.mobBtnRefs.carrySpeed(true) end
+    if M.mobBtnRefs.lagger then M.mobBtnRefs.lagger(false) end
+    if M.mobBtnRefs.laggerCarry then M.mobBtnRefs.laggerCarry(false) end
+    if M.carryModeBtn then M.carryModeBtn.Text = "Carry On" end
+    if M.laggerModeBtn then M.laggerModeBtn.Text = "Lag Off" end
+    if M.laggerCarryBtn then M.laggerCarryBtn.Text = "L.Carry Off" end
+    if M.refreshSpeedModeLabel then M.refreshSpeedModeLabel() end
+end
+function M.setModeLaggerCarryFlags()
+    M.carrySpeedActive = false
+    M.laggerModeEnabled = false
+    M.laggerCarryActive = true
+    if M.mobBtnRefs.carrySpeed then M.mobBtnRefs.carrySpeed(false) end
+    if M.mobBtnRefs.lagger then M.mobBtnRefs.lagger(false) end
+    if M.mobBtnRefs.laggerCarry then M.mobBtnRefs.laggerCarry(true) end
+    if M.carryModeBtn then M.carryModeBtn.Text = "Carry Off" end
+    if M.laggerModeBtn then M.laggerModeBtn.Text = "Lag Off" end
+    if M.laggerCarryBtn then M.laggerCarryBtn.Text = "L.Carry On" end
+    if M.refreshSpeedModeLabel then M.refreshSpeedModeLabel() end
+end
+function M.stopWalkSpeedAutoSwitch()
+    if M._autoSwitchSpeedConn then
+        pcall(function() M._autoSwitchSpeedConn:Disconnect() end)
+        M._autoSwitchSpeedConn = nil
+    end
+end
+function M.startWalkSpeedAutoSwitch()
+    if M._autoSwitchSpeedConn then return end
+    local _autoCarryAcc = 0
+    M._autoSwitchSpeedConn = RunService.Heartbeat:Connect(function(dt)
+        if not M.autoSwitchSpeedEnabled and not M.autoTurnOffSpeedEnabled and not M.autoSwitchLaggerSpeedEnabled then
+            M.stopWalkSpeedAutoSwitch()
+            return
+        end
+        if M._manualSpeedModeLock then return end
+        _autoCarryAcc = _autoCarryAcc + (dt or 0.016)
+        if _autoCarryAcc < 0.06 then return end
+        _autoCarryAcc = 0
+        local char = player.Character
+        if not char then return end
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if not hum then return end
+        local ws = hum.WalkSpeed or 16
+        local thr = tonumber(M.AUTO_SWITCH_THRESHOLD) or 25
+        if M.autoSwitchSpeedEnabled and not M.manualCarryActive and not M._manualCarryOffLock then
+            if M.isStealState() then
+                if M.autoCarryMode == "Lagger" then
+                    if not M.laggerCarryActive then M.setModeLaggerCarryFlags() end
+                elseif M.autoCarryMode == "Carry" then
+                    if not M.carrySpeedActive then M.setModeCarryFlags() end
+                else
+                    if M.carrySpeedActive or M.laggerCarryActive then M.setModeNormalFlags() end
+                end
+            else
+                if M.carrySpeedActive or M.laggerCarryActive then M.setModeNormalFlags() end
+            end
+        end
+        if not M.autoSwitchSpeedEnabled and M.autoSwitchLaggerSpeedEnabled and ws <= thr and not M.laggerCarryActive and not M.laggerModeEnabled then
+            M.setModeLaggerCarryFlags()
+        elseif not M.autoSwitchSpeedEnabled and M.autoSwitchLaggerSpeedEnabled and ws > thr and (M.laggerCarryActive or M.laggerModeEnabled) then
+            M.setModeNormalFlags()
+        end
+    end)
+end
+function M.refreshWalkSpeedAutoSwitch()
+    if M.autoSwitchSpeedEnabled or M.autoTurnOffSpeedEnabled or M.autoSwitchLaggerSpeedEnabled then
+        M.startWalkSpeedAutoSwitch()
+    else
+        M.stopWalkSpeedAutoSwitch()
+    end
+end
+function M.updateAutoSwitchSpeed()
+    if M._manualSpeedModeLock then return end
+    if not M.autoSwitchSpeedEnabled or M.manualCarryActive or M._manualCarryOffLock then return end
+    local holding = M.isStealState()
+    if holding then
+        if M.autoCarryMode == "Lagger" then
+            if not M.laggerCarryActive then M.setModeLaggerCarryFlags() end
+        elseif M.autoCarryMode == "Carry" then
+            if not M.carrySpeedActive then M.setModeCarryFlags() end
+        else
+            if M.carrySpeedActive or M.laggerCarryActive then M.setModeNormalFlags() end
+        end
+    elseif not M.manualCarryActive and (M.carrySpeedActive or M.laggerCarryActive) then
+        M.setModeNormalFlags()
+    end
+    if M._autoSwitchWasSteal ~= holding and M._applySpeedNow then pcall(M._applySpeedNow) end
+    M._autoSwitchWasSteal = holding
+end
+function M.isRagdollState(hum)
+    if not hum then return true end;local st=hum:GetState()
+    return hum.PlatformStand or st==Enum.HumanoidStateType.Physics or st==Enum.HumanoidStateType.Ragdoll or st==Enum.HumanoidStateType.FallingDown
+end
+function M.notify(text)
+    task.spawn(function()
+        local gui = M.mainGui or (player:FindFirstChild("PlayerGui") and player.PlayerGui:FindFirstChild("PrimeHubUI"))
+        if not gui then return end
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(0, 220, 0, 35)
+        label.Position = UDim2.new(0.5, -110, 0.85, 0)
+        label.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+        label.BackgroundTransparency = 0.1
+        label.TextColor3 = Color3.fromRGB(255, 235, 248)
+        label.Text = text
+        label.Font = Enum.Font.GothamBold
+        label.TextSize = 16
+        label.Parent = gui
+        label.ZIndex = 1000
+        local corner = Instance.new("UICorner", label)
+        corner.CornerRadius = UDim.new(0, 10)
+        local stroke = Instance.new("UIStroke", label)
+        stroke.Color = Color3.fromRGB(100, 100, 100)
+        stroke.Thickness = 1.5
+        task.wait(2.5)
+        local t = game:GetService("TweenService"):Create(label, TweenInfo.new(0.6), {TextTransparency = 1, BackgroundTransparency = 1})
+        t:Play()
+        t.Completed:Connect(function() label:Destroy() end)
+    end)
+end
+function M.dropBrainrotInHand()
+    local char = player.Character
+    local dropped = false
+    if char then
+        for _, item in ipairs(char:GetChildren()) do
+            if item:IsA("Tool") then
+                local name = item.Name:lower()
+                if name:find("brainrot", 1, true) or name:find("skibidi", 1, true) or name:find("toilet", 1, true) then
+                    item.Parent = workspace
+                    dropped = true
+                end
+            end
+        end
+    end
+    local bp = player:FindFirstChild("Backpack")
+    if bp then
+        for _, item in ipairs(bp:GetChildren()) do
+            if item:IsA("Tool") then
+                local name = item.Name:lower()
+                if name:find("brainrot", 1, true) or name:find("skibidi", 1, true) or name:find("toilet", 1, true) then
+                    item.Parent = workspace
+                    dropped = true
+                end
+            end
+        end
+    end
+    return dropped
+end
+
+function M.stopDrop()
+    M.dropActive = false
+    if M._dropConn then
+        pcall(function() M._dropConn:Disconnect() end)
+        M._dropConn = nil
+    end
+    if M._dropFlingThread then
+        pcall(task.cancel, M._dropFlingThread)
+        M._dropFlingThread = nil
+    end
+    local char = player.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    if root then
+        root.AssemblyLinearVelocity = Vector3.zero
+        root.AssemblyAngularVelocity = Vector3.zero
+    end
+end
+
+function M.runDrop()
+    if M.dropBrainrotInHand() then return end
+    if M.dropActive then return end
+    local char = player.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    if not root or not hum then return end
+
+    local mode = tostring(M.dropMode or "Fling")
+    if mode == "Fling" then
+        local velocity = root.AssemblyLinearVelocity
+        local horizontalSpeed = Vector3.new(velocity.X, 0, velocity.Z).Magnitude
+        local cooldown = horizontalSpeed > 5 and 0.6 or 0.25
+        if tick() - (M._lastDropTime or 0) < cooldown then return end
+        M._lastDropTime = tick()
+        M.dropActive = true
+        local flingThread
+        local function finish()
+            if M._dropFlingThread == flingThread then M._dropFlingThread = nil end
+            M.dropActive = false
+            local currentChar = player.Character
+            local currentRoot = currentChar and currentChar:FindFirstChild("HumanoidRootPart")
+            local currentHum = currentChar and currentChar:FindFirstChildOfClass("Humanoid")
+            if currentRoot then
+                currentRoot.AssemblyLinearVelocity = Vector3.zero
+                currentRoot.AssemblyAngularVelocity = Vector3.zero
+                if currentRoot.Position.Y < -100 then
+                    currentRoot.CFrame = CFrame.new(currentRoot.Position.X, 5, currentRoot.Position.Z)
+                end
+                local params = RaycastParams.new()
+                params.FilterDescendantsInstances = {currentChar}
+                params.FilterType = Enum.RaycastFilterType.Exclude
+                local hit = workspace:Raycast(currentRoot.Position, Vector3.new(0, -2000, 0), params)
+                if hit then
+                    local offset = (currentHum and currentHum.HipHeight or 2) + currentRoot.Size.Y / 2
+                    currentRoot.CFrame = CFrame.new(currentRoot.Position.X, hit.Position.Y + offset, currentRoot.Position.Z)
+                end
+                if currentHum and currentHum.Health > 0 then
+                    currentHum:ChangeState(Enum.HumanoidStateType.Running)
+                end
+            end
+        end
+        flingThread = task.spawn(function()
+            local started = tick()
+            while M.dropActive and tick() - started < 0.25 do
+                RunService.Heartbeat:Wait()
+                local currentChar = player.Character
+                local currentRoot = currentChar and currentChar:FindFirstChild("HumanoidRootPart")
+                if not currentRoot then break end
+                local currentVelocity = currentRoot.AssemblyLinearVelocity
+                local flatVelocity = Vector3.new(0, currentVelocity.Y, 0)
+                currentRoot.AssemblyLinearVelocity = flatVelocity * 10000 + Vector3.new(0, 10000, 0)
+                RunService.RenderStepped:Wait()
+                if currentRoot.Parent then currentRoot.AssemblyLinearVelocity = flatVelocity end
+                RunService.Stepped:Wait()
+                if currentRoot.Parent then currentRoot.AssemblyLinearVelocity = flatVelocity + Vector3.new(0, 0.1, 0) end
+            end
+            finish()
+        end)
+        M._dropFlingThread = flingThread
+        task.delay(0.35, function()
+            if M.dropActive then finish() end
+        end)
+        return
+    end
+
+    -- Jump Drop: ascenso corto y regreso al suelo mediante raycast.
+    M.dropActive = true
+    local started = tick()
+    if M._dropConn then pcall(function() M._dropConn:Disconnect() end) end
+    M._dropConn = RunService.Heartbeat:Connect(function()
+        local currentChar = player.Character
+        local currentRoot = currentChar and currentChar:FindFirstChild("HumanoidRootPart")
+        if not currentRoot or not M.dropActive then
+            M.stopDrop()
+            return
+        end
+        if tick() - started >= (M.DROP_ASCEND_DURATION or 0.22) then
+            pcall(function()
+                local params = RaycastParams.new()
+                params.FilterDescendantsInstances = {currentChar}
+                params.FilterType = Enum.RaycastFilterType.Exclude
+                local hit = workspace:Raycast(currentRoot.Position, Vector3.new(0, -3000, 0), params)
+                if hit then
+                    local currentHum = currentChar:FindFirstChildOfClass("Humanoid")
+                    local offset = (currentHum and currentHum.HipHeight or 2) + currentRoot.Size.Y / 2
+                    currentRoot.CFrame = CFrame.new(currentRoot.Position.X, hit.Position.Y + offset, currentRoot.Position.Z)
+                    currentRoot.AssemblyLinearVelocity = Vector3.zero
+                    currentRoot.AssemblyAngularVelocity = Vector3.zero
+                    if currentHum and currentHum.Health > 0 then currentHum:ChangeState(Enum.HumanoidStateType.Running) end
+                end
+            end)
+            M.stopDrop()
+            return
+        end
+        local currentVelocity = currentRoot.AssemblyLinearVelocity
+        currentRoot.AssemblyLinearVelocity = Vector3.new(currentVelocity.X, M.DROP_ASCEND_SPEED or 160, currentVelocity.Z)
+    end)
+end
+function M.startRemoveAcc()
+    if M.removeAccEnabled then return end
+    M.removeAccEnabled = true
+    local function removeAccDo()
+        if not M.removeAccEnabled then return end
+        local char = player.Character
+        if not char then return end
+        for _,obj in ipairs(char:GetDescendants()) do
+            if obj:IsA("Accessory") or obj:IsA("Hat") then
+                if not M.removedAccessories[obj] then
+                    M.removedAccessories[obj] = true
+                    pcall(function() obj:Destroy() end)
+                end
+            end
+        end
+    end
+    removeAccDo()
+    M.removeAccConn = player.CharacterAdded:Connect(function()
+        task.wait(0.5)
+        if M.removeAccEnabled then removeAccDo() end
+    end)
+end
+function M.stopRemoveAcc()
+    M.removeAccEnabled = false
+    if M.removeAccConn then
+        M.removeAccConn:Disconnect()
+        M.removeAccConn = nil
+    end
+    M.removedAccessories = {}
+end
+function M.destroyMobileButtons()
+    if M.mobGuiRef then
+        pcall(function() M.mobGuiRef:Destroy() end)
+        M.mobGuiRef = nil
+    end
+    for _,n in ipairs({"MoveeMobileButtons"}) do
+        local old = game:GetService("CoreGui"):FindFirstChild(n); if old then old:Destroy() end
+        local pgui = player:FindFirstChild("PlayerGui"); if pgui then local o = pgui:FindFirstChild(n); if o then o:Destroy() end end
+    end
+    M.mobBtnRefs = {}
+end
+function M.loadBtnPositions()
+    local positions = {}
+    for k, pos in pairs(M._savedButtonPositions or {}) do
+        if type(pos) == "table" and type(pos.x) == "number" and type(pos.y) == "number" then
+            positions[k] = {x = pos.x, y = pos.y}
+        end
+    end
+    pcall(function()
+        if type(isfile) == "function" and type(readfile) == "function" and M.MOB_POS_FILE and isfile(M.MOB_POS_FILE) then
+            local decoded = HS:JSONDecode(readfile(M.MOB_POS_FILE))
+            if type(decoded) == "table" then
+                for key, pos in pairs(decoded) do
+                    if type(pos) == "table" and type(pos.x) == "number" and type(pos.y) == "number" then
+                        positions[key] = {x = pos.x, y = pos.y}
+                    end
+                end
+            end
+        end
+    end)
+    -- from main config mobileButtonPositions
+    pcall(function()
+        if type(M._cfgBtnPos) == "table" then
+            for key, pos in pairs(M._cfgBtnPos) do
+                if type(pos) == "table" and type(pos.x) == "number" then
+                    positions[key] = {x = pos.x, y = pos.y}
+                end
+            end
+        end
+    end)
+    M._savedButtonPositions = positions
+    return positions
+end
+
+function M.saveBtnPositions()
+    local out = {}
+    -- merge previous
+    for k, pos in pairs(M._savedButtonPositions or {}) do
+        if type(pos) == "table" and type(pos.x) == "number" and type(pos.y) == "number" then
+            out[k] = {x = pos.x, y = pos.y}
+        end
+    end
+    -- live holders
+    if M.mobGuiRef then
+        for _, child in ipairs(M.mobGuiRef:GetChildren()) do
+            local key = child:GetAttribute("BtnKey")
+            if (not key) and type(child.Name) == "string" and child.Name:sub(1, 10) == "BtnHolder_" then
+                key = child.Name:sub(11)
+            elseif (not key) and type(child.Name) == "string" and child.Name:sub(1, 4) == "Btn_" then
+                key = child.Name:sub(5)
+            end
+            if key then
+                out[key] = {x = child.Position.X.Offset, y = child.Position.Y.Offset}
+            end
+        end
+    end
+    M._savedButtonPositions = out
+    pcall(function()
+        if type(writefile) == "function" and HS then
+            writefile(M.MOB_POS_FILE or "primehub_fe_klan_btnpos.json", HS:JSONEncode(out))
+        end
+    end)
+    if M.saveConfig then pcall(M.saveConfig) end
+    return out
+end
+function M.resetMobilePositions()
+    -- limpia posiciones guardadas (memoria + disco)
+    M._savedButtonPositions = {}
+    pcall(function()
+        if type(delfile) == "function" then
+            pcall(function() delfile(M.MOB_POS_FILE) end)
+        end
+        if type(writefile) == "function" then
+            writefile(M.MOB_POS_FILE, "{}")
+            writefile("primehub_fe_klan_btnpos.json", "{}")
+        end
+    end)
+    -- reconstruye botones en posiciones por defecto
+    local wasEnabled = M.mobileButtonsEnabled ~= false
+    M.mobileButtonsEnabled = true
+    M._forceDefaultMobPos = true
+    pcall(function()
+        if M.destroyMobileButtons then M.destroyMobileButtons() end
+    end)
+    pcall(function()
+        M.buildMobileButtons()
+    end)
+    M._forceDefaultMobPos = false
+    -- guardar defaults actuales como nuevas posiciones base
+    pcall(function()
+        local out = {}
+        if M.mobGuiRef then
+            for _, child in ipairs(M.mobGuiRef:GetChildren()) do
+                local key = child:GetAttribute("BtnKey")
+                if (not key) and type(child.Name) == "string" and child.Name:sub(1, 10) == "BtnHolder_" then
+                    key = child.Name:sub(11)
+                end
+                if key then
+                    out[key] = {x = child.Position.X.Offset, y = child.Position.Y.Offset}
+                end
+            end
+        end
+        M._savedButtonPositions = out
+        if type(writefile) == "function" and HS then
+            writefile(M.MOB_POS_FILE, HS:JSONEncode(out))
+        end
+    end)
+    if M.saveConfig then pcall(M.saveConfig) end
+    if M.notify then
+        pcall(function() M.notify("Mobile buttons: position reset") end)
+    end
+    M.mobileButtonsEnabled = wasEnabled
+end
+
+function M.buildMobileButtons()
+    local activeTheme = (M.colorScheme == "Blue") and "Blue" or "Pink"
+    M.colorScheme = activeTheme
+    -- cargar posiciones guardadas antes de destruir (si no forzamos default)
+    if not M._forceDefaultMobPos then
+        pcall(function()
+            if M.saveBtnPositions and M.mobGuiRef then M.saveBtnPositions() end
+        end)
+        pcall(function()
+            if M.loadBtnPositions then M.loadBtnPositions() end
+        end)
+    end
+    M.destroyMobileButtons()
+    if not M.mobileButtonsEnabled then return end
+    local vp = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(800, 600)
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "MoveeMobileButtons"
+    gui.ResetOnSpawn = false
+    gui.IgnoreGuiInset = true
+    gui.DisplayOrder = 15
+    M.mobileButtonsGui = gui
+    M.mobGuiRef = gui
+    pcall(function() if syn and syn.protect_gui then syn.protect_gui(gui) end end)
+    if not pcall(function() gui.Parent = game:GetService("CoreGui") end) then gui.Parent = player:WaitForChild("PlayerGui") end
+    gui.Enabled = not (M.hideMobileButtons == true)
+
+    local function getMobAccent()
+        local a = M.currentAccent
+        if typeof(a) == "Color3" then return a end
+        local n = M.adaptThemeName
+        if M.ADAPT_THEME_COLORS and n and M.ADAPT_THEME_COLORS[n] then
+            return M.ADAPT_THEME_COLORS[n]
+        end
+        return Color3.fromRGB(58, 128, 245)
+    end
+    local function lighten(c, f)
+        f = f or 1.3
+        return Color3.new(math.min(1, c.R * f), math.min(1, c.G * f), math.min(1, c.B * f))
+    end
+    local function darken(c, f)
+        f = f or 0.25
+        return Color3.new(c.R * f, c.G * f, c.B * f)
+    end
+    local pink = getMobAccent()
+    local pinkLight = lighten(pink, 1.35)
+    local black = darken(pink, 0.15)
+    local white = Color3.fromRGB(255, 255, 255)
+    local size = math.max(58, math.floor((M.mobileButtonsSize or 100) * (M.uiScale or 0.8) * 0.62))
+    local gap, cols, pad = 8, 2, 8
+    local startX = vp.X - (cols * size + gap) - pad
+    local defs = {
+        {"autoLeft", "AUTO\nLEFT", true}, {"autoRight", "AUTO\nRIGHT", true},
+        {"batAimbot", "BAT\nAIMBOT", true}, {"tpBat", "BAT\nBYPASS", true},
+        {"batV2", "BAT\nV2", true},
+        {"carrySpeed", "CARRY\nSPEED", true},
+        {"drop", "DROP\nBR", false}, {"tpDown", "TP\nDOWN", false},
+        {"lagger", "LAG\nMODE", true}, {"laggerCarry", "LAG\nCARRY", true},
+        {"instaReset", "INSTA\nRESET", false},
+    }
+    M.mobBtnRefs = {}
+    local function makeMobileButtonMovable(holder, clickBtn)
+        -- mueve el HOLDER; el TextButton solo captura el input
+        local dragging = false
+        local dragInput = nil
+        local dragStart = nil
+        local startPos = nil
+
+        local function savePos()
+            local key = holder:GetAttribute("BtnKey")
+                or (clickBtn and clickBtn:GetAttribute("BtnKey"))
+            if not key then return end
+            M._savedButtonPositions = M._savedButtonPositions or {}
+            M._savedButtonPositions[key] = {
+                x = holder.Position.X.Offset,
+                y = holder.Position.Y.Offset,
+            }
+            pcall(function()
+                if type(writefile) == "function" and HS then
+                    writefile(M.MOB_POS_FILE or "primehub_fe_klan_btnpos.json", HS:JSONEncode(M._savedButtonPositions))
+                end
+            end)
+            if M.saveBtnPositions then pcall(M.saveBtnPositions) end
+        end
+
+        local function beginDrag(input)
+            if M.uiLocked then return end
+            if input.UserInputType ~= Enum.UserInputType.MouseButton1
+                and input.UserInputType ~= Enum.UserInputType.Touch then
+                return
+            end
+            dragging = true
+            dragInput = input
+            dragStart = input.Position
+            startPos = holder.Position
+        end
+
+        local function endDrag(input)
+            if not dragging then return end
+            if input and dragInput and input ~= dragInput then return end
+            dragging = false
+            dragInput = nil
+            savePos()
+        end
+
+        -- Input en el boton (captura real del touch/click)
+        if clickBtn then
+            clickBtn.InputBegan:Connect(function(input)
+                beginDrag(input)
+            end)
+        end
+        holder.InputBegan:Connect(function(input)
+            beginDrag(input)
+        end)
+
+        -- movimiento global (mouse + touch)
+        UIS.InputChanged:Connect(function(input)
+            if not dragging or M.uiLocked then return end
+            if dragInput and input ~= dragInput then return end
+            if input.UserInputType ~= Enum.UserInputType.MouseMovement
+                and input.UserInputType ~= Enum.UserInputType.Touch then
+                return
+            end
+            if not dragStart or not startPos then return end
+            local delta = input.Position - dragStart
+            holder.Position = UDim2.new(
+                startPos.X.Scale, startPos.X.Offset + delta.X,
+                startPos.Y.Scale, startPos.Y.Offset + delta.Y
+            )
+        end)
+
+        UIS.InputEnded:Connect(function(input)
+            endDrag(input)
+        end)
+    end
+
+    for i, def in ipairs(defs) do
+        local key, label, isToggle = def[1], def[2], def[3]
+        local row, col = math.floor((i - 1) / cols), (i - 1) % cols
+        local defX = startX + col * (size + gap)
+        local defY = 50 + row * (size + gap)
+        local savedPos = (not M._forceDefaultMobPos) and M._savedButtonPositions and M._savedButtonPositions[key]
+        local posX = (type(savedPos) == "table" and type(savedPos.x) == "number") and savedPos.x or defX
+        local posY = (type(savedPos) == "table" and type(savedPos.y) == "number") and savedPos.y or defY
+
+        -- Holder: el gradient NO puede ir en el TextButton (tiñe el texto)
+        local holder = Instance.new("Frame")
+        holder.Name = "BtnHolder_" .. key
+        holder.Size = UDim2.fromOffset(size, size)
+        holder.Position = UDim2.fromOffset(posX, posY)
+        holder.BackgroundTransparency = 1
+        holder.BorderSizePixel = 0
+        holder.ZIndex = 100
+        holder:SetAttribute("BtnKey", key)
+        holder:SetAttribute("DefaultX", defX)
+        holder:SetAttribute("DefaultY", defY)
+        holder.Active = true
+        holder.Parent = gui
+
+        local bg = Instance.new("Frame")
+        bg.Name = "Bg"
+        bg.Size = UDim2.fromScale(1, 1)
+        bg.BackgroundColor3 = pink
+        bg.BackgroundTransparency = 0
+        bg.BorderSizePixel = 0
+        bg.ZIndex = 100
+        bg.Parent = holder
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 14)
+        corner.Parent = bg
+        local gradient = Instance.new("UIGradient")
+        gradient.Name = "ButtonBlackBottomFade"
+        gradient.Rotation = 90
+        gradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, pinkLight),
+            ColorSequenceKeypoint.new(0.5, pink),
+            ColorSequenceKeypoint.new(1, black),
+        })
+        gradient.Parent = bg
+        local stroke = Instance.new("UIStroke")
+        stroke.Name = "BtnStroke"
+        stroke.Color = Color3.fromRGB(160, 164, 175)
+        stroke.Thickness = 2
+        stroke.Transparency = 0.25
+        stroke.Parent = bg
+        M._mobBtnStrokes = M._mobBtnStrokes or {}
+        table.insert(M._mobBtnStrokes, stroke)
+        -- mark so global menu plomo anim does NOT fight press flash
+        stroke:SetAttribute("MobBtn", true)
+        stroke:SetAttribute("BtnActive", false)
+
+        local btn = Instance.new("TextButton")
+        btn.Name = "Btn_" .. key
+        btn.Size = UDim2.fromScale(1, 1)
+        btn.Position = UDim2.fromScale(0, 0)
+        btn.BackgroundTransparency = 1
+        btn.BorderSizePixel = 0
+        btn.AutoButtonColor = false
+        btn.Text = label
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.TextTransparency = 0
+        btn.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+        btn.TextStrokeTransparency = 0.15
+        btn.Font = Enum.Font.GothamBlack
+        btn.TextSize = 13
+        btn.TextWrapped = true
+        btn.ZIndex = 102
+        btn:SetAttribute("BtnKey", key)
+        btn.Parent = holder
+
+        -- Botón independiente: solo activa/desactiva; la velocidad se ajusta en la interfaz.
+        if key == "tpBat" then
+            M.bypassAimbotSpeed = math.clamp(tonumber(M.bypassAimbotSpeed) or 55, 10, 150)
+            btn.Text = "BAT\nBYPASS"
+            btn.TextSize = 12
+        end
+
+        local pumpkin = Instance.new("TextLabel")
+        pumpkin.Name = "PumpkinButtonDecoration"
+        pumpkin.Size = UDim2.new(0, math.max(18, math.floor(size * 0.28)), 0, math.max(18, math.floor(size * 0.28)))
+        pumpkin.Position = UDim2.new(1, -math.max(22, math.floor(size * 0.30)), 0, 2)
+        pumpkin.BackgroundTransparency = 1
+        pumpkin.Text = "🎃"
+        pumpkin.TextColor3 = Color3.fromRGB(255, 154, 32)
+        pumpkin.TextStrokeColor3 = Color3.fromRGB(65, 8, 82)
+        pumpkin.TextStrokeTransparency = 0.05
+        pumpkin.TextScaled = true
+        pumpkin.Font = Enum.Font.GothamBlack
+        pumpkin.ZIndex = 103
+        pumpkin.Parent = holder
+
+        makeMobileButtonMovable(holder, btn)
+
+        local on = false
+        local function paint(active)
+            on = active == true
+            local accent = getMobAccent()
+            local accentL = lighten(accent, 1.35)
+            local accentD = darken(accent, 0.18)
+            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            btn.TextTransparency = 0
+            btn.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+            btn.TextStrokeTransparency = 0.15
+            bg.BackgroundColor3 = accent
+            bg.BackgroundTransparency = 0
+            stroke:SetAttribute("BtnActive", on)
+            if on then
+                -- Active: bright plomo/white edge, very visible
+                stroke.Color = Color3.fromRGB(230, 232, 240)
+                stroke.Thickness = 3.4
+                stroke.Transparency = 0
+                gradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, accentL),
+                    ColorSequenceKeypoint.new(0.45, accent),
+                    ColorSequenceKeypoint.new(1, accent),
+                })
+            else
+                stroke.Color = Color3.fromRGB(140, 144, 155)
+                stroke.Thickness = 1.6
+                stroke.Transparency = 0.35
+                gradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, accentL),
+                    ColorSequenceKeypoint.new(0.55, accent),
+                    ColorSequenceKeypoint.new(1, accentD),
+                })
+            end
+            btn:SetAttribute("Active", on)
+        end
+
+        M.mobBtnRefs[key] = paint
+        -- Strong plomo flash when pressed (very noticeable)
+        local function plomoPressFlash()
+            if not stroke or not stroke.Parent then return end
+            stroke:SetAttribute("PressFlash", true)
+            pcall(function()
+                stroke.Color = Color3.fromRGB(255, 255, 255)
+                stroke.Thickness = 4.5
+                stroke.Transparency = 0
+            end)
+            -- quick white -> bright plomo pulse
+            task.spawn(function()
+                for i = 1, 8 do
+                    if not stroke or not stroke.Parent then break end
+                    local a = i / 8
+                    stroke.Color = Color3.fromRGB(255, 255, 255):Lerp(Color3.fromRGB(170, 175, 190), a)
+                    stroke.Thickness = 4.5 - a * 1.2
+                    task.wait(0.06)
+                end
+                stroke:SetAttribute("PressFlash", false)
+                -- restore via paint state
+                if stroke:GetAttribute("BtnActive") then
+                    stroke.Color = Color3.fromRGB(230, 232, 240)
+                    stroke.Thickness = 3.4
+                    stroke.Transparency = 0
+                else
+                    stroke.Color = Color3.fromRGB(140, 144, 155)
+                    stroke.Thickness = 1.6
+                    stroke.Transparency = 0.35
+                end
+            end)
+        end
+        btn.MouseButton1Down:Connect(plomoPressFlash)
+        btn.TouchTap:Connect(function() end) -- keep touch path; flash also on click
+
+        paint(false)
+        btn.Activated:Connect(function()
+            if isToggle then
+                if key == "autoLeft" then
+                    if M.autoRightEnabled then M.autoRightEnabled = false; M.stopAutoRight() end
+                    M.autoLeftEnabled = not M.autoLeftEnabled
+                    if M.autoLeftEnabled then M.startAutoLeft() else M.stopAutoLeft() end
+                    paint(M.autoLeftEnabled)
+                elseif key == "autoRight" then
+                    if M.autoLeftEnabled then M.autoLeftEnabled = false; M.stopAutoLeft() end
+                    M.autoRightEnabled = not M.autoRightEnabled
+                    if M.autoRightEnabled then M.startAutoRight() else M.stopAutoRight() end
+                    paint(M.autoRightEnabled)
+                elseif key == "batAimbot" then
+                    M.batAimbotEnabled = not M.batAimbotEnabled
+                    if M.batAimbotEnabled then M.startBatAimbot() else M.stopBatAimbot() end
+                    paint(M.batAimbotEnabled)
+                elseif key == "tpBat" then
+                    M.toggleBypassAimbot()
+                    paint(M.bypassAimbotEnabled)
+                elseif key == "batV2" then
+                    M.toggleBatV2()
+                    paint(M.batV2Enabled == true)
+                elseif key == "carrySpeed" then
+                    M.toggleCarryMode(); paint(M.carrySpeedActive)
+                elseif key == "lagger" then
+                    M.toggleLaggerMode(); paint(M.laggerModeEnabled)
+                    if M.mobBtnRefs.carrySpeed then M.mobBtnRefs.carrySpeed(M.carrySpeedActive) end
+                elseif key == "laggerCarry" then
+                    M.toggleLaggerCarry(); paint(M.laggerCarryActive)
+                end
+            elseif key == "drop" then
+                M.runDrop(); paint(false)
+            elseif key == "tpDown" then
+                M.runTPFloor(); paint(false)
+            elseif key == "instaReset" then
+                M.doInstaReset(); paint(false)
+            end
+            if M.saveConfig then pcall(M.saveConfig) end
+        end)
+    end
+end
+local PRIMEHUB_FE_KLAN_CONFIG_NAME = "primehub_fe_klan_config.json"
+local PrimeHubFeKlanConfig = { Theme="Purple" }
+local CHERRY_THEMES = {
+    Purple   = { Accent=Color3.fromRGB(207,159,255), AccentDim=Color3.fromRGB(160,120,210), Bg=Color3.fromRGB(8,4,14), Row=Color3.fromRGB(16,10,24) },
+    Blue     = { Accent=Color3.fromRGB(58,128,245), AccentDim=Color3.fromRGB(40,90,180), Bg=Color3.fromRGB(4,8,16), Row=Color3.fromRGB(10,16,28) },
+}
+if M._savedTheme and CHERRY_THEMES[M._savedTheme] then
+    PrimeHubFeKlanConfig.Theme = M._savedTheme
+end
+M.colorScheme = "Purple"
+    PrimeHubFeKlanConfig.Theme = "Purple"
+M.toggleLayoutPos = M.toggleLayoutPos or "Low" -- Low | High
+M.customBgId = "131828154911144"
+M.customBgOpacity = 0
+M.mobBtnBgId = 0
+
+-- Decal IDs need rbxthumb for reliable ImageLabel/ImageButton load
+function M.bgImageUri(id)
+    local n = tonumber(id) or 0
+    if n <= 0 then return "" end
+    return "rbxassetid://" .. tostring(n)
+end
+function M.bgImageUriThumb(id)
+    local n = tonumber(id) or 0
+    if n <= 0 then return "" end
+    -- varios tamaños: algunos assets solo cargan en thumb
+    return string.format("rbxthumb://type=Asset&id=%d&w=768&h=432", n)
+end
+function M.bgImageUriThumbAlt(id)
+    local n = tonumber(id) or 0
+    if n <= 0 then return "" end
+    return string.format("rbxthumb://type=Asset&id=%d&w=420&h=420", n)
+end
+M.MENU_BG_IDS = {
+    "101866560269754", -- fondo azul restaurado del panel Keybinds
+    "107416548769490", -- fondo morado
+    "104853451207790", -- fondo rosa
+    "128737402834585", -- fondo verde
+}
+M.BG_IMAGE_IDS = M.MENU_BG_IDS
+M.menuBgIndex = tonumber(M.menuBgIndex) or 1
+M.MOB_BTN_IMAGE_IDS = {
+    131828154911144,
+    85741797518102,
+    83079735691327,
+    132200926526645,
+    87158109204937,
+}
+local function loadPrimeHubFeKlanConfig()
+    M.editMobileButtons = false
+    -- defaults suaves (no forzar OFF de utility al cargar)
+    if M.antiLagEnabled == nil then M.antiLagEnabled = false end
+    if M.antiLagV2Enabled == nil then M.antiLagV2Enabled = false end
+    if M.graphicsBajosEnabled == nil then M.graphicsBajosEnabled = false end
+    if M.antiDieEnabled == nil then M.antiDieEnabled = false end
+    if M.nukeOptimiserEnabled == nil then M.nukeOptimiserEnabled = false end
+    if M.antiVoidEnabled == nil then M.antiVoidEnabled = false end
+    if M.bodyLockEnabled == nil then M.bodyLockEnabled = false end
+    if M.pcKeyStatusEnabled == nil then M.pcKeyStatusEnabled = false end
+    if type(readfile)~="function" or type(isfile)~="function" then return end
+    local ok,d = pcall(function()
+        if not isfile(PRIMEHUB_FE_KLAN_CONFIG_NAME) then return nil end
+        return HS:JSONDecode(readfile(PRIMEHUB_FE_KLAN_CONFIG_NAME))
+    end)
+    if ok and type(d)=="table" then
+        local themeName = nil
+        if type(d.Theme)=="string" and CHERRY_THEMES[d.Theme] then themeName = d.Theme end
+        if type(d.colorScheme)=="string" and CHERRY_THEMES[d.colorScheme] then themeName = d.colorScheme end
+        if themeName then
+            PrimeHubFeKlanConfig.Theme = themeName
+            M.colorScheme = themeName
+            M._savedTheme = themeName
+        end
+        if type(d.normalSpeed)=="number" then M.NS=d.normalSpeed end
+        if type(d.carrySpeed)=="number" then M.CS=d.carrySpeed end
+        if type(d.laggerSpeed)=="number" then M.LAGGER_SPEED=d.laggerSpeed end
+        if type(d.laggerCarrySpeed)=="number" then M.LAGGER_CARRY_SPEED=d.laggerCarrySpeed end
+        if type(d.speedMethod)=="string" then
+            for _,sm in ipairs(M.speedMethodList) do if sm==d.speedMethod then M.speedMethod=sm; break end end
+        end
+        
+        if type(d.autoTPHeight)=="number" then M.autoTPHeight=d.autoTPHeight end
+        if type(d.fovValue)=="number" then M.fovValue=d.fovValue end
+        if d.fovEnabled~=nil then M.fovEnabled=d.fovEnabled==true end
+        if d.pcKeyStatusEnabled~=nil then M.pcKeyStatusEnabled=d.pcKeyStatusEnabled==true end
+        if type(d.pcKeyPanelScale)=="number" then M.pcKeyPanelScale=math.clamp(d.pcKeyPanelScale, 0.65, 1.5) end
+        if type(d.pcKeyPanelPosition)=="table" and type(d.pcKeyPanelPosition.x)=="number" and type(d.pcKeyPanelPosition.y)=="number" then M.pcKeyPanelPosition=d.pcKeyPanelPosition end
+        if type(d.uiScale)=="number" then M.uiScale=d.uiScale end
+        M.infJumpMode = "hold"
+        if type(d.mobileButtonsSize)=="number" then M.mobileButtonsSize=d.mobileButtonsSize end
+        if type(d.skyTheme)=="string" then M.currentSkyTheme=d.skyTheme end
+        if d.skyThemesEnabled~=nil then M.skyThemesEnabled=d.skyThemesEnabled==true end
+        if d.carrySpeedActive~=nil then M.carrySpeedActive=d.carrySpeedActive==true end
+        if d.manualCarryActive~=nil then M.manualCarryActive=d.manualCarryActive==true end
+        if d.laggerCarryActive~=nil then M.laggerCarryActive=d.laggerCarryActive==true end
+        if d.laggerModeEnabled~=nil then M.laggerModeEnabled=d.laggerModeEnabled==true end
+        if type(d.autoCarryMode)=="string" and (d.autoCarryMode=="Lagger" or d.autoCarryMode=="Carry" or d.autoCarryMode=="Normal") then M.autoCarryMode=d.autoCarryMode end
+        if d.autoSwing~=nil then M.autoSwingEnabled=d.autoSwing==true end
+        if d.introSoundEnabled~=nil then M.introSoundEnabled=d.introSoundEnabled==true end
+        if d.introSongChoice then M.introSongChoice=d.introSongChoice end
+        if d.introGUIEnabled~=nil then M.introGUIEnabled=d.introGUIEnabled==true end
+        if d.ragdollGui~=nil then M.ragdollGuiEnabled=d.ragdollGui==true end
+        if d.perButtonDrag~=nil then M.perButtonDragEnabled=d.perButtonDrag==true end
+        if d.mobileButtonsEnabled~=nil then M.mobileButtonsEnabled=d.mobileButtonsEnabled==true end
+        if d.autoMoveSwing~=nil then M.autoMoveSwingEnabled=d.autoMoveSwing==true end
+        if d.autoSwitchSpeed~=nil then M.autoSwitchSpeedEnabled=d.autoSwitchSpeed==true end
+        if d.autoTurnOffSpeed~=nil then M.autoTurnOffSpeedEnabled=d.autoTurnOffSpeed==true end
+        if d.autoSwitchLaggerSpeed~=nil then M.autoSwitchLaggerSpeedEnabled=d.autoSwitchLaggerSpeed==true end
+        if d.autoLeftEnabled~=nil then M.autoLeftEnabled=d.autoLeftEnabled==true end
+        if d.autoRightEnabled~=nil then M.autoRightEnabled=d.autoRightEnabled==true end
+        if d.mobileButtonsLocked~=nil then M.mobileButtonsLocked=d.mobileButtonsLocked==true end
+        if type(d.cameraSensitivity)=="number" then M.cameraSensitivity=math.clamp(d.cameraSensitivity, 0.35, 1.0) end
+        if type(d.customFont)=="string" then M.customFontSelected=d.customFont end
+        if d.showPlayerSpeeds~=nil then M.showPlayerSpeeds=d.showPlayerSpeeds==true end
+        if d.removeAcc~=nil then M.removeAccEnabled=d.removeAcc end
+        if d.playerESPEnabled~=nil then M.playerESPEnabled=d.playerESPEnabled end
+        if d.antiRagdoll~=nil then M.antiRagdollEnabled=d.antiRagdoll end
+        if type(d.antiRagdollMode)=="string" then local m=d.antiRagdollMode; if m=="Splatter" then m="V1" elseif m=="No Splatter" then m="V2" end; if m=="V1" or m=="V2" then M.antiRagdollMode=m end end
+        
+        if d.autoRadiusEnabled~=nil then M.autoRadiusEnabled=d.autoRadiusEnabled==true end
+        if type(d.speedProfile)=="string" then M.speedProfile = d.speedProfile end
+        if type(d.normalSpeedNorm)=="number" then M.NormalSpeedNorm = d.normalSpeedNorm end
+        if type(d.normalSpeedSteal)=="number" then M.NormalSpeedSteal = d.normalSpeedSteal end
+        if type(d.laggerSpeedNorm)=="number" then M.LaggerSpeedNorm = d.laggerSpeedNorm end
+        if type(d.laggerSpeedSteal)=="number" then M.LaggerSpeedSteal = d.laggerSpeedSteal end
+        if type(d.customSpeedNorm)=="number" then M.CustomSpeedNorm = d.customSpeedNorm end
+        if type(d.customSpeedSteal)=="number" then M.CustomSpeedSteal = d.customSpeedSteal end
+        -- Finalize: reafirmar velocidades guardadas (prioridad absoluta)
+        if type(d.laggerSpeed) == "number" then M.LAGGER_SPEED = d.laggerSpeed end
+        if type(d.laggerCarrySpeed) == "number" then M.LAGGER_CARRY_SPEED = d.laggerCarrySpeed end
+        if type(d.normalSpeedNorm) == "number" then M.NormalSpeedNorm = d.normalSpeedNorm end
+        if type(d.normalSpeedSteal) == "number" then M.NormalSpeedSteal = d.normalSpeedSteal end
+        if type(d.laggerSpeedNorm) == "number" then M.LaggerSpeedNorm = d.laggerSpeedNorm end
+        if type(d.laggerSpeedSteal) == "number" then M.LaggerSpeedSteal = d.laggerSpeedSteal end
+        if type(d.customSpeedNorm) == "number" then M.CustomSpeedNorm = d.customSpeedNorm end
+        if type(d.customSpeedSteal) == "number" then M.CustomSpeedSteal = d.customSpeedSteal end
+        if type(d.speedProfile) == "string" then M.speedProfile = d.speedProfile end
+        if M.syncProfileToNSCS then
+            pcall(M.syncProfileToNSCS)
+        else
+            local p = M.speedProfile or "Normal"
+            if p == "Custom" then
+                M.NS = tonumber(M.CustomSpeedNorm) or M.NS
+                M.CS = tonumber(M.CustomSpeedSteal) or M.CS
+            elseif p == "Lagger" then
+                M.NS = tonumber(M.LaggerSpeedNorm) or M.NS
+                M.CS = tonumber(M.LaggerSpeedSteal) or M.CS
+            else
+                M.NS = tonumber(M.NormalSpeedNorm) or M.NS
+                M.CS = tonumber(M.NormalSpeedSteal) or M.CS
+            end
+        end
+        -- Lag independiente siempre desde campos dedicados
+        if type(d.laggerSpeed) == "number" then M.LAGGER_SPEED = d.laggerSpeed end
+        if type(d.laggerCarrySpeed) == "number" then M.LAGGER_CARRY_SPEED = d.laggerCarrySpeed end
+
+        if type(d.mobileButtonPositions)=="table" then
+            local validPositions = {}
+            for key, pos in pairs(d.mobileButtonPositions) do
+                if type(key) == "string" and type(pos) == "table" and type(pos.x) == "number" and type(pos.y) == "number" then
+                    validPositions[key] = {x = pos.x, y = pos.y}
+                end
+            end
+            M._savedButtonPositions = validPositions
+        end
+        if d.infiniteJump~=nil then M.infJumpEnabled=d.infiniteJump end
+        if d.medusaCounter~=nil then M.medusaCounterEnabled=d.medusaCounter end
+        if d.batCounter~=nil then M.batCounterEnabled=d.batCounter end
+        M.unwalkEnabled = false
+        M._unwalkOffLock = true
+        if d.antiLag~=nil then M.antiLagEnabled=d.antiLag end
+        if d.nukeOptimiserEnabled~=nil then M.nukeOptimiserEnabled=d.nukeOptimiserEnabled end
+        if d.adaptThemeName then M.adaptThemeName = tostring(d.adaptThemeName) end
+        if type(d.menuBgIndex) == "number" then M.menuBgIndex = d.menuBgIndex end
+        if type(d.toggleLayoutPos) == "string" and (d.toggleLayoutPos == "Low" or d.toggleLayoutPos == "High") then M.toggleLayoutPos = d.toggleLayoutPos end
+        if d.playerBgSaved ~= nil then M._playerBgSaved = d.playerBgSaved == true end
+        if d.adaptThemeName then M.adaptThemeName = tostring(d.adaptThemeName):upper() end
+        if M.adaptThemeName and M.ADAPT_THEME_COLORS and M.ADAPT_THEME_COLORS[M.adaptThemeName] then
+            M.currentAccent = M.ADAPT_THEME_COLORS[M.adaptThemeName]
+        end
+        if d.customBgId then M.customBgId = tostring(d.customBgId) end
+        if d.antiVoidEnabled~=nil then M.antiVoidEnabled=d.antiVoidEnabled end
+        if d.bodyLockEnabled~=nil then M.bodyLockEnabled=d.bodyLockEnabled end
+        if d.bodyLockRadius~=nil then M.bodyLockRadius=tonumber(d.bodyLockRadius) or 60 end
+        if d.antiLagV2~=nil then M.antiLagV2Enabled=d.antiLagV2==true end
+        if d.graphicsBajosEnabled~=nil then M.graphicsBajosEnabled=d.graphicsBajosEnabled==true end
+        if d.antiDieEnabled~=nil then M.antiDieEnabled=d.antiDieEnabled==true end
+        if type(d.currentAccessoryPack)=="string" then M.currentAccessoryPack=d.currentAccessoryPack end
+        if d.antiSummerBase~=nil then M.antiSummerBaseEnabled=d.antiSummerBase end
+        if d.uiLocked~=nil then M.uiLocked=d.uiLocked==true end
+        if d.uiTransparencyEnabled~=nil then M.uiTransparencyEnabled=d.uiTransparencyEnabled end
+        if d.mobButtonsTransparencyEnabled~=nil then M.mobButtonsTransparencyEnabled=d.mobButtonsTransparencyEnabled end
+        if d.stretchRez~=nil then M.stretchRezEnabled=d.stretchRez end
+        if d.antiKick~=nil then M.antiKickEnabled=d.antiKick end
+        if d.safeMode~=nil then M.safeModeEnabled=d.safeMode end
+        if d.mirrorTPDown~=nil then M.mirrorTPDownEnabled=d.mirrorTPDown end
+        if type(d.customBgId)=="number" then M.customBgId=d.customBgId end
+        if type(d.customBgOpacity)=="number" then M.customBgOpacity=math.clamp(d.customBgOpacity,0,1) end
+        if d.skinLegHidden~=nil then M.skinLegHidden=d.skinLegHidden==true end
+        if d.hideMobileButtons~=nil then M.hideMobileButtons=d.hideMobileButtons==true end
+        if type(d.mobBtnBgId)=="number" then M.mobBtnBgId=d.mobBtnBgId end
+        if d.autoBat~=nil then M.autoBatEnabled=d.autoBat==true end
+        if d.batAimbotEnabled~=nil then M.batAimbotEnabled=d.batAimbotEnabled==true; if d.batAimbotEnabled then M.autoBatEnabled=true end end
+        if d.batCounter~=nil then M.batCounterEnabled=d.batCounter==true end
+        if d.batCounterV2~=nil then M.batCounterV2Enabled=d.batCounterV2==true end
+        if d.bypassAimbotEnabled~=nil then M.bypassAimbotEnabled=d.bypassAimbotEnabled==true end
+        if d.zenonetopAimOn~=nil then M._zenonetopAimOn=d.zenonetopAimOn==true end
+        if d.autoDestroyTurretEnabled~=nil then M.autoDestroyTurretEnabled=d.autoDestroyTurretEnabled==true end
+        if d.antiRagdoll~=nil then M.antiRagdollEnabled=d.antiRagdoll==true end
+        if d.medusaCounter~=nil then M.medusaCounterEnabled=d.medusaCounter==true end
+        if d.autoSwing~=nil then M.autoSwingEnabled=d.autoSwing==true end
+        if d.autoSwingEnabled~=nil then M.autoSwingEnabled=d.autoSwingEnabled==true end
+        if d.antiVoidEnabled~=nil then M.antiVoidEnabled=d.antiVoidEnabled==true end
+        if d.bodyLockEnabled~=nil then M.bodyLockEnabled=d.bodyLockEnabled==true end
+        if type(d.bodyLockRadius)=="number" then M.bodyLockRadius=d.bodyLockRadius end
+        if d.autoGrabV1Enabled~=nil then M.autoGrabV1Enabled=d.autoGrabV1Enabled==true end
+        if type(d.antiRagdollMode)=="string" then local m=d.antiRagdollMode; if m=="Splatter" then m="V1" elseif m=="No Splatter" then m="V2" end; if m=="V1" or m=="V2" then M.antiRagdollMode=m end end
+        if d.stealBarWidth~=nil then M.stealBarWidth=math.clamp(tonumber(d.stealBarWidth) or 360, 260, 560) end
+        if d.autoGrabV1Enabled~=nil then M.autoGrabV1Enabled=d.autoGrabV1Enabled==true end
+        if d.stealBarWidth~=nil then M.stealBarWidth=math.clamp(tonumber(d.stealBarWidth) or 360,260,560) end
+        do
+            local mode = d.autoGrabMode or d.AutoGrabMode or d.stealMode or d.grabMode
+            if type(mode) == "string" then
+                mode = string.upper(mode)
+                if mode:find("2") then mode = "V2" elseif mode:find("1") then mode = "V1" end
+            end
+            if mode == "V1" or mode == "V2" then
+                M.autoGrabMode = mode
+                if type(d.normalStealVersion) == "string" then M.normalStealVersion = d.normalStealVersion end
+                if d.tpBatVersion == "V1" or d.tpBatVersion == "V2" then M.tpBatVersion = d.tpBatVersion end
+                if d.batV2Enabled ~= nil then M.batV2Enabled = d.batV2Enabled == true end
+                if d.autoBatV2SwingEnabled ~= nil then M.autoBatV2SwingEnabled = d.autoBatV2SwingEnabled ~= false end
+                if type(d.batV2Speed) == "number" then M.AUTO_BAT_V2_SPEED = d.batV2Speed end
+                if type(d.batV2Dist) == "number" then M.AUTO_BAT_V2_DIST = d.batV2Dist end
+                if type(d.batV2Height) == "number" then M.AUTO_BAT_V2_HEIGHT = d.batV2Height end
+                if type(d.batV2HitDist) == "number" then M.AUTO_BAT_V2_HIT_DIST = d.batV2HitDist end
+                if type(d.batV2SwingCd) == "number" then M.AUTO_BAT_V2_SWING_CD = d.batV2SwingCd end
+                pcall(function()
+                    if ZenXSteal then ZenXSteal.GrabMode = mode end
+                end)
+            end
+        end
+        pcall(function()
+            if getgenv and getgenv()._PrimeHubAutoGrabMode then
+                local g = tostring(getgenv()._PrimeHubAutoGrabMode)
+                if g == "V1" or g == "V2" then
+                    M.autoGrabMode = g
+                    if ZenXSteal then ZenXSteal.GrabMode = g end
+                end
+            end
+        end)
+        if d.lineESPEnabled~=nil then M.lineESPEnabled=d.lineESPEnabled end
+        if d.menuOpen~=nil then M.menuOpen=d.menuOpen~=false end
+        if type(d.dropMode) == "string" and (d.dropMode == "Fling" or d.dropMode == "Jump Drop") then
+            M.dropMode = d.dropMode
+        end
+        if type(d.Theme)=="string" and CHERRY_THEMES[d.Theme] then M._savedTheme=d.Theme; M.colorScheme=d.Theme end
+        if type(d.colorScheme)=="string" and CHERRY_THEMES[d.colorScheme] then M._savedTheme=d.colorScheme; M.colorScheme=d.colorScheme end
+        if type(d.skyTheme)=="string" and M.CANDY_SKY_PRESETS and M.CANDY_SKY_PRESETS[d.skyTheme] then M.currentSkyTheme=d.skyTheme end
+        if d.speedESPEnabled~=nil then M.speedESPEnabled=d.speedESPEnabled end
+        if type(d.animPack)=="string" then M.animPack=d.animPack end
+        if type(d.batSkinName)=="string" then M.batSkinName=d.batSkinName end
+        if type(d.characterSkinName)=="string" then M.characterSkinName=d.characterSkinName end
+        if d.headlessEnabled~=nil then M.headlessEnabled=d.headlessEnabled end
+        if d.korbloxEnabled~=nil then M.korbloxEnabled=d.korbloxEnabled end
+        if d.bypassAimbotEnabled~=nil then M.bypassAimbotEnabled=d.bypassAimbotEnabled==true end
+        if d.animPackEnabled~=nil then M.animPackEnabled=d.animPackEnabled end
+        if d.primeHubSkinEnabled~=nil then M.primeHubSkinEnabled=d.primeHubSkinEnabled==true end
+        if d.primeHubKawatanEnabled~=nil then M.primeHubKawatanEnabled=d.primeHubKawatanEnabled==true end
+        if d.primeHubHeadHidden~=nil then M.primeHubHeadHidden=d.primeHubHeadHidden==true end
+        if d.primeHubFireEnabled~=nil then M.primeHubFireEnabled=d.primeHubFireEnabled==true end
+        if d.primeHubHaloEnabled~=nil then M.primeHubHaloEnabled=d.primeHubHaloEnabled==true end
+        if type(d.primeHubFireColorName)=="string" then M.primeHubFireColorName=d.primeHubFireColorName end
+        if type(d.primeHubMusicSelection)=="string" then M.primeHubMusicSelection=d.primeHubMusicSelection end
+        -- Utility / performance persistence
+        if d.antiLag ~= nil then M.antiLagEnabled = d.antiLag == true end
+        if d.antiLagV2 ~= nil then M.antiLagV2Enabled = d.antiLagV2 == true end
+        if d.nukeOptimiserEnabled ~= nil then M.nukeOptimiserEnabled = d.nukeOptimiserEnabled == true end
+        if d.antiVoidEnabled ~= nil then M.antiVoidEnabled = d.antiVoidEnabled == true end
+        if d.bodyLockEnabled ~= nil then M.bodyLockEnabled = d.bodyLockEnabled == true end
+        if type(d.bodyLockRadius) == "number" then M.bodyLockRadius = d.bodyLockRadius end
+        if d.antiKick ~= nil then M.antiKickEnabled = d.antiKick == true end
+        if d.safeMode ~= nil then M.safeModeEnabled = d.safeMode == true end
+        if d.stretchRez ~= nil then M.stretchRezEnabled = d.stretchRez == true end
+        if d.antiSummerBase ~= nil then M.antiSummerBaseEnabled = d.antiSummerBase == true end
+        if d.removeAcc ~= nil then M.removeAccEnabled = d.removeAcc == true end
+        if d.graphicsBajosEnabled ~= nil then M.graphicsBajosEnabled = d.graphicsBajosEnabled == true end
+        if d.antiDieEnabled ~= nil then M.antiDieEnabled = d.antiDieEnabled == true end
+        if d.hideMobileButtons ~= nil then M.hideMobileButtons = d.hideMobileButtons == true end
+        if d.mobileButtonsEnabled ~= nil then M.mobileButtonsEnabled = d.mobileButtonsEnabled == true end
+        if d.uiLocked ~= nil then M.uiLocked = d.uiLocked == true end
+        if d.adaptThemeName then M.adaptThemeName = tostring(d.adaptThemeName) end
+        if type(d.customBgId) == "string" or type(d.customBgId) == "number" then M.customBgId = tostring(d.customBgId) end
+        
+        local function lk(e,d2)
+            if type(d2)~="table" then return end
+            if d2.kb and Enum.KeyCode[d2.kb] then e.kb=Enum.KeyCode[d2.kb] end
+            if d2.gp and Enum.KeyCode[d2.gp] then e.gp=Enum.KeyCode[d2.gp] end
+        end
+        if d.dropBrainrotKey then lk(M.KB.DropBrainrot,d.dropBrainrotKey) end
+        if d.autoLeftKey then lk(M.KB.AutoLeft,d.autoLeftKey) end
+        if d.autoRightKey then lk(M.KB.AutoRight,d.autoRightKey) end
+        if d.autoBatKey then lk(M.KB.AutoBat,d.autoBatKey) end
+        if d.laggerToggleKey then lk(M.KB.LaggerToggle,d.laggerToggleKey) end
+        if d.laggerCarryKey then lk(M.KB.LaggerCarry,d.laggerCarryKey) end
+        if d.tpFloorKey then lk(M.KB.TPFloor,d.tpFloorKey) end
+        if d.guiHideKey then lk(M.KB.GuiHide,d.guiHideKey) end
+        if d.instaResetKey then lk(M.KB.InstaReset,d.instaResetKey) end
+                if d.bypassAimbotKey then lk(M.KB.BypassAimbot,d.bypassAimbotKey) end
+        if d.batTPKey then lk(M.KB.BatTP,d.batTPKey) end
+        if d.batV2Key and M.KB.BatV2 then lk(M.KB.BatV2,d.batV2Key) end
+        if d.speedNormalKey then lk(M.KB.SpeedNormal, d.speedNormalKey) end
+        if d.speedLaggerKey then lk(M.KB.SpeedLagger, d.speedLaggerKey) end
+        if d.speedCustomKey then lk(M.KB.SpeedCustom, d.speedCustomKey) end
+    end
+end
+local _saveDebounce, _savePending = false, false
+local _saveDebounce = false
+local _savePending = false
+function savePrimeHubFeKlanConfig()
+    -- debounce: evita spam de writefile (más fluido)
+    if _saveDebounce then
+        _savePending = true
+        pcall(function()
+            if getgenv then getgenv()._PrimeHubAutoGrabMode = tostring(M.autoGrabMode or "V1") end
+        end)
+        return true
+    end
+    _saveDebounce = true
+    _savePending = false
+    task.delay(0.45, function()
+        _saveDebounce = false
+        if _savePending then
+            _savePending = false
+            pcall(savePrimeHubFeKlanConfig)
+        end
+    end)
+
+    local function ks(e)
+        if type(e) ~= "table" then return {kb = nil, gp = nil} end
+        return {
+            kb = (e.kb and e.kb.Name) or nil,
+            gp = (e.gp and e.gp.Name) or nil,
+        }
+    end
+    local btnPos = {}
+    for key, pos in pairs(M._savedButtonPositions or {}) do
+        if type(pos) == "table" and type(pos.x) == "number" and type(pos.y) == "number" then
+            btnPos[key] = {x = pos.x, y = pos.y}
+        end
+    end
+    if M.mobGuiRef then
+        for _, child in ipairs(M.mobGuiRef:GetChildren()) do
+            local key = child:GetAttribute("BtnKey")
+            if (not key) and type(child.Name) == "string" and child.Name:sub(1, 10) == "BtnHolder_" then
+                key = child.Name:sub(11)
+            end
+            if key then
+                btnPos[key] = {x = child.Position.X.Offset, y = child.Position.Y.Offset}
+            end
+        end
+        M._savedButtonPositions = btnPos
+    end
+
+    local cfg = {
+        Theme = (PrimeHubFeKlanConfig and PrimeHubFeKlanConfig.Theme) or M.colorScheme,
+        toggleLayoutPos = M.toggleLayoutPos or "Low",
+        colorScheme = M.colorScheme,
+        normalSpeed = tonumber(M.NS) or 60,
+        carrySpeed = tonumber(M.CS) or 30,
+        laggerSpeed = tonumber(M.LAGGER_SPEED) or 15,
+        laggerCarrySpeed = tonumber(M.LAGGER_CARRY_SPEED) or 24.5,
+        speedProfile = M.speedProfile or "Normal",
+        normalSpeedNorm = tonumber(M.NormalSpeedNorm) or 59,
+        normalSpeedSteal = tonumber(M.NormalSpeedSteal) or 29,
+        laggerSpeedNorm = tonumber(M.LaggerSpeedNorm) or 30,
+        laggerSpeedSteal = tonumber(M.LaggerSpeedSteal) or 15,
+        customSpeedNorm = tonumber(M.CustomSpeedNorm) or 66,
+        customSpeedSteal = tonumber(M.CustomSpeedSteal) or 34,
+        speedMethod = M.speedMethod,
+        carrySpeedActive = M.carrySpeedActive == true,
+        manualCarryActive = M.manualCarryActive == true,
+        laggerCarryActive = M.laggerCarryActive == true,
+        laggerModeEnabled = M.laggerModeEnabled == true,
+        autoLeftEnabled = M.autoLeftEnabled == true,
+        autoRightEnabled = M.autoRightEnabled == true,
+        autoBat = M.autoBatEnabled == true,
+        batAimbotEnabled = (M.batAimbotEnabled == true) or (M.autoBatEnabled == true),
+        batCounter = M.batCounterEnabled == true,
+        batCounterV2 = M.batCounterV2Enabled == true,
+        bypassAimbotEnabled = M.bypassAimbotEnabled == true,
+        zenonetopAimOn = M._zenonetopAimOn ~= false,
+        autoDestroyTurretEnabled = M.autoDestroyTurretEnabled == true,
+        antiRagdoll = M.antiRagdollEnabled == true,
+        antiRagdollMode = M.antiRagdollMode or "V1",
+        medusaCounter = M.medusaCounterEnabled == true,
+        autoSwing = M.autoSwingEnabled == true,
+        autoSwingEnabled = M.autoSwingEnabled == true,
+        autoGrabV1Enabled = M.autoGrabV1Enabled == true,
+        autoGrabMode = tostring(M.autoGrabMode or "V1"),
+        normalStealVersion = tostring(M.normalStealVersion or "86"),
+        tpBatVersion = tostring(M.tpBatVersion or "V1"),
+        batV2Enabled = M.batV2Enabled == true,
+        autoBatV2SwingEnabled = M.autoBatV2SwingEnabled ~= false,
+        batV2Speed = M.AUTO_BAT_V2_SPEED,
+        batV2Dist = M.AUTO_BAT_V2_DIST,
+        batV2Height = M.AUTO_BAT_V2_HEIGHT,
+        batV2HitDist = M.AUTO_BAT_V2_HIT_DIST,
+        batV2SwingCd = M.AUTO_BAT_V2_SWING_CD,
+        autoStealEnabled = M.Steal and M.Steal.AutoStealEnabled == true,
+        dropMode = tostring(M.dropMode or "Fling"),
+        stealBarWidth = tonumber(M.stealBarWidth) or 360,
+        antiVoidEnabled = M.antiVoidEnabled == true,
+        bodyLockEnabled = M.bodyLockEnabled == true,
+        bodyLockRadius = tonumber(M.bodyLockRadius) or 60,
+        batAimbotEnabled = M.batAimbotEnabled == true,
+        tpBatEnabled = M.tpBatEnabled == true,
+        bypassAimbotEnabled = M.bypassAimbotEnabled == true,
+        antiRagdoll = M.antiRagdollEnabled == true,
+        infiniteJump = M.infJumpEnabled == true,
+        medusaCounter = M.medusaCounterEnabled == true,
+        batCounter = M.batCounterEnabled == true,
+        autoSwing = M.autoSwingEnabled == true,
+        autoSwingEnabled = M.autoSwingEnabled == true,
+        antiRagdollMode = M.antiRagdollMode or "V1",
+        autoGrabV1Enabled = M.autoGrabV1Enabled == true,
+        autoGrabMode = tostring(M.autoGrabMode or "V1"),
+        stealBarWidth = tonumber(M.stealBarWidth) or 360,
+        antiLag = M.antiLagEnabled == true,
+        graphicsBajosEnabled = M.graphicsBajosEnabled == true,
+        antiDieEnabled = M.antiDieEnabled == true,
+        currentAccessoryPack = tostring(M.currentAccessoryPack or "Off"),
+        pcKeyStatusEnabled = M.pcKeyStatusEnabled == true,
+        antiLagV2 = M.antiLagV2Enabled == true,
+        nukeOptimiserEnabled = M.nukeOptimiserEnabled == true,
+        adaptThemeName = M.adaptThemeName,
+        menuBgIndex = tonumber(M.menuBgIndex) or 1,
+        customBgId = tostring(M.customBgId or ""),
+        batSkinName = tostring(M.batSkinName or "Off"),
+        characterSkinName = tostring(M.characterSkinName or "Off"),
+        antiVoidEnabled = M.antiVoidEnabled == true,
+        bodyLockEnabled = M.bodyLockEnabled == true,
+        bodyLockRadius = tonumber(M.bodyLockRadius) or 60,
+        antiKick = M.antiKickEnabled == true,
+        safeMode = M.safeModeEnabled == true,
+        stretchRez = M.stretchRezEnabled == true,
+        antiSummerBase = M.antiSummerBaseEnabled == true,
+        removeAcc = M.removeAccEnabled == true,
+        lineESPEnabled = M.lineESPEnabled == true,
+        speedESPEnabled = M.speedESPEnabled == true,
+        showPlayerSpeeds = M.showPlayerSpeeds == true,
+        playerESPEnabled = M.playerESPEnabled == true,
+        uiScale = M.uiScale,
+        uiLocked = M.uiLocked == true,
+        hideMobileButtons = M.hideMobileButtons == true,
+        mobileButtonsEnabled = M.mobileButtonsEnabled ~= false,
+        mobileButtonPositions = btnPos,
+        animPack = M.animPack,
+        animPackEnabled = M.animPackEnabled == true,
+        headlessEnabled = M.headlessEnabled == true,
+        primeHubHeadHidden = M.primeHubHeadHidden ~= false,
+        skyTheme = M.currentSkyTheme,
+        skyThemesEnabled = M.skyThemesEnabled == true,
+        customBgId = tonumber(M.customBgId) or 0,
+        fovValue = M.fovValue,
+        dropBrainrotKey = ks(M.KB and M.KB.DropBrainrot),
+        autoLeftKey = ks(M.KB and M.KB.AutoLeft),
+        autoRightKey = ks(M.KB and M.KB.AutoRight),
+        autoBatKey = ks(M.KB and M.KB.AutoBat),
+        laggerToggleKey = ks(M.KB and M.KB.LaggerToggle),
+        laggerCarryKey = ks(M.KB and M.KB.LaggerCarry),
+        tpFloorKey = ks(M.KB and M.KB.TPFloor),
+        guiHideKey = ks(M.KB and M.KB.GuiHide),
+        instaResetKey = ks(M.KB and M.KB.InstaReset),
+        bypassAimbotKey = ks(M.KB and M.KB.BypassAimbot),
+        batTPKey = ks(M.KB and M.KB.BatTP),
+        batV2Key = ks(M.KB and M.KB.BatV2),
+        speedNormalKey = ks(M.KB and M.KB.SpeedNormal),
+        speedLaggerKey = ks(M.KB and M.KB.SpeedLagger),
+        speedCustomKey = ks(M.KB and M.KB.SpeedCustom),
+    }
+
+    local keybinds = {
+        dropBrainrotKey = cfg.dropBrainrotKey,
+        autoLeftKey = cfg.autoLeftKey,
+        autoRightKey = cfg.autoRightKey,
+        autoBatKey = cfg.autoBatKey,
+        laggerToggleKey = cfg.laggerToggleKey,
+        laggerCarryKey = cfg.laggerCarryKey,
+        tpFloorKey = cfg.tpFloorKey,
+        guiHideKey = cfg.guiHideKey,
+        instaResetKey = cfg.instaResetKey,
+        bypassAimbotKey = cfg.bypassAimbotKey,
+        batTPKey = cfg.batTPKey,
+        speedNormalKey = cfg.speedNormalKey,
+        speedLaggerKey = cfg.speedLaggerKey,
+        speedCustomKey = cfg.speedCustomKey,
+    }
+
+    pcall(function()
+        if getgenv then
+            getgenv()._PrimeHubFeKlanSavedCfg = cfg
+            getgenv()._PrimeHubFeKlanKeybinds = keybinds
+        end
+    end)
+
+    local name = PRIMEHUB_FE_KLAN_CONFIG_NAME or "primehub_fe_klan_config.json"
+    local kbName = "primehub_fe_klan_keybinds.json"
+    local ok1, json1 = pcall(function() return HS:JSONEncode(cfg) end)
+    local ok2, json2 = pcall(function() return HS:JSONEncode(keybinds) end)
+    if ok1 and type(json1) == "string" and type(writefile) == "function" then
+        pcall(function() writefile(name, json1) end)
+        pcall(function() writefile("primehub_fe_klan_config.json", json1) end)
+    end
+    if ok2 and type(json2) == "string" and type(writefile) == "function" then
+        pcall(function() writefile(kbName, json2) end)
+    end
+    return true
+end
+
+M.saveConfig = savePrimeHubFeKlanConfig
+M.loadConfig = loadPrimeHubFeKlanConfig
+M.primeHubSkinEnabled = false
+M.primeHubKawatanEnabled = false
+M.primeHubHeadHidden = M.primeHubHeadHidden ~= false
+M.primeHubFireEnabled = M.primeHubFireEnabled ~= false
+M.primeHubHaloEnabled = M.primeHubHaloEnabled ~= false
+M.primeHubFireColorName = M.primeHubFireColorName or "Blue"
+M.skinLegHidden = M.skinLegHidden ~= false
+M.hideMobileButtons = M.hideMobileButtons == true
+_G.PrimeHubForceMobileVisible = not M.hideMobileButtons
+M.primeHubMusicSelection = M.primeHubMusicSelection or "Off"
+M._primeHubSkinOriginal = M._primeHubSkinOriginal or {}
+M._primeHubSkinCharacterConn = M._primeHubSkinCharacterConn or nil
+M._primeHubMusicSound = M._primeHubMusicSound or nil
+M.ROT_X_MUSIC = {
+    ["Steve Lacy"] = {assetId = 139557371055334, volume = 0.75},
+    ["Teeth XXXTENTACION"] = {assetId = 111018848542448, volume = 0.75},
+    ["Tokio Drift"] = {assetId = 125968616299811, volume = 0.75},
+    ["the dream tree"] = {assetId = 102616343336371, volume = 0.75},
+    ["alors on danse larp version"] = {assetId = 74034501108599, volume = 0.75},
+    ["SAFIRA HUB 1"] = {assetId = 131155338276252, volume = 0.75, startPosition = 8},
+    ["SAFIRA HUB 2"] = {assetId = 77097411209853, volume = 0.75},
+    ["SAFIRA HUB 3"] = {assetId = 139982007364841, volume = 0.75},
+    ["SAFIRA HUB 4"] = {assetId = 109159861086023, volume = 0.75},
+    ["SAFIRA HUB 5"] = {assetId = 109548574272322, volume = 0.75},
+    ["SAFIRA HUB 6"] = {assetId = 74181901266359, volume = 0.75},
+    ["SAFIRA HUB 7"] = {assetId = 103659269007598, volume = 0.75},
+    ["SAFIRA HUB 8"] = {assetId = 120167544632035, volume = 0.75},
+    ["SAFIRA HUB 9"] = {assetId = 132525879805359, volume = 0.75},
+    ["SAFIRA HUB 10"] = {assetId = 74181901266359, volume = 0.75},
+}
+M.ROT_X_MUSIC_ORDER = {
+    "Steve Lacy",
+    "Teeth XXXTENTACION",
+    "Tokio Drift",
+    "the dream tree",
+    "alors on danse larp version",
+    "SAFIRA HUB 1", "SAFIRA HUB 2", "SAFIRA HUB 3", "SAFIRA HUB 4", "SAFIRA HUB 5",
+    "SAFIRA HUB 6", "SAFIRA HUB 7", "SAFIRA HUB 8", "SAFIRA HUB 9", "SAFIRA HUB 10",
+}
+M.ROT_X_MUSIC_START = M.ROT_X_MUSIC_START or {}
+for _, name in ipairs(M.ROT_X_MUSIC_ORDER or {}) do
+    M.ROT_X_MUSIC_START[name] = tonumber(M.ROT_X_MUSIC_START[name]) or 0
+end
+for i = 1, 10 do
+    local k = "SAFIRA HUB " .. i
+    M.ROT_X_MUSIC_START[k] = tonumber(M.ROT_X_MUSIC_START[k]) or 0
+end
+function M.setPrimeHubMusicStart(name, seconds)
+    local value = math.max(0, tonumber(seconds) or 0)
+    M.ROT_X_MUSIC_START[name] = value
+    if M.primeHubMusicSelection == name and M._primeHubMusicSound then
+        pcall(function() M._primeHubMusicSound.TimePosition = value end)
+    end
+    savePrimeHubFeKlanConfig()
+end
+local function primeHubSkinColor()
+    return M.primeHubKawatanEnabled and Color3.fromRGB(10, 10, 10) or Color3.fromRGB(245, 245, 255)
+end
+local PRIMEHUB_FIRE_COLORS = {
+    Blue = {Color3.fromRGB(55, 155, 255), Color3.fromRGB(15, 55, 255)},
+    Red = {M.currentAccent or Color3.fromRGB(58, 128, 245), Color3.fromRGB(120, 0, 0)},
+    Green = {Color3.fromRGB(80, 255, 120), Color3.fromRGB(0, 90, 35)},
+    Purple = {Color3.fromRGB(220, 90, 255), Color3.fromRGB(70, 0, 120)},
+    White = {Color3.fromRGB(255, 235, 248), Color3.fromRGB(150, 150, 255)},
+    Yellow = {Color3.fromRGB(255, 170, 225), Color3.fromRGB(255, 120, 195)},
+    Black = {Color3.fromRGB(20, 20, 20), Color3.fromRGB(255, 195, 30)},
+}
+local PRIMEHUB_FIRE_COLOR_NAMES = {"Blue", "Red", "Green", "Purple", "White", "Yellow", "Black"}
+local function primeHubFireColors()
+    local pair = PRIMEHUB_FIRE_COLORS[M.primeHubFireColorName or "Blue"] or PRIMEHUB_FIRE_COLORS.Blue
+    return pair[1], pair[2]
+end
+function M._rememberPrimeHubSkin(obj, data)
+    if obj and M._primeHubSkinOriginal[obj] == nil then
+        M._primeHubSkinOriginal[obj] = data
+    end
+end
+function M._restorePrimeHubSkin()
+    for obj, data in pairs(M._primeHubSkinOriginal) do
+        if obj and obj.Parent and type(data) == "table" then
+            pcall(function()
+                if data.kind == "part" and obj:IsA("BasePart") then
+                    obj.Color = data.color
+                    obj.Material = data.material
+                    obj.Transparency = data.transparency
+                    obj.LocalTransparencyModifier = data.localTransparency
+                    obj.Reflectance = data.reflectance
+                elseif data.kind == "shirt" and obj:IsA("Shirt") then
+                    obj.ShirtTemplate = data.template
+                elseif data.kind == "pants" and obj:IsA("Pants") then
+                    obj.PantsTemplate = data.template
+                elseif data.kind == "graphic" and obj:IsA("ShirtGraphic") then
+                    obj.Graphic = data.graphic
+                elseif data.kind == "decal" and (obj:IsA("Decal") or obj:IsA("Texture")) then
+                    obj.Transparency = data.transparency
+                elseif data.kind == "bodycolors" and obj:IsA("BodyColors") then
+                    obj.HeadColor3 = data.head
+                    obj.LeftArmColor3 = data.leftArm
+                    obj.RightArmColor3 = data.rightArm
+                    obj.LeftLegColor3 = data.leftLeg
+                    obj.RightLegColor3 = data.rightLeg
+                    obj.TorsoColor3 = data.torso
+                end
+            end)
+        end
+    end
+    local char = player.Character
+    if char then
+        local fire = char:FindFirstChild("PrimeHubSkinHeadFire", true)
+        if fire then pcall(function() fire:Destroy() end) end
+        local aura = char:FindFirstChild("PrimeHubSkinFloatingAura", true)
+        if aura then pcall(function() aura:Destroy() end) end
+        local crown = char:FindFirstChild("PrimeHubSkinFloatingCrown", true)
+        if crown then pcall(function() crown:Destroy() end) end
+        local dragon = char:FindFirstChild("PrimeHubSkinDragon", true)
+        if dragon then pcall(function() dragon:Destroy() end) end
+    end
+    M._primeHubSkinOriginal = {}
+end
+function M._enforcePrimeHubSkinIntegrity(char)
+    if not M.primeHubSkinEnabled or not char or not char.Parent then return end
+    for _, obj in ipairs(char:GetDescendants()) do
+        if obj:IsA("Motor6D") then
+            obj.Enabled = true
+        elseif obj:IsA("BasePart") then
+            local n = obj.Name:lower()
+            local compact = n:gsub("[%s_%-]", "")
+            if n == "left leg" or compact == "leftleg" or compact == "leftupperleg" or compact == "leftlowerleg" or compact == "leftfoot" then
+                local hidden = M.skinLegHidden ~= false
+                obj.Transparency = hidden and 1 or 0
+                obj.LocalTransparencyModifier = hidden and 1 or 0
+            elseif n == "right leg" or compact == "rightleg" or compact == "rightupperleg" or compact == "rightlowerleg" or compact == "rightfoot" then
+                obj.Transparency = 0
+                obj.LocalTransparencyModifier = 0
+            end
+        end
+    end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    if hum then
+        hum.AutoRotate = true
+        hum.PlatformStand = false
+        hum.Sit = false
+    end
+end
+function M._applyPrimeHubSkin(char)
+    if not M.primeHubSkinEnabled or not char or not char.Parent then return end
+    local skinColor = primeHubSkinColor()
+        local hideNames = {
+        head = M.primeHubHeadHidden ~= false,
+    }
+    for _, joint in ipairs(char:GetDescendants()) do
+        if joint:IsA("Motor6D") then
+            joint.Enabled = true
+        end
+    end
+    local bodyColors = char:FindFirstChildOfClass("BodyColors")
+    if bodyColors then
+        M._rememberPrimeHubSkin(bodyColors, {
+            kind = "bodycolors", head = bodyColors.HeadColor3, leftArm = bodyColors.LeftArmColor3,
+            rightArm = bodyColors.RightArmColor3, leftLeg = bodyColors.LeftLegColor3,
+            rightLeg = bodyColors.RightLegColor3, torso = bodyColors.TorsoColor3,
+        })
+        bodyColors.HeadColor3 = skinColor
+        bodyColors.LeftArmColor3 = skinColor
+        bodyColors.RightArmColor3 = skinColor
+        bodyColors.LeftLegColor3 = skinColor
+        bodyColors.RightLegColor3 = skinColor
+        bodyColors.TorsoColor3 = skinColor
+    end
+    for _, obj in ipairs(char:GetDescendants()) do
+        if obj:IsA("BasePart") then
+            M._rememberPrimeHubSkin(obj, {
+                kind = "part", color = obj.Color, material = obj.Material,
+                transparency = obj.Transparency, localTransparency = obj.LocalTransparencyModifier,
+                reflectance = obj.Reflectance,
+            })
+            local inAccessory = obj:FindFirstAncestorOfClass("Accessory") ~= nil
+            if inAccessory then
+                obj.LocalTransparencyModifier = 1
+            else
+                obj.Color = skinColor
+                obj.Material = Enum.Material.SmoothPlastic
+                obj.Reflectance = 0
+                local lowerPartName = obj.Name:lower()
+                local compactPartName = lowerPartName:gsub("[%s_%-]", "")
+                if hideNames[lowerPartName] or hideNames[compactPartName] then
+                    obj.LocalTransparencyModifier = 1
+                end
+            end
+        elseif obj:IsA("Shirt") then
+            M._rememberPrimeHubSkin(obj, {kind = "shirt", template = obj.ShirtTemplate})
+            obj.ShirtTemplate = ""
+        elseif obj:IsA("Pants") then
+            M._rememberPrimeHubSkin(obj, {kind = "pants", template = obj.PantsTemplate})
+            obj.PantsTemplate = ""
+        elseif obj:IsA("ShirtGraphic") then
+            M._rememberPrimeHubSkin(obj, {kind = "graphic", graphic = obj.Graphic})
+            obj.Graphic = ""
+        elseif (obj:IsA("Decal") or obj:IsA("Texture")) and obj.Name:lower() == "face" then
+            M._rememberPrimeHubSkin(obj, {kind = "decal", transparency = obj.Transparency})
+            obj.Transparency = 1
+        end
+    end
+    local head = char:FindFirstChild("Head")
+    if head then
+        local aura = head:FindFirstChild("PrimeHubSkinFloatingAura")
+        if not aura then
+            aura = Instance.new("Model")
+            aura.Name = "PrimeHubSkinFloatingAura"
+            aura.Parent = head
+        end
+        for _, oldPart in ipairs(aura:GetChildren()) do
+            if oldPart.Name == "HaloCircle" or oldPart.Name == "HaloSegment" or oldPart.Name == "HaloRay" then pcall(function() oldPart:Destroy() end) end
+        end
+        local xRadius = 1.04
+        local zRadius = 1.02
+        local segments = 48
+        for i = 1, segments do
+            local angle = (i / segments) * math.pi * 2
+            local line = Instance.new("Part")
+            line.Name = "HaloCircle"
+            local tangentLength = (2 * math.pi * xRadius / segments) * 1.16
+            line.Size = Vector3.new(tangentLength, 0.105, 0.105)
+            line.Color = (i % 6 == 0) and Color3.fromRGB(255, 200, 240) or Color3.fromRGB(255, 130, 205)
+            line.Material = Enum.Material.Neon
+            line.Transparency = M.primeHubHaloEnabled == false and 1 or 0.01
+            line.Reflectance = 0
+            line.CanCollide = false
+            line.CanTouch = false
+            line.CanQuery = false
+            line.Massless = true
+            line.CastShadow = false
+            line.CFrame = head.CFrame * CFrame.new(math.cos(angle) * xRadius, 0.90, math.sin(angle) * zRadius) * CFrame.Angles(0, -math.atan2(math.cos(angle) * zRadius, math.sin(angle) * xRadius), 0)
+            line.Parent = aura
+            local weld = Instance.new("WeldConstraint")
+            weld.Name = "HaloWeld"
+            weld.Part0 = head
+            weld.Part1 = line
+            weld.Parent = line
+        end
+        for _, segment in ipairs(aura:GetChildren()) do
+            if segment:IsA("BasePart") then
+                segment.Color = Color3.fromRGB(255, 135, 215)
+                segment.Material = Enum.Material.Neon
+                segment.Transparency = 0.01
+                segment.Reflectance = 0
+            end
+        end
+        local rayCount = 24
+        for i = 1, rayCount do
+            local rayAngle = (i / rayCount) * math.pi * 2
+            local ray = Instance.new("Part")
+            ray.Name = "HaloRay"
+            ray.Size = Vector3.new(0.055, 0.34 + (i % 4) * 0.07, 0.055)
+            ray.Color = (i % 4 == 0) and Color3.fromRGB(255, 200, 240) or Color3.fromRGB(255, 145, 215)
+            ray.Material = Enum.Material.Neon
+            ray.Transparency = M.primeHubHaloEnabled == false and 1 or 0.04
+            ray.CanCollide = false
+            ray.CanTouch = false
+            ray.CanQuery = false
+            ray.Massless = true
+            ray.CastShadow = false
+            ray.CFrame = head.CFrame * CFrame.new(math.cos(rayAngle) * 1.28, 0.90, math.sin(rayAngle) * 1.26) * CFrame.Angles(0, -rayAngle, 0)
+            ray.Parent = aura
+            local rayWeld = Instance.new("WeldConstraint")
+            rayWeld.Name = "HaloRayWeld"
+            rayWeld.Part0 = head
+            rayWeld.Part1 = ray
+            rayWeld.Parent = ray
+        end
+        local glow = head:FindFirstChild("HaloGlow")
+        if not glow then
+            glow = Instance.new("PointLight")
+            glow.Name = "HaloGlow"
+            glow.Parent = head
+        end
+        glow.Enabled = false
+        glow.Color = Color3.fromRGB(255, 145, 215)
+        glow.Brightness = 0
+        glow.Range = 0
+        glow.Shadows = false
+        local haloHighlight = aura:FindFirstChild("HaloHighlight")
+        if not haloHighlight then
+            haloHighlight = Instance.new("Highlight")
+            haloHighlight.Name = "HaloHighlight"
+            haloHighlight.Adornee = aura
+            haloHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+            haloHighlight.FillColor = Color3.fromRGB(255, 145, 215)
+            haloHighlight.FillTransparency = 0.08
+            haloHighlight.OutlineColor = Color3.fromRGB(255, 205, 240)
+            haloHighlight.OutlineTransparency = 0.02
+            haloHighlight.Parent = aura
+        end
+        haloHighlight.Enabled = M.primeHubHaloEnabled ~= false
+        haloHighlight.FillColor = Color3.fromRGB(255, 145, 215)
+        haloHighlight.FillTransparency = 0.08
+        haloHighlight.OutlineColor = Color3.fromRGB(255, 205, 240)
+        haloHighlight.OutlineTransparency = 0.02
+        if M.primeHubHaloEnabled == false then
+            pcall(function() aura:Destroy() end)
+            pcall(function() glow:Destroy() end)
+        end
+        local fire = head:FindFirstChild("PrimeHubSkinHeadFire")
+        if not fire then
+            fire = Instance.new("Fire")
+            fire.Name = "PrimeHubSkinHeadFire"
+            fire.Parent = head
+        end
+        local primary, secondary = primeHubFireColors()
+                fire.Color = primary
+        fire.SecondaryColor = secondary
+        fire.Heat = 13
+        fire.Size = 9
+        fire.Enabled = M.primeHubFireEnabled ~= false
+    end
+    local torso = char:FindFirstChild("UpperTorso") or char:FindFirstChild("Torso")
+    if torso then
+        local dragon = torso:FindFirstChild("PrimeHubSkinDragon")
+        if dragon then pcall(function() dragon:Destroy() end) end
+    end
+    M._enforcePrimeHubSkinIntegrity(char)
+end
+function M.setPrimeHubSkinMode(mode, silent)
+    -- skin negra / Kawatan desactivada; solo Hide Head
+    M._restorePrimeHubSkin()
+    M.primeHubSkinEnabled = false
+    M.primeHubKawatanEnabled = false
+    local enabled = false
+    if false then
+        M.headlessEnabled = false
+        M.korbloxEnabled = false
+        M.applyHeadlessToChar(player.Character, false)
+        M.applyKorbloxToChar(player.Character, false)
+        M._applyPrimeHubSkin(player.Character)
+        if not M._primeHubSkinCharacterConn then
+            M._primeHubSkinCharacterConn = player.CharacterAdded:Connect(function(char)
+                task.wait(0.35)
+                if M.primeHubSkinEnabled then M._applyPrimeHubSkin(char) end
+            end)
+        end
+    elseif M._primeHubSkinCharacterConn then
+        pcall(function() M._primeHubSkinCharacterConn:Disconnect() end)
+        M._primeHubSkinCharacterConn = nil
+    end
+    if not silent then savePrimeHubFeKlanConfig() end
+end
+
+
+-- ==================== BAT V2 (from CLEAN) ====================
+M.batV2Enabled = M.batV2Enabled == true
+M.autoBatV2SwingEnabled = true
+M._batV2Conn = nil
+M._batV2HitCD = false
+M.AUTO_BAT_V2_SPEED = 60
+M.AUTO_BAT_V2_DIST = 1.0
+M.AUTO_BAT_V2_HEIGHT = 1.5
+M.AUTO_BAT_V2_V_OFF = 0.0
+M.AUTO_BAT_V2_HIT_DIST = 4.5
+M.AUTO_BAT_V2_SWING_CD = 0.08
+
+local function _batV2FindTool()
+    local c = player.Character
+    if c then
+        for _, v in ipairs(c:GetChildren()) do
+            if v:IsA("Tool") then return v end
+        end
+    end
+    local bp = player:FindFirstChildOfClass("Backpack")
+    if bp then
+        for _, v in ipairs(bp:GetChildren()) do
+            if v:IsA("Tool") then return v end
+        end
+    end
+    return nil
+end
+
+local function _batV2ClosestPlayer()
+    local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return nil, math.huge end
+    local hpos = hrp.Position
+    local closest, bestDist = nil, math.huge
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p ~= player then
+            local c = p.Character
+            if c then
+                local tr = c:FindFirstChild("HumanoidRootPart")
+                local ph = c:FindFirstChildOfClass("Humanoid")
+                if tr and ph and ph.Health > 0 then
+                    local d = (hpos - tr.Position).Magnitude
+                    if d < bestDist then bestDist = d; closest = p end
+                end
+            end
+        end
+    end
+    return closest, bestDist
+end
+
+local function _batV2TryHit()
+    if M._batV2HitCD or not M.autoBatV2SwingEnabled then return end
+    M._batV2HitCD = true
+    local char = player.Character
+    if char then
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        local tool = _batV2FindTool()
+        if tool then
+            if tool.Parent ~= char and hum then
+                pcall(function() hum:EquipTool(tool) end)
+            end
+            local remote = tool:FindFirstChildOfClass("RemoteEvent")
+            if remote then
+                pcall(function() remote:FireServer() end)
+            else
+                pcall(function() tool:Activate() end)
+            end
+        end
+    end
+    task.delay(M.AUTO_BAT_V2_SWING_CD, function()
+        M._batV2HitCD = false
+    end)
+end
+
+function M.startBatV2()
+    if M._batV2Conn then return end
+    M._batV2Conn = RunService.Heartbeat:Connect(function()
+        if not M.batV2Enabled then return end
+        local char = player.Character
+        if not char then return end
+        local root = char:FindFirstChild("HumanoidRootPart")
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if not root or not hum then return end
+        local target = select(1, _batV2ClosestPlayer())
+        if target and target.Character then
+            local targetRoot = target.Character:FindFirstChild("HumanoidRootPart")
+            if targetRoot then
+                local targetVel = targetRoot.AssemblyLinearVelocity or targetRoot.Velocity
+                local moveDir = targetVel.Magnitude > 0.1 and targetVel.Unit or targetRoot.CFrame.LookVector
+                local offset = moveDir * M.AUTO_BAT_V2_DIST + Vector3.new(0, M.AUTO_BAT_V2_HEIGHT + M.AUTO_BAT_V2_V_OFF, 0)
+                local desiredPos = targetRoot.Position + offset
+                local toTarget = desiredPos - root.Position
+                if toTarget.Magnitude > 0.5 then
+                    local moveVec = toTarget.Unit * M.AUTO_BAT_V2_SPEED
+                    root.AssemblyLinearVelocity = Vector3.new(moveVec.X, moveVec.Y, moveVec.Z)
+                else
+                    root.AssemblyLinearVelocity = root.AssemblyLinearVelocity * 0.95
+                    if root.AssemblyLinearVelocity.Magnitude < 1 then
+                        root.AssemblyLinearVelocity = Vector3.zero
+                    end
+                end
+                local distToTarget = (root.Position - targetRoot.Position).Magnitude
+                if distToTarget <= M.AUTO_BAT_V2_HIT_DIST then
+                    _batV2TryHit()
+                end
+            end
+        else
+            root.AssemblyLinearVelocity = root.AssemblyLinearVelocity * 0.9
+            if root.AssemblyLinearVelocity.Magnitude < 1 then
+                root.AssemblyLinearVelocity = Vector3.zero
+            end
+        end
+    end)
+end
+
+function M.stopBatV2()
+    if M._batV2Conn then
+        M._batV2Conn:Disconnect()
+        M._batV2Conn = nil
+    end
+    local c = player.Character
+    local root = c and c:FindFirstChild("HumanoidRootPart")
+    if root then
+        root.AssemblyLinearVelocity = Vector3.zero
+    end
+    M._batV2HitCD = false
+end
+
+function M.enableBatV2()
+    if M.batV2Enabled then return end
+    -- mutual exclusion with other bat modes
+    if M.autoBatEnabled or M.batAimbotEnabled then
+        M.autoBatEnabled = false
+        M.batAimbotEnabled = false
+        if M.stopBatAimbot then pcall(M.stopBatAimbot) end
+    end
+    if M.bypassAimbotEnabled then
+        M.bypassAimbotEnabled = false
+        if M.stopBypassAimbot then pcall(M.stopBypassAimbot) end
+        if M.mobBtnRefs and M.mobBtnRefs.tpBat then pcall(M.mobBtnRefs.tpBat, false) end
+    end
+    if M.autoLeftEnabled then
+        M.autoLeftEnabled = false
+        if M.stopAutoLeft then pcall(M.stopAutoLeft) end
+        if M.mobBtnRefs and M.mobBtnRefs.autoLeft then pcall(M.mobBtnRefs.autoLeft, false) end
+    end
+    if M.autoRightEnabled then
+        M.autoRightEnabled = false
+        if M.stopAutoRight then pcall(M.stopAutoRight) end
+        if M.mobBtnRefs and M.mobBtnRefs.autoRight then pcall(M.mobBtnRefs.autoRight, false) end
+    end
+    M.batV2Enabled = true
+    M.startBatV2()
+    if M.setBatV2Visual then pcall(M.setBatV2Visual, true) end
+    if M.mobBtnRefs and M.mobBtnRefs.batV2 then pcall(M.mobBtnRefs.batV2, true) end
+end
+
+function M.disableBatV2()
+    if not M.batV2Enabled then return end
+    M.batV2Enabled = false
+    M.stopBatV2()
+    if M.setBatV2Visual then pcall(M.setBatV2Visual, false) end
+    if M.mobBtnRefs and M.mobBtnRefs.batV2 then pcall(M.mobBtnRefs.batV2, false) end
+end
+
+function M.toggleBatV2()
+    if M.batV2Enabled then M.disableBatV2() else M.enableBatV2() end
+end
+
+-- ==================== PACK ACCESSORY (VisDuels Bleed packs) ====================
+M.ACCESSORY_PACK_ORDER = {
+    {"Off", "Off"},
+    {"Bleed 1", "Bleed 1"},
+    {"Bleed 2", "Bleed 2"},
+    {"Bleed 3", "Bleed 3"},
+    {"Outfit 3", "Outfit 3"},
+    {"Homero Chino", "Homero Chino"},
+}
+M.currentAccessoryPack = M.currentAccessoryPack or "Off"
+M._accOriginalOutfit = M._accOriginalOutfit or {shirt = nil, pants = nil}
+M._accOriginalAccessories = M._accOriginalAccessories or {}
+M.accSelectorLabel = nil
+
+local BLEED_PACKS = {
+    ["Bleed 1"] = {
+        accessory = 306969564,
+        offset = Vector3.new(0, 0.3, 0),
+        headMesh = "http://www.roblox.com/asset/?id=134079402",
+        headTexture = "http://www.roblox.com/asset/?id=133940918",
+        shirt = "http://www.roblox.com/asset/?id=10632503795",
+        pants = "http://www.roblox.com/asset/?id=123161592384863",
+        korblox = "right",
+    },
+    ["Bleed 2"] = {
+        accessory = 1744060292,
+        offset = Vector3.new(0, 1.4, -0.2),
+        headMesh = "http://www.roblox.com/asset/?id=134079402",
+        headTexture = "http://www.roblox.com/asset/?id=133940918",
+        shirt = "http://www.roblox.com/asset/?id=11526718530",
+        pants = "http://www.roblox.com/asset/?id=93710523210027",
+        korblox = "right",
+    },
+    ["Bleed 3"] = {
+        accessory = 112564966849233,
+        offset = Vector3.new(0, 0.6, 0),
+        headMesh = "http://www.roblox.com/asset/?id=134079402",
+        headTexture = "http://www.roblox.com/asset/?id=133940918",
+        shirt = "http://www.roblox.com/asset/?id=11849088376",
+        pants = "http://www.roblox.com/asset/?id=16534673928",
+        korblox = "right",
+    },
+    -- From CLEAN hub
+    ["Outfit 3"] = {
+        accessory = 8349240186,
+        offset = Vector3.new(0, 0.9, 0),
+        shirt = "http://www.roblox.com/asset/?id=11926549070",
+        pants = "http://www.roblox.com/asset/?id=13189494471",
+        headMesh = "https://assetdelivery.roblox.com/v1/asset/?id=16673245747",
+        headTexture = nil,
+        korblox = "none",
+        headlessKorblox = true,
+    },
+}
+
+-- Homero Chino (CLEAN) config + helpers
+local HOMERO_TAG = "LocalOutfit_"
+local HOMERO_CFG = {
+    body = { 10725826963, 86500008, 86500054, 86500036, 86500064, 86500078 },
+    aplicarCuerpo = true,
+    items = {
+        { id = 103227869700418, offset = CFrame.new(0,0,0) },
+        { id = 84952305140948,   offset = CFrame.new(0,0,0) },
+        { id = 122465238537030,  offset = CFrame.new(0,0,0) },
+    },
+    shirt = nil,
+    pants = "rbxassetid://78591690208112",
+    skinColor = Color3.fromRGB(234,184,146),
+    headColor = Color3.fromRGB(0,0,0),
+}
+
+local function _homeroLoadObjects(id)
+    local ok, res = pcall(function() return game:GetObjects("rbxassetid://" .. tostring(id)) end)
+    if ok and typeof(res) == "table" and #res > 0 then return res end
+    ok, res = pcall(function() return game:GetService("InsertService"):LoadAsset(id) end)
+    if ok and res then return { res } end
+    return nil
+end
+
+local function _homeroCollectParts(objs)
+    local out = {}
+    for _, o in ipairs(objs) do
+        if o:IsA("BasePart") then out[#out+1] = o end
+        for _, d in ipairs(o:GetDescendants()) do
+            if d:IsA("BasePart") then out[#out+1] = d end
+        end
+    end
+    return out
+end
+
+local function _homeroFindAtt(char, name)
+    for _, p in ipairs(char:GetDescendants()) do
+        if p:IsA("Attachment") and p.Name == name and p.Parent and p.Parent:IsA("BasePart") then
+            return p
+        end
+    end
+end
+
+local function _homeroApplyBody(char)
+    for _, id in ipairs(HOMERO_CFG.body) do
+        local objs = _homeroLoadObjects(id)
+        if objs then
+            for _, mp in ipairs(_homeroCollectParts(objs)) do
+                local orig = char:FindFirstChild(mp.Name)
+                if orig and orig:IsA("BasePart") then
+                    local c = mp:Clone()
+                    c.Name = HOMERO_TAG .. "body_" .. mp.Name
+                    c.CanCollide = false
+                    c.Anchored = false
+                    c.Massless = true
+                    c.Size = orig.Size
+                    c.CFrame = orig.CFrame
+                    c.Parent = char
+                    local w = Instance.new("WeldConstraint")
+                    w.Part0 = orig
+                    w.Part1 = c
+                    w.Parent = c
+                    orig.Transparency = 1
+                end
+            end
+            for _, o in ipairs(objs) do pcall(function() o:Destroy() end) end
+        end
+    end
+end
+
+local function _homeroAttachItem(char, entry)
+    local objs = _homeroLoadObjects(entry.id)
+    if not objs then return false end
+    local handle
+    for _, p in ipairs(_homeroCollectParts(objs)) do
+        if p.Name == "Handle" then handle = p; break end
+        if not handle then handle = p end
+    end
+    if not handle then
+        for _, o in ipairs(objs) do pcall(function() o:Destroy() end) end
+        return false
+    end
+    local H = handle:Clone()
+    for _, o in ipairs(objs) do pcall(function() o:Destroy() end) end
+    H.Name = HOMERO_TAG .. "item_" .. tostring(entry.id)
+    H.CanCollide = false
+    H.Anchored = false
+    H.Massless = true
+    local wrap = H:FindFirstChildWhichIsA("WrapLayer")
+    local target, c0, c1
+    if wrap then
+        target = char:FindFirstChild("UpperTorso") or char:FindFirstChild("Torso") or char:FindFirstChild("HumanoidRootPart")
+        c0 = entry.offset or CFrame.new()
+        c1 = CFrame.new()
+    else
+        local hAtt = H:FindFirstChildOfClass("Attachment")
+        local bAtt = hAtt and _homeroFindAtt(char, hAtt.Name)
+        if bAtt then
+            target = bAtt.Parent
+            c0 = bAtt.CFrame * (entry.offset or CFrame.new())
+            c1 = hAtt.CFrame
+        else
+            target = char:FindFirstChild("Head")
+            c0 = entry.offset or CFrame.new(0, 1.4, 0)
+            c1 = CFrame.new()
+        end
+    end
+    if not target then H:Destroy(); return false end
+    H.CFrame = target.CFrame * c0 * c1:Inverse()
+    H.Parent = char
+    local w = Instance.new("Weld")
+    w.Part0 = target
+    w.Part1 = H
+    w.C0 = c0
+    w.C1 = c1
+    w.Parent = H
+    return true
+end
+
+function M.applyHomeroOutfit(char)
+    char = char or player.Character
+    if not char then return end
+    char:WaitForChild("Humanoid", 10)
+    char:WaitForChild("Head", 10)
+    task.wait(0.35)
+    for _, d in ipairs(char:GetChildren()) do
+        if type(d.Name) == "string" and d.Name:sub(1, #HOMERO_TAG) == HOMERO_TAG then
+            pcall(function() d:Destroy() end)
+        end
+    end
+    if HOMERO_CFG.skinColor then
+        local bc = char:FindFirstChildWhichIsA("BodyColors") or Instance.new("BodyColors")
+        bc.HeadColor3 = HOMERO_CFG.headColor or HOMERO_CFG.skinColor
+        bc.TorsoColor3 = HOMERO_CFG.skinColor
+        bc.LeftArmColor3, bc.RightArmColor3 = HOMERO_CFG.skinColor, HOMERO_CFG.skinColor
+        bc.LeftLegColor3, bc.RightLegColor3 = HOMERO_CFG.skinColor, HOMERO_CFG.skinColor
+        bc.Parent = char
+    end
+    for _, a in ipairs(char:GetChildren()) do
+        if a:IsA("Accessory") then
+            local h = a:FindFirstChild("Handle")
+            if h then h.Transparency = 1 end
+        end
+    end
+    if HOMERO_CFG.shirt then
+        local s = char:FindFirstChildWhichIsA("Shirt") or Instance.new("Shirt")
+        s.Name = "Shirt"
+        s.ShirtTemplate = HOMERO_CFG.shirt
+        s.Parent = char
+    end
+    if HOMERO_CFG.pants then
+        local p = char:FindFirstChildWhichIsA("Pants") or Instance.new("Pants")
+        p.Name = "Pants"
+        p.PantsTemplate = HOMERO_CFG.pants
+        p.Parent = char
+    end
+    if HOMERO_CFG.aplicarCuerpo then pcall(_homeroApplyBody, char) end
+    for _, e in ipairs(HOMERO_CFG.items) do
+        pcall(_homeroAttachItem, char, e)
+    end
+end
+
+
+local function _accSaveOriginalOutfit(char)
+    if not char then return end
+    local shirt = char:FindFirstChildWhichIsA("Shirt")
+    local pants = char:FindFirstChildWhichIsA("Pants")
+    M._accOriginalOutfit.shirt = shirt and shirt.ShirtTemplate or nil
+    M._accOriginalOutfit.pants = pants and pants.PantsTemplate or nil
+end
+
+local function _accRestoreOriginalOutfit(char)
+    if not char then return end
+    for _, obj in ipairs(char:GetChildren()) do
+        if obj:IsA("Shirt") or obj:IsA("Pants") then obj:Destroy() end
+    end
+    if M._accOriginalOutfit.shirt then
+        local s = Instance.new("Shirt"); s.ShirtTemplate = M._accOriginalOutfit.shirt; s.Parent = char
+    end
+    if M._accOriginalOutfit.pants then
+        local p = Instance.new("Pants"); p.PantsTemplate = M._accOriginalOutfit.pants; p.Parent = char
+    end
+    M._accOriginalOutfit.shirt = nil
+    M._accOriginalOutfit.pants = nil
+end
+
+local function _accClearOutfit(char)
+    if not char then return end
+    for _, obj in ipairs(char:GetChildren()) do
+        if obj:IsA("Shirt") or obj:IsA("Pants") then obj:Destroy() end
+    end
+end
+
+local function _accSaveOriginalAccessories(char)
+    M._accOriginalAccessories = {}
+    if not char then return end
+    for _, child in ipairs(char:GetChildren()) do
+        if child:IsA("Accessory") or child:IsA("Hat") then
+            table.insert(M._accOriginalAccessories, child:Clone())
+        end
+    end
+end
+
+local function _accRestoreOriginalAccessories(char)
+    if not char then return end
+    for _, child in ipairs(char:GetChildren()) do
+        if child:IsA("Accessory") or child:IsA("Hat") or child.Name == "AuFfitAccessory" or child.Name:find("Korblox_") then
+            child:Destroy()
+        end
+    end
+    for _, clone in ipairs(M._accOriginalAccessories) do
+        if clone then
+            local newAcc = clone:Clone()
+            newAcc.Parent = char
+        end
+    end
+    M._accOriginalAccessories = {}
+end
+
+local function _accClearAllAccessories(char)
+    if not char then return end
+    for _, child in ipairs(char:GetChildren()) do
+        if child:IsA("Accessory") or child:IsA("Hat") or child.Name == "AuFfitAccessory" then
+            child:Destroy()
+        end
+        if child.Name:find("Korblox_") or child.Name:find("Headless_") then
+            child:Destroy()
+        end
+    end
+    for _, partName in ipairs({"Head", "LeftUpperLeg", "LeftLowerLeg", "LeftFoot", "RightUpperLeg", "RightLowerLeg", "RightFoot"}) do
+        local part = char:FindFirstChild(partName)
+        if part and part:IsA("BasePart") then part.Transparency = 0 end
+    end
+end
+
+local function _accApplyBleedOutfit(packName)
+    local config = BLEED_PACKS[packName]
+    if not config then return false end
+    local char = player.Character
+    if not char then return false end
+    local head = char:FindFirstChild("Head") or char:WaitForChild("Head", 5)
+    if not head then return false end
+
+    if config.headlessKorblox then
+        pcall(function()
+            head.Transparency = 1
+            head.CanCollide = false
+            head.LocalTransparencyModifier = 1
+            local face = head:FindFirstChild("face")
+            if face then face.Transparency = 1 end
+        end)
+    end
+
+    if config.headMesh then
+        for _, d in ipairs(char:GetChildren()) do
+            if d:IsA("CharacterMesh") and d.BodyPart == Enum.BodyPart.Head then
+                pcall(function() d:Destroy() end)
+            end
+        end
+        local done = false
+        if head:IsA("MeshPart") then
+            done = pcall(function()
+                head.MeshId = config.headMesh
+                if config.headTexture then head.TextureID = config.headTexture end
+            end)
+        end
+        if not done then
+            local sm = head:FindFirstChildWhichIsA("SpecialMesh") or Instance.new("SpecialMesh")
+            sm.Parent = head
+            sm.MeshType = Enum.MeshType.FileMesh
+            sm.MeshId = config.headMesh
+            sm.TextureId = config.headTexture or ""
+        end
+    end
+
+    if config.shirt then
+        local s = char:FindFirstChildWhichIsA("Shirt") or Instance.new("Shirt")
+        s.Name = "Shirt"; s.ShirtTemplate = config.shirt; s.Parent = char
+    end
+    if config.pants then
+        local p = char:FindFirstChildWhichIsA("Pants") or Instance.new("Pants")
+        p.Name = "Pants"; p.PantsTemplate = config.pants; p.Parent = char
+    end
+
+    if config.accessory and head then
+        local old = char:FindFirstChild("AuFfitAccessory")
+        if old then old:Destroy() end
+        local objs = nil
+        local ok, res = pcall(function()
+            if type(game.GetObjects) == "function" then
+                return game:GetObjects("rbxassetid://" .. tostring(config.accessory))
+            end
+        end)
+        if ok and type(res) == "table" and #res > 0 then
+            objs = res
+        else
+            ok, res = pcall(function()
+                return game:GetService("InsertService"):LoadAsset(config.accessory)
+            end)
+            if ok and res then objs = {res} end
+        end
+        if objs then
+            local handle
+            for _, o in ipairs(objs) do
+                if o:IsA("BasePart") then handle = o; break end
+                local f = o:FindFirstChildWhichIsA("BasePart", true)
+                if f then handle = f; break end
+            end
+            if handle then
+                local h = handle:Clone()
+                h.Name = "AuFfitAccessory"
+                h.CanCollide = false
+                h.Anchored = false
+                h.Massless = true
+                h.Parent = char
+                local weld = Instance.new("Weld")
+                weld.Part0 = head
+                weld.Part1 = h
+                weld.C0 = CFrame.new(config.offset or Vector3.zero)
+                weld.Parent = h
+            end
+            for _, o in ipairs(objs) do pcall(function() o:Destroy() end) end
+        end
+    end
+
+    if config.korblox and config.korblox ~= "none" then
+        local function attachKorblox(side)
+            local ids = { left = 139607673, right = 139607718 }
+            local targets = { left = "LeftUpperLeg", right = "RightUpperLeg" }
+            local hides = {
+                left = {"LeftUpperLeg", "LeftLowerLeg", "LeftFoot"},
+                right = {"RightUpperLeg", "RightLowerLeg", "RightFoot"},
+            }
+            local targetPart = char:FindFirstChild(targets[side])
+            if not targetPart then return false end
+            for _, partName in ipairs(hides[side]) do
+                local limb = char:FindFirstChild(partName)
+                if limb and limb:IsA("BasePart") then limb.Transparency = 1 end
+            end
+            local success, objects = pcall(function()
+                if type(game.GetObjects) == "function" then
+                    return game:GetObjects("rbxassetid://" .. ids[side])
+                end
+            end)
+            if not success or not objects or #objects == 0 then
+                success, objects = pcall(function()
+                    local m = game:GetService("InsertService"):LoadAsset(ids[side])
+                    return m and {m} or nil
+                end)
+            end
+            if not success or not objects or #objects == 0 then return false end
+            local assetModel = objects[1]
+            local mainMesh = assetModel:IsA("BasePart") and assetModel or assetModel:FindFirstChildWhichIsA("BasePart", true)
+            if not mainMesh then pcall(function() assetModel:Destroy() end); return false end
+            mainMesh.CanCollide = false
+            mainMesh.Massless = true
+            mainMesh.CFrame = targetPart.CFrame
+            local weld = Instance.new("WeldConstraint")
+            weld.Part0 = targetPart
+            weld.Part1 = mainMesh
+            weld.Parent = mainMesh
+            assetModel.Name = "Korblox_" .. side
+            assetModel.Parent = char
+            return true
+        end
+        if config.korblox == "left" then attachKorblox("left")
+        elseif config.korblox == "right" then attachKorblox("right") end
+    end
+    return true
+end
+
+function M.applyAccessoryPack(packName)
+    packName = tostring(packName or "Off")
+    M.currentAccessoryPack = packName
+    local char = player.Character
+    if not char then return end
+    if packName == "Off" then
+        _accClearAllAccessories(char)
+        for _, d in ipairs(char:GetChildren()) do
+            if type(d.Name) == "string" and d.Name:sub(1, #HOMERO_TAG) == HOMERO_TAG then
+                pcall(function() d:Destroy() end)
+            end
+        end
+        _accRestoreOriginalOutfit(char)
+        _accRestoreOriginalAccessories(char)
+        return
+    end
+    if not M._accOriginalOutfit.shirt and not M._accOriginalOutfit.pants then
+        _accSaveOriginalOutfit(char)
+    end
+    if #(M._accOriginalAccessories or {}) == 0 then
+        _accSaveOriginalAccessories(char)
+    end
+    _accClearOutfit(char)
+    _accClearAllAccessories(char)
+    for _, d in ipairs(char:GetChildren()) do
+        if type(d.Name) == "string" and d.Name:sub(1, #HOMERO_TAG) == HOMERO_TAG then
+            pcall(function() d:Destroy() end)
+        end
+    end
+    if packName == "Homero Chino" then
+        task.spawn(function()
+            pcall(M.applyHomeroOutfit, char)
+        end)
+        return
+    end
+    _accApplyBleedOutfit(packName)
+end
+
+function M.setAccessoryPackByOffset(dir)
+    local order = M.ACCESSORY_PACK_ORDER
+    local idx = 1
+    for i, entry in ipairs(order) do
+        if entry[2] == M.currentAccessoryPack then idx = i; break end
+    end
+    local newIdx = idx + (tonumber(dir) or 0)
+    if newIdx < 1 then newIdx = #order end
+    if newIdx > #order then newIdx = 1 end
+    local packName = order[newIdx][2]
+    M.applyAccessoryPack(packName)
+    if M.accSelectorLabel then M.accSelectorLabel.Text = packName end
+    if M.saveConfig then pcall(M.saveConfig) end
+end
+
+-- Persistencia robusta del Pack Accessory: reaplica al iniciar y después de cada respawn.
+function M.restoreSavedAccessoryPack(char)
+    local packName = tostring(M.currentAccessoryPack or "Off")
+    if packName == "" or packName == "nil" then packName = "Off" end
+    if packName == "Off" then
+        if M.accSelectorLabel and M.accSelectorLabel.Parent then M.accSelectorLabel.Text = "Off" end
+        return false
+    end
+    if not M.ACCESSORY_PACK_ORDER then
+        if M.accSelectorLabel and M.accSelectorLabel.Parent then M.accSelectorLabel.Text = "Off" end
+        return false
+    end
+    local target = char or player.Character
+    if not target or not target.Parent then return false end
+    local humanoid = target:FindFirstChildOfClass("Humanoid") or target:WaitForChild("Humanoid", 4)
+    local head = target:FindFirstChild("Head") or target:WaitForChild("Head", 4)
+    if not humanoid or not head then return false end
+    local ok = pcall(function() M.applyAccessoryPack(packName) end)
+    if M.accSelectorLabel and M.accSelectorLabel.Parent then M.accSelectorLabel.Text = packName end
+    return ok
+end
+local function queueSavedAccessoryPack(char)
+    local delays = {0.15, 0.6, 1.25, 2.2}
+    for _, delayTime in ipairs(delays) do
+        task.delay(delayTime, function()
+            if player.Character == char and M.currentAccessoryPack and M.currentAccessoryPack ~= "Off" then
+                pcall(function() M.restoreSavedAccessoryPack(char) end)
+            end
+        end)
+    end
+end
+player.CharacterAdded:Connect(function(char)
+    queueSavedAccessoryPack(char)
+end)
+if player.Character then
+    queueSavedAccessoryPack(player.Character)
+end
+
+
+function M.setPrimeHubSkinEnabled(on)
+    M.setPrimeHubSkinMode(on and "PrimeHub" or "Off")
+end
+function M.setPrimeHubKawatanEnabled(on)
+    M.setPrimeHubSkinMode(on and "Kawatan" or "Off")
+end
+    do
+        local _skinAcc = 0
+        local _skinParts = {}
+        local _skinChar = nil
+        RunService.RenderStepped:Connect(function()
+        if not M.primeHubSkinEnabled then return end
+        local char = player.Character
+        if not char or not char.Parent then return end
+        _skinAcc = _skinAcc + 0.016
+        if _skinAcc < (PRIMEHUB_MOBILE and 0.14 or 0.07) then return end
+        _skinAcc = 0
+        M._enforcePrimeHubSkinIntegrity(char)
+        local head = char:FindFirstChild("Head")
+        if head and head:IsA("BasePart") then
+            local headTarget = M.primeHubHeadHidden == false and 0 or 1
+            if head.Transparency ~= headTarget then head.Transparency = headTarget end
+            if head.LocalTransparencyModifier ~= headTarget then head.LocalTransparencyModifier = headTarget end
+            local fire = head:FindFirstChild("PrimeHubSkinHeadFire")
+            if not fire then
+                fire = Instance.new("Fire")
+                fire.Name = "PrimeHubSkinHeadFire"
+                fire.Parent = head
+            end
+            local primary, secondary = primeHubFireColors()
+            fire.Color = primary
+            fire.SecondaryColor = secondary
+            fire.Heat = 13
+            fire.Size = 9
+            fire.Enabled = M.primeHubFireEnabled ~= false
+            local aura = char:FindFirstChild("PrimeHubSkinFloatingAura", true)
+            if M.primeHubHaloEnabled == false then
+                if aura then pcall(function() aura:Destroy() end) end
+                local glow = head:FindFirstChild("HaloGlow")
+                if glow then pcall(function() glow:Destroy() end) end
+            elseif not aura or not aura:FindFirstChild("HaloCircle") or not aura:FindFirstChild("HaloRay") then
+                pcall(function() M._applyPrimeHubSkin(char) end)
+            end
+        end
+        for _, obj in ipairs(char:GetDescendants()) do
+            if obj:IsA("BasePart") then
+                local n = obj.Name:lower()
+                local compact = n:gsub("[%s_%-]", "")
+                if n == "left leg" or compact == "leftleg" or compact == "leftupperleg" or compact == "leftlowerleg" or compact == "leftfoot" then
+                    local hidden = M.skinLegHidden ~= false
+                    local target = hidden and 1 or 0
+                    if obj.Transparency ~= target then obj.Transparency = target end
+                    if obj.LocalTransparencyModifier ~= target then obj.LocalTransparencyModifier = target end
+                elseif n == "right leg" or compact == "rightleg" or compact == "rightupperleg" or compact == "rightlowerleg" or compact == "rightfoot" then
+                    if obj.Transparency ~= 0 then obj.Transparency = 0 end
+                    if obj.LocalTransparencyModifier ~= 0 then obj.LocalTransparencyModifier = 0 end
+                elseif obj:FindFirstAncestorOfClass("Accessory") then
+                    if obj.LocalTransparencyModifier ~= 1 then obj.LocalTransparencyModifier = 1 end
+                end
+            end
+        end
+    end)
+    end
+function M.setPrimeHubMusic(name, silent)
+    local selected = M.ROT_X_MUSIC[name] and name or "Off"
+    if M._primeHubMusicSound then
+        pcall(function() M._primeHubMusicSound:Stop() end)
+        pcall(function() M._primeHubMusicSound:Destroy() end)
+        M._primeHubMusicSound = nil
+    end
+    M.primeHubMusicSelection = selected
+    if selected ~= "Off" then
+        local entry = M.ROT_X_MUSIC[selected]
+        local sound = Instance.new("Sound")
+        sound.Name = "PrimeHubMusic"
+        sound.SoundId = "rbxassetid://" .. tostring(entry.assetId)
+        sound.Volume = entry.volume or 0.75
+        sound.Looped = false
+        sound.Parent = game:GetService("SoundService")
+        M._primeHubMusicSound = sound
+        sound.Ended:Connect(function()
+            if M._primeHubMusicSound ~= sound or M.primeHubMusicSelection ~= selected then return end
+            local order = M.getPrimeHubMusicOrder and M.getPrimeHubMusicOrder() or {}
+            local idx = 1
+            for i, name in ipairs(order) do
+                if name == selected then idx = i; break end
+            end
+            local nextName = order[idx + 1] or order[1]
+            if nextName then M.setPrimeHubMusic(nextName) else M.setPrimeHubMusic("Off") end
+        end)
+        local startAt = math.max(0, tonumber(M.ROT_X_MUSIC_START[selected]) or 0)
+        pcall(function() sound.TimePosition = startAt end)
+        sound.Loaded:Connect(function()
+            if M._primeHubMusicSound == sound and sound.Parent then
+                pcall(function() sound.TimePosition = startAt end)
+                pcall(function() sound:Play() end)
+            end
+        end)
+        task.spawn(function()
+            pcall(function()
+                if not sound.IsLoaded then sound.Loaded:Wait() end
+                if M._primeHubMusicSound == sound and sound.Parent then sound:Play() end
+            end)
+        end)
+        pcall(function() sound:Play() end)
+    end
+    if not silent then savePrimeHubFeKlanConfig() end
+end
+
+-- Graphics Bajos: modo de rendimiento integrado.
+M.graphicsBajosEnabled = false
+M._graphicsBajosConn = nil
+local function applyGraphicsBajosObject(obj)
+    pcall(function()
+        if obj:IsA("BasePart") then
+            obj.CastShadow = false
+            obj.Material = Enum.Material.Plastic
+            obj.Reflectance = 0
+            obj.BackSurface = Enum.SurfaceType.SmoothNoOutlines
+            obj.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
+            obj.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
+            obj.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
+            obj.RightSurface = Enum.SurfaceType.SmoothNoOutlines
+            obj.TopSurface = Enum.SurfaceType.SmoothNoOutlines
+        elseif obj:IsA("PostEffect") then
+            obj.Enabled = false
+        elseif obj:IsA("ForceField") then
+            obj:Destroy()
+        end
+    end)
+end
+
+-- ===== PRIMEHUB MUSIC PLAYER GUI (Utility OPEN) =====
+M._musicPlayerGui = M._musicPlayerGui or nil
+M._musicPlayerConn = M._musicPlayerConn or nil
+M._musicPaused = M._musicPaused or false
+
+function M.getPrimeHubMusicOrder()
+    local list = {}
+    if type(M.ROT_X_MUSIC_ORDER) == "table" then
+        for _, name in ipairs(M.ROT_X_MUSIC_ORDER) do
+            if M.ROT_X_MUSIC and M.ROT_X_MUSIC[name] then
+                table.insert(list, name)
+            end
+        end
+    end
+    if #list == 0 then
+        for n = 1, 10 do
+            local name = "PrimeHub " .. n
+            if M.ROT_X_MUSIC and M.ROT_X_MUSIC[name] then
+                table.insert(list, name)
+            end
+        end
+    end
+    return list
+end
+
+function M.closePrimeHubMusicPlayer()
+    if M._musicPlayerConn then
+        pcall(function() M._musicPlayerConn:Disconnect() end)
+        M._musicPlayerConn = nil
+    end
+    if M._musicSeekConns then
+        for _, c in ipairs(M._musicSeekConns) do
+            pcall(function() c:Disconnect() end)
+        end
+        M._musicSeekConns = nil
+    end
+    if M._musicPlayerGui then
+        pcall(function() M._musicPlayerGui:Destroy() end)
+        M._musicPlayerGui = nil
+    end
+end
+
+function M.openPrimeHubMusicPlayer()
+    M.closePrimeHubMusicPlayer()
+    local pg = player:FindFirstChild("PlayerGui") or player:WaitForChild("PlayerGui", 3)
+    if not pg then return end
+
+    local WHITE = Color3.fromRGB(255, 255, 255)
+    local WHITE_DIM = Color3.fromRGB(200, 200, 210)
+    local BG = Color3.fromRGB(10, 10, 14)
+    local BTN = Color3.fromRGB(28, 28, 36)
+
+    local sg = Instance.new("ScreenGui")
+    sg.Name = "PrimeHubMusicPlayer"
+    sg.ResetOnSpawn = false
+    sg.IgnoreGuiInset = true
+    sg.DisplayOrder = 120
+    sg.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    sg.Parent = pg
+    M._musicPlayerGui = sg
+
+    local panel = Instance.new("Frame", sg)
+    panel.Name = "PlayerPanel"
+    panel.Size = UDim2.new(0, 320, 0, 168)
+    panel.Position = UDim2.new(0.5, -160, 1, -200)
+    panel.AnchorPoint = Vector2.new(0, 0)
+    panel.BackgroundColor3 = BG
+    panel.BackgroundTransparency = 0.08
+    panel.BorderSizePixel = 0
+    Instance.new("UICorner", panel).CornerRadius = UDim.new(0, 18)
+    local pStroke = Instance.new("UIStroke", panel)
+    pStroke.Color = WHITE
+    pStroke.Thickness = 1.2
+    pStroke.Transparency = 0.45
+
+    local title = Instance.new("TextLabel", panel)
+    title.Name = "Title"
+    title.Size = UDim2.new(1, -56, 0, 24)
+    title.Position = UDim2.new(0, 16, 0, 12)
+    title.BackgroundTransparency = 1
+    title.Text = "SAFIRA HUB Music"
+    title.TextColor3 = WHITE
+    title.TextSize = 16
+    title.Font = Enum.Font.GothamBold
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.TextTruncate = Enum.TextTruncate.AtEnd
+
+    local sub = Instance.new("TextLabel", panel)
+    sub.Name = "Sub"
+    sub.Size = UDim2.new(1, -56, 0, 16)
+    sub.Position = UDim2.new(0, 16, 0, 36)
+    sub.BackgroundTransparency = 1
+    sub.Text = "SAFIRA HUB music"
+    sub.TextColor3 = WHITE_DIM
+    sub.TextSize = 12
+    sub.Font = Enum.Font.Gotham
+    sub.TextXAlignment = Enum.TextXAlignment.Left
+
+    local closeBtn = Instance.new("TextButton", panel)
+    closeBtn.Size = UDim2.new(0, 28, 0, 28)
+    closeBtn.Position = UDim2.new(1, -36, 0, 10)
+    closeBtn.BackgroundColor3 = BTN
+    closeBtn.BorderSizePixel = 0
+    closeBtn.Text = "X"
+    closeBtn.TextColor3 = WHITE
+    closeBtn.TextSize = 12
+    closeBtn.Font = Enum.Font.GothamBold
+    Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(1, 0)
+    closeBtn.MouseButton1Click:Connect(function()
+        M.closePrimeHubMusicPlayer()
+    end)
+
+    local waveBars = {}
+    local function makeWave(parent, x)
+        local w = Instance.new("Frame", parent)
+        w.Size = UDim2.new(0, 48, 0, 32)
+        w.Position = UDim2.new(0, x, 0, 68)
+        w.BackgroundTransparency = 1
+        for i = 1, 4 do
+            local bar = Instance.new("Frame", w)
+            bar.Size = UDim2.new(0, 5, 0, 10)
+            bar.Position = UDim2.new(0, (i - 1) * 11, 1, 0)
+            bar.AnchorPoint = Vector2.new(0, 1)
+            bar.BackgroundColor3 = WHITE
+            bar.BackgroundTransparency = 0.15
+            bar.BorderSizePixel = 0
+            Instance.new("UICorner", bar).CornerRadius = UDim.new(0, 3)
+            table.insert(waveBars, {bar = bar, phase = i * 0.7 + x * 0.01, side = x})
+        end
+        return w
+    end
+    makeWave(panel, 12)
+    makeWave(panel, 260)
+
+    -- Borde vivo blanco / plomo
+    local borderPulse = 0
+    local PLOMO = Color3.fromRGB(120, 120, 130)
+
+    local prevBtn = Instance.new("TextButton", panel)
+    prevBtn.Size = UDim2.new(0, 36, 0, 36)
+    prevBtn.Position = UDim2.new(0.5, -70, 0, 68)
+    prevBtn.BackgroundColor3 = BTN
+    prevBtn.BorderSizePixel = 0
+    prevBtn.Text = "<<"
+    prevBtn.TextColor3 = WHITE
+    prevBtn.TextSize = 12
+    prevBtn.Font = Enum.Font.GothamBold
+    Instance.new("UICorner", prevBtn).CornerRadius = UDim.new(1, 0)
+
+    local playBtn = Instance.new("TextButton", panel)
+    playBtn.Size = UDim2.new(0, 48, 0, 48)
+    playBtn.Position = UDim2.new(0.5, -24, 0, 62)
+    playBtn.BackgroundColor3 = WHITE
+    playBtn.BorderSizePixel = 0
+    playBtn.Text = "II"
+    playBtn.TextColor3 = Color3.fromRGB(10, 10, 14)
+    playBtn.TextSize = 16
+    playBtn.Font = Enum.Font.GothamBlack
+    Instance.new("UICorner", playBtn).CornerRadius = UDim.new(1, 0)
+
+    local nextBtn = Instance.new("TextButton", panel)
+    nextBtn.Size = UDim2.new(0, 36, 0, 36)
+    nextBtn.Position = UDim2.new(0.5, 34, 0, 68)
+    nextBtn.BackgroundColor3 = BTN
+    nextBtn.BorderSizePixel = 0
+    nextBtn.Text = ">>"
+    nextBtn.TextColor3 = WHITE
+    nextBtn.TextSize = 12
+    nextBtn.Font = Enum.Font.GothamBold
+    Instance.new("UICorner", nextBtn).CornerRadius = UDim.new(1, 0)
+
+    local elapsedLbl = Instance.new("TextLabel", panel)
+    elapsedLbl.Size = UDim2.new(0, 40, 0, 14)
+    elapsedLbl.Position = UDim2.new(0, 14, 1, -28)
+    elapsedLbl.BackgroundTransparency = 1
+    elapsedLbl.Text = "0:00"
+    elapsedLbl.TextColor3 = WHITE_DIM
+    elapsedLbl.TextSize = 11
+    elapsedLbl.Font = Enum.Font.Code
+    elapsedLbl.TextXAlignment = Enum.TextXAlignment.Left
+
+    local durLbl = Instance.new("TextLabel", panel)
+    durLbl.Size = UDim2.new(0, 40, 0, 14)
+    durLbl.Position = UDim2.new(1, -54, 1, -28)
+    durLbl.BackgroundTransparency = 1
+    durLbl.Text = "0:00"
+    durLbl.TextColor3 = WHITE_DIM
+    durLbl.TextSize = 11
+    durLbl.Font = Enum.Font.Code
+    durLbl.TextXAlignment = Enum.TextXAlignment.Right
+
+    local track = Instance.new("Frame", panel)
+    track.Size = UDim2.new(1, -108, 0, 4)
+    track.Position = UDim2.new(0, 54, 1, -24)
+    track.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+    track.BorderSizePixel = 0
+    Instance.new("UICorner", track).CornerRadius = UDim.new(1, 0)
+    local fill = Instance.new("Frame", track)
+    fill.Size = UDim2.new(0, 0, 1, 0)
+    fill.BackgroundColor3 = WHITE
+    fill.BorderSizePixel = 0
+    Instance.new("UICorner", fill).CornerRadius = UDim.new(1, 0)
+    local knob = Instance.new("Frame", track)
+    knob.Size = UDim2.new(0, 10, 0, 10)
+    knob.AnchorPoint = Vector2.new(0.5, 0.5)
+    knob.Position = UDim2.new(0, 0, 0.5, 0)
+    knob.BackgroundColor3 = WHITE
+    knob.BorderSizePixel = 0
+    Instance.new("UICorner", knob).CornerRadius = UDim.new(1, 0)
+
+    local function fmt(t)
+        t = math.max(0, math.floor(tonumber(t) or 0))
+        return string.format("%d:%02d", math.floor(t / 60), t % 60)
+    end
+
+    local function currentIndex()
+        local sel = M.primeHubMusicSelection or "Off"
+        local order = M.getPrimeHubMusicOrder()
+        for i, name in ipairs(order) do
+            if name == sel then return i end
+        end
+        return 1
+    end
+
+    local function refreshTitle()
+        local sel = M.primeHubMusicSelection
+        if not sel or sel == "Off" then
+            title.Text = "SAFIRA HUB Music"
+            sub.Text = "SAFIRA HUB music"
+            playBtn.Text = ">"
+        else
+            title.Text = tostring(sel)
+            sub.Text = "SAFIRA HUB • now playing"
+            local snd = M._primeHubMusicSound
+            if snd and snd.IsPlaying and not M._musicPaused then
+                playBtn.Text = "II"
+            else
+                playBtn.Text = ">"
+            end
+        end
+    end
+
+    local function playIndex(n)
+        local list = M.getPrimeHubMusicOrder()
+        if #list == 0 then return end
+        if n < 1 then n = #list end
+        if n > #list then n = 1 end
+        M._musicPaused = false
+        M.setPrimeHubMusic(list[n])
+        refreshTitle()
+    end
+
+    prevBtn.MouseButton1Click:Connect(function()
+        playIndex(currentIndex() - 1)
+    end)
+    nextBtn.MouseButton1Click:Connect(function()
+        playIndex(currentIndex() + 1)
+    end)
+    playBtn.MouseButton1Click:Connect(function()
+        local snd = M._primeHubMusicSound
+        local sel = M.primeHubMusicSelection
+        if not sel or sel == "Off" or not snd then
+            playIndex(1)
+            return
+        end
+        if snd.IsPlaying and not M._musicPaused then
+            pcall(function() snd:Pause() end)
+            M._musicPaused = true
+            playBtn.Text = ">"
+        else
+            pcall(function() snd:Resume() end)
+            if not snd.IsPlaying then pcall(function() snd:Play() end) end
+            M._musicPaused = false
+            playBtn.Text = "II"
+        end
+        refreshTitle()
+    end)
+
+    -- seek drag
+    local dragging = false
+    local function seekTo(x)
+        local snd = M._primeHubMusicSound
+        if not snd then return end
+        local w = math.max(1, track.AbsoluteSize.X)
+        local a = math.clamp((x - track.AbsolutePosition.X) / w, 0, 1)
+        local len = (snd.TimeLength and snd.TimeLength > 0) and snd.TimeLength or 1
+        pcall(function() snd.TimePosition = a * len end)
+        fill.Size = UDim2.new(a, 0, 1, 0)
+        knob.Position = UDim2.new(a, 0, 0.5, 0)
+    end
+    local seekConns = {}
+    table.insert(seekConns, track.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            seekTo(input.Position.X)
+        end
+    end))
+    table.insert(seekConns, UIS.InputChanged:Connect(function(input)
+        if not dragging then return end
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            seekTo(input.Position.X)
+        end
+    end))
+    table.insert(seekConns, UIS.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end))
+    M._musicSeekConns = seekConns
+
+    -- auto start first track if none
+    if not M.primeHubMusicSelection or M.primeHubMusicSelection == "Off" then
+        playIndex(1)
+    else
+        refreshTitle()
+        local snd = M._primeHubMusicSound
+        if snd and not snd.IsPlaying then
+            pcall(function() snd:Play() end)
+        end
+    end
+
+    -- Heartbeat ligero: throttle ~15 FPS visual (no cada frame)
+    local _mpAcc = 0
+    local _lastTitle = ""
+    local _sin = math.sin
+    local _abs = math.abs
+    M._musicPlayerConn = RunService.Heartbeat:Connect(function(dt)
+        if not M._musicPlayerGui then return end
+        _mpAcc = _mpAcc + (dt or 0.016)
+        if _mpAcc < 0.066 then return end -- ~15 updates/s
+        _mpAcc = 0
+
+        local snd = M._primeHubMusicSound
+        local pos, len = 0, 0
+        local playing = false
+        if snd then
+            pos = snd.TimePosition or 0
+            len = snd.TimeLength or 0
+            playing = snd.IsPlaying and not M._musicPaused
+        end
+        elapsedLbl.Text = fmt(pos)
+        if len > 0 then durLbl.Text = fmt(len) end
+        if len > 0 and not dragging then
+            local a = pos / len
+            if a < 0 then a = 0 elseif a > 1 then a = 1 end
+            fill.Size = UDim2.new(a, 0, 1, 0)
+            knob.Position = UDim2.new(a, 0, 0.5, 0)
+        end
+        local t = os.clock()
+        local nBars = #waveBars
+        for i = 1, nBars do
+            local info = waveBars[i]
+            local bar = info.bar
+            if bar then
+                local h
+                if playing then
+                    h = 8 + _abs(_sin(t * 6 + info.phase)) * 24
+                else
+                    h = 7 + _abs(_sin(t + info.phase)) * 3
+                end
+                bar.Size = UDim2.new(0, 5, 0, h)
+            end
+        end
+        borderPulse = borderPulse + 0.08
+        local lerp = (_sin(borderPulse) + 1) * 0.5
+        pStroke.Color = WHITE:Lerp(PLOMO, lerp)
+        pStroke.Transparency = 0.28 + lerp * 0.22
+        local sel = M.primeHubMusicSelection or "Off"
+        local want = (sel == "Off") and ">" or (playing and "II" or ">")
+        if playBtn.Text ~= want then playBtn.Text = want end
+        if sel ~= _lastTitle then
+            _lastTitle = sel
+            if sel == "Off" then
+                title.Text = "SAFIRA HUB Music"
+                sub.Text = "SAFIRA HUB music"
+            else
+                title.Text = tostring(sel)
+                sub.Text = "SAFIRA HUB • now playing"
+            end
+        end
+    end)
+end
+
+
+function M.enableGraphicsBajos()
+    M.graphicsBajosEnabled = true
+    local terrain = workspace:FindFirstChildWhichIsA("Terrain")
+    if terrain then
+        terrain.WaterWaveSize = 0; terrain.WaterWaveSpeed = 0
+        terrain.WaterReflectance = 0; terrain.WaterTransparency = 1
+    end
+    Lighting.Brightness = 2; Lighting.GlobalShadows = false
+    Lighting.FogEnd = 9000000000; Lighting.FogStart = 9000000000
+    for _, obj in ipairs(game:GetDescendants()) do applyGraphicsBajosObject(obj) end
+    if M._graphicsBajosConn then M._graphicsBajosConn:Disconnect() end
+    M._graphicsBajosConn = workspace.DescendantAdded:Connect(function(obj)
+        if M.graphicsBajosEnabled then applyGraphicsBajosObject(obj) end
+    end)
+end
+function M.disableGraphicsBajos()
+    M.graphicsBajosEnabled = false
+    if M._graphicsBajosConn then M._graphicsBajosConn:Disconnect(); M._graphicsBajosConn = nil end
+end
+
+
+-- ============================================================
+-- AUTO STEAL (Anti-Sammy style) with presets 75 / 80 / 86 / 90
+-- ============================================================
+M.Steal = M.Steal or { AutoStealEnabled = false, StealRadius = 61, StealDuration = 1.3, Data = {} }
+M.normalStealVersion = M.normalStealVersion or "86"
+M.NORMAL_STEAL_PERCENT = {
+    ["75"] = 0.75,
+    ["80"] = 0.80,
+    ["86"] = 0.86,
+    ["90"] = 0.90,
+}
+M._asIsStealing = false
+M._asStealProgress = 0
+M._asStealPaused = false
+M._asAutoStealConn = nil
+
+local function AS_isMyPlotByName(plotName)
+    local plots = workspace:FindFirstChild("Plots")
+    if not plots then return false end
+    local plot = plots:FindFirstChild(plotName)
+    if not plot then return false end
+    local sign = plot:FindFirstChild("PlotSign")
+    if sign then
+        local yb = sign:FindFirstChild("YourBase")
+        if yb and yb:IsA("BillboardGui") then
+            return yb.Enabled == true
+        end
+    end
+    return false
+end
+
+function M.AS_findNearestPrompt()
+    local char = player.Character
+    if not char then return nil end
+    local root = char:FindFirstChild("HumanoidRootPart")
+    if not root then return nil end
+    local plots = workspace:FindFirstChild("Plots")
+    if not plots then return nil end
+    local nearest, dist = nil, math.huge
+    for _, plot in ipairs(plots:GetChildren()) do
+        if not AS_isMyPlotByName(plot.Name) then
+            local pods = plot:FindFirstChild("AnimalPodiums")
+            if pods then
+                for _, pod in ipairs(pods:GetChildren()) do
+                    local base = pod:FindFirstChild("Base")
+                    local sp = base and base:FindFirstChild("Spawn")
+                    if sp then
+                        local d = (sp.Position - root.Position).Magnitude
+                        if d <= (M.Steal.StealRadius or 61) and d < dist then
+                            local att = sp:FindFirstChild("PromptAttachment")
+                            if att then
+                                for _, prompt in ipairs(att:GetChildren()) do
+                                    if prompt:IsA("ProximityPrompt") and tostring(prompt.ActionText or ""):find("Steal") then
+                                        nearest, dist = prompt, d
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return nearest
+end
+
+function M.AS_getPromptSpawnPosition(prompt)
+    if not prompt then return nil end
+    local parent = prompt.Parent
+    if parent and parent.Name == "PromptAttachment" then parent = parent.Parent end
+    if parent and parent.Name == "Spawn" and parent:IsA("BasePart") then return parent.Position end
+    return nil
+end
+
+function M.AS_isStealTargetClose(spawnPosition)
+    if not spawnPosition then return false end
+    local character = player.Character
+    local root = character and character:FindFirstChild("HumanoidRootPart")
+    return root ~= nil and (spawnPosition - root.Position).Magnitude <= 9
+end
+
+function M.AS_executeSteal(prompt)
+    if M._asIsStealing then return end
+    if not M.Steal.Data[prompt] then
+        M.Steal.Data[prompt] = { hold = {}, trigger = {}, ready = true }
+        if getconnections then
+            pcall(function()
+                for _, c in ipairs(getconnections(prompt.PromptButtonHoldBegan)) do
+                    if c.Function then table.insert(M.Steal.Data[prompt].hold, c.Function) end
+                end
+                for _, c in ipairs(getconnections(prompt.Triggered)) do
+                    if c.Function then table.insert(M.Steal.Data[prompt].trigger, c.Function) end
+                end
+            end)
+        end
+    end
+    local data = M.Steal.Data[prompt]
+    if not data.ready then return end
+    data.ready = false
+    M._asIsStealing = true
+    local spawnPosition = M.AS_getPromptSpawnPosition(prompt)
+    local duration = math.max(tonumber(M.Steal.StealDuration) or 1.3, 0.05)
+    local stopRatio = M.NORMAL_STEAL_PERCENT[tostring(M.normalStealVersion)] or M.NORMAL_STEAL_PERCENT["86"]
+    local stopPoint = duration * stopRatio
+    M._asStealProgress = 0
+    M._asStealPaused = false
+    pcall(function() getgenv()._AS_StealProgress = 0 end)
+
+    task.spawn(function()
+        for _, fn in ipairs(data.hold) do task.spawn(fn) end
+        local started = tick()
+        while M._asIsStealing and M.Steal.AutoStealEnabled and prompt.Parent do
+            local elapsed = tick() - started
+            M._asStealProgress = math.clamp(elapsed / duration, 0, stopRatio)
+            pcall(function() getgenv()._AS_StealProgress = M._asStealProgress end)
+            if M.autoGrabV1Progress ~= nil then M.autoGrabV1Progress = M._asStealProgress end
+            if type(zenXUpdateBar) == "function" then pcall(zenXUpdateBar) elseif M.zenXUpdateBar then pcall(M.zenXUpdateBar) end
+            if elapsed >= stopPoint then break end
+            task.wait()
+        end
+        M._asStealProgress = stopRatio
+        pcall(function() getgenv()._AS_StealProgress = stopRatio end)
+        M._asStealPaused = true
+        local closeEnough = M.AS_isStealTargetClose(spawnPosition)
+        local waitDeadline = tick() + 2
+        while M._asIsStealing and M.Steal.AutoStealEnabled and prompt.Parent and not closeEnough and tick() < waitDeadline do
+            closeEnough = M.AS_isStealTargetClose(spawnPosition)
+            task.wait()
+        end
+        if closeEnough and M._asIsStealing and M.Steal.AutoStealEnabled and prompt.Parent then
+            M._asStealPaused = false
+            local remaining = math.max(duration - stopPoint, 0.01)
+            local finishStarted = tick()
+            while M._asIsStealing and M.Steal.AutoStealEnabled and prompt.Parent do
+                local finishAlpha = math.clamp((tick() - finishStarted) / remaining, 0, 1)
+                M._asStealProgress = stopRatio + finishAlpha * (1 - stopRatio)
+                pcall(function() getgenv()._AS_StealProgress = M._asStealProgress end)
+                if M.autoGrabV1Progress ~= nil then M.autoGrabV1Progress = M._asStealProgress end
+                if finishAlpha >= 1 then break end
+                task.wait()
+            end
+            if M._asIsStealing and M.Steal.AutoStealEnabled and prompt.Parent then
+                for _, fn in ipairs(data.trigger) do task.spawn(fn) end
+            end
+        end
+        task.wait(0.06)
+        data.ready = true
+        M._asIsStealing = false
+        M._asStealProgress = 0
+        M._asStealPaused = false
+        pcall(function() getgenv()._AS_StealProgress = 0 end)
+        if M.autoGrabV1Progress ~= nil then M.autoGrabV1Progress = 0 end
+    end)
+end
+
+function M.startAntiSammyAutoSteal()
+    M.Steal = M.Steal or { AutoStealEnabled = false, StealRadius = 61, StealDuration = 1.3, Data = {} }
+    M.Steal.AutoStealEnabled = true
+    M.autoGrabV1Enabled = true
+    ZenXSteal.AutoStealEnabled = true
+    -- sync radius
+    if M.Steal.StealRadius then ZenXSteal.StealRadius = M.Steal.StealRadius end
+    if M.startAutoGrabV1 then
+        M.startAutoGrabV1()
+    end
+end
+
+function M.stopAntiSammyAutoSteal()
+    M.Steal = M.Steal or {}
+    M.Steal.AutoStealEnabled = false
+    M.autoGrabV1Enabled = false
+    ZenXSteal.AutoStealEnabled = false
+    M._asIsStealing = false
+    if M.stopAutoGrabV1 then
+        M.stopAutoGrabV1()
+    end
+    if M._asAutoStealConn then
+        pcall(function() M._asAutoStealConn:Disconnect() end)
+        M._asAutoStealConn = nil
+    end
+end
+
+function M.setStealPreset(value)
+    value = tostring(value)
+    if M.NORMAL_STEAL_PERCENT[value] then
+        M.normalStealVersion = value
+    end
+end
+
+
+-- ============================================================
+-- ANTI DIE & FLING (from Anti-Sammy)
+-- ============================================================
+M.antiDieEnabled = false
+M.antiDieFlingEnabled = false
+M._antiDieConns = {}
+
+local AntiDie = {
+    enabled = false,
+    loop = nil,
+    healthConn = nil,
+    charConn = nil,
+    lastHealTime = 0,
+    invincibleUntil = 0,
+    config = {
+        healthThreshold = 50,
+        invincibilityFrames = 0.75,
+        ragdollProtection = true,
+        autoRevive = true,
+    },
+}
+
+local AntiFlingShield = {
+    enabled = false,
+    loop = nil,
+    velocityThreshold = 80,
+}
+
+AntiDie.superHeal = function(hum)
+    if not hum or not hum.Parent then return end
+    local maxHealth = hum.MaxHealth or 100
+    if maxHealth <= 0 then maxHealth = 100 end
+    pcall(function()
+        hum.Health = maxHealth
+        if hum.MaxHealth < maxHealth then hum.MaxHealth = maxHealth end
+    end)
+    AntiDie.invincibleUntil = tick() + AntiDie.config.invincibilityFrames
+    AntiDie.lastHealTime = tick()
+    pcall(function()
+        local char = hum.Parent
+        if not char then return end
+        for _, child in ipairs(char:GetChildren()) do
+            if child:IsA("NumberValue") then
+                local name = child.Name:lower()
+                if name:find("health") or name:find("hp") or name:find("life") then
+                    child.Value = maxHealth
+                end
+            elseif child:IsA("BoolValue") and child.Name:lower():find("dead") then
+                child.Value = false
+            end
+        end
+    end)
+end
+
+AntiDie.autoRevive = function()
+    if not AntiDie.config.autoRevive then return end
+    local char = player.Character
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    if not hum or hum.Health > 0 then return end
+    AntiDie.superHeal(hum)
+    pcall(function()
+        hum:ChangeState(Enum.HumanoidStateType.GettingUp)
+        hum:ChangeState(Enum.HumanoidStateType.Running)
+    end)
+    if root then
+        pcall(function()
+            root.CFrame = CFrame.new(root.Position + Vector3.new(0, 3, 0))
+            root.AssemblyLinearVelocity = Vector3.zero
+        end)
+    end
+end
+
+AntiDie.preventDamage = function(root, hum)
+    if not hum then return end
+    if hum.Health < (hum.MaxHealth or 100) then AntiDie.superHeal(hum) end
+    if tick() < AntiDie.invincibleUntil and hum.Health < (hum.MaxHealth or 100) then
+        hum.Health = hum.MaxHealth or 100
+    end
+    if AntiDie.config.ragdollProtection then
+        local state = hum:GetState()
+        if state == Enum.HumanoidStateType.Physics
+            or state == Enum.HumanoidStateType.Ragdoll
+            or state == Enum.HumanoidStateType.FallingDown
+            or state == Enum.HumanoidStateType.Dead then
+            pcall(function()
+                hum:ChangeState(Enum.HumanoidStateType.GettingUp)
+                hum:ChangeState(Enum.HumanoidStateType.Running)
+            end)
+            AntiDie.superHeal(hum)
+            if root then
+                pcall(function() root.AssemblyAngularVelocity = Vector3.zero end)
+            end
+        end
+    end
+    if hum.Health <= 0 then
+        AntiDie.superHeal(hum)
+        pcall(function()
+            hum:ChangeState(Enum.HumanoidStateType.GettingUp)
+            hum:ChangeState(Enum.HumanoidStateType.Running)
+        end)
+        if root then
+            pcall(function()
+                root.CFrame = CFrame.new(root.Position + Vector3.new(0, 2, 0))
+                root.AssemblyLinearVelocity = Vector3.zero
+            end)
+        end
+    end
+end
+
+AntiDie.attachHealth = function(char)
+    if AntiDie.healthConn then
+        AntiDie.healthConn:Disconnect()
+        AntiDie.healthConn = nil
+    end
+    local hum = char and (char:FindFirstChildOfClass("Humanoid") or char:WaitForChild("Humanoid", 3))
+    if not hum then return end
+    AntiDie.healthConn = hum:GetPropertyChangedSignal("Health"):Connect(function()
+        if not AntiDie.enabled then return end
+        if hum.Health < (hum.MaxHealth or 100) then AntiDie.superHeal(hum) end
+        if hum.Health <= 0 then AntiDie.autoRevive() end
+    end)
+    if hum.Health < (hum.MaxHealth or 100) then AntiDie.superHeal(hum) end
+end
+
+AntiDie.start = function()
+    AntiDie.enabled = true
+    if AntiDie.loop then AntiDie.loop:Disconnect() end
+    AntiDie.loop = RunService.Heartbeat:Connect(function()
+        if not AntiDie.enabled then return end
+        local char = player.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        local root = char and char:FindFirstChild("HumanoidRootPart")
+        if not hum then return end
+        if hum.Health <= 0 then
+            AntiDie.autoRevive()
+        elseif hum.Health <= AntiDie.config.healthThreshold or hum.Health < (hum.MaxHealth or 100) then
+            AntiDie.superHeal(hum)
+        end
+        AntiDie.preventDamage(root, hum)
+    end)
+    if player.Character then AntiDie.attachHealth(player.Character) end
+    if AntiDie.charConn then AntiDie.charConn:Disconnect() end
+    AntiDie.charConn = player.CharacterAdded:Connect(function(char)
+        if not AntiDie.enabled then return end
+        task.wait(0.05)
+        AntiDie.attachHealth(char)
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if hum then AntiDie.superHeal(hum) end
+    end)
+end
+
+AntiDie.stop = function()
+    AntiDie.enabled = false
+    for _, connectionName in ipairs({"loop", "healthConn", "charConn"}) do
+        local connection = AntiDie[connectionName]
+        if connection then
+            connection:Disconnect()
+            AntiDie[connectionName] = nil
+        end
+    end
+end
+
+AntiFlingShield.stabilizeRoot = function(root)
+    if not root or not root.Parent then return end
+    local velocity
+    local ok = pcall(function() velocity = root.AssemblyLinearVelocity end)
+    if not ok or typeof(velocity) ~= "Vector3" then
+        ok, velocity = pcall(function() return root.Velocity end)
+        if not ok or typeof(velocity) ~= "Vector3" then return end
+    end
+    if velocity.Magnitude <= AntiFlingShield.velocityThreshold then return end
+    local stabilized = Vector3.new(0, velocity.Y, 0)
+    pcall(function() root.AssemblyLinearVelocity = stabilized end)
+    pcall(function() root.AssemblyAngularVelocity = Vector3.zero end)
+    pcall(function() root.Velocity = stabilized end)
+    pcall(function() root.RotVelocity = Vector3.zero end)
+end
+
+AntiFlingShield.start = function()
+    AntiFlingShield.enabled = true
+    if AntiFlingShield.loop then AntiFlingShield.loop:Disconnect() end
+    AntiFlingShield.loop = RunService.Heartbeat:Connect(function()
+        if not AntiFlingShield.enabled then return end
+        local char = player.Character
+        AntiFlingShield.stabilizeRoot(char and char:FindFirstChild("HumanoidRootPart"))
+    end)
+end
+
+AntiFlingShield.stop = function()
+    AntiFlingShield.enabled = false
+    if AntiFlingShield.loop then
+        AntiFlingShield.loop:Disconnect()
+        AntiFlingShield.loop = nil
+    end
+end
+
+function M.enableAntiDie()
+    M.antiDieEnabled = true
+    M.antiDieFlingEnabled = true
+    AntiDie.start()
+    AntiFlingShield.start()
+end
+
+function M.disableAntiDie()
+    M.antiDieEnabled = false
+    M.antiDieFlingEnabled = false
+    AntiDie.stop()
+    AntiFlingShield.stop()
+end
+
+function M.enableAntiDieFling()
+    M.enableAntiDie()
+end
+
+function M.disableAntiDieFling()
+    M.disableAntiDie()
+end
+
+
+-- Graphics Bajos: modo de rendimiento integrado.
+M.graphicsBajosEnabled = false
+M._graphicsBajosConn = nil
+local function applyGraphicsBajosObject(obj)
+    pcall(function()
+        if obj:IsA("BasePart") then
+            obj.CastShadow = false
+            obj.Material = Enum.Material.Plastic
+            obj.Reflectance = 0
+            obj.BackSurface = Enum.SurfaceType.SmoothNoOutlines
+            obj.BottomSurface = Enum.SurfaceType.SmoothNoOutlines
+            obj.FrontSurface = Enum.SurfaceType.SmoothNoOutlines
+            obj.LeftSurface = Enum.SurfaceType.SmoothNoOutlines
+            obj.RightSurface = Enum.SurfaceType.SmoothNoOutlines
+            obj.TopSurface = Enum.SurfaceType.SmoothNoOutlines
+        elseif obj:IsA("PostEffect") then
+            obj.Enabled = false
+        elseif obj:IsA("ForceField") then
+            obj:Destroy()
+        end
+    end)
+end
+function M.enableGraphicsBajos()
+    M.graphicsBajosEnabled = true
+    local terrain = workspace:FindFirstChildWhichIsA("Terrain")
+    if terrain then
+        terrain.WaterWaveSize = 0; terrain.WaterWaveSpeed = 0
+        terrain.WaterReflectance = 0; terrain.WaterTransparency = 1
+    end
+    Lighting.Brightness = 2; Lighting.GlobalShadows = false
+    Lighting.FogEnd = 9000000000; Lighting.FogStart = 9000000000
+    for _, obj in ipairs(game:GetDescendants()) do applyGraphicsBajosObject(obj) end
+    if M._graphicsBajosConn then M._graphicsBajosConn:Disconnect() end
+    M._graphicsBajosConn = workspace.DescendantAdded:Connect(function(obj)
+        if M.graphicsBajosEnabled then applyGraphicsBajosObject(obj) end
+    end)
+end
+function M.disableGraphicsBajos()
+    M.graphicsBajosEnabled = false
+    if M._graphicsBajosConn then M._graphicsBajosConn:Disconnect(); M._graphicsBajosConn = nil end
+end
+
+
+local RunService2 = game:GetService("RunService")
+local cherryESPState = { LineESP=false, SpeedESP=false }
+local cherryESPObjects = {}
+M.applyLoadedConfig = function()
+    if M.stopCameraSmoothing then pcall(M.stopCameraSmoothing) end
+    if M.normalizeCameraState then pcall(M.normalizeCameraState) end
+    cherryESPState.LineESP = M.lineESPEnabled == true
+    cherryESPState.SpeedESP = M.speedESPEnabled == true
+    if M.playerESPEnabled then M.toggleESP(true) else M.toggleESP(false) end
+    if M.showPlayerSpeeds then M.togglePlayerSpeeds(true) else M.togglePlayerSpeeds(false) end
+    if M.autoSwitchSpeedEnabled then
+        M.refreshWalkSpeedAutoSwitch()
+        pcall(M.updateAutoSwitchSpeed)
+    else
+        M.stopWalkSpeedAutoSwitch()
+    end
+    M.stopManualInfJumpLoop(); M.stopHoldInfJump()
+    M.infJumpMode = "hold"
+    if M.infJumpEnabled then M.startHoldInfJump() end
+    if M.autoLeftEnabled then pcall(M.startAutoLeft) else pcall(M.stopAutoLeft) end
+    if M.autoRightEnabled then pcall(M.startAutoRight) else pcall(M.stopAutoRight) end
+        if M.primeHubSkinEnabled and M.setPrimeHubSkinMode then
+        pcall(M.setPrimeHubSkinMode, M.primeHubKawatanEnabled and "Kawatan" or "PrimeHub", true)
+    end
+    if M.primeHubMusicSelection and M.primeHubMusicSelection ~= "Off" and M.setPrimeHubMusic then
+        pcall(M.setPrimeHubMusic, M.primeHubMusicSelection, true)
+    end
+    if M.buildMobileButtons and M.mobileButtonsEnabled then pcall(M.buildMobileButtons) end
+    if M.applyFOV then pcall(M.applyFOV) end
+    if M.applyCameraSensitivity then pcall(M.applyCameraSensitivity) end
+    task.defer(function()
+        task.wait(0.05)
+        if M.normalizeCameraState then pcall(M.normalizeCameraState) end
+        if M.startCameraSmoothing then pcall(M.startCameraSmoothing) end
+    end)
+    if M.CandyApplyCustomSky then pcall(M.CandyApplyCustomSky, M.currentSkyTheme) end
+    if M.saveConfig then pcall(M.saveConfig) end
+end
+local DrawingAvailable = false
+pcall(function() DrawingAvailable = Drawing and type(Drawing.new)=="function" end)
+local function cherryRemoveESP(p)
+    local r = cherryESPObjects[p]
+    if not r then return end
+    for _,o in pairs(r) do pcall(function()
+        if typeof(o)=="Instance" then o:Destroy()
+        elseif o.Remove then o:Remove() end
+    end) end
+    cherryESPObjects[p]=nil
+end
+local function cherryGetSpeed(root)
+    local v
+    pcall(function() v=root.AssemblyLinearVelocity end)
+    if not v then pcall(function() v=root.Velocity end) end
+    if not v then return 0 end
+    return Vector3.new(v.X,0,v.Z).Magnitude
+end
+local function cherryCreateESP(p)
+    if cherryESPObjects[p] then return cherryESPObjects[p] end
+    local r={}
+    local hl=Instance.new("Highlight")
+    hl.FillTransparency=1; hl.OutlineTransparency=0
+    hl.DepthMode=Enum.HighlightDepthMode.AlwaysOnTop
+    hl.Enabled=false; hl.Parent=workspace
+    r.Highlight=hl
+    local box=Instance.new("BoxHandleAdornment")
+    box.Name="LineESPBox"
+    box.Size=Vector3.new(3.2, 5.8, 2.2)
+    box.Color3=M.currentAccent or Color3.fromRGB(58, 128, 245)
+    box.Transparency=0.25
+    box.AlwaysOnTop=true
+    box.ZIndex=5
+    box.Visible=false
+    box.Parent=workspace
+    r.Box=box
+    local bb=Instance.new("BillboardGui")
+    bb.Size=UDim2.fromOffset(150,32); bb.StudsOffset=Vector3.new(0,3.25,0)
+    bb.AlwaysOnTop=true; bb.Enabled=false; bb.ResetOnSpawn=false
+    bb.Parent=player:WaitForChild("PlayerGui")
+    local sl=Instance.new("TextLabel",bb)
+    sl.Size=UDim2.fromScale(1,1); sl.BackgroundTransparency=1; sl.Text="0.0 spd"
+    sl.TextStrokeColor3=Color3.new(0,0,0); sl.TextStrokeTransparency=0
+    sl.Font=Enum.Font.GothamBlack; sl.TextSize=18
+    sl.TextXAlignment=Enum.TextXAlignment.Center; sl.TextYAlignment=Enum.TextYAlignment.Center
+    r.Billboard=bb; r.SpeedText=sl
+    if DrawingAvailable then
+        local ln=Drawing.new("Line")
+        ln.Visible=false; ln.Thickness=2.75; ln.Transparency=1
+        r.Line=ln
+    end
+    cherryESPObjects[p]=r
+    return r
+end
+Players.PlayerRemoving:Connect(function(p) cherryRemoveESP(p) end)
+local function themeDarkFromAccent(accent, amount)
+    amount = math.clamp(tonumber(amount) or 0.12, 0, 1)
+    return Color3.new(
+        math.clamp(accent.R * amount, 0, 1),
+        math.clamp(accent.G * amount, 0, 1),
+        math.clamp(accent.B * amount, 0, 1)
+    )
+end
+local function isNearBlack(c, threshold)
+    if typeof(c) ~= "Color3" then return false end
+    threshold = threshold or 0.14
+    return c.R <= threshold and c.G <= threshold and c.B <= threshold
+end
+M.THEME_BG_IDS = {}
+function M.applyMenuBackground(index)
+    local list = M.MENU_BG_IDS or M.BG_IMAGE_IDS or {}
+    local n = #list
+    if n < 1 then return end
+    index = tonumber(index) or M.menuBgIndex or 1
+    if index < 1 then index = n end
+    if index > n then index = 1 end
+    M.menuBgIndex = index
+    local id = tostring(list[index])
+    M.customBgId = id
+    if M.bgImageRef and M.bgImageRef.Parent then
+        -- thumb es el más fiable en ImageLabel de GUI
+        local uri = string.format("rbxthumb://type=Asset&id=%s&w=768&h=432", id)
+        M.bgImageRef.Image = uri
+        M.bgImageRef.ImageTransparency = 1
+        M.bgImageRef.ScaleType = Enum.ScaleType.Crop
+        M.bgImageRef.Visible = true
+        M.bgImageRef.ZIndex = 0
+    end
+    if M.menuBgLabel and M.menuBgLabel.Parent then
+        M.menuBgLabel.Text = "image " .. tostring(index)
+    end
+end
+function M.applyThemeBackground(themeName)
+    M.applyMenuBackground(M.menuBgIndex or 1)
+end
+
+function M.savePlayerBackground()
+    M._playerBgSaved = true
+    M.menuBgIndex = tonumber(M.menuBgIndex) or 1
+    M.customBgId = tostring((M.MENU_BG_IDS or {})[M.menuBgIndex] or M.customBgId or "")
+    M.adaptThemeName = tostring(M.adaptThemeName or "BLUE")
+    if M.ADAPT_THEME_COLORS and M.ADAPT_THEME_COLORS[M.adaptThemeName] then
+        M.currentAccent = M.ADAPT_THEME_COLORS[M.adaptThemeName]
+    end
+    pcall(function() if savePrimeHubFeKlanConfig then savePrimeHubFeKlanConfig() end end)
+    if M.notify then pcall(function() M.notify("Background + color guardados") end) end
+end
+
+function M.cycleMenuBackground(dir)
+    local list = M.MENU_BG_IDS or M.BG_IMAGE_IDS or {}
+    local n = #list
+    if n < 1 then return end
+    local idx = (tonumber(M.menuBgIndex) or 1) + (tonumber(dir) or 1)
+    if idx < 1 then idx = n end
+    if idx > n then idx = 1 end
+    M.applyMenuBackground(idx)
+end
+M.ADAPT_THEME_COLORS = {
+    PURPLE = Color3.fromRGB(160, 40, 255),
+    BLUE   = Color3.fromRGB(0, 140, 255),
+    PINK   = Color3.fromRGB(255, 80, 190),
+    GREEN  = Color3.fromRGB(0, 200, 110),
+}
+M.ADAPT_THEME_ORDER = {"PURPLE","BLUE","PINK","GREEN"}
+M.adaptThemeName = M.adaptThemeName or "BLUE"
+M.menuBgIndex = (M.adaptThemeName == "PURPLE" and 2) or (M.adaptThemeName == "PINK" and 3) or (M.adaptThemeName == "GREEN" and 4) or 1
+M.currentAccent = M.currentAccent or Color3.fromRGB(255, 120, 180)
+
+function M.applyAdaptThemeColor(name)
+    name = tostring(name or M.adaptThemeName or "BLUE"):upper()
+    local tint = M.ADAPT_THEME_COLORS and M.ADAPT_THEME_COLORS[name]
+    if not tint then
+        name = "BLUE"
+        tint = (M.ADAPT_THEME_COLORS and M.ADAPT_THEME_COLORS.BLUE) or Color3.fromRGB(58, 128, 245)
+    end
+    M.adaptThemeName = name
+    M.currentAccent = tint
+
+    -- Fondos oscuros derivados del color (negro/gris = casi black)
+    local isDark = (name == "GREY" or name == "WHITE")
+    local bgDark = Color3.fromRGB(0, 0, 0)
+    local rowDark = Color3.fromRGB(10, 10, 12)
+    if name == "GREY" then
+        bgDark = Color3.fromRGB(12, 12, 14)
+        rowDark = Color3.fromRGB(22, 22, 26)
+        tint = Color3.fromRGB(120, 120, 128) -- gris visible, no negro puro
+        M.currentAccent = tint
+    elseif name == "WHITE" then
+        tint = Color3.fromRGB(230, 230, 235)
+        M.currentAccent = tint
+    end
+
+    local cherryMap = {
+        PURPLE = "Purple", BLUE = "Blue", RED = "Red", PINK = "Pink",
+        YELLOW = "Yellow", GREY = "Default", WHITE = "Default", FOREST = "Default",
+    }
+    local cherryName = cherryMap[name] or "Blue"
+    CHERRY_THEMES = CHERRY_THEMES or {}
+    if not CHERRY_THEMES[cherryName] then
+        CHERRY_THEMES[cherryName] = { Accent = tint, AccentDim = tint, Bg = bgDark, Row = rowDark }
+    end
+    CHERRY_THEMES[cherryName].Accent = tint
+    CHERRY_THEMES[cherryName].AccentDim = Color3.new(tint.R * 0.7, tint.G * 0.7, tint.B * 0.7)
+    CHERRY_THEMES[cherryName].Bg = bgDark
+    CHERRY_THEMES[cherryName].Row = rowDark
+    M.colorScheme = cherryName
+    M._savedTheme = cherryName
+    if PrimeHubFeKlanConfig then PrimeHubFeKlanConfig.Theme = cherryName end
+    pcall(function() applyAccentFromTheme() end)
+
+    local function isPinkish(c)
+        if typeof(c) ~= "Color3" then return false end
+        -- detectar rosa/magenta hardcodeado
+        local r, g, b = c.R * 255, c.G * 255, c.B * 255
+        if r > 180 and b > 120 and g < 180 then return true end
+        if r > 200 and g > 80 and g < 160 and b > 150 then return true end
+        return false
+    end
+
+    local function paintAll(root)
+        if not root then return end
+        for _, obj in ipairs(root:GetDescendants()) do
+            pcall(function()
+                if obj:IsA("UIStroke") then
+                    if isPinkish(obj.Color) or true then
+                        obj.Color = tint
+                    end
+                elseif obj:IsA("TextLabel") or obj:IsA("TextButton") then
+                    if isPinkish(obj.TextColor3) or isPinkish(obj.BackgroundColor3) then
+                        if isPinkish(obj.TextColor3) then obj.TextColor3 = tint end
+                        if isPinkish(obj.BackgroundColor3) then obj.BackgroundColor3 = tint end
+                    end
+                    local tn = string.lower(tostring(obj.Name or ""))
+                    local tx = string.lower(tostring(obj.Text or ""))
+                    if string.find(tn, "title") or string.find(tn, "header") or string.find(tn, "primehub")
+                        or string.find(tx, "primehub") or string.find(tn, "tab") then
+                        if obj:IsA("TextLabel") or (obj:IsA("TextButton") and obj.BackgroundTransparency > 0.5) then
+                            obj.TextColor3 = tint
+                        else
+                            obj.BackgroundColor3 = tint
+                            obj.TextColor3 = Color3.fromRGB(255, 255, 255)
+                        end
+                    end
+                    -- tabs Main/Speed etc
+                    if string.find(tn, "tab") or string.find(tx, "main") or string.find(tx, "speed")
+                        or string.find(tx, "combat") or string.find(tx, "utility") then
+                        if obj.BackgroundTransparency < 0.5 then
+                            obj.BackgroundColor3 = tint
+                            obj.TextColor3 = Color3.fromRGB(255, 255, 255)
+                        end
+                    end
+                elseif obj:IsA("Frame") or obj:IsA("ScrollingFrame") then
+                    if isPinkish(obj.BackgroundColor3) then
+                        obj.BackgroundColor3 = tint
+                    end
+                elseif obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
+                    if isPinkish(obj.ImageColor3) then
+                        obj.ImageColor3 = tint
+                    end
+                end
+            end)
+        end
+    end
+
+    pcall(function() paintAll(M.mainGui) end)
+    pcall(function() paintAll(M.mainFrame) end)
+    pcall(function() paintAll(M.statusGui) end)
+    pcall(function() paintAll(M.pcKeyStatusGui) end)
+
+    -- Botones móviles: fondo del color + texto blanco
+    pcall(function()
+        local gui = M.mobGuiRef or M.mobileButtonsGui
+        if not gui then return end
+        for _, holder in ipairs(gui:GetChildren()) do
+            for _, d in ipairs(holder:GetDescendants()) do
+                pcall(function()
+                    if d:IsA("UIStroke") then
+                        d.Color = Color3.fromRGB(255, 255, 255)
+                    elseif d:IsA("TextLabel") or d:IsA("TextButton") then
+                        d.TextColor3 = Color3.fromRGB(255, 255, 255)
+                        if d:IsA("TextButton") and d.BackgroundTransparency < 1 then
+                            d.BackgroundColor3 = tint
+                        end
+                    elseif d:IsA("Frame") or d:IsA("ImageLabel") then
+                        local n = string.lower(tostring(d.Name or ""))
+                        if string.find(n, "bg") or string.find(n, "none") or string.find(n, "glow") or d.BackgroundTransparency < 0.5 then
+                            if d:IsA("ImageLabel") then
+                                d.ImageColor3 = tint
+                            else
+                                d.BackgroundColor3 = tint
+                            end
+                        end
+                    end
+                    if d:IsA("UIGradient") then
+                        d.Color = ColorSequence.new({
+                            ColorSequenceKeypoint.new(0, tint),
+                            ColorSequenceKeypoint.new(1, Color3.new(tint.R * 0.5, tint.G * 0.5, tint.B * 0.5)),
+                        })
+                    end
+                end)
+            end
+        end
+    end)
+
+    -- refrescar paint de cada botón móvil con el acento actual
+    pcall(function()
+        if M.mobBtnRefs then
+            for key, paintFn in pairs(M.mobBtnRefs) do
+                if type(paintFn) == "function" then
+                    local active = false
+                    pcall(function()
+                        -- conservar estado on/off si el botón lo tiene
+                    end)
+                    paintFn(false)
+                end
+            end
+            -- reaplicar estados activos
+            if M.autoLeftEnabled and M.mobBtnRefs.autoLeft then M.mobBtnRefs.autoLeft(true) end
+            if M.autoRightEnabled and M.mobBtnRefs.autoRight then M.mobBtnRefs.autoRight(true) end
+            if M.batAimbotEnabled and M.mobBtnRefs.batAimbot then M.mobBtnRefs.batAimbot(true) end
+            if M.bypassAimbotEnabled and M.mobBtnRefs.tpBat then M.mobBtnRefs.tpBat(true) end
+            if M.carrySpeedActive and M.mobBtnRefs.carrySpeed then M.mobBtnRefs.carrySpeed(true) end
+            if M.laggerModeEnabled and M.mobBtnRefs.lagger then M.mobBtnRefs.lagger(true) end
+            if M.laggerCarryActive and M.mobBtnRefs.laggerCarry then M.mobBtnRefs.laggerCarry(true) end
+        end
+    end)
+
+    pcall(function() if savePrimeHubFeKlanConfig then savePrimeHubFeKlanConfig() end end)
+    if M.notify then pcall(function() M.notify("Color: " .. name) end) end
+end
+
+
+function applyAccentFromTheme()
+    local name = PrimeHubFeKlanConfig.Theme or M.colorScheme or M._savedTheme or "Default"
+    if not CHERRY_THEMES[name] then name = "Default" end
+    PrimeHubFeKlanConfig.Theme = name
+    M.colorScheme = name
+    M._savedTheme = name
+    M.applyThemeBackground(name)
+    local t = CHERRY_THEMES[name]
+    local accent = t.Accent
+    local dim = t.AccentDim or accent:Lerp(Color3.new(0,0,0), 0.35)
+    local bg  = themeDarkFromAccent(accent, 0.10)
+    local row = themeDarkFromAccent(accent, 0.18)
+    local btn = themeDarkFromAccent(accent, 0.22)
+    local tog = themeDarkFromAccent(accent, 0.28)
+    local gradTop = themeDarkFromAccent(accent, 0.26)
+    local gradBot = themeDarkFromAccent(accent, 0.08)
+    CHERRY_ACCENT = accent
+    UI_ACCENT = accent
+    UI_ACCENT_DIM = dim
+    UI_BG_DARK = bg
+    UI_ROW_BG = row
+    UI_BTN_BG = btn
+    UI_TOGGLE_OFF = tog
+    UI_TOGGLE_KNOB = Color3.fromRGB(245, 185, 225)
+    UI_KNOB_ON = Color3.fromRGB(255, 235, 248)
+    UI_TEXT_PRIMARY = Color3.fromRGB(255, 235, 248)
+    UI_TEXT_WHITE = Color3.fromRGB(255, 235, 248)
+    UI_TEXT_DIM = dim:Lerp(Color3.fromRGB(200,200,210), 0.4)
+    UI_TEXT_SECTION = accent
+    UI_CARD_STROKE = dim
+    UI_GRAD_TOP = gradTop
+    UI_GRAD_BOT = gradBot
+    M.Theme = {
+        Name = name,
+        Accent = accent,
+        AccentDim = dim,
+        Bg = bg,
+        Row = row,
+    }
+    if M.updateStealBarTheme then
+        M.updateStealBarTheme()
+    end
+    if M.antiLagEnabled and M.enableAntiLag then
+        task.defer(function()
+            if M.antiLagEnabled then pcall(M.enableAntiLag) end
+        if M.nukeOptimiserEnabled then pcall(M.enableNukeOptimizer) end
+        if M.antiVoidEnabled then pcall(M.startAntiVoid) end
+        if M.bodyLockEnabled then pcall(M.startBodyLock) end
+        end)
+    end
+end
+function M.recolorPinkToTheme(root)
+    if not root then return end
+    local blueMode = (M.colorScheme == "Blue")
+    local pink = {
+        ["255,92,180"] = Color3.fromRGB(58,128,245), ["255,105,180"] = Color3.fromRGB(58,128,245),
+        ["255,140,210"] = Color3.fromRGB(40,90,180), ["255,180,225"] = Color3.fromRGB(40,90,180),
+        ["150,20,95"] = Color3.fromRGB(40,90,180), ["120,20,80"] = Color3.fromRGB(40,90,180),
+        ["255,235,248"] = Color3.fromRGB(220,235,255), ["255,210,210"] = Color3.fromRGB(205,225,255),
+        ["255,175,175"] = Color3.fromRGB(175,215,255),
+    }
+    local blue = {
+        ["58,128,245"] = Color3.fromRGB(255,105,180), ["40,90,180"] = Color3.fromRGB(200,80,140),
+        ["220,235,255"] = Color3.fromRGB(255,235,248), ["205,225,255"] = Color3.fromRGB(255,210,210),
+        ["175,215,255"] = Color3.fromRGB(255,175,175),
+    }
+    local function isESPObject(obj)
+        local p = obj
+        while p and p ~= root do
+            if string.find(string.upper(p.Name or ""), "ESP", 1, true) then return true end
+            p = p.Parent
+        end
+        return string.find(string.upper(obj.Name or ""), "ESP", 1, true) ~= nil
+    end
+    local function convert(obj, property)
+        local ok, c = pcall(function() return obj[property] end)
+        if not ok or typeof(c) ~= "Color3" then return end
+        local r,g,b = math.floor(c.R*255+0.5), math.floor(c.G*255+0.5), math.floor(c.B*255+0.5)
+        local key = string.format("%d,%d,%d", r,g,b)
+        local mapped = blueMode and pink[key] or blue[key]
+        if mapped then pcall(function() obj[property] = mapped end) end
+    end
+    local function recolor(obj)
+        if isESPObject(obj) then return end
+        if obj:IsA("GuiObject") then convert(obj, "BackgroundColor3") end
+        if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then convert(obj, "TextColor3") end
+        if obj:IsA("ImageLabel") or obj:IsA("ImageButton") then convert(obj, "ImageColor3") end
+        if obj:IsA("UIStroke") then convert(obj, "Color") end
+    end
+    recolor(root)
+    for _, d in ipairs(root:GetDescendants()) do recolor(d) end
+end
+function M.recolorBlacksToTheme(root)
+    if not root then return end
+    local bg = UI_BG_DARK or themeDarkFromAccent(UI_ACCENT or Color3.new(1,1,1), 0.10)
+    local row = UI_ROW_BG or themeDarkFromAccent(UI_ACCENT or Color3.new(1,1,1), 0.18)
+    local btn = UI_BTN_BG or themeDarkFromAccent(UI_ACCENT or Color3.new(1,1,1), 0.22)
+    local accent = UI_ACCENT or Color3.new(1,1,1)
+    local dim = UI_ACCENT_DIM or accent
+    local function recolor(obj)
+        if obj:IsA("GuiObject") then
+            local ok, col = pcall(function() return obj.BackgroundColor3 end)
+            if ok and isNearBlack(col) then
+                if obj:IsA("Frame") and (obj.Name == "Main" or obj.Name == "MainFrame" or obj.Size.X.Scale >= 0.9) then
+                    obj.BackgroundColor3 = bg
+                elseif obj:IsA("TextButton") or obj:IsA("ImageButton") then
+                    obj.BackgroundColor3 = btn
+                else
+                    obj.BackgroundColor3 = row
+                end
+            end
+        end
+        if obj:IsA("UIStroke") then
+            local ok, col = pcall(function() return obj.Color end)
+            if ok and isNearBlack(col, 0.25) then
+                obj.Color = dim
+            end
+        end
+        if obj:IsA("UIGradient") then
+            pcall(function()
+                obj.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, UI_GRAD_TOP or gradTop or row),
+                    ColorSequenceKeypoint.new(1, UI_GRAD_BOT or bg),
+                })
+            end)
+        end
+    end
+    recolor(root)
+    for _, d in ipairs(root:GetDescendants()) do
+        recolor(d)
+    end
+end
+local CHERRY_ACCENT = CHERRY_THEMES[PrimeHubFeKlanConfig.Theme].Accent
+do
+local _espAcc = 0
+RunService2.RenderStepped:Connect(function(dt)
+    if not (cherryESPState and (cherryESPState.LineESP or cherryESPState.SpeedESP)) then
+        return
+    end
+    _espAcc = _espAcc + (dt or 0.016)
+    if _espAcc < (PRIMEHUB_MOBILE and 0.12 or 0.05) then return end
+    _espAcc = 0
+    local cam=workspace.CurrentCamera; if not cam then return end
+    local lc=player.Character
+    local lr=lc and lc:FindFirstChild("HumanoidRootPart")
+    -- La línea sale del pecho del personaje local.
+    local lineStart=Vector2.new(cam.ViewportSize.X*0.5, cam.ViewportSize.Y*0.96)
+    if lr then
+        local chest = lc:FindFirstChild("UpperTorso") or lc:FindFirstChild("Torso") or lr
+        local cp, cv = cam:WorldToViewportPoint(chest.Position)
+        if cv and cp.Z > 0 then lineStart=Vector2.new(cp.X, cp.Y + 28) end
+    end
+    local liveAccent = UI_ACCENT or CHERRY_ACCENT or Color3.fromRGB(255,255,255)
+    for _,p in ipairs(M.getPlayersCached and M.getPlayersCached() or Players:GetPlayers()) do
+        if p ~= player then
+            local r=cherryCreateESP(p)
+            local ch=p.Character
+            local hum=ch and ch:FindFirstChildOfClass("Humanoid")
+            local root=ch and ch:FindFirstChild("HumanoidRootPart")
+            local head=ch and ch:FindFirstChild("Head")
+            local alive=ch and hum and root and hum.Health>0
+            if not alive then
+                if r.Line then r.Line.Visible=false end
+                if r.Box then r.Box.Visible=false; r.Box.Adornee=nil end
+                r.Highlight.Enabled=false; r.Billboard.Enabled=false
+                r.Highlight.Adornee=nil; r.Billboard.Adornee=nil
+            else
+                r.Highlight.Adornee=ch; r.Highlight.Enabled=cherryESPState.LineESP
+                if r.Box then
+                    local ext = Vector3.new(3.2, 5.8, 2.2)
+                    pcall(function()
+                        local measured = ch:GetExtentsSize()
+                        ext = Vector3.new(math.clamp(measured.X * 1.12, 2.4, 8), math.clamp(measured.Y * 1.08, 4, 10), math.clamp(measured.Z * 1.12, 1.6, 6))
+                    end)
+                    r.Box.Size=ext
+                    r.Box.Adornee=root
+                    r.Box.Visible=cherryESPState.LineESP
+                end
+                r.Highlight.OutlineColor=liveAccent
+                r.Highlight.FillColor=liveAccent
+                r.Highlight.FillTransparency=0.85
+                if r.Line then
+                    local tp,tv=cam:WorldToViewportPoint(root.Position)
+                    if cherryESPState.LineESP and tv and tp.Z>0 then
+                        r.Line.From=lineStart; r.Line.To=Vector2.new(tp.X,tp.Y)
+                        r.Line.Color=_aceEspColor(); r.Line.Thickness=1; r.Line.Visible=true
+                    else r.Line.Visible=false end
+                end
+                if cherryESPState.SpeedESP and head then
+                    r.Billboard.Adornee=head; r.Billboard.Enabled=true
+                    r.SpeedText.Text=string.format("%.1f spd",cherryGetSpeed(root))
+                    r.SpeedText.TextColor3=liveAccent
+                else r.Billboard.Enabled=false; r.Billboard.Adornee=nil end
+            end
+        end
+    end
+end)
+end
+function M.trackConn(conn) table.insert(M._persistentConns,conn); return conn end
+function M.clearPersistentConns()
+    for _,c in ipairs(M._persistentConns) do pcall(function() c:Disconnect() end) end
+    M._persistentConns={}
+end
+function M.makeNumberCallback(tbl,key,min,max)
+    return function(v)
+        if min and v<min then return end
+        if max and v>max then return end
+        tbl[key]=v
+        if key=="mobileButtonsSize" and M.mobileButtonsEnabled then M.buildMobileButtons() end
+        savePrimeHubFeKlanConfig()
+    end
+end
+
+local function accentNow()
+    return M.currentAccent or Color3.fromRGB(58, 128, 245)
+end
+local C = {
+    -- CLEAN HUB palette
+    bg=Color3.fromRGB(0,0,0), bgDark=Color3.fromRGB(10,10,10), row=Color3.fromRGB(10,10,10),
+    input=Color3.fromRGB(15,15,15), text=Color3.fromRGB(255,255,255), textDim=Color3.fromRGB(180,180,190),
+    textMuted=Color3.fromRGB(100,100,110), white=Color3.fromRGB(255,255,255),
+    divider=Color3.fromRGB(50,50,50), accent=Color3.fromRGB(180,180,190)
+}
+setmetatable(C, {__index = function(_, k)
+    if k == "accent" or k == "divider" then return accentNow() end
+    return nil
+end})
+local function guiCorner(p,r) local c=Instance.new("UICorner");c.CornerRadius=UDim.new(0,r or 10);c.Parent=p;return c end
+local function guiSharpCorner(p) local c=Instance.new("UICorner");c.CornerRadius=UDim.new(0,0);c.Parent=p;return c end
+-- Live plomo (lead gray) animated borders
+M._plomoStrokes = M._plomoStrokes or {}
+M._plomoAnimRunning = false
+local PLOMO_A = Color3.fromRGB(70, 72, 78)
+local PLOMO_B = Color3.fromRGB(140, 144, 155)
+local PLOMO_C = Color3.fromRGB(95, 98, 108)
+
+local function guiStroke(p, col, t)
+    local s = Instance.new("UIStroke")
+    s.Color = col or Color3.fromRGB(50, 50, 50)
+    s.Thickness = t or 1
+    s.Transparency = 0.45
+    s.Parent = p
+    table.insert(M._plomoStrokes, s)
+    return s
+end
+
+function M.startPlomoBorderAnim()
+    if M._plomoAnimRunning then return end
+    M._plomoAnimRunning = true
+    task.spawn(function()
+        while M._plomoAnimRunning do
+            local t = tick()
+            -- smooth wave between gray tones
+            local wave = (math.sin(t * 5.5) + 1) * 0.5  -- fast live plomo
+            local wave2 = (math.sin(t * 5.5 + 1.2) + 1) * 0.5
+            local col = PLOMO_A:Lerp(PLOMO_B, wave):Lerp(PLOMO_C, wave2 * 0.35)
+            local trans = 0.12 + wave * 0.28  -- visible pulse
+            -- clean dead refs
+            local alive = {}
+            for _, s in ipairs(M._plomoStrokes or {}) do
+                if s and s.Parent then
+                    local curT = 0.25
+                    pcall(function() curT = s.Transparency end)
+                    local isMob = false
+                    local flashing = false
+                    pcall(function()
+                        isMob = s:GetAttribute("MobBtn") == true
+                        flashing = s:GetAttribute("PressFlash") == true
+                    end)
+                    -- don't override mobile btn strokes (they have their own active/press logic)
+                    if (not isMob) and (not flashing) and curT < 0.92 then
+                        pcall(function()
+                            s.Color = col
+                            s.Transparency = trans
+                        end)
+                    end
+                    table.insert(alive, s)
+                end
+            end
+            M._plomoStrokes = alive
+            -- Active mobile buttons: strong live plomo pulse so ON state is obvious
+            for _, s in ipairs(M._mobBtnStrokes or {}) do
+                if s and s.Parent then
+                    local active, flashing = false, false
+                    pcall(function()
+                        active = s:GetAttribute("BtnActive") == true
+                        flashing = s:GetAttribute("PressFlash") == true
+                    end)
+                    if active and not flashing then
+                        local t2 = tick() * 8
+                        local w = (math.sin(t2) + 1) * 0.5
+                        pcall(function()
+                            s.Color = Color3.fromRGB(200, 204, 215):Lerp(Color3.fromRGB(255, 255, 255), w)
+                            s.Thickness = 3.2 + w * 1.4
+                            s.Transparency = 0.02 + w * 0.12
+                        end)
+                    end
+                end
+            end
+            task.wait(0.06)
+        end
+    end)
+end
+
+function M.stopPlomoBorderAnim()
+    M._plomoAnimRunning = false
+end
+
+local function tw(obj,props,ti) TweenService:Create(obj,ti or TweenInfo.new(0.12),props):Play() end
+local function makeDraggable_cyber(dragTarget, moveTarget)
+    moveTarget = moveTarget or dragTarget
+    local dragging, dragInput, dragStart, startPos = false
+    dragTarget.InputBegan:Connect(function(input)
+        if M.uiLocked then return end
+        if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then
+            dragging=true; dragStart=input.Position; startPos=moveTarget.Position
+            input.Changed:Connect(function() if input.UserInputState==Enum.UserInputState.End then dragging=false end end)
+        end
+    end)
+    dragTarget.InputChanged:Connect(function(input)
+        if input.UserInputType==Enum.UserInputType.MouseMovement or input.UserInputType==Enum.UserInputType.Touch then dragInput=input end
+    end)
+    UIS.InputChanged:Connect(function(input)
+        if input==dragInput and dragging then
+            local delta=input.Position-dragStart
+            moveTarget.Position=UDim2.new(startPos.X.Scale,startPos.X.Offset+delta.X,startPos.Y.Scale,startPos.Y.Offset+delta.Y)
+        end
+    end)
+end
+local function uiSectionHeader(parent, text)
+    local wrap=Instance.new("Frame",parent)
+    wrap.Size=UDim2.new(1,0,0,32)
+    wrap.BackgroundTransparency=1
+    wrap.BorderSizePixel=0
+    local L=Instance.new("TextLabel",wrap)
+    L.Size=UDim2.new(1,-20,0,18)
+    L.Position=UDim2.new(0,10,0,8)
+    L.BackgroundTransparency=1
+    L.Text=text:upper()
+    L.TextColor3=M.currentAccent or Color3.fromRGB(180,180,190)
+    L.TextSize=12
+    L.Font=Enum.Font.GothamBlack
+    L.TextXAlignment=Enum.TextXAlignment.Left
+    L.TextStrokeColor3=Color3.fromRGB(0,0,0)
+    L.TextStrokeTransparency=0.4
+    local line=Instance.new("Frame",wrap)
+    line.Size=UDim2.new(1,-20,0,1)
+    line.Position=UDim2.new(0,10,1,-2)
+    line.BackgroundColor3=M.currentAccent or Color3.fromRGB(180,180,190)
+    line.BackgroundTransparency=0.5
+    line.BorderSizePixel=0
+    return L
+end
+local function uiInputRow(parent, label, value, callback)
+    local Row=Instance.new("Frame",parent); Row.Size=UDim2.new(1,-8,0,42); Row.BackgroundColor3=Color3.fromRGB(8,10,12)
+    Row.BackgroundTransparency=0.12; Row.BorderSizePixel=0; guiCorner(Row,12); local rowStroke=guiStroke(Row,Color3.fromRGB(255,255,255),1); rowStroke.Transparency=0.78
+    local Lb=Instance.new("TextLabel",Row); Lb.Size=UDim2.new(1,-80,1,0); Lb.Position=UDim2.new(0,14,0,0)
+    Lb.BackgroundTransparency=1; Lb.Text=label; Lb.TextColor3=Color3.fromRGB(255,255,255); Lb.TextSize=13; Lb.Font=Enum.Font.GothamBlack; Lb.TextXAlignment=Enum.TextXAlignment.Left
+    Lb.TextTruncate=Enum.TextTruncate.AtEnd
+    Lb.TextStrokeColor3=Color3.fromRGB(0,0,0); Lb.TextStrokeTransparency=0.25
+    local BC=Instance.new("Frame",Row); BC.ZIndex=6; BC.Position=UDim2.new(1,-68,0.5,-12); BC.Size=UDim2.new(0,56,0,24)
+    BC.BackgroundColor3=Color3.fromRGB(15,15,15); BC.BackgroundTransparency=0.7; BC.BorderSizePixel=0; guiCorner(BC,6); guiStroke(BC, Color3.fromRGB(50,50,50),1)
+    local Box=Instance.new("TextBox",BC); Box.ZIndex=7; Box.Size=UDim2.new(1,0,1,0); Box.BackgroundTransparency=1
+    Box.Text=tostring(value); Box.TextColor3=C.text; Box.TextSize=11; Box.Font=Enum.Font.GothamBold; Box.ClearTextOnFocus=false
+    Box.FocusLost:Connect(function() local n=tonumber(Box.Text); if n then callback(n) else Box.Text=tostring(value) end end)
+    return Row,Box
+end
+local function uiNumberRow(parent, label, value, min, max, callback)
+    return uiInputRow(parent, label, value, function(v)
+        if min and v < min then v = min end
+        if max and v > max then v = max end
+        callback(v)
+    end)
+end
+local function uiToggleRow(parent, label, enabled, callback)
+    -- Toggles de alto contraste (legibles sobre fondos)
+    local Row=Instance.new("Frame",parent)
+    Row.Size=UDim2.new(1,-8,0,42)
+    Row.BackgroundColor3=Color3.fromRGB(8, 10, 12)
+    Row.BackgroundTransparency=0.12
+    Row.BorderSizePixel=0
+    guiCorner(Row, 12)
+    local rowStroke=guiStroke(Row, Color3.fromRGB(255,255,255), 1)
+    rowStroke.Transparency=0.78
+    local Lb=Instance.new("TextLabel",Row)
+    Lb.Size=UDim2.new(1,-72,1,0)
+    Lb.Position=UDim2.new(0,14,0,0)
+    Lb.BackgroundTransparency=1
+    Lb.Text=label
+    Lb.TextColor3=Color3.fromRGB(255,255,255)
+    Lb.TextSize=13
+    Lb.Font=Enum.Font.GothamBlack
+    Lb.TextXAlignment=Enum.TextXAlignment.Left
+    Lb.TextTruncate=Enum.TextTruncate.AtEnd
+    Lb.TextStrokeColor3=Color3.fromRGB(0,0,0)
+    Lb.TextStrokeTransparency=0.25
+    local Track=Instance.new("Frame",Row)
+    Track.Name="Track"
+    Track.Size=UDim2.new(0,44,0,24)
+    Track.AnchorPoint=Vector2.new(1,0.5)
+    Track.Position=UDim2.new(1,-12,0.5,0)
+    Track.BackgroundColor3=Color3.fromRGB(45,48,55)
+    Track.BackgroundTransparency=0
+    Track.BorderSizePixel=0
+    guiCorner(Track, 12)
+    local trackStroke=Instance.new("UIStroke",Track)
+    trackStroke.Name="PillStroke"
+    trackStroke.Color=Color3.fromRGB(120,125,135)
+    trackStroke.Thickness=1.2
+    trackStroke.Transparency=0.25
+    local Knob=Instance.new("Frame",Track)
+    Knob.Name="Knob"
+    Knob.Size=UDim2.new(0,18,0,18)
+    Knob.Position=enabled and UDim2.new(1,-21,0.5,-9) or UDim2.new(0,3,0.5,-9)
+    Knob.BackgroundColor3=Color3.fromRGB(245,245,250)
+    Knob.BorderSizePixel=0
+    guiCorner(Knob, 9)
+    local kStroke=Instance.new("UIStroke",Knob)
+    kStroke.Color=Color3.fromRGB(0,0,0)
+    kStroke.Thickness=1
+    kStroke.Transparency=0.55
+    local Shine=Instance.new("Frame",Knob)
+    Shine.Size=UDim2.new(1,-6,0,5)
+    Shine.Position=UDim2.new(0,3,0,2)
+    Shine.BackgroundColor3=Color3.fromRGB(255,255,255)
+    Shine.BackgroundTransparency=0.55
+    Shine.BorderSizePixel=0
+    guiCorner(Shine, 4)
+    local st=enabled==true
+    local function setV(on)
+        st=on
+        local theme = M.currentAccent or Color3.fromRGB(0, 200, 110)
+        local info = TweenInfo.new(0.16, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        TweenService:Create(Knob, info, {Position = on and UDim2.new(1,-21,0.5,-9) or UDim2.new(0,3,0.5,-9)}):Play()
+        TweenService:Create(Track, info, {
+            BackgroundColor3 = on and theme or Color3.fromRGB(45,48,55),
+            BackgroundTransparency = 0,
+        }):Play()
+        TweenService:Create(trackStroke, info, {
+            Color = on and theme or Color3.fromRGB(120,125,135),
+            Transparency = on and 0.1 or 0.25,
+        }):Play()
+    end
+    setV(st)
+    local Btn=Instance.new("TextButton",Row)
+    Btn.Size=UDim2.new(1,0,1,0)
+    Btn.BackgroundTransparency=1
+    Btn.Text=""
+    Btn.ZIndex=10
+    Btn.MouseButton1Click:Connect(function()
+        st=not st
+        setV(st)
+        if callback then callback(st) end
+        savePrimeHubFeKlanConfig()
+    end)
+    Row.MouseEnter:Connect(function()
+        TweenService:Create(Row, TweenInfo.new(0.12), {
+            BackgroundColor3=Color3.fromRGB(18,22,26),
+            BackgroundTransparency=0.05,
+        }):Play()
+    end)
+    Row.MouseLeave:Connect(function()
+        TweenService:Create(Row, TweenInfo.new(0.12), {
+            BackgroundColor3=Color3.fromRGB(8,10,12),
+            BackgroundTransparency=0.12,
+        }):Play()
+    end)
+    return Row,setV
+end
+
+-- Expandable toggle like Anti-Sammy: main row + arrow + V1/V2 panel
+local function uiExpandableVersionToggle(parent, label, enabled, versions, initialVersion, onToggle, onVersion)
+    versions = versions or {"V1", "V2"}
+    local selected = tostring(initialVersion or versions[1])
+    local open = false
+    local st = enabled == true
+
+    local wrap = Instance.new("Frame", parent)
+    wrap.Size = UDim2.new(1, 0, 0, 44)
+    wrap.BackgroundTransparency = 1
+    wrap.BorderSizePixel = 0
+    wrap.ClipsDescendants = false
+
+    local Row = Instance.new("Frame", wrap)
+    Row.Size = UDim2.new(1, 0, 0, 44)
+    Row.BackgroundColor3 = C.row
+    Row.BackgroundTransparency = 0.28
+    Row.BorderSizePixel = 0
+    guiCorner(Row, 10)
+    local rowStroke = guiStroke(Row, C.divider, 1)
+    rowStroke.Transparency = 0.48
+
+    local Lb = Instance.new("TextLabel", Row)
+    Lb.Size = UDim2.new(1, -100, 1, 0)
+    Lb.Position = UDim2.new(0, 12, 0, 0)
+    Lb.BackgroundTransparency = 1
+    Lb.Text = label
+    Lb.TextColor3 = C.text
+    Lb.TextSize = 13
+    Lb.Font = Enum.Font.GothamMedium
+    Lb.TextXAlignment = Enum.TextXAlignment.Left
+
+    -- Arrow button (opens V1/V2)
+    local Arrow = Instance.new("TextButton", Row)
+    Arrow.Size = UDim2.fromOffset(28, 24)
+    Arrow.Position = UDim2.new(1, -86, 0.5, -12)
+    Arrow.BackgroundColor3 = C.bgDark
+    Arrow.BackgroundTransparency = 0.2
+    Arrow.BorderSizePixel = 0
+    Arrow.Text = "▼"
+    Arrow.TextColor3 = C.text
+    Arrow.Font = Enum.Font.GothamBold
+    Arrow.TextSize = 11
+    Arrow.ZIndex = 5
+    Arrow.AutoButtonColor = false
+    guiCorner(Arrow, 7)
+    guiStroke(Arrow, C.divider, 1)
+
+    -- Toggle track
+    local Track = Instance.new("Frame", Row)
+    Track.Size = UDim2.new(0, 40, 0, 20)
+    Track.Position = UDim2.new(1, -52, 0.5, -10)
+    Track.BackgroundColor3 = C.bgDark
+    Track.BackgroundTransparency = 0.18
+    Track.BorderSizePixel = 0
+    Track.ZIndex = 4
+    guiCorner(Track, 10)
+    guiStroke(Track, UI_ACCENT or C.divider, 1.35)
+
+    local Knob = Instance.new("Frame", Track)
+    Knob.Size = UDim2.new(0, 16, 0, 16)
+    Knob.Position = st and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
+    Knob.BackgroundColor3 = C.text
+    Knob.BackgroundTransparency = st and 0 or 0.25
+    Knob.BorderSizePixel = 0
+    guiCorner(Knob, 8)
+
+    local function setToggleVisual(on)
+        st = on
+        pcall(function()
+            tw(Knob, {Position = on and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)})
+            tw(Knob, {BackgroundTransparency = on and 0.1 or 0.6})
+        end)
+    end
+
+    local ToggleHit = Instance.new("TextButton", Track)
+    ToggleHit.Size = UDim2.fromScale(1, 1)
+    ToggleHit.BackgroundTransparency = 1
+    ToggleHit.Text = ""
+    ToggleHit.ZIndex = 6
+    ToggleHit.MouseButton1Click:Connect(function()
+        st = not st
+        setToggleVisual(st)
+        if onToggle then onToggle(st, selected) end
+        savePrimeHubFeKlanConfig()
+    end)
+
+    -- Dropdown panel with V1 / V2
+    local Drop = Instance.new("Frame", wrap)
+    Drop.Name = "VersionDrop"
+    Drop.Size = UDim2.new(1, 0, 0, 0)
+    Drop.Position = UDim2.new(0, 0, 0, 46)
+    Drop.BackgroundTransparency = 1
+    Drop.BorderSizePixel = 0
+    Drop.ClipsDescendants = true
+    Drop.ZIndex = 8
+
+    local Panel = Instance.new("Frame", Drop)
+    Panel.Size = UDim2.new(1, 0, 0, 40)
+    Panel.BackgroundColor3 = C.row
+    Panel.BackgroundTransparency = 0.2
+    Panel.BorderSizePixel = 0
+    guiCorner(Panel, 10)
+    local panelStroke = guiStroke(Panel, C.divider, 1)
+    panelStroke.Transparency = 0.4
+
+    local versionBtns = {}
+    local function refreshVersions()
+        for ver, btn in pairs(versionBtns) do
+            local active = ver == selected
+            btn.BackgroundTransparency = active and 0.15 or 0.55
+            btn.TextColor3 = active and (UI_ACCENT or Color3.fromRGB(255, 120, 160)) or C.text
+            local s = btn:FindFirstChildOfClass("UIStroke")
+            if s then
+                s.Transparency = active and 0.05 or 0.45
+                s.Color = active and (UI_ACCENT or Color3.fromRGB(255, 120, 160)) or (C.divider or Color3.fromRGB(80, 80, 90))
+                s.Thickness = active and 1.6 or 1
+            end
+        end
+    end
+
+    local count = #versions
+    for i, ver in ipairs(versions) do
+        local b = Instance.new("TextButton", Panel)
+        b.Size = UDim2.new(1 / count, -8, 1, -8)
+        b.Position = UDim2.new((i - 1) / count, 4, 0, 4)
+        b.BackgroundColor3 = C.bgDark
+        b.BackgroundTransparency = 0.55
+        b.BorderSizePixel = 0
+        b.Text = ver
+        b.TextColor3 = C.text
+        b.Font = Enum.Font.GothamBold
+        b.TextSize = 12
+        b.AutoButtonColor = false
+        b.ZIndex = 10
+        guiCorner(b, 8)
+        local bs = guiStroke(b, C.divider, 1)
+        bs.Transparency = 0.45
+        versionBtns[ver] = b
+        b.MouseButton1Click:Connect(function()
+            selected = ver
+            refreshVersions()
+            if onVersion then onVersion(selected, st) end
+            savePrimeHubFeKlanConfig()
+        end)
+    end
+    refreshVersions()
+
+    local function setOpen(v)
+        open = v
+        Arrow.Text = open and "▲" or "▼"
+        local targetH = open and 44 or 0
+        wrap.Size = UDim2.new(1, 0, 0, 44 + (open and 48 or 0))
+        Drop.Size = UDim2.new(1, 0, 0, open and 44 or 0)
+        pcall(function()
+            if TweenService then
+                TweenService:Create(Drop, TweenInfo.new(0.18, Enum.EasingStyle.Quad), {Size = UDim2.new(1, 0, 0, open and 44 or 0)}):Play()
+            end
+        end)
+    end
+
+    Arrow.MouseButton1Click:Connect(function()
+        setOpen(not open)
+    end)
+
+    return wrap, setToggleVisual, function(ver)
+        selected = tostring(ver)
+        refreshVersions()
+    end
+end
+
+local function uiActionRow(parent, label, callback)
+    local Row=Instance.new("Frame",parent); Row.Size=UDim2.new(1,-8,0,42); Row.BackgroundColor3=Color3.fromRGB(8,10,12)
+    Row.BackgroundTransparency=0.12; Row.BorderSizePixel=0; guiCorner(Row,12); local rowStroke=guiStroke(Row,Color3.fromRGB(255,255,255),1); rowStroke.Transparency=0.78
+    local AB=Instance.new("TextButton",Row); AB.Size=UDim2.new(1,0,1,0); AB.BackgroundTransparency=1
+    AB.Text=label; AB.TextColor3=Color3.fromRGB(255,255,255); AB.TextSize=13; AB.Font=Enum.Font.GothamBlack; AB.Parent=Row
+    AB.MouseButton1Click:Connect(function() if callback then callback() end end)
+    return Row,AB
+end
+local function uiChoiceRow(parent, label, options, defaultIndex, callback)
+    local Row=Instance.new("Frame",parent); Row.Size=UDim2.new(1,-8,0,40); Row.BackgroundColor3=Color3.fromRGB(12,12,14)
+    Row.BackgroundTransparency=0.35; Row.BorderSizePixel=0; guiCorner(Row,12); local rowStroke=guiStroke(Row,Color3.fromRGB(55,55,60),1); rowStroke.Transparency=0.4
+    local Lb=Instance.new("TextLabel",Row); Lb.Size=UDim2.new(1,-120,1,0); Lb.Position=UDim2.new(0,14,0,0)
+    Lb.BackgroundTransparency=1; Lb.Text=label; Lb.TextColor3=Color3.fromRGB(245,245,248); Lb.TextSize=12; Lb.Font=Enum.Font.GothamBold; Lb.TextXAlignment=Enum.TextXAlignment.Left
+    Lb.TextTruncate=Enum.TextTruncate.AtEnd
+    local CB=Instance.new("TextButton",Row); CB.Size=UDim2.new(0,100,0,26); CB.Position=UDim2.new(1,-112,0.5,-13)
+    CB.BackgroundColor3=Color3.fromRGB(18,18,22); CB.BackgroundTransparency=0.2; CB.BorderSizePixel=0; CB.Text=tostring(options[defaultIndex or 1])
+    CB.TextColor3=Color3.fromRGB(245,245,248); CB.TextSize=11; CB.Font=Enum.Font.GothamBold; guiCorner(CB,8); guiStroke(CB,Color3.fromRGB(55,55,60),1)
+    local idx = defaultIndex or 1
+    CB.MouseButton1Click:Connect(function()
+        idx = idx % #options + 1
+        CB.Text = tostring(options[idx])
+        if callback then callback(options[idx]) end
+        savePrimeHubFeKlanConfig()
+    end)
+    local function setVal(v) for i,o in ipairs(options) do if tostring(o)==tostring(v) then idx=i; CB.Text=tostring(o); break end end end
+    return Row, setVal
+end
+local function uiKeybindRow(parent, label, kbEntry, stateGetter)
+    local Row=Instance.new("Frame",parent); Row.Size=UDim2.new(1,-8,0,40); Row.BackgroundColor3=Color3.fromRGB(12,12,14)
+    Row.BackgroundTransparency=0.35; Row.BorderSizePixel=0; guiCorner(Row,12); local rowStroke=guiStroke(Row,Color3.fromRGB(55,55,60),1); rowStroke.Transparency=0.4
+    local Lb=Instance.new("TextLabel",Row); Lb.Size=UDim2.new(0.43,0,1,0); Lb.Position=UDim2.new(0,14,0,0)
+    Lb.BackgroundTransparency=1; Lb.Text=label; Lb.TextColor3=Color3.fromRGB(245,245,248); Lb.TextSize=12; Lb.Font=Enum.Font.GothamBold; Lb.TextXAlignment=Enum.TextXAlignment.Left
+    local KB=Instance.new("TextButton",Row); KB.Size=UDim2.new(0,58,0,24); KB.Position=UDim2.new(1,-174,0.5,-12)
+    KB.BackgroundColor3=C.bgDark; KB.BackgroundTransparency=0.3; KB.BorderSizePixel=0
+    local Status=Instance.new("TextLabel",Row); Status.Size=UDim2.new(0,82,0,24); Status.Position=UDim2.new(1,-112,0.5,-12)
+    Status.BackgroundTransparency=1; Status.TextSize=10; Status.Font=Enum.Font.GothamBold; Status.TextXAlignment=Enum.TextXAlignment.Center
+    local function updateText()
+        if type(kbEntry) == "table" and kbEntry.kb then
+            KB.Text = tostring(kbEntry.kb.Name)
+        else
+            KB.Text = "None"
+        end
+    end
+    local function updateStatus()
+        local enabled = stateGetter and stateGetter() == true
+        Status.Text = enabled and "ACTIVADO" or "APAGADO"
+        Status.TextColor3 = enabled and Color3.fromRGB(110, 255, 170) or Color3.fromRGB(190, 165, 185)
+    end
+    local ClearBtn=Instance.new("TextButton",Row); ClearBtn.Size=UDim2.new(0,24,0,24); ClearBtn.Position=UDim2.new(1,-26,0.5,-12)
+    ClearBtn.BackgroundColor3=C.bgDark; ClearBtn.BackgroundTransparency=0.3; ClearBtn.BorderSizePixel=0
+    ClearBtn.Text="X"; ClearBtn.TextColor3=Color3.fromRGB(255, 120, 200); ClearBtn.TextSize=11; ClearBtn.Font=Enum.Font.GothamBold
+    guiCorner(ClearBtn,6); guiStroke(ClearBtn,C.divider,1)
+    ClearBtn.MouseButton1Click:Connect(function()
+        if type(kbEntry) == "table" then kbEntry.kb = nil end
+        updateText()
+        if M.saveConfig then M.saveConfig() end
+        if M.notify then M.notify(label .. " cleared") end
+    end)
+    updateText(); updateStatus()
+    KB.TextColor3=C.text; KB.TextSize=10; KB.Font=Enum.Font.GothamBold; guiCorner(KB,6); guiStroke(KB,C.divider,1)
+    KB.MouseButton1Click:Connect(function()
+        KB.Text = "..."
+        local conn
+        conn = UIS.InputBegan:Connect(function(inp, gpe)
+            if inp.UserInputType == Enum.UserInputType.Keyboard then
+                if inp.KeyCode == Enum.KeyCode.Escape then
+                    if type(kbEntry) == "table" then kbEntry.kb = nil end
+                else
+                    if type(kbEntry) == "table" then kbEntry.kb = inp.KeyCode end
+                end
+                updateText()
+                if M.saveConfig then M.saveConfig() end
+                conn:Disconnect()
+            end
+        end)
+    end)
+    task.spawn(function()
+        while Row.Parent do
+            updateStatus()
+            task.wait(0.2)
+        end
+    end)
+    return Row
+end
+function M.buildPCKeyStatusPanel()
+    if M.pcKeyStatusGui then pcall(function() M.pcKeyStatusGui:Destroy() end) end
+    local pg = player:FindFirstChildOfClass("PlayerGui")
+    if not pg then return end
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "PrimeHubPCKeyStatus"
+    gui.ResetOnSpawn = false
+    gui.DisplayOrder = 998
+    gui.IgnoreGuiInset = true
+    gui.Parent = pg
+    M.pcKeyStatusGui = gui
+
+    local panel = Instance.new("Frame")
+    panel.Name = "PCKeyStatusPanel"
+    panel.Size = UDim2.fromOffset(280, 437)
+    local savedPanelPos = M.pcKeyPanelPosition
+    if type(savedPanelPos) == "table" and type(savedPanelPos.x) == "number" and type(savedPanelPos.y) == "number" then
+        panel.Position = UDim2.new(savedPanelPos.x, savedPanelPos.ox or 0, savedPanelPos.y, savedPanelPos.oy or 0)
+    else
+        panel.Position = UDim2.new(1, -298, 0, 86)
+    end
+    panel.BackgroundColor3 = Color3.fromRGB(10, 22, 45)
+    panel.BackgroundTransparency = 1
+    panel.BorderSizePixel = 0
+    panel.Parent = gui
+    guiCorner(panel, 36)
+    guiStroke(panel, Color3.fromRGB(55, 150, 255), 1.4)
+    local panelImage = Instance.new("ImageLabel")
+    panelImage.Name = "HalloweenBackgroundImage"
+    panelImage.Size = UDim2.new(1, 0, 1, 0)
+    panelImage.Position = UDim2.fromOffset(0, 0)
+    panelImage.BackgroundTransparency = 1
+    panelImage.Image = "rbxassetid://131828154911144"
+    panelImage.ImageTransparency = 0
+    panelImage.ScaleType = Enum.ScaleType.Crop
+    panelImage.ZIndex = 0
+    panelImage.Parent = panel
+    guiCorner(panelImage, 36)
+    local panelShade = Instance.new("Frame")
+    panelShade.Size = UDim2.new(1, 0, 1, 0)
+    panelShade.BackgroundColor3 = Color3.fromRGB(3, 15, 34)
+    panelShade.BackgroundTransparency = 0.42
+    panelShade.BorderSizePixel = 0
+    panelShade.ZIndex = 1
+    panelShade.Parent = panel
+    guiCorner(panelShade, 36)
+    local panelScale = Instance.new("UIScale")
+    panelScale.Scale = math.clamp(tonumber(M.pcKeyPanelScale) or 1, 0.65, 1.5)
+    panelScale.Parent = panel
+    M.pcKeyPanelScaleRef = panelScale
+
+    local title = Instance.new("TextButton")
+    title.Size = UDim2.new(1, -20, 0, 36)
+    title.Position = UDim2.fromOffset(10, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "SAFIRA HUB"
+    title.TextColor3 = Color3.fromRGB(235, 247, 255)
+    title.TextStrokeColor3 = Color3.fromRGB(55, 150, 255)
+    title.TextStrokeTransparency = 0.25
+    title.TextSize = 21
+    title.Font = Enum.Font.Fantasy
+    title.AutoButtonColor = false
+    title.Active = true
+    title.ZIndex = 10
+    title.Parent = panel
+    local dripData = {{x = 0.31, y = 31, s = 8}, {x = 0.50, y = 33, s = 5}, {x = 0.67, y = 31, s = 7}}
+    for _, d in ipairs(dripData) do
+        local drip = Instance.new("Frame")
+        drip.Size = UDim2.fromOffset(d.s, d.s + 5)
+        drip.Position = UDim2.new(d.x, 0, 0, d.y)
+        drip.BackgroundColor3 = Color3.fromRGB(80, 170, 255)
+        drip.BorderSizePixel = 0
+        drip.ZIndex = 9
+        drip.Parent = panel
+        guiCorner(drip, d.s)
+    end
+
+    local dragging = false
+    local dragStart = nil
+    local panelStart = nil
+    local dragInput = nil
+    local function updatePanelPosition(input)
+        if not dragging or not dragStart or not panelStart then return end
+        local delta = input.Position - dragStart
+        panel.Position = UDim2.new(panelStart.X.Scale, panelStart.X.Offset + delta.X, panelStart.Y.Scale, panelStart.Y.Offset + delta.Y)
+    end
+    title.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            panelStart = panel.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then dragging = false end
+            end)
+        end
+    end)
+    title.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+    UIS.InputChanged:Connect(function(input)
+        if input == dragInput then updatePanelPosition(input) end
+    end)
+    UIS.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+            local p = panel.Position
+            M.pcKeyPanelPosition = {x = p.X.Scale, y = p.Y.Scale, ox = p.X.Offset, oy = p.Y.Offset}
+            pcall(savePrimeHubFeKlanConfig)
+        end
+    end)
+
+    local line = Instance.new("Frame")
+    line.Size = UDim2.new(1, -18, 0, 1)
+    line.Position = UDim2.fromOffset(9, 35)
+    line.BackgroundColor3 = Color3.fromRGB(55, 150, 255)
+    line.BorderSizePixel = 0
+    line.Parent = panel
+
+    local list = Instance.new("ScrollingFrame")
+    list.Name = "PCKeyRows"
+    list.Position = UDim2.fromOffset(9, 41)
+    list.Size = UDim2.new(1, -18, 1, -48)
+    list.BackgroundTransparency = 1
+    list.BorderSizePixel = 0
+    list.ScrollBarThickness = 0
+    list.ScrollingEnabled = false
+    list.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    list.CanvasSize = UDim2.new(0, 0, 0, 0)
+    list.Parent = panel
+
+    local entries = {
+        {"Bat Bypass", "BatTP", function() return M.bypassAimbotEnabled == true end},
+        {"Bat Aimbot", "AutoBat", function() return M.autoBatEnabled == true end},
+        {"Drop Brainrot", "DropBrainrot", function() return M.dropActive == true end},
+        {"Auto Left", "AutoLeft", function() return M.autoLeftEnabled == true end},
+        {"Auto Right", "AutoRight", function() return M.autoRightEnabled == true end},
+        {"Insta Reset", "InstaReset", function() return M.instaResetBusy == true end},
+        {"Hide GUI", "GuiHide", function() return false end},
+        {"Carry Speed", "SpeedNormal", function() return M.manualCarryActive == true or M.carrySpeedActive == true end},
+        {"Lagger Carry", "LaggerCarry", function() return M.laggerCarryActive == true end},
+        {"Lagger Speed", "SpeedLagger", function() return M.speedProfile == "Lagger" and M.carrySpeedActive == true end},
+        {"Lagger Mode", "LaggerToggle", function() return M.laggerModeEnabled == true end},
+        {"Custom Speed", "SpeedCustom", function() return M.speedProfile == "Custom" and M.carrySpeedActive == true end},
+    }
+    local rows = {}
+    for i, item in ipairs(entries) do
+        local row = Instance.new("Frame")
+        row.Size = UDim2.new(1, -4, 0, 28)
+        row.Position = UDim2.fromOffset(2, 2 + (i - 1) * 31)
+        row.BackgroundTransparency = 1
+                row.Visible = false
+        row.Parent = list
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(0.52, 0, 1, 0)
+        label.BackgroundTransparency = 1
+        label.Text = item[1]
+        label.TextColor3 = Color3.fromRGB(255, 235, 248)
+        label.TextSize = 11
+        label.Font = Enum.Font.GothamMedium
+        label.TextXAlignment = Enum.TextXAlignment.Left
+        label.Parent = row
+
+        local key = Instance.new("TextLabel")
+        key.Size = UDim2.new(0, 42, 1, 0)
+        key.Position = UDim2.new(0.52, 0, 0, 0)
+        key.BackgroundTransparency = 1
+        key.TextColor3 = Color3.fromRGB(220, 205, 220)
+        key.TextSize = 10
+        key.Font = Enum.Font.GothamBold
+        key.TextXAlignment = Enum.TextXAlignment.Center
+        key.Parent = row
+
+        local status = Instance.new("TextLabel")
+        status.Size = UDim2.new(0, 82, 1, 0)
+        status.Position = UDim2.new(1, -82, 0, 0)
+        status.BackgroundTransparency = 1
+        status.TextSize = 10
+        status.Font = Enum.Font.GothamBold
+        status.TextXAlignment = Enum.TextXAlignment.Right
+        status.Parent = row
+        rows[i] = {row = row, key = key, status = status, item = item}
+    end
+
+    task.spawn(function()
+        while gui.Parent do
+            local visibleCount = 0
+            for _, r in ipairs(rows) do
+                local entry = M.KB and M.KB[r.item[2]]
+                local hasKey = entry and entry.kb ~= nil
+                r.row.Visible = hasKey == true
+                if hasKey then
+                    visibleCount = visibleCount + 1
+                    r.row.Position = UDim2.fromOffset(2, 2 + (visibleCount - 1) * 31)
+                    r.key.Text = "[" .. tostring(entry.kb.Name) .. "]"
+                    local active = r.item[3]() == true
+                    r.status.Text = active and "ACTIVADO" or "APAGADO"
+                    r.status.TextColor3 = active and Color3.fromRGB(110, 255, 170) or Color3.fromRGB(190, 165, 185)
+                end
+            end
+            panel.Size = UDim2.fromOffset(280, math.clamp(57 + visibleCount * 31, 100, 437))
+            task.wait(0.2)
+        end
+    end)
+end
+
+function M.applyToggleLayoutPos()
+    -- Fixed: tabs under title (High). Kept for compatibility.
+end
+
+function M.buildGui()
+    applyAccentFromTheme()
+    M.clearPersistentConns()
+    for _,n in ipairs({"MoveeDuels","Cherry_Menu","K7HubGUI","VantaHubUI","VynxxHubUI","VynxHubUI","PrimeHubUI","SAFIRA HUB","CLEAN HUB","BLACK HUB","BloodHounds","AceDuelsAdaptReconstruct","RXZHub"}) do
+        local cg=game:GetService("CoreGui")
+        local old=cg:FindFirstChild(n); if old then old:Destroy() end
+        local pg=player:FindFirstChild("PlayerGui")
+        if pg then local o=pg:FindFirstChild(n); if o then o:Destroy() end end
+    end
+    local PlayerGui = player:WaitForChild("PlayerGui")
+    local GuiHub = Instance.new("ScreenGui")
+    GuiHub.Name = "PrimeHubUI"
+    GuiHub.ResetOnSpawn = false
+    GuiHub.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    GuiHub.DisplayOrder = 999
+    GuiHub.Parent = PlayerGui
+    if _G.PrimeHubIntroActive then
+        GuiHub.Enabled = false
+        _G.PrimeHubIntroDoneCallbacks = _G.PrimeHubIntroDoneCallbacks or {}
+        table.insert(_G.PrimeHubIntroDoneCallbacks, function()
+            if GuiHub and GuiHub.Parent then GuiHub.Enabled = true end
+        end)
+    else
+        GuiHub.Enabled = true
+    end
+    M.mainGui = GuiHub
+    local Outer = Instance.new("Frame")
+    Outer.Name = "Outer"
+    Outer.Size = UDim2.new(0, 330, 0, 480)
+    Outer.Position = UDim2.new(0, 20, 0, 2)
+    Outer.BackgroundTransparency = 1
+    Outer.BorderSizePixel = 0
+    Outer.ClipsDescendants = true
+    Outer.Parent = GuiHub
+    M.mainFrame = Outer
+    local OuterScale = Instance.new("UIScale")
+    OuterScale.Scale = M.uiScale or 0.8
+    OuterScale.Parent = Outer
+    M.uiScaleRef = OuterScale
+    local Inner = Instance.new("Frame")
+    Inner.Name = "Inner"
+    Inner.ClipsDescendants = true
+    Inner.Size = UDim2.new(1, 0, 1, 0)
+    Inner.BackgroundColor3 = Color3.fromRGB(0,0,0)
+    Inner.BackgroundTransparency = 1
+    Inner.BorderSizePixel = 0
+    Inner.Parent = Outer
+    guiCorner(Inner, 18)
+    guiStroke(Inner, Color3.fromRGB(50,50,50), 1)
+    if M.startPlomoBorderAnim then M.startPlomoBorderAnim() end
+    local BgCont = Instance.new("Frame")
+    BgCont.Name = "BackgroundContainer"
+    BgCont.Size = UDim2.new(1, 0, 1, 0)
+    BgCont.BackgroundTransparency = 1
+    BgCont.ZIndex = 0
+    BgCont.Parent = Inner
+    local BgGrad = Instance.new("Frame")
+    BgGrad.Name = "BgGrad"
+    BgGrad.Size = UDim2.new(1, 0, 1, 0)
+    BgGrad.BackgroundColor3 = C.bgDark
+    BgGrad.BorderSizePixel = 0
+    BgGrad.ZIndex = 0
+    BgGrad.Parent = BgCont
+    guiCorner(BgGrad, 18)
+    local grad = Instance.new("UIGradient")
+    grad.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(4,4,4)), ColorSequenceKeypoint.new(0.5, Color3.fromRGB(7,7,7)), ColorSequenceKeypoint.new(1, Color3.fromRGB(4,4,4))})
+    grad.Rotation = 135
+    grad.Parent = BgGrad
+    local initialBgId = tostring(M.customBgId or "131828154911144")
+    if initialBgId == "0" then initialBgId = "131828154911144" end
+    local BgImg = Instance.new("ImageLabel")
+    BgImg.Name = "BackgroundImage"
+    BgImg.Size = UDim2.new(1, 0, 1, 0)
+    BgImg.BackgroundTransparency = 1
+    do
+        local _id = (M.MENU_BG_IDS and M.MENU_BG_IDS[M.menuBgIndex or 1]) or M.customBgId or "139563268403340"
+        BgImg.Image = string.format("rbxthumb://type=Asset&id=%s&w=768&h=432", tostring(_id))
+        BgImg.Visible = true
+    end
+    BgImg.ScaleType = Enum.ScaleType.Crop
+    BgImg.ImageTransparency = 0
+    BgImg.ZIndex = 0
+    BgImg.Parent = BgCont
+    guiCorner(BgImg, 18)
+    BgImg.ImageTransparency = 1
+    local pumpkinBackdrop = Instance.new("TextLabel")
+    pumpkinBackdrop.Name = "HalloweenPumpkinBackdrop"
+    pumpkinBackdrop.Size = UDim2.new(1.35, 0, 1.35, 0)
+    pumpkinBackdrop.Position = UDim2.new(0.5, 0, 0.56, 0)
+    pumpkinBackdrop.AnchorPoint = Vector2.new(0.5, 0.5)
+    pumpkinBackdrop.BackgroundTransparency = 1
+    pumpkinBackdrop.Text = "🎃"
+    pumpkinBackdrop.TextColor3 = Color3.fromRGB(255, 116, 22)
+    pumpkinBackdrop.TextTransparency = 0.18
+    pumpkinBackdrop.TextStrokeColor3 = Color3.fromRGB(74, 8, 92)
+    pumpkinBackdrop.TextStrokeTransparency = 0.1
+    pumpkinBackdrop.Font = Enum.Font.GothamBlack
+    pumpkinBackdrop.TextScaled = true
+    pumpkinBackdrop.ZIndex = 1
+    pumpkinBackdrop.Parent = BgCont
+    local pumpkinGlow = Instance.new("Frame")
+    pumpkinGlow.Name = "HalloweenPumpkinShade"
+    pumpkinGlow.Size = UDim2.fromScale(1, 1)
+    pumpkinGlow.BackgroundColor3 = Color3.fromRGB(18, 5, 25)
+    pumpkinGlow.BackgroundTransparency = 0.38
+    pumpkinGlow.BorderSizePixel = 0
+    pumpkinGlow.ZIndex = 0
+    pumpkinGlow.Parent = BgCont
+    guiCorner(pumpkinGlow, 18)
+    M.bgImageRef = BgImg
+    task.defer(function()
+        if M.applyMenuBackground then M.applyMenuBackground(M.menuBgIndex or 1) end
+    end)
+    local HF = Instance.new("Frame")
+    HF.Name = "HeaderFrame"
+    HF.Size = UDim2.new(1, 0, 0, 70)
+    HF.BackgroundTransparency = 1
+    HF.BorderSizePixel = 0
+    HF.Parent = Inner
+    HF.ZIndex = 2
+    makeDraggable_cyber(HF, Outer)
+    -- Título texto estilo grafiti PRIMEHUB (bordes + hover + izquierda)
+    local TL = Instance.new("TextLabel")
+    TL.Name = "PrimeHubTitleLogo"
+    TL.Position = UDim2.new(0, 8, 0, 0)
+    TL.Size = UDim2.new(0, 200, 0, 66)
+    TL.BackgroundTransparency = 1
+    TL.BorderSizePixel = 0
+    TL.Text = "SAFIRA HUB"
+    TL.Font = Enum.Font.LuckiestGuy
+    TL.TextSize = 60
+    TL.TextXAlignment = Enum.TextXAlignment.Left
+    TL.TextYAlignment = Enum.TextYAlignment.Center
+    TL.TextColor3 = M.currentAccent or Color3.fromRGB(255, 255, 255)
+    TL.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    TL.TextStrokeTransparency = 0
+    TL.ZIndex = 30
+    TL.Parent = HF
+    -- Capas de borde (outline grueso)
+    local function makeOutline(ox, oy, z)
+        local o = Instance.new("TextLabel")
+        o.Name = "PrimeHubTitleOutline"
+        o.Position = UDim2.new(0, 8 + ox, 0, oy)
+        o.Size = UDim2.new(0, 200, 0, 66)
+        o.BackgroundTransparency = 1
+        o.Text = "SAFIRA HUB"
+        o.Font = Enum.Font.LuckiestGuy
+        o.TextSize = 60
+        o.TextXAlignment = Enum.TextXAlignment.Left
+        o.TextYAlignment = Enum.TextYAlignment.Center
+        o.TextColor3 = Color3.fromRGB(0, 0, 0)
+        o.TextStrokeTransparency = 1
+        o.TextTransparency = 0.05
+        o.ZIndex = z
+        o.Parent = HF
+        return o
+    end
+    local outlines = {
+        makeOutline(-2, -2, 28), makeOutline(2, -2, 28),
+        makeOutline(-2, 2, 28), makeOutline(2, 2, 28),
+        makeOutline(-3, 0, 28), makeOutline(3, 0, 28),
+        makeOutline(0, -3, 28), makeOutline(0, 3, 28),
+    }
+    -- Hover suave sobre el título
+    local hit = Instance.new("TextButton")
+    hit.Name = "PrimeHubTitleHit"
+    hit.Position = UDim2.new(0, 4, 0, 0)
+    hit.Size = UDim2.new(0, 210, 0, 66)
+    hit.BackgroundTransparency = 1
+    hit.Text = ""
+    hit.ZIndex = 31
+    hit.Parent = HF
+    local hoverTween = nil
+    local function tweenTitle(props, t)
+        if hoverTween then pcall(function() hoverTween:Cancel() end) end
+        hoverTween = TweenService:Create(TL, TweenInfo.new(t or 0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props)
+        hoverTween:Play()
+    end
+    hit.MouseEnter:Connect(function()
+        local c = M.currentAccent or Color3.fromRGB(255, 255, 255)
+        local bright = Color3.new(
+            math.min(1, c.R * 1.25 + 0.08),
+            math.min(1, c.G * 1.25 + 0.08),
+            math.min(1, c.B * 1.25 + 0.08)
+        )
+        tweenTitle({TextColor3 = bright, TextSize = 64}, 0.16)
+        for _, o in ipairs(outlines) do
+            TweenService:Create(o, TweenInfo.new(0.16), {TextSize = 64}):Play()
+        end
+    end)
+    hit.MouseLeave:Connect(function()
+        local c = M.currentAccent or Color3.fromRGB(255, 255, 255)
+        tweenTitle({TextColor3 = c, TextSize = 60}, 0.2)
+        for _, o in ipairs(outlines) do
+            TweenService:Create(o, TweenInfo.new(0.2), {TextSize = 60}):Play()
+        end
+    end)
+    M._titleLogoLabel = TL
+    M._titleLogoOutlines = outlines
+    local function refreshTitleColor()
+        local c = M.currentAccent or Color3.fromRGB(255, 255, 255)
+        if M._titleLogoLabel and M._titleLogoLabel.Parent then
+            M._titleLogoLabel.TextColor3 = c
+        end
+    end
+    M.refreshTitleColor = refreshTitleColor
+    task.defer(refreshTitleColor)
+    local ML = Instance.new("TextLabel")
+    ML.Position = UDim2.new(0, 14, 0, 32)
+    ML.Size = UDim2.new(0, 200, 0, 14)
+    ML.BackgroundTransparency = 1
+    ML.Text = ""
+    ML.TextColor3 = C.textDim
+    ML.TextSize = 10
+    ML.Font = Enum.Font.GothamBold
+    ML.TextXAlignment = Enum.TextXAlignment.Left
+    ML.Parent = HF
+    ML.ZIndex = 3
+    local LockBtn = Instance.new("TextButton")
+    LockBtn.Size = UDim2.new(0, 55, 0, 28)
+    LockBtn.Position = UDim2.new(1, -98, 0, 8)
+    LockBtn.BackgroundColor3 = C.bgDark
+    LockBtn.BorderSizePixel = 0
+    LockBtn.Text = M.uiLocked and "Lock" or "Unlock"
+    LockBtn.TextColor3 = C.text
+    LockBtn.Font = Enum.Font.GothamBold
+    LockBtn.TextSize = 10
+    LockBtn.ZIndex = 5
+    LockBtn.Parent = HF
+    guiCorner(LockBtn, 8)
+    guiStroke(LockBtn, C.divider, 1)
+    LockBtn.MouseButton1Click:Connect(function()
+        M.uiLocked = not M.uiLocked
+        LockBtn.Text = M.uiLocked and "Lock" or "Unlock"
+        if M.saveConfig then M.saveConfig() end
+        if M.notify then M.notify("UI " .. (M.uiLocked and "Locked" or "Unlocked")) end
+    end)
+    local CloseBtn = Instance.new("TextButton")
+    CloseBtn.Size = UDim2.new(0, 28, 0, 28)
+    CloseBtn.Position = UDim2.new(1, -38, 0, 8)
+    CloseBtn.BackgroundColor3 = C.bgDark
+    CloseBtn.BorderSizePixel = 0
+    CloseBtn.Text = "-"
+    CloseBtn.TextColor3 = C.text
+    CloseBtn.Font = Enum.Font.GothamBold
+    CloseBtn.TextSize = 22
+    CloseBtn.ZIndex = 5
+    CloseBtn.Parent = HF
+    guiCorner(CloseBtn, 8)
+    guiStroke(CloseBtn, C.divider, 1)
+    local MiniBtn = Instance.new("ImageButton")
+    local mobileEntry = UIS.TouchEnabled and not UIS.KeyboardEnabled
+    -- Barra flotante DEMONS HUB con el mismo tamaño que SAFIRA HUB.
+    MiniBtn.Size = UDim2.new(0, 180, 0, 40)
+    MiniBtn.Position = mobileEntry and UDim2.new(0, 14, 0, 60) or Outer.Position
+    MiniBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    MiniBtn.BackgroundTransparency = 0
+    MiniBtn.BorderSizePixel = 0
+    -- El botón queda negro; el icono nuevo va separado para que no tape el texto.
+    MiniBtn.Image = ""
+    MiniBtn.Active = true
+    MiniBtn.AutoButtonColor = false
+    MiniBtn.ZIndex = 1000
+    MiniBtn.Visible = true
+    MiniBtn.Parent = GuiHub
+    guiCorner(MiniBtn, 12)
+
+    local miniIcon = Instance.new("ImageLabel")
+    miniIcon.Name = "MenuLogo"
+    miniIcon.BackgroundTransparency = 1
+    miniIcon.Image = "rbxassetid://126405527996904"
+    miniIcon.ScaleType = Enum.ScaleType.Fit
+    miniIcon.Size = UDim2.new(1, -16, 1, -8)
+    miniIcon.Position = UDim2.new(0, 8, 0, 4)
+    miniIcon.ZIndex = 1001
+    miniIcon.Parent = MiniBtn
+
+    local miniStroke = guiStroke(MiniBtn, Color3.fromRGB(55, 55, 55), 1)
+    if miniStroke then miniStroke.Transparency = 0.35 end
+    makeDraggable_cyber(MiniBtn, MiniBtn)
+    MiniBtn.MouseEnter:Connect(function()
+        TweenService:Create(MiniBtn, TweenInfo.new(0.12), {BackgroundTransparency = 0.0}):Play()
+    end)
+    MiniBtn.MouseLeave:Connect(function()
+        TweenService:Create(MiniBtn, TweenInfo.new(0.12), {BackgroundTransparency = 0.05}):Play()
+    end)
+    local openingGui = false
+    local function playSmallBubbleOpen()
+        local bubbleLayer = Instance.new("Frame")
+        bubbleLayer.Name = "PrimeHubOpenBubbles"
+        bubbleLayer.BackgroundTransparency = 1
+        bubbleLayer.Size = UDim2.fromScale(1, 1)
+        bubbleLayer.ZIndex = 40
+        bubbleLayer.Parent = Outer
+        local points = {
+            {0.28, 0.32, 3}, {0.48, 0.24, 4}, {0.68, 0.36, 3},
+            {0.36, 0.58, 4}, {0.62, 0.62, 3}, {0.50, 0.46, 5}
+        }
+        for _, point in ipairs(points) do
+            local b = Instance.new("Frame")
+            b.AnchorPoint = Vector2.new(0.5, 0.5)
+            b.Position = UDim2.fromScale(point[1], point[2])
+            b.Size = UDim2.fromOffset(point[3], point[3])
+            b.BackgroundColor3 = M.currentAccent or Color3.fromRGB(58, 128, 245)
+            b.BackgroundTransparency = 0.08
+            b.BorderSizePixel = 0
+            b.ZIndex = 41
+            b.Parent = bubbleLayer
+            local c = Instance.new("UICorner")
+            c.CornerRadius = UDim.new(1, 0)
+            c.Parent = b
+            local st = Instance.new("UIStroke")
+            st.Color = Color3.fromRGB(255, 190, 230)
+            st.Thickness = 1
+            st.Parent = b
+            TweenService:Create(b, TweenInfo.new(0.32, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Size = UDim2.fromOffset(point[3] + 9, point[3] + 9),
+                BackgroundTransparency = 1
+            }):Play()
+            TweenService:Create(st, TweenInfo.new(0.32), {Transparency = 1}):Play()
+        end
+        task.delay(0.38, function()
+            if bubbleLayer and bubbleLayer.Parent then bubbleLayer:Destroy() end
+        end)
+    end
+    local function showGui()
+        if openingGui then return end
+        openingGui = true
+        local targetScale = M.uiScale or 0.8
+        OuterScale.Scale = targetScale * 0.70
+        local targetPosition = Outer.Position
+        Outer.Position = UDim2.new(0, -math.max(Outer.AbsoluteSize.X, 380) - 18, targetPosition.Y.Scale, targetPosition.Y.Offset)
+        Outer.Visible = true
+        MiniBtn.Visible = false
+        playSmallBubbleOpen()
+        M.menuOpen = true
+        local openTween = TweenService:Create(Outer, TweenInfo.new(0.52, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = targetPosition})
+        local scaleTween = TweenService:Create(OuterScale, TweenInfo.new(0.44, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Scale = targetScale})
+        openTween:Play()
+        scaleTween:Play()
+        openTween.Completed:Wait()
+        openingGui = false
+        pcall(savePrimeHubFeKlanConfig)
+    end
+    local function hideGui()
+        if openingGui then return end
+        openingGui = true
+        local currentScale = OuterScale.Scale
+        local restingPosition = Outer.Position
+        local wallPosition = UDim2.new(0, -math.max(Outer.AbsoluteSize.X, 380) - 18, restingPosition.Y.Scale, restingPosition.Y.Offset)
+        local closeTween = TweenService:Create(Outer, TweenInfo.new(0.36, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {Position = wallPosition})
+        local scaleTween = TweenService:Create(OuterScale, TweenInfo.new(0.28, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Scale = (M.uiScale or 0.8) * 0.70})
+        closeTween:Play()
+        scaleTween:Play()
+        closeTween.Completed:Wait()
+        Outer.Visible = false
+        MiniBtn.Visible = true
+        Outer.Position = restingPosition
+        OuterScale.Scale = currentScale
+        M.menuOpen = false
+        openingGui = false
+        pcall(savePrimeHubFeKlanConfig)
+    end
+    M._showGuiWithBubble = showGui
+    M._hideGuiWithBubble = hideGui
+    CloseBtn.MouseButton1Click:Connect(hideGui)
+    MiniBtn.MouseButton1Click:Connect(showGui)
+    local function applyResponsiveLayout()
+        local camera=workspace.CurrentCamera
+        if not camera or not camera.ViewportSize then return end
+        local viewport=camera.ViewportSize; local vw,vh=viewport.X,viewport.Y
+        local mobile=UIS.TouchEnabled and not UIS.KeyboardEnabled
+        local margin=mobile and 8 or 12
+        local availableW=math.max(1,vw-(margin*2))
+        local availableH=math.max(1,vh-(margin*2))
+        local fitScale=math.min(availableW/320,availableH/480)
+        local minScale=mobile and 0.38 or 0.55
+        local responsiveScale=math.clamp(fitScale,minScale,1)
+        OuterScale.Scale=math.clamp(math.min(tonumber(M.uiScale) or 0.8,responsiveScale),minScale,1)
+        local scaledW=320*OuterScale.Scale; local scaledH=480*OuterScale.Scale
+        local px=margin; local py=math.max(margin,(vh-scaledH)/2)
+        Outer.Position=UDim2.new(0,px,0,py-15)
+        if mobileEntry and MiniBtn and MiniBtn.Parent then
+            local bx=math.clamp(14,8,math.max(8,vw-100-8)); local by=math.clamp(60,8,math.max(8,vh-32-8))
+            MiniBtn.Position=UDim2.new(0,bx,0,by)
+        elseif MiniBtn and MiniBtn.Parent and not M.menuOpen then
+            MiniBtn.Position=Outer.Position
+        end
+    end
+    applyResponsiveLayout()
+    local cameraForResize=workspace.CurrentCamera
+    if cameraForResize then cameraForResize:GetPropertyChangedSignal("ViewportSize"):Connect(applyResponsiveLayout) end
+    workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+        local newCamera=workspace.CurrentCamera
+        if newCamera then newCamera:GetPropertyChangedSignal("ViewportSize"):Connect(applyResponsiveLayout); task.defer(applyResponsiveLayout) end
+    end)
+    local LeftPanel = Instance.new("Frame")
+    LeftPanel.Name = "LeftPanel"
+    LeftPanel.Size = UDim2.new(0, 100, 1, -118)
+    LeftPanel.Position = UDim2.new(0, 0, 0, 63)
+    LeftPanel.BackgroundColor3 = C.bgDark
+    LeftPanel.BackgroundTransparency = 0.5
+    LeftPanel.BorderSizePixel = 0
+    LeftPanel.Parent = Inner
+    guiCorner(LeftPanel, 12)
+    LeftPanel.ZIndex = 2
+    local CatList = Instance.new("ScrollingFrame")
+    CatList.Name = "CategoryList"
+    CatList.Size = UDim2.new(1, 0, 1, 0)
+    CatList.BackgroundTransparency = 1
+    CatList.BorderSizePixel = 0
+    CatList.ScrollBarThickness = 0
+    CatList.CanvasSize = UDim2.new(0, 0, 0, 0)
+    CatList.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    CatList.Active = true
+    CatList.Parent = LeftPanel
+    local CatLay = Instance.new("UIListLayout")
+    CatLay.SortOrder = Enum.SortOrder.LayoutOrder; CatLay.Padding = UDim.new(0, 8); CatLay.Parent = CatList
+    CatLay:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() CatList.CanvasSize = UDim2.new(0, 0, 0, CatLay.AbsoluteContentSize.Y + 25) end)
+    local CF = Instance.new("Frame")
+    CF.Name = "ContentContainer"
+    CF.Size = UDim2.new(1, -110, 1, -118)
+    CF.Position = UDim2.new(0, 105, 0, 63)
+    CF.BackgroundTransparency = 1
+    CF.BorderSizePixel = 0
+    CF.Parent = Inner
+    local Categories = {"Speed", "Mechanics", "Visuals", "Animations", "Utility", "Keybinds"}
+    local CategoryRefs = {contents={}, btnsSide={}, active="Visuals"}
+    for _, name in pairs(Categories) do
+        local page = Instance.new("ScrollingFrame")
+        page.Name = "Page_" .. name
+        page.Size = UDim2.new(1, 0, 1, 0)
+        page.BackgroundTransparency = 1
+        page.BorderSizePixel = 0
+        page.ScrollBarThickness = 4
+        page.ScrollBarImageColor3 = C.divider
+        page.CanvasSize = UDim2.new(0, 0, 0, 0)
+        page.AutomaticCanvasSize = Enum.AutomaticSize.Y
+        page.ScrollingDirection = Enum.ScrollingDirection.Y
+        page.ScrollingEnabled = true
+        page.Visible = (name == "Visuals")
+        page.Parent = CF
+        CategoryRefs.contents[name] = page
+        local lay = Instance.new("UIListLayout")
+        lay.SortOrder = Enum.SortOrder.LayoutOrder; lay.Padding = UDim.new(0, 6); lay.Parent = page
+        lay.HorizontalAlignment = Enum.HorizontalAlignment.Center
+        local pad = Instance.new("UIPadding")
+        pad.PaddingLeft = UDim.new(0, 8); pad.PaddingRight = UDim.new(0, 8); pad.PaddingTop = UDim.new(0, 4); pad.PaddingBottom = UDim.new(0, 16); pad.Parent = page
+    end
+    for i, name in ipairs(Categories) do
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(1, 0, 0, 32); btn.BackgroundColor3 = C.bgDark; btn.BackgroundTransparency = 0.3
+        btn.Text = name; btn.TextColor3 = (name == "Speed") and C.text or C.textMuted
+        btn.Visible = name ~= "Speed" and name ~= "Mechanics"
+        btn.TextSize = 10; btn.Font = Enum.Font.GothamBold; btn.BorderSizePixel = 0; btn.LayoutOrder = i; btn.Parent = CatList; guiCorner(btn, 6)
+        local ind = Instance.new("Frame"); ind.Name = "indicator"; ind.Size = UDim2.new(0, 2, 0, 16); ind.Position = UDim2.new(1,-2,0.5,-8)
+        ind.BackgroundColor3 = C.text; ind.BackgroundTransparency = (name == "Speed") and 0.3 or 1; ind.Parent = btn
+        CategoryRefs.btnsSide[name] = btn
+        btn.MouseButton1Click:Connect(function()
+            pcall(plomoPressFlash)
+            for _, f in pairs(CategoryRefs.contents) do f.Visible = false end
+            CategoryRefs.contents[name].Visible = true
+            CategoryRefs.active = name
+            for n, b in pairs(CategoryRefs.btnsSide) do
+                local ac = (n == name)
+                b.TextColor3 = ac and C.text or C.textMuted; b.BackgroundTransparency = ac and 0.2 or 0.3
+                local i2 = b:FindFirstChild("indicator"); if i2 then i2.BackgroundTransparency = ac and 0.3 or 1 end
+            end
+        end)
+    end
+    local PM = CategoryRefs.contents["Speed"]
+    uiSectionHeader(PM, "THREE SPEEDS SYSTEM (Touch to Select)")
+    local function uiSpeedCard(parent, title, keyEntry, profileName, getNorm, getSteal, setNorm, setSteal)
+        local Row = Instance.new("Frame", parent)
+        Row.Size = UDim2.new(1, 0, 0, 75)
+        Row.BackgroundColor3 = C.row
+        Row.BackgroundTransparency = 1
+        Row.BorderSizePixel = 0
+        guiCorner(Row, 10)
+        local rowStroke=guiStroke(Row, C.divider, 1); rowStroke.Transparency=1
+        local ClickBtn = Instance.new("TextButton", Row)
+        ClickBtn.Size = UDim2.new(0.7, 0, 1, 0)
+        ClickBtn.BackgroundTransparency = 1
+        ClickBtn.Text = ""
+        ClickBtn.ZIndex = 2
+        local Lb = Instance.new("TextLabel", Row)
+        Lb.Size = UDim2.new(0.6, 0, 0, 30)
+        Lb.Position = UDim2.new(0, 12, 0, 6)
+        Lb.BackgroundTransparency = 1
+        Lb.Text = title
+        Lb.TextColor3 = C.text
+        Lb.TextSize = 13
+        Lb.Font = Enum.Font.GothamBold
+        Lb.TextXAlignment = Enum.TextXAlignment.Left
+        local KeyBtn = Instance.new("TextButton", Row)
+        KeyBtn.Size = UDim2.new(0, 70, 0, 22)
+        KeyBtn.Position = UDim2.new(1, -80, 0, 8)
+        KeyBtn.BackgroundColor3 = C.bgDark
+        KeyBtn.BackgroundTransparency = 0.2
+        KeyBtn.TextSize = 10
+        KeyBtn.Font = Enum.Font.GothamBold
+        KeyBtn.TextColor3 = C.text
+        KeyBtn.ZIndex = 5
+        guiCorner(KeyBtn, 6)
+        guiStroke(KeyBtn, C.divider, 1)
+        local function updateKeyText()
+            if type(keyEntry) == "table" and keyEntry.kb then
+                KeyBtn.Text = tostring(keyEntry.kb.Name)
+            else
+                KeyBtn.Text = "None"
+            end
+        end
+        updateKeyText()
+        KeyBtn.MouseButton1Click:Connect(function()
+            KeyBtn.Text = "..."
+            local conn
+            conn = UIS.InputBegan:Connect(function(inp, gpe)
+                if inp.UserInputType == Enum.UserInputType.Keyboard then
+                    if inp.KeyCode == Enum.KeyCode.Escape then
+                        if type(keyEntry) == "table" then keyEntry.kb = nil end
+                    else
+                        if type(keyEntry) == "table" then keyEntry.kb = inp.KeyCode end
+                    end
+                    updateKeyText()
+                    if M.saveConfig then M.saveConfig() end
+                    conn:Disconnect()
+                end
+            end)
+        end)
+        ClickBtn.MouseButton1Click:Connect(function()
+            if M.speedProfile == profileName then
+                M.carrySpeedActive = not M.carrySpeedActive
+            else
+                local wasCarry = M.carrySpeedActive == true or M.manualCarryActive == true or M.laggerCarryActive == true
+                M.speedProfile = profileName
+                -- Elegir perfil solo cambia Normal Speed (NS) y Carry Speed (CS)
+                M.NS = getNorm()
+                M.CS = getSteal()
+                -- Lag Mode / Lag Carry NO se tocan (independientes)
+                M.carrySpeedActive = wasCarry
+                M.manualCarryActive = wasCarry
+                if M._applySpeedNow then pcall(M._applySpeedNow) end
+            end
+            M.manualCarryActive = M.carrySpeedActive == true
+            if M.saveConfig then M.saveConfig() end
+            M.notify(profileName .. ": " .. (M.carrySpeedActive and M.CS or M.NS))
+        end)
+        local NormBox = Instance.new("TextBox", Row)
+        NormBox.Size = UDim2.new(0, 80, 0, 24)
+        NormBox.Position = UDim2.new(0, 12, 0, 42)
+        NormBox.BackgroundColor3 = C.input
+        NormBox.BackgroundTransparency = 0.2
+        NormBox.Text = tostring(getNorm())
+        NormBox.TextColor3 = C.text
+        NormBox.TextSize = 11
+        NormBox.Font = Enum.Font.GothamMedium
+        NormBox.ZIndex = 3
+        guiCorner(NormBox, 6)
+        guiStroke(NormBox, C.divider, 1)
+        NormBox.FocusLost:Connect(function(enter)
+            local n = tonumber(NormBox.Text)
+            if n then
+                setNorm(n)
+                if profileName == "Lagger" then
+                    M.LaggerSpeedNorm = n
+                    -- NO tocar M.LAGGER_SPEED (eso es solo Controls > Lagger Normal Speed)
+                elseif profileName == "Normal" then
+                    M.NormalSpeedNorm = n
+                elseif profileName == "Custom" then
+                    M.CustomSpeedNorm = n
+                end
+                -- Si este perfil es el seleccionado, actualiza NS (walk / auto path)
+                if M.speedProfile == profileName then
+                    M.NS = n
+                end
+                pcall(savePrimeHubFeKlanConfig)
+            else
+                NormBox.Text = tostring(getNorm())
+            end
+        end)
+        local StealBox = Instance.new("TextBox", Row)
+        StealBox.Size = UDim2.new(0, 80, 0, 24)
+        StealBox.Position = UDim2.new(0, 105, 0, 42)
+        StealBox.BackgroundColor3 = C.input
+        StealBox.BackgroundTransparency = 0.2
+        StealBox.Text = tostring(getSteal())
+        StealBox.TextColor3 = C.text
+        StealBox.TextSize = 11
+        StealBox.Font = Enum.Font.GothamMedium
+        StealBox.ZIndex = 3
+        guiCorner(StealBox, 6)
+        guiStroke(StealBox, C.divider, 1)
+        StealBox.FocusLost:Connect(function(enter)
+            local n = tonumber(StealBox.Text)
+            if n then
+                setSteal(n)
+                if profileName == "Lagger" then
+                    M.LaggerSpeedSteal = n
+                    -- NO tocar M.LAGGER_CARRY_SPEED (eso es solo Controls > Lagger Carry Speed)
+                elseif profileName == "Normal" then
+                    M.NormalSpeedSteal = n
+                elseif profileName == "Custom" then
+                    M.CustomSpeedSteal = n
+                end
+                -- Si este perfil es el seleccionado, actualiza CS (Carry Speed)
+                if M.speedProfile == profileName then
+                    M.CS = n
+                end
+                pcall(savePrimeHubFeKlanConfig)
+            else
+                StealBox.Text = tostring(getSteal())
+            end
+        end)
+        return Row
+    end
+    uiSpeedCard(PM, "Normal Speed (Default)", M.KB.SpeedNormal, "Normal", function() return M.NormalSpeedNorm end, function() return M.NormalSpeedSteal end, function(v) M.NormalSpeedNorm = v end, function(v) M.NormalSpeedSteal = v end)
+    uiSpeedCard(PM, "Lagger Speed (Against lagger)", M.KB.SpeedLagger, "Lagger", function() return M.LaggerSpeedNorm end, function() return M.LaggerSpeedSteal end, function(v) M.LaggerSpeedNorm = v end, function(v) M.LaggerSpeedSteal = v end)
+    uiSpeedCard(PM, "Custom Speed (Three)", M.KB.SpeedCustom, "Custom", function() return M.CustomSpeedNorm end, function() return M.CustomSpeedSteal end, function(v) M.CustomSpeedNorm = v end, function(v) M.CustomSpeedSteal = v end)
+    local function uiLaggerCarryCard(parent)
+        local Row = Instance.new("Frame", parent)
+        Row.Size = UDim2.new(1, 0, 0, 75)
+        Row.BackgroundColor3 = C.row
+        Row.BackgroundTransparency = 1
+        Row.BorderSizePixel = 0
+        guiCorner(Row, 10)
+        local rowStroke=guiStroke(Row, C.divider, 1); rowStroke.Transparency=1
+        local ClickBtn = Instance.new("TextButton", Row)
+        ClickBtn.Size = UDim2.new(0.7, 0, 1, 0)
+        ClickBtn.BackgroundTransparency = 1
+        ClickBtn.Text = ""
+        ClickBtn.ZIndex = 2
+        local Lb = Instance.new("TextLabel", Row)
+        Lb.Size = UDim2.new(0.6, 0, 0, 30)
+        Lb.Position = UDim2.new(0, 12, 0, 6)
+        Lb.BackgroundTransparency = 1
+        Lb.Text = "Lagger Carry Mode"
+        Lb.TextColor3 = C.text
+        Lb.TextSize = 13
+        Lb.Font = Enum.Font.GothamBold
+        Lb.TextXAlignment = Enum.TextXAlignment.Left
+        local StatusLb = Instance.new("TextLabel", Row)
+        StatusLb.Size = UDim2.new(0, 70, 0, 22)
+        StatusLb.Position = UDim2.new(1, -80, 0, 8)
+        StatusLb.BackgroundColor3 = C.bgDark
+        StatusLb.BackgroundTransparency = 0.2
+        StatusLb.Text = M.laggerCarryActive and "ON" or "OFF"
+        StatusLb.TextSize = 10
+        StatusLb.Font = Enum.Font.GothamBold
+        StatusLb.TextColor3 = M.laggerCarryActive and Color3.fromRGB(255, 135, 215) or C.text
+        guiCorner(StatusLb, 6)
+        guiStroke(StatusLb, C.divider, 1)
+        M.laggerCarryStatusLabel = StatusLb
+        ClickBtn.MouseButton1Click:Connect(function()
+            if M.toggleLaggerCarry then
+                M.toggleLaggerCarry()
+            else
+                M.laggerCarryActive = not M.laggerCarryActive
+            end
+            if M.saveConfig then M.saveConfig() end
+            M.notify("Lagger Carry: " .. (M.laggerCarryActive and "ON" or "OFF"))
+        end)
+        local SpdBox = Instance.new("TextBox", Row)
+        SpdBox.Size = UDim2.new(0, 120, 0, 24)
+        SpdBox.Position = UDim2.new(0, 12, 0, 42)
+        SpdBox.BackgroundColor3 = C.input
+        SpdBox.BackgroundTransparency = 0.2
+        SpdBox.Text = tostring(M.LAGGER_CARRY_SPEED or 20)
+        SpdBox.TextColor3 = C.text
+        SpdBox.TextSize = 11
+        SpdBox.Font = Enum.Font.GothamMedium
+        SpdBox.ZIndex = 3
+        guiCorner(SpdBox, 6)
+        guiStroke(SpdBox, C.divider, 1)
+        SpdBox.FocusLost:Connect(function(enter)
+            local n = tonumber(SpdBox.Text)
+            if n then
+                M.LAGGER_CARRY_SPEED = n
+                pcall(savePrimeHubFeKlanConfig)
+            else
+                SpdBox.Text = tostring(M.LAGGER_CARRY_SPEED or 20)
+            end
+        end)
+        return Row
+    end
+    uiLaggerCarryCard(PM)
+    uiSectionHeader(PM, "CONTROLS")
+    uiToggleRow(PM, "Lagger Normal", M.laggerModeEnabled, function(on)
+        if on ~= M.laggerModeEnabled then
+            if M.toggleLaggerMode then
+                M.toggleLaggerMode()
+            else
+                M.laggerModeEnabled = on
+                if on then M.laggerCarryActive = false; M.carrySpeedActive = false end
+            end
+        end
+        if M.laggerCarryStatusLabel then
+            M.laggerCarryStatusLabel.Text = M.laggerCarryActive and "ON" or "OFF"
+            M.laggerCarryStatusLabel.TextColor3 = M.laggerCarryActive and Color3.fromRGB(255, 135, 215) or Color3.fromRGB(255, 235, 248)
+        end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiNumberRow(PM, "Lagger Normal Speed", M.LAGGER_SPEED or 15, 1, 200, function(v)
+        M.LAGGER_SPEED = tonumber(v) or 15
+        -- solo Lag Mode; no tocar perfil ni LAGGER_CARRY_SPEED
+        if M.laggerModeEnabled and M._applySpeedNow then pcall(M._applySpeedNow) end
+        pcall(savePrimeHubFeKlanConfig)
+    end)
+    uiNumberRow(PM, "Lagger Carry Speed", M.LAGGER_CARRY_SPEED or 24.5, 1, 200, function(v)
+        M.LAGGER_CARRY_SPEED = tonumber(v) or 24.5
+        -- solo Lag Carry; no tocar perfil ni LAGGER_SPEED
+        if M.laggerCarryActive and M._applySpeedNow then pcall(M._applySpeedNow) end
+        pcall(savePrimeHubFeKlanConfig)
+    end)
+    uiActionRow(PM, M.manualCarryActive and "Carry Mode: ON" or "Carry Mode: OFF", function()
+        M.manualCarryActive = not M.manualCarryActive
+        if M.manualCarryActive then
+            M.autoCarryMode = "Carry"
+            M.setModeCarryFlags()
+            if M._applySpeedNow then pcall(M._applySpeedNow) end
+        elseif M.autoSwitchSpeedEnabled then
+            M.updateAutoSwitchSpeed()
+        else
+            M.setModeNormalFlags()
+        end
+        M.refreshWalkSpeedAutoSwitch()
+        M.refreshSpeedModeLabel()
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PM, "Auto Carry Speed", M.autoSwitchSpeedEnabled, function(on)
+        M.autoSwitchSpeedEnabled = on
+        if not on then M.setModeNormalFlags() end
+        M.refreshWalkSpeedAutoSwitch()
+    end)
+    uiChoiceRow(PM, "Auto Carry Mode", {"Lagger", "Carry", "Normal"}, M.autoCarryMode == "Lagger" and 1 or (M.autoCarryMode == "Carry" and 2 or 3), function(v) M.autoCarryMode = v end)
+    local PMech = CategoryRefs.contents["Mechanics"]
+    uiSectionHeader(PMech, "COMBAT")
+
+    -- SPIN Bot (Cerberus Duels): gira únicamente mientras el jugador lleva un brainrot.
+    -- No cambia el personaje, no fuerza respawn y conserva una única conexión estable.
+    M.spinBotEnabled = M.spinBotEnabled == true
+    M.spinBotSpeed = tonumber(M.spinBotSpeed) or 30
+    M._spinBotConnection = nil
+    M._spinBotAngular = nil
+    local function stopSafiraSpinBot()
+        if M._spinBotConnection then M._spinBotConnection:Disconnect(); M._spinBotConnection = nil end
+        local char = player.Character
+        local root = char and char:FindFirstChild("HumanoidRootPart")
+        if root then
+            for _, obj in ipairs(root:GetChildren()) do
+                if obj.Name == "SafiraSpinBotAngular" then pcall(function() obj:Destroy() end) end
+            end
+        end
+        M._spinBotAngular = nil
+    end
+    local function startSafiraSpinBot()
+        if M._spinBotConnection then return end
+        M._spinBotConnection = RunService.Heartbeat:Connect(function()
+            if not M.spinBotEnabled or not (M.hasBrainrotInHand and M.hasBrainrotInHand()) then
+                local angular = M._spinBotAngular
+                if angular then pcall(function() angular:Destroy() end); M._spinBotAngular = nil end
+                return
+            end
+            local char = player.Character
+            local root = char and char:FindFirstChild("HumanoidRootPart")
+            if not root then return end
+            if not M._spinBotAngular or M._spinBotAngular.Parent ~= root then
+                local existing = root:FindFirstChild("SafiraSpinBotAngular")
+                if existing and existing:IsA("BodyAngularVelocity") then
+                    M._spinBotAngular = existing
+                else
+                    local angular = Instance.new("BodyAngularVelocity")
+                    angular.Name = "SafiraSpinBotAngular"
+                    angular.MaxTorque = Vector3.new(0, math.huge, 0)
+                    angular.P = 1250
+                    angular.AngularVelocity = Vector3.new(0, M.spinBotSpeed, 0)
+                    angular.Parent = root
+                    M._spinBotAngular = angular
+                end
+            end
+            M._spinBotAngular.AngularVelocity = Vector3.new(0, M.spinBotSpeed, 0)
+        end)
+    end
+    uiToggleRow(PMech, "SPIN Bot (solo con Brainrot)", M.spinBotEnabled, function(on)
+        M.spinBotEnabled = on == true
+        if M.spinBotEnabled then
+            startSafiraSpinBot()
+        else
+            stopSafiraSpinBot()
+        end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PMech, "Aimbot All Gears", M._zenonetopAimOn == true, function(on)
+        M._zenonetopAimOn = on == true
+        savePrimeHubFeKlanConfig()
+    end)
+    -- Auto Destroy Turret optimizado: sin escanear todo Workspace en bucle.
+    M.autoDestroyTurretEnabled = M.autoDestroyTurretEnabled == true
+    M._turretDestroyPending = {}
+    function M._isTurretObject(obj)
+        if not obj then return false end
+        local n = obj.Name:lower()
+        return n:find("turret") ~= nil or n:find("sentry") ~= nil
+    end
+    function M._destroyTurretIfNearby(obj)
+        if not M.autoDestroyTurretEnabled or not obj or not obj.Parent then return end
+        local char = player.Character
+        local root = char and char:FindFirstChild("HumanoidRootPart")
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        local bat = M.findBatForAimbot and M.findBatForAimbot() or nil
+        local part = obj:IsA("BasePart") and obj or obj:FindFirstChildWhichIsA("BasePart", true)
+        if not root or not hum or not bat or not part then return end
+        if (part.Position - root.Position).Magnitude > 250 then return end
+        if M._turretDestroyPending[obj] then return end
+        M._turretDestroyPending[obj] = true
+        task.spawn(function()
+            for _ = 1, 6 do
+                if not M.autoDestroyTurretEnabled or not obj.Parent then break end
+                local currentChar = player.Character
+                local currentRoot = currentChar and currentChar:FindFirstChild("HumanoidRootPart")
+                local currentBat = M.findBatForAimbot and M.findBatForAimbot() or nil
+                local currentPart = obj:IsA("BasePart") and obj or obj:FindFirstChildWhichIsA("BasePart", true)
+                if not currentRoot or not currentBat or not currentPart then break end
+                if (currentPart.Position - currentRoot.Position).Magnitude > 250 then break end
+                pcall(function() currentBat:Activate() end)
+                task.wait(0.12)
+            end
+            M._turretDestroyPending[obj] = nil
+        end)
+    end
+    function M.startAutoDestroyTurret()
+        if M.autoDestroyTurretConn then return end
+        M.autoDestroyTurretEnabled = true
+        M.autoDestroyTurretConn = workspace.DescendantAdded:Connect(function(obj)
+            if M._isTurretObject(obj) then
+                task.defer(M._destroyTurretIfNearby, obj)
+            end
+        end)
+    end
+    function M.stopAutoDestroyTurret()
+        M.autoDestroyTurretEnabled = false
+        if M.autoDestroyTurretConn then
+            pcall(function() M.autoDestroyTurretConn:Disconnect() end)
+            M.autoDestroyTurretConn = nil
+        end
+        M._turretDestroyPending = {}
+    end
+    uiToggleRow(PMech, "Auto Destroy Turret", M.autoDestroyTurretEnabled == true, function(on)
+        if on then M.startAutoDestroyTurret() else M.stopAutoDestroyTurret() end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PMech, "Anti Void", M.antiVoidEnabled == true, function(on)
+        M.antiVoidEnabled = on == true
+        M.setAntiVoid(on == true)
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PMech, "Body Lock", M.bodyLockEnabled == true, function(on)
+        M.bodyLockEnabled = on == true
+        M.setBodyLock(on == true)
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PMech, "bypass aimbot", M.autoBatEnabled == true, function(on)
+        M.autoBatEnabled = on == true
+        M.batAimbotEnabled = on == true
+        if on then M.queueAutoBatStart() else M.stopBatAimbot() end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PMech, "Bat Counter", M.batCounterEnabled == true, function(on)
+        M.batCounterEnabled = on == true
+        if on then M.startBatCounter() else M.stopBatCounter() end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PMech, "Bat Counter V2", M.batCounterV2Enabled == true, function(on)
+        if on then M.startBatCounterV2() else M.stopBatCounterV2() end
+        savePrimeHubFeKlanConfig()
+    end)
+    -- Velocidad del Bat Bypass: se ajusta desde la interfaz, no desde el botón flotante.
+    if uiNumberRow then
+        uiNumberRow(PMech, "Bat Bypass Speed", M.bypassAimbotSpeed or 55, 10, 150, function(v)
+            M.bypassAimbotSpeed = math.clamp(tonumber(v) or 55, 10, 150)
+            savePrimeHubFeKlanConfig()
+        end)
+    end
+    -- Bat Bypass is activated/deactivated from its standalone mobile button.
+    do
+        local _, setBatV2Vis = uiToggleRow(PMech, "Bat V2", M.batV2Enabled == true, function(on)
+            if on then M.enableBatV2() else M.disableBatV2() end
+            savePrimeHubFeKlanConfig()
+        end)
+        M.setBatV2Visual = setBatV2Vis
+        uiToggleRow(PMech, "Bat V2 Auto Swing", M.autoBatV2SwingEnabled ~= false, function(on)
+            M.autoBatV2SwingEnabled = on == true
+            savePrimeHubFeKlanConfig()
+        end)
+        if uiNumberRow then
+            uiNumberRow(PMech, "Bat V2 Speed", M.AUTO_BAT_V2_SPEED or 60, 10, 200, function(v)
+                M.AUTO_BAT_V2_SPEED = tonumber(v) or 60
+                savePrimeHubFeKlanConfig()
+            end)
+        end
+    end
+    uiExpandableVersionToggle(PMech, "Anti Ragdoll", M.antiRagdollEnabled == true, {"V1", "V2"}, (M.antiRagdollMode == "V2" or M.antiRagdollMode == "No Splatter") and "V2" or "V1",
+        function(on, version)
+            M.antiRagdollMode = tostring(version or M.antiRagdollMode or "V1")
+            if on then
+                M.startAntiRagdoll()
+            else
+                M.stopAntiRagdoll()
+            end
+            savePrimeHubFeKlanConfig()
+        end,
+        function(version, isOn)
+            M.antiRagdollMode = tostring(version or "V1")
+            if M.notify then pcall(function() M.notify("Anti Ragdoll: " .. M.antiRagdollMode) end) end
+            if isOn or M.antiRagdollEnabled then
+                M.startAntiRagdoll()
+            end
+            savePrimeHubFeKlanConfig()
+        end
+    )
+    uiToggleRow(PMech, "Medusa Counter", M.medusaCounterEnabled == true, function(on)
+        M.medusaCounterEnabled = on == true
+        if on then M.setupMedusa(player.Character) else M.stopMedusaCounter() end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PMech, "Auto Swing", M.autoSwingEnabled == true, function(on)
+        M.autoSwingEnabled = on == true
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PMech, "Anti Die & Fling", M.antiDieEnabled == true, function(on)
+        if on then M.enableAntiDie() else M.disableAntiDie() end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiChoiceRow(PMech, "Drop Type", {"Fling", "Jump Drop"}, M.dropMode == "Jump Drop" and 2 or 1, function(v)
+        local selected = tostring(v)
+        if selected == "1" then selected = "Fling" elseif selected == "2" then selected = "Jump Drop" end
+        M.dropMode = (selected == "Jump Drop") and "Jump Drop" or "Fling"
+        if M.dropActive then M.stopDrop() end
+        if M.notify then pcall(function() M.notify("Drop Type: " .. M.dropMode) end) end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiSectionHeader(PMech, "AUTO STEAL")
+    uiToggleRow(PMech, "Auto Steal", (M.Steal and M.Steal.AutoStealEnabled == true) or (M.autoGrabV1Enabled == true), function(on)
+        if on then
+            if M.startAntiSammyAutoSteal then M.startAntiSammyAutoSteal()
+            elseif M.startAutoGrabV1 then M.startAutoGrabV1() end
+        else
+            if M.stopAntiSammyAutoSteal then M.stopAntiSammyAutoSteal()
+            elseif M.stopAutoGrabV1 then M.stopAutoGrabV1() end
+        end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiChoiceRow(PMech, "Steal Preset", {"75", "80", "86", "90"}, ({["75"]=1,["80"]=2,["86"]=3,["90"]=4})[tostring(M.normalStealVersion or "86")] or 3, function(v)
+        local val = tostring(v)
+        if val == "1" then val = "75"
+        elseif val == "2" then val = "80"
+        elseif val == "3" then val = "86"
+        elseif val == "4" then val = "90"
+        end
+        if M.setStealPreset then M.setStealPreset(val) else M.normalStealVersion = val end
+        if M.notify then pcall(function() M.notify("Steal Preset: " .. tostring(M.normalStealVersion)) end) end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiActionRow(PMech, "Steal Bar Size −", function()
+        if M.resizeStealBar then M.resizeStealBar(-20) else M.stealBarWidth = math.max(260, (M.stealBarWidth or 360) - 20) end
+        if not (M.autoGrabV1Gui and M.autoGrabV1Gui.Parent) then if M.ensureAutoGrabV1Gui then M.ensureAutoGrabV1Gui() end end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiActionRow(PMech, "Steal Bar Size +", function()
+        if M.resizeStealBar then M.resizeStealBar(20) else M.stealBarWidth = math.min(560, (M.stealBarWidth or 360) + 20) end
+        if not (M.autoGrabV1Gui and M.autoGrabV1Gui.Parent) then if M.ensureAutoGrabV1Gui then M.ensureAutoGrabV1Gui() end end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiNumberRow(PMech, "Steal Bar Width", M.stealBarWidth or 360, 260, 560, function(v)
+        M.stealBarWidth = math.clamp(tonumber(v) or 360, 260, 560)
+        if M.resizeStealBar then M.resizeStealBar(0) end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiNumberRow(PMech, "Steal Radius", (M.Steal and M.Steal.StealRadius) or 61, 10, 120, function(v)
+        if not M.Steal then M.Steal = { AutoStealEnabled = false, StealDuration = 1.3, Data = {} } end
+        M.Steal.StealRadius = math.clamp(tonumber(v) or 61, 10, 120)
+        if ZenXSteal then ZenXSteal.StealRadius = M.Steal.StealRadius end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiSectionHeader(PMech, "MOTION")
+    uiToggleRow(PMech, "Lagger Normal", M.laggerModeEnabled, function(on)
+        if on ~= M.laggerModeEnabled then
+            if M.toggleLaggerMode then M.toggleLaggerMode() else
+                M.laggerModeEnabled = on
+                if on then M.laggerCarryActive = false; M.carrySpeedActive = false end
+            end
+        end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PMech, "Infinite Jump", M.infJumpEnabled, function(on)
+        M.infJumpEnabled = on == true
+        M.stopManualInfJumpLoop(); M.stopHoldInfJump()
+        M.infJumpMode = "hold"
+        if M.infJumpEnabled then M.startHoldInfJump() end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PMech, "Mirror TP Down", M.mirrorTPDownEnabled, function(on) M.setMirrorTPDown(on); savePrimeHubFeKlanConfig() end)
+    uiToggleRow(PMech, "Auto Left", M.autoLeftEnabled, function(on)
+        if on then if M.autoRightEnabled then M.autoRightEnabled=false; M.stopAutoRight() end; M.autoLeftEnabled=true; M.startAutoLeft() else M.autoLeftEnabled=false; M.stopAutoLeft() end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PMech, "Auto Right", M.autoRightEnabled, function(on)
+        if on then if M.autoLeftEnabled then M.autoLeftEnabled=false; M.stopAutoLeft() end; M.autoRightEnabled=true; M.startAutoRight() else M.autoRightEnabled=false; M.stopAutoRight() end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiActionRow(PMech, "TP Down", function() M.runTPFloor()     end)
+    if ZenXSteal then
+        uiNumberRow(PMech, "Grab Range", ZenXSteal.StealRadius or 62, 1, 100, function(v)
+            ZenXSteal.StealRadius = math.clamp(tonumber(v) or 62, 1, 100)
+            savePrimeHubFeKlanConfig()
+        end)
+    end
+    -- Tool Aimbot original de ZENONETOP, conectado al uso real de cada gear.
+    M._zenonetopAimOn = M._zenonetopAimOn ~= false
+    M._zenonetopAimTools = { ["Web Slinger"] = true, ["Paintball Gun"] = true, ["Laser Cape"] = true }
+    M._zenonetopMouse = nil
+    function M._zenonetopGetMouse()
+        if M._zenonetopMouse then return M._zenonetopMouse end
+        pcall(function()
+            local packages = game:GetService("ReplicatedStorage"):FindFirstChild("Packages")
+            if packages then
+                local module = packages:FindFirstChild("PlayerMouse") or packages:WaitForChild("PlayerMouse", 5)
+                if module then M._zenonetopMouse = require(module) end
+            end
+        end)
+        return M._zenonetopMouse
+    end
+    function M._zenonetopBestEnemy()
+        local char = player.Character
+        local root = char and char:FindFirstChild("HumanoidRootPart")
+        local cam = workspace.CurrentCamera
+        if not root or not cam then return nil end
+        local best, score = nil, math.huge
+        for _, plr in ipairs(Players:GetPlayers()) do
+            if plr ~= player and plr.Character then
+                local targetRoot = plr.Character:FindFirstChild("HumanoidRootPart")
+                local hum = plr.Character:FindFirstChildOfClass("Humanoid")
+                if targetRoot and hum and hum.Health > 0 then
+                    local distance = (targetRoot.Position - root.Position).Magnitude
+                    local toTarget = targetRoot.Position - cam.CFrame.Position
+                    if distance <= 100 and toTarget.Magnitude > 0.01 then
+                        local angle = math.deg(math.acos(math.clamp(cam.CFrame.LookVector:Dot(toTarget.Unit), -1, 1)))
+                        local currentScore = distance + (angle > 200 and 1000 or 0)
+                        if currentScore < score then score, best = currentScore, targetRoot end
+                    end
+                end
+            end
+        end
+        return best
+    end
+    function M._zenonetopOverrideMouse()
+        if not M._zenonetopAimOn then return end
+        local char = player.Character
+        local equipped = char and char:FindFirstChildOfClass("Tool")
+        if not equipped or not M._zenonetopAimTools[equipped.Name] then return end
+        local mouse = M._zenonetopGetMouse()
+        local target = M._zenonetopBestEnemy()
+        if not mouse or not target or not target.Parent then return end
+        pcall(function()
+            local velocity = target.AssemblyLinearVelocity or Vector3.zero
+            mouse.Hit = CFrame.new(target.Position + velocity * 0.1)
+            mouse.Target = target
+        end)
+    end
+    M._zenonetopHooked = M._zenonetopHooked or {}
+    function M._zenonetopHookTool(tool)
+        if not tool or not M._zenonetopAimTools[tool.Name] or M._zenonetopHooked[tool] then return end
+        M._zenonetopHooked[tool] = true
+        tool.Activated:Connect(function() M._zenonetopOverrideMouse() end)
+        tool.Equipped:Connect(function()
+            task.wait(0.05)
+            M._zenonetopOverrideMouse()
+        end)
+    end
+    function M._zenonetopWatchTools(container)
+        if not container then return end
+        for _, tool in ipairs(container:GetChildren()) do M._zenonetopHookTool(tool) end
+        container.ChildAdded:Connect(function(tool)
+            task.wait(0.05)
+            M._zenonetopHookTool(tool)
+        end)
+    end
+    M._zenonetopWatchTools(player:FindFirstChildOfClass("Backpack"))
+    if player.Character then M._zenonetopWatchTools(player.Character) end
+    player.CharacterAdded:Connect(function(char)
+        task.wait(0.2)
+        M._zenonetopWatchTools(char)
+        M._zenonetopWatchTools(player:FindFirstChildOfClass("Backpack"))
+    end)
+    M._zenonetopAimConn = RunService.RenderStepped:Connect(function()
+        if M._zenonetopAimOn and UIS:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
+            M._zenonetopOverrideMouse()
+        end
+    end)
+    M._zenonetopTouchConn = UIS.InputBegan:Connect(function(input, processed)
+        if not processed and input.UserInputType == Enum.UserInputType.Touch then M._zenonetopOverrideMouse() end
+    end)
+
+    local PVis = CategoryRefs.contents["Visuals"]
+    uiSectionHeader(PVis, "COLOR")
+    do
+        local colorBtn = Instance.new("TextButton")
+        colorBtn.Name = "ToggleBluePurple"
+        colorBtn.Size = UDim2.new(1, -16, 0, 32)
+        colorBtn.Position = UDim2.fromOffset(8, 0)
+        colorBtn.BorderSizePixel = 0
+        colorBtn.Font = Enum.Font.GothamBold
+        colorBtn.TextSize = 13
+        colorBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        colorBtn.AutoButtonColor = true
+        colorBtn.Parent = PVis
+        Instance.new("UICorner", colorBtn).CornerRadius = UDim.new(0, 8)
+        local colorStroke = Instance.new("UIStroke", colorBtn)
+        colorStroke.Thickness = 1.2
+        local function refreshColorButton()
+            local current = M.adaptThemeName
+            if not M.ADAPT_THEME_COLORS[current] then current = "BLUE" end
+            local tint = M.ADAPT_THEME_COLORS[current]
+            local labels = {PURPLE = "Morado", BLUE = "Azul", PINK = "Rosa", GREEN = "Verde"}
+            colorBtn.BackgroundColor3 = tint
+            colorStroke.Color = tint
+            colorBtn.Text = "Color: " .. labels[current] .. "  •  Tocar para cambiar"
+        end
+        local function toggleColor()
+            local order = {"PURPLE", "BLUE", "PINK", "GREEN"}
+            local currentIndex = 1
+            for i, name in ipairs(order) do
+                if M.adaptThemeName == name then currentIndex = i; break end
+            end
+            local nextColor = order[(currentIndex % #order) + 1]
+            M.adaptThemeName = nextColor
+            M.currentAccent = M.ADAPT_THEME_COLORS[nextColor]
+            M.menuBgIndex = (nextColor == "PURPLE" and 2) or (nextColor == "PINK" and 3) or (nextColor == "GREEN" and 4) or 1
+            if M.applyAdaptThemeColor then M.applyAdaptThemeColor(nextColor) end
+            if M.applyMenuBackground then M.applyMenuBackground(M.menuBgIndex) end
+            if M.refreshTitleColor then pcall(M.refreshTitleColor) end
+            refreshColorButton()
+            savePrimeHubFeKlanConfig()
+        end
+        colorBtn.Activated:Connect(toggleColor)
+        refreshColorButton()
+    end
+        -- El fondo se selecciona automáticamente según el color activo:
+    -- azul = imagen 1, morado = imagen 2.
+    M.menuBgIndex = (M.adaptThemeName == "PURPLE" and 2) or (M.adaptThemeName == "PINK" and 3) or (M.adaptThemeName == "GREEN" and 4) or 1
+    task.defer(function()
+        if M.applyMenuBackground then M.applyMenuBackground(M.menuBgIndex) end
+    end)
+    uiSectionHeader(PVis, "SKY & VISION")
+    if M.SkyOrder and M.CandyApplyCustomSky then
+        uiToggleRow(PVis, "Sky Themes", M.skyThemesEnabled == true, function(on)
+            M.skyThemesEnabled = on == true
+            if M.skyThemesEnabled then M.CandyApplyCustomSky(M.currentSkyTheme) else M.CandyApplyCustomSky("Off") end
+            savePrimeHubFeKlanConfig()
+        end)
+        local savedSkyIndex = table.find(M.SkyOrder, M.currentSkyTheme) or 1
+        uiChoiceRow(PVis, "Sky Preset", M.SkyOrder, savedSkyIndex, function(v)
+            M.currentSkyTheme = v
+            if M.skyThemesEnabled == true then M.CandyApplyCustomSky(v) end
+            savePrimeHubFeKlanConfig()
+        end)
+    end
+    uiSectionHeader(PVis, "CAMERA")
+    if M.applyFOV then
+        local fovChoices = {"Desactivado", 80, 90, 120}
+        local selectedFov = 1
+        if M.fovEnabled == true then selectedFov = table.find(fovChoices, tonumber(M.fovValue) or 80) or 2 end
+        uiChoiceRow(PVis, "Camera FOV", fovChoices, selectedFov, function(v)
+            if v == "Desactivado" then
+                M.fovEnabled = false
+            else
+                M.fovEnabled = true
+                M.fovValue = tonumber(v) or 80
+            end
+            M.applyFOV()
+            savePrimeHubFeKlanConfig()
+        end)
+    end
+    uiSectionHeader(PVis, "ESP")
+    uiToggleRow(PVis, "Player ESP", M.playerESPEnabled, function(on) M.playerESPEnabled = on == true; M.toggleESP(M.playerESPEnabled); savePrimeHubFeKlanConfig() end)
+    uiToggleRow(PVis, "Line ESP", M.lineESPEnabled, function(on) if M.setAdaptLineESP then M.setAdaptLineESP(on == true) else M.lineESPEnabled = on == true end; savePrimeHubFeKlanConfig() end)
+
+    -- Black Skin: personaje negro, cabeza oculta y accesorios superiores retirados.
+    M.blackSkinEnabled = false
+    M._blackSkinOriginals = {}
+    M._blackSkinHeadState = {}
+    M._blackSkinRemovedAccessories = {}
+    local function clearBlackSkinEffects(char)
+        if not char then return end
+        for _, obj in ipairs(char:GetDescendants()) do
+            if obj.Name == "PrimeHubSkinHeadFire" or obj.Name == "PrimeHubSkinFloatingAura" or obj.Name == "PrimeHubSkinFloatingCrown" or obj.Name == "PrimeHubSkinDragon" or obj.Name == "HaloGlow" then
+                pcall(function() obj:Destroy() end)
+            elseif obj:IsA("Fire") or obj:IsA("Smoke") or obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam") then
+                pcall(function() obj.Enabled = false end)
+            end
+        end
+    end
+    local function removeBlackSkinAccessories(char)
+        if not char then return end
+        for _, obj in ipairs(char:GetChildren()) do
+            if obj:IsA("Accessory") then
+                pcall(function() obj:Destroy() end)
+            end
+        end
+    end
+    function M.enableBlackSkin()
+        -- eliminada: solo Hide Head
+        M.blackSkinEnabled = false
+    end
+    function M.disableBlackSkin()
+        M.blackSkinEnabled = false
+        for obj, original in pairs(M._blackSkinOriginals or {}) do
+            if obj and obj.Parent then
+                pcall(function()
+                    if typeof(original) == "Color3" then obj.Color = original
+                    elseif obj:IsA("BodyColors") then
+                        obj.HeadColor3=original.HeadColor3; obj.LeftArmColor3=original.LeftArmColor3; obj.RightArmColor3=original.RightArmColor3; obj.LeftLegColor3=original.LeftLegColor3; obj.RightLegColor3=original.RightLegColor3; obj.TorsoColor3=original.TorsoColor3
+                    end
+                end)
+            end
+        end
+        for head, state in pairs(M._blackSkinHeadState or {}) do
+            if head and head.Parent then head.Transparency=state.Transparency; head.LocalTransparencyModifier=state.LocalTransparencyModifier end
+        end
+        M._blackSkinOriginals = {}; M._blackSkinHeadState = {}
+    end
+    player.CharacterAdded:Connect(function(char)
+        if false and M.blackSkinEnabled then task.wait(0.2); M.enableBlackSkin() end
+    end)
+    task.defer(function() end)
+
+    -- SAFIRA HUB skin center: cosmetic-only local presets for the character and bat.
+    M.batSkinName = M.batSkinName or "Off"
+    M.characterSkinName = M.characterSkinName or "Off"
+    M._primeBatSkinOriginals = M._primeBatSkinOriginals or {}
+    M._primeCharacterOriginals = M._primeCharacterOriginals or {}
+    function M.applyPrimeBatSkin(name)
+        name = tostring(name or "Off")
+        M.batSkinName = name
+        local colors = {
+            Pumpkin = {Color3.fromRGB(255, 126, 20), Color3.fromRGB(92, 14, 120)},
+            Shadow = {Color3.fromRGB(24, 18, 35), Color3.fromRGB(145, 55, 255)},
+            Candy = {Color3.fromRGB(255, 75, 180), Color3.fromRGB(60, 220, 255)},
+        }
+        local pair = colors[name]
+        local char = player.Character
+        local bp = player:FindFirstChildOfClass("Backpack")
+        local containers = {char, bp}
+        for _, container in ipairs(containers) do
+            if container then
+                for _, tool in ipairs(container:GetChildren()) do
+                    if tool:IsA("Tool") and (tool.Name:lower():find("bat") or tool.Name:lower():find("slap")) then
+                        for _, obj in ipairs(tool:GetDescendants()) do
+                            if obj:IsA("BasePart") then
+                                if not M._primeBatSkinOriginals[obj] then M._primeBatSkinOriginals[obj] = {Color=obj.Color, Material=obj.Material} end
+                                if pair then
+                                    obj.Color = pair[1]
+                                    obj.Material = Enum.Material.Neon
+                                else
+                                    local original = M._primeBatSkinOriginals[obj]
+                                    obj.Color, obj.Material = original.Color, original.Material
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        if M.saveConfig then pcall(M.saveConfig) end
+    end
+    function M.applyPrimeCharacterSkin(name)
+        name = tostring(name or "Off")
+        M.characterSkinName = name
+        local char = player.Character
+        local body = char and char:FindFirstChildOfClass("BodyColors")
+        local head = char and char:FindFirstChild("Head")
+        if body then
+            if not M._primeCharacterOriginals[body] then
+                M._primeCharacterOriginals[body] = {
+                    HeadColor3=body.HeadColor3, TorsoColor3=body.TorsoColor3,
+                    LeftArmColor3=body.LeftArmColor3, RightArmColor3=body.RightArmColor3,
+                    LeftLegColor3=body.LeftLegColor3, RightLegColor3=body.RightLegColor3,
+                }
+            end
+            local palette = {
+                Halloween = Color3.fromRGB(255, 125, 25),
+                Shadow = Color3.fromRGB(42, 24, 58),
+            }
+            local c = palette[name]
+            local original = M._primeCharacterOriginals[body]
+            if c then
+                body.HeadColor3, body.TorsoColor3 = c, c
+                body.LeftArmColor3, body.RightArmColor3 = c, c
+                body.LeftLegColor3, body.RightLegColor3 = c, c
+            elseif original then
+                body.HeadColor3, body.TorsoColor3 = original.HeadColor3, original.TorsoColor3
+                body.LeftArmColor3, body.RightArmColor3 = original.LeftArmColor3, original.RightArmColor3
+                body.LeftLegColor3, body.RightLegColor3 = original.LeftLegColor3, original.RightLegColor3
+            end
+        end
+        if head then
+            local fire = head:FindFirstChild("PrimeHalloweenFlame")
+            if name == "Halloween" then
+                fire = fire or Instance.new("Fire")
+                fire.Name = "PrimeHalloweenFlame"
+                fire.Color = Color3.fromRGB(255, 115, 20)
+                fire.SecondaryColor = Color3.fromRGB(150, 45, 255)
+                fire.Heat, fire.Size, fire.Enabled = 6, 5, true
+                fire.Parent = head
+            elseif fire then fire:Destroy() end
+        end
+        if name == "Headless" then M.applyHeadlessToChar(char, true) else M.applyHeadlessToChar(char, false) end
+        if name == "Korblox" then M.applyKorbloxToChar(char, true) else M.applyKorbloxToChar(char, false) end
+        if M.saveConfig then pcall(M.saveConfig) end
+    end
+
+    local PAnim = CategoryRefs.contents["Animations"]
+    uiSectionHeader(PAnim, "SKINS")
+    uiChoiceRow(PAnim, "Bat Skin", {"Off", "Pumpkin", "Shadow", "Candy"}, table.find({"Off", "Pumpkin", "Shadow", "Candy"}, M.batSkinName) or 1, function(v)
+        M.applyPrimeBatSkin(v)
+    end)
+    uiChoiceRow(PAnim, "Character Skin", {"Off", "Halloween", "Shadow", "Headless", "Korblox"}, table.find({"Off", "Halloween", "Shadow", "Headless", "Korblox"}, M.characterSkinName) or 1, function(v)
+        M.applyPrimeCharacterSkin(v)
+    end)
+    uiToggleRow(PAnim, "Hide Head", M.primeHubHeadHidden ~= false, function(on)
+        M.primeHubHeadHidden = on == true
+        local char = player.Character
+        local head = char and char:FindFirstChild("Head")
+        if head then
+            head.Transparency = M.primeHubHeadHidden and 1 or 0
+            head.LocalTransparencyModifier = M.primeHubHeadHidden and 1 or 0
+        end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiSectionHeader(PAnim, "ANIMATIONS")
+    uiToggleRow(PAnim, "Animations Enabled", M.animPackEnabled == true, function(on)
+        M.animPackEnabled = on == true
+        if M.animPackEnabled then
+            M.applyAnimPack(M.animPack or "None")
+        else
+            M.unwalkEnabled = false
+            M._unwalkOffLock = true
+            M.stopUnwalk()
+            M.resetAnimations(player.Character)
+        end
+        savePrimeHubFeKlanConfig()
+    end)
+    if M.applyAnimPack then
+        uiChoiceRow(PAnim, "Animation Pack", {"None", "Adidas Sports", "Adidas Community", "Adidas Aura", "Wicked Popular", "Elder", "Zombie", "Mage", "Catwalk Glam", "Astronaut", "Werewolf", "Superhero", "Toy", "No Boundaries", "NFL", "Amazon Unboxed", "Vampire", "Ninja", "Robot", "Levitation", "Stylish", "Bubbly", "Unwalk"}, table.find({"None", "Adidas Sports", "Adidas Community", "Adidas Aura", "Wicked Popular", "Elder", "Zombie", "Mage", "Catwalk Glam", "Astronaut", "Werewolf", "Superhero", "Toy", "No Boundaries", "NFL", "Amazon Unboxed", "Vampire", "Ninja", "Robot", "Levitation", "Stylish", "Bubbly", "Unwalk"}, M.animPack or "Mage") or 8, function(v)
+            M.animPack = v
+            if v == "Unwalk" then
+                M.animPackEnabled = true
+                M.unwalkEnabled = true
+                M._unwalkOffLock = false
+                M.startUnwalk()
+            else
+                M.unwalkEnabled = false
+                M._unwalkOffLock = true
+                M.stopUnwalk()
+                if M.animPackEnabled then M.applyAnimPack(v) end
+            end
+            savePrimeHubFeKlanConfig()
+        end)
+    end
+
+    local PUtil = CategoryRefs.contents["Utility"]
+            uiSectionHeader(PUtil, "INTERFACE EDIT")
+    uiActionRow(PUtil, "Reset Position (Mobile Buttons)", function()
+        M.resetMobilePositions()
+        savePrimeHubFeKlanConfig()
+    end)
+    uiSectionHeader(PUtil, "BACKGROUNDS & EFFECTS")
+    uiToggleRow(PUtil, "Button Opacity (Transparent)", M.mobButtonsTransparencyEnabled, function(on)
+        M.mobButtonsTransparencyEnabled = on == true
+        local alpha = M.mobButtonsTransparencyEnabled and 0.55 or 0
+        local gui = M.mobileButtonsGui
+        if gui then
+            for _, item in ipairs(gui:GetDescendants()) do
+                if item:IsA("TextButton") then
+                    item.BackgroundTransparency = (tonumber(M.mobBtnBgId) or 0) > 0 and 1 or alpha
+                elseif item:IsA("ImageLabel") and item.Name == "BtnBgImage" then
+                    item.ImageTransparency = alpha
+                end
+            end
+        end
+        if M.mobileButtonsEnabled then M.buildMobileButtons() end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiNumberRow(PUtil, "Menu Scale", M.uiScale, 0.5, 2.0, function(v) M.uiScale = v; if M.uiScaleRef then M.uiScaleRef.Scale = v end; savePrimeHubFeKlanConfig() end)
+    uiToggleRow(PUtil, "Hide Mobile Buttons", M.hideMobileButtons == true, function(on)
+        M.hideMobileButtons = on == true
+        _G.PrimeHubForceMobileVisible = not M.hideMobileButtons
+        if M.mobileButtonsGui then M.mobileButtonsGui.Enabled = not M.hideMobileButtons end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiSectionHeader(PUtil, "PERFORMANCE")
+    uiToggleRow(PUtil, "Anti-Lag", M.antiLagEnabled == true, function(on)
+        M.antiLagEnabled = on == true
+        if on then M.enableAntiLag() else M.disableAntiLag() end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PUtil, "Nuke Optimizer", M.nukeOptimiserEnabled == true, function(on)
+        if on then M.enableNukeOptimizer() else M.disableNukeOptimizer() end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiToggleRow(PUtil, "Graphics Bajos", M.graphicsBajosEnabled == true, function(on)
+        if on then M.enableGraphicsBajos() else M.disableGraphicsBajos() end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiSectionHeader(PUtil, "PROTECTION")
+    uiToggleRow(PUtil, "Anti Summer Base", M.antiSummerBaseEnabled, function(on) M.antiSummerBaseEnabled = on; if on then M.enableAntiSummerBase() else M.disableAntiSummerBase() end; savePrimeHubFeKlanConfig() end)
+    uiToggleRow(PUtil, "Stretch Rez", M.stretchRezEnabled, function(on) M.stretchRezEnabled = on; if on then M.enableStretchRez() else M.disableStretchRez() end; savePrimeHubFeKlanConfig() end)
+    uiToggleRow(PUtil, "Remove Accessories", M.removeAccEnabled, function(on) M.removeAccEnabled = on; if on then M.startRemoveAcc() else M.stopRemoveAcc() end; savePrimeHubFeKlanConfig() end)
+
+    do
+        local row = Instance.new("Frame")
+        row.Size = UDim2.new(1, -8, 0, 36)
+        row.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
+        row.BackgroundTransparency = 0.15
+        row.BorderSizePixel = 0
+        row.Parent = PUtil
+        Instance.new("UICorner", row).CornerRadius = UDim.new(0, 8)
+        local pad = Instance.new("UIPadding", row)
+        pad.PaddingLeft = UDim.new(0, 10)
+        pad.PaddingRight = UDim.new(0, 8)
+        local nameLbl = Instance.new("TextLabel", row)
+        nameLbl.Size = UDim2.new(0.42, 0, 1, 0)
+        nameLbl.BackgroundTransparency = 1
+        nameLbl.Text = "Pack Accessory"
+        nameLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+        nameLbl.Font = Enum.Font.GothamBold
+        nameLbl.TextSize = 12
+        nameLbl.TextXAlignment = Enum.TextXAlignment.Left
+        local container = Instance.new("Frame", row)
+        container.Size = UDim2.new(0, 160, 1, 0)
+        container.Position = UDim2.new(1, -168, 0, 0)
+        container.BackgroundTransparency = 1
+        local leftBtn = Instance.new("TextButton", container)
+        leftBtn.Size = UDim2.new(0, 32, 0, 26)
+        leftBtn.Position = UDim2.new(0, 0, 0.5, -13)
+        leftBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 36)
+        leftBtn.BorderSizePixel = 0
+        leftBtn.Text = "<"
+        leftBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        leftBtn.Font = Enum.Font.GothamBlack
+        leftBtn.TextSize = 13
+        leftBtn.AutoButtonColor = false
+        Instance.new("UICorner", leftBtn).CornerRadius = UDim.new(0, 6)
+        M.accSelectorLabel = Instance.new("TextLabel", container)
+        M.accSelectorLabel.Size = UDim2.new(0, 84, 0, 26)
+        M.accSelectorLabel.Position = UDim2.new(0.5, -42, 0.5, -13)
+        M.accSelectorLabel.BackgroundTransparency = 1
+        M.accSelectorLabel.Text = tostring(M.currentAccessoryPack or "Off")
+        M.accSelectorLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        M.accSelectorLabel.Font = Enum.Font.GothamBlack
+        M.accSelectorLabel.TextSize = 12
+        M.accSelectorLabel.TextXAlignment = Enum.TextXAlignment.Center
+        local rightBtn = Instance.new("TextButton", container)
+        rightBtn.Size = UDim2.new(0, 32, 0, 26)
+        rightBtn.Position = UDim2.new(1, -32, 0.5, -13)
+        rightBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 36)
+        rightBtn.BorderSizePixel = 0
+        rightBtn.Text = ">"
+        rightBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        rightBtn.Font = Enum.Font.GothamBlack
+        rightBtn.TextSize = 13
+        rightBtn.AutoButtonColor = false
+        Instance.new("UICorner", rightBtn).CornerRadius = UDim.new(0, 6)
+        leftBtn.MouseButton1Click:Connect(function()
+            if M.setAccessoryPackByOffset then M.setAccessoryPackByOffset(-1) end
+        end)
+        rightBtn.MouseButton1Click:Connect(function()
+            if M.setAccessoryPackByOffset then M.setAccessoryPackByOffset(1) end
+        end)
+    end
+
+    uiToggleRow(PUtil, "Anti-Kick", M.antiKickEnabled, function(on) M.antiKickEnabled = on; if on then M.enableAntiKick() else M.disableAntiKick() end; savePrimeHubFeKlanConfig() end)
+    uiToggleRow(PUtil, "Safe Mode", M.safeModeEnabled, function(on) M.safeModeEnabled = on; if on then M.enableSafeMode() else M.disableSafeMode() end; savePrimeHubFeKlanConfig() end)
+    uiSectionHeader(PUtil, "MUSIC")
+    -- Row estilo foto: Songs + OPEN
+    do
+        local songRow = Instance.new("Frame", PUtil)
+        songRow.Size = UDim2.new(1, 0, 0, 44)
+        songRow.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
+        songRow.BackgroundTransparency = 0.15
+        songRow.BorderSizePixel = 0
+        guiCorner(songRow, 14)
+        local songStroke = guiStroke(songRow, Color3.fromRGB(220, 220, 230), 1)
+        songStroke.Transparency = 0.35
+        local songLbl = Instance.new("TextLabel", songRow)
+        songLbl.Size = UDim2.new(1, -100, 1, 0)
+        songLbl.Position = UDim2.new(0, 16, 0, 0)
+        songLbl.BackgroundTransparency = 1
+        songLbl.Text = "Songs"
+        songLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+        songLbl.TextSize = 15
+        songLbl.Font = Enum.Font.GothamBold
+        songLbl.TextXAlignment = Enum.TextXAlignment.Left
+        local openBtn = Instance.new("TextButton", songRow)
+        openBtn.Size = UDim2.new(0, 78, 0, 28)
+        openBtn.Position = UDim2.new(1, -90, 0.5, -14)
+        openBtn.BackgroundColor3 = Color3.fromRGB(245, 245, 250)
+        openBtn.BorderSizePixel = 0
+        openBtn.AutoButtonColor = false
+        openBtn.Text = "OPEN"
+        openBtn.TextColor3 = Color3.fromRGB(15, 15, 18)
+        openBtn.TextSize = 12
+        openBtn.Font = Enum.Font.GothamBlack
+        guiCorner(openBtn, 14)
+        openBtn.MouseButton1Click:Connect(function()
+            if M.openPrimeHubMusicPlayer then
+                M.openPrimeHubMusicPlayer()
+            end
+        end)
+    end
+
+uiSectionHeader(PUtil, "MOBILE")
+    uiToggleRow(PUtil, "Mobile Buttons", M.mobileButtonsEnabled, function(on) M.mobileButtonsEnabled = on == true; if on then M.buildMobileButtons() else M.destroyMobileButtons() end; savePrimeHubFeKlanConfig() end)
+    uiNumberRow(PUtil, "Button Size", M.mobileButtonsSize, 40, 150, function(v) M.mobileButtonsSize = math.clamp(tonumber(v) or 100, 40, 150); if M.mobileButtonsEnabled then M.buildMobileButtons() end; savePrimeHubFeKlanConfig() end)
+    uiSectionHeader(PUtil, "ACTIONS")
+    uiActionRow(PUtil, "Save Config", function() if M.saveConfig then M.saveConfig() end; M.notify("Configuration saved") end)
+    uiActionRow(PUtil, "Reset All Settings", function() M.resetAllSettings() end)
+    local function uiStringInputRow(parent, label, value, callback)
+        local Row=Instance_new("Frame",parent); Row.Size=UDim2.new(1,0,0,40); Row.BackgroundColor3=C.row
+        Row.BackgroundTransparency=0.28; Row.BorderSizePixel=0; guiCorner(Row,10); local rowStroke=guiStroke(Row,C.divider,1); rowStroke.Transparency=0.48
+        local Lb=Instance_new("TextLabel",Row); Lb.Size=UDim2.new(0.4,0,1,0); Lb.Position=UDim2.new(0,12,0,0)
+        Lb.BackgroundTransparency=1; Lb.Text=label; Lb.TextColor3=C.text; Lb.TextSize=12; Lb.Font=Enum.Font.GothamMedium; Lb.TextXAlignment=Enum.TextXAlignment.Left
+        local BC=Instance_new("Frame",Row); BC.ZIndex=6; BC.Position=UDim2.new(1,-128,0.5,-12); BC.Size=UDim2.new(0,116,0,24)
+        BC.BackgroundColor3=C.input; BC.BackgroundTransparency=0.5; BC.BorderSizePixel=0; guiCorner(BC,6); guiStroke(BC,C.divider,1)
+        local Box=Instance_new("TextBox",BC); Box.ZIndex=7; Box.Size=UDim2.new(1,0,1,0); Box.BackgroundTransparency=1
+        Box.Text=tostring(value); Box.TextColor3=C.text; Box.TextSize=10; Box.Font=Enum.Font.GothamBold; Box.ClearTextOnFocus=true
+        Box.FocusLost:Connect(function() callback(Box.Text) end)
+        return Row,Box
+    end
+    local PKB = CategoryRefs.contents["Keybinds"]
+    uiSectionHeader(PKB, "PC KEYS")
+    uiToggleRow(PKB, "Show PC Key Panel", M.pcKeyStatusEnabled == true, function(on)
+        M.pcKeyStatusEnabled = on == true
+        if M.pcKeyStatusEnabled then
+            M.buildPCKeyStatusPanel()
+        elseif M.pcKeyStatusGui then
+            M.pcKeyStatusGui:Destroy()
+            M.pcKeyStatusGui = nil
+        end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiActionRow(PKB, "Panel Smaller", function()
+        M.pcKeyPanelScale = math.clamp((tonumber(M.pcKeyPanelScale) or 1) - 0.1, 0.65, 1.5)
+        if M.pcKeyPanelScaleRef then M.pcKeyPanelScaleRef.Scale = M.pcKeyPanelScale end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiActionRow(PKB, "Panel Bigger", function()
+        M.pcKeyPanelScale = math.clamp((tonumber(M.pcKeyPanelScale) or 1) + 0.1, 0.65, 1.5)
+        if M.pcKeyPanelScaleRef then M.pcKeyPanelScaleRef.Scale = M.pcKeyPanelScale end
+        savePrimeHubFeKlanConfig()
+    end)
+    uiKeybindRow(PKB, "Carry Speed", M.KB.SpeedNormal, function() return M.manualCarryActive == true or M.carrySpeedActive == true end)
+    uiKeybindRow(PKB, "Bat Aimbot", M.KB.AutoBat, function() return M.autoBatEnabled == true end)
+    uiKeybindRow(PKB, "Bat Bypass", M.KB.BatTP, function() return M.bypassAimbotEnabled == true end)
+    uiKeybindRow(PKB, "Bat V2", M.KB.BatV2, function() return M.batV2Enabled == true end)
+    uiKeybindRow(PKB, "Drop Brainrot", M.KB.DropBrainrot, function() return M.dropActive == true end)
+    uiSectionHeader(PKB, "OTHER KEYBINDS")
+    uiKeybindRow(PKB, "Hide GUI", M.KB.GuiHide)
+    uiKeybindRow(PKB, "Insta Reset", M.KB.InstaReset)
+    uiKeybindRow(PKB, "Lagger Carry", M.KB.LaggerCarry)
+    uiKeybindRow(PKB, "Lagger Speed", M.KB.SpeedLagger)
+    uiKeybindRow(PKB, "Custom Speed", M.KB.SpeedCustom)
+    uiKeybindRow(PKB, "Lagger Mode", M.KB.LaggerToggle)
+    uiKeybindRow(PKB, "TP Down", M.KB.TPFloor)
+    uiKeybindRow(PKB, "Auto Left", M.KB.AutoLeft)
+    uiKeybindRow(PKB, "Auto Right", M.KB.AutoRight)
+    -- PrimeHub Melo layout: todas las secciones de XD Nuevo permanecen separadas arriba.
+    LeftPanel.Visible = false
+    -- Content starts under title + tabs
+    CF.Position = UDim2.new(0, 0, 0, 108)
+    CF.Size = UDim2.new(1, 0, 1, -112)
+    CF.ZIndex = 6
+    M._contentFrameRef = CF
+    local TopTabs = Instance.new("ScrollingFrame")
+    TopTabs.Name = "TopSections"
+    -- CLEAN-style bottom tab bar
+    -- Tabs debajo del título (High)
+    TopTabs.Position = UDim2.new(0, 6, 0, 68)
+    TopTabs.Size = UDim2.new(1, -12, 0, 36)
+    TopTabs.BackgroundTransparency = 1
+    TopTabs.BorderSizePixel = 0
+    TopTabs.ScrollBarThickness = 0
+    TopTabs.CanvasSize = UDim2.new(0, 0, 0, 0)
+    TopTabs.AutomaticCanvasSize = Enum.AutomaticSize.X
+    TopTabs.ScrollingDirection = Enum.ScrollingDirection.X
+    TopTabs.Active = true
+    TopTabs.ZIndex = 50
+    TopTabs.Parent = Inner
+    local TopLayout = Instance.new("UIListLayout", TopTabs)
+    TopLayout.FillDirection = Enum.FillDirection.Horizontal
+    TopLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+    TopLayout.Padding = UDim.new(0, 6)
+    TopLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    TopTabs.CanvasPosition = Vector2.zero
+    local tabTargets = {Main = "Visuals", Speed = "Speed", Combat = "Mechanics", Animations = "Animations", Utility = "Utility", Keybinds = "Keybinds"}
+    local tabRefs = {}
+    local tabNames = {"Main", "Speed", "Combat", "Animations", "Utility", "Keybinds"}
+    local function selectTopSection(name)
+        local target = tabTargets[name] or "Visuals"
+        for pageName, page in pairs(CategoryRefs.contents) do page.Visible = (pageName == target) end
+        CategoryRefs.active = target
+        for tabName, tab in pairs(tabRefs) do
+            local active = tabName == name
+            local SILVER = Color3.fromRGB(180, 180, 190)
+            local SILVER_DARK = Color3.fromRGB(100, 100, 110)
+            tab.BackgroundColor3 = active and Color3.fromRGB(20, 20, 20) or Color3.fromRGB(0, 0, 0)
+            tab.BackgroundTransparency = active and 0.35 or 0.55
+            tab.TextColor3 = active and (M.currentAccent or SILVER) or SILVER_DARK
+            local stroke = tab:FindFirstChild("TabStroke")
+            if stroke then
+                stroke.Color = active and (M.currentAccent or SILVER) or Color3.fromRGB(50, 50, 50)
+                stroke.Thickness = 1
+                stroke.Transparency = active and 0.3 or 0.55
+            end
+        end
+    end
+    for i, name in ipairs(tabNames) do
+        local tab = Instance.new("TextButton")
+        tab.Name = "Top_" .. name
+        tab.Size = UDim2.fromOffset(78, 32)
+        tab.BackgroundColor3 = name == "Main" and Color3.fromRGB(20, 20, 20) or Color3.fromRGB(0, 0, 0)
+        tab.BackgroundTransparency = name == "Main" and 0.35 or 0.55
+        tab.BorderSizePixel = 0
+        tab.Text = name
+        tab.TextColor3 = name == "Main" and Color3.fromRGB(180, 180, 190) or Color3.fromRGB(100, 100, 110)
+        tab.TextSize = 11
+        tab.Font = Enum.Font.GothamBold
+        tab.LayoutOrder = i
+        tab.ZIndex = 51
+        tab.Parent = TopTabs
+        guiCorner(tab, 10)
+        local stroke = guiStroke(tab, M.currentAccent or Color3.fromRGB(58, 128, 245), 1.8)
+        stroke.Name = "TabStroke"
+        tabRefs[name] = tab
+        tab.MouseButton1Click:Connect(function() selectTopSection(name) end)
+    end
+    selectTopSection("Main")
+    local footer = Instance.new("Frame")
+    footer.Name = "PrimeHubFooter"
+    footer.Size = UDim2.new(1, -24, 0, 0)
+    footer.Position = UDim2.new(0, 12, 1, -52)
+    footer.Visible = false
+    footer.BackgroundColor3 = C.bgDark
+    footer.BackgroundTransparency = 0.08
+    footer.BorderSizePixel = 0
+    footer.ZIndex = 30
+    footer.Parent = Inner
+    guiCorner(footer, 14)
+    guiStroke(footer, C.divider, 1)
+    local footerLine = Instance.new("Frame")
+    footerLine.Size = UDim2.new(0.72, 0, 0, 1)
+    footerLine.Position = UDim2.new(0.14, 0, 0, 6)
+    footerLine.BackgroundColor3 = M.currentAccent or Color3.fromRGB(58, 128, 245)
+    footerLine.BorderSizePixel = 0
+    footerLine.ZIndex = 31
+    footerLine.Parent = footer
+    if M.recolorPinkToTheme then
+        M.recolorPinkToTheme(Inner)
+    end
+    local footerText = Instance.new("TextLabel")
+    footerText.Name = "PrimeHubTitle"
+    footerText.Size = UDim2.new(1, -16, 1, -8)
+    footerText.Position = UDim2.new(0, 8, 0, 4)
+    footerText.BackgroundTransparency = 1
+    footerText.Text = "SAFIRA HUB"
+    footerText.TextColor3 = M.currentAccent or Color3.fromRGB(58, 128, 245)
+    footerText.TextStrokeColor3 = Color3.fromRGB(120, 20, 80)
+    footerText.TextStrokeTransparency = 0.15
+    footerText.Font = Enum.Font.Code
+    footerText.TextSize = 19
+    footerText.TextXAlignment = Enum.TextXAlignment.Center
+    footerText.TextYAlignment = Enum.TextYAlignment.Center
+    footerText.ZIndex = 32
+    footerText.Parent = footer
+    Outer.Visible = false
+    MiniBtn.Visible = true
+    M.menuOpen = false
+    if M.pcKeyStatusEnabled == true then pcall(M.buildPCKeyStatusPanel) else pcall(function() if M.pcKeyStatusGui then M.pcKeyStatusGui:Destroy(); M.pcKeyStatusGui = nil end end) end
+end
+
+M.speedProfile = M.speedProfile or "Normal"
+M.NormalSpeedNorm = M.NormalSpeedNorm or 59
+M.NormalSpeedSteal = M.NormalSpeedSteal or 29
+M.LaggerSpeedNorm = M.LaggerSpeedNorm or 30
+M.LaggerSpeedSteal = M.LaggerSpeedSteal or 15
+M.CustomSpeedNorm = M.CustomSpeedNorm or 66
+M.CustomSpeedSteal = M.CustomSpeedSteal or 34
+function M.resetAllSettings()
+    M.speedProfile = "Normal"
+    M.NormalSpeedNorm = 59
+    M.NormalSpeedSteal = 29
+    M.LaggerSpeedNorm = 30
+    M.LaggerSpeedSteal = 15
+    M.CustomSpeedNorm = 66
+    M.CustomSpeedSteal = 34
+    M.NS = 59
+    M.CS = 29
+    M.LAGGER_SPEED = 30
+    M.LAGGER_CARRY_SPEED = 15
+    M.speedMethod = "Velocity"
+    M.hyperMult = 4
+    M._lastSpeedMethod = nil
+    M._anchoredBySpeed = nil
+    M.carrySpeedActive = false
+    M.laggerModeEnabled = false
+    M.laggerCarryActive = false
+    M.antiRagdollEnabled = false
+    M.antiRagdollMode = "V1"
+    M.infJumpEnabled = false
+    M.infJumpMode = "hold"
+    M.medusaCounterEnabled = false
+    M.batCounterEnabled = false
+    M.unwalkEnabled = false
+        M.medusaDebounce = false
+    M.medusaLastUsed = 0
+    M.autoLeftEnabled = false
+    M.autoRightEnabled = false
+    M.autoBatEnabled = false
+    M.autoSwingEnabled = true
+    M.autoMoveSwingEnabled = false
+    M.antiLagEnabled = false
+    M.antiLagV2Enabled = false
+    M.removeAccessoriesEnabled = false
+    M.stretchRezEnabled = false
+        M.autoTPHeight = 20
+    M.guiTransparencyEnabled = false
+    M.mobileButtonsEnabled = true
+    M.mobileButtonsSize = 100
+    M.fovValue = 80
+    M.fovIndex = 1
+    M.autoSwitchSpeedEnabled = false
+    M.antiKickEnabled = false
+    M.brainrotDetected = false
+    M.ragdollGuiEnabled = true
+    M.introSoundEnabled = false
+    M.introSongChoice = 3
+    M.introGUIEnabled = false
+    M.autoRadiusEnabled = false
+    M.removeAccEnabled = false
+    M.playerESPEnabled = false
+    M.showPlayerSpeeds = false
+    M.uiScale = 0.8
+    M.perButtonDragEnabled = true
+    M.lineESPEnabled = false
+    M.speedESPEnabled = false
+    M.animPack = "Mage"
+    M.headlessEnabled = false
+    M.korbloxEnabled = false
+    M.primeHubSkinEnabled = false
+    M.primeHubKawatanEnabled = false
+    M.primeHubMusicSelection = "Off"
+    if M.setPrimeHubSkinMode then M.setPrimeHubSkinMode("Off", true) end
+    if M.setPrimeHubMusic then M.setPrimeHubMusic("Off", true) end
+    M.bypassAimbotEnabled = false
+    M.animPackEnabled = true
+    M.stopBatAimbot()
+    M.stopAutoLeft()
+    M.stopAutoRight()
+    M.stopAntiRagdoll()
+    M.stopHoldInfJump()
+    M.stopManualInfJumpLoop()
+    M.stopMedusaCounter()
+    M.stopBatCounter()
+    M.stopUnwalk()
+    M.disableAntiLag()
+    M.disableAntiLagV2()
+    M.disableStretchRez()
+    M.disableAntiKick()
+    M.stopBypassAimbot()
+    M.stopRemoveAcc()
+    M.toggleESP(false)
+    M.togglePlayerSpeeds(false)
+    savePrimeHubFeKlanConfig()
+    M.buildGui()
+end
+repeat task.wait() until game:IsLoaded()
+task.wait(0.15)
+loadPrimeHubFeKlanConfig()
+pcall(function()
+    local mode = M.autoGrabMode
+    if getgenv and getgenv()._PrimeHubAutoGrabMode then
+        local g = tostring(getgenv()._PrimeHubAutoGrabMode)
+        if g == "V1" or g == "V2" then mode = g end
+    end
+    if mode ~= "V1" and mode ~= "V2" then mode = "V1" end
+    M.autoGrabMode = mode
+    if ZenXSteal then ZenXSteal.GrabMode = mode end
+end)
+M.loadBtnPositions()
+-- Reactivar automáticamente los interruptores que quedaron encendidos.
+task.defer(function()
+    if M._zenonetopAimOn == nil then M._zenonetopAimOn = true end
+    if M.autoDestroyTurretEnabled then M.startAutoDestroyTurret() end
+end)
+if M.graphicsBajosEnabled then pcall(M.enableGraphicsBajos) end
+if M.antiDieEnabled then pcall(M.enableAntiDie) end
+if M.startPlomoBorderAnim then pcall(M.startPlomoBorderAnim) end
+if not M.KB.BatTP.kb then
+    M.KB.BatTP.kb = M.KB.BypassAimbot.kb or Enum.KeyCode.E
+end
+M.KB.BypassAimbot.kb = nil
+M.speedESPEnabled = false
+cherryESPState.SpeedESP = false
+M.primeHubSkinEnabled = false; M.primeHubKawatanEnabled = false
+if M._savedTheme and CHERRY_THEMES[M._savedTheme] then
+    PrimeHubFeKlanConfig.Theme = M._savedTheme
+    M.colorScheme = M._savedTheme
+elseif M.colorScheme and CHERRY_THEMES[M.colorScheme] then
+    PrimeHubFeKlanConfig.Theme = M.colorScheme
+    M._savedTheme = M.colorScheme
+end
+applyAccentFromTheme()
+-- Intro: ocultar GUI hasta Skip o fin
+_G.PrimeHubIntroActive = true
+_G.PrimeHubIntroFinished = false
+_G.PrimeHubForceMobileVisible = false
+_G.PrimeHubIntroDoneCallbacks = {}
+pcall(savePrimeHubFeKlanConfig)
+M.unwalkEnabled = false
+M._unwalkOffLock = true
+if player.Character then
+    pcall(M.stopUnwalk)
+    pcall(M.restoreOriginalAnimate, player.Character)
+end
+M.buildGui()
+-- Reaplicar el pack guardado después de crear el selector y de que el personaje esté listo.
+task.defer(function()
+    if player.Character and M.currentAccessoryPack and M.currentAccessoryPack ~= "Off" then
+        pcall(function() M.restoreSavedAccessoryPack(player.Character) end)
+    end
+end)
+pcall(function()
+    if M.applyMenuBackground then M.applyMenuBackground(M.menuBgIndex or 1) end
+    if M.adaptThemeName and M.applyAdaptThemeColor then
+        M.applyAdaptThemeColor(M.adaptThemeName)
+    end
+end)
+M.applyThemeBackground(M.colorScheme)
+-- CLEAN shell: keep native colors
+task.spawn(function()
+    pcall(playCinematicIntro)
+end)
+cherryESPState.LineESP = M.lineESPEnabled == true
+cherryESPState.SpeedESP = M.speedESPEnabled == true
+if M.autoSwitchSpeedEnabled then M.refreshWalkSpeedAutoSwitch() end
+task.defer(function()
+    task.wait(0.05)
+    pcall(function()
+        
+        if M.updateHeadTheme then M.updateHeadTheme() end
+        if M.mainFrame then
+            M.recolorBlacksToTheme(M.mainFrame)
+            if M.recolorPinkToTheme then M.recolorPinkToTheme(M.mainFrame) end
+        end
+        if M.statusGui then M.recolorBlacksToTheme(M.statusGui) end
+    end)
+    -- During intro: no mobile buttons. Build only after intro ends.
+    if _G.PrimeHubIntroActive then
+        pcall(M.destroyMobileButtons)
+    elseif M.mobileButtonsEnabled then
+        M.buildMobileButtons()
+        if M.applyMobileButtonsVisibility then M.applyMobileButtonsVisibility() end
+    else
+        M.destroyMobileButtons()
+    end
+    task.spawn(function()
+        while _G.PrimeHubIntroActive do task.wait(0.1) end
+        task.wait(0.05)
+        if M.mainGui and M.mainGui.Parent then M.mainGui.Enabled = true end
+        if M.mobileButtonsEnabled then
+            if not (M.mobileButtonsGui and M.mobileButtonsGui.Parent) then
+                pcall(M.buildMobileButtons)
+            end
+            local visible = not (M.hideMobileButtons == true)
+            if M.mobileButtonsGui and M.mobileButtonsGui.Parent then M.mobileButtonsGui.Enabled = visible end
+            if M.mobGuiRef and M.mobGuiRef.Parent then M.mobGuiRef.Enabled = visible end
+        end
+        if M.autoGrabV1Enabled ~= false then
+            pcall(function()
+                if not (M.autoGrabV1Gui and M.autoGrabV1Gui.Parent) then
+                    M.ensureAutoGrabV1Gui()
+                end
+                if M.autoGrabV1Gui then M.autoGrabV1Gui.Enabled = true end
+                if not M.autoGrabV1Conn then M.startAutoGrabV1() end
+            end)
+        end
+    end)
+    task.wait(0.05)
+    if M.antiRagdollEnabled then M.startAntiRagdoll() end
+    M.infJumpMode = "hold"
+    if M.infJumpEnabled then M.startHoldInfJump() end
+    if M.medusaCounterEnabled then M.setupMedusa(player.Character) end
+    if M.batCounterEnabled then M.startBatCounter() end
+    M.unwalkEnabled = false
+    M._unwalkOffLock = true
+    task.wait(0.05)
+    if M.autoBatEnabled then M.queueAutoBatStart() end
+    if M.autoLeftEnabled then M.startAutoLeft() end
+    if M.autoRightEnabled then M.startAutoRight() end
+    
+    if M.bypassAimbotEnabled then M.startBypassAimbot() end
+    if M.antiVoidEnabled then pcall(function() M.startAntiVoid() end) end
+    if M.bodyLockEnabled then pcall(function() M.startBodyLock() end) end
+    if M.autoGrabV1Enabled then pcall(function() M.startAutoGrabV1() end) end
+    if M.antiKickEnabled then M.enableAntiKick() end
+    if M.antiSummerBaseEnabled then M.enableAntiSummerBase() end
+    if M.stretchRezEnabled then M.enableStretchRez() end
+    if M.removeAccEnabled then M.startRemoveAcc() end
+    task.wait(0.08)
+    if M.animPackEnabled and M.animPack and M.PACKS[M.animPack] then
+        M.applyAnimPack(M.animPack)
+    elseif player.Character then
+        M.resetAnimations(player.Character)
+    end
+    if M.headlessEnabled or M.korbloxEnabled then M.applyCharterToChar(player.Character) end
+    if M.primeHubMusicSelection and M.primeHubMusicSelection ~= "Off" then M.setPrimeHubMusic(M.primeHubMusicSelection, true) end
+    if M.skyThemesEnabled == true then M.CandyApplyCustomSky(M.currentSkyTheme) else M.CandyApplyCustomSky("Off") end
+    if M.showPlayerSpeeds then M.togglePlayerSpeeds(true) end
+    if M.playerESPEnabled then M.toggleESP(true) end
+    if M.updateStatusRadius then M.updateStatusRadius() end
+    M.startHeadSpeedUpdates()
+    -- Final pass: reaplicar performance + Combat guardados
+    task.defer(function()
+        if M.antiLagEnabled then pcall(M.enableAntiLag) end
+        if M.nukeOptimiserEnabled and M.enableNukeOptimizer then pcall(M.enableNukeOptimizer) end
+        if M.graphicsBajosEnabled then pcall(M.enableGraphicsBajos) end
+        if M.antiDieEnabled then pcall(M.enableAntiDie) end
+        M.unwalkEnabled = false
+        M._unwalkOffLock = true
+        if M.antiSummerBaseEnabled then pcall(M.enableAntiSummerBase) end
+        if M.stretchRezEnabled then pcall(M.enableStretchRez) end
+        if M.antiKickEnabled then pcall(M.enableAntiKick) end
+        if M.removeAccEnabled then pcall(M.startRemoveAcc) end
+        -- Combat
+        if M.antiVoidEnabled and M.startAntiVoid then pcall(M.startAntiVoid) end
+        if M.bodyLockEnabled and M.startBodyLock then pcall(M.startBodyLock) end
+        if M.antiRagdollEnabled and M.startAntiRagdoll then pcall(M.startAntiRagdoll) end
+        if M.batCounterEnabled and M.startBatCounter then pcall(M.startBatCounter) end
+        if M.medusaCounterEnabled and M.setupMedusa then pcall(function() M.setupMedusa(player.Character) end) end
+        if M.autoBatEnabled and M.queueAutoBatStart then pcall(M.queueAutoBatStart) end
+        if M.bypassAimbotEnabled and M.startBypassAimbot then pcall(M.startBypassAimbot) end
+        if M.autoGrabV1Enabled ~= false and M.startAutoGrabV1 then pcall(M.startAutoGrabV1) end
+    end)
+    if player.Character then
+        M.setupHeadIndicator(player.Character)
+        M.setupRagdollTriggers()
+    end
+end)
+player.CharacterAdded:Connect(function(char)
+    task.wait(0.5)
+    if M.primeHubHeadHidden then
+        local hiddenHead = char:FindFirstChild("Head") or char:WaitForChild("Head", 3)
+        if hiddenHead and hiddenHead:IsA("BasePart") then
+            hiddenHead.Transparency = 1
+            hiddenHead.LocalTransparencyModifier = 1
+            task.delay(0.35, function()
+                if M.primeHubHeadHidden and hiddenHead.Parent then
+                    hiddenHead.Transparency = 1
+                    hiddenHead.LocalTransparencyModifier = 1
+                end
+            end)
+        end
+    end
+    if M.normalizeCameraState then pcall(M.normalizeCameraState) end
+    task.defer(function()
+        if player.Character == char and M.normalizeCameraState then pcall(M.normalizeCameraState) end
+    end)
+    M.setupHeadIndicator(char)
+    M.setupRagdollTriggers()
+    if M.medusaCounterEnabled then M.setupMedusa(char) end
+    if M.batCounterEnabled then M.startBatCounter() end
+    M.unwalkEnabled = false
+    M._unwalkOffLock = true
+    M.stopUnwalk()
+    if M.animPackEnabled and M.animPack and M.PACKS[M.animPack] then
+        task.wait(0.2)
+        M.applyAnimPack(M.animPack)
+    else
+        M.resetAnimations(char)
+    end
+    if M.headlessEnabled or M.korbloxEnabled then
+        task.wait(0.2)
+        M.applyCharterToChar(char)
+    end
+    if M.bypassAimbotEnabled then
+        task.wait(0.2)
+        M.startBypassAimbot()
+    end
+    if M.bodyLockEnabled then
+        task.wait(0.3)
+        pcall(function() M.stopBodyLock(); M.startBodyLock() end)
+    end
+    if M.antiVoidEnabled then
+        pcall(function() M.startAntiVoid() end)
+    end
+end)
+do
+    local _ncAcc = 0
+    RunService.Heartbeat:Connect(function(dt)
+        _ncAcc = _ncAcc + dt
+        if _ncAcc < 2.0 then return end
+        _ncAcc = 0
+        for _, p in ipairs(Players:GetPlayers()) do
+            if p ~= player and p.Character then
+                local hrp = p.Character:FindFirstChild("HumanoidRootPart")
+                if hrp then hrp.CanCollide = false end
+                local head = p.Character:FindFirstChild("Head")
+                if head then head.CanCollide = false end
+            end
+        end
+    end)
+end
+
+-- ==================== VOID SPEED ENGINE (Anti Drop — no spoof) ====================
+-- Normal/Lagger: root.Velocity | Carry: CFrame step | Anti Fling
+local FLING_THRESHOLD = 80
+local function _voidApplyVelocitySpeed(speed)
+    local char = player.Character
+    if not char then return end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    local root = char:FindFirstChild("HumanoidRootPart")
+    if not hum or not root then return end
+
+    if M.antiDieEnabled and root.AssemblyLinearVelocity.Magnitude > FLING_THRESHOLD then
+        root.AssemblyLinearVelocity = Vector3.new(0, root.AssemblyLinearVelocity.Y, 0)
+        root.AssemblyAngularVelocity = Vector3.zero
+    end
+
+    if hum.Health <= 0 then return end
+
+    if M.autoBatEnabled or M.autoLeftEnabled or M.autoRightEnabled or M.bypassAimbotEnabled then
+        return
+    end
+
+    if M.isRagdollState and M.isRagdollState(hum) then
+        M.lastMoveDir = Vector3.zero
+        return
+    end
+
+    local dir = hum.MoveDirection
+    if dir.Magnitude <= 0.05 then
+        if M.antiRagdollEnabled and M.lastMoveDir and M.lastMoveDir.Magnitude > 0.05 and M.MOVE_KEYS then
+            local anyHeld = false
+            for key in pairs(M.MOVE_KEYS) do
+                if UIS:IsKeyDown(key) then anyHeld = true; break end
+            end
+            if anyHeld then dir = M.lastMoveDir else return end
+        else
+            return
+        end
+    end
+
+    M.lastMoveDir = dir
+    local u = dir.Unit
+    local s = tonumber(speed)
+    if not s or s <= 0 then
+        s = (M.getActiveMoveSpeed and M.getActiveMoveSpeed()) or 16
+    end
+    s = tonumber(s) or 16
+    -- Mismo método exacto que Lagger Carry: solo root.Velocity
+    root.Velocity = Vector3.new(u.X * s, root.Velocity.Y, u.Z * s)
+end
+
+local function destroySpeedObjects()
+    local char = player.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    if hrp then
+        local lv = hrp:FindFirstChild("_RHSpeedLV")
+        if lv then pcall(function() lv:Destroy() end) end
+    end
+end
+M.destroySpeedObjects = destroySpeedObjects
+
+-- helpers para auto left/right y paths (usa Velocity, misma lógica Void)
+M._getOrMakeLV = function() return nil end
+M._speedLVSet = function(hrp, x, z)
+    if not hrp then return end
+    local y = 0
+    pcall(function() y = hrp.Velocity.Y end)
+    pcall(function()
+        hrp.Velocity = Vector3.new(x, y, z)
+    end)
+end
+M._speedLVClear = function(hrp)
+    if not hrp then return end
+    pcall(function()
+        local y = hrp.Velocity.Y
+        hrp.Velocity = Vector3.new(0, y, 0)
+    end)
+    local lv = hrp:FindFirstChild("_RHSpeedLV")
+    if lv then pcall(function() lv:Destroy() end) end
+end
+
+local _voidSpeedConn = nil
+pcall(function()
+    local _mobileSpeedModeAcc = 0
+    local function tickSpeed()
+        _mobileSpeedModeAcc = _mobileSpeedModeAcc + 0.016
+        if not PRIMEHUB_MOBILE or _mobileSpeedModeAcc >= 0.15 then
+            _mobileSpeedModeAcc = 0
+            if M.updateAutoSwitchSpeed then pcall(M.updateAutoSwitchSpeed) end
+        end
+        _voidApplyVelocitySpeed(M.getActiveMoveSpeed and M.getActiveMoveSpeed() or 16)
+    end
+    if RunService.PreSimulation then
+        _voidSpeedConn = RunService.PreSimulation:Connect(tickSpeed)
+    else
+        _voidSpeedConn = RunService.Heartbeat:Connect(tickSpeed)
+    end
+end)
+
+
+task.spawn(function()
+    while task.wait(45) do pcall(savePrimeHubFeKlanConfig) end
+end)
+M.applyFOV()
+task.spawn(function()
+    while true do
+        task.wait(10)
+        pcall(M.saveBtnPositions)
+    end
+end)
+function M.refreshSpeedModeLabel()
+end
+pcall(function()
+    M.refreshWalkSpeedAutoSwitch()
+    if M.customFontSelected and M.customFontSelected ~= "None" then
+        task.spawn(function()
+            task.wait(0.4)
+            pcall(function() M.applyCustomFont(M.customFontSelected) end)
+        end)
+    end
+end)
+print("SAFIRA HUB loaded!")
+local kbDebounce = {}
+UIS.InputBegan:Connect(function(inp, gpe)
+    if UIS:GetFocusedTextBox() then return end
+    if inp.UserInputType == Enum.UserInputType.Keyboard then
+        local key = inp.KeyCode
+        for name, entry in pairs(M.KB) do
+            if type(entry) == "table" and entry.kb == key then
+                if kbDebounce[name] and tick() - kbDebounce[name] < 0.2 then break end
+                kbDebounce[name] = tick()
+                if name == "DropBrainrot" then
+                    M.runDrop()
+                elseif name == "AutoBat" then
+                    M.dropBrainrotInHand()
+                    if M.autoBatEnabled then M.stopBatAimbot() else M.queueAutoBatStart() end
+                elseif name == "BatV2" then
+                    M.dropBrainrotInHand()
+                    if M.toggleBatV2 then M.toggleBatV2() end
+                elseif name == "BatTP" then
+                    M.dropBrainrotInHand()
+                    if M.bypassAimbotEnabled then M.stopBypassAimbot() else M.startBypassAimbot() end
+                    if M.mobBtnRefs and M.mobBtnRefs.tpBat then M.mobBtnRefs.tpBat(M.bypassAimbotEnabled) end
+                                elseif name == "GuiHide" then
+                    if M.menuOpen then
+                        if M._hideGuiWithBubble then M._hideGuiWithBubble() end
+                    else
+                        if M._showGuiWithBubble then M._showGuiWithBubble() end
+                    end
+                elseif name == "InstaReset" then
+                    M.doInstaReset()
+                elseif name == "LaggerToggle" then
+                    M.toggleLaggerMode()
+                elseif name == "LaggerCarry" then
+                    M.toggleLaggerCarry()
+                elseif name == "SpeedNormal" then
+                    M._manualSpeedModeLock = true
+                    if M.speedProfile == "Normal" then
+                        M.carrySpeedActive = not M.carrySpeedActive
+                    else
+                        local wasCarry = M.carrySpeedActive == true or M.manualCarryActive == true or M.laggerCarryActive == true
+                        M.speedProfile = "Normal"
+                        M.NS = M.NormalSpeedNorm
+                        M.CS = M.NormalSpeedSteal
+                        M.carrySpeedActive = wasCarry
+                        M.laggerModeEnabled = false
+                        M.laggerCarryActive = false
+                        M.manualCarryActive = wasCarry
+                        if M._applySpeedNow then pcall(M._applySpeedNow) end
+                    end
+                    M.manualCarryActive = M.carrySpeedActive == true
+                    if M.saveConfig then M.saveConfig() end
+                    M.notify("Normal: " .. (M.carrySpeedActive and M.CS or M.NS))
+                elseif name == "SpeedLagger" then
+                    M._manualSpeedModeLock = true
+                    if M.speedProfile == "Lagger" then
+                        M.carrySpeedActive = not M.carrySpeedActive
+                    else
+                        local wasCarry = M.carrySpeedActive == true or M.manualCarryActive == true or M.laggerCarryActive == true
+                        M.speedProfile = "Lagger"
+                        M.NS = M.LaggerSpeedNorm
+                        M.CS = M.LaggerSpeedSteal
+                        M.carrySpeedActive = wasCarry
+                        M.laggerModeEnabled = false
+                        M.laggerCarryActive = false
+                        M.manualCarryActive = wasCarry
+                        if M._applySpeedNow then pcall(M._applySpeedNow) end
+                    end
+                    M.manualCarryActive = M.carrySpeedActive == true
+                    if M.saveConfig then M.saveConfig() end
+                    M.notify("Lagger: " .. (M.carrySpeedActive and M.CS or M.NS))
+                elseif name == "SpeedCustom" then
+                    M._manualSpeedModeLock = true
+                    if M.speedProfile == "Custom" then
+                        M.carrySpeedActive = not M.carrySpeedActive
+                    else
+                        local wasCarry = M.carrySpeedActive == true or M.manualCarryActive == true or M.laggerCarryActive == true
+                        M.speedProfile = "Custom"
+                        M.NS = M.CustomSpeedNorm
+                        M.CS = M.CustomSpeedSteal
+                        M.carrySpeedActive = wasCarry
+                        M.laggerModeEnabled = false
+                        M.laggerCarryActive = false
+                        M.manualCarryActive = wasCarry
+                        if M._applySpeedNow then pcall(M._applySpeedNow) end
+                    end
+                    M.manualCarryActive = M.carrySpeedActive == true
+                    if M.saveConfig then M.saveConfig() end
+                    M.notify("Custom: " .. (M.carrySpeedActive and M.CS or M.NS))
+                elseif name == "TPFloor" then
+                    M.runTPFloor()
+                elseif name == "AutoLeft" then
+                    if M.autoLeftEnabled then M.stopAutoLeft(); M.autoLeftEnabled=false else M.startAutoLeft(); M.autoLeftEnabled=true end
+                elseif name == "AutoRight" then
+                    if M.autoRightEnabled then M.stopAutoRight(); M.autoRightEnabled=false else M.startAutoRight(); M.autoRightEnabled=true end
+                end
+                if M.saveConfig then M.saveConfig() end
+                break
+            end
+        end
+    end
+end)
+
+-- ===== Adapt_fixed integration: ESP Player / ESP Line / Nuke Optimizer =====
+V = M
+LP = LP or player
+THEME_ACCENT = M.currentAccent or Color3.fromRGB(58,128,245)
+THEME_ACCENT = THEME_ACCENT or Color3.fromRGB(230, 230, 230)
+THEME_ACCENT_DIM = THEME_ACCENT_DIM or Color3.fromRGB(145, 145, 145)
+PlayerESP = PlayerESP or {enabled=false, playerData={}, conns={}, discordText="discord.gg/gr7eqCS2a"}
+BoxedESPOptions = BoxedESPOptions or {box=false, tracer=false}
+BoxedESPData = BoxedESPData or {}
+BoxedESPConn = BoxedESPConn or nil
+stretchRezConn = stretchRezConn or nil
+antiLagDescConn = antiLagDescConn or nil
+noCamCollisionConn = noCamCollisionConn or nil
+noCamCollisionParts = noCamCollisionParts or {}
+_aceNukeConns = _aceNukeConns or {}
+_aceNukeOn = _aceNukeOn or false
+_aceCustomFontOrig = _aceCustomFontOrig or {}
+_aceCustomFontConn = _aceCustomFontConn or nil
+_aceCustomFont = _aceCustomFont or nil
+function startPlayerESP()
+if PlayerESP.enabled then return end
+PlayerESP.enabled = true
+function cleanup(plr)
+local d=PlayerESP.playerData[plr]; if not d then return end
+pcall(function() if d.highlight then d.highlight:Destroy() end end)
+pcall(function() if d.billboard then d.billboard:Destroy() end end)
+if d.conns then for _,c in ipairs(d.conns) do pcall(function() c:Disconnect() end) end end
+PlayerESP.playerData[plr]=nil
+end
+function setup(plr,char)
+if not PlayerESP.enabled or plr==LP then return end
+cleanup(plr)
+local hrp=char and (char:FindFirstChild("HumanoidRootPart") or char:WaitForChild("HumanoidRootPart",5))
+local head=char and (char:FindFirstChild("Head") or char:WaitForChild("Head",5))
+if not hrp or not head then return end
+local hl=Instance.new("Highlight")
+hl.Name="AdaptDuelsESP"; hl.Adornee=char; hl.FillColor=(_G.AdaptThemeColors and _G.AdaptThemeColors[_G.AdaptThemeName]) or THEME_ACCENT; hl.FillTransparency=0.72
+hl.OutlineColor=(_G.AdaptThemeColors and _G.AdaptThemeColors[_G.AdaptThemeName]) or THEME_ACCENT; hl.OutlineTransparency=0; hl.DepthMode=Enum.HighlightDepthMode.AlwaysOnTop; hl.Parent=char
+local bb=Instance.new("BillboardGui")
+bb.Name="AdaptDuelsESPTag"; bb.Adornee=head; bb.Size=UDim2.new(0,170,0,42); bb.StudsOffset=Vector3.new(0,2.8,0); bb.AlwaysOnTop=true; bb.LightInfluence=0; bb.Parent=head
+local box=Instance.new("Frame",bb); box.Size=UDim2.new(1,0,1,0); box.BackgroundTransparency=1; box.BorderSizePixel=0
+Instance.new("UICorner",box).CornerRadius=UDim.new(0,9)
+local n=Instance.new("TextLabel",box); n.Size=UDim2.new(1,-8,0,19); n.Position=UDim2.new(0,4,0,1); n.BackgroundTransparency=1; n.TextColor3=Color3.fromRGB(255,255,255); n.TextStrokeColor3=Color3.fromRGB(0,0,0); n.Font=Enum.Font.GothamBlack; n.TextSize=13; n.TextStrokeTransparency=0.08
+local sub=Instance.new("TextLabel",box); sub.Size=UDim2.new(1,-8,0,17); sub.Position=UDim2.new(0,4,0,19); sub.BackgroundTransparency=1; sub.TextColor3=Color3.fromRGB(255,255,255); sub.TextStrokeColor3=Color3.fromRGB(0,0,0); sub.Font=Enum.Font.GothamBlack; sub.TextSize=11; sub.TextStrokeTransparency=0.08
+local conn=RunService.Heartbeat:Connect(function()
+if not PlayerESP.enabled or not hrp.Parent then return end
+local v=hrp.AssemblyLinearVelocity or hrp.Velocity
+n.Text=string.format("Speed: %.1f", Vector3.new(v.X,0,v.Z).Magnitude); sub.Text=plr.Name
+end)
+PlayerESP.playerData[plr]={highlight=hl,billboard=bb,conns={conn}}
+end
+for _,plr in ipairs(Players:GetPlayers()) do if plr~=LP then if plr.Character then setup(plr,plr.Character) end; table.insert(PlayerESP.conns, plr.CharacterAdded:Connect(function(c) task.defer(setup,plr,c) end)) end end
+table.insert(PlayerESP.conns, Players.PlayerAdded:Connect(function(plr) if plr~=LP then table.insert(PlayerESP.conns, plr.CharacterAdded:Connect(function(c) task.defer(setup,plr,c) end)) end end))
+table.insert(PlayerESP.conns, Players.PlayerRemoving:Connect(cleanup))
+end
+function stopPlayerESP()
+PlayerESP.enabled=false
+for _,c in ipairs(PlayerESP.conns or {}) do pcall(function() c:Disconnect() end) end
+PlayerESP.conns={}
+for plr,d in pairs(PlayerESP.playerData or {}) do pcall(function() if d.highlight then d.highlight:Destroy() end end); pcall(function() if d.billboard then d.billboard:Destroy() end end) end
+PlayerESP.playerData={}
+end
+function _aceEspColor()
+    local colors = M.ADAPT_THEME_COLORS or {
+        PURPLE = Color3.fromRGB(160,40,255),
+        BLUE = Color3.fromRGB(0,140,255),
+        PINK = Color3.fromRGB(255,80,190),
+        GREEN = Color3.fromRGB(0,200,110),
+    }
+    local themeName = tostring(M.adaptThemeName or "BLUE"):upper()
+    local active = colors[themeName] or M.currentAccent or THEME_ACCENT
+    return active or Color3.fromRGB(0,140,255)
+end
+function _safeDrawing(kind, props)
+if not Drawing or not Drawing.new then return nil end
+local ok, obj = pcall(function() return Drawing.new(kind) end)
+if not ok or not obj then return nil end
+for k,v in pairs(props or {}) do pcall(function() obj[k]=v end) end
+return obj
+end
+function _cleanupBoxedESPPlayer(player)
+local data = BoxedESPData[player]
+if not data then return end
+for _,obj in pairs(data) do
+pcall(function()
+obj.Visible = false
+if obj.Remove then obj:Remove() end
+end)
+end
+BoxedESPData[player] = nil
+end
+function _cleanupBoxedESP()
+for player,_ in pairs(BoxedESPData) do _cleanupBoxedESPPlayer(player) end
+end
+function _updateBoxedESP()
+local cam = workspace.CurrentCamera
+if not cam then return end
+local anyOn = BoxedESPOptions.box or BoxedESPOptions.tracer
+if not anyOn then
+_cleanupBoxedESP()
+return
+end
+for _,player in ipairs(Players:GetPlayers()) do
+if player == LP then continue end
+local char = player.Character
+local root = char and char:FindFirstChild("HumanoidRootPart")
+local head = char and char:FindFirstChild("Head")
+if not root or not head then
+_cleanupBoxedESPPlayer(player)
+continue
+end
+local rootPos,onScreen = cam:WorldToViewportPoint(root.Position)
+local headPos = cam:WorldToViewportPoint(head.Position + Vector3.new(0,0.55,0))
+local data = BoxedESPData[player]
+if not data then
+data = {
+box = _safeDrawing("Square",{Thickness=2,Filled=false,Transparency=1,Color=_aceEspColor()}),
+tracer = _safeDrawing("Line",{Thickness=2,Transparency=1,Color=_aceEspColor()}),
+}
+BoxedESPData[player] = data
+end
+local color = _aceEspColor()
+local height = math.abs(headPos.Y - rootPos.Y) * 2.15
+if height < 20 or height ~= height then height = 65 end
+local width = height / 2.15
+local view = cam.ViewportSize
+local centerX, centerY = view.X/2, view.Y/2
+local targetX, targetY = rootPos.X, rootPos.Y + height/2
+local targetVisible = onScreen and rootPos.Z > 0
+if not targetVisible then
+local dx = rootPos.X - centerX
+local dy = rootPos.Y - centerY
+if rootPos.Z <= 0 then
+dx = -dx
+dy = -dy
+end
+if math.abs(dx) < 1 and math.abs(dy) < 1 then
+local rel = cam.CFrame:PointToObjectSpace(root.Position)
+dx = rel.X
+dy = -rel.Y
+if rootPos.Z <= 0 then
+dx = -dx
+dy = -dy
+end
+end
+local edgePad = 10
+local scaleX = (dx ~= 0) and ((view.X/2 - edgePad) / math.abs(dx)) or math.huge
+local scaleY = (dy ~= 0) and ((view.Y/2 - edgePad) / math.abs(dy)) or math.huge
+local scale = math.min(scaleX, scaleY)
+if scale == math.huge or scale ~= scale then scale = 1 end
+targetX = math.clamp(centerX + dx * scale, edgePad, view.X - edgePad)
+targetY = math.clamp(centerY + dy * scale, edgePad, view.Y - edgePad)
+end
+if data.box then
+data.box.Color = color
+data.box.Size = Vector2.new(width,height)
+data.box.Position = Vector2.new(rootPos.X - width/2, rootPos.Y - height/2)
+data.box.Visible = false
+end
+if data.tracer then
+data.tracer.Color = _aceEspColor()
+local localChar = LP.Character
+local localRoot = localChar and localChar:FindFirstChild("HumanoidRootPart")
+local localHead = localChar and localChar:FindFirstChild("Head")
+local fromX, fromY
+if localRoot then
+local localScreen = cam:WorldToViewportPoint(localRoot.Position)
+fromX = localScreen.X
+fromY = localScreen.Y + 15
+end
+if not fromX or not fromY then
+fromX = cam.ViewportSize.X/2
+fromY = cam.ViewportSize.Y - 88
+end
+data.tracer.From = Vector2.new(fromX, fromY)
+data.tracer.To = Vector2.new(targetX, targetY)
+data.tracer.Visible = BoxedESPOptions.tracer == true
+end
+end
+end
+function refreshBoxedESP()
+local anyOn = BoxedESPOptions.box or BoxedESPOptions.tracer
+if anyOn and not BoxedESPConn then
+BoxedESPConn = RunService.RenderStepped:Connect(_updateBoxedESP)
+elseif (not anyOn) and BoxedESPConn then
+BoxedESPConn:Disconnect()
+BoxedESPConn = nil
+_cleanupBoxedESP()
+end
+end
+Players.PlayerRemoving:Connect(_cleanupBoxedESPPlayer)
+_nukeOptimizerOn = false
+_nukeOptimizerConns = {}
+_nukeOptimizerThreads = {}
+function enableNukeOptimizer()
+if _nukeOptimizerOn then return end
+_nukeOptimizerOn = true
+nukeOptimiserEnabled = true
+V.nukeOptEnabled = true
+local MaterialService = game:GetService("MaterialService")
+local XMin, XMax = -560, -240
+local ClothingClasses = {"Shirt","Pants","ShirtGraphic","Accessory","Hat","HairAccessory","FaceAccessory","NeckAccessory","ShoulderAccessory","FrontAccessory","BackAccessory","WaistAccessory"}
+local BASE_NAMES = {"baseplate","spawnlocation","spawn location","spawn"}
+function SafeDestroy(obj)
+if obj and obj.Name == "Overhead" then return end
+pcall(function() obj:Destroy() end)
+end
+function IsClothing(obj)
+for _, className in ipairs(ClothingClasses) do
+if obj:IsA(className) then return true end
+end
+return false
+end
+function IsCharacterPart(obj)
+for _, plr in ipairs(Players:GetPlayers()) do
+if plr.Character and obj:IsDescendantOf(plr.Character) then return true end
+end
+return false
+end
+function IsOutOfRange(obj)
+if obj:IsA("BasePart") then
+local x = obj.Position.X
+return x < XMin or x > XMax
+end
+return false
+end
+function IsBase(obj)
+if not obj:IsA("BasePart") then return false end
+local nl = obj.Name:lower()
+for _, n in ipairs(BASE_NAMES) do
+if nl:find(n, 1, true) then return true end
+end
+return false
+end
+function IsInBase(obj)
+local p = obj.Parent
+while p and p ~= workspace do
+if IsBase(p) then return true end
+p = p.Parent
+end
+return false
+end
+function MakeTransparent(obj)
+pcall(function()
+if IsBase(obj) and not IsCharacterPart(obj) then
+obj.Transparency = 1
+obj.CastShadow = false
+end
+end)
+end
+function StripObject(obj)
+pcall(function()
+if obj:IsA("Texture") or obj:IsA("Decal") or obj:IsA("SpecialMesh") then
+SafeDestroy(obj)
+elseif obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam") or obj:IsA("Smoke") or obj:IsA("Fire") or obj:IsA("Sparkles") then
+pcall(function() obj.Enabled = false end)
+SafeDestroy(obj)
+elseif obj:IsA("SurfaceAppearance") then
+SafeDestroy(obj)
+elseif obj:IsA("BasePart") then
+obj.CastShadow = false
+obj.Material = Enum.Material.Plastic
+obj.MaterialVariant = ""
+obj.Reflectance = 0
+end
+end)
+end
+function CleanObject(obj)
+pcall(function()
+if obj:IsA("SurfaceAppearance") then
+SafeDestroy(obj)
+elseif obj:IsA("Decal") or obj:IsA("Texture") then
+if not (obj.Name == "face" and obj.Parent and obj.Parent.Name == "Head") then SafeDestroy(obj) end
+elseif obj:IsA("SpecialMesh") then
+obj.TextureId = ""
+elseif obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam") then
+SafeDestroy(obj)
+elseif obj:IsA("PointLight") or obj:IsA("SpotLight") or obj:IsA("SurfaceLight") then
+SafeDestroy(obj)
+elseif obj:IsA("Fire") or obj:IsA("Smoke") or obj:IsA("Sparkles") or obj:IsA("Explosion") then
+SafeDestroy(obj)
+elseif obj:IsA("Animation") or obj:IsA("AnimationController") then
+SafeDestroy(obj)
+elseif obj:IsA("BasePart") then
+obj.CastShadow = false
+obj.Material = Enum.Material.Plastic
+obj.MaterialVariant = ""
+obj.Reflectance = 0
+end
+end)
+end
+function ApplyGreySky()
+pcall(function()
+for _, obj in ipairs(Lighting:GetChildren()) do
+if obj:IsA("Sky") then obj:Destroy() end
+end
+local sky = Instance.new("Sky")
+sky.SkyboxBk = ""; sky.SkyboxDn = ""; sky.SkyboxFt = ""
+sky.SkyboxLf = ""; sky.SkyboxRt = ""; sky.SkyboxUp = ""
+sky.CelestialBodiesShown = false
+sky.Name = "_AdaptDuelsNukeSky"
+sky.Parent = Lighting
+end)
+end
+function OptimizeLighting()
+pcall(function()
+Lighting.GlobalShadows = false
+Lighting.FogEnd = 9e9
+Lighting.FogStart = 9e9
+Lighting.EnvironmentDiffuseScale = 0
+Lighting.EnvironmentSpecularScale = 0
+Lighting.Brightness = 1.5
+Lighting.Ambient = Color3.fromRGB(60,60,60)
+for _, v in ipairs(Lighting:GetChildren()) do
+if v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("SunRaysEffect") or v:IsA("DepthOfFieldEffect") or v:IsA("Atmosphere") or v:IsA("Clouds") then
+v:Destroy()
+end
+end
+ApplyGreySky()
+end)
+end
+function ApplyTerrain()
+pcall(function()
+local terrain = workspace:FindFirstChildOfClass("Terrain")
+if terrain then
+terrain.Decoration = false
+terrain.WaterWaveSize = 0
+terrain.WaterWaveSpeed = 0
+terrain.WaterReflectance = 0
+terrain.WaterTransparency = 1
+end
+end)
+end
+function OptimizeCharacter(char)
+if not char then return end
+task.spawn(function()
+task.wait(0.3)
+if not _nukeOptimizerOn then return end
+for _, obj in ipairs(char:GetDescendants()) do
+if IsClothing(obj) then SafeDestroy(obj) else CleanObject(obj) end
+end
+end)
+end
+pcall(function()
+settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level01
+end)
+pcall(function() if setfpscap then setfpscap(999) end end)
+table.insert(_nukeOptimizerThreads, task.spawn(function()
+if not game:IsLoaded() then game.Loaded:Wait() end
+OptimizeLighting()
+ApplyTerrain()
+for _, obj in ipairs(workspace:GetDescendants()) do
+if not _nukeOptimizerOn then return end
+if IsBase(obj) then
+MakeTransparent(obj)
+elseif IsClothing(obj) then
+SafeDestroy(obj)
+elseif IsInBase(obj) then
+elseif IsCharacterPart(obj) then
+elseif IsOutOfRange(obj) then
+SafeDestroy(obj)
+else
+CleanObject(obj)
+StripObject(obj)
+end
+end
+for _, obj in ipairs(workspace:GetDescendants()) do MakeTransparent(obj) end
+end))
+table.insert(_nukeOptimizerConns, workspace.DescendantAdded:Connect(function(obj)
+if not _nukeOptimizerOn then return end
+task.defer(function()
+if not _nukeOptimizerOn then return end
+if IsBase(obj) then MakeTransparent(obj); return end
+if IsClothing(obj) then
+SafeDestroy(obj)
+elseif IsInBase(obj) then
+elseif IsCharacterPart(obj) then
+elseif IsOutOfRange(obj) then
+SafeDestroy(obj)
+else
+CleanObject(obj)
+StripObject(obj)
+end
+end)
+end))
+table.insert(_nukeOptimizerConns, Lighting.DescendantAdded:Connect(function(obj)
+if not _nukeOptimizerOn then return end
+if obj:IsA("Atmosphere") or obj:IsA("Clouds") or obj:IsA("PostEffect") then SafeDestroy(obj) end
+end))
+table.insert(_nukeOptimizerConns, MaterialService.DescendantAdded:Connect(function(obj)
+if not _nukeOptimizerOn then return end
+SafeDestroy(obj)
+end))
+for _, plr in ipairs(Players:GetPlayers()) do
+OptimizeCharacter(plr.Character)
+table.insert(_nukeOptimizerConns, plr.CharacterAdded:Connect(OptimizeCharacter))
+end
+table.insert(_nukeOptimizerConns, Players.PlayerAdded:Connect(function(plr)
+table.insert(_nukeOptimizerConns, plr.CharacterAdded:Connect(OptimizeCharacter))
+end))
+table.insert(_nukeOptimizerThreads, task.spawn(function()
+while _nukeOptimizerOn do
+task.wait(15)
+pcall(function() collectgarbage("collect") end)
+end
+end))
+end
+function disableNukeOptimizer()
+_nukeOptimizerOn = false
+nukeOptimiserEnabled = false
+V.nukeOptEnabled = false
+for _, c in ipairs(_nukeOptimizerConns) do pcall(function() c:Disconnect() end) end
+_nukeOptimizerConns = {}
+_nukeOptimizerThreads = {}
+end
+
+local _adaptStartPlayerESP = startPlayerESP
+local _adaptStopPlayerESP = stopPlayerESP
+M.toggleESP = function(on)
+    M.playerESPEnabled = on == true
+    THEME_ACCENT = M.currentAccent or THEME_ACCENT or Color3.fromRGB(58,128,245)
+    if on then
+        _adaptStartPlayerESP()
+    else
+        _adaptStopPlayerESP()
+    end
+end
+M.enableNukeOptimizer = function()
+    nukeOptimiserEnabled = true
+    enableNukeOptimizer()
+    M.nukeOptimiserEnabled = true
+end
+M.disableNukeOptimizer = function()
+    disableNukeOptimizer()
+    M.nukeOptimiserEnabled = false
+end
+if BoxedESPOptions then
+    BoxedESPOptions.tracer = M.lineESPEnabled == true
+    if refreshBoxedESP then refreshBoxedESP() end
+end
+
+
+-- ===== ESP Line Adapt recreada: implementación visible independiente =====
+local AdaptVisibleLineESP = {enabled=false, lines={}, conn=nil}
+local function adaptVisibleLineColor()
+    local colors = M.ADAPT_THEME_COLORS or {
+        PURPLE=Color3.fromRGB(160,40,255), BLUE=Color3.fromRGB(0,140,255),
+        PINK=Color3.fromRGB(255,80,190), GREEN=Color3.fromRGB(0,200,110),
+    }
+    return colors[tostring(M.adaptThemeName or "BLUE"):upper()] or M.currentAccent or Color3.fromRGB(0,140,255)
+end
+local function adaptClearVisibleLines()
+    for plr,line in pairs(AdaptVisibleLineESP.lines) do
+        pcall(function() line.Visible=false; line:Remove() end)
+        AdaptVisibleLineESP.lines[plr]=nil
+    end
+end
+local function adaptUpdateVisibleLines()
+    if not AdaptVisibleLineESP.enabled then return end
+    local cam=workspace.CurrentCamera
+    if not cam or not Drawing or not Drawing.new then return end
+    local view=cam.ViewportSize
+    local from=Vector2.new(view.X*0.5, view.Y-55)
+    local color=adaptVisibleLineColor()
+    local alive={}
+    for _,plr in ipairs(Players:GetPlayers()) do
+        if plr ~= player then
+            local char=plr.Character
+            local root=char and char:FindFirstChild("HumanoidRootPart")
+            local head=char and char:FindFirstChild("Head")
+            if root and head then
+                local pos,onScreen=cam:WorldToViewportPoint(head.Position)
+                local line=AdaptVisibleLineESP.lines[plr]
+                if not line then
+                    local ok,obj=pcall(function() return Drawing.new("Line") end)
+                    if ok and obj then
+                        line=obj; line.Thickness=2.5; line.Transparency=1; AdaptVisibleLineESP.lines[plr]=line
+                    end
+                end
+                if line then
+                    alive[plr]=true
+                    line.Color=color
+                    line.From=from
+                    line.To=Vector2.new(pos.X,pos.Y)
+                    line.Visible=onScreen and pos.Z>0
+                end
+            end
+        end
+    end
+    for plr,line in pairs(AdaptVisibleLineESP.lines) do
+        if not alive[plr] then pcall(function() line.Visible=false end) end
+    end
+end
+function M.setAdaptLineESP(on)
+    AdaptVisibleLineESP.enabled=on==true
+    M.lineESPEnabled=AdaptVisibleLineESP.enabled
+    if BoxedESPOptions then BoxedESPOptions.tracer=false end
+    if cherryESPState then cherryESPState.LineESP=false end
+    if AdaptVisibleLineESP.conn then AdaptVisibleLineESP.conn:Disconnect(); AdaptVisibleLineESP.conn=nil end
+    adaptClearVisibleLines()
+    if AdaptVisibleLineESP.enabled then
+        if Drawing and Drawing.new then
+            AdaptVisibleLineESP.conn=RunService.RenderStepped:Connect(adaptUpdateVisibleLines)
+        elseif M.notify then pcall(function() M.notify("Drawing no está disponible para ESP Line") end) end
+    end
+end
+M.setAdaptLineESP(M.lineESPEnabled==true)
+
+M.saveConfig = savePrimeHubFeKlanConfig
+M.loadConfig = loadPrimeHubFeKlanConfig
+
+end)()
