@@ -9122,10 +9122,9 @@ function M.buildGui()
     miniIcon.BackgroundTransparency = 1
     miniIcon.Image = "rbxassetid://126405527996904"
     miniIcon.ScaleType = Enum.ScaleType.Stretch
-    -- Zoom real del logo: sobresale ligeramente por dentro de la barra para
-    -- que el dibujo se vea más grande sin aumentar el tamaño de la barra.
-    miniIcon.Size = UDim2.new(1.24, 0, 1.24, 0)
-    miniIcon.Position = UDim2.new(-0.12, 0, -0.12, 0)
+    -- Zoom del logo al 17%, manteniendo el tamaño de la barra.
+    miniIcon.Size = UDim2.new(1.17, 0, 1.17, 0)
+    miniIcon.Position = UDim2.new(-0.085, 0, -0.085, 0)
     miniIcon.ZIndex = 1001
     miniIcon.Parent = MiniBtn
 
