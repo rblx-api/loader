@@ -9101,8 +9101,8 @@ function M.buildGui()
     guiStroke(CloseBtn, C.divider, 1)
     local MiniBtn = Instance.new("ImageButton")
     local mobileEntry = UIS.TouchEnabled and not UIS.KeyboardEnabled
-    -- Barra flotante DEMONS HUB ampliada para igualar el tamaño de la imagen de referencia.
-    MiniBtn.Size = UDim2.new(0, 210, 0, 48)
+    -- Barra flotante DEMONS HUB con el mismo tamaño que SAFIRA HUB.
+    MiniBtn.Size = UDim2.new(0, 180, 0, 40)
     MiniBtn.Position = mobileEntry and UDim2.new(0, 14, 0, 60) or Outer.Position
     MiniBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     MiniBtn.BackgroundTransparency = 0
@@ -9121,7 +9121,7 @@ function M.buildGui()
     miniIcon.BackgroundTransparency = 1
     miniIcon.Image = "rbxassetid://126405527996904"
     miniIcon.ScaleType = Enum.ScaleType.Fit
-    -- La imagen ocupa exactamente todo el espacio de la barra flotante.
+    -- Logo ampliado para que las letras ocupen mejor la barra flotante 180x40.
     miniIcon.Size = UDim2.new(1, 0, 1, 0)
     miniIcon.Position = UDim2.new(0, 0, 0, 0)
     miniIcon.ZIndex = 1001
