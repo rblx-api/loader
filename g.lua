@@ -1,528 +1,385 @@
---made by yeah_32154
---made by yeah_32154
---made by yeah_32154
---made by yeah_32154
---made by yeah_32154
---made by yeah_32154
---made by yeah_32154
-
+-- LuaSecure trace: 77fb21d87c3a676833b0ca9b2513237038716921320fb71a1ae4e61758dfbd78
 local Players = game:GetService("Players")
-local UIS = game:GetService("UserInputService")
+local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
-local LP = Players.LocalPlayer
+local RunService = game:GetService("RunService")
 
-local existing = LP:FindFirstChild("PlayerGui") and LP.PlayerGui:FindFirstChild("AdaptUI")
-if existing then existing:Destroy() end
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
 
-local gui = Instance.new("ScreenGui")
-gui.Name = "AdaptUI"
-gui.ResetOnSpawn = false
-gui.IgnoreGuiInset = true
-gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-gui.Parent = LP:WaitForChild("PlayerGui")
+-- ===== VISION HUB THEME (Black, White, & Purple) =====
+local COLORS = {
+bg = Color3.fromRGB(10, 10, 12),
+surface = Color3.fromRGB(18, 18, 22),
+disabled = Color3.fromRGB(28, 28, 34),
+border = Color3.fromRGB(50, 40, 70),
+accent = Color3.fromRGB(138, 43, 226), -- Purple
+accentDark = Color3.fromRGB(90, 20, 150),
+accentBright = Color3.fromRGB(186, 85, 211), -- Light Purple / Orchid
+crimson = Color3.fromRGB(80, 20, 120),
+text = Color3.fromRGB(240, 240, 245),
+white = Color3.fromRGB(255, 255, 255),
+black = Color3.fromRGB(0, 0, 0),
+}
 
--- ============ Helpers ============
-local function new(class, props, children)
-    local o = Instance.new(class)
-    for k,v in pairs(props or {}) do o[k] = v end
-    for _,c in ipairs(children or {}) do c.Parent = o end
-    return o
-end
+local FONT = Enum.Font.GothamBlack
 
-local function corner(r) return new("UICorner",{CornerRadius=UDim.new(0,r)}) end
-local function stroke(c,t,trans)
-    return new("UIStroke",{Color=c or Color3.fromRGB(60,60,60),Thickness=t or 1,Transparency=trans or 0.3,ApplyStrokeMode=Enum.ApplyStrokeMode.Border})
-end
+-- ============================================================
+-- VISION HUB PACKET LAGGER LOGIC MODULE
+-- ============================================================
+local SRC = [==[
+local RS = game:GetService("ReplicatedStorage")
 
--- ============ Main Frame ============
-local main = new("Frame",{
-    Name="Main",
-    Parent=gui,
-    Size=UDim2.fromOffset(330,540),
-    Position=UDim2.new(0.5,-165,0.5,-270),
-    BackgroundColor3=Color3.fromRGB(0,0,0),
-    BackgroundTransparency=0,
-    BorderSizePixel=0,
-    Active=true,
-    ClipsDescendants=true,
-},{corner(14), stroke(Color3.fromRGB(25,25,25),1,0.2)})
-
--- ============ Background Image ============
-new("ImageLabel",{
-    Parent=main,
-    Size=UDim2.fromScale(1,1),
-    BackgroundTransparency=1,
-    Image="rbxassetid://76428063854127",
-    ScaleType=Enum.ScaleType.Crop,
-    ImageTransparency=0,
-    ZIndex=0,
-})
-
--- Drag
+local Event
 do
-    local dragging, dragStart, startPos
-    main.InputBegan:Connect(function(input)
-        if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then
-            dragging=true; dragStart=input.Position; startPos=main.Position
-            input.Changed:Connect(function() if input.UserInputState==Enum.UserInputState.End then dragging=false end end)
-        end
-    end)
-    UIS.InputChanged:Connect(function(input)
-        if dragging and (input.UserInputType==Enum.UserInputType.MouseMovement or input.UserInputType==Enum.UserInputType.Touch) then
-            local d = input.Position - dragStart
-            main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset+d.X, startPos.Y.Scale, startPos.Y.Offset+d.Y)
-        end
-    end)
+local ok, net = pcall(function()
+return RS:WaitForChild("Packages"):WaitForChild("Net")
+end)
+if ok and net then
+local kids = net:GetChildren()
+Event = kids[230]
+end
 end
 
--- ============ Header ============
-local header = new("Frame",{
-    Parent=main,
-    Size=UDim2.new(1,0,0,270),
-    BackgroundTransparency=1,
-    BorderSizePixel=0,
-    ClipsDescendants=true,
-})
+local state = { running = false, thread = nil }
+local intensity = 10000
 
-new("Frame",{
-    Parent=header,
-    Size=UDim2.new(1,-32,0,1),
-    Position=UDim2.new(0,16,1,-1),
-    BackgroundColor3=Color3.fromRGB(28,28,28),
-    BorderSizePixel=0,
-})
+local function start()
+if state.running then return end
+if not Event then return end
+state.running = true
 
--- Thin divider under ADAPT title
-new("Frame",{
-    Parent=header,
-    Size=UDim2.new(1,-32,0,1),
-    Position=UDim2.new(0,16,0,108),
-    BackgroundColor3=Color3.fromRGB(255,255,255),
-    BackgroundTransparency=0,
-    BorderSizePixel=0,
-},{
-    new("UIGradient",{
-        Transparency=NumberSequence.new({
-            NumberSequenceKeypoint.new(0,   1),
-            NumberSequenceKeypoint.new(0.18,0.25),
-            NumberSequenceKeypoint.new(0.5, 0.25),
-            NumberSequenceKeypoint.new(0.82,0.25),
-            NumberSequenceKeypoint.new(1,   1),
-        }),
-        Rotation=0,
-    }),
-})
+local payload = table.create(intensity, function() end)
 
--- ============ Close Button (small circle) ============
-local closeBtn = new("TextButton",{
-    Parent=header,
-    Size=UDim2.fromOffset(24,24),
-    Position=UDim2.new(1,-38,0,12),
-    BackgroundColor3=Color3.fromRGB(20,20,20),
-    BackgroundTransparency=0,
-    Text="X",
-    Font=Enum.Font.GothamBold,
-    TextSize=11,
-    TextColor3=Color3.fromRGB(255,255,255),
-    AutoButtonColor=false,
-    ZIndex=5,
-},{
-    new("UICorner",{CornerRadius=UDim.new(0,12)}),
-    new("UIStroke",{Color=Color3.fromRGB(50,50,50),Thickness=1,Transparency=0.2}),
-})
-closeBtn.MouseButton1Click:Connect(function() gui.Enabled=false end)
-
--- ============ Tab content container ============
-local body = new("ScrollingFrame",{
-    Parent=main,
-    Position=UDim2.fromOffset(0,110),
-    Size=UDim2.new(1,0,1,-170),
-    BackgroundTransparency=1,
-    BorderSizePixel=0,
-    ScrollBarThickness=2,
-    ScrollBarImageColor3=Color3.fromRGB(60,60,60),
-    CanvasSize=UDim2.new(),
-    AutomaticCanvasSize=Enum.AutomaticSize.Y,
-},{
-    new("UIPadding",{PaddingLeft=UDim.new(0,16),PaddingRight=UDim.new(0,16),PaddingTop=UDim.new(0,14),PaddingBottom=UDim.new(0,16)}),
-    new("UIListLayout",{Padding=UDim.new(0,10),SortOrder=Enum.SortOrder.LayoutOrder}),
-})
-
--- ============ Components ============
-local function sectionLabel(text)
-    local lbl = new("TextLabel",{
-        Size=UDim2.new(1,0,0,20),
-        BackgroundTransparency=1,
-        Text=string.upper(text),
-        Font=Enum.Font.GothamBold,
-        TextSize=10,
-        TextColor3=Color3.fromRGB(200,200,200),
-        TextXAlignment=Enum.TextXAlignment.Left,
-    })
-    return lbl
+state.thread = task.spawn(function()
+while state.running do
+for _ = 1, 3 do
+pcall(function()
+if Event then
+Event:FireServer(payload)
+end
+end)
+end
+task.wait(0.01)
+end
+end)
 end
 
-local function row(height)
-    return new("Frame",{
-        Size=UDim2.new(1,0,0,height or 48),
-        BackgroundColor3=Color3.fromRGB(10,10,10),
-        BorderSizePixel=0,
-    },{corner(10), stroke(Color3.fromRGB(55,55,55),1,0)})
+local function stop()
+state.running = false
+if state.thread then
+pcall(task.cancel, state.thread)
+state.thread = nil
+end
 end
 
-local function makeSlider(name, min, max, default, callback)
-    local r = row(46)
-    new("TextLabel",{Parent=r,Size=UDim2.new(1,-80,1,0),Position=UDim2.fromOffset(14,0),BackgroundTransparency=1,
-        Text=name,Font=Enum.Font.GothamMedium,TextSize=14,TextColor3=Color3.fromRGB(235,235,235),TextXAlignment=Enum.TextXAlignment.Left})
-    local valBox = new("TextBox",{Parent=r,Size=UDim2.fromOffset(58,26),Position=UDim2.new(1,-66,0.5,-13),
-        BackgroundColor3=Color3.fromRGB(18,18,18),Text=tostring(default),Font=Enum.Font.GothamBold,TextSize=13,
-        TextColor3=Color3.fromRGB(235,235,235),TextXAlignment=Enum.TextXAlignment.Center,
-        ClearTextOnFocus=true,BorderSizePixel=0},{corner(6)})
-    valBox.FocusLost:Connect(function()
-        local n = tonumber(valBox.Text)
-        if n then
-            n = math.clamp(n, min, max)
-            if max-min<=10 then n=math.floor(n*10+0.5)/10 else n=math.floor(n+0.5) end
-            valBox.Text = tostring(n)
-            if callback then callback(n) end
-        else
-            valBox.Text = tostring(default)
-        end
-    end)
-    return r
-end
+return {
+start = start,
+stop = stop,
+toggle = function() if state.running then stop() else start() end end,
+isRunning = function() return state.running end,
+}
+]==]
 
--- ============ Keybind System ============
-local listeningBtn = nil
-local keybindMap = {}
-UIS.InputBegan:Connect(function(input, gameProcessed)
-    if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
-    if input.KeyCode == Enum.KeyCode.Escape and listeningBtn then
-        listeningBtn.btn.Text = listeningBtn.prev
-        listeningBtn.btn.TextColor3 = Color3.fromRGB(220,220,220)
-        listeningBtn = nil
-        return
-    end
-    if listeningBtn then
-        listeningBtn.onKey(input.KeyCode)
-        listeningBtn = nil
-        return
-    end
-    local cb = keybindMap[input.KeyCode]
-    if cb then cb() end
+local loader = coroutine.create(function()
+local chunk = loadstring(SRC)
+if not chunk then return end
+local ok, api = pcall(chunk)
+if ok and type(api) == "table" then
+_G.__ALT = api
+end
 end)
 
-local function makeToggle(name, default, keybind, callback, showDropdown)
-    local state = default
-    local expanded = false
-    local boundKey = nil
+coroutine.resume(loader)
+loader = nil
 
-    local container = new("Frame",{
-        Size=UDim2.new(1,0,0,46),
-        BackgroundTransparency=1,
-        BorderSizePixel=0,
-        AutomaticSize=Enum.AutomaticSize.Y,
-        ClipsDescendants=false,
-    })
-    new("UIListLayout",{Parent=container,SortOrder=Enum.SortOrder.LayoutOrder,Padding=UDim.new(0,4)})
+local api = _G.__ALT
+_G.__ALT = nil
 
-    -- main line
-    local r = new("Frame",{
-        Parent=container,
-        Size=UDim2.new(1,0,0,46),
-        BackgroundColor3=Color3.fromRGB(10,10,10),
-        BorderSizePixel=0,
-        LayoutOrder=1,
-        ClipsDescendants=true,
-    },{corner(10), stroke(Color3.fromRGB(55,55,55),1,0)})
+-- ===== SAVE STATE (Session only) =====
+local savedData = {
+position = UDim2.new(0.5, 0, 0.5, 0),
+active = false,
+visible = true,
+toggleKey = Enum.KeyCode.G, -- Default keybind (KeyCode)
+toggleUserButton = nil -- For Gamepad/Mouse inputs if needed
+}
 
-    -- name tag
-    new("TextLabel",{
-        Parent=r,
-        Size=UDim2.new(1,-125,1,0),
-        Position=UDim2.fromOffset(14,0),
-        BackgroundTransparency=1,
-        Text=name,
-        Font=Enum.Font.GothamBold,
-        TextSize=13,
-        TextColor3=Color3.fromRGB(235,235,235),
-        TextXAlignment=Enum.TextXAlignment.Left,
-    })
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "VisionPacketLaggerUI"
+screenGui.ResetOnSpawn = false
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+screenGui.IgnoreGuiInset = true
+screenGui.Parent = playerGui
 
-    -- Dropdown "v" button
-    local dropBtn
-    if showDropdown then
-        dropBtn = new("TextButton",{
-            Parent=r,
-            Size=UDim2.fromOffset(22,22),
-            Position=UDim2.new(1,-120,0.5,-11),
-            BackgroundColor3=Color3.fromRGB(18,18,18),
-            Text="v",
-            Font=Enum.Font.GothamBold,
-            TextSize=11,
-            TextColor3=Color3.fromRGB(160,160,160),
-            AutoButtonColor=false,
-            BorderSizePixel=0,
-        },{corner(5)})
+-- ===== Layout constants =====
+local WIDTH = 230
+local HEIGHT = 142
+local HEADER_H = 34
+local TOGGLE_H = 38
+local KEYBIND_H = 24
+local PAD = 10
 
-        -- Separator
-        new("Frame",{
-            Parent=r,
-            Size=UDim2.new(0,1,0.5,0),
-            Position=UDim2.new(1,-96,0.25,0),
-            BackgroundColor3=Color3.fromRGB(60,60,60),
-            BorderSizePixel=0,
-        })
-    end
+local main = Instance.new("Frame")
+main.Name = "VisionPacketLaggerFrame"
+main.Size = UDim2.new(0, WIDTH, 0, HEIGHT)
+main.Position = savedData.position
+main.AnchorPoint = Vector2.new(0.5, 0.5)
+main.BackgroundColor3 = COLORS.bg
+main.BorderSizePixel = 0
+main.ClipsDescendants = false
+main.Parent = screenGui
 
-    -- Keybind button
-    local initText = keybind and string.upper(keybind) or "-"
-    local kbBtn = new("TextButton",{
-        Parent=r,
-        Size=UDim2.fromOffset(36,22),
-        Position=UDim2.new(1,-92,0.5,-11),
-        BackgroundColor3=Color3.fromRGB(18,18,18),
-        Text=initText,
-        Font=Enum.Font.GothamBold,
-        TextSize=12,
-        TextColor3=Color3.fromRGB(220,220,220),
-        AutoButtonColor=false,
-        BorderSizePixel=0,
-    },{corner(5)})
+local mainCorner = Instance.new("UICorner")
+mainCorner.CornerRadius = UDim.new(0, 10)
+mainCorner.Parent = main
 
-    -- Separator
-    new("Frame",{
-        Parent=r,
-        Size=UDim2.new(0,1,0.5,0),
-        Position=UDim2.new(1,-53,0.25,0),
-        BackgroundColor3=Color3.fromRGB(60,60,60),
-        BorderSizePixel=0,
-    })
+local mainGrad = Instance.new("UIGradient")
+mainGrad.Color = ColorSequence.new(COLORS.bg, Color3.fromRGB(15, 10, 22))
+mainGrad.Rotation = 135
+mainGrad.Parent = main
 
-    -- toggle switch
-    local sw = new("TextButton",{
-        Parent=r,
-        Size=UDim2.fromOffset(38,20),
-        Position=UDim2.new(1,-48,0.5,-10),
-        BackgroundColor3=default and Color3.fromRGB(240,240,240) or Color3.fromRGB(55,55,55),
-        Text="",AutoButtonColor=false,BorderSizePixel=0,
-    },{corner(10)})
-    local dot = new("Frame",{
-        Parent=sw,
-        Size=UDim2.fromOffset(16,16),
-        Position=default and UDim2.new(1,-18,0.5,-8) or UDim2.new(0,2,0.5,-8),
-        BackgroundColor3=default and Color3.fromRGB(20,20,20) or Color3.fromRGB(200,200,200),
-        BorderSizePixel=0,
-    },{corner(8)})
+local borderFrame = Instance.new("Frame")
+borderFrame.Name = "BorderFrame"
+borderFrame.Size = UDim2.new(1, 2, 1, 2)
+borderFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+borderFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+borderFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+borderFrame.BorderSizePixel = 0
+borderFrame.ZIndex = 0
+borderFrame.Parent = main
 
-    local function updateToggle(newState)
-        state = newState
-        TweenService:Create(sw,TweenInfo.new(0.18),{BackgroundColor3=state and Color3.fromRGB(240,240,240) or Color3.fromRGB(55,55,55)}):Play()
-        TweenService:Create(dot,TweenInfo.new(0.18),{
-            Position=state and UDim2.new(1,-18,0.5,-8) or UDim2.new(0,2,0.5,-8),
-            BackgroundColor3=state and Color3.fromRGB(20,20,20) or Color3.fromRGB(200,200,200),
-        }):Play()
-        if callback then callback(state) end
-    end
+local borderCorner = Instance.new("UICorner")
+borderCorner.CornerRadius = UDim.new(0, 11)
+borderCorner.Parent = borderFrame
 
-    local toggleFn = function()
-        updateToggle(not state)
-    end
-
-    sw.MouseButton1Click:Connect(function()
-        updateToggle(not state)
-    end)
-
-    -- V1/V2 select
-    local choicePanel = new("Frame",{
-        Parent=container,
-        Size=UDim2.new(1,0,0,28),
-        BackgroundTransparency=1,
-        BorderSizePixel=0,
-        Visible=false,
-        LayoutOrder=2,
-    })
-
-    local v1Btn = new("TextButton",{
-        Parent=choicePanel,
-        Size=UDim2.new(0.5,-3,1,0),
-        Position=UDim2.fromOffset(0,0),
-        BackgroundColor3=Color3.fromRGB(235,235,235),
-        Text="V1",
-        Font=Enum.Font.GothamBold,
-        TextSize=13,
-        TextColor3=Color3.fromRGB(15,15,15),
-        AutoButtonColor=false,
-        BorderSizePixel=0,
-    },{corner(10)})
-
-    local v2Btn = new("TextButton",{
-        Parent=choicePanel,
-        Position=UDim2.new(0.5,3,0,0),
-        Size=UDim2.new(0.5,-3,1,0),
-        BackgroundColor3=Color3.fromRGB(18,18,18),
-        Text="V2",
-        Font=Enum.Font.GothamBold,
-        TextSize=13,
-        TextColor3=Color3.fromRGB(120,120,120),
-        AutoButtonColor=false,
-        BorderSizePixel=0,
-    },{corner(10), stroke(Color3.fromRGB(40,40,40),1,0)})
-
-    -- Dropdown
-    if dropBtn then
-        dropBtn.MouseButton1Click:Connect(function()
-            expanded = not expanded
-            choicePanel.Visible = expanded
-            dropBtn.Text = expanded and "^" or "v"
-        end)
-    end
-
-    -- Keybind attach
-    kbBtn.MouseButton1Click:Connect(function()
-        local prevText = kbBtn.Text
-        listeningBtn = {
-            btn = kbBtn,
-            prev = prevText,
-            onKey = function(kc)
-                if boundKey then keybindMap[boundKey] = nil end
-                boundKey = kc
-                keybindMap[kc] = toggleFn
-                local nm = kc.Name
-                kbBtn.Text = #nm <= 3 and nm:upper() or nm:sub(1,2):upper()
-                kbBtn.TextColor3 = Color3.fromRGB(220,220,220)
-            end
-        }
-        kbBtn.Text = ".."
-        kbBtn.TextColor3 = Color3.fromRGB(255,215,50)
-    end)
-
-    if keybind then
-        for _, kc in pairs(Enum.KeyCode:GetEnumItems()) do
-            if kc.Name:lower() == keybind:lower() then
-                boundKey = kc
-                keybindMap[kc] = toggleFn
-                break
-            end
-        end
-    end
-
-    -- V1 / V2
-    v1Btn.MouseButton1Click:Connect(function()
-        v1Btn.BackgroundColor3 = Color3.fromRGB(235,235,235)
-        v1Btn.TextColor3 = Color3.fromRGB(15,15,15)
-        v2Btn.BackgroundColor3 = Color3.fromRGB(18,18,18)
-        v2Btn.TextColor3 = Color3.fromRGB(120,120,120)
-    end)
-    v2Btn.MouseButton1Click:Connect(function()
-        v2Btn.BackgroundColor3 = Color3.fromRGB(235,235,235)
-        v2Btn.TextColor3 = Color3.fromRGB(15,15,15)
-        v1Btn.BackgroundColor3 = Color3.fromRGB(18,18,18)
-        v1Btn.TextColor3 = Color3.fromRGB(120,120,120)
-    end)
-
-    return container
-end
-
--- ============ Tabs ============
-local tabs = {"Movement","Combat","Utility","Settings"}
-local tabContents = {}
-
-local function buildCombat(parent)
-    sectionLabel("Steal Configuration").Parent = parent
-    makeSlider("Radius",1,100,62).Parent = parent
-    makeSlider("Duration",0.1,5,1.3).Parent = parent
-    makeToggle("Auto Steal",false).Parent = parent
-    sectionLabel("Bat Aimbot").Parent = parent
-    makeToggle("Bat Aimbot",true,"e",nil,true).Parent = parent
-    makeToggle("Desync Aimbot",true,"c").Parent = parent
-    sectionLabel("Auto Path").Parent = parent
-    makeToggle("Auto Left",true,"u").Parent = parent
-    makeToggle("Auto Right",false,"i").Parent = parent
-end
-
-local function buildMovement(parent)
-end
-
-local function buildUtility(parent)
-end
-
-local function buildSettings(parent)
-    sectionLabel("Settings").Parent = parent
-    makeToggle("Auto Save Config",true).Parent = parent
-    local r = row(46)
-    r.Parent = parent
-    new("TextLabel",{Parent=r,Size=UDim2.new(1,-28,1,0),Position=UDim2.fromOffset(14,0),BackgroundTransparency=1,
-        Text="Version  1.0.0",Font=Enum.Font.GothamMedium,TextSize=14,
-        TextColor3=Color3.fromRGB(180,180,180),TextXAlignment=Enum.TextXAlignment.Left})
-end
-
-local builders = {Movement=buildMovement,Combat=buildCombat,Utility=buildUtility,Settings=buildSettings}
-
-local function clear() for _,c in ipairs(body:GetChildren()) do if not c:IsA("UIPadding") and not c:IsA("UIListLayout") then c:Destroy() end end end
-
--- ============ Tab Bar ============
-local tabBar = new("Frame",{
-    Parent=main,
-    Position=UDim2.new(0,12,1,-56),
-    Size=UDim2.new(1,-24,0,46),
-    BackgroundTransparency=1,
-    BorderSizePixel=0,
-},{
-    new("UIListLayout",{FillDirection=Enum.FillDirection.Horizontal,Padding=UDim.new(0,0),SortOrder=Enum.SortOrder.LayoutOrder,VerticalAlignment=Enum.VerticalAlignment.Center,HorizontalAlignment=Enum.HorizontalAlignment.Center}),
-    new("UIPadding",{PaddingLeft=UDim.new(0,0),PaddingRight=UDim.new(0,0),PaddingTop=UDim.new(0,4),PaddingBottom=UDim.new(0,4)}),
+local borderGrad = Instance.new("UIGradient")
+borderGrad.Color = ColorSequence.new({
+ColorSequenceKeypoint.new(0.0, Color3.fromRGB(20, 10, 35)),
+ColorSequenceKeypoint.new(0.25, Color3.fromRGB(100, 30, 180)),
+ColorSequenceKeypoint.new(0.5, Color3.fromRGB(200, 130, 255)),
+ColorSequenceKeypoint.new(0.75, Color3.fromRGB(100, 30, 180)),
+ColorSequenceKeypoint.new(1.0, Color3.fromRGB(20, 10, 35)),
 })
+borderGrad.Rotation = 0
+borderGrad.Parent = borderFrame
 
-local current
-local tabBorders = {}
-local tabButtons = {}
-local function selectTab(name)
-    current = name
-    clear()
-    builders[name](body)
-    for n,btn in pairs(tabButtons) do
-        local active = n==name
-        local border = tabBorders[n]
-        if active then
-            if border then border.BackgroundTransparency = 0 end
-            btn.TextColor3 = Color3.fromRGB(255,255,255)
-            btn.Font = Enum.Font.GothamBold
-        else
-            if border then border.BackgroundTransparency = 0.65 end
-            btn.TextColor3 = Color3.fromRGB(120,120,120)
-            btn.Font = Enum.Font.GothamMedium
-        end
-    end
+local innerMask = Instance.new("Frame")
+innerMask.Name = "InnerMask"
+innerMask.Size = UDim2.new(1, -2, 1, -2)
+innerMask.Position = UDim2.new(0.5, 0, 0.5, 0)
+innerMask.AnchorPoint = Vector2.new(0.5, 0.5)
+innerMask.BackgroundColor3 = COLORS.bg
+innerMask.BorderSizePixel = 0
+innerMask.ZIndex = 1
+innerMask.Parent = main
+
+local innerCorner = Instance.new("UICorner")
+innerCorner.CornerRadius = UDim.new(0, 9)
+innerCorner.Parent = innerMask
+
+local innerGrad = Instance.new("UIGradient")
+innerGrad.Color = ColorSequence.new(COLORS.bg, Color3.fromRGB(15, 10, 22))
+innerGrad.Rotation = 135
+innerGrad.Parent = innerMask
+
+local title = Instance.new("TextLabel")
+title.Name = "Title"
+title.Size = UDim2.new(1, -20, 0, HEADER_H)
+title.Position = UDim2.new(0, 10, 0, 0)
+title.BackgroundTransparency = 1
+title.Font = FONT
+title.Text = "Vision Packet Lagger"
+title.TextColor3 = COLORS.text
+title.TextSize = 14
+title.TextXAlignment = Enum.TextXAlignment.Center
+title.ZIndex = 3
+title.Parent = main
+
+-- ===== Toggle Button =====
+local toggle = Instance.new("TextButton")
+toggle.Name = "Toggle"
+toggle.Size = UDim2.new(1, -20, 0, TOGGLE_H)
+toggle.Position = UDim2.new(0, 10, 0, HEADER_H + 8)
+toggle.BackgroundColor3 = COLORS.disabled
+toggle.BorderSizePixel = 0
+toggle.Font = FONT
+toggle.Text = ""
+toggle.TextTransparency = 1
+toggle.AutoButtonColor = false
+toggle.ZIndex = 3
+toggle.Parent = main
+
+local toggleCorner = Instance.new("UICorner")
+toggleCorner.CornerRadius = UDim.new(0, 8)
+toggleCorner.Parent = toggle
+
+local toggleGrad = Instance.new("UIGradient")
+toggleGrad.Color = ColorSequence.new(COLORS.disabled, Color3.fromRGB(40, 30, 50))
+toggleGrad.Rotation = 135
+toggleGrad.Parent = toggle
+
+local toggleStroke = Instance.new("UIStroke")
+toggleStroke.Color = COLORS.border
+toggleStroke.Thickness = 1.66
+toggleStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+toggleStroke.Parent = toggle
+
+local toggleLabel = Instance.new("TextLabel")
+toggleLabel.Name = "Label"
+toggleLabel.Size = UDim2.new(1, 0, 1, 0)
+toggleLabel.Position = UDim2.new(0, 0, 0, 0)
+toggleLabel.BackgroundTransparency = 1
+toggleLabel.Font = FONT
+toggleLabel.Text = "DISABLED"
+toggleLabel.TextColor3 = COLORS.white
+toggleLabel.TextTransparency = 0
+toggleLabel.TextSize = 14
+toggleLabel.TextXAlignment = Enum.TextXAlignment.Center
+toggleLabel.TextYAlignment = Enum.TextYAlignment.Center
+toggleLabel.ZIndex = 5
+toggleLabel.Active = false
+toggleLabel.Parent = toggle
+
+-- ===== Keybind Button =====
+local keybindBtn = Instance.new("TextButton")
+keybindBtn.Name = "KeybindBtn"
+keybindBtn.Size = UDim2.new(1, -20, 0, KEYBIND_H)
+keybindBtn.Position = UDim2.new(0, 10, 0, HEADER_H + TOGGLE_H + 14)
+keybindBtn.BackgroundColor3 = COLORS.surface
+keybindBtn.BorderSizePixel = 0
+keybindBtn.Font = FONT
+keybindBtn.Text = "Toggle Key: [" .. savedData.toggleKey.Name .. "]"
+keybindBtn.TextColor3 = COLORS.text
+keybindBtn.TextSize = 10
+keybindBtn.AutoButtonColor = false
+keybindBtn.ZIndex = 3
+keybindBtn.Parent = main
+
+local kbCorner = Instance.new("UICorner")
+kbCorner.CornerRadius = UDim.new(0, 6)
+kbCorner.Parent = keybindBtn
+
+local kbStroke = Instance.new("UIStroke")
+kbStroke.Color = COLORS.border
+kbStroke.Thickness = 1
+kbStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+kbStroke.Parent = keybindBtn
+
+-- ===== Footer / Hint Label (Discord) =====
+local hintLabel = Instance.new("TextLabel")
+hintLabel.Name = "HintLabel"
+hintLabel.Size = UDim2.new(1, -20, 0, 14)
+hintLabel.Position = UDim2.new(0, 10, 0, HEADER_H + TOGGLE_H + KEYBIND_H + 16)
+hintLabel.BackgroundTransparency = 1
+hintLabel.Font = FONT
+hintLabel.Text = "Discord.gg/VisionHub"
+hintLabel.TextColor3 = COLORS.accentBright
+hintLabel.TextSize = 9
+hintLabel.TextXAlignment = Enum.TextXAlignment.Center
+hintLabel.ZIndex = 3
+hintLabel.Parent = main
+
+local active = false
+local isBinding = false
+
+-- ===== Active State Logic =====
+RunService.RenderStepped:Connect(function(dt)
+local speed = active and 160 or 60
+borderGrad.Rotation = (borderGrad.Rotation + speed * dt) % 360
+end)
+
+local function setActive(state)
+active = state
+savedData.active = state
+
+if state then
+toggle.BackgroundColor3 = COLORS.accentBright
+toggleGrad.Color = ColorSequence.new(COLORS.accent, COLORS.accentBright)
+toggleGrad.Rotation = 0
+toggleStroke.Color = COLORS.white
+toggleLabel.Text = "ENABLED"
+toggleLabel.TextColor3 = COLORS.black
+if api and api.start then pcall(api.start) end
+else
+toggle.BackgroundColor3 = COLORS.disabled
+toggleGrad.Color = ColorSequence.new(COLORS.disabled, Color3.fromRGB(40, 30, 50))
+toggleGrad.Rotation = 135
+toggleStroke.Color = COLORS.border
+toggleLabel.Text = "DISABLED"
+toggleLabel.TextColor3 = COLORS.white
+if api and api.stop then pcall(api.stop) end
+end
 end
 
-for i,name in ipairs(tabs) do
-    local border = new("Frame",{
-        Parent=tabBar,
-        Size=UDim2.new(0.25,0,1,0),
-        BackgroundColor3=Color3.fromRGB(255,255,255),
-        BackgroundTransparency=0.65,
-        BorderSizePixel=0,
-        LayoutOrder=i,
-    },{corner(10)})
-    local b = new("TextButton",{
-        Parent=border,
-        Size=UDim2.new(1,-2,1,-2),
-        Position=UDim2.fromOffset(1,1),
-        BackgroundColor3=Color3.fromRGB(10,10,10),
-        BackgroundTransparency=0,
-        BorderSizePixel=0,
-        AutoButtonColor=false,
-        Text=name,
-        Font=Enum.Font.GothamMedium,
-        TextSize=12,
-        TextColor3=Color3.fromRGB(120,120,120),
-    },{corner(9)})
-    tabBorders[name] = border
-    tabButtons[name] = b
-    b.MouseButton1Click:Connect(function() selectTab(name) end)
+toggle.MouseButton1Click:Connect(function()
+setActive(not active)
+end)
+
+-- ===== Keybind Button Logic =====
+keybindBtn.MouseButton1Click:Connect(function()
+if isBinding then return end
+isBinding = true
+keybindBtn.Text = "looking For Key..."
+keybindBtn.TextColor3 = COLORS.accentBright
+kbStroke.Color = COLORS.accentBright
+end)
+
+-- ===== Dragging (via title bar only) =====
+local dragging = false
+local dragStart, startPos
+
+title.InputBegan:Connect(function(input)
+if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+dragging = true
+dragStart = input.Position
+startPos = main.Position
+end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+local delta = input.Position - dragStart
+main.Position = UDim2.new(
+startPos.X.Scale, startPos.X.Offset + delta.X,
+startPos.Y.Scale, startPos.Y.Offset + delta.Y
+)
+savedData.position = main.Position
+end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+dragging = false
+end
+end)
+
+-- ===== GLOBAL INPUT (Keybinds & Controller Support) =====
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+if gameProcessed then return end
+
+-- Handle keybinding process for Keyboard, Mouse, and Gamepad
+if isBinding then
+if input.UserInputType == Enum.UserInputType.Keyboard then
+savedData.toggleKey = input.KeyCode
+savedData.toggleUserButton = nil
+keybindBtn.Text = "Toggle Key: [" .. savedData.toggleKey.Name .. "]"
+keybindBtn.TextColor3 = COLORS.text
+kbStroke.Color = COLORS.border
+isBinding = false
+elseif input.UserInputType == Enum.UserInputType.Gamepad1 then
+savedData.toggleKey = input.KeyCode
+savedData.toggleUserButton = nil
+keybindBtn.Text = "Toggle Key: [" .. savedData.toggleKey.Name .. "]"
+keybindBtn.TextColor3 = COLORS.text
+kbStroke.Color = COLORS.border
+isBinding = false
+end
+return
 end
 
-selectTab("Combat")
-
-print("[ADAPT] UI loaded.")
-print("made by yeah_32154")
+-- Toggle the lagger on/off with the custom key or controller button
+if input.KeyCode == savedData.toggleKey then
+setActive(not active)
+end
+end)
