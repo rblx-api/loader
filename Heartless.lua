@@ -1,639 +1,1364 @@
-local Players      = game:GetService("Players")
-local UIS          = game:GetService("UserInputService")
+-- This File Has Clean by Prince Bot | .gg/freesource
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Stats = game:GetService("Stats")
+local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
-local RS           = game:GetService("ReplicatedStorage")
-local HttpService  = game:GetService("HttpService")
-local SoundService = game:GetService("SoundService")
+local HttpService = game:GetService("HttpService")
 
-local LP = Players.LocalPlayer
-local CONFIG_FILE = "Heartless_Config.json"
+local LocalPlayer = Players.LocalPlayer
+if not LocalPlayer then return end
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- ============ THEME ============
-local ICE_BLUE    = Color3.fromRGB(0, 170, 255)
-local ICE_CYAN    = Color3.fromRGB(0, 255, 255)
-local ICE_DEEP    = Color3.fromRGB(0, 90, 180)
-local BG_BLACK    = Color3.fromRGB(6, 8, 12)
-local BG_PANEL    = Color3.fromRGB(12, 16, 24)
-local BG_INPUT    = Color3.fromRGB(20, 28, 40)
-local BG_HOVER    = Color3.fromRGB(30, 42, 60)
-local TEXT_WHITE  = Color3.fromRGB(240, 248, 255)
-local TEXT_DIM    = Color3.fromRGB(130, 150, 175)
-local TEXT_GLOW   = Color3.fromRGB(100, 220, 255)
-local STROKE_BLUE = Color3.fromRGB(30, 80, 140)
-
--- ============ SFX ============
-local sfxFolder = Instance.new("Folder")
-sfxFolder.Name = "HeartlessSFX"
-sfxFolder.Parent = SoundService
-
-local function makeSfx(name, id, vol, pitch)
-    local s = Instance.new("Sound")
-    s.Name = name
-    s.SoundId = "rbxassetid://" .. tostring(id)
-    s.Volume = vol or 0.5
-    s.PlaybackSpeed = pitch or 1
-    s.Parent = sfxFolder
-    return s
+if PlayerGui:FindFirstChild("XefewAntiPacketLagger") then
+    warn("[Xefew] Already running - use the OPEN pill or RightShift")
+    return
 end
 
-local SFX = {
-    Click     = makeSfx("Click",     9114282417, 0.35, 1.0),
-    Hover     = makeSfx("Hover",     9114294822, 0.15, 1.4),
-    Start     = makeSfx("Start",     9114300981, 0.55, 0.9),
-    Stop      = makeSfx("Stop",      9114303932, 0.45, 0.75),
-    Toggle    = makeSfx("Toggle",    9114307441, 0.40, 1.2),
-    Keybind   = makeSfx("Keybind",   9114310303, 0.40, 1.6),
-    Saved     = makeSfx("Saved",     9114313755, 0.40, 1.3),
-    Error     = makeSfx("Error",     9114316718, 0.40, 0.6),
+local ACCENTS = {
+    Color3.fromRGB(124, 92, 255),  
+    Color3.fromRGB(64, 156, 255),  
+    Color3.fromRGB(60, 220, 140),  
+    Color3.fromRGB(255, 95, 160),  
+    Color3.fromRGB(255, 160, 60),  
+    Color3.fromRGB(225, 230, 255), 
 }
 
-local function playSfx(name)
-    local s = SFX[name]
-    if not s then return end
-    s:Stop()
-    s:Play()
-end
-
--- ============ GUI ============
-local gui = Instance.new("ScreenGui")
-gui.Name = "Heartless"
-gui.ResetOnSpawn = false
-gui.IgnoreGuiInset = true
-gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-gui.DisplayOrder = 999
-gui.Parent = LP:WaitForChild("PlayerGui")
-
-local Main = Instance.new("Frame", gui)
-Main.Size = UDim2.new(0, 320, 0, 340)
-Main.Position = UDim2.new(0.5, -160, 0.5, -170)
-Main.BackgroundColor3 = BG_BLACK
-Main.BorderSizePixel = 0
-Main.ClipsDescendants = true
-Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 16)
-
-local MainStroke = Instance.new("UIStroke", Main)
-MainStroke.Color = STROKE_BLUE
-MainStroke.Thickness = 1.5
-MainStroke.Transparency = 0.1
-MainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-
-local MainGrad = Instance.new("UIGradient", Main)
-MainGrad.Rotation = 135
-MainGrad.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(10, 14, 22)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(4, 6, 10)),
+local BACKGROUNDS = {
+    "rbxassetid://136102941611031",
+    "rbxassetid://126836814104648",
+    "rbxassetid://113066671567217",
+    "rbxassetid://90742337592784",
+    "rbxassetid://103981252715138",
+    "rbxassetid://99152937872371",
+    "rbxassetid://122784193969238",
+    "rbxassetid://139441110677603",
+    "rbxassetid://107924157410781",
+    "rbxassetid://81716347974946",
+    "rbxassetid://136094657712452",
+    "rbxassetid://80469907559370",
+    "rbxassetid://91444821153663",
+    "rbxassetid://113802640695350",
+    "rbxassetid://81861129614949",
 }
 
--- ============ ANIMATED SNOW / ICE PARTICLES ============
-local Particles = Instance.new("Frame", Main)
-Particles.Size = UDim2.new(1, 0, 1, 0)
-Particles.BackgroundTransparency = 1
-Particles.ZIndex = 0
-Particles.ClipsDescendants = true
-Instance.new("UICorner", Particles).CornerRadius = UDim.new(0, 16)
+local CONFIG_FILE = "xefew_anti_packet_lagger.json"
 
-local function spawnFlake()
-    local dot = Instance.new("Frame", Particles)
-    local size = math.random(1, 4)
-    dot.Size = UDim2.new(0, size, 0, size)
-    dot.BackgroundColor3 = (math.random(1, 2) == 1) and ICE_CYAN or TEXT_WHITE
-    dot.BackgroundTransparency = math.random(55, 90) / 100
-    dot.BorderSizePixel = 0
-    dot.ZIndex = 0
-    Instance.new("UICorner", dot).CornerRadius = UDim.new(1, 0)
-
-    local startX = math.random() * 1.1 - 0.05
-    local drift = (math.random(-20, 20)) / 100
-    local dur = math.random(5, 11) / 1
-
-    dot.Position = UDim2.new(startX, 0, -0.05, 0)
-
-    local info = TweenInfo.new(dur, Enum.EasingStyle.Linear)
-    local fall = TweenService:Create(dot, info, {
-        Position = UDim2.new(startX + drift, 0, 1.05, 0),
-        BackgroundTransparency = 1,
-    })
-    fall:Play()
-    fall.Completed:Connect(function()
-        dot:Destroy()
-    end)
-end
-
-task.spawn(function()
-    while Particles.Parent do
-        spawnFlake()
-        task.wait(math.random(8, 22) / 100)
-    end
-end)
-
--- ============ TOP BAR ============
-local TopBar = Instance.new("Frame", Main)
-TopBar.Size = UDim2.new(1, 0, 0, 54)
-TopBar.BackgroundColor3 = BG_PANEL
-TopBar.BackgroundTransparency = 0.35
-TopBar.BorderSizePixel = 0
-TopBar.ZIndex = 2
-Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 16)
-
-local TopBarMask = Instance.new("Frame", TopBar)
-TopBarMask.Size = UDim2.new(1, 0, 0, 20)
-TopBarMask.Position = UDim2.new(0, 0, 1, -20)
-TopBarMask.BackgroundColor3 = BG_PANEL
-TopBarMask.BackgroundTransparency = 0.35
-TopBarMask.BorderSizePixel = 0
-TopBarMask.ZIndex = 2
-
-local Stripe = Instance.new("Frame", TopBar)
-Stripe.Size = UDim2.new(1, -24, 0, 2)
-Stripe.Position = UDim2.new(0, 12, 1, -2)
-Stripe.BorderSizePixel = 0
-Stripe.BackgroundColor3 = ICE_BLUE
-Stripe.ZIndex = 3
-Instance.new("UICorner", Stripe).CornerRadius = UDim.new(1, 0)
-local StripeGrad = Instance.new("UIGradient", Stripe)
-StripeGrad.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, ICE_DEEP),
-    ColorSequenceKeypoint.new(0.5, ICE_CYAN),
-    ColorSequenceKeypoint.new(1, ICE_DEEP),
+local config = {
+    accent = 1,
+    bg = 1,
+    bgOpacity = 60,
+    scale = 100,
+    burst = 40,
+    pps = 60,
+    enabled = true,
+    sens = 2,
+    highlight = true,
+    alerts = true,
 }
 
--- Icono de la imagen
-local Icon = Instance.new("ImageLabel", TopBar)
-Icon.Size = UDim2.new(0, 32, 0, 32)
-Icon.Position = UDim2.new(0, 12, 0.5, -16)
-Icon.BackgroundTransparency = 1
-Icon.Image = "rbxassetid://1000009328"
-Icon.ScaleType = Enum.ScaleType.Fit
-Icon.ZIndex = 4
-
-local Title = Instance.new("TextLabel", TopBar)
-Title.BackgroundTransparency = 1
-Title.Position = UDim2.new(0, 52, 0, 0)
-Title.Size = UDim2.new(1, -100, 1, 0)
-Title.Text = "hearteless"
-Title.Font = Enum.Font.GothamBlack
-Title.TextSize = 16
-Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.TextYAlignment = Enum.TextYAlignment.Center
-Title.TextColor3 = TEXT_WHITE
-Title.ZIndex = 3
-
-local TitleGrad = Instance.new("UIGradient", Title)
-TitleGrad.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, TEXT_WHITE),
-    ColorSequenceKeypoint.new(0.5, TEXT_GLOW),
-    ColorSequenceKeypoint.new(1, TEXT_WHITE),
-}
-
-task.spawn(function()
-    local t = 0
-    while TitleGrad.Parent do
-        t = t + 0.03
-        TitleGrad.Offset = Vector2.new(math.sin(t) * 0.3, 0)
-        task.wait(0.03)
-    end
-end)
-
-local CollapseBtn = Instance.new("TextButton", TopBar)
-CollapseBtn.Size = UDim2.new(0, 26, 0, 26)
-CollapseBtn.Position = UDim2.new(1, -34, 0.5, -13)
-CollapseBtn.BackgroundColor3 = BG_INPUT
-CollapseBtn.BorderSizePixel = 0
-CollapseBtn.Text = "−"
-CollapseBtn.Font = Enum.Font.GothamBlack
-CollapseBtn.TextSize = 18
-CollapseBtn.TextColor3 = TEXT_WHITE
-CollapseBtn.AutoButtonColor = false
-CollapseBtn.ZIndex = 4
-Instance.new("UICorner", CollapseBtn).CornerRadius = UDim.new(0, 8)
-
--- ============ BODY ============
-local Body = Instance.new("Frame", Main)
-Body.Position = UDim2.new(0, 0, 0, 54)
-Body.Size = UDim2.new(1, 0, 1, -54)
-Body.BackgroundTransparency = 1
-Body.ZIndex = 2
-
-local Pad = Instance.new("UIPadding", Body)
-Pad.PaddingTop = UDim.new(0, 16)
-Pad.PaddingBottom = UDim.new(0, 16)
-Pad.PaddingLeft = UDim.new(0, 18)
-Pad.PaddingRight = UDim.new(0, 18)
-
--- ============ OMAHAD POWER ============
-local IntLabel = Instance.new("TextLabel", Body)
-IntLabel.BackgroundTransparency = 1
-IntLabel.Size = UDim2.new(1, 0, 0, 14)
-IntLabel.Text = "CHANGE OMAHAD POWER"
-IntLabel.Font = Enum.Font.GothamBold
-IntLabel.TextSize = 10
-IntLabel.TextXAlignment = Enum.TextXAlignment.Left
-IntLabel.TextColor3 = TEXT_DIM
-
-local IntRow = Instance.new("Frame", Body)
-IntRow.Position = UDim2.new(0, 0, 0, 20)
-IntRow.Size = UDim2.new(1, 0, 0, 42)
-IntRow.BackgroundTransparency = 1
-
-local function makeBtn(parent, text, w, x)
-    local b = Instance.new("TextButton", parent)
-    b.Size = UDim2.new(0, w, 1, 0)
-    b.Position = UDim2.new(0, x, 0, 0)
-    b.BackgroundColor3 = BG_INPUT
-    b.BorderSizePixel = 0
-    b.Text = text
-    b.Font = Enum.Font.GothamBlack
-    b.TextSize = 18
-    b.TextColor3 = TEXT_WHITE
-    b.AutoButtonColor = false
-    b.ZIndex = 3
-    Instance.new("UICorner", b).CornerRadius = UDim.new(0, 10)
-    local s = Instance.new("UIStroke", b)
-    s.Color = STROKE_BLUE
-    s.Thickness = 1
-    s.Transparency = 0.4
-    return b
-end
-
-local Minus = makeBtn(IntRow, "−", 42, 0)
-local Plus  = makeBtn(IntRow, "+", 42, 242)
-
-local IntBox = Instance.new("TextBox", IntRow)
-IntBox.Position = UDim2.new(0, 50, 0, 0)
-IntBox.Size = UDim2.new(0, 184, 1, 0)
-IntBox.BackgroundColor3 = BG_INPUT
-IntBox.BorderSizePixel = 0
-IntBox.Text = "10000"
-IntBox.PlaceholderText = "omahad power"
-IntBox.Font = Enum.Font.GothamBlack
-IntBox.TextSize = 18
-IntBox.TextColor3 = TEXT_GLOW
-IntBox.PlaceholderColor3 = TEXT_DIM
-IntBox.ClearTextOnFocus = false
-IntBox.ZIndex = 3
-Instance.new("UICorner", IntBox).CornerRadius = UDim.new(0, 10)
-local IntStroke = Instance.new("UIStroke", IntBox)
-IntStroke.Color = STROKE_BLUE
-IntStroke.Thickness = 1
-IntStroke.Transparency = 0.3
-
--- ============ PRESETS ============
-local PresetRow = Instance.new("Frame", Body)
-PresetRow.Position = UDim2.new(0, 0, 0, 72)
-PresetRow.Size = UDim2.new(1, 0, 0, 30)
-PresetRow.BackgroundTransparency = 1
-
-local function makePreset(text, pos, width)
-    local b = Instance.new("TextButton", PresetRow)
-    b.Size = UDim2.new(width, 0, 1, 0)
-    b.Position = UDim2.new(pos, 0, 0, 0)
-    b.BackgroundColor3 = BG_INPUT
-    b.BorderSizePixel = 0
-    b.Text = text
-    b.Font = Enum.Font.GothamBold
-    b.TextSize = 11
-    b.TextColor3 = TEXT_DIM
-    b.AutoButtonColor = false
-    b.ZIndex = 3
-    Instance.new("UICorner", b).CornerRadius = UDim.new(0, 8)
-    local s = Instance.new("UIStroke", b)
-    s.Color = STROKE_BLUE
-    s.Thickness = 1
-    s.Transparency = 0.5
-    return b
-end
-
-local P1k  = makePreset("1K",  0,     0.235)
-local P10k = makePreset("10K", 0.255, 0.235)
-local P25k = makePreset("25K", 0.510, 0.235)
-local P50k = makePreset("50K", 0.765, 0.235)
-
--- ============ DIVIDER ============
-local Div = Instance.new("Frame", Body)
-Div.Position = UDim2.new(0, 0, 0, 112)
-Div.Size = UDim2.new(1, 0, 0, 1)
-Div.BackgroundColor3 = STROKE_BLUE
-Div.BackgroundTransparency = 0.5
-Div.BorderSizePixel = 0
-Div.ZIndex = 3
-
--- ============ KEYBIND ============
-local KeyLabel = Instance.new("TextLabel", Body)
-KeyLabel.BackgroundTransparency = 1
-KeyLabel.Position = UDim2.new(0, 0, 0, 126)
-KeyLabel.Size = UDim2.new(1, 0, 0, 14)
-KeyLabel.Text = "TOGGLE KEYBIND"
-KeyLabel.Font = Enum.Font.GothamBold
-KeyLabel.TextSize = 10
-KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
-KeyLabel.TextColor3 = TEXT_DIM
-
-local KeyBtn = Instance.new("TextButton", Body)
-KeyBtn.Position = UDim2.new(0, 0, 0, 146)
-KeyBtn.Size = UDim2.new(1, 0, 0, 40)
-KeyBtn.BackgroundColor3 = BG_INPUT
-KeyBtn.BorderSizePixel = 0
-KeyBtn.Text = "G"
-KeyBtn.Font = Enum.Font.GothamBlack
-KeyBtn.TextSize = 15
-KeyBtn.TextColor3 = TEXT_GLOW
-KeyBtn.AutoButtonColor = false
-KeyBtn.ZIndex = 3
-Instance.new("UICorner", KeyBtn).CornerRadius = UDim.new(0, 10)
-local KeyStroke = Instance.new("UIStroke", KeyBtn)
-KeyStroke.Color = STROKE_BLUE
-KeyStroke.Thickness = 1
-KeyStroke.Transparency = 0.3
-
-local listeningForKey = false
-
--- ============ CONTROL ============
-local StartBtn = Instance.new("TextButton", Body)
-StartBtn.Position = UDim2.new(0, 0, 1, -56)
-StartBtn.Size = UDim2.new(1, 0, 0, 56)
-StartBtn.BackgroundColor3 = ICE_DEEP
-StartBtn.BorderSizePixel = 0
-StartBtn.Text = "START"
-StartBtn.Font = Enum.Font.GothamBlack
-StartBtn.TextSize = 20
-StartBtn.TextColor3 = TEXT_WHITE
-StartBtn.AutoButtonColor = false
-StartBtn.ZIndex = 3
-Instance.new("UICorner", StartBtn).CornerRadius = UDim.new(0, 14)
-local StartStroke = Instance.new("UIStroke", StartBtn)
-StartStroke.Color = ICE_CYAN
-StartStroke.Thickness = 1.5
-StartStroke.Transparency = 0.2
-
-local StartGrad = Instance.new("UIGradient", StartBtn)
-StartGrad.Rotation = 90
-StartGrad.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 120, 220)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 60, 140)),
-}
-
--- ============ STATE ============
-local lagging = false
-local lagThread
-local intensity = 10000
-local toggleKey = Enum.KeyCode.G
-local toggleKeyName = "G"
-
-local function tween(obj, props, t)
-    TweenService:Create(obj, TweenInfo.new(t or 0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
-end
-
-local function clampIntensity(v)
-    v = tonumber(v)
-    if not v then return intensity end
-    return math.clamp(math.floor(v), 1, 100000)
-end
-
-local function updateIntensity()
-    intensity = clampIntensity(IntBox.Text)
-    IntBox.Text = tostring(intensity)
-end
-
-local function setIntensity(v, silent)
-    intensity = clampIntensity(v)
-    IntBox.Text = tostring(intensity)
-    if not silent then playSfx("Click") end
-end
-
--- ============ KEY HELPERS ============
-local function keyToName(keyCode)
-    if not keyCode then return "G" end
-    return keyCode.Name
-end
-
-local function nameToKey(name)
-    if not name then return Enum.KeyCode.G end
-    local ok, key = pcall(function() return Enum.KeyCode[name] end)
-    if ok and key then return key end
-    return Enum.KeyCode.G
-end
-
-local function applyKeybind(name)
-    toggleKeyName = name or "G"
-    toggleKey = nameToKey(toggleKeyName)
-    KeyBtn.Text = toggleKeyName
-end
-
--- ============ SAVE / LOAD ============
-local function saveConfig()
-    updateIntensity()
-    local cfg = {
-        Intensity = intensity,
-        Keybind   = toggleKeyName,
-        PX_S = Main.Position.X.Scale, PX_O = Main.Position.X.Offset,
-        PY_S = Main.Position.Y.Scale, PY_O = Main.Position.Y.Offset,
-    }
-    if writefile then
-        local ok = pcall(function()
-            writefile(CONFIG_FILE, HttpService:JSONEncode(cfg))
-        end)
-        if ok then playSfx("Saved") else playSfx("Error") end
-    else
-        playSfx("Error")
-    end
-end
-
-local function loadConfig()
-    if not readfile or not isfile then return end
-    if not isfile(CONFIG_FILE) then return end
-    local ok, cfg = pcall(function()
-        return HttpService:JSONDecode(readfile(CONFIG_FILE))
-    end)
-    if ok and type(cfg) == "table" then
-        if tonumber(cfg.Intensity) then
-            intensity = clampIntensity(cfg.Intensity)
-            IntBox.Text = tostring(intensity)
-        end
-        if type(cfg.Keybind) == "string" and cfg.Keybind ~= "" then
-            applyKeybind(cfg.Keybind)
-        end
-        if tonumber(cfg.PX_S) and tonumber(cfg.PX_O) and tonumber(cfg.PY_S) and tonumber(cfg.PY_O) then
-            Main.Position = UDim2.new(cfg.PX_S, cfg.PX_O, cfg.PY_S, cfg.PY_O)
-        end
-    end
-end
-
--- ============ EVENT ============
-local Event
-do
-    local ok, net = pcall(function()
-        return RS:WaitForChild("Packages"):WaitForChild("Net")
-    end)
-    if ok and net then
-        local kids = net:GetChildren()
-        Event = kids[230]
-    end
-end
-
-local function paintRunning()
-    tween(StartBtn, {BackgroundColor3 = Color3.fromRGB(0, 200, 120)}, 0.15)
-    StartBtn.Text = "STOP"
-    tween(StartStroke, {Transparency = 0}, 0.15)
-end
-local function paintIdle()
-    tween(StartBtn, {BackgroundColor3 = ICE_DEEP}, 0.15)
-    StartBtn.Text = "START"
-    tween(StartStroke, {Transparency = 0.2}, 0.15)
-end
-
-local function startLagging()
-    if lagging then return end
-    if not Event then
-        playSfx("Error"); return
-    end
-    updateIntensity()
-    lagging = true
-    paintRunning()
-    playSfx("Start")
-
-    local payload = table.create(intensity, function() end)
-
-    lagThread = task.spawn(function()
-        while lagging do
-            for _ = 1, 3 do
-                pcall(function() Event:FireServer(payload) end)
+pcall(function()
+    if isfile and readfile and isfile(CONFIG_FILE) then
+        local data = HttpService:JSONDecode(readfile(CONFIG_FILE))
+        for k, v in pairs(data) do
+            if config[k] ~= nil and type(v) == type(config[k]) then
+                config[k] = v
             end
-            task.wait(0.01)
         end
-    end)
-end
-
-local function stopLagging()
-    if not lagging then return end
-    lagging = false
-    if lagThread then
-        pcall(task.cancel, lagThread)
-        lagThread = nil
     end
-    paintIdle()
-    playSfx("Stop")
+end)
+
+local function clampInt(v, lo, hi)
+    return math.clamp(math.floor(v + 0.5), lo, hi)
 end
 
--- ============ HOVER ============
-local function attachHover(b)
-    b.MouseEnter:Connect(function()
-        tween(b, {BackgroundColor3 = BG_HOVER}, 0.12)
-        playSfx("Hover")
+config.accent = clampInt(config.accent, 1, #ACCENTS)
+config.bg = clampInt(config.bg, 1, #BACKGROUNDS)
+config.bgOpacity = clampInt(config.bgOpacity, 0, 100)
+config.scale = clampInt(config.scale, 70, 120)
+config.burst = clampInt(config.burst, 10, 80)
+config.pps = clampInt(config.pps, 10, 120)
+config.sens = clampInt(config.sens, 1, 3)
+
+local saveQueued = false
+local function saveConfig()
+    if not writefile or saveQueued then return end
+    saveQueued = true
+    task.delay(1, function()
+        saveQueued = false
+        pcall(function()
+            writefile(CONFIG_FILE, HttpService:JSONEncode(config))
+        end)
     end)
-    b.MouseLeave:Connect(function()
-        tween(b, {BackgroundColor3 = BG_INPUT}, 0.12)
-    end)
 end
 
-for _, b in ipairs({Minus, Plus, P1k, P10k, P25k, P50k, KeyBtn, CollapseBtn}) do
-    attachHover(b)
+local state = {
+    MaxPPS = config.pps,
+    BurstLimit = config.burst,
+    Enabled = config.enabled,
+    Log = false,
+    Highlight = config.highlight,
+    Alerts = config.alerts,
+    totalDropped = 0,
+    locked = false,
+    ping = 0,
+    selfLagging = false,
+    laggers = {},
+    hookOk = false,
+    onFlag = nil,
+}
+
+local bucket = { tokens = state.BurstLimit, last = tick() }
+local isOwnCall = checkcaller or function() return false end
+
+local function shouldAllow(now)
+    if not state.Enabled then return true end
+
+    local elapsed = now - bucket.last
+    bucket.last = now
+    bucket.tokens = math.min(state.BurstLimit, bucket.tokens + elapsed * state.MaxPPS)
+
+    if bucket.tokens >= 1 then
+        bucket.tokens -= 1
+        return true
+    end
+
+    state.totalDropped += 1
+    if state.Log then
+        warn("[Xefew] Remote call limited")
+    end
+    return false
 end
-StartBtn.MouseEnter:Connect(function()
-    tween(StartBtn, {Size = UDim2.new(1, 0, 0, 58)}, 0.12)
-    playSfx("Hover")
-end)
-StartBtn.MouseLeave:Connect(function()
-    tween(StartBtn, {Size = UDim2.new(1, 0, 0, 56)}, 0.12)
-end)
 
--- ============ CONNECTIONS ============
-IntBox.FocusLost:Connect(function()
-    updateIntensity()
-    playSfx("Click")
-    saveConfig()
-end)
-Minus.MouseButton1Click:Connect(function()
-    updateIntensity(); setIntensity(intensity - 1000); saveConfig()
-end)
-Plus.MouseButton1Click:Connect(function()
-    updateIntensity(); setIntensity(intensity + 1000); saveConfig()
-end)
-P1k.MouseButton1Click:Connect(function()  setIntensity(1000);  saveConfig() end)
-P10k.MouseButton1Click:Connect(function() setIntensity(10000); saveConfig() end)
-P25k.MouseButton1Click:Connect(function() setIntensity(25000); saveConfig() end)
-P50k.MouseButton1Click:Connect(function() setIntensity(50000); saveConfig() end)
-
-StartBtn.MouseButton1Click:Connect(function()
-    playSfx("Click")
-    if lagging then stopLagging() else startLagging() end
-end)
-
--- ============ KEYBIND LISTEN ============
-KeyBtn.MouseButton1Click:Connect(function()
-    if listeningForKey then return end
-    listeningForKey = true
-    KeyBtn.Text = "press a key..."
-    tween(KeyBtn, {BackgroundColor3 = ICE_DEEP}, 0.15)
-    playSfx("Keybind")
-end)
-
-UIS.InputBegan:Connect(function(input, gpe)
-    if gpe then return end
-
-    if listeningForKey then
-        if input.UserInputType == Enum.UserInputType.Keyboard then
-            listeningForKey = false
-            applyKeybind(keyToName(input.KeyCode))
-            tween(KeyBtn, {BackgroundColor3 = BG_INPUT}, 0.15)
-            playSfx("Keybind")
-            saveConfig()
-        end
+local oldNamecall
+local function hookFn(self, ...)
+    if getnamecallmethod() == "FireServer" and not isOwnCall() and not shouldAllow(tick()) then
         return
     end
+    return oldNamecall(self, ...)
+end
 
-    if input.KeyCode == toggleKey then
-        playSfx("Toggle")
-        if lagging then stopLagging() else startLagging() end
-    end
-end)
-
--- ============ MINIMIZE ============
-local collapsed = false
-local FULL_H = 340
-local MINI_H = 54
-
-CollapseBtn.MouseButton1Click:Connect(function()
-    collapsed = not collapsed
-    playSfx("Click")
-    if collapsed then
-        CollapseBtn.Text = "+"
-        tween(Main, {Size = UDim2.new(0, 320, 0, MINI_H)}, 0.3)
+state.hookOk = pcall(function()
+    if hookmetamethod then
+        oldNamecall = hookmetamethod(game, "__namecall", newcclosure(hookFn))
     else
-        CollapseBtn.Text = "−"
-        tween(Main, {Size = UDim2.new(0, 320, 0, FULL_H)}, 0.3)
+        local mt = getrawmetatable(game)
+        setreadonly(mt, false)
+        oldNamecall = mt.__namecall
+        mt.__namecall = newcclosure(hookFn)
+        setreadonly(mt, true)
     end
 end)
 
--- ============ DRAG ============
-local dragging, dragStart, startPos
-TopBar.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1
-    or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = Main.Position
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-                saveConfig()
+if not state.hookOk then
+    warn("[Xefew] Remote hook failed - limiter off, lag detector still running")
+end
+
+local DETECT = {
+    FreezeTime = 0.40,  
+    MinSpeed = 10,      
+    JumpStuds = 10,     
+    FlagHold = 5,       
+}
+
+local SENS = {
+    { FreezeTime = 0.60, MinSpeed = 12, JumpStuds = 14 }, 
+    { FreezeTime = 0.40, MinSpeed = 10, JumpStuds = 10 }, 
+    { FreezeTime = 0.25, MinSpeed = 8,  JumpStuds = 7  }, 
+}
+
+local function applySens(i)
+    local p = SENS[i]
+    DETECT.FreezeTime = p.FreezeTime
+    DETECT.MinSpeed = p.MinSpeed
+    DETECT.JumpStuds = p.JumpStuds
+end
+applySens(config.sens)
+
+local tracks = {}
+local selfLagUntil = 0
+local lastBeat = tick()
+
+local function getPing()
+    local ok, v = pcall(function()
+        return Stats.Network.ServerStatsItem["Data Ping"]:GetValue()
+    end)
+    return ok and v or 0
+end
+
+local function setHighlight(t, on)
+    if on then
+        if (not t.hl or not t.hl.Parent) and t.char then
+            local hl = Instance.new("Highlight")
+            hl.Name = "XefewLagFlag"
+            hl.FillColor = Color3.fromRGB(255, 60, 60)
+            hl.FillTransparency = 0.6
+            hl.OutlineColor = Color3.fromRGB(255, 60, 60)
+            hl.Parent = t.char
+            t.hl = hl
+        end
+    elseif t.hl then
+        t.hl:Destroy()
+        t.hl = nil
+    end
+end
+
+local function clearTrack(plr)
+    local t = tracks[plr]
+    if t then
+        setHighlight(t, false)
+        tracks[plr] = nil
+    end
+end
+
+Players.PlayerRemoving:Connect(clearTrack)
+
+RunService.Heartbeat:Connect(function()
+    local now = tick()
+    local dt = now - lastBeat
+    lastBeat = now
+
+    state.ping = getPing()
+
+    if dt > 0.2 or state.ping > 450 then
+        selfLagUntil = now + 1.5
+    end
+    local selfLagging = now < selfLagUntil
+    state.selfLagging = selfLagging
+
+    local list = {}
+
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer then
+            local char = plr.Character
+            local hrp = char and char:FindFirstChild("HumanoidRootPart")
+
+            if not hrp then
+                clearTrack(plr)
+            else
+                local t = tracks[plr]
+                if not t or t.char ~= char then
+                    if t then setHighlight(t, false) end
+                    t = {
+                        char = char,
+                        pos = hrp.Position,
+                        lastChange = now,
+                        lastVel = 0,
+                        flagUntil = 0,
+                        spikes = 0,
+                        status = "OK",
+                        wasFlagged = false,
+                        lastToast = -100,
+                    }
+                    tracks[plr] = t
+                end
+
+                local pos = hrp.Position
+                local delta = (pos - t.pos).Magnitude
+
+                if selfLagging then
+                    t.pos = pos
+                    t.lastChange = now
+                    t.lastVel = 0
+                elseif delta > 0.05 then
+                    local gap = now - t.lastChange
+                    if gap >= DETECT.FreezeTime
+                        and t.lastVel >= DETECT.MinSpeed
+                        and delta >= DETECT.JumpStuds then
+                        t.spikes += 1
+                        t.flagUntil = now + DETECT.FlagHold
+                        if state.Log then
+                            warn(string.format("[Xefew] %s lag spike: froze %.2fs, snapped %.0f studs", plr.Name, gap, delta))
+                        end
+                    end
+                    t.pos = pos
+                    t.lastChange = now
+                    t.lastVel = hrp.AssemblyLinearVelocity.Magnitude
+                end
+
+                local frozen = (not selfLagging)
+                    and (now - t.lastChange) >= DETECT.FreezeTime
+                    and t.lastVel >= DETECT.MinSpeed
+
+                local status = "OK"
+                if now < t.flagUntil then
+                    status = "SPIKE"
+                elseif frozen then
+                    status = "FROZEN"
+                end
+                t.status = status
+                local flagged = status ~= "OK"
+
+                setHighlight(t, flagged and state.Highlight)
+
+                if flagged and not t.wasFlagged and (now - t.lastToast) > 8 then
+                    t.lastToast = now
+                    if state.onFlag then
+                        pcall(state.onFlag, plr, t)
+                    end
+                end
+                t.wasFlagged = flagged
+
+                if flagged then
+                    local name = plr.DisplayName
+                    if t.spikes > 0 then
+                        name = name .. " x" .. t.spikes
+                    end
+                    list[#list + 1] = name
+                end
+            end
+        end
+    end
+
+    state.laggers = list
+end)
+
+local BG = Color3.fromRGB(13, 13, 18)
+local CARD = Color3.fromRGB(26, 26, 35)
+local TEXT = Color3.fromRGB(235, 235, 245)
+local MUTED = Color3.fromRGB(150, 150, 168)
+local GOOD = Color3.fromRGB(70, 220, 130)
+local WARN = Color3.fromRGB(255, 190, 70)
+local BAD = Color3.fromRGB(255, 85, 85)
+
+local function make(class, props, parent)
+    local o = Instance.new(class)
+    for k, v in pairs(props) do
+        o[k] = v
+    end
+    o.Parent = parent
+    return o
+end
+
+local function corner(o, r)
+    return make("UICorner", { CornerRadius = UDim.new(0, r) }, o)
+end
+
+local function stroke(o, color, transparency, thickness)
+    return make("UIStroke", {
+        Color = color,
+        Transparency = transparency,
+        Thickness = thickness or 1,
+        ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+    }, o)
+end
+
+local function tween(o, t, props, style)
+    TweenService:Create(o, TweenInfo.new(t, style or Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
+end
+
+local function label(parent, props)
+    local p = {
+        BackgroundTransparency = 1,
+        Font = Enum.Font.Gotham,
+        TextSize = 12,
+        TextColor3 = TEXT,
+        TextXAlignment = Enum.TextXAlignment.Left,
+    }
+    for k, v in pairs(props) do
+        p[k] = v
+    end
+    return make("TextLabel", p, parent)
+end
+
+local function card(parent, height)
+    local f = make("Frame", {
+        Size = UDim2.new(1, 0, 0, height),
+        BackgroundColor3 = CARD,
+        BackgroundTransparency = 0.25,
+        BorderSizePixel = 0,
+    }, parent)
+    corner(f, 8)
+    return f
+end
+
+local accent = ACCENTS[config.accent]
+local accentHooks = {}
+
+local function onAccent(fn)
+    accentHooks[#accentHooks + 1] = fn
+end
+
+local function bindAccent(obj, prop)
+    obj[prop] = accent
+    onAccent(function(c)
+        if obj.Parent then
+            tween(obj, 0.25, { [prop] = c })
+        end
+    end)
+end
+
+local function setAccent(i)
+    accent = ACCENTS[i]
+    config.accent = i
+    for _, fn in ipairs(accentHooks) do
+        fn(accent)
+    end
+    saveConfig()
+end
+
+local function makeDraggable(handle, target, canDrag)
+    local dragging = false
+    local dragStart, startPos
+    local moved = false
+
+    handle.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            if canDrag and not canDrag() then return end
+            dragging = true
+            moved = false
+            dragStart = input.Position
+            startPos = target.Position
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local d = input.Position - dragStart
+            if math.abs(d.X) > 6 or math.abs(d.Y) > 6 then
+                moved = true
+            end
+            target.Position = UDim2.new(
+                startPos.X.Scale, startPos.X.Offset + d.X,
+                startPos.Y.Scale, startPos.Y.Offset + d.Y
+            )
+        end
+    end)
+
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+
+    return function()
+        return moved
+    end
+end
+
+local WIN_W, WIN_H = 340, 440
+
+local ScreenGui = make("ScreenGui", {
+    Name = "XefewAntiPacketLagger",
+    ResetOnSpawn = false,
+    ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+}, PlayerGui)
+
+local Root = make("Frame", {
+    Name = "Root",
+    Size = UDim2.new(0, WIN_W, 0, WIN_H),
+    AnchorPoint = Vector2.new(0.5, 0.5),
+    Position = UDim2.new(0.5, 0, 0.5, 0),
+    BackgroundTransparency = 1,
+}, ScreenGui)
+
+local UserScale = make("UIScale", { Scale = config.scale / 100 }, Root)
+
+local Main = make("Frame", {
+    Name = "Main",
+    Size = UDim2.new(1, 0, 1, 0),
+    AnchorPoint = Vector2.new(0.5, 0.5),
+    Position = UDim2.new(0.5, 0, 0.5, 0),
+    BackgroundColor3 = BG,
+    BorderSizePixel = 0,
+    Active = true,
+    ClipsDescendants = true,
+}, Root)
+corner(Main, 12)
+stroke(Main, Color3.fromRGB(255, 255, 255), 0.85, 1)
+
+local OpenScale = make("UIScale", { Scale = 1 }, Main)
+
+local BgImage = make("ImageLabel", {
+    Name = "Background",
+    Size = UDim2.new(1, 0, 1, 0),
+    BackgroundTransparency = 1,
+    Image = BACKGROUNDS[config.bg],
+    ScaleType = Enum.ScaleType.Crop,
+    ImageTransparency = 1 - config.bgOpacity / 100,
+}, Main)
+corner(BgImage, 12)
+
+local Overlay = make("Frame", {
+    Size = UDim2.new(1, 0, 1, 0),
+    BackgroundColor3 = BG,
+    BackgroundTransparency = 0.3,
+    BorderSizePixel = 0,
+}, Main)
+corner(Overlay, 12)
+
+local TitleBar = make("Frame", {
+    Size = UDim2.new(1, 0, 0, 40),
+    BackgroundColor3 = Color3.fromRGB(18, 18, 24),
+    BackgroundTransparency = 0.2,
+    BorderSizePixel = 0,
+}, Main)
+
+local TitleAccent = make("Frame", {
+    Size = UDim2.new(0, 3, 0, 16),
+    Position = UDim2.new(0, 12, 0.5, -8),
+    BorderSizePixel = 0,
+}, TitleBar)
+corner(TitleAccent, 2)
+bindAccent(TitleAccent, "BackgroundColor3")
+
+label(TitleBar, {
+    Size = UDim2.new(1, -100, 1, 0),
+    Position = UDim2.new(0, 24, 0, 0),
+    Text = "XEFEW ANTI PACKET LAGGER",
+    Font = Enum.Font.GothamBold,
+    TextSize = 12,
+})
+
+local LockBtn = make("TextButton", {
+    Size = UDim2.new(0, 28, 0, 28),
+    Position = UDim2.new(1, -70, 0, 6),
+    BackgroundColor3 = Color3.fromRGB(40, 40, 52),
+    Text = "🔓",
+    Font = Enum.Font.GothamBold,
+    TextSize = 13,
+    TextColor3 = TEXT,
+    BorderSizePixel = 0,
+}, TitleBar)
+corner(LockBtn, 7)
+
+local CloseBtn = make("TextButton", {
+    Size = UDim2.new(0, 28, 0, 28),
+    Position = UDim2.new(1, -36, 0, 6),
+    BackgroundColor3 = Color3.fromRGB(40, 40, 52),
+    Text = "×",
+    Font = Enum.Font.GothamBold,
+    TextSize = 18,
+    TextColor3 = TEXT,
+    BorderSizePixel = 0,
+}, TitleBar)
+corner(CloseBtn, 7)
+
+LockBtn.MouseButton1Click:Connect(function()
+    state.locked = not state.locked
+    LockBtn.Text = state.locked and "🔒" or "🔓"
+    tween(LockBtn, 0.15, {
+        BackgroundColor3 = state.locked and Color3.fromRGB(90, 45, 55) or Color3.fromRGB(40, 40, 52),
+    })
+end)
+
+makeDraggable(TitleBar, Root, function()
+    return not state.locked
+end)
+
+local TABS = { "HOME", "DETECT", "STYLE" }
+
+local TabBar = make("Frame", {
+    Position = UDim2.new(0, 0, 0, 40),
+    Size = UDim2.new(1, 0, 0, 34),
+    BackgroundTransparency = 1,
+}, Main)
+
+local Underline = make("Frame", {
+    Size = UDim2.new(1 / #TABS, 0, 0, 2),
+    Position = UDim2.new(0, 0, 1, -2),
+    BorderSizePixel = 0,
+}, TabBar)
+bindAccent(Underline, "BackgroundColor3")
+
+local Content = make("Frame", {
+    Position = UDim2.new(0, 10, 0, 82),
+    Size = UDim2.new(1, -20, 0, 334),
+    BackgroundTransparency = 1,
+}, Main)
+
+label(Main, {
+    Size = UDim2.new(1, -24, 0, 16),
+    Position = UDim2.new(0, 12, 1, -22),
+    Text = "RightShift: toggle menu  |  drag the title bar to move",
+    TextSize = 10,
+    TextColor3 = MUTED,
+})
+
+local function createSlider(parent, name, min, max, default, fmt, callback)
+    local holder = card(parent, 46)
+    label(holder, { Size = UDim2.new(0.6, 0, 0, 18), Position = UDim2.new(0, 10, 0, 5), Text = name })
+    local valueLbl = label(holder, {
+        Size = UDim2.new(0.4, -10, 0, 18),
+        Position = UDim2.new(0.6, 0, 0, 5),
+        TextXAlignment = Enum.TextXAlignment.Right,
+        Font = Enum.Font.GothamBold,
+    })
+
+    local hit = make("TextButton", {
+        Size = UDim2.new(1, -20, 0, 20),
+        Position = UDim2.new(0, 10, 0, 22),
+        BackgroundTransparency = 1,
+        Text = "",
+        AutoButtonColor = false,
+    }, holder)
+
+    local bar = make("Frame", {
+        Size = UDim2.new(1, 0, 0, 6),
+        Position = UDim2.new(0, 0, 0.5, -3),
+        BackgroundColor3 = Color3.fromRGB(46, 46, 58),
+        BorderSizePixel = 0,
+    }, hit)
+    corner(bar, 3)
+
+    local fill = make("Frame", { Size = UDim2.new(0, 0, 1, 0), BorderSizePixel = 0 }, bar)
+    corner(fill, 3)
+    bindAccent(fill, "BackgroundColor3")
+
+    local knob = make("Frame", {
+        Size = UDim2.new(0, 14, 0, 14),
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        Position = UDim2.new(0, 0, 0.5, 0),
+        BackgroundColor3 = Color3.new(1, 1, 1),
+        BorderSizePixel = 0,
+        ZIndex = 2,
+    }, bar)
+    corner(knob, 7)
+
+    local function show(value)
+        local rel = (value - min) / (max - min)
+        fill.Size = UDim2.new(rel, 0, 1, 0)
+        knob.Position = UDim2.new(rel, 0, 0.5, 0)
+        valueLbl.Text = fmt(value)
+    end
+    show(default)
+
+    local dragging = false
+
+    local function update(x)
+        local w = math.max(bar.AbsoluteSize.X, 1)
+        local rel = math.clamp((x - bar.AbsolutePosition.X) / w, 0, 1)
+        local value = math.floor(min + (max - min) * rel + 0.5)
+        show(value)
+        callback(value)
+    end
+
+    hit.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            update(input.Position.X)
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            update(input.Position.X)
+        end
+    end)
+
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+
+    return holder
+end
+
+local TRACK_OFF = Color3.fromRGB(55, 55, 68)
+
+local function createToggle(parent, text, default, callback)
+    local holder = card(parent, 34)
+    label(holder, { Size = UDim2.new(1, -70, 1, 0), Position = UDim2.new(0, 10, 0, 0), Text = text })
+
+    local track = make("TextButton", {
+        Size = UDim2.new(0, 38, 0, 20),
+        Position = UDim2.new(1, -48, 0.5, -10),
+        Text = "",
+        AutoButtonColor = false,
+        BorderSizePixel = 0,
+        BackgroundColor3 = TRACK_OFF,
+    }, holder)
+    corner(track, 10)
+
+    local knob = make("Frame", {
+        Size = UDim2.new(0, 14, 0, 14),
+        Position = UDim2.new(0, 3, 0.5, -7),
+        BackgroundColor3 = Color3.new(1, 1, 1),
+        BorderSizePixel = 0,
+    }, track)
+    corner(knob, 7)
+
+    local on = default
+
+    local function render(animate)
+        local goalPos = on and UDim2.new(0, 21, 0.5, -7) or UDim2.new(0, 3, 0.5, -7)
+        local goalCol = on and accent or TRACK_OFF
+        if animate then
+            tween(knob, 0.15, { Position = goalPos })
+            tween(track, 0.15, { BackgroundColor3 = goalCol })
+        else
+            knob.Position = goalPos
+            track.BackgroundColor3 = goalCol
+        end
+    end
+
+    render(false)
+    onAccent(function()
+        render(true)
+    end)
+
+    track.MouseButton1Click:Connect(function()
+        on = not on
+        render(true)
+        callback(on)
+    end)
+
+    return holder
+end
+
+local function createSegmented(parent, title, options, default, callback)
+    local holder = card(parent, 52)
+    label(holder, {
+        Size = UDim2.new(1, -20, 0, 14),
+        Position = UDim2.new(0, 10, 0, 5),
+        Text = title,
+        TextSize = 10,
+        TextColor3 = MUTED,
+        Font = Enum.Font.GothamBold,
+    })
+
+    local row = make("Frame", {
+        Size = UDim2.new(1, -20, 0, 24),
+        Position = UDim2.new(0, 10, 0, 22),
+        BackgroundTransparency = 1,
+    }, holder)
+
+    local selected = default
+    local btns = {}
+    local count = #options
+
+    local function render()
+        for i, b in ipairs(btns) do
+            local sel = (i == selected)
+            tween(b, 0.15, {
+                BackgroundColor3 = sel and accent or Color3.fromRGB(40, 40, 52),
+                TextColor3 = sel and Color3.new(1, 1, 1) or MUTED,
+            })
+        end
+    end
+
+    for i, opt in ipairs(options) do
+        local b = make("TextButton", {
+            Size = UDim2.new(1 / count, -4, 1, 0),
+            Position = UDim2.new((i - 1) / count, 2, 0, 0),
+            BackgroundColor3 = Color3.fromRGB(40, 40, 52),
+            Text = opt,
+            Font = Enum.Font.GothamBold,
+            TextSize = 11,
+            TextColor3 = MUTED,
+            BorderSizePixel = 0,
+            AutoButtonColor = false,
+        }, row)
+        corner(b, 6)
+        btns[i] = b
+        b.MouseButton1Click:Connect(function()
+            selected = i
+            render()
+            callback(i)
+        end)
+    end
+
+    render()
+    onAccent(render)
+    return holder
+end
+
+local function createButton(parent, text, height, callback)
+    local b = make("TextButton", {
+        Size = UDim2.new(1, 0, 0, height),
+        BackgroundColor3 = Color3.fromRGB(40, 40, 52),
+        Text = text,
+        Font = Enum.Font.GothamBold,
+        TextSize = 11,
+        TextColor3 = TEXT,
+        BorderSizePixel = 0,
+        AutoButtonColor = true,
+    }, parent)
+    corner(b, 8)
+    b.MouseButton1Click:Connect(callback)
+    return b
+end
+
+local function newPage()
+    local page = make("Frame", {
+        Size = UDim2.new(1, 0, 1, 0),
+        BackgroundTransparency = 1,
+        Visible = false,
+    }, Content)
+    make("UIListLayout", {
+        Padding = UDim.new(0, 8),
+        SortOrder = Enum.SortOrder.LayoutOrder,
+    }, page)
+    return page
+end
+
+local updaters = {}
+
+local function buildHome(page)
+    local status = card(page, 62)
+    stroke(status, Color3.fromRGB(255, 255, 255), 0.88, 1)
+    local dot = make("Frame", {
+        Size = UDim2.new(0, 12, 0, 12),
+        Position = UDim2.new(0, 14, 0, 14),
+        BackgroundColor3 = GOOD,
+        BorderSizePixel = 0,
+    }, status)
+    corner(dot, 6)
+    local title = label(status, {
+        Size = UDim2.new(1, -46, 0, 20),
+        Position = UDim2.new(0, 36, 0, 10),
+        Font = Enum.Font.GothamBold,
+        TextSize = 14,
+    })
+    local sub = label(status, {
+        Size = UDim2.new(1, -46, 0, 18),
+        Position = UDim2.new(0, 36, 0, 34),
+        TextSize = 11,
+        TextColor3 = MUTED,
+    })
+
+    createToggle(page, "Remote limiter", state.Enabled, function(on)
+        state.Enabled = on
+        config.enabled = on
+        saveConfig()
+    end)
+
+    createSlider(page, "Burst Limit", 10, 80, state.BurstLimit, function(v)
+        return v .. " calls"
+    end, function(v)
+        state.BurstLimit = v
+        bucket.tokens = math.min(bucket.tokens, v)
+        config.burst = v
+        saveConfig()
+    end)
+
+    createSlider(page, "Max PPS", 10, 120, state.MaxPPS, function(v)
+        return v .. " /s"
+    end, function(v)
+        state.MaxPPS = v
+        config.pps = v
+        saveConfig()
+    end)
+
+    local graph = card(page, 56)
+    label(graph, {
+        Size = UDim2.new(0.5, 0, 0, 16),
+        Position = UDim2.new(0, 10, 0, 4),
+        Text = "PING",
+        TextSize = 10,
+        TextColor3 = MUTED,
+        Font = Enum.Font.GothamBold,
+    })
+    local pingLbl = label(graph, {
+        Size = UDim2.new(0.5, -10, 0, 16),
+        Position = UDim2.new(0.5, 0, 0, 4),
+        TextXAlignment = Enum.TextXAlignment.Right,
+        TextSize = 11,
+        Font = Enum.Font.GothamBold,
+    })
+    local area = make("Frame", {
+        Position = UDim2.new(0, 10, 0, 22),
+        Size = UDim2.new(1, -20, 1, -28),
+        BackgroundTransparency = 1,
+    }, graph)
+
+    local N = 36
+    local samples = {}
+    local bars = {}
+    for i = 1, N do
+        samples[i] = 0
+        bars[i] = make("Frame", {
+            AnchorPoint = Vector2.new(0, 1),
+            Position = UDim2.new((i - 1) / N, 0, 1, 0),
+            Size = UDim2.new(1 / N, -2, 0.05, 0),
+            BackgroundColor3 = GOOD,
+            BorderSizePixel = 0,
+        }, area)
+        corner(bars[i], 1)
+    end
+
+    createButton(page, "RESET COUNTER", 30, function()
+        state.totalDropped = 0
+    end)
+
+    updaters[#updaters + 1] = function()
+        local c, txt
+        if not state.hookOk then
+            c, txt = WARN, "LIMITER UNAVAILABLE"
+        elseif state.Enabled then
+            c, txt = GOOD, "PROTECTION ACTIVE"
+        else
+            c, txt = BAD, "LIMITER OFF"
+        end
+        dot.BackgroundColor3 = c
+        title.Text = txt
+        title.TextColor3 = c
+        sub.Text = string.format("Ping %d ms  |  %d calls limited", math.floor(state.ping), state.totalDropped)
+
+        table.remove(samples, 1)
+        samples[N] = state.ping
+        for i = 1, N do
+            local v = samples[i]
+            bars[i].Size = UDim2.new(1 / N, -2, math.clamp(v / 300, 0.05, 1), 0)
+            bars[i].BackgroundColor3 = (v < 100 and GOOD) or (v < 200 and WARN) or BAD
+        end
+        pingLbl.Text = math.floor(state.ping) .. " ms"
+    end
+end
+
+local function buildDetect(page)
+    local banner = card(page, 44)
+    local bStroke = stroke(banner, GOOD, 0.5, 1)
+    local bText = label(banner, {
+        Size = UDim2.new(1, -20, 1, 0),
+        Position = UDim2.new(0, 10, 0, 0),
+        Font = Enum.Font.GothamBold,
+        TextSize = 11,
+        TextWrapped = true,
+        TextXAlignment = Enum.TextXAlignment.Center,
+    })
+
+    createSegmented(page, "SENSITIVITY", { "LOW", "MEDIUM", "HIGH" }, config.sens, function(i)
+        config.sens = i
+        applySens(i)
+        saveConfig()
+    end)
+
+    createToggle(page, "Highlight flagged players", state.Highlight, function(on)
+        state.Highlight = on
+        config.highlight = on
+        saveConfig()
+    end)
+
+    createToggle(page, "Pop-up alerts", state.Alerts, function(on)
+        state.Alerts = on
+        config.alerts = on
+        saveConfig()
+    end)
+
+    label(page, {
+        Size = UDim2.new(1, 0, 0, 14),
+        Text = "PLAYERS",
+        TextSize = 10,
+        TextColor3 = MUTED,
+        Font = Enum.Font.GothamBold,
+    })
+
+    local listFrame = make("ScrollingFrame", {
+        Size = UDim2.new(1, 0, 0, 100),
+        BackgroundColor3 = CARD,
+        BackgroundTransparency = 0.25,
+        BorderSizePixel = 0,
+        ScrollBarThickness = 3,
+        CanvasSize = UDim2.new(),
+        AutomaticCanvasSize = Enum.AutomaticSize.Y,
+    }, page)
+    corner(listFrame, 8)
+    make("UIPadding", {
+        PaddingTop = UDim.new(0, 6),
+        PaddingBottom = UDim.new(0, 6),
+        PaddingLeft = UDim.new(0, 6),
+        PaddingRight = UDim.new(0, 6),
+    }, listFrame)
+    make("UIListLayout", {
+        Padding = UDim.new(0, 4),
+        SortOrder = Enum.SortOrder.LayoutOrder,
+    }, listFrame)
+
+    local emptyLbl = label(page, {
+        Size = UDim2.new(1, 0, 0, 14),
+        Text = "",
+    })
+    emptyLbl.Visible = false
+
+    local rows = {}
+
+    local function createRow(plr)
+        local f = make("Frame", {
+            Size = UDim2.new(1, -6, 0, 26),
+            BackgroundColor3 = Color3.fromRGB(38, 38, 50),
+            BackgroundTransparency = 0.3,
+            BorderSizePixel = 0,
+        }, listFrame)
+        corner(f, 6)
+        local n = label(f, {
+            Size = UDim2.new(1, -92, 1, 0),
+            Position = UDim2.new(0, 8, 0, 0),
+            Text = plr.DisplayName,
+            TextSize = 11,
+            TextTruncate = Enum.TextTruncate.AtEnd,
+        })
+        local chip = label(f, {
+            Size = UDim2.new(0, 74, 0, 18),
+            Position = UDim2.new(1, -80, 0.5, -9),
+            BackgroundColor3 = GOOD,
+            BackgroundTransparency = 0.8,
+            Font = Enum.Font.GothamBold,
+            TextSize = 10,
+            TextXAlignment = Enum.TextXAlignment.Center,
+            TextColor3 = GOOD,
+            Text = "OK",
+        })
+        corner(chip, 5)
+        return { frame = f, name = n, chip = chip }
+    end
+
+    local function updateList()
+        local others = {}
+        local seen = {}
+        for _, plr in ipairs(Players:GetPlayers()) do
+            if plr ~= LocalPlayer then
+                seen[plr] = true
+                others[#others + 1] = plr
+            end
+        end
+        table.sort(others, function(a, b)
+            return a.DisplayName:lower() < b.DisplayName:lower()
+        end)
+
+        for plr, row in pairs(rows) do
+            if not seen[plr] then
+                row.frame:Destroy()
+                rows[plr] = nil
+            end
+        end
+
+        for i, plr in ipairs(others) do
+            local row = rows[plr]
+            if not row then
+                row = createRow(plr)
+                rows[plr] = row
+            end
+            local t = tracks[plr]
+            local st = t and t.status or "OK"
+            local col = GOOD
+            local txt = "OK"
+            if st == "SPIKE" then
+                col = BAD
+                txt = "SPIKE x" .. t.spikes
+            elseif st == "FROZEN" then
+                col = WARN
+                txt = "FROZEN"
+            end
+            row.name.Text = plr.DisplayName
+            row.chip.Text = txt
+            row.chip.TextColor3 = col
+            row.chip.BackgroundColor3 = col
+            row.frame.LayoutOrder = (st ~= "OK" and 0 or 1000) + i
+        end
+
+        emptyLbl.Visible = (#others == 0)
+        emptyLbl.Text = "No other players in the server"
+    end
+
+    updaters[#updaters + 1] = function()
+        local c, txt
+        if state.selfLagging then
+            c, txt = WARN, "YOUR CONNECTION IS UNSTABLE\nDetection paused"
+        elseif #state.laggers > 0 then
+            c, txt = BAD, "LAG SWITCH DETECTED\n" .. table.concat(state.laggers, ", ")
+        else
+            c, txt = GOOD, "ALL CLEAR\nNo lag switchers detected"
+        end
+        bText.Text = txt
+        bText.TextColor3 = c
+        bStroke.Color = c
+        updateList()
+    end
+end
+
+local function buildStyle(page)
+    local sw = card(page, 52)
+    label(sw, {
+        Size = UDim2.new(1, -20, 0, 14),
+        Position = UDim2.new(0, 10, 0, 5),
+        Text = "ACCENT COLOR",
+        TextSize = 10,
+        TextColor3 = MUTED,
+        Font = Enum.Font.GothamBold,
+    })
+    local swStrokes = {}
+    for i, col in ipairs(ACCENTS) do
+        local b = make("TextButton", {
+            Size = UDim2.new(0, 22, 0, 22),
+            Position = UDim2.new(0, 10 + (i - 1) * 32, 0, 24),
+            BackgroundColor3 = col,
+            Text = "",
+            AutoButtonColor = false,
+            BorderSizePixel = 0,
+        }, sw)
+        corner(b, 11)
+        swStrokes[i] = stroke(b, Color3.new(1, 1, 1), i == config.accent and 0 or 1, 2)
+        b.MouseButton1Click:Connect(function()
+            setAccent(i)
+            for j, s in ipairs(swStrokes) do
+                tween(s, 0.15, { Transparency = (j == i) and 0 or 1 })
             end
         end)
     end
+
+    createSlider(page, "Background opacity", 0, 100, config.bgOpacity, function(v)
+        return v .. "%"
+    end, function(v)
+        config.bgOpacity = v
+        BgImage.ImageTransparency = 1 - v / 100
+        saveConfig()
+    end)
+
+    createSlider(page, "Menu size", 70, 120, config.scale, function(v)
+        return v .. "%"
+    end, function(v)
+        config.scale = v
+        UserScale.Scale = v / 100
+        saveConfig()
+    end)
+
+    label(page, {
+        Size = UDim2.new(1, 0, 0, 14),
+        Text = "BACKGROUND",
+        TextSize = 10,
+        TextColor3 = MUTED,
+        Font = Enum.Font.GothamBold,
+    })
+
+    local grid = make("ScrollingFrame", {
+        Size = UDim2.new(1, 0, 0, 140),
+        BackgroundColor3 = CARD,
+        BackgroundTransparency = 0.25,
+        BorderSizePixel = 0,
+        ScrollBarThickness = 3,
+        CanvasSize = UDim2.new(),
+        AutomaticCanvasSize = Enum.AutomaticSize.Y,
+    }, page)
+    corner(grid, 8)
+    make("UIPadding", {
+        PaddingTop = UDim.new(0, 6),
+        PaddingBottom = UDim.new(0, 6),
+        PaddingLeft = UDim.new(0, 6),
+        PaddingRight = UDim.new(0, 6),
+    }, grid)
+    make("UIGridLayout", {
+        CellSize = UDim2.new(0, 92, 0, 52),
+        CellPadding = UDim2.new(0, 6, 0, 6),
+        SortOrder = Enum.SortOrder.LayoutOrder,
+    }, grid)
+
+    local bgStrokes = {}
+    for i, asset in ipairs(BACKGROUNDS) do
+        local b = make("ImageButton", {
+            BackgroundColor3 = Color3.fromRGB(30, 30, 40),
+            Image = asset,
+            ScaleType = Enum.ScaleType.Crop,
+            AutoButtonColor = true,
+            LayoutOrder = i,
+            BorderSizePixel = 0,
+        }, grid)
+        corner(b, 6)
+        local s = stroke(b, accent, i == config.bg and 0 or 1, 2)
+        bindAccent(s, "Color")
+        bgStrokes[i] = s
+
+        local num = label(b, {
+            Size = UDim2.new(0, 20, 0, 14),
+            Position = UDim2.new(0, 4, 0, 4),
+            BackgroundColor3 = Color3.new(0, 0, 0),
+            BackgroundTransparency = 0.4,
+            Text = tostring(i),
+            Font = Enum.Font.GothamBold,
+            TextSize = 10,
+            TextXAlignment = Enum.TextXAlignment.Center,
+        })
+        corner(num, 4)
+
+        b.MouseButton1Click:Connect(function()
+            config.bg = i
+            BgImage.Image = asset
+            for j, st in ipairs(bgStrokes) do
+                tween(st, 0.15, { Transparency = (j == i) and 0 or 1 })
+            end
+            saveConfig()
+        end)
+    end
+end
+
+local pages = {}
+for i = 1, #TABS do
+    pages[i] = newPage()
+end
+
+buildHome(pages[1])
+buildDetect(pages[2])
+buildStyle(pages[3])
+
+local tabButtons = {}
+
+local function selectTab(i)
+    for idx, p in ipairs(pages) do
+        p.Visible = (idx == i)
+    end
+    for idx, b in ipairs(tabButtons) do
+        tween(b, 0.15, { TextColor3 = (idx == i) and TEXT or MUTED })
+    end
+    tween(Underline, 0.2, { Position = UDim2.new((i - 1) / #TABS, 0, 1, -2) })
+end
+
+for i, name in ipairs(TABS) do
+    local b = make("TextButton", {
+        Size = UDim2.new(1 / #TABS, 0, 1, -2),
+        Position = UDim2.new((i - 1) / #TABS, 0, 0, 0),
+        BackgroundTransparency = 1,
+        Text = name,
+        Font = Enum.Font.GothamBold,
+        TextSize = 11,
+        TextColor3 = MUTED,
+    }, TabBar)
+    tabButtons[i] = b
+    b.MouseButton1Click:Connect(function()
+        selectTab(i)
+    end)
+end
+
+selectTab(1)
+
+local Pill = make("TextButton", {
+    Name = "OpenPill",
+    Size = UDim2.new(0, 96, 0, 30),
+    Position = UDim2.new(0, 16, 0.5, -15),
+    BackgroundColor3 = Color3.fromRGB(18, 18, 24),
+    Text = "XEFEW",
+    Font = Enum.Font.GothamBold,
+    TextSize = 11,
+    TextColor3 = TEXT,
+    TextXAlignment = Enum.TextXAlignment.Left,
+    BorderSizePixel = 0,
+    AutoButtonColor = false,
+    Visible = false,
+}, ScreenGui)
+corner(Pill, 15)
+stroke(Pill, Color3.fromRGB(255, 255, 255), 0.8, 1)
+make("UIPadding", { PaddingLeft = UDim.new(0, 30) }, Pill)
+
+local PillDot = make("Frame", {
+    Size = UDim2.new(0, 10, 0, 10),
+    Position = UDim2.new(0, -20, 0.5, -5),
+    BackgroundColor3 = GOOD,
+    BorderSizePixel = 0,
+}, Pill)
+corner(PillDot, 5)
+
+local pillWasDragged = makeDraggable(Pill, Pill)
+
+local ToastHolder = make("Frame", {
+    Size = UDim2.new(0, 260, 0, 200),
+    AnchorPoint = Vector2.new(0.5, 0),
+    Position = UDim2.new(0.5, 0, 0, 14),
+    BackgroundTransparency = 1,
+}, ScreenGui)
+make("UIListLayout", {
+    Padding = UDim.new(0, 6),
+    SortOrder = Enum.SortOrder.LayoutOrder,
+    HorizontalAlignment = Enum.HorizontalAlignment.Center,
+}, ToastHolder)
+
+local function toast(text, color)
+    local f = make("Frame", {
+        Size = UDim2.new(1, 0, 0, 30),
+        BackgroundColor3 = Color3.fromRGB(24, 24, 32),
+        BackgroundTransparency = 1,
+        BorderSizePixel = 0,
+    }, ToastHolder)
+    corner(f, 8)
+    local s = stroke(f, color, 1, 1)
+    local l = label(f, {
+        Size = UDim2.new(1, -16, 1, 0),
+        Position = UDim2.new(0, 8, 0, 0),
+        Text = text,
+        TextColor3 = color,
+        Font = Enum.Font.GothamBold,
+        TextSize = 11,
+        TextTransparency = 1,
+        TextTruncate = Enum.TextTruncate.AtEnd,
+    })
+
+    tween(f, 0.2, { BackgroundTransparency = 0.1 })
+    tween(s, 0.2, { Transparency = 0.3 })
+    tween(l, 0.2, { TextTransparency = 0 })
+
+    task.delay(3.5, function()
+        tween(f, 0.25, { BackgroundTransparency = 1 })
+        tween(s, 0.25, { Transparency = 1 })
+        tween(l, 0.25, { TextTransparency = 1 })
+        task.delay(0.3, function()
+            f:Destroy()
+        end)
+    end)
+end
+
+state.onFlag = function(plr)
+    if state.Alerts then
+        toast("LAG ALERT: " .. plr.DisplayName, BAD)
+    end
+end
+
+local menuOpen = true
+
+local function setMenuVisible(v)
+    if v == menuOpen then return end
+    menuOpen = v
+    if v then
+        Pill.Visible = false
+        Root.Visible = true
+        OpenScale.Scale = 0.85
+        tween(OpenScale, 0.22, { Scale = 1 }, Enum.EasingStyle.Back)
+    else
+        tween(OpenScale, 0.15, { Scale = 0.85 })
+        task.delay(0.15, function()
+            if not menuOpen then
+                Root.Visible = false
+                Pill.Visible = true
+            end
+        end)
+    end
+end
+
+CloseBtn.MouseButton1Click:Connect(function()
+    setMenuVisible(false)
 end)
-UIS.InputChanged:Connect(function(input)
-    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement
-    or input.UserInputType == Enum.UserInputType.Touch) then
-        local d = input.Position - dragStart
-        Main.Position = UDim2.new(
-            startPos.X.Scale, startPos.X.Offset + d.X,
-            startPos.Y.Scale, startPos.Y.Offset + d.Y
-        )
+
+Pill.MouseButton1Click:Connect(function()
+    if pillWasDragged() then return end
+    setMenuVisible(true)
+end)
+
+UserInputService.InputBegan:Connect(function(input, gpe)
+    if gpe then return end
+    if input.KeyCode == Enum.KeyCode.RightShift then
+        setMenuVisible(not menuOpen)
     end
 end)
 
--- ============ INTRO ============
-Main.Size = UDim2.new(0, 320, 0, 0)
-Main.BackgroundTransparency = 1
-task.defer(loadConfig)
-tween(Main, {Size = UDim2.new(0, 320, 0, FULL_H), BackgroundTransparency = 0}, 0.4)
-paintIdle()
+updaters[#updaters + 1] = function()
+    if state.selfLagging then
+        PillDot.BackgroundColor3 = WARN
+    elseif #state.laggers > 0 then
+        PillDot.BackgroundColor3 = BAD
+    else
+        PillDot.BackgroundColor3 = GOOD
+    end
+end
+
+local acc = 0
+RunService.Heartbeat:Connect(function(dt)
+    acc += dt
+    if acc < 0.25 then return end
+    acc = 0
+    for _, fn in ipairs(updaters) do
+        local ok, err = pcall(fn)
+        if not ok and state.Log then
+            warn("[Xefew] UI update error: " .. tostring(err))
+        end
+    end
+end)
+
+print("[Xefew Anti Packet Lagger v3] Loaded")
