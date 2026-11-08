@@ -350,7 +350,7 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    loadstring(game:HttpGet("https://pastefy.app/LYkPHkU1/raw"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Irish-Hub-Scripts/Packet-Lagger/refs/heads/main/Irish.Lua"))()
 
     task.wait(1)
 
