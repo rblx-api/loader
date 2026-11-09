@@ -3628,7 +3628,7 @@ screenGui.Destroying:Connect(function()
     end
 end)
 refreshAppearance()end)end function buildGui()local SILVER=Color3.fromRGB(196,199,205)local BG=Color3.fromRGB(5,5,6)local BG2=Color3.fromRGB(10,10,12)local ROW_BG=Color3.fromRGB(15,15,18)local ROW_BORDER=Color3.fromRGB(154,157,164)local WHITE=Color3.fromRGB(248,248,250)local GRAY=Color3.fromRGB(170,173,180)local INP=Color3.fromRGB(12,12,14)local TAB_ACTIVE=Color3.fromRGB(196,199,205)local TAB_INACT=Color3.fromRGB(150,155,165)local SECT_LBL=Color3.fromRGB(218,220,225)local TOGGLE_BG=Color3.fromRGB(18,18,21)local KNOB=Color3.fromRGB(235,245,255)local TRACK_ACTIVE=Color3.fromRGB(170,173,180)local GUI_W,GUI_H=348,468 local old=game:GetService("CoreGui"):FindFirstChild("Hearteless")if old then old:Destroy()end local pg=LP:FindFirstChild("PlayerGui")if pg then local o=pg:FindFirstChild("Hearteless");if o then o:Destroy()end end gui=Instance.new("ScreenGui")gui.Name="Hearteless"do local cleanup=_G.HeartelessMoreButtonsCleanup gui.Destroying:Connect(function()if cleanup then cleanup()end end)end gui.ResetOnSpawn=false gui.ZIndexBehavior=Enum.ZIndexBehavior.Global gui.DisplayOrder=10 gui.IgnoreGuiInset=true pcall(function()if syn and syn.protect_gui then syn.protect_gui(gui)end end)if not pcall(function()gui.Parent=game:GetService("CoreGui")end)then gui.Parent=LP:WaitForChild("PlayerGui")end main=Instance.new("Frame",gui)main.Size=UDim2.new(0,GUI_W,0,GUI_H)local savedMainPos=uiPreferences.mainPosition or{XScale=0,XOffset=20,YScale=0,YOffset=2}main.Position=UDim2.new(savedMainPos.XScale or 0,savedMainPos.XOffset or 20,savedMainPos.YScale or 0,savedMainPos.YOffset or 2)main.Active=true main.BackgroundColor3=BG main.BackgroundTransparency=0 main.BorderSizePixel=0 main.ClipsDescendants=false Instance.new("UICorner",main).CornerRadius=UDim.new(0,18)local uiVisualBoundary=Instance.new("Frame",main)uiVisualBoundary.Name="UIVisualBoundary"uiVisualBoundary.Size=UDim2.fromScale(1,1.11)uiVisualBoundary.Position=UDim2.fromScale(0,-0.055)uiVisualBoundary.BackgroundColor3=BG uiVisualBoundary.BackgroundTransparency=0 uiVisualBoundary.BorderSizePixel=0 uiVisualBoundary.ZIndex=1 uiVisualBoundary.Active=false uiVisualBoundary.ClipsDescendants=true Instance.new("UICorner",uiVisualBoundary).CornerRadius=UDim.new(0,18)do local glow=Instance.new("UIStroke",uiVisualBoundary)glow.Name="WindowNeonGlow"uiVisual.registerPerformanceGlow(glow)glow.Thickness=6 glow.Transparency=0.88 glow:SetAttribute("FearThemeRole","NeonEdge")local gradient=Instance.new("UIGradient",glow)gradient.Rotation=35 gradient:SetAttribute("FearThemeRole","NeonGradient")uiVisual.neonWindowGradient=gradient end do local edge=Instance.new("UIStroke",uiVisualBoundary)edge.Color=Color3.fromRGB(198,202,210)edge.Transparency=0.16 edge.Thickness=1.25 edge:SetAttribute("FearThemeRole","NeonEdge")end mainUIScale=Instance.new("UIScale",main)local function applyResponsiveMainScale()if not mainUIScale or not main or not main.Parent then return end local camera=workspace.CurrentCamera local viewport=camera and camera.ViewportSize or Vector2.new(1920,1080)local requestedScale=math.clamp((tonumber(uiScaleValue)or 100)/100,0.50,1.50)local safeMarginX=12 local safeMarginY=12 local activeWidth=uiVisual.pumking.isActive()and uiVisual.pumking.width or GUI_W local activeHeight=uiVisual.pumking.isActive()and uiVisual.pumking.height or GUI_H local fitX=math.max(0.35,(viewport.X-safeMarginX)/activeWidth)local fitY=math.max(0.35,(viewport.Y-safeMarginY)/activeHeight)local effectiveScale=math.min(requestedScale,fitX,fitY)uiVisual.mainTargetScale=effectiveScale if uiVisual.mainAnimating then return end mainUIScale.Scale=effectiveScale local maxX=uiVisual.pumking.isActive()and math.max(0,viewport.X-activeWidth*effectiveScale)or math.max(0,(viewport.X/effectiveScale)-activeWidth)local maxY=uiVisual.pumking.isActive()and math.max(0,viewport.Y-activeHeight*effectiveScale)or math.max(0,(viewport.Y/effectiveScale)-activeHeight)local x=main.Position.X.Offset local y=main.Position.Y.Offset x=math.clamp(x,0,maxX)y=math.clamp(y,0,maxY)main.Position=UDim2.new(0,x,0,y)end _G.__SureApplyResponsiveMainScale=applyResponsiveMainScale applyResponsiveMainScale()task.defer(applyResponsiveMainScale)task.delay(0.25,applyResponsiveMainScale)local _sureViewportConn=nil local function hookSureViewport()if _sureViewportConn then _sureViewportConn:Disconnect()_sureViewportConn=nil end local camera=workspace.CurrentCamera if camera then _sureViewportConn=camera:GetPropertyChangedSignal("ViewportSize"):Connect(function()task.defer(applyResponsiveMainScale)end)end end hookSureViewport()workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()hookSureViewport()task.defer(applyResponsiveMainScale)end)do local function makeBackgroundLayer(name,z)local img=Instance.new("ImageLabel",uiVisualBoundary)img.Name=name img.Size=UDim2.fromScale(1,1)img.Position=UDim2.fromScale(0,0)img.BackgroundTransparency=1 img.BorderSizePixel=0 img.ImageColor3=Color3.fromRGB(255,255,255)img.ImageTransparency=1 img.ScaleType=Enum.ScaleType.Crop img.ZIndex=z img.Visible=false img.ClipsDescendants=true img:SetAttribute("BlessBackgroundGhost",true)Instance.new("UICorner",img).CornerRadius=UDim.new(0,18)return img end local backgroundImage=makeBackgroundLayer("BackgroundImage",1)local nextBackgroundImage=makeBackgroundLayer("BackgroundImageNext",2)local displayedIndex,displayedMode local ghostSets={}local function configureBackground(image,asset,ghostMode)image:SetAttribute("GhostMode",ghostMode)image.Image=ghostMode and""or asset image.BackgroundColor3=Color3.fromRGB(0,0,0)local group=ghostSets[image]if ghostMode and not group then local layer=Instance.new("Frame",image)layer.Name="FlyingGhosts"layer.Size=UDim2.new(1,-16,1,-126)layer.Position=UDim2.fromOffset(8,110)layer.BackgroundTransparency=1 layer.BorderSizePixel=0 layer.ClipsDescendants=true layer.ZIndex=2 layer:SetAttribute("BlessBackgroundGhost",true)group={layer=layer,ghosts={}}ghostSets[image]=group for i,data in ipairs({{46,.09,.12},{42,.43,.10},{52,.88,.16},{40,.24,.35},{48,.74,.40},{44,.07,.63},{54,.48,.70},{46,.91,.77},{40,.22,.91}})do group.ghosts[#group.ghosts+1]=uiVisual.makeFlyingGhost(layer,data[1],data[2],data[3],i*1.73,2)end end if group then group.layer.Visible=ghostMode end end local ghostClock,ghostStep=0,0 local ghostConnection ghostConnection=RunService.RenderStepped:Connect(function(dt)if not uiVisualBoundary.Parent then ghostConnection:Disconnect()return end ghostClock+=dt ghostStep+=dt if ghostStep<uiVisual.decorInterval(1/30)or not main.Visible or uiVisual.pumking.isActive()then return end ghostStep=0 if uiVisual.neonWindowGradient then uiVisual.neonWindowGradient.Rotation=35+math.sin(ghostClock*0.4)*20 end for image,group in pairs(ghostSets)do if image.Visible and group.layer.Visible then for _,ghost in ipairs(group.ghosts)do local t=ghostClock*ghost.speed+ghost.phase ghost.object.Position=UDim2.fromScale(ghost.x+math.sin(t*.63)*.065,ghost.y+math.sin(t)*.09)ghost.object.Rotation=math.sin(t*.82)*12 end end end end)local sliding=false local pendingKind=false local slideTweens={}local slideConnection,loadConnection local function stopBackgroundSlide()if slideConnection then slideConnection:Disconnect()slideConnection=nil end if loadConnection then loadConnection:Disconnect()loadConnection=nil end for _,tween in ipairs(slideTweens)do tween:Cancel()end table.clear(slideTweens)end local function resolveBackgroundDisplayAsset(asset)if type(asset)~="string"or asset==""then return""end if asset:match("^rbxassetid://")or asset:match("^rbxthumb://")or asset:match("^rbxasset://")then return asset end local id=asset:match("(%d+)")return id and("rbxassetid://"..id)or asset end uiVisual.windowFadeAlpha=0 uiVisual.applyWindowBackgroundFade=function(alpha)uiVisual.windowFadeAlpha=math.clamp(alpha or 0,0,1)for _,image in ipairs({backgroundImage,nextBackgroundImage})do if image.Parent then image.ImageTransparency=image.Visible and uiVisual.windowFadeAlpha or 1 image.BackgroundTransparency=image:GetAttribute("GhostMode")and uiVisual.windowFadeAlpha or 1 local group=ghostSets[image]if group then for _,ghost in ipairs(group.ghosts)do for _,part in ipairs(ghost.parts)do part.object.BackgroundTransparency=part.base+(1-part.base)*uiVisual.windowFadeAlpha end end end end end end uiVisual._backgroundTransition=uiVisual._backgroundTransition or 0 uiVisual.refreshBackground=function(kind)local selected=math.clamp(math.floor(tonumber(uiVisual.backgroundIndex)or 1),1,#uiVisual.backgrounds)local mode=uiVisual.halloweenMode==true uiVisual.backgroundIndex=selected uiVisual.backgroundColorIndex=math.clamp(selected,1,#uiVisual.backgroundColors)if uiVisual.refreshBackgroundCards then uiVisual.refreshBackgroundCards()end if uiVisual.refreshNameLogo then uiVisual.refreshNameLogo()end if sliding then if kind=="mode"then pendingKind="mode"end return end if displayedIndex==selected and displayedMode==mode then if loadConnection then uiVisual._backgroundTransition+=1 stopBackgroundSlide()nextBackgroundImage.Visible=false nextBackgroundImage.Position=UDim2.fromScale(1,0)uiVisual.applyWindowBackgroundFade(uiVisual.windowFadeAlpha)end return end uiVisual._backgroundTransition+=1 local token=uiVisual._backgroundTransition stopBackgroundSlide()pendingKind=false local asset=uiVisual.backgrounds[selected]or""local resolved=resolveBackgroundDisplayAsset(asset)local initial=displayedIndex==nil local incoming=initial and backgroundImage or nextBackgroundImage configureBackground(incoming,resolved,selected==uiVisual.ghostBackgroundIndex)incoming.Position=UDim2.fromScale(initial and 0 or 1,0)incoming.Visible=initial and(resolved~=""or selected==uiVisual.ghostBackgroundIndex)uiVisual.applyWindowBackgroundFade(uiVisual.windowFadeAlpha)local started=initial local function valid()return token==uiVisual._backgroundTransition and incoming.Parent~=nil and main.Parent~=nil end local function commit()if not valid()then return end if slideConnection then slideConnection:Disconnect()slideConnection=nil end if loadConnection then loadConnection:Disconnect()loadConnection=nil end if incoming~=backgroundImage then local outgoing=backgroundImage backgroundImage=incoming nextBackgroundImage=outgoing end backgroundImage.Name="BackgroundImage"backgroundImage.ZIndex=1 backgroundImage.Position=UDim2.fromScale(0,0)backgroundImage.Visible=backgroundImage.Image~=""or backgroundImage:GetAttribute("GhostMode")==true uiVisual.renderedBackgroundIndex,uiVisual.renderedBackgroundMode=selected,mode nextBackgroundImage.Name="BackgroundImageNext"nextBackgroundImage.ZIndex=2 nextBackgroundImage.Position=UDim2.fromScale(1,0)nextBackgroundImage.Visible=false uiVisual.applyWindowBackgroundFade(uiVisual.windowFadeAlpha)displayedIndex,displayedMode=selected,mode sliding=false table.clear(slideTweens)if uiVisual.backgroundIndex~=selected or(uiVisual.halloweenMode==true)~=mode then local requestKind=pendingKind pendingKind=false task.defer(function()if valid()then uiVisual.refreshBackground(requestKind)end end)end end local function begin(ready)if started or not valid()then return end if incoming.Image~=""and not ready and not incoming.IsLoaded then return end started=true if loadConnection then loadConnection:Disconnect()loadConnection=nil end incoming.Visible=incoming.Image~=""or incoming:GetAttribute("GhostMode")==true if uiVisual.transitionNameLogo then uiVisual.transitionNameLogo(selected,mode,kind)end incoming.Position=UDim2.fromScale(1,0)uiVisual.applyWindowBackgroundFade(uiVisual.windowFadeAlpha)if kind~="mode"or displayedMode==mode or not main.Visible then commit()return end sliding=true local info=TweenInfo.new(0.36,Enum.EasingStyle.Quint,Enum.EasingDirection.InOut)slideTweens[1]=TS:Create(backgroundImage,info,{Position=UDim2.fromScale(-1,0)})slideTweens[2]=TS:Create(incoming,info,{Position=UDim2.fromScale(0,0)})slideConnection=slideTweens[2].Completed:Connect(function(state)if state==Enum.PlaybackState.Completed then commit()end end)slideTweens[1]:Play()slideTweens[2]:Play()end if initial then displayedIndex,displayedMode=selected,mode uiVisual.renderedBackgroundIndex,uiVisual.renderedBackgroundMode=selected,mode else loadConnection=incoming:GetPropertyChangedSignal("IsLoaded"):Connect(function()begin(false)end)begin(resolved=="")end if resolved==""then return end local fallbackStarted=false local function preload(uri,fallback)task.spawn(function()local status local ok=pcall(function()ContentProvider:PreloadAsync({uri},function(_,result)status=result end)end)if not valid()or incoming.Image~=uri then return end if ok and(status==nil or status==Enum.AssetFetchStatus.Success)or incoming.IsLoaded then begin(true)elseif fallback then fallback()end end)end local function useFallback()if not valid()or(started and not initial)or fallbackStarted then return end local fallback=resolveExactImageAsset(asset)if fallback==""or fallback==incoming.Image then return end fallbackStarted=true incoming.Image=fallback uiVisual.applyWindowBackgroundFade(uiVisual.windowFadeAlpha)preload(fallback)end preload(resolved,useFallback)task.delay(3,function()if valid()and not incoming.IsLoaded then useFallback()end end)end uiVisualBoundary.Destroying:Connect(function()uiVisual._backgroundTransition+=1 stopBackgroundSlide()if ghostConnection then ghostConnection:Disconnect()end end)uiVisual.refreshBackgroundColor=function()local backgroundIndex=math.clamp(math.floor(tonumber(uiVisual.backgroundIndex)or 1),1,#uiVisual.backgrounds)uiVisual.backgroundColorIndex=math.clamp(backgroundIndex,1,#uiVisual.backgroundColors)backgroundImage.ImageColor3=Color3.fromRGB(255,255,255)nextBackgroundImage.ImageColor3=Color3.fromRGB(255,255,255)if uiVisual.refreshBackgroundCards then uiVisual.refreshBackgroundCards()end if main and main.Parent then uiVisual.refreshTheme(main)end if uiVisual.refreshNameLogo then uiVisual.refreshNameLogo()end if MobilePanel and MobilePanel.Parent then uiVisual.refreshTheme(MobilePanel)end if batV2FloatingButton and batV2FloatingButton.Parent then uiVisual.refreshTheme(batV2FloatingButton)end if instaResetFloatingButton and instaResetFloatingButton.Parent then uiVisual.refreshTheme(instaResetFloatingButton)end if bypassFloatingButton and bypassFloatingButton.Parent then uiVisual.refreshTheme(bypassFloatingButton)end if pbFrame and pbFrame.Parent then uiVisual.refreshTheme(pbFrame)end if heartelessPingPanel and heartelessPingPanel.gui.Parent then heartelessPingPanel.refreshTheme()end if miniBtn and miniBtn.Parent then uiVisual.refreshTheme(miniBtn)end local char=LP and LP.Character local head=char and char:FindFirstChild("Head")local speedGui=head and(head:FindFirstChild("HeartelessSpeedIndicator")or head:FindFirstChild("HeartelessSpeedIndicator"))if speedGui then uiVisual.refreshTheme(speedGui)end for _,speedText in pairs(enemySpeedLabels or{})do if speedText and speedText.Parent then uiVisual.refreshTheme(speedText)end end backgroundImage.ImageColor3=Color3.fromRGB(255,255,255)nextBackgroundImage.ImageColor3=Color3.fromRGB(255,255,255)end local shade=Instance.new("Frame",uiVisualBoundary)shade.Name="BackgroundShade"shade.Size=UDim2.fromScale(1,1)shade.Position=UDim2.fromScale(0,0)shade.BackgroundColor3=Color3.fromRGB(0,0,0)shade.BackgroundTransparency=1-(math.clamp(uiVisual.backgroundDarkness or 18,0,75)/100)shade.BorderSizePixel=0 shade.ZIndex=4 Instance.new("UICorner",shade).CornerRadius=UDim.new(0,18)uiVisual.applyBackgroundDarkness=function()if not shade or not shade.Parent then return end local darkness=math.clamp(tonumber(uiVisual.backgroundDarkness)or 18,0,75)uiVisual.tween(shade,{BackgroundTransparency=1-(darkness/100)},0.12)if uiVisual.pumking and uiVisual.pumking.isActive()then uiVisual.pumking.refreshArtwork()end end uiVisual.refreshBackground(false)uiVisual.refreshBackgroundColor()uiVisual.applyBackgroundDarkness()task.spawn(function()pcall(function()local preload={}for _,asset in ipairs(uiVisual.backgrounds)do if type(asset)=="string"and asset~=""then local img=Instance.new("ImageLabel")img.Image=resolveBackgroundDisplayAsset(asset)preload[#preload+1]=img end end if#preload>0 then ContentProvider:PreloadAsync(preload)end for _,img in ipairs(preload)do img:Destroy()end end)end)end local shadow=Instance.new("Frame",main)shadow.Size=UDim2.new(1,12,1,12)shadow.Position=UDim2.new(0,-6,0,6)shadow.BackgroundColor3=Color3.fromRGB(0,0,0)shadow.BackgroundTransparency=0.9 shadow.BorderSizePixel=0 shadow.ZIndex=2 Instance.new("UICorner",shadow).CornerRadius=UDim.new(0,22)do local viewport=Instance.new("Frame",main)viewport.Name="WordViewport"viewport.Size=UDim2.new(1,-16,0,84)viewport.Position=UDim2.fromOffset(8,0)viewport.BackgroundTransparency=1 viewport.BorderSizePixel=0 viewport.ClipsDescendants=false viewport.ZIndex=18 local function makeWord(name)local layer=Instance.new("Frame",viewport)layer.Name=name layer.Size=UDim2.fromScale(1,1)layer.BackgroundTransparency=1 layer.BorderSizePixel=0 layer.ZIndex=18 local glow=Instance.new("TextLabel",layer)glow.Name="HeartelessLogoGlow"glow.AnchorPoint=Vector2.new(.5,0)glow.Size=UDim2.new(1,0,1,0)glow.Position=UDim2.new(.5,0,0,-14)glow.BackgroundTransparency=1 glow.Text="hearteless" glow.TextTransparency=.60 glow.Font=Enum.Font.GothamBlack glow.TextScaled=true glow.TextColor3=Color3.fromRGB(255,255,255) glow.ZIndex=19 glow:SetAttribute("FearThemeRole","ThemeLogoGlow")glow:SetAttribute("BlessWordLayer",true)local image=Instance.new("TextLabel",layer)image.Name="HeartelessLogo"image.AnchorPoint=Vector2.new(.5,0)image.Size=UDim2.new(1,-4,1,-4)image.Position=UDim2.new(.5,0,0,-14)image.BackgroundTransparency=1 image.Text="hearteless" image.Font=Enum.Font.GothamBlack image.TextScaled=true image.TextColor3=Color3.fromRGB(255,255,255) image.ZIndex=20 image:SetAttribute("FearThemeRole","ThemeLogo")image:SetAttribute("BlessWordLayer",true)return{layer=layer,image=image,glow=glow}end local current=makeWord("WordCurrent")local spare=makeWord("WordNext")spare.layer.Visible=false local wordIndex=uiVisual.renderedBackgroundIndex or uiVisual.backgroundIndex local wordMode=uiVisual.renderedBackgroundMode==true local motion,connection={},nil local function setWord(word,mode)
-    local tinted = mode==true or uiVisual.nameLogoIndex==2
+    local tinted = mode==true or uiVisual.nameLogoIndex==2 or uiVisual.christmasMode==true
     word.image.Text = "hearteless"
     word.glow.Text = "hearteless"
     word.image:SetAttribute("BlessLogoTint",tinted)
@@ -3636,7 +3636,7 @@ refreshAppearance()end)end function buildGui()local SILVER=Color3.fromRGB(196,19
     word.image.TextColor3 = tinted and uiVisual.getThemeAccent() or Color3.fromRGB(255,255,255)
     word.glow.TextColor3 = uiVisual.getThemeAccent()
     word.glow.TextTransparency = 0.60
-end uiVisual.applyWordFade=function(alpha)for _,word in ipairs({current,spare})do word.image.TextTransparency=alpha word.glow.TextTransparency=.60+.40*alpha end end uiVisual.resetWordMotion=function()if connection then connection:Disconnect()connection=nil end for _,tween in ipairs(motion)do tween:Cancel()end table.clear(motion)current.layer.Position=UDim2.fromScale(0,0)spare.layer.Position=UDim2.fromScale(1,0)spare.layer.Visible=false end uiVisual.transitionNameLogo=function(index,mode,kind)uiVisual.resetWordMotion()setWord(spare,mode)spare.layer.Position=UDim2.fromScale(1,0)spare.layer.Visible=true wordIndex,wordMode=index,mode local function finish()if connection then connection:Disconnect()connection=nil end current,spare=spare,current current.layer.Position=UDim2.fromScale(0,0)current.layer.Visible=true spare.layer.Visible=false spare.layer.Position=UDim2.fromScale(1,0)table.clear(motion)uiVisual.applyWordFade(uiVisual.windowFadeAlpha or 0) if uiVisual.refreshNameLogo then uiVisual.refreshNameLogo() end end uiVisual.refreshTheme(spare.layer)uiVisual.applyWordFade(uiVisual.windowFadeAlpha or 0)if not main.Visible then finish()return end local info=TweenInfo.new(kind=="mode"and.36 or.28,Enum.EasingStyle.Quint,Enum.EasingDirection.InOut)motion[1]=TS:Create(current.layer,info,{Position=UDim2.fromScale(-1,0)})motion[2]=TS:Create(spare.layer,info,{Position=UDim2.fromScale(0,0)})connection=motion[2].Completed:Connect(function(state)if state==Enum.PlaybackState.Completed then finish()end end)motion[1]:Play()motion[2]:Play()end setWord(current,wordMode)uiVisual.refreshNameLogo=function()uiVisual.nameLogoIndex=math.clamp(math.floor(tonumber(uiVisual.nameLogoIndex)or 1),1,#uiVisual.nameLogos)uiVisual.nameColorIndex=1 if uiVisual.nameLogoBtnRef then uiVisual.nameLogoBtnRef.Text=uiVisual.nameLogoIndex==2 and "Word 2" or "Word 1" end if uiVisual.backgroundIndex==wordIndex and#motion==0 then setWord(current,wordMode)uiVisual.applyWordFade(uiVisual.windowFadeAlpha or 0)end if uiVisual.refreshMiniLogo then uiVisual.refreshMiniLogo()end if uiVisual.refreshNameLogoCards then uiVisual.refreshNameLogoCards()end end viewport.Destroying:Connect(uiVisual.resetWordMotion)uiVisual.refreshNameLogo()task.spawn(function()pcall(function()ContentProvider:PreloadAsync(uiVisual.nameLogos)end)end)end local closeBtnGlow=Instance.new("TextLabel",main)closeBtnGlow.Name="CloseNeonGlow"closeBtnGlow.Size=UDim2.new(0,29,0,29)closeBtnGlow.Position=UDim2.new(1,-34,0,-9)closeBtnGlow.BackgroundTransparency=1 closeBtnGlow.BorderSizePixel=0 closeBtnGlow.Text="乂"closeBtnGlow.TextColor3=uiVisual.getThemeAccent()closeBtnGlow.TextTransparency=0.42 closeBtnGlow.TextStrokeColor3=uiVisual.getThemeAccent()closeBtnGlow.TextStrokeTransparency=0.02 closeBtnGlow.Font=Enum.Font.GothamBlack closeBtnGlow.TextSize=23 closeBtnGlow.ZIndex=199 closeBtnGlow:SetAttribute("FearThemeRole","NeonCloseGlow")local closeBtn=Instance.new("TextButton",main)closeBtn.Size=UDim2.new(0,27,0,27)closeBtn.Position=UDim2.new(1,-33,0,-10)closeBtn.BackgroundColor3=Color3.fromRGB(0,0,0)closeBtn.BackgroundTransparency=1 closeBtn.BorderSizePixel=0 closeBtn.Text="乂"closeBtn.TextColor3=uiVisual.getThemePalette().light:Lerp(Color3.fromRGB(255,255,255),0.32)closeBtn.TextStrokeColor3=uiVisual.getThemeAccent()closeBtn.TextStrokeTransparency=0.04 closeBtn.Font=Enum.Font.GothamBlack closeBtn.TextSize=20 closeBtn.AutoButtonColor=false closeBtn.ZIndex=200 closeBtn:SetAttribute("FearThemeRole","NeonCloseText")closeBtn.MouseEnter:Connect(function()closeBtn.TextColor3=Color3.fromRGB(255,255,255)closeBtn.TextStrokeColor3=uiVisual.getThemePalette().light closeBtn.TextStrokeTransparency=0 closeBtnGlow.TextTransparency=0.18 end)closeBtn.MouseLeave:Connect(function()local palette=uiVisual.getThemePalette()closeBtn.TextColor3=palette.light:Lerp(Color3.fromRGB(255,255,255),0.32)closeBtn.TextStrokeColor3=uiVisual.getThemeAccent()closeBtn.TextStrokeTransparency=0.04 closeBtnGlow.TextTransparency=0.42 end)local dragHandle=Instance.new("TextButton",main)dragHandle.Name="WindowDragHandle"dragHandle.Size=UDim2.new(1,-54,0,84)dragHandle.Position=UDim2.new(0,0,0,0)dragHandle.BackgroundTransparency=1 dragHandle.BorderSizePixel=0 dragHandle.Text=""dragHandle.AutoButtonColor=false dragHandle.ZIndex=150 local draggingMain=false local dragInputMain=nil local dragStartMain=nil local mainStartPos=nil local function saveMainPosition()uiPreferences.mainPosition={XScale=main.Position.X.Scale,XOffset=main.Position.X.Offset,YScale=main.Position.Y.Scale,YOffset=main.Position.Y.Offset}task.defer(saveAllSettings)end dragHandle.Active=true local function beginMainDrag(input)if uiVisual.mainAnimating or not uiPreferences.visible then return end if input.UserInputType~=Enum.UserInputType.MouseButton1 and input.UserInputType~=Enum.UserInputType.Touch then return end local tween=uiVisual.tweens[main]if tween then tween:Cancel()end draggingMain=true dragInputMain=input dragStartMain=input.Position mainStartPos=main.Position end dragHandle.InputBegan:Connect(beginMainDrag)UIS.InputChanged:Connect(function(input)if not draggingMain or not dragStartMain or not mainStartPos then return end if input.UserInputType~=Enum.UserInputType.MouseMovement and input.UserInputType~=Enum.UserInputType.Touch then return end local scale=(mainUIScale and tonumber(mainUIScale.Scale))or 1 if scale<=0 then scale=1 end local delta=(input.Position-dragStartMain)/(uiVisual.pumking.isActive()and 1 or scale)local x=mainStartPos.X.Offset+delta.X local y=mainStartPos.Y.Offset+delta.Y local viewport=workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(1920,1080)local maxX=uiVisual.pumking.isActive()and math.max(0,viewport.X-uiVisual.pumking.width*scale)or math.max(0,(viewport.X/scale)-GUI_W)local maxY=uiVisual.pumking.isActive()and math.max(0,viewport.Y-uiVisual.pumking.height*scale)or math.max(0,(viewport.Y/scale)-GUI_H)x=math.clamp(x,0,maxX)y=math.clamp(y,0,maxY)main.Position=UDim2.new(0,x,0,y)end)local function finishMainDrag(input)if not draggingMain then return end if input and dragInputMain and input~=dragInputMain and input.UserInputType~=Enum.UserInputType.MouseButton1 then return end draggingMain=false dragInputMain=nil dragStartMain=nil mainStartPos=nil saveMainPosition()end dragHandle.InputEnded:Connect(finishMainDrag)UIS.InputEnded:Connect(function(input)if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then finishMainDrag(input)end end)miniBtn=Instance.new("TextButton",gui)miniBtn.Size=UDim2.new(0,146,0,44)miniBtn.Position=UDim2.new(0,16,0,58)miniBtn.BackgroundColor3=BG2 miniBtn:SetAttribute("FearThemeRole","MiniOpenButton")miniBtn.BackgroundTransparency=0.04 miniBtn.BorderSizePixel=0 miniBtn.Text=""miniBtn.AutoButtonColor=false miniBtn.ZIndex=20 miniBtn.Visible=false Instance.new("UICorner",miniBtn).CornerRadius=UDim.new(0,11)do local edge=Instance.new("UIStroke",miniBtn)edge:SetAttribute("FearThemeRole","MiniOpenStroke")edge.Color=SILVER edge.Transparency=0.30 edge.Thickness=1.15 end local miniLogoGlow=Instance.new("TextLabel",miniBtn)miniLogoGlow.Name="SureMiniLogoGlow"miniLogoGlow.AnchorPoint=Vector2.new(0.5,0.5)miniLogoGlow.Size=UDim2.new(1,-12,1,-6)miniLogoGlow.Position=UDim2.new(0.5,0,0.5,1)miniLogoGlow.BackgroundTransparency=1 miniLogoGlow.BorderSizePixel=0 miniLogoGlow.Text="hearteless" miniLogoGlow.TextColor3=Color3.fromRGB(255,255,255)miniLogoGlow.TextTransparency=0.70 miniLogoGlow.Font=Enum.Font.GothamBlack miniLogoGlow.TextScaled=true miniLogoGlow.ZIndex=21 miniLogoGlow:SetAttribute("FearThemeRole","ThemeLogo")local miniLogo=Instance.new("TextLabel",miniBtn)miniLogo.Name="SureMiniLogo"miniLogo.AnchorPoint=Vector2.new(0.5,0.5)miniLogo.Size=UDim2.new(1,-18,1,-10)miniLogo.Position=UDim2.new(0.5,0,0.5,0)miniLogo.BackgroundTransparency=1 miniLogo.BorderSizePixel=0 miniLogo.Text="hearteless" miniLogo.TextColor3=Color3.fromRGB(255,255,255)miniLogo.TextTransparency=0 miniLogo.Font=Enum.Font.GothamBlack miniLogo.TextScaled=true miniLogo.ZIndex=22 miniLogo:SetAttribute("FearThemeRole","ThemeLogo")uiVisual.refreshMiniLogo=function()local index=math.clamp(math.floor(tonumber(uiVisual.nameLogoIndex)or 1),1,#uiVisual.nameLogos)local tinted=uiVisual.halloweenMode==true or uiVisual.nameLogoIndex==2
+end uiVisual.applyWordFade=function(alpha)for _,word in ipairs({current,spare})do word.image.TextTransparency=alpha word.glow.TextTransparency=.60+.40*alpha end end uiVisual.resetWordMotion=function()if connection then connection:Disconnect()connection=nil end for _,tween in ipairs(motion)do tween:Cancel()end table.clear(motion)current.layer.Position=UDim2.fromScale(0,0)spare.layer.Position=UDim2.fromScale(1,0)spare.layer.Visible=false end uiVisual.transitionNameLogo=function(index,mode,kind)uiVisual.resetWordMotion()setWord(spare,mode)spare.layer.Position=UDim2.fromScale(1,0)spare.layer.Visible=true wordIndex,wordMode=index,mode local function finish()if connection then connection:Disconnect()connection=nil end current,spare=spare,current current.layer.Position=UDim2.fromScale(0,0)current.layer.Visible=true spare.layer.Visible=false spare.layer.Position=UDim2.fromScale(1,0)table.clear(motion)uiVisual.applyWordFade(uiVisual.windowFadeAlpha or 0) if uiVisual.refreshNameLogo then uiVisual.refreshNameLogo() end end uiVisual.refreshTheme(spare.layer)uiVisual.applyWordFade(uiVisual.windowFadeAlpha or 0)if not main.Visible then finish()return end local info=TweenInfo.new(kind=="mode"and.36 or.28,Enum.EasingStyle.Quint,Enum.EasingDirection.InOut)motion[1]=TS:Create(current.layer,info,{Position=UDim2.fromScale(-1,0)})motion[2]=TS:Create(spare.layer,info,{Position=UDim2.fromScale(0,0)})connection=motion[2].Completed:Connect(function(state)if state==Enum.PlaybackState.Completed then finish()end end)motion[1]:Play()motion[2]:Play()end setWord(current,wordMode)uiVisual.refreshNameLogo=function()uiVisual.nameLogoIndex=math.clamp(math.floor(tonumber(uiVisual.nameLogoIndex)or 1),1,#uiVisual.nameLogos)uiVisual.nameColorIndex=1 if uiVisual.nameLogoBtnRef then uiVisual.nameLogoBtnRef.Text=uiVisual.nameLogoIndex==2 and "Word 2" or "Word 1" end if uiVisual.backgroundIndex==wordIndex and#motion==0 then setWord(current,wordMode)uiVisual.applyWordFade(uiVisual.windowFadeAlpha or 0)end if uiVisual.refreshMiniLogo then uiVisual.refreshMiniLogo()end if uiVisual.refreshNameLogoCards then uiVisual.refreshNameLogoCards()end end viewport.Destroying:Connect(uiVisual.resetWordMotion)uiVisual.refreshNameLogo()task.spawn(function()pcall(function()ContentProvider:PreloadAsync(uiVisual.nameLogos)end)end)end local closeBtnGlow=Instance.new("TextLabel",main)closeBtnGlow.Name="CloseNeonGlow"closeBtnGlow.Size=UDim2.new(0,29,0,29)closeBtnGlow.Position=UDim2.new(1,-34,0,-9)closeBtnGlow.BackgroundTransparency=1 closeBtnGlow.BorderSizePixel=0 closeBtnGlow.Text="乂"closeBtnGlow.TextColor3=uiVisual.getThemeAccent()closeBtnGlow.TextTransparency=0.42 closeBtnGlow.TextStrokeColor3=uiVisual.getThemeAccent()closeBtnGlow.TextStrokeTransparency=0.02 closeBtnGlow.Font=Enum.Font.GothamBlack closeBtnGlow.TextSize=23 closeBtnGlow.ZIndex=199 closeBtnGlow:SetAttribute("FearThemeRole","NeonCloseGlow")local closeBtn=Instance.new("TextButton",main)closeBtn.Size=UDim2.new(0,27,0,27)closeBtn.Position=UDim2.new(1,-33,0,-10)closeBtn.BackgroundColor3=Color3.fromRGB(0,0,0)closeBtn.BackgroundTransparency=1 closeBtn.BorderSizePixel=0 closeBtn.Text="乂"closeBtn.TextColor3=uiVisual.getThemePalette().light:Lerp(Color3.fromRGB(255,255,255),0.32)closeBtn.TextStrokeColor3=uiVisual.getThemeAccent()closeBtn.TextStrokeTransparency=0.04 closeBtn.Font=Enum.Font.GothamBlack closeBtn.TextSize=20 closeBtn.AutoButtonColor=false closeBtn.ZIndex=200 closeBtn:SetAttribute("FearThemeRole","NeonCloseText")closeBtn.MouseEnter:Connect(function()closeBtn.TextColor3=Color3.fromRGB(255,255,255)closeBtn.TextStrokeColor3=uiVisual.getThemePalette().light closeBtn.TextStrokeTransparency=0 closeBtnGlow.TextTransparency=0.18 end)closeBtn.MouseLeave:Connect(function()local palette=uiVisual.getThemePalette()closeBtn.TextColor3=palette.light:Lerp(Color3.fromRGB(255,255,255),0.32)closeBtn.TextStrokeColor3=uiVisual.getThemeAccent()closeBtn.TextStrokeTransparency=0.04 closeBtnGlow.TextTransparency=0.42 end)local dragHandle=Instance.new("TextButton",main)dragHandle.Name="WindowDragHandle"dragHandle.Size=UDim2.new(1,-54,0,84)dragHandle.Position=UDim2.new(0,0,0,0)dragHandle.BackgroundTransparency=1 dragHandle.BorderSizePixel=0 dragHandle.Text=""dragHandle.AutoButtonColor=false dragHandle.ZIndex=150 local draggingMain=false local dragInputMain=nil local dragStartMain=nil local mainStartPos=nil local function saveMainPosition()uiPreferences.mainPosition={XScale=main.Position.X.Scale,XOffset=main.Position.X.Offset,YScale=main.Position.Y.Scale,YOffset=main.Position.Y.Offset}task.defer(saveAllSettings)end dragHandle.Active=true local function beginMainDrag(input)if uiVisual.mainAnimating or not uiPreferences.visible then return end if input.UserInputType~=Enum.UserInputType.MouseButton1 and input.UserInputType~=Enum.UserInputType.Touch then return end local tween=uiVisual.tweens[main]if tween then tween:Cancel()end draggingMain=true dragInputMain=input dragStartMain=input.Position mainStartPos=main.Position end dragHandle.InputBegan:Connect(beginMainDrag)UIS.InputChanged:Connect(function(input)if not draggingMain or not dragStartMain or not mainStartPos then return end if input.UserInputType~=Enum.UserInputType.MouseMovement and input.UserInputType~=Enum.UserInputType.Touch then return end local scale=(mainUIScale and tonumber(mainUIScale.Scale))or 1 if scale<=0 then scale=1 end local delta=(input.Position-dragStartMain)/(uiVisual.pumking.isActive()and 1 or scale)local x=mainStartPos.X.Offset+delta.X local y=mainStartPos.Y.Offset+delta.Y local viewport=workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(1920,1080)local maxX=uiVisual.pumking.isActive()and math.max(0,viewport.X-uiVisual.pumking.width*scale)or math.max(0,(viewport.X/scale)-GUI_W)local maxY=uiVisual.pumking.isActive()and math.max(0,viewport.Y-uiVisual.pumking.height*scale)or math.max(0,(viewport.Y/scale)-GUI_H)x=math.clamp(x,0,maxX)y=math.clamp(y,0,maxY)main.Position=UDim2.new(0,x,0,y)end)local function finishMainDrag(input)if not draggingMain then return end if input and dragInputMain and input~=dragInputMain and input.UserInputType~=Enum.UserInputType.MouseButton1 then return end draggingMain=false dragInputMain=nil dragStartMain=nil mainStartPos=nil saveMainPosition()end dragHandle.InputEnded:Connect(finishMainDrag)UIS.InputEnded:Connect(function(input)if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then finishMainDrag(input)end end)miniBtn=Instance.new("TextButton",gui)miniBtn.Size=UDim2.new(0,146,0,44)miniBtn.Position=UDim2.new(0,16,0,58)miniBtn.BackgroundColor3=BG2 miniBtn:SetAttribute("FearThemeRole","MiniOpenButton")miniBtn.BackgroundTransparency=0.04 miniBtn.BorderSizePixel=0 miniBtn.Text=""miniBtn.AutoButtonColor=false miniBtn.ZIndex=20 miniBtn.Visible=false Instance.new("UICorner",miniBtn).CornerRadius=UDim.new(0,11)do local edge=Instance.new("UIStroke",miniBtn)edge:SetAttribute("FearThemeRole","MiniOpenStroke")edge.Color=SILVER edge.Transparency=0.30 edge.Thickness=1.15 end local miniLogoGlow=Instance.new("TextLabel",miniBtn)miniLogoGlow.Name="SureMiniLogoGlow"miniLogoGlow.AnchorPoint=Vector2.new(0.5,0.5)miniLogoGlow.Size=UDim2.new(1,-12,1,-6)miniLogoGlow.Position=UDim2.new(0.5,0,0.5,1)miniLogoGlow.BackgroundTransparency=1 miniLogoGlow.BorderSizePixel=0 miniLogoGlow.Text="hearteless" miniLogoGlow.TextColor3=Color3.fromRGB(255,255,255)miniLogoGlow.TextTransparency=0.70 miniLogoGlow.Font=Enum.Font.GothamBlack miniLogoGlow.TextScaled=true miniLogoGlow.ZIndex=21 miniLogoGlow:SetAttribute("FearThemeRole","ThemeLogo")local miniLogo=Instance.new("TextLabel",miniBtn)miniLogo.Name="SureMiniLogo"miniLogo.AnchorPoint=Vector2.new(0.5,0.5)miniLogo.Size=UDim2.new(1,-18,1,-10)miniLogo.Position=UDim2.new(0.5,0,0.5,0)miniLogo.BackgroundTransparency=1 miniLogo.BorderSizePixel=0 miniLogo.Text="hearteless" miniLogo.TextColor3=Color3.fromRGB(255,255,255)miniLogo.TextTransparency=0 miniLogo.Font=Enum.Font.GothamBlack miniLogo.TextScaled=true miniLogo.ZIndex=22 miniLogo:SetAttribute("FearThemeRole","ThemeLogo")uiVisual.refreshMiniLogo=function()local index=math.clamp(math.floor(tonumber(uiVisual.nameLogoIndex)or 1),1,#uiVisual.nameLogos)local tinted=uiVisual.halloweenMode==true or uiVisual.christmasMode==true or uiVisual.nameLogoIndex==2
 miniLogo.Text="hearteless" miniLogoGlow.Text="hearteless"
 miniLogo:SetAttribute("BlessLogoTint",tinted)
 miniLogo.TextColor3=tinted and uiVisual.getThemeAccent() or Color3.fromRGB(255,255,255)
@@ -3812,7 +3812,6 @@ local function playChristmasIntro()
     local Players = game:GetService("Players")
     local TweenService = game:GetService("TweenService")
     local RunService = game:GetService("RunService")
-    local SoundService = game:GetService("SoundService")
     local lp = Players.LocalPlayer
     local pg = lp:FindFirstChild("PlayerGui") or lp:WaitForChild("PlayerGui", 5)
     if not pg then return end
@@ -3826,69 +3825,158 @@ local function playChristmasIntro()
     sg.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     pcall(function() if syn and syn.protect_gui then syn.protect_gui(sg) end end)
     sg.Parent = pg
+
+    local GREEN = Color3.fromRGB(80, 220, 120)
+    local GREEN_DARK = Color3.fromRGB(20, 90, 40)
+    local GREEN_GLOW = Color3.fromRGB(40, 180, 90)
+
     local bg = Instance.new("Frame")
     bg.Size = UDim2.fromScale(1,1)
-    bg.BackgroundColor3 = Color3.fromRGB(8, 20, 40)
+    bg.BackgroundColor3 = Color3.fromRGB(6, 14, 10)
     bg.BorderSizePixel = 0
+    bg.BackgroundTransparency = 0.35
     bg.Parent = sg
-    local bgImg = Instance.new("ImageLabel")
-    bgImg.Size = UDim2.fromScale(1,1)
-    bgImg.BackgroundTransparency = 1
-    bgImg.Image = "rbxassetid://113677359739710"
-    bgImg.ScaleType = Enum.ScaleType.Crop
-    bgImg.ImageTransparency = 0.25
-    bgImg.Parent = bg
-    local overlay = Instance.new("Frame")
-    overlay.Size = UDim2.fromScale(1,1)
-    overlay.BackgroundColor3 = Color3.fromRGB(5, 15, 35)
-    overlay.BackgroundTransparency = 0.55
-    overlay.BorderSizePixel = 0
-    overlay.Parent = bg
-    -- Title
+
+    -- Soft vignette
+    local vignette = Instance.new("Frame")
+    vignette.Size = UDim2.fromScale(1,1)
+    vignette.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    vignette.BackgroundTransparency = 0.55
+    vignette.BorderSizePixel = 0
+    vignette.ZIndex = 2
+    vignette.Parent = bg
+
+    -- Main title glow (behind)
+    local titleGlow = Instance.new("TextLabel")
+    titleGlow.Size = UDim2.new(1, 0, 0, 90)
+    titleGlow.Position = UDim2.new(0, 0, 0.36, -2)
+    titleGlow.BackgroundTransparency = 1
+    titleGlow.Text = "Heartless"
+    titleGlow.TextColor3 = GREEN_GLOW
+    titleGlow.TextTransparency = 1
+    titleGlow.Font = Enum.Font.GothamBlack
+    titleGlow.TextSize = 72
+    titleGlow.TextStrokeColor3 = GREEN_DARK
+    titleGlow.TextStrokeTransparency = 0.5
+    titleGlow.ZIndex = 5
+    titleGlow.Parent = bg
+
+    -- Main title
     local title = Instance.new("TextLabel")
-    title.Size = UDim2.new(1,0,0,80)
-    title.Position = UDim2.new(0,0,0.38,0)
+    title.Size = UDim2.new(1, 0, 0, 90)
+    title.Position = UDim2.new(0, 0, 0.36, 0)
     title.BackgroundTransparency = 1
-    title.Text = "HEARTLESS"
-    title.TextColor3 = Color3.fromRGB(255, 240, 245)
-    title.TextStrokeColor3 = Color3.fromRGB(180, 30, 50)
-    title.TextStrokeTransparency = 0.2
-    title.Font = Enum.Font.GothamBlack
-    title.TextSize = 64
+    title.Text = "Heartless"
+    title.TextColor3 = GREEN
     title.TextTransparency = 1
+    title.Font = Enum.Font.GothamBlack
+    title.TextSize = 70
+    title.TextStrokeColor3 = GREEN_DARK
+    title.TextStrokeTransparency = 0.15
+    title.ZIndex = 6
     title.Parent = bg
+
+    -- Subtitle glow
+    local subGlow = Instance.new("TextLabel")
+    subGlow.Size = UDim2.new(1, 0, 0, 36)
+    subGlow.Position = UDim2.new(0, 0, 0.50, -1)
+    subGlow.BackgroundTransparency = 1
+    subGlow.Text = "on top"
+    subGlow.TextColor3 = GREEN_GLOW
+    subGlow.TextTransparency = 1
+    subGlow.Font = Enum.Font.GothamBold
+    subGlow.TextSize = 28
+    subGlow.ZIndex = 5
+    subGlow.Parent = bg
+
+    -- Subtitle
     local subtitle = Instance.new("TextLabel")
-    subtitle.Size = UDim2.new(1,0,0,28)
-    subtitle.Position = UDim2.new(0,0,0.48,0)
+    subtitle.Size = UDim2.new(1, 0, 0, 36)
+    subtitle.Position = UDim2.new(0, 0, 0.50, 0)
     subtitle.BackgroundTransparency = 1
-    subtitle.Text = "🎄  Merry Christmas  🎄"
-    subtitle.TextColor3 = Color3.fromRGB(200, 240, 255)
-    subtitle.Font = Enum.Font.GothamBold
-    subtitle.TextSize = 20
+    subtitle.Text = "on top"
+    subtitle.TextColor3 = GREEN
     subtitle.TextTransparency = 1
+    subtitle.Font = Enum.Font.GothamBold
+    subtitle.TextSize = 26
+    subtitle.TextStrokeColor3 = GREEN_DARK
+    subtitle.TextStrokeTransparency = 0.25
+    subtitle.ZIndex = 6
     subtitle.Parent = bg
-    -- Snow particles
+
+    -- Skip button
+    local skipBtn = Instance.new("TextButton")
+    skipBtn.Size = UDim2.new(0, 110, 0, 32)
+    skipBtn.Position = UDim2.new(1, -130, 0, 18)
+    skipBtn.BackgroundColor3 = Color3.fromRGB(12, 12, 14)
+    skipBtn.BackgroundTransparency = 0.25
+    skipBtn.BorderSizePixel = 0
+    skipBtn.Text = "SKIP INTRO"
+    skipBtn.TextColor3 = Color3.fromRGB(200, 210, 200)
+    skipBtn.Font = Enum.Font.GothamBold
+    skipBtn.TextSize = 12
+    skipBtn.AutoButtonColor = false
+    skipBtn.ZIndex = 20
+    skipBtn.Parent = bg
+    Instance.new("UICorner", skipBtn).CornerRadius = UDim.new(0, 8)
+    local skipStroke = Instance.new("UIStroke", skipBtn)
+    skipStroke.Color = GREEN
+    skipStroke.Thickness = 1
+    skipStroke.Transparency = 0.55
+
+    -- Light snow particles (subtle)
     local snowflakes = {}
-    for i = 1, 40 do
+    for i = 1, 28 do
         local flake = Instance.new("TextLabel")
-        flake.Size = UDim2.fromOffset(math.random(10,22), math.random(10,22))
-        flake.Position = UDim2.new(math.random(), 0, -0.1 - math.random()*0.3, 0)
+        flake.Size = UDim2.fromOffset(math.random(8, 16), math.random(8, 16))
+        flake.Position = UDim2.new(math.random(), 0, -0.1 - math.random() * 0.3, 0)
         flake.BackgroundTransparency = 1
         flake.Text = "❄"
-        flake.TextColor3 = Color3.fromRGB(230, 245, 255)
-        flake.TextTransparency = math.random()*0.4
-        flake.TextSize = math.random(14, 26)
+        flake.TextColor3 = Color3.fromRGB(180, 255, 200)
+        flake.TextTransparency = 0.35 + math.random() * 0.4
+        flake.TextSize = math.random(12, 20)
         flake.Rotation = math.random(0, 360)
-        flake.ZIndex = 5
+        flake.ZIndex = 4
         flake.Parent = bg
-        snowflakes[#snowflakes+1] = {obj=flake, speed=0.08+math.random()*0.18, drift=(math.random()-0.5)*0.12, rot=math.random(-40,40)}
+        snowflakes[#snowflakes + 1] = {
+            obj = flake,
+            speed = 0.06 + math.random() * 0.14,
+            drift = (math.random() - 0.5) * 0.10,
+            rot = math.random(-30, 30)
+        }
     end
-    -- Animate
+
+    local closed = false
+    local function closeIntro()
+        if closed then return end
+        closed = true
+        local fadeInfo = TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+        for _, obj in ipairs({title, titleGlow, subtitle, subGlow, bg, vignette, skipBtn}) do
+            if obj:IsA("TextLabel") or obj:IsA("TextButton") then
+                TweenService:Create(obj, fadeInfo, {TextTransparency = 1}):Play()
+            else
+                TweenService:Create(obj, fadeInfo, {BackgroundTransparency = 1}):Play()
+            end
+        end
+        for _, s in ipairs(snowflakes) do
+            if s.obj then TweenService:Create(s.obj, fadeInfo, {TextTransparency = 1}):Play() end
+        end
+        task.delay(0.65, function()
+            if sg and sg.Parent then sg:Destroy() end
+        end)
+    end
+
+    skipBtn.MouseButton1Click:Connect(closeIntro)
+
     local start = os.clock()
     local conn
     conn = RunService.RenderStepped:Connect(function(dt)
+        if closed then
+            if conn then conn:Disconnect() end
+            return
+        end
         local t = os.clock() - start
-        for _,s in ipairs(snowflakes) do
+        for _, s in ipairs(snowflakes) do
             if s.obj and s.obj.Parent then
                 local p = s.obj.Position
                 local ny = p.Y.Scale + s.speed * dt
@@ -3899,28 +3987,19 @@ local function playChristmasIntro()
                 s.obj.Rotation = s.obj.Rotation + s.rot * dt
             end
         end
-        if t > 3.8 then
-            conn:Disconnect()
+        if t > 4.2 then
+            closeIntro()
+            if conn then conn:Disconnect() end
         end
     end)
-    -- Fade in title
-    TweenService:Create(title, TweenInfo.new(0.9, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency=0}):Play()
-    TweenService:Create(subtitle, TweenInfo.new(1.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency=0}):Play()
-    -- Hold then fade out
-    task.delay(2.6, function()
-        local fadeInfo = TweenInfo.new(0.85, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
-        TweenService:Create(title, fadeInfo, {TextTransparency=1}):Play()
-        TweenService:Create(subtitle, fadeInfo, {TextTransparency=1}):Play()
-        TweenService:Create(bgImg, fadeInfo, {ImageTransparency=1}):Play()
-        TweenService:Create(overlay, fadeInfo, {BackgroundTransparency=1}):Play()
-        TweenService:Create(bg, fadeInfo, {BackgroundTransparency=1}):Play()
-        for _,s in ipairs(snowflakes) do
-            if s.obj then TweenService:Create(s.obj, fadeInfo, {TextTransparency=1}):Play() end
-        end
-        task.delay(0.95, function()
-            if conn then pcall(function() conn:Disconnect() end) end
-            if sg and sg.Parent then sg:Destroy() end
-        end)
+
+    -- Fade in
+    local fadeIn = TweenInfo.new(0.85, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    TweenService:Create(title, fadeIn, {TextTransparency = 0}):Play()
+    TweenService:Create(titleGlow, fadeIn, {TextTransparency = 0.55}):Play()
+    task.delay(0.25, function()
+        TweenService:Create(subtitle, fadeIn, {TextTransparency = 0}):Play()
+        TweenService:Create(subGlow, fadeIn, {TextTransparency = 0.6}):Play()
     end)
 end
 task.spawn(playChristmasIntro)
