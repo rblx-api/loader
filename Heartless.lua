@@ -233,7 +233,7 @@ do
                 cleanup()
             end)
             if not ok then
-                warn("[INSY HUB] Intro: " .. tostring(err))
+                warn("[hearteless] Intro: " .. tostring(err))
                 pcall(function()
                     local cg = game:GetService("CoreGui")
                     local old = cg:FindFirstChild("RivalHubIntro")
@@ -754,7 +754,7 @@ function updateAllUIThemeColors(color)
     end
     local secColor = getThemeSecondaryReadable()
     if MVPUI.footerStats and MVPUI.footerStats.Parent then
-        MVPUI.footerStats.Text = "INSY HUB\240\159\140\159  /  " .. string.upper(COLOR_THEME_LABELS[currentColorTheme] or currentColorTheme)
+        MVPUI.footerStats.Text = "hearteless  /  " .. string.upper(COLOR_THEME_LABELS[currentColorTheme] or currentColorTheme)
         MVPUI.footerStats.TextColor3 = secColor or Color3.fromRGB(211, 167, 108)
     end
 
@@ -8770,7 +8770,7 @@ function buildGui()
     MVPUI.round(header, 16)
     MVPUI.addFlow(MVPUI.stroke(header, getThemeColor(), 0.25, 1.4), "stroke", 90)
     MVPUI.art = nil
-    scriptLogoRef = MVPUI.text(header, "INSY HUB\240\159\140\159", UDim2.fromOffset(16, 0), UDim2.new(1, -24, 1, 0), 17, WHITE, 8)
+    scriptLogoRef = MVPUI.text(header, "hearteless", UDim2.fromOffset(16, 0), UDim2.new(1, -24, 1, 0), 17, WHITE, 8)
     scriptLogoRef.Font = Enum.Font.GothamBlack
     MVPUI.titleGradient = MVPUI.new("UIGradient", scriptLogoRef, {Rotation = 90,
         Color = ColorSequence.new(WHITE, Color3.fromRGB(190, 90, 255))})
@@ -8786,7 +8786,7 @@ function buildGui()
         BorderSizePixel = 0, AutoButtonColor = false, Visible = false, ZIndex = 25})
     MVPUI.round(miniBtn, 11)
     MVPUI.addFlow(MVPUI.stroke(miniBtn, getThemeColor(), 0, 2.2), "stroke", 90)
-    local miniOpen = MVPUI.text(miniBtn, "INSY HUB", UDim2.fromScale(0, 0), UDim2.fromScale(1, 1), 20, Color3.new(1, 1, 1), 28)
+    local miniOpen = MVPUI.text(miniBtn, "hearteless", UDim2.fromScale(0, 0), UDim2.fromScale(1, 1), 20, Color3.new(1, 1, 1), 28)
     miniOpen.Name = "ynsyText"
     miniOpen.Font = Enum.Font.GothamBlack
     miniOpen.TextXAlignment = Enum.TextXAlignment.Center
@@ -8845,7 +8845,7 @@ function buildGui()
         Image = "rbxthumb://type=AvatarHeadShot&id=" .. LP.UserId .. "&w=150&h=150", BackgroundColor3 = INP, BorderSizePixel = 0, ZIndex = 8})
     MVPUI.round(avatar, 5)
     MVPUI.text(footer, "@" .. LP.Name, UDim2.fromOffset(27, 5), UDim2.new(0.5, -32, 0, 18), 11, Color3.fromRGB(228, 226, 218), 9)
-    MVPUI.footerStats = MVPUI.text(footer, "INSY HUB\240\159\140\159  /  PURPLE", UDim2.new(0.5, 0, 0, 5), UDim2.new(0.5, -3, 0, 18), 10,
+    MVPUI.footerStats = MVPUI.text(footer, "hearteless  /  PURPLE", UDim2.new(0.5, 0, 0, 5), UDim2.new(0.5, -3, 0, 18), 10,
         Color3.fromRGB(226, 184, 128), 9)
     MVPUI.footerStats.TextXAlignment = Enum.TextXAlignment.Right
     local tabs = {"Speed", "Custom", "Visuals", "Visual", "Settings", "Keybinds"}
@@ -10436,7 +10436,7 @@ function buildGui()
     stealBgImageHud.ZIndex = 50
     Instance.new("UICorner", stealBgImageHud).CornerRadius = UDim.new(0, 9)
 
-    local hudBrand = MVPUI.text(pbFrame, "INSY HUB", UDim2.fromOffset(8, 3), UDim2.fromOffset(82, 20), 13,
+    local hudBrand = MVPUI.text(pbFrame, "hearteless", UDim2.fromOffset(8, 3), UDim2.fromOffset(82, 20), 13,
         Color3.fromRGB(255, 255, 255), 55)
     hudBrand.Name = "HudBrand"
     hudBrand.Font = Enum.Font.GothamBold
