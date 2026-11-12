@@ -17166,9 +17166,9 @@ local textOverlay = btn:FindFirstChild("MobileButtonText")
 local noneBg = btn:FindFirstChild("ButtonNoneBackground")
 local noneGrad = noneBg and noneBg:FindFirstChild("ButtonNoneGradient")
 local dot = btn:FindFirstChild("Dot")
--- BlueX style: dark gradient button | OFF = edge tipis redup, ON = outline putih tebal
+-- Estilo negro y blanco: fondo negro + texto blanco | OFF borde gris claro, ON borde blanco grueso
 if noneGrad then
-    noneGrad.Enabled = true
+    noneGrad.Enabled = false
 end
 if noneBg then
     noneBg.BackgroundTransparency = 0
@@ -17177,6 +17177,11 @@ if noneBg then
         noneBg.Image = ""
         noneBg.ImageTransparency = 1
     end
+end
+if btn then
+    btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    btn.BackgroundTransparency = 0
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 end
 if textOverlay then
     TS:Create(textOverlay, TweenInfo.new(0.12), {
@@ -17191,9 +17196,9 @@ if st then
         st.Thickness = 3.2
         st.Transparency = 0
     else
-        st.Color = Color3.fromRGB(28, 28, 34)
-        st.Thickness = 1.4
-        st.Transparency = 0.75
+        st.Color = Color3.fromRGB(180, 180, 180)
+        st.Thickness = 1.6
+        st.Transparency = 0.35
     end
 end
 if dot then dot.Visible = false end
@@ -17285,9 +17290,9 @@ textOverlay.TextYAlignment = Enum.TextYAlignment.Center
 textOverlay.ZIndex = btn.ZIndex + 1
 btn.TextTransparency = 1
 local stroke = Instance.new("UIStroke", btn)
-stroke.Color = Color3.fromRGB(28, 28, 34)
-stroke.Thickness = 1.4
-stroke.Transparency = 0.75
+stroke.Color = Color3.fromRGB(180, 180, 180)
+stroke.Thickness = 1.6
+stroke.Transparency = 0.35
 stroke.Enabled = true
 stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 local pressing, dragging = false, false
