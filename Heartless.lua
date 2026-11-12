@@ -5969,7 +5969,7 @@ local function setupSpeedIndicator(char)
     discordLabel.Name = "DiscordLbl"
     discordLabel.Size = UDim2.new(1, 0, 0.38, 0)
     discordLabel.BackgroundTransparency = 1
-    discordLabel.Text = "USING ZYREX HUB"
+    discordLabel.Text = "90GGHT DUELS"
     discordLabel.TextColor3 = gray
     discordLabel.Font = Enum.Font.GothamBold
     discordLabel.TextScaled = true
@@ -6877,7 +6877,7 @@ Title.Name = "Title"
 Title.BackgroundTransparency = 1
 Title.Size = UDim2.new(0, 200, 0, 20)
 Title.Position = UDim2.new(0, 24, 0, 10)
-Title.Text = "ZYREX HUB"
+Title.Text = "90GGHT DUELS"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextStrokeTransparency = 1
 Title.Font = Enum.Font.GothamBlack
@@ -6892,7 +6892,7 @@ SubTitle.Name = "SubTitle"
 SubTitle.BackgroundTransparency = 1
 SubTitle.Size = UDim2.new(0, 200, 0, 14)
 SubTitle.Position = UDim2.new(0, 24, 0, 30)
-SubTitle.Text = "USING ZYREX HUB"
+SubTitle.Text = "90GGHT DUELS"
 SubTitle.TextColor3 = Color3.fromRGB(130, 130, 135)
 SubTitle.Font = Enum.Font.Gotham
 SubTitle.TextSize = 10
@@ -7153,7 +7153,7 @@ do
     brand.Name = "KryzenXBrand"
     brand.BackgroundTransparency = 1
     brand.BorderSizePixel = 0
-    brand.Size = UDim2.new(0, 270, 0, 76)
+    brand.Size = UDim2.new(0, 340, 0, 76)
     brand.AnchorPoint = Vector2.new(0.5, 0)
     brand.Position = UDim2.new(0.5, 0, 0, 4)
     brand.ZIndex = 12
@@ -7165,13 +7165,13 @@ do
     logoText.BorderSizePixel = 0
     logoText.Size = UDim2.new(1, 0, 1, 0)
     logoText.Position = UDim2.new(0, 0, 0, 0)
-    logoText.Text = "ZYREX"
+    logoText.Text = "90GGHT DUELS"
     logoText.TextColor3 = Color3.fromRGB(255, 255, 255)
     logoText.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
     logoText.TextStrokeTransparency = 0.05
     logoText.Font = Enum.Font.Antique
-    logoText.TextSize = 68
-    logoText.TextScaled = false
+    logoText.TextSize = 36
+    logoText.TextScaled = true
     logoText.TextXAlignment = Enum.TextXAlignment.Center
     logoText.TextYAlignment = Enum.TextYAlignment.Center
     logoText.ZIndex = 13
@@ -9843,7 +9843,7 @@ speedKeybindRow(Keybinds, "Auto Right", "AutoRight", 10)
 do
 THEME_ACCENT = Color3.fromRGB(255, 255, 255)
 THEME_ACCENT_DIM = Color3.fromRGB(160, 160, 160)
-PlayerESP = PlayerESP or {enabled=false, playerData={}, conns={}, discordText="USING ZYREX HUB"}
+PlayerESP = PlayerESP or {enabled=false, playerData={}, conns={}, discordText="90GGHT DUELS"}
 BoxedESPOptions = BoxedESPOptions or {box=false, tracer=false}
 BoxedESPData = BoxedESPData or {}
 BoxedESPConn = BoxedESPConn or nil
@@ -15288,10 +15288,10 @@ _G.KryzenXBuildButtonVisibilityRows = function()
     local page = Settings
     if not page then return end
     local BTN_LIST = {
-        {"drop", "DROP BR"}, {"autoLeft", "AUTO LEFT"}, {"aimbot", "BAT AIMBOT"},
-        {"autoRight", "AUTO RIGHT"}, {"laggerNormal", "LAGGER NORM"}, {"laggerCarry", "LAGGER CARRY"},
-        {"tp", "TP DOWN"}, {"carry", "CARRY SPEED"}, {"batV2", "BAT V2"},
-        {"instantReset", "INSTANT RESET"},
+        {"drop", "90GGHT DUELS"}, {"autoLeft", "90GGHT DUELS"}, {"aimbot", "90GGHT DUELS"},
+        {"autoRight", "90GGHT DUELS"}, {"laggerNormal", "90GGHT DUELS"}, {"laggerCarry", "90GGHT DUELS"},
+        {"tp", "90GGHT DUELS"}, {"carry", "90GGHT DUELS"}, {"batV2", "90GGHT DUELS"},
+        {"instantReset", "90GGHT DUELS"},
     }
     local N = #BTN_LIST + 1
     local function getHidden()
@@ -17957,16 +17957,16 @@ _G.KryzenXApplyMobileButtonShape()
 if type(saveKryzenXConfig) == "function" then pcall(saveKryzenXConfig) end
 end
 
-makeButton("drop", "DROP BR", defaults.drop, function(btn)
+makeButton("drop", "90GGHT\nDUELS", defaults.drop, function(btn)
 if runDropBrainrot then runDropBrainrot() elseif runDrop then runDrop() end
 pulse(btn)
 end)
 
-makeButton("autoLeft", "AUTO\nLEFT", defaults.autoLeft, function()
+makeButton("autoLeft", "90GGHT\nDUELS", defaults.autoLeft, function()
 if _G.KryzenXSetAutoLeft then _G.KryzenXSetAutoLeft(not autoLeftEnabled) end
 end)
 
-makeButton("aimbot", "BAT\nAIMBOT", defaults.aimbot, function(btn)
+makeButton("aimbot", "90GGHT\nDUELS", defaults.aimbot, function(btn)
 if _G.KryzenXSafeModeIsLocked and _G.KryzenXSafeModeIsLocked() then return end
 selectedAimbotMode = "Normal"
 if _G.KryzenXToggleSelectedAimbot then _G.KryzenXToggleSelectedAimbot() end
@@ -17975,34 +17975,34 @@ setActive(btn, _G.KryzenXNormalAimbotOn == true)
 end)
 end)
 
-makeButton("autoRight", "AUTO\nRIGHT", defaults.autoRight, function()
+makeButton("autoRight", "90GGHT\nDUELS", defaults.autoRight, function()
 if _G.KryzenXSetAutoRight then _G.KryzenXSetAutoRight(not autoRightEnabled) end
 end)
 
-makeButton("laggerNormal", "LAGGER\nNORM", defaults.laggerNormal, function(btn)
+makeButton("laggerNormal", "90GGHT\nDUELS", defaults.laggerNormal, function(btn)
 if toggleLaggerMode then toggleLaggerMode() end
 task.delay(0.03,function()
 setActive(btn, laggerModeEnabled == true)
 end)
 end)
 
-makeButton("laggerCarry", "LAGGER\nCARRY", defaults.laggerCarry, function(btn)
+makeButton("laggerCarry", "90GGHT\nDUELS", defaults.laggerCarry, function(btn)
 if toggleLaggerCarryMode then toggleLaggerCarryMode() end
 task.delay(0.03, function()
 setActive(btn, laggerCarryActive == true)
 end)
 end)
 
-makeButton("tp", "TP DOWN", defaults.tp, function(btn)
+makeButton("tp", "90GGHT\nDUELS", defaults.tp, function(btn)
 if runTPFloor then runTPFloor() end
 pulse(btn)
 end)
 
-makeButton("carry", "CARRY\nSPEED", defaults.carry, function()
+makeButton("carry", "90GGHT\nDUELS", defaults.carry, function()
 if toggleCarryMode then toggleCarryMode() end
 end)
 
-makeButton("batV2", "BAT\nV2", defaults.batV2, function(btn)
+makeButton("batV2", "90GGHT\nDUELS", defaults.batV2, function(btn)
     if _G.KryzenXToggleBatV2 then _G.KryzenXToggleBatV2() end
     task.delay(0.03, function()
         if btn and btn.Parent then
@@ -18012,7 +18012,7 @@ makeButton("batV2", "BAT\nV2", defaults.batV2, function(btn)
 end)
 
 
-makeButton("instantReset", "INSTANT\nRESET", defaults.instantReset, function(btn)
+makeButton("instantReset", "90GGHT\nDUELS", defaults.instantReset, function(btn)
     instaResetRun()
     pulse(btn)
 end)
