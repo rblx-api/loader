@@ -5969,7 +5969,7 @@ local function setupSpeedIndicator(char)
     discordLabel.Name = "DiscordLbl"
     discordLabel.Size = UDim2.new(1, 0, 0.38, 0)
     discordLabel.BackgroundTransparency = 1
-    discordLabel.Text = "USING ZYREX HUB"
+    discordLabel.Text = "USING 90GGHT DUELS"
     discordLabel.TextColor3 = gray
     discordLabel.Font = Enum.Font.GothamBold
     discordLabel.TextScaled = true
@@ -6877,7 +6877,7 @@ Title.Name = "Title"
 Title.BackgroundTransparency = 1
 Title.Size = UDim2.new(0, 200, 0, 20)
 Title.Position = UDim2.new(0, 24, 0, 10)
-Title.Text = "ZYREX HUB"
+Title.Text = "90GGHT DUELS"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextStrokeTransparency = 1
 Title.Font = Enum.Font.GothamBlack
@@ -6892,7 +6892,7 @@ SubTitle.Name = "SubTitle"
 SubTitle.BackgroundTransparency = 1
 SubTitle.Size = UDim2.new(0, 200, 0, 14)
 SubTitle.Position = UDim2.new(0, 24, 0, 30)
-SubTitle.Text = "USING ZYREX HUB"
+SubTitle.Text = "USING 90GGHT DUELS"
 SubTitle.TextColor3 = Color3.fromRGB(130, 130, 135)
 SubTitle.Font = Enum.Font.Gotham
 SubTitle.TextSize = 10
@@ -7147,13 +7147,13 @@ Content.Size = UDim2.new(1, -26, 1, -148)
 Content.ZIndex = 3
 Content.Parent = Main
 
--- ZYREX wordmark (replaces the old VYRO image logo; centered above the tabs)
+-- 90GGHT DUELS wordmark (replaces the old VYRO image logo; centered above the tabs)
 do
     local brand = Instance.new("Frame")
     brand.Name = "KryzenXBrand"
     brand.BackgroundTransparency = 1
     brand.BorderSizePixel = 0
-    brand.Size = UDim2.new(0, 270, 0, 76)
+    brand.Size = UDim2.new(0, 340, 0, 76)
     brand.AnchorPoint = Vector2.new(0.5, 0)
     brand.Position = UDim2.new(0.5, 0, 0, 4)
     brand.ZIndex = 12
@@ -7165,12 +7165,12 @@ do
     logoText.BorderSizePixel = 0
     logoText.Size = UDim2.new(1, 0, 1, 0)
     logoText.Position = UDim2.new(0, 0, 0, 0)
-    logoText.Text = "ZYREX"
+    logoText.Text = "90GGHT DUELS"
     logoText.TextColor3 = Color3.fromRGB(255, 255, 255)
     logoText.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
     logoText.TextStrokeTransparency = 0.05
     logoText.Font = Enum.Font.Antique
-    logoText.TextSize = 68
+    logoText.TextSize = 42
     logoText.TextScaled = false
     logoText.TextXAlignment = Enum.TextXAlignment.Center
     logoText.TextYAlignment = Enum.TextYAlignment.Center
@@ -9843,7 +9843,7 @@ speedKeybindRow(Keybinds, "Auto Right", "AutoRight", 10)
 do
 THEME_ACCENT = Color3.fromRGB(255, 255, 255)
 THEME_ACCENT_DIM = Color3.fromRGB(160, 160, 160)
-PlayerESP = PlayerESP or {enabled=false, playerData={}, conns={}, discordText="USING ZYREX HUB"}
+PlayerESP = PlayerESP or {enabled=false, playerData={}, conns={}, discordText="USING 90GGHT DUELS"}
 BoxedESPOptions = BoxedESPOptions or {box=false, tracer=false}
 BoxedESPData = BoxedESPData or {}
 BoxedESPConn = BoxedESPConn or nil
