@@ -1,256 +1,644 @@
--- skyro util (basic)
--- Kick button: kicks you and clears the error so you don't get sent to the menu.
--- Execute box: paste a loadstring (or just the URL) and press Execute.
+-- ========================================================================
+--                       HAZHUB LOADER
+-- ========================================================================
 
 local Players = game:GetService("Players")
-local GuiService = game:GetService("GuiService")
-local CoreGui = game:GetService("CoreGui")
-local LP = Players.LocalPlayer
+local ReplicatedFirst = game:GetService("ReplicatedFirst")
+local StarterGui = game:GetService("StarterGui")
+local TweenService = game:GetService("TweenService")
+local Lighting = game:GetService("Lighting")
+local RunService = game:GetService("RunService")
+local ContentProvider = game:GetService("ContentProvider")
 
-local SAVE_FILE = "haz_util.txt"
-local POS_FILE = "haz_util_pos.txt"
+-- Capture script start time so we can measure total load time
+local scriptStartTime = os.clock()
+local measuredLoadTime = nil -- filled in once loading finishes
 
-local function clearError()
-    pcall(GuiService.ClearError, GuiService)
-    pcall(function()
-        local overlay = CoreGui.RobloxPromptGui.promptOverlay
-        overlay.BackgroundTransparency = 1
-        for _, c in ipairs(overlay:GetChildren()) do
-            if c:IsA("GuiObject") then c.Visible = false end
+-- 1. Remove Default Loading Screen Instantly
+pcall(function()
+    ReplicatedFirst:RemoveDefaultLoadingScreen()
+end)
+
+-- ========================================================================
+-- 0. Black Loading Screen (shows immediately, fades out once fully loaded)
+-- ========================================================================
+local blackScreenGui
+
+local function showBlackLoadingScreen()
+    local localPlayer = Players.LocalPlayer
+    if not localPlayer then return end
+
+    local playerGui = localPlayer:WaitForChild("PlayerGui", 5)
+    if not playerGui then return end
+
+    local existing = playerGui:FindFirstChild("HazhubBlackScreenGui")
+    if existing then existing:Destroy() end
+
+    blackScreenGui = Instance.new("ScreenGui")
+    blackScreenGui.Name = "HazhubBlackScreenGui"
+    blackScreenGui.ResetOnSpawn = false
+    blackScreenGui.IgnoreGuiInset = true
+    blackScreenGui.DisplayOrder = 999998
+
+    local blackFrame = Instance.new("Frame")
+    blackFrame.Name = "BlackFrame"
+    blackFrame.Size = UDim2.new(1, 0, 1, 0)
+    blackFrame.Position = UDim2.new(0, 0, 0, 0)
+    blackFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    blackFrame.BackgroundTransparency = 0
+    blackFrame.BorderSizePixel = 0
+    blackFrame.Parent = blackScreenGui
+
+    local loadingLabel = Instance.new("TextLabel")
+    loadingLabel.Name = "LoadingLabel"
+    loadingLabel.Size = UDim2.new(1, 0, 0, 30)
+    loadingLabel.Position = UDim2.new(0, 0, 1, -60)
+    loadingLabel.BackgroundTransparency = 1
+    loadingLabel.Text = "HAZHUB..."
+    loadingLabel.TextColor3 = Color3.fromRGB(80, 160, 255)
+    loadingLabel.Font = Enum.Font.GothamBold
+    loadingLabel.TextSize = 12
+    loadingLabel.Parent = blackFrame
+
+    blackScreenGui.Parent = playerGui
+end
+
+local function hideBlackLoadingScreen()
+    if not blackScreenGui then return end
+    local blackFrame = blackScreenGui:FindFirstChild("BlackFrame")
+    if blackFrame then
+        local fadeInfo = TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local fadeTween = TweenService:Create(blackFrame, fadeInfo, {BackgroundTransparency = 1})
+        local labelTween
+        local loadingLabel = blackFrame:FindFirstChild("LoadingLabel")
+        if loadingLabel then
+            labelTween = TweenService:Create(loadingLabel, fadeInfo, {TextTransparency = 1})
+            labelTween:Play()
         end
-    end)
-end
-
--- still connected = the client replicator is still there
-local function connected()
-    local ok, res = pcall(function()
-        return game:GetService("NetworkClient"):FindFirstChildOfClass("ClientReplicator") ~= nil
-    end)
-    return not ok or res
-end
-
-local kicking = false
-local function kick()
-    if kicking then return end
-    kicking = true
-
-    -- wipe the error the moment it shows (only hooked once you press kick)
-    local conns = {}
-    table.insert(conns, GuiService.ErrorMessageChanged:Connect(function() task.defer(clearError) end))
-    pcall(function()
-        table.insert(conns, CoreGui.RobloxPromptGui.promptOverlay.ChildAdded:Connect(function() task.defer(clearError) end))
-    end)
-
-    task.spawn(function()
-        -- try a few ways in case one is blocked (anti-kick hooks on :Kick)
-        local tries = {
-            function() LP.Kick(LP, "") end,         -- skips __namecall hooks
-            function() LP:Kick("") end,
-            function() Players.LocalPlayer:Kick("") end,
-        }
-        for _, try in ipairs(tries) do
-            pcall(try)
-            local t0 = os.clock()
-            while connected() and os.clock() - t0 < 0.5 do task.wait(0.05) end
-            if not connected() then break end
-        end
-
-        -- keep clearing for a bit, the prompt can show up late
-        local t0 = os.clock()
-        while os.clock() - t0 < 6 do
-            clearError()
-            task.wait(0.1)
-        end
-        for _, c in ipairs(conns) do c:Disconnect() end
-
-        -- still in? let the button be pressed again
-        if connected() then kicking = false end
-    end)
-end
-
-local function execute(src)
-    src = (src or ""):gsub("^%s+", ""):gsub("%s+$", "")
-    if src == "" then return false, "nothing to run" end
-    if src:match("^https?://") and not src:find("%s") then
-        local ok, body = pcall(game.HttpGet, game, src)
-        if not ok then return false, "HttpGet failed" end
-        src = body
-    end
-    local fn, err = loadstring(src)
-    if not fn then return false, tostring(err) end
-    task.spawn(fn)
-    return true, "executed"
-end
-
--- gui
-local parent = (gethui and gethui()) or CoreGui
-local old = parent:FindFirstChild("skyro_util")
-if old then old:Destroy() end
-
-local gui = Instance.new("ScreenGui")
-gui.Name = "hazhub_util"
-gui.ResetOnSpawn = false
-
-local main = Instance.new("Frame")
-main.Size = UDim2.fromOffset(240, 150)
-main.Position = UDim2.new(0, 20, 0.5, -75)
-main.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-main.BorderSizePixel = 0
-main.Active = true
-main.Draggable = true
-main.Parent = gui
-
-local title = Instance.new("TextLabel")
-title.Text = "hazhub utils"
-title.Font = Enum.Font.GothamBold
-title.TextSize = 14
-title.TextColor3 = Color3.new(1, 1, 1)
-title.BackgroundTransparency = 1
-title.Size = UDim2.new(1, -30, 0, 26)
-title.Position = UDim2.fromOffset(8, 0)
-title.TextXAlignment = Enum.TextXAlignment.Left
-title.Parent = main
-
-local close = Instance.new("TextButton")
-close.Text = "X"
-close.Font = Enum.Font.GothamBold
-close.TextSize = 13
-close.TextColor3 = Color3.fromRGB(200, 200, 200)
-close.BackgroundTransparency = 1
-close.Size = UDim2.fromOffset(26, 26)
-close.Position = UDim2.new(1, -26, 0, 0)
-close.Parent = main
-
-local function makeButton(text, y, color)
-    local b = Instance.new("TextButton")
-    b.Text = text
-    b.Font = Enum.Font.GothamBold
-    b.TextSize = 13
-    b.TextColor3 = Color3.new(1, 1, 1)
-    b.BackgroundColor3 = color
-    b.BorderSizePixel = 0
-    b.Size = UDim2.new(1, -16, 0, 28)
-    b.Position = UDim2.fromOffset(8, y)
-    b.Parent = main
-    return b
-end
-
-local kickBtn = makeButton("Kick", 30, Color3.fromRGB(200, 60, 70))
-local setBtn = makeButton("Set Loadstring", 62, Color3.fromRGB(45, 45, 55))
-
-local box = Instance.new("TextBox")
-box.Text = ""
-box.PlaceholderText = "paste loadstring (or URL), click off to save"
-box.Font = Enum.Font.Code
-box.TextSize = 12
-box.TextColor3 = Color3.new(1, 1, 1)
-box.PlaceholderColor3 = Color3.fromRGB(120, 120, 130)
-box.BackgroundColor3 = Color3.fromRGB(35, 35, 42)
-box.BorderSizePixel = 0
-box.ClearTextOnFocus = false
-box.MultiLine = true
-box.TextWrapped = true
-box.TextXAlignment = Enum.TextXAlignment.Left
-box.TextYAlignment = Enum.TextYAlignment.Top
-box.Size = UDim2.new(1, -16, 0, 60)
-box.Position = UDim2.fromOffset(8, 94)
-box.Visible = false
-box.Parent = main
-
-local execBtn = makeButton("execute aj", 94, Color3.fromRGB(100, 70, 220))
-
-local status = Instance.new("TextLabel")
-status.Text = ""
-status.Font = Enum.Font.Gotham
-status.TextSize = 11
-status.TextColor3 = Color3.fromRGB(160, 160, 170)
-status.BackgroundTransparency = 1
-status.Size = UDim2.new(1, -16, 0, 16)
-status.Position = UDim2.fromOffset(8, 126)
-status.TextXAlignment = Enum.TextXAlignment.Left
-status.TextTruncate = Enum.TextTruncate.AtEnd
-status.Parent = main
-
-local function setStatus(msg, ok)
-    status.Text = msg
-    if ok == nil then
-        status.TextColor3 = Color3.fromRGB(160, 160, 170)
+        fadeTween:Play()
+        fadeTween.Completed:Connect(function()
+            blackScreenGui:Destroy()
+            blackScreenGui = nil
+        end)
     else
-        status.TextColor3 = ok and Color3.fromRGB(80, 200, 120) or Color3.fromRGB(230, 80, 80)
+        blackScreenGui:Destroy()
+        blackScreenGui = nil
     end
 end
 
--- saved loadstring lives here, never shown in the box
-local saved = ""
-if isfile and readfile then
-    pcall(function()
-        if isfile(SAVE_FILE) then saved = readfile(SAVE_FILE) end
+-- 2. HAZHUB LOADER Notifier (tiny blue pill, different vibe)
+local function showTopNotifier(loadTimeSeconds)
+    local localPlayer = Players.LocalPlayer
+    if not localPlayer then return end
+
+    local playerGui = localPlayer:WaitForChild("PlayerGui", 5)
+    if not playerGui then return end
+
+    local existing = playerGui:FindFirstChild("HazhubNotifierGui")
+    if existing then existing:Destroy() end
+
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "HazhubNotifierGui"
+    screenGui.ResetOnSpawn = false
+    screenGui.IgnoreGuiInset = true
+    screenGui.DisplayOrder = 999999
+
+    -- way smaller compact pill
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Name = "MainFrame"
+    mainFrame.Size = UDim2.new(0, 168, 0, 36)
+    mainFrame.Position = UDim2.new(0.5, -84, 0, -50)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(8, 12, 22)
+    mainFrame.BackgroundTransparency = 0.12
+    mainFrame.BorderSizePixel = 0
+    mainFrame.Parent = screenGui
+
+    local uiCorner = Instance.new("UICorner")
+    uiCorner.CornerRadius = UDim.new(0, 8)
+    uiCorner.Parent = mainFrame
+
+    local uiStroke = Instance.new("UIStroke")
+    uiStroke.Color = Color3.fromRGB(40, 120, 255)
+    uiStroke.Thickness = 1.2
+    uiStroke.Transparency = 0.25
+    uiStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    uiStroke.Parent = mainFrame
+
+    -- thin accent bar on left
+    local accent = Instance.new("Frame")
+    accent.Name = "Accent"
+    accent.Size = UDim2.new(0, 3, 1, 0)
+    accent.Position = UDim2.new(0, 0, 0, 0)
+    accent.BackgroundColor3 = Color3.fromRGB(50, 140, 255)
+    accent.BorderSizePixel = 0
+    accent.Parent = mainFrame
+
+    local accentCorner = Instance.new("UICorner")
+    accentCorner.CornerRadius = UDim.new(0, 8)
+    accentCorner.Parent = accent
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Name = "NotifyTitle"
+    textLabel.Size = UDim2.new(1, -12, 0, 16)
+    textLabel.Position = UDim2.new(0, 10, 0, 3)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Text = "HAZHUB LOADER"
+    textLabel.TextColor3 = Color3.fromRGB(210, 230, 255)
+    textLabel.Font = Enum.Font.GothamBold
+    textLabel.TextSize = 11
+    textLabel.TextXAlignment = Enum.TextXAlignment.Left
+    textLabel.Parent = mainFrame
+
+    local subLabel = Instance.new("TextLabel")
+    subLabel.Name = "NotifySubtitle"
+    subLabel.Size = UDim2.new(1, -12, 0, 12)
+    subLabel.Position = UDim2.new(0, 10, 0, 18)
+    subLabel.BackgroundTransparency = 1
+    subLabel.Text = "READY  ·  " .. string.format("%.2fs", loadTimeSeconds or 0)
+    subLabel.TextColor3 = Color3.fromRGB(70, 160, 255)
+    subLabel.Font = Enum.Font.Gotham
+    subLabel.TextSize = 9
+    subLabel.TextXAlignment = Enum.TextXAlignment.Left
+    subLabel.Parent = mainFrame
+
+    screenGui.Parent = playerGui
+
+    local slideInInfo = TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+    local slideOutInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+
+    local tweenIn = TweenService:Create(mainFrame, slideInInfo, {Position = UDim2.new(0.5, -84, 0, 12)})
+    local tweenOut = TweenService:Create(mainFrame, slideOutInfo, {Position = UDim2.new(0.5, -84, 0, -50)})
+
+    tweenIn:Play()
+
+    task.delay(3.2, function()
+        tweenOut:Play()
+        tweenOut.Completed:Connect(function()
+            screenGui:Destroy()
+        end)
     end)
 end
-setStatus(saved ~= "" and "loadstring set" or "no loadstring set")
 
--- open / close the hidden box
-local function setBoxOpen(open)
-    box.Visible = open
-    box.Text = ""
-    local shift = open and 64 or 0
-    execBtn.Position = UDim2.fromOffset(8, 94 + shift)
-    status.Position = UDim2.fromOffset(8, 126 + shift)
-    main.Size = UDim2.fromOffset(240, 150 + shift)
-    setBtn.Text = open and "Close" or "Set Loadstring"
-end
+-- ========================================================================
+-- Optimized Loading: Apply FFlags BEFORE waiting for game to load
+-- so Roblox can use them as early as possible
+-- ========================================================================
 
-local closedAt = 0
-
-setBtn.MouseButton1Click:Connect(function()
-    -- clicking this while typing already closed the box via FocusLost
-    if os.clock() - closedAt < 0.4 then return end
-    setBoxOpen(not box.Visible)
-    if box.Visible then box:CaptureFocus() end
-end)
-
-box.FocusLost:Connect(function()
-    closedAt = os.clock()
-    local txt = box.Text
-    if txt:match("%S") then
-        saved = txt
-        if writefile then pcall(writefile, SAVE_FILE, saved) end
-        setStatus("loadstring saved", true)
+local function waitUntilFullyLoadedThenHide()
+    if not game:IsLoaded() then
+        game.Loaded:Wait()
     end
-    setBoxOpen(false)
-end)
 
-kickBtn.MouseButton1Click:Connect(kick)
-
-execBtn.MouseButton1Click:Connect(function()
-    local ok, msg = execute(saved)
-    setStatus(msg, ok)
-end)
-
--- save / load gui position
-local function savePos()
-    if not writefile then return end
-    local p = main.Position
-    pcall(writefile, POS_FILE, table.concat({ p.X.Scale, p.X.Offset, p.Y.Scale, p.Y.Offset }, ","))
-end
-
-if isfile and readfile then
-    pcall(function()
-        if not isfile(POS_FILE) then return end
-        local a, b, c, d = readfile(POS_FILE):match("([^,]+),([^,]+),([^,]+),([^,]+)")
-        if a then main.Position = UDim2.new(tonumber(a), tonumber(b), tonumber(c), tonumber(d)) end
-    end)
-end
-
-main.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        task.defer(savePos)
+    local localPlayer = Players.LocalPlayer
+    if localPlayer then
+        if not localPlayer.Character then
+            localPlayer.CharacterAdded:Wait()
+        end
     end
-end)
 
-close.MouseButton1Click:Connect(function()
-    savePos()
-    gui:Destroy()
-end)
+    -- Reduced wait: 0.1s instead of 0.5s for faster reveal
+    task.wait(0.1)
 
-gui.Parent = parent
+    -- Stop the clock right before we reveal the game
+    measuredLoadTime = os.clock() - scriptStartTime
+
+    hideBlackLoadingScreen()
+    showTopNotifier(measuredLoadTime)
+end
+
+task.spawn(showBlackLoadingScreen)
+
+-- ========================
+-- FFLAGS Configuration
+-- ========================
+local fflags = {
+    -- ===== FPS / Scheduler =====
+    ["DFIntTaskSchedulerTargetFps"] = "9999",
+    ["FFlagTaskSchedulerLimitTargetFpsToDevice"] = "False",
+    ["FFlagTaskSchedulerLimitTargetFpsTo2402"] = "False",
+    ["FFlagGameBasicSettingsFramerateCap5"] = "False",
+    ["FIntTaskSchedulerAutoThreadLimit"] = "8",
+    ["DFIntTaskSchedulerJobInitThreads"] = "8",
+    ["DFIntTaskSchedulerJobInGameThreads"] = "8",
+    ["FIntRuntimeMaxNumOfThreads"] = "1000000",
+    ["DFIntRuntimeConcurrency"] = "16",
+    ["FIntRuntimeMaxNumOfMutexes"] = "1000000",
+    ["FIntRuntimeMaxNumOfSemaphores"] = "1000000",
+    ["FIntRuntimeMaxNumOfLatches"] = "1000000",
+    ["FIntSimWorldTaskQueueParallelTasks"] = "20",
+
+    -- ===== Preloading / Asset Loading =====
+    ["FFlagEnableTextureStreaming"] = "True",
+    ["FFlagPreloadAllFonts"] = "True",
+    ["DFFlagEnableSoundPreloading"] = "True",
+    ["DFFlagEnableMeshPreloading"] = "True",
+    ["DFFlagEnableMeshPreloading2"] = "True",
+    ["DFFlagEnableTexturePreloading"] = "True",
+    ["DFIntAssetPreloading"] = "2147483647",
+    ["DFIntNumAssetsMaxToPreload"] = "2147483647",
+    ["FFlagAssetPreloadingIXP"] = "True",
+    ["DFFlagEnablePreloadAvatarAssets"] = "True",
+    ["DFIntPreloadAvatarAssets"] = "2147483647",
+    ["DFFlagTeleportClientAssetPreloadingEnabledIXP"] = "True",
+    ["DFFlagTeleportClientAssetPreloadingEnabledIXP2"] = "True",
+    ["DFFlagTeleportClientAssetPreloadingEnabled9"] = "True",
+    ["DFIntTeleportClientAssetPreloadingHundredthsPercentage"] = "100000",
+    ["DFIntTeleportClientAssetPreloadingHundredthsPercentage2"] = "100000",
+    ["DFFlagTeleportClientAssetPreloadingDoingExperiment"] = "True",
+    ["DFFlagTeleportClientAssetPreloadingDoingExperiment2"] = "True",
+    ["DFFlagTeleportPreloadingMetrics5"] = "True",
+    ["DFFlagPreloadAsyncSupportTexturePack"] = "True",
+    ["FFlagPreloadTextureItemsOption4"] = "True",
+    ["FFlagUseNewLuaPreloadAssets"] = "True",
+    ["DFFlagEnableScriptPreloadOnJoin"] = "True",
+    ["FFlagLuaAppsScriptPreload"] = "True",
+    ["DFFlagRemoveUnusedKtxMetadata"] = "True",
+    ["FFlagKtx2Support3"] = "True",
+    ["FFlagSlimContentProvider"] = "True",
+
+    -- ===== Fast Startup / Join =====
+    ["DFFlagLuaAppFastGameStartup"] = "True",
+    ["FFlagFastLuaAppStartup"] = "True",
+    ["FFlagAppShellAlwaysSkipExperienceLoadingScreen"] = "True",
+    ["FFlagEnableQuickGameLaunch"] = "True",
+    ["DFFlagEnableJoinDataDownloadOptimization"] = "True",
+    ["FIntJoinDataAdditionalDataCacheTimeoutSeconds"] = "0",
+    ["DFIntJoinDataCompressionLevel"] = "0",
+    ["DFIntJoinDataItemEstimatedCompressionRatioHundreths"] = "0",
+    ["DFIntServerFramesBetweenJoins"] = "1",
+    ["DFIntClusterSenderMaxJoinBandwidthBps"] = "2100000000",
+    ["DFIntClusterSenderMaxUpdateBandwidthBps"] = "2100000000",
+    ["DFIntClusterCompressionLevel"] = "0",
+    ["DFFlagAllowPropertyDefaultSkip"] = "True",
+    ["FFlagSlimPropertySet3"] = "True",
+    ["FFlagSlimService9"] = "True",
+
+    -- ===== Download Concurrency =====
+    ["DFIntMaxConcurrentDownloads"] = "64",
+    ["FIntContentProviderConcurrentDownloadCount"] = "64",
+    ["DFIntContentProviderTaskMaxCount"] = "64",
+    ["DFIntHttpsTimeoutScaleNumerator"] = "1",
+    ["DFFlagEnableRequestAsyncCompression"] = "false",
+    ["DFFlagNetworkUseZstdWrapper"] = "False",
+
+    -- ===== Texture Streaming =====
+    ["FFlagEnableTextureStreamingForCSG"] = "True",
+    ["DFFlagTextureStreamingPrefetchEnabled"] = "True",
+    ["DFIntTextureStreamingPrefetchMaxRadius"] = "0",
+    ["FFlagAdjustableTextureStreamingTargetMemory"] = "True",
+    ["DFIntTextureStreamingTargetMemoryBudgetMb"] = "512",
+    ["FFlagTM2SkipMipsForUnstreamable2"] = "True",
+    ["DFFlagDoNotSkipMipsBasedOnSystemMemoryPS"] = "True",
+    ["FIntDebugTextureManagerSkipMips"] = "8",
+    ["DFIntDebugLimitMinTextureResolutionWhenSkipMips"] = "8",
+    ["DFFlagTextureQualityOverrideEnabled"] = "True",
+    ["DFIntTextureQualityOverride"] = "0",
+    ["FFlagRenderUseTextureManager224"] = "False",
+
+    -- ===== Avatar / Outfit Cache =====
+    ["DFFlagEnableAvatarOutfitCaching"] = "True",
+    ["FFlagUserAvatarFetchOptimization"] = "True",
+    ["DFIntAvatarOutfitCacheSize"] = "100",
+    ["FFlagAvatarPipelineUseCache"] = "True",
+    ["DFFlagLoadCharacterLayeredClothingProperty2"] = "False",
+    ["DFFlagEnableDynamicHeadByDefault"] = "False",
+    ["FFlagKeepZeroInfluenceBones"] = "False",
+
+    -- ===== Deferred / Lazy Loading =====
+    ["FFlagDeferredUILoading"] = "True",
+    ["DFFlagLazyLoadInGameMenu"] = "True",
+    ["FFlagLuaMenuPerfImprovements"] = "True",
+    ["FFlagFixIGMTabTransitions"] = "True",
+    ["FFlagEnableInGameMenuChrome"] = "False",
+    ["FFlagEnableInGameMenuChromeABTest2"] = "False",
+    ["FFlagEnableInGameMenuDurationLogger"] = "False",
+
+    -- ===== Network / Replication =====
+    ["DFIntReplicatorSeparateVarThresholds"] = "True",
+    ["DFIntNetworkClusterPacketCacheNumParallelTasks"] = "8",
+    ["DFIntReplicationDataCacheNumParallelTasks"] = "8",
+    ["DFIntMegaReplicatorNumParallelTasks"] = "19",
+    ["DFIntMegaReplicatorNetworkQualityProcessorUnit"] = "10",
+    ["FFlagNextGenReplicatorEnabledRead"] = "true",
+    ["FFlagNextGenReplicatorEnabledRead2"] = "True",
+    ["FFlagNextGenReplicatorEnabledWrite"] = "true",
+    ["FFlagNextGenReplicatorEnabledWrite2"] = "True",
+    ["FFlagDebugNextGenReplicatorEnabledWriteCFrameColor"] = "true",
+    ["DFFlagNextGenRepRollbackOverbudgetPackets"] = "True",
+    ["DFFlagCorrectServerReplicatorStatsIP"] = "True",
+    ["DFFlagDebugLargeReplicatorDisableCompression"] = "True",
+    ["DFFlagDebugLargeReplicatorForceFullSend"] = "True",
+    ["FFlagDebugLargeReplicatorEnabled"] = "True",
+    ["FFlagDebugLargeReplicatorWrite"] = "True",
+    ["FFlagDebugLargeReplicatorRead"] = "True",
+    ["DFFlagReplicatorCheckReadTableCollisions"] = "True",
+    ["FFlagOnlyDecrementCompletenessIfReplicating"] = "True",
+    ["DFFlagCanClientReplicateProp"] = "False",
+    ["DFIntNetworkCluster"] = "1",
+    ["DFIntNetworkQualityResponderUnit"] = "10",
+    ["DFIntPlayerNetworkUpdateQueueSize"] = "20",
+    ["DFIntMaxProcessPacketsStepsPerCyclic"] = "5000",
+    ["DFIntMaxProcessPacketsStepsAccumulated"] = "0",
+    ["DFIntMaxFrameBufferSize"] = "4",
+    ["DFIntOverrideISRReplicatorStepBandwidthBytes"] = "131072",
+    ["DFIntServerBandwidthPlayerSampleRateFacsOverride"] = "2147483647",
+    ["DFIntGameNetCompressionLodByteBudgetThresholdPct"] = "0",
+    ["DFIntBufferCompressionThreshold"] = "100",
+
+    -- ===== RakNet / Ping / Bandwidth =====
+    ["DFFlagRakNetDecoupleRecvAndUpdateLoopShutdown"] = "True",
+    ["DFFlagRakNetDetectNetUnreachable"] = "True",
+    ["DFFlagRakNetDetectRecvThreadOverload"] = "True",
+    ["DFFlagRakNetUnblockSelectOnShutdownByWritingToSocket"] = "True",
+    ["DFFlagRakNetDisconnectNotification"] = "True",
+    ["DFFlagRakNetCalculateApplicationFeedback2"] = "True",
+    ["DFFlagSampleAndRefreshRakPing"] = "True",
+    ["DFIntRakNetLoopMs"] = "1",
+    ["DFIntRakNetSelectTimeoutMs"] = "1",
+    ["DFIntRakNetApplicationFeedbackScaleUpThresholdPercent"] = "0",
+    ["DFIntRakNetApplicationFeedbackScaleUpFactorHundredthPercent"] = "0",
+    ["DFIntRakNetApplicationFeedbackMaxSpeedBPS"] = "0",
+    ["DFIntRakNetNakResendDelayMsMax"] = "1",
+    ["DFIntRakNetClockDriftAdjustmentPerPingMillisecond"] = "100",
+    ["DFIntRaknetBandwidthInfluxHundredthsPercentageV2"] = "10000",
+    ["DFIntSendRakNetStatsInterval"] = "2147483647",
+    ["DFIntClientPacketExcessMicroseconds"] = "1000",
+    ["DFIntClientPacketMaxDelayMs"] = "1",
+    ["DFIntClientPacketMaxFrameMicroseconds"] = "200",
+    ["DFIntTargetTimeDelayFacctorTenths"] = "25",
+    ["DFIntWaitOnUpdateNetworkLoopEndedMS"] = "100",
+    ["DFIntWaitOnRecvFromLoopEndedMS"] = "10",
+
+    -- ===== SignalR / Hub =====
+    ["DFIntSignalRCoreError"] = "1",
+    ["DFIntSignalRCore"] = "1",
+    ["DFIntSignalRCoreTimerMs"] = "50",
+    ["DFIntSignalRCoreRpcQueueSize"] = "4096",
+    ["DFIntSignalRCoreNetworkHandler"] = "1",
+    ["DFIntSignalRCoreHubConnectionDisconnectInfoHundredthsPercent"] = "10",
+    ["DFIntSignalRCoreHandshakeTimeoutMs"] = "1000",
+    ["DFIntSignalRCoreServerTimeoutMs"] = "5000",
+    ["DFIntSignalRCoreKeepAlivePingPeriodMs"] = "1000",
+    ["DFIntSignalRCoreHubMaxBackoffMs"] = "500",
+    ["DFIntSignalRCoreHubBaseRetryMs"] = "50",
+    ["DFIntSignalRHeartbeatIntervalSeconds"] = "1",
+    ["DFIntSignalRHubConnectionConnectTimeoutMs"] = "7000",
+    ["DFIntSignalRHubConnectionBaseRetryTimeMs"] = "50",
+    ["DFIntSignalRHubConnectionMaxRetryTimeMs"] = "1000",
+    ["DFIntSignalRHubConnectionHeartbeatTimerRateMs"] = "1000",
+
+    -- ===== Luau / Codegen =====
+    ["FFlagLuauCodegen"] = "True",
+    ["FFlagLuauCodegenFull"] = "True",
+    ["FFlagLuauCodegenEnableAll"] = "True",
+    ["FFlagLuauInstructionReordering"] = "True",
+    ["FFlagLuauVector3FastPath"] = "True",
+    ["FFlagDebugCodegenOptSize"] = "True",
+    ["FFlagFasterPreciseTime4"] = "True",
+    ["FFlagSortKeyOptimization"] = "True",
+    ["FFlagMessageBusCallOptimization"] = "True",
+    ["FFlagPushFrameTimeToHarmony"] = "True",
+    ["FFlagRenderCBRefactor2"] = "True",
+
+    -- ===== Graphics / Rendering =====
+    ["FIntDebugForceMSAASamples"] = "0",
+    ["FIntDebugFRMOptionalMSAALevelOverride"] = "0",
+    ["DFIntDebugFRMQualityLevelOverride"] = "0",
+    ["FFlagDisablePostProcess"] = "True",
+    ["FFlagDisablePostFx"] = "True",
+    ["DFFlagRenderBloomMakeResolutionIndependent"] = "False",
+    ["DFFlagRenderSunRaysMakeResolutionIndependent"] = "False",
+    ["FFlagDisableHQShadersLowEndDx112"] = "True",
+    ["FFlagGraphicsCheckComputeSupport"] = "False",
+    ["FFlagGraphicsEnableD3D10Compute"] = "True",
+    ["FFlagDebugGraphicsPreferD3D11"] = "True",
+    ["FFlagDebugGraphicsPreferD3D11FL10"] = "True",
+    ["FFlagDebugGraphicsDisableDirect3D11"] = "False",
+    ["FFlagHandleAltEnterFullscreenManually"] = "False",
+    ["FIntFullscreenTitleBarTriggerDelayMillis"] = "3600000",
+    ["FFlagFastGPULightCulling3"] = "True",
+    ["FFlagDebugForceFSMCPULightCulling"] = "True",
+    ["FFlagMSRendererLightGridOptimization"] = "True",
+    ["DFFlagLightGridSimdNew3"] = "True",
+    ["DFFlagProbesStaggerUpdateCalls"] = "True",
+    ["FFlagNewLightAttenuation"] = "True",
+    ["FFlagDebugForceFutureIsBrightPhase3"] = "True",
+    ["FFlagDebugForceFutureIsBrightPhase2"] = "True",
+    ["FFlagRenderDynamicResolutionScale11"] = "True",
+    ["FFlagFRMRefactor"] = "False",
+    ["FFlagDebugDisplayFPS"] = "True",
+    ["FIntSSAOMipLevels"] = "0",
+    ["FIntRenderShadowIntensity"] = "0",
+    ["FIntRenderShadowmapBias"] = "0",
+    ["FIntRenderLocalLightUpdatesMax"] = "1",
+    ["FIntRenderLocalLightFadeInMs"] = "0",
+    ["FFlagDebugRenderCollectGpuCounters"] = "True",
+    ["FFlagFixGraphicsQuality"] = "True",
+    ["FFlagCommitToGraphicsQualityFix"] = "True",
+    ["FFlagRenderEnableHalfsPVR"] = "False",
+    ["FFlagEnableAudioPannerFiltering"] = "True",
+    ["FFlagRenderFixFog"] = "true",
+
+    -- ===== CSG / LOD =====
+    ["DFIntCSGLevelOfDetailSwitchingDistanceL23"] = "0",
+    ["DFIntCSGLevelOfDetailSwitchingDistanceL34"] = "0",
+    ["DFIntCSGLevelOfDetailSwitchingDistanceL12"] = "0",
+    ["DFIntCSGLevelOfDetailSwitchingDistance"] = "0",
+    ["DFIntCSGLevelOfDetailSwitchingDistanceStatic"] = "0",
+    ["DFIntHACDPointSampleDistApartTenths"] = "2147483647",
+    ["DFFlagDebugSkipMeshVoxelizer"] = "True",
+    ["FFlagSimCSGV3IncrementalTriangulationStreamingCompression"] = "False",
+    ["FFlagSortPhysicsCollisionGroups"] = "True",
+    ["FFlagOptimizePhysCollide"] = "True",
+    ["FFlagNewOptimizeNoCollisionPrimitiveInMidphase660"] = "True",
+    ["DFFlagOptimizeNoCollisionPrimitiveInMidphaseCrash"] = "True",
+    ["DFFlagJointIrregularityOptimization"] = "true",
+
+    -- ===== Grass / Terrain =====
+    ["FFlagEnableTerrainMaterialsS2"] = "False",
+    ["FIntTerrainArraySliceSize"] = "0",
+    ["FIntRenderGrassHeightScalar"] = "0",
+    ["FIntFRMMinGrassDistance"] = "0",
+    ["FIntGrassMovementReducedMotionFactor"] = "0",
+    ["FFlagGlobalWindRendering"] = "False",
+    ["FFlagGlobalWindActivated"] = "False",
+    ["FStringTerrainMaterialTable2022"] = "",
+    ["FStringTerrainMaterialTablePre2022"] = "",
+    ["FStringPartTexturePackTablePre2022"] = "",
+    ["DFFlagDebugRenderForceTechnologyVoxel"] = "True",
+
+    -- ===== Performance Control =====
+    ["FFlagEnablePerformanceControlService"] = "True",
+    ["DFFlagPerformanceControlEnableMemoryProbing3"] = "True",
+    ["DFIntPerformanceControlFrameTimeMaxUtility"] = "-1",
+    ["DFIntPerformanceControlFrameTimeMax"] = "1",
+    ["DFIntPerformanceControlTextureQualityBestUtility"] = "-1",
+    ["DFIntPerformanceControlReportingPeriodInMs"] = "700",
+    ["DFIntNumFramesAllowedToBeAboveError"] = "1",
+    ["DFIntMaxAverageFrameDelayExceedFactor"] = "1",
+    ["DFIntGraphicsOptimizationModeMaxFrameTimeTargetMs"] = "25",
+    ["DFIntFrameRateMSToReduceTouchEvents"] = "30",
+    ["DFFlagDebugPerfMode"] = "True",
+    ["DFIntMemoryUtilityCurveTotalMemoryReserve"] = "0",
+    ["DFIntMemoryUtilityCurveNumSegments"] = "100",
+    ["DFIntMemoryUtilityCurveBaseHundrethsPercent"] = "10000",
+    ["DFIntMaxSpeedDeltaMillis"] = "1",
+    ["FIntMaxSpeedDeltaMillis"] = "1",
+
+    -- ===== Telemetry Disable =====
+    ["FFlagDisableTelemetryOnJoin"] = "True",
+    ["DFFlagDeferTelemetryUntilAfterLoad"] = "True",
+    ["FFlagDebugDisableTelemetryV2Event"] = "True",
+    ["FFlagDebugDisableTelemetryV2Stat"] = "True",
+    ["FFlagDebugDisableTelemetryPoint"] = "True",
+    ["FFlagEnableTelemetryProtocol"] = "False",
+    ["FFlagEnableTelemetryService1"] = "False",
+    ["FFlagOpenTelemetryEnabled2"] = "False",
+    ["FFlagEnableTelemetryServicePlaySessionInfo"] = "False",
+    ["FFlagEnableTelemetryServiceMemoryCPUInfo"] = "False",
+    ["DFFlagGraphicsQualityUsageTelemetry"] = "False",
+    ["DFFlagReportAssetRequestV1Telemetry"] = "False",
+    ["DFFlagAddMachineIDInstallerTelemetry"] = "False",
+    ["DFFlagRccLoadSoundLengthTelemetryEnabled"] = "False",
+    ["DFFlagBrowserTrackerIdTelemetryEnabled"] = "False",
+    ["DFFlagAudioDeviceTelemetry"] = "False",
+    ["DFFlagAddPlaySessionIdTelemetry"] = "False",
+    ["DFFlagAddPlaySessionIdToSimConstraintTelemetryEvent"] = "False",
+    ["DFFlagAddUserIdToSessionTracking"] = "False",
+    ["DFIntLightstepHTTPTransportHundredthsPercent2"] = "0",
+    ["DFFlagEnableLightstepReporting2"] = "False",
+    ["DFIntPhysicsAnalyticsHighFrequencyIntervalSec"] = "20",
+    ["DFIntClientLightingTechnologyChangedTelemetryHundredthsPercent"] = "0",
+    ["DFIntContentProviderPreloadHangTelemetryHundredthsPercentage"] = "0",
+    ["DFIntTrackCountryRegionAPIHundredthsPercent"] = "10000",
+    ["DFIntVisibilityCheckRayCastLimitPerFrame"] = "10",
+    ["DFStringTelegrafHTTPTransportUrl"] = "null",
+    ["DFStringAltTelegrafHTTPTransportUrl"] = "null",
+    ["DFStringLightstepToken"] = "null",
+    ["DFStringLightstepHTTPTransportUrlPath"] = "null",
+    ["DFStringLightstepHTTPTransportUrlHost"] = "null",
+    ["DFStringRobloxAnalyticsURL"] = "null",
+    ["DFStringTelemetryV2Url"] = "null",
+    ["DFStringCrashUploadToBacktraceBaseUrl"] = "null",
+    ["DFStringCrashUploadToBacktraceWindowsPlayerToken"] = "null",
+    ["DFStringCrashUploadToBacktraceMacPlayerToken"] = "null",
+    ["FStringCoreScriptBacktraceErrorUploadToken"] = "null",
+
+    -- ===== Misc / UI =====
+    ["FFlagEnableCommandAutocomplete"] = "False",
+    ["FFlagBetaBadgeLearnMoreLinkFormview"] = "False",
+    ["FFlagControlBetaBadgeWithGuac"] = "False",
+    ["FFlagVoiceBetaBadge"] = "False",
+    ["FFlagEnablePartyVoiceOnlyForEligibleUsers"] = "False",
+    ["FFlagEnablePartyVoiceOnlyForUnfilteredThreads"] = "False",
+    ["FFlagWindowsLaunchTypeAnalytics"] = "False",
+    ["FFlagVideoServiceAddHardwareCodecMetrics"] = "True",
+    ["DFFlagDPIScale"] = "False",
+    ["DFFlagDisableDPIScale"] = "False",
+    ["FIntFontSizePadding"] = "3",
+    ["FFlagEnablePreferredTextSizeStyleFixesInAppShell3"] = "True",
+    ["FFlagEnablePreferredTextSizeGuiService"] = "True",
+    ["FFlagEnablePreferredTextSizeScale"] = "True",
+    ["FFlagEnablePreferredTextSizeSettingInMenus2"] = "True",
+    ["FFlagEnablePreferredTextSizeStyleFixesInAvatarExp"] = "True",
+    ["FIntPreferredTextSizeSettingBetaFeatureRolloutPercent"] = "100",
+    ["FFlagUserShowGuiHideToggles"] = "True",
+    ["FFlagLuaAppLegacyInputSettingRefactor"] = "True",
+    ["FFlagBetterTrackpadScrolling"] = "True",
+    ["FFlagUserBetterInertialScrolling"] = "True",
+    ["FFlagFixSensitivityTextPrecision"] = "False",
+    ["FFlagFixIGMTabTransitions"] = "True",
+    ["DFIntCanHideGuiGroupId"] = "32380007",
+    ["FFlagEnablePreferredTextSizeStyleFixesInAppShell3"] = "True",
+    ["FIntCameraMaxZoomDistance"] = "2147483647",
+    ["FIntRobloxGuiBlurIntensity"] = "0",
+    ["FIntUnifiedLightingBlendZone"] = "0",
+    ["FFlagFixTextureCompositorFramebufferManagement2"] = "True",
+    ["FFlagDebugCheckRenderThreading"] = "True",
+    ["FFlagDebugForceGenerateHSR"] = "True",
+    ["FIntHSRClusterSymmetryDistancePercent"] = "10000",
+    ["DFFlagOptimizeClusterCacheAlloc"] = "True",
+    ["FIntUITextureMaxUpdateDepth"] = "1",
+    ["FIntEnableVisBugChecksHundredthPercent27"] = "100",
+    ["FIntOverrideISRReplicatorStepBandwidthBytes"] = "131072",
+    ["FIntVertexSmoothingGroupTolerance"] = "0",
+    ["FFlagFixOutdatedTimeScaleParticles"] = "False",
+    ["FFlagFixOutdatedParticles2"] = "False",
+    ["FFlagFixParticleAttachmentCulling"] = "False",
+    ["DFFlagAudioUseVolumetricPanning"] = "True",
+    ["DFFlagAudioEnableVolumetricPanningForMeshes"] = "True",
+    ["DFIntVoiceChatVolumeThousandths"] = "5000",
+    ["FFlagLoginPageOptimizedPngs"] = "True",
+    ["FFlagDebugAvatarChatVisualization"] = "True",
+    ["FStringGetPlayerImageDefaultTimeout"] = "1",
+    ["FStringVoiceBetaBadgeLearnMoreLink"] = "null",
+    ["FStringGamesUrlPath"] = "/games/",
+    ["FIntActivatedCountTimerMSMouse"] = "0",
+    ["FIntActivatedCountTimerMSKeyboard"] = "0",
+    ["FIntCAP1209DataSharingTOSVersion"] = "0",
+    ["FIntCAP1544DataSharingUserRolloutPercentage"] = "0",
+    ["DFIntSignalRCoreHubConnectionDisconnectInfoHundredthsPercent"] = "10",
+
+    -- ===== Extra Undocumented =====
+    ["DebugLimitMinTextureResolutionWhenSkipMips"] = "2147483647",
+    ["DoNotSkipMipsBasedOnSystemMemoryPS"] = "True",
+    ["TM2SkipMipsForUnstreamable2"] = "True",
+    ["RenderUseTextureManager224"] = "False",
+    ["DebugTextureManagerSkipMips"] = "9",
+    ["EnablePowerTraceModule"] = "True",
+    ["IncludePowerSaverMode"] = "True",
+    ["DebugFRMQualityLevelOverride"] = "1",
+}
+
+-- ========================================================================
+-- 3. Actually apply the FFlags
+-- ========================================================================
+local function getFFlagSetter()
+    local candidates = {
+        "setfflag",
+        "setfastflag",
+        "set_fflag",
+        "setFFlag",
+        "fflag",
+        "mfflags",
+    }
+
+    for _, name in ipairs(candidates) do
+        local fn = rawget(getfenv(), name) or (getgenv and getgenv()[name])
+        if type(fn) == "function" then
+            return fn
+        end
+    end
+    return nil
+end
+
+local function applyFFlags()
+    local setter = getFFlagSetter()
+
+    if not setter then
+        warn("[HAZHUB LOADER] No FFlag-setting function found in this environment. "
+            .. "FFlags were NOT applied. Check your executor's documentation for the "
+            .. "correct global function name (commonly setfflag/setfastflag).")
+        return 0
+    end
+
+    local applied, failed = 0, 0
+    for flagName, flagValue in pairs(fflags) do
+        local ok = pcall(function()
+            setter(flagName, flagValue)
+        end)
+        if ok then
+            applied += 1
+        else
+            failed += 1
+        end
+    end
+
+    print(string.format("[HAZHUB LOADER] FFlags applied: %d, failed: %d", applied, failed))
+    return applied
+end
+
+-- Apply FFlags first (before loading wait) for maximum effect
+task.spawn(applyFFlags)
+-- Then wait for the game to be loaded and hide the screen
+task.spawn(waitUntilFullyLoadedThenHide)
