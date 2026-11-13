@@ -1,4 +1,11 @@
+-- TrxGrief purple standalone (hardened)
+local task = task or {
+    spawn = spawn,
+    wait = wait,
+    delay = delay,
+}
 task.spawn(function()
+    local ok, err = pcall(function()
     local Players    = game:GetService("Players")
     local RunService = game:GetService("RunService")
     local UIS        = game:GetService("UserInputService")
@@ -7,15 +14,27 @@ task.spawn(function()
     local LP         = Players.LocalPlayer
     while not LP do task.wait() end
 
+    -- soft parent: prefer original hub UI, else gethui / PlayerGui / CoreGui
     local sg
     local CoreGui = game:GetService("CoreGui")
-    for _ = 1, 300 do
+    for _ = 1, 40 do
         sg = CoreGui:FindFirstChild("LowCortisolHubUI") or CoreGui:FindFirstChild("TrxUI")
         if sg then break end
-        task.wait(0.1)
+        task.wait(0.05)
     end
     if not sg then
-        warn("hazhub")
+        if typeof(gethui) == "function" then
+            sg = gethui()
+        end
+    end
+    if not sg then
+        sg = LP:FindFirstChild("PlayerGui") or LP:WaitForChild("PlayerGui", 5)
+    end
+    if not sg then
+        sg = CoreGui
+    end
+    if not sg then
+        warn("[TrxGrief] no valid ScreenGui parent — aborted")
         return
     end
 
@@ -984,4 +1003,9 @@ task.spawn(function()
         end
     end
 
-    print("[6767] Grief Detector loaded — _G.TrxSetGriefDetector(true/false) to toggle")
+
+    end) -- close pcall
+    if not ok then
+        warn("[sdf] runtime error:", err)
+    end
+end) -- close task.spawn
