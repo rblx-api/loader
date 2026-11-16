@@ -9641,9 +9641,6 @@ buildConfigTable = function()
         stealRadius = CONFIG.STEAL_RANGE,
         antiRagdollMode = antiRagdollMode,
         antiDieEnabled = antiDieEnabled,
-        confuser = (_G.__LuckConfuser and _G.__LuckConfuser.on) or false,
-        confuserSpeed = (_G.__LuckConfuser and _G.__LuckConfuser.speed) or 50,
-        confuserSteal = (_G.__LuckConfuser and _G.__LuckConfuser.steal) or false,
         autoSteal = CONFIG.AUTO_STEAL_ENABLED,
         medusaCounter = medusaCounterEnabled,
         batCounter = batCounterEnabled,
@@ -9841,14 +9838,6 @@ loadAllSettings = function()
         antiRagdollMode = result.antiRagdoll and "v2" or "off"
     end
     antiDieEnabled = result.antiDieEnabled or false
-    -- Confuser settings
-    if _G.__LuckConfuser then
-        _G.__LuckConfuser.speed = math.max(0, tonumber(result.confuserSpeed) or 50)
-        _G.__LuckConfuser.steal = result.confuserSteal == true
-        if result.confuser == true and type(_G.__LuckSetConfuser) == "function" then
-            task.defer(function() pcall(_G.__LuckSetConfuser, true) end)
-        end
-    end
     antiFlingEnabled = result.antiFlingEnabled or false
     CONFIG.AUTO_STEAL_ENABLED = result.autoSteal or false
     medusaCounterEnabled = result.medusaCounter or false
@@ -14094,88 +14083,60 @@ do
         createActionRow(keybinds, "Hide GUI", KB.GuiHide)
         local extra = data2022.Extra
         createFrame(extra, "Extra")
-        -- ═══════════════════════════════════════════════════════════
-        -- CONFUSER (portado de STAR HUD) — giro + auto steal + speed
-        -- ═══════════════════════════════════════════════════════════
-        local KCF = {
-            on = false,
-            steal = false,
-            speed = 50,
-            spinConn = nil,
-            angle = 0,
-            dieConns = {},
-            dieAdded = nil,
-            dieBeat = nil,
-            dieActive = false,
-            stealApplied = false,
-            setVisual = nil,
-            setStealVisual = nil,
-            speedBox = nil,
-        }
-
-        local function kmsChar()
+        -- CONFUSER (portado del STAR HUD, con su logica completa)
+        -- Confuser = giro del personaje + anti-die propio
+        -- Confuser Auto (Steal) = se enciende solo cuando estas robando (Stealing)
+        -- Confuser Speed = velocidad del giro
+        createFrame(extra, "Confuser")
+        local KCF = { on = false, steal = false, speed = 50, spinConn = nil, angle = 0, dieConns = {}, dieAdded = nil, dieBeat = nil, dieActive = false, stealApplied = false, setVisual = nil, setStealVisual = nil }
+        local function confuserChar()
             local ch = localPlayer and localPlayer.Character
             return ch, ch and ch:FindFirstChild("HumanoidRootPart")
         end
-
-        local function kmsStartSpin()
+        local function confuserStartSpin()
             if KCF.spinConn then return end
             KCF.angle = 0
             KCF.spinConn = RunService.Heartbeat:Connect(function(dt)
                 if not KCF.on then return end
-                local ch, root = kmsChar()
+                local ch, root = confuserChar()
                 if not root then return end
                 local hum = ch:FindFirstChildOfClass("Humanoid")
                 if hum then pcall(function() hum.AutoRotate = false end) end
                 local step = KCF.speed * dt * 60
                 KCF.angle = (KCF.angle + step) % 360
                 root.CFrame = CFrame.new(root.Position) * CFrame.Angles(0, math.rad(KCF.angle), 0)
-                pcall(function() root.AssemblyAngularVelocity = Vector3.zero end)
+                pcall(function() root.AssemblyAngularVelocity = zeroVector end)
             end)
         end
-
-        local function kmsStopSpin()
-            if KCF.spinConn then
-                pcall(function() KCF.spinConn:Disconnect() end)
-                KCF.spinConn = nil
-            end
-            local ch, root = kmsChar()
+        local function confuserStopSpin()
+            if KCF.spinConn then pcall(function() KCF.spinConn:Disconnect() end) KCF.spinConn = nil end
+            local ch, root = confuserChar()
             if ch then
                 local hum = ch:FindFirstChildOfClass("Humanoid")
                 if hum then pcall(function() hum.AutoRotate = true end) end
-                if root then pcall(function() root.AssemblyAngularVelocity = Vector3.zero end) end
+                if root then pcall(function() root.AssemblyAngularVelocity = zeroVector end) end
             end
         end
-
-        local function kmsClearCharEntry(char, restore)
+        local function confuserClearCharEntry(char, restore)
             local entry = KCF.dieConns[char]
-            if entry then
-                for _, c in ipairs(entry) do pcall(function() c:Disconnect() end) end
-                KCF.dieConns[char] = nil
-            end
+            if entry then for _, c in ipairs(entry) do pcall(function() c:Disconnect() end) end KCF.dieConns[char] = nil end
             if restore and char and char.Parent then
                 pcall(function()
                     local hum = char:FindFirstChildOfClass("Humanoid")
-                    if hum then
-                        hum.BreakJointsOnDeath = true
-                        hum:SetStateEnabled(Enum.HumanoidStateType.Dead, true)
-                    end
+                    if hum then hum.BreakJointsOnDeath = true hum:SetStateEnabled(Enum.HumanoidStateType.Dead, true) end
                 end)
             end
         end
-
-        local function kmsApplyAntiDie(char)
+        local function confuserApplyAntiDie(char)
             if not char or not char.Parent then return end
             local hum = char:FindFirstChildOfClass("Humanoid")
             if not hum then return end
-            kmsClearCharEntry(char, false)
+            confuserClearCharEntry(char, false)
             hum.BreakJointsOnDeath = false
             pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false) end)
             local conns = {}
             table.insert(conns, hum:GetPropertyChangedSignal("Health"):Connect(function()
-                if KCF.dieActive and KCF.dieConns[char] == conns and hum.Health <= 0 then
-                    hum.Health = hum.MaxHealth
-                end
+                if KCF.dieActive and KCF.dieConns[char] == conns and hum.Health <= 0 then hum.Health = hum.MaxHealth end
             end))
             table.insert(conns, hum.Died:Connect(function()
                 task.defer(function()
@@ -14187,12 +14148,11 @@ do
                 end)
             end))
             table.insert(conns, char.AncestryChanged:Connect(function()
-                if not char.Parent then kmsClearCharEntry(char, false) end
+                if not char.Parent then confuserClearCharEntry(char, false) end
             end))
             KCF.dieConns[char] = conns
         end
-
-        local function kmsSetAntiDie(enabled)
+        local function confuserSetAntiDie(enabled)
             enabled = enabled == true
             if enabled == KCF.dieActive then return end
             KCF.dieActive = enabled
@@ -14200,108 +14160,61 @@ do
                 if not KCF.dieAdded then
                     KCF.dieAdded = localPlayer.CharacterAdded:Connect(function(char)
                         task.wait(0.2)
-                        if KCF.dieActive and char and char.Parent then kmsApplyAntiDie(char) end
+                        if KCF.dieActive and char and char.Parent then confuserApplyAntiDie(char) end
                     end)
                 end
                 local ch = localPlayer.Character
-                if ch and ch.Parent and not KCF.dieConns[ch] then kmsApplyAntiDie(ch) end
+                if ch and ch.Parent and not KCF.dieConns[ch] then confuserApplyAntiDie(ch) end
                 if not KCF.dieBeat then
                     KCF.dieBeat = RunService.Heartbeat:Connect(function()
                         if not KCF.dieActive then return end
                         local c = localPlayer.Character
                         local hum = c and c.Parent and c:FindFirstChildOfClass("Humanoid")
                         if not hum then return end
-                        if not KCF.dieConns[c] then kmsApplyAntiDie(c) end
+                        if not KCF.dieConns[c] then confuserApplyAntiDie(c) end
                         if hum.BreakJointsOnDeath then hum.BreakJointsOnDeath = false end
-                        if hum:GetStateEnabled(Enum.HumanoidStateType.Dead) then
-                            pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false) end)
-                        end
+                        if hum:GetStateEnabled(Enum.HumanoidStateType.Dead) then pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false) end) end
                         if hum.Health <= 0 then hum.Health = hum.MaxHealth end
                     end)
                 end
             else
-                if KCF.dieBeat then
-                    pcall(function() KCF.dieBeat:Disconnect() end)
-                    KCF.dieBeat = nil
-                end
-                for ch in pairs(KCF.dieConns) do kmsClearCharEntry(ch, true) end
+                if KCF.dieBeat then pcall(function() KCF.dieBeat:Disconnect() end) KCF.dieBeat = nil end
+                for ch in pairs(KCF.dieConns) do confuserClearCharEntry(ch, true) end
             end
         end
-
-        local function kmsSetConfuser(on)
+        local function confuserSet(on)
             KCF.on = on == true
-            if KCF.on then
-                kmsSetAntiDie(true)
-                kmsStartSpin()
-            else
-                kmsStopSpin()
-                -- restore global anti-die preference if present
-                if type(antiDieEnabled) == "boolean" and antiDieEnabled then
-                    kmsSetAntiDie(true)
-                else
-                    kmsSetAntiDie(false)
-                end
-            end
+            if KCF.on then confuserSetAntiDie(true) confuserStartSpin() else confuserStopSpin() confuserSetAntiDie(false) end
             if KCF.setVisual then pcall(KCF.setVisual, KCF.on) end
-            if type(saveAllSettings) == "function" then pcall(saveAllSettings) end
+            pcall(saveAllSettings)
         end
-
-        local function kmsCarrying()
+        local function confuserCarrying()
             local ch = localPlayer.Character
-            local ok1, r1 = pcall(function() return localPlayer:GetAttribute("Stealing") end)
-            if ok1 and r1 == true then return true end
-            local ok2, r2 = pcall(function() return ch and ch:GetAttribute("Stealing") end)
-            if ok2 and r2 == true then return true end
-            return false
+            return localPlayer:GetAttribute("Stealing") == true or (ch ~= nil and ch:GetAttribute("Stealing") == true)
         end
-
         task.spawn(function()
             while true do
                 task.wait(0.15)
                 if not KCF.steal then
-                    if KCF.stealApplied then
-                        KCF.stealApplied = false
-                        if KCF.on then pcall(kmsSetConfuser, false) end
-                    end
+                    if KCF.stealApplied then KCF.stealApplied = false if KCF.on then pcall(confuserSet, false) end end
                 else
-                    local carrying = kmsCarrying()
-                    if carrying and not KCF.stealApplied and not KCF.on then
-                        KCF.stealApplied = true
-                        pcall(kmsSetConfuser, true)
-                    elseif not carrying and KCF.stealApplied then
-                        KCF.stealApplied = false
-                        pcall(kmsSetConfuser, false)
-                    end
+                    local carrying = confuserCarrying()
+                    if carrying and not KCF.stealApplied and not KCF.on then KCF.stealApplied = true pcall(confuserSet, true)
+                    elseif not carrying and KCF.stealApplied then KCF.stealApplied = false pcall(confuserSet, false) end
                 end
             end
         end)
-
-        -- UI in EXTRA tab
-        createFrame(extra, "Confuser")
-        KCF.setVisual = mkToggle(extra, "Confuser", function(on)
-            pcall(kmsSetConfuser, on)
-        end)
+        KCF.setVisual = mkToggle(extra, "Confuser", function(on) pcall(confuserSet, on) end)
         KCF.setStealVisual = mkToggle(extra, "Confuser Auto (Steal)", function(on)
             KCF.steal = on == true
             if not on then KCF.stealApplied = false end
-            if type(saveAllSettings) == "function" then pcall(saveAllSettings) end
+            pcall(saveAllSettings)
         end)
-        do
-            local speedRow = createFrame2(extra, 38)
-            mkLabel(speedRow, "Confuser Speed")
-            createTextBox(speedRow, KCF.speed, 50, 56, function(v)
-                local n = tonumber(v)
-                if n and n >= 0 and n < 2000 then
-                    KCF.speed = math.floor(n + 0.5)
-                    if type(saveAllSettings) == "function" then pcall(saveAllSettings) end
-                end
-            end)
-        end
-
-        -- expose for settings
-        _G.__LuckConfuser = KCF
-        _G.__LuckSetConfuser = kmsSetConfuser
-
+        local confuserSpeedRow = createFrame2(extra, 38)
+        mkLabel(confuserSpeedRow, "Confuser Speed")
+        createTextBox(confuserSpeedRow, KCF.speed, 50, 56, function(v)
+            if v and v >= 0 and v < 2000 then KCF.speed = math.floor(v + 0.5) pcall(saveAllSettings) end
+        end)
         -- Luck Hub mini (del archivo subido, UNA SOLA VEZ) con boton Open / Closed
         local luckMiniClose = nil
         local luckMiniOpen = false
@@ -15926,7 +15839,6 @@ return closeLuckHubMini
                     luckHubBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
                 end
             end
-        end)
         end)
         local vector2318 = Instance.new("Frame", keybinds)
         vector2318.Size = UDim2.new(1, 0, 0, 16)
