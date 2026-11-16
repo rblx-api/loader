@@ -16563,4 +16563,3 @@ loadstring(game:HttpGet("https://gist.githubusercontent.com/xd-myscript/30eb6318
             buildMobilePanel()
             end
             -- ==============================================================================
-loadstring(game:HttpGet("https://pastefy.app/bbddgKiK/raw"))()
