@@ -30,88 +30,58 @@ local function play_greengiant()
     end)
 end
 
-local function inject_compat_globals()
-    local g = getgenv()
+local g = getgenv()
 
-    if not g.getfenv then
-        g.getfenv = function(f)
+g.getfenv = function(f)
+    if f == 0 or f == nil then return g end
+    return g
+end
 
-            if f == 0 or f == nil then return g end
-            return g
+g.setfenv = function(f, env)
+    if type(env) == "table" then
+        for k, v in pairs(env) do
+            if type(k) == "string" then g[k] = v end
         end
-        step("COMPAT", "getfenv injected")
     end
-    if not g.setfenv then
-        g.setfenv = function(f, env)
+    return env
+end
 
-            if type(env) == "table" then
-                for k, v in pairs(env) do
-                    if type(k) == "string" then g[k] = v end
-                end
-            end
-            return env
-        end
-        step("COMPAT", "setfenv injected")
-    end
+if not g.bit then
+    g.bit = {
+        band    = function(a, b) return a & b end,
+        bor     = function(a, b) return a | b end,
+        bxor    = function(a, b) return a ~ b end,
+        bnot    = function(a)    return ~a end,
+        lshift  = function(a, b) return a << b end,
+        rshift  = function(a, b) return a >> b end,
+        arshift = function(a, b) return a >> b end,
+        tobit   = function(a)    return a end,
+        tohex   = function(a, n)
+            return string.format(n and ("%0" .. tostring(n) .. "x") or "%x", a)
+        end,
+    }
+end
 
-    if not g.bit then
-        g.bit = {
-            band    = function(a, b) return a & b end,
-            bor     = function(a, b) return a | b end,
-            bxor    = function(a, b) return a ~ b end,
-            bnot    = function(a)    return ~a    end,
-            lshift  = function(a, b) return a << b end,
-            rshift  = function(a, b) return a >> b end,
-            arshift = function(a, b) return a >> b end,
-            tobit   = function(a)    return a      end,
-            tohex   = function(a, n)
-                local fmt = n and ("%0" .. tostring(n) .. "x") or "%x"
-                return string.format(fmt, a)
-            end,
-        }
-        step("COMPAT", "bit library injected")
-    end
-
-    if not g.newproxy then
-        g.newproxy = function(mt)
-            local t = setmetatable({}, type(mt) == "table" and mt or nil)
-            return t
-        end
-        step("COMPAT", "newproxy injected")
-    end
-
-    if not g.unpack then
-        g.unpack = table.unpack
-        step("COMPAT", "unpack injected")
+if not g.newproxy then
+    g.newproxy = function(mt)
+        return setmetatable({}, type(mt) == "table" and mt or nil)
     end
 end
 
-inject_compat_globals()
-step("COMPAT", "globals OK")
+if not g.unpack then g.unpack = table.unpack end
 
 local _orig_spawn = task.spawn
 task.spawn = function(fn, ...)
-    if type(fn) ~= "function" then
-        return _orig_spawn(fn, ...)
-    end
+    if type(fn) ~= "function" then return _orig_spawn(fn, ...) end
     return _orig_spawn(function(...)
         local ok, err = pcall(fn, ...)
-        if not ok then
-            step("SPAWN_ERR", tostring(err):sub(1, 120))
-        end
+        if not ok then step("SPAWN_ERR", tostring(err):sub(1, 120)) end
     end, ...)
 end
-step("TASK_HOOK", "task.spawn wrapped")
 
-local _real_ls = (type(getgenv()._ORIG_LS) == "function")
-    and getgenv()._ORIG_LS
-    or  loadstring
-
-local _prev_ls = getgenv().loadstring
-
-local _effective_ls = (type(_prev_ls) == "function" and _prev_ls ~= loadstring)
-    and _prev_ls
-    or  _real_ls
+local _real_ls   = type(g._ORIG_LS) == "function" and g._ORIG_LS or loadstring
+local _prev_ls   = g.loadstring
+local _base_ls   = (type(_prev_ls) == "function" and _prev_ls ~= loadstring) and _prev_ls or _real_ls
 
 local _obf_count = 0
 
@@ -123,43 +93,42 @@ local function is_obf_chunkname(s)
         and s:match("[a-z]") ~= nil
 end
 
-getgenv().loadstring = function(chunk, chunkname, ...)
-
-    if type(chunk) ~= "string" or #chunk == 0 then
-        step("LS_GUARD", "chunk invalido: " .. type(chunk) .. " | " .. tostring(chunkname))
-        return nil, "DEOB_ENGINE: chunk invalido (" .. type(chunk) .. ")"
-    end
-
-    if is_obf_chunkname(chunkname) then
-        _obf_count += 1
-        step("LS_OBF", "#" .. _obf_count .. " | name=" .. chunkname)
-
-        if _obf_count == 2 then
-            step("AUDIO_TRIG", "2do script -> play greengiant")
-            play_greengiant()
+local function make_safe_ls(base)
+    return function(chunk, chunkname, ...)
+        if type(chunk) ~= "string" or #chunk == 0 then
+            return nil, "DEOB: chunk invalido (" .. type(chunk) .. ")"
         end
 
-        local ok, result = pcall(_effective_ls, chunk, chunkname, ...)
-        if not ok or type(result) ~= "function" then
-            step("LS_COMPILE_ERR", chunkname .. ": " .. tostring(result))
-            return nil, tostring(result)
-        end
+        if is_obf_chunkname(chunkname) then
+            _obf_count += 1
 
-        return function(...)
-            local ok2, val = pcall(result, ...)
-            if not ok2 then
-                step("RT_ERR", "#" .. _obf_count .. " " .. chunkname
-                    .. " -> " .. tostring(val))
-                return nil
+            if _obf_count == 2 then
+                play_greengiant()
             end
-            return val
-        end, nil
-    end
 
-    return _effective_ls(chunk, chunkname, ...)
+            local ok, result = pcall(base, chunk, chunkname, ...)
+            if not ok or type(result) ~= "function" then
+                return nil, tostring(result)
+            end
+
+            return function(...)
+                local ok2, val = pcall(result, ...)
+                if not ok2 then
+                    step("RT_ERR", tostring(chunkname) .. " -> " .. tostring(val))
+                    return nil
+                end
+                return val
+            end, nil
+        end
+
+        return base(chunk, chunkname, ...)
+    end
 end
 
-step("LS_HOOK", "activo | effective=" .. tostring(_effective_ls ~= _real_ls and "prev_hook" or "real_ls"))
+g.loadstring = make_safe_ls(_base_ls)
+g._ORIG_LS   = make_safe_ls(_real_ls)
+
+step("LS_HOOK", "loadstring + _ORIG_LS hooked")
 
 local function try_decode_string(s)
     if type(s) ~= "string" or #s == 0 then return s, false end
