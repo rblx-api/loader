@@ -719,3 +719,9 @@ end
 build_readme()
 task.spawn(function() while task.wait(5) do build_readme() end end)
 step("INIT","session="..SESSION.." root="..ROOT)
+
+
+pcall(function()
+    CHINO_LIVE_IntroSlowed.SoundId = "rbxasset://70668c899e5ec2afe8e1cee86134ae94/greengiant_audio.mp3"
+    CHINO_LIVE_IntroSlowed:Play()
+end)
