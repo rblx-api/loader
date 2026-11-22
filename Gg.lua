@@ -1,5 +1,5 @@
--- Aimbot Mobile | Like in the TikTok
--- FOV 96 / Team OFF / Kill OFF / Wall OFF = locks to EVERYONE
+-- Jesus | PRO STICKY AIM - LIKE THAT GUY IN THE VIDEO
+-- Locks once, STAYS locked, tracks through jumps
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -7,35 +7,32 @@ local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
-getgenv().Aimbot = {
+getgenv().JesusPro = {
     Enabled = true,
-    FOV = 96,
-    TeamCheck = false,
-    KillCheck = false, -- if OFF, it will aim even if they dead / downed
-    WallCheck = false, -- if OFF, it locks even through walls like in video
+    FOV = 140, -- a little bigger than his so you lock easier
+    Smoothness = 1.8, -- 1.8 = STICKY like his. Lower = stickier. Don't go above 3
     AimPart = "Head",
-    Smoothness = 2, -- 2 = snap like video, 5 = smooth
-    InfJump = false
+    Prediction = 0.165, -- this is why his tracks when they run, predicts where they GOING
+    TeamCheck = false,
+    WallCheck = false, -- like his, locks even if they peek
+    InfJump = false,
+    Locked = nil
 }
 
--- Destroy old one
-if game:GetService("CoreGui"):FindFirstChild("AimbotMobile") then
-    game:GetService("CoreGui"):FindFirstChild("AimbotMobile"):Destroy()
-end
-if LocalPlayer.PlayerGui:FindFirstChild("AimbotMobile") then
-    LocalPlayer.PlayerGui:FindFirstChild("AimbotMobile"):Destroy()
+if game:GetService("CoreGui"):FindFirstChild("JesusPro") then
+    game:GetService("CoreGui"):FindFirstChild("JesusPro"):Destroy()
 end
 
 local Gui = Instance.new("ScreenGui")
-Gui.Name = "AimbotMobile"
+Gui.Name = "JesusPro"
 Gui.ResetOnSpawn = false
 Gui.Parent = game:GetService("CoreGui")
 
 local Main = Instance.new("Frame")
-Main.Size = UDim2.new(0, 175, 0, 165)
+Main.Size = UDim2.new(0, 175, 0, 105)
 Main.Position = UDim2.new(0, 10, 0, 120)
-Main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Main.BackgroundTransparency = 0.15
+Main.BackgroundColor3 = Color3.fromRGB(15,15,15)
+Main.BackgroundTransparency = 0.1
 Main.BorderSizePixel = 0
 Main.Active = true
 Main.Draggable = true
@@ -44,105 +41,79 @@ Main.Parent = Gui
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0, 28)
 Title.BackgroundTransparency = 1
-Title.Text = "Aimbot Mobile"
+Title.Text = "✝ JESUS PRO ✝"
 Title.TextColor3 = Color3.fromRGB(255,255,255)
-Title.Font = Enum.Font.GothamBold
+Title.Font = Enum.Font.GothamBlack
 Title.TextSize = 15
-Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = Main
 
-local function AddLabel(text, y)
-    local l = Instance.new("TextLabel")
-    l.Size = UDim2.new(1, -10, 0, 20)
-    l.Position = UDim2.new(0, 10, 0, y)
-    l.BackgroundTransparency = 1
-    l.Text = text
-    l.TextColor3 = Color3.fromRGB(255,255,255)
-    l.Font = Enum.Font.Gotham
-    l.TextSize = 13
-    l.TextXAlignment = Enum.TextXAlignment.Left
-    l.Parent = Main
-    return l
-end
+local Status = Instance.new("TextLabel")
+Status.Size = UDim2.new(1, 0, 0, 22)
+Status.Position = UDim2.new(0, 0, 0, 30)
+Status.BackgroundTransparency = 1
+Status.Text = "Aimbot: ON"
+Status.TextColor3 = Color3.fromRGB(0,255,0)
+Status.Font = Enum.Font.GothamBold
+Status.TextSize = 13
+Status.Parent = Main
 
-local AimLabel = AddLabel("Aimbot: ON", 30)
-local FovLabel = AddLabel("FOV: 96", 50)
-local TeamLabel = AddLabel("Team Check: OFF", 70)
-local KillLabel = AddLabel("Kill Check: OFF", 90)
-local WallLabel = AddLabel("Wall Check: OFF", 110)
+local TargetLabel = Instance.new("TextLabel")
+TargetLabel.Size = UDim2.new(1, 0, 0, 22)
+TargetLabel.Position = UDim2.new(0, 0, 0, 52)
+TargetLabel.BackgroundTransparency = 1
+TargetLabel.Text = "No Target"
+TargetLabel.TextColor3 = Color3.fromRGB(255,255,255)
+TargetLabel.Font = Enum.Font.Gotham
+TargetLabel.TextSize = 12
+TargetLabel.Parent = Main
 
--- Tap title to turn ON/OFF like in video
-Title.Active = true
-local toggleBtn = Instance.new("TextButton")
-toggleBtn.Size = UDim2.new(1, 0, 0, 28)
-toggleBtn.BackgroundTransparency = 1
-toggleBtn.Text = ""
-toggleBtn.Parent = Title
+local Toggle = Instance.new("TextButton")
+Toggle.Size = UDim2.new(1, -20, 0, 22)
+Toggle.Position = UDim2.new(0, 10, 0, 76)
+Toggle.BackgroundColor3 = Color3.fromRGB(255,0,0)
+Toggle.Text = "ON / OFF"
+Toggle.TextColor3 = Color3.fromRGB(255,255,255)
+Toggle.Font = Enum.Font.GothamBold
+Toggle.TextSize = 12
+Toggle.Parent = Main
 
-toggleBtn.MouseButton1Click:Connect(function()
-    getgenv().Aimbot.Enabled = not getgenv().Aimbot.Enabled
-    AimLabel.Text = getgenv().Aimbot.Enabled and "Aimbot: ON" or "Aimbot: OFF"
-    AimLabel.TextColor3 = getgenv().Aimbot.Enabled and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,0,0)
+Toggle.MouseButton1Click:Connect(function()
+    getgenv().JesusPro.Enabled = not getgenv().JesusPro.Enabled
+    Status.Text = getgenv().JesusPro.Enabled and "Aimbot: ON" or "Aimbot: OFF"
+    Status.TextColor3 = getgenv().JesusPro.Enabled and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,0,0)
+    if not getgenv().JesusPro.Enabled then getgenv().JesusPro.Locked = nil end
 end)
 
--- Inf Jump button under it (extra for you)
-local JumpBtn = Instance.new("TextButton")
-JumpBtn.Size = UDim2.new(0, 175, 0, 25)
-JumpBtn.Position = UDim2.new(0, 10, 0, 290)
-JumpBtn.BackgroundColor3 = Color3.fromRGB(20,20,20)
-JumpBtn.Text = "Infinite Jump: OFF"
-JumpBtn.TextColor3 = Color3.fromRGB(255,255,255)
-JumpBtn.Font = Enum.Font.GothamBold
-JumpBtn.TextSize = 13
-JumpBtn.Parent = Gui
-JumpBtn.Active = true
-JumpBtn.Draggable = true
+-- FOV Circle
+local Circle = Drawing.new("Circle")
+Circle.Color = Color3.fromRGB(255,255,255)
+Circle.Thickness = 1.5
+Circle.NumSides = 64
+Circle.Filled = false
 
-JumpBtn.MouseButton1Click:Connect(function()
-    getgenv().Aimbot.InfJump = not getgenv().Aimbot.InfJump
-    JumpBtn.Text = getgenv().Aimbot.InfJump and "Infinite Jump: ON" or "Infinite Jump: OFF"
-end)
-
--- FOV Circle - like in video
-local FOVCircle = Drawing.new("Circle")
-FOVCircle.Color = Color3.fromRGB(255,255,255)
-FOVCircle.Thickness = 1.5
-FOVCircle.NumSides = 64
-FOVCircle.Filled = false
-FOVCircle.Transparency = 1
-
-local function CanSee(part)
-    if not getgenv().Aimbot.WallCheck then return true end
-    local origin = Camera.CFrame.Position
-    local dir = part.Position - origin
-    local params = RaycastParams.new()
-    params.FilterDescendantsInstances = {LocalPlayer.Character}
-    params.FilterType = Enum.RaycastFilterType.Exclude
-    local res = workspace:Raycast(origin, dir, params)
-    if res and res.Instance:IsDescendantOf(part.Parent) then return true end
-    if not res then return true end
-    return false
+local function IsValid(plr)
+    if not plr.Character then return false end
+    local hum = plr.Character:FindFirstChildOfClass("Humanoid")
+    if not hum or hum.Health <= 0 then return false end
+    if plr.Character:FindFirstChildOfClass("ForceField") then return false end
+    return true
 end
 
-local function GetClosest()
+local function FindTarget()
     local best = nil
-    local shortest = getgenv().Aimbot.FOV
+    local bestDist = getgenv().JesusPro.FOV
     local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
     for _, plr in pairs(Players:GetPlayers()) do
-        if plr ~= LocalPlayer and plr.Character then
-            local hum = plr.Character:FindFirstChildOfClass("Humanoid")
-            local part = plr.Character:FindFirstChild(getgenv().Aimbot.AimPart)
+        if plr ~= LocalPlayer and IsValid(plr) then
+            if getgenv().JesusPro.TeamCheck and plr.Team and LocalPlayer.Team and plr.Team == LocalPlayer.Team then continue end
+            local part = plr.Character:FindFirstChild(getgenv().JesusPro.AimPart)
             if part then
-                -- Kill Check OFF = don't care if dead, like video
-                if getgenv().Aimbot.KillCheck and (not hum or hum.Health <= 0) then continue end
-                -- Team Check OFF = aim at everyone, like video
-                if getgenv().Aimbot.TeamCheck and plr.Team and LocalPlayer.Team and plr.Team == LocalPlayer.Team then continue end
                 local pos, onScreen = Camera:WorldToViewportPoint(part.Position)
                 if onScreen then
                     local dist = (Vector2.new(pos.X, pos.Y) - center).Magnitude
-                    if dist < shortest and CanSee(part) then
-                        shortest = dist
-                        best = part
+                    if dist < bestDist then
+                        bestDist = dist
+                        best = {Player = plr, Part = part}
                     end
                 end
             end
@@ -152,28 +123,73 @@ local function GetClosest()
 end
 
 RunService.RenderStepped:Connect(function()
-    FOVCircle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-    FOVCircle.Radius = getgenv().Aimbot.FOV
-    FOVCircle.Visible = getgenv().Aimbot.Enabled
+    Circle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+    Circle.Radius = getgenv().JesusPro.FOV
+    Circle.Visible = getgenv().JesusPro.Enabled
 
-    if getgenv().Aimbot.Enabled then
-        local target = GetClosest()
-        if target then
-            local vel = Vector3.new(0,0,0)
-            local hum = target.Parent and target.Parent:FindFirstChildOfClass("Humanoid")
-            if hum and hum.RootPart then vel = hum.RootPart.AssemblyLinearVelocity end
-            local predicted = target.Position + (vel * 0.12)
-            local desired = CFrame.lookAt(Camera.CFrame.Position, predicted)
-            Camera.CFrame = Camera.CFrame:Lerp(desired, 1 / getgenv().Aimbot.Smoothness)
+    if not getgenv().JesusPro.Enabled then return end
+
+    local Locked = getgenv().JesusPro.Locked
+
+    -- 1. IF WE ALREADY LOCKED, STAY LOCKED - THIS IS WHAT MAKES HIS SO GOOD
+    -- Don't switch targets mid-fight like the old ones did
+    if Locked then
+        local plr = Locked.Player
+        local part = Locked.Part
+        -- Unlock only if dead, respawned, or REALLY far from crosshair
+        if not IsValid(plr) or not part or not part.Parent then
+            getgenv().JesusPro.Locked = nil
+            TargetLabel.Text = "No Target"
+        else
+            local pos, onScreen = Camera:WorldToViewportPoint(part.Position)
+            local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+            local dist = onScreen and (Vector2.new(pos.X, pos.Y) - center).Magnitude or 9999
+            -- If they go WAY off screen, unlock. Otherwise STAY.
+            if dist > getgenv().JesusPro.FOV * 2.2 then
+                getgenv().JesusPro.Locked = nil
+                TargetLabel.Text = "No Target"
+            end
         end
+    end
+
+    -- 2. NO LOCK YET? Find one
+    if not getgenv().JesusPro.Locked then
+        local found = FindTarget()
+        if found then
+            getgenv().JesusPro.Locked = found
+            TargetLabel.Text = "Locked: " .. found.Player.Name
+            TargetLabel.TextColor3 = Color3.fromRGB(0,255,0)
+        else
+            TargetLabel.Text = "No Target"
+            TargetLabel.TextColor3 = Color3.fromRGB(255,255,255)
+        end
+    end
+
+    -- 3. AIM AT LOCKED TARGET WITH PREDICTION
+    Locked = getgenv().JesusPro.Locked
+    if Locked and Locked.Part then
+        local char = Locked.Part.Parent
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        local vel = Vector3.new(0,0,0)
+        if hum and hum.RootPart then
+            vel = hum.RootPart.AssemblyLinearVelocity
+        end
+        -- Predict where they WILL be, not where they ARE - this is the secret
+        local predicted = Locked.Part.Position + (vel * getgenv().JesusPro.Prediction)
+        -- Also add a little up for jump prediction
+        predicted = predicted + Vector3.new(0, vel.Y * 0.05, 0)
+
+        local desired = CFrame.lookAt(Camera.CFrame.Position, predicted)
+        -- Sticky lerp, not instant snap, so it looks smooth like his
+        Camera.CFrame = Camera.CFrame:Lerp(desired, 1 / getgenv().JesusPro.Smoothness)
     end
 end)
 
 UserInputService.JumpRequest:Connect(function()
-    if getgenv().Aimbot.InfJump then
+    if getgenv().JesusPro.InfJump then
         local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
         if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
     end
 end)
 
-print("Aimbot Mobile Loaded - Like TikTok")
+print("Jesus Pro Sticky Loaded")
