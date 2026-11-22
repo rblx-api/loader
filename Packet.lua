@@ -1,421 +1,512 @@
--- Luck.packet - VERSION CON MINIMIZAR + START VISIBLE
--- Original leaked by NXC HUB
+--[[
+	JESUS PACKET
 
-local Players          = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
-local TweenService     = game:GetService("TweenService")
+	Features:
+	- Transparent dark blue theme with cyan accents (like the photo).
+	- Mobile support: Touch draggable, scales to fit screen.
+	- Minimize into a compact pill with a quick-toggle switch.
+	- Keybind system.
+	- CFrame Walk (ported from Violette, restyled to Jesus colors).
+]]
+
+local Players           = game:GetService("Players")
+local TweenService      = game:GetService("TweenService")
+local UserInputService  = game:GetService("UserInputService")
+local RunService        = game:GetService("RunService")
+local HttpService       = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local HttpService      = game:GetService("HttpService")
-local Workspace        = game:GetService("Workspace")
+local ContentProvider   = game:GetService("ContentProvider")
 
-local LP = Players.LocalPlayer
-if not LP then warn("Run as LocalScript.") return end
+local player    = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
 
-local playerGui   = LP:WaitForChild("PlayerGui")
-local CONFIG_FILE = "Luck_packet_Config.json"
+local old = playerGui:FindFirstChild("JESUSPACKET")
+if old then old:Destroy() end
 
--- ── COLORS ──
+--------------------------------------------------------------------------
+-- Config
+--------------------------------------------------------------------------
+local FILE = "jesus_packet.json"
+local cfg = { Key = "G", Sounds = true, Collapsed = false, CardPos = nil, Intensity = 10000, WalkStuds = 8, WalkDelay = 0.1 }
+pcall(function()
+	if isfile and isfile(FILE) then
+		local data = HttpService:JSONDecode(readfile(FILE))
+		for k in pairs(cfg) do
+			if data[k] ~= nil then cfg[k] = data[k] end
+		end
+	end
+end)
+local saveToken = 0
+local function save()
+	saveToken += 1
+	local token = saveToken
+	task.delay(0.4, function()
+		if token ~= saveToken then return end
+		pcall(function()
+			if writefile then writefile(FILE, HttpService:JSONEncode(cfg)) end
+		end)
+	end)
+end
+local function packPos(p) return { p.X.Scale, p.X.Offset, p.Y.Scale, p.Y.Offset } end
+local function unpackPos(t, fallback)
+	if type(t) == "table" and #t == 4 then return UDim2.new(t[1], t[2], t[3], t[4]) end
+	return fallback
+end
+
+--------------------------------------------------------------------------
+-- Look (Jesus Hub Theme)
+--------------------------------------------------------------------------
 local C = {
-    panelTop  = Color3.fromRGB(10,  48,  29),
-    panelBot  = Color3.fromRGB(18,  24,  23),
-    edge      = Color3.fromRGB(190,  20,  35),
-    red       = Color3.fromRGB(220,  20,  35),
-    green     = Color3.fromRGB(0, 255, 0),
-    label     = Color3.fromRGB(190, 220, 195),
-    white     = Color3.fromRGB(255, 255, 255),
-    field     = Color3.fromRGB(15,  29,  23),
-    fieldEdge = Color3.fromRGB(25, 105,  58),
-    stop      = Color3.fromRGB(105,  18,  25),
+	Bg    = Color3.fromRGB(10, 12, 16),
+	Raise = Color3.fromRGB(18, 22, 30),
+	Line  = Color3.fromRGB(35, 45, 60),
+	Dim   = Color3.fromRGB(120, 140, 160),
+	Sub   = Color3.fromRGB(160, 180, 200),
+	Text  = Color3.fromRGB(240, 245, 255),
+	White = Color3.fromRGB(255, 255, 255),
+	On    = Color3.fromRGB(0, 170, 255),
+	On2   = Color3.fromRGB(0, 120, 255),
+}
+local FONT, FONT_B, FONT_K = Enum.Font.Gotham, Enum.Font.GothamMedium, Enum.Font.GothamBold
+
+local function new(class, props, kids)
+	local o = Instance.new(class)
+	for k, v in pairs(props or {}) do o[k] = v end
+	for _, c in ipairs(kids or {}) do c.Parent = o end
+	return o
+end
+local function tween(o, t, props, style, dir)
+	local tw = TweenService:Create(o, TweenInfo.new(t, style or Enum.EasingStyle.Quad, dir or Enum.EasingDirection.Out), props)
+	tw:Play()
+	return tw
+end
+local function corner(r) return new("UICorner", { CornerRadius = UDim.new(0, r) }) end
+local function round() return new("UICorner", { CornerRadius = UDim.new(1, 0) }) end
+local function stroke(col, tr, th)
+	return new("UIStroke", { Color = col, Transparency = tr or 0, Thickness = th or 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border })
+end
+local function label(props)
+	props.BackgroundTransparency = 1
+	props.Font = props.Font or FONT
+	props.TextSize = props.TextSize or 12
+	props.TextColor3 = props.TextColor3 or C.Text
+	props.TextXAlignment = props.TextXAlignment or Enum.TextXAlignment.Left
+	return new("TextLabel", props)
+end
+
+local KEYNAMES = {
+	LeftShift = "L-Shift", RightShift = "R-Shift", LeftControl = "L-Ctrl", RightControl = "R-Ctrl",
+	LeftAlt = "L-Alt", RightAlt = "R-Alt", Return = "Enter", Backspace = "Bksp", Space = "Space",
+	CapsLock = "Caps", Tab = "Tab",
+	ButtonA = "A", ButtonB = "B", ButtonX = "X", ButtonY = "Y",
+	ButtonL1 = "L1", ButtonR1 = "R1", ButtonL2 = "L2", ButtonR2 = "R2",
+	ButtonL3 = "L3", ButtonR3 = "R3", ButtonStart = "Start", ButtonSelect = "Select",
+	DPadUp = "D-Up", DPadDown = "D-Down", DPadLeft = "D-Left", DPadRight = "D-Right",
 }
 
--- ── HELPERS ──
-local function make(cls, props, parent)
-    local o = Instance.new(cls)
-    for k, v in pairs(props or {}) do o[k] = v end
-    o.Parent = parent
-    return o
+--------------------------------------------------------------------------
+-- Sound effects disabled
+local gui = new("ScreenGui", {
+	Name = "JESUSPACKET", ResetOnSpawn = false, IgnoreGuiInset = true,
+	ZIndexBehavior = Enum.ZIndexBehavior.Sibling, DisplayOrder = 100, Parent = playerGui,
+})
+local function play(name, pitch) return end
+
+-- State
+--------------------------------------------------------------------------
+local active = false
+local activeSince = 0
+local hooks = {}
+local setActive
+
+local touchOnly = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
+local W, H = 262, 380
+
+--------------------------------------------------------------------------
+-- The window
+--------------------------------------------------------------------------
+local card = new("Frame", {
+	AnchorPoint = Vector2.new(0.5, 0.5),
+	Position = unpackPos(cfg.CardPos, UDim2.fromScale(0.5, 0.5)),
+	Size = UDim2.fromOffset(W, H),
+	BackgroundColor3 = C.Bg,
+	BackgroundTransparency = 0.15,
+	BorderSizePixel = 0, ClipsDescendants = true, Parent = gui,
+}, { corner(12) })
+local cardStroke = stroke(C.Line, 0.5, 1.5)
+cardStroke.Parent = card
+local cardScale = new("UIScale", { Parent = card })
+
+local function fitScale()
+	local cam = workspace.CurrentCamera
+	local vs = cam and cam.ViewportSize or Vector2.new(1280, 720)
+	local base = touchOnly and 1.12 or 1
+	cardScale.Scale = math.clamp(math.min(base, (vs.X - 16) / W, (vs.Y - 16) / H), 0.55, 1.3)
 end
-local function corner(p, r) make("UICorner", { CornerRadius = UDim.new(0, r) }, p) end
-local function stroke(p, col, th, tr)
-    return make("UIStroke", { Color = col, Thickness = th, Transparency = tr or 0, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }, p)
-end
-local function tween(obj, props, t)
-    TweenService:Create(obj, TweenInfo.new(t or 0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
+fitScale()
+if workspace.CurrentCamera then
+	workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(fitScale)
 end
 
--- ── STATE ──
-local lagging       = false
-local lagThread     = nil
-local intensity     = 42000
-local toggleKey     = Enum.KeyCode.C
-local toggleKeyName = "C"
-local isMinimized   = false
+-- Header
+local title = label({
+	Text = 'JESUS <font color="#00aaff">PACKET</font>', RichText = true,
+	Font = FONT_K, TextSize = 14, TextColor3 = C.Text,
+	Position = UDim2.fromOffset(16, 0), Size = UDim2.new(1, -72, 0, 38), Parent = card,
+})
+
+-- Mini-mode buttons
+local miniToggleBtn = new("TextButton", {
+	AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -40, 0.5, -13), Size = UDim2.fromOffset(40, 26),
+	BackgroundColor3 = C.Raise, AutoButtonColor = false, Font = FONT_K, TextSize = 11,
+	TextColor3 = C.White, Text = "START", Visible = false, ZIndex = 10, Parent = card,
+}, { corner(6) })
+local miniToggleStroke = stroke(C.Line, 0.2, 1.5)
+miniToggleStroke.Parent = miniToggleBtn
+
+local expandBtn = new("TextButton", {
+	AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -8, 0.5, -12), Size = UDim2.fromOffset(26, 24),
+	BackgroundColor3 = C.Raise, AutoButtonColor = false, Font = FONT_K, TextSize = 14,
+	TextColor3 = C.White, Text = "+", Visible = false, ZIndex = 10, Parent = card,
+}, { corner(4) })
+local expandStroke = stroke(C.Line, 0.2, 1.5)
+expandStroke.Parent = expandBtn
+
+local minBtn = new("TextButton", {
+	AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -8, 0, 8), Size = UDim2.fromOffset(24, 20),
+	BackgroundColor3 = C.Raise, AutoButtonColor = false, Font = FONT_B, TextSize = 14, TextColor3 = C.Dim, Text = "—", ZIndex = 10, Parent = card,
+}, { corner(4) })
+local minBtnStroke = stroke(C.Line, 0.5, 1); minBtnStroke.Parent = minBtn
+
+minBtn.MouseEnter:Connect(function() tween(minBtn, 0.12, { TextColor3 = C.White, BackgroundColor3 = C.Line }) end)
+minBtn.MouseLeave:Connect(function() tween(minBtn, 0.2, { TextColor3 = C.Dim, BackgroundColor3 = C.Raise }) end)
+
+new("Frame", { Position = UDim2.fromOffset(0, 38), Size = UDim2.new(1, 0, 0, 1), BackgroundColor3 = C.Line, BackgroundTransparency = 0.5, BorderSizePixel = 0, Parent = card })
+
+-- The big button
+local BTN_W, BTN_H = W - 32, 70
+local btn = new("TextButton", {
+	Position = UDim2.fromOffset(16, 52), Size = UDim2.fromOffset(BTN_W, BTN_H),
+	BackgroundColor3 = C.Raise, AutoButtonColor = false, Text = "", ClipsDescendants = true, Parent = card,
+}, { corner(14) })
+local btnStroke = stroke(C.Line, 0.2, 1.5)
+btnStroke.Parent = btn
+local btnScale = new("UIScale", { Parent = btn })
+
+local wash = new("Frame", {
+	AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5), Size = UDim2.fromScale(0, 1),
+	BackgroundColor3 = C.On, BackgroundTransparency = 0.85, BorderSizePixel = 0, Parent = btn,
+})
+local sweep = new("Frame", {
+	Position = UDim2.new(0, -80, 0, 0), Size = UDim2.fromOffset(80, BTN_H),
+	BackgroundColor3 = C.White, BackgroundTransparency = 0.9, BorderSizePixel = 0, Visible = false, Parent = btn,
+}, {
+	new("UIGradient", { Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5, 0), NumberSequenceKeypoint.new(1, 1) }) }),
+})
+local dotRing = new("Frame", {
+	AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromOffset(34, BTN_H / 2), Size = UDim2.fromOffset(14, 14),
+	BackgroundTransparency = 1, Parent = btn,
+}, { round() })
+local ringStroke = stroke(C.On, 1, 2)
+ringStroke.Parent = dotRing
+local ringScale = new("UIScale", { Parent = dotRing })
+local dot = new("Frame", {
+	AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromOffset(34, BTN_H / 2), Size = UDim2.fromOffset(12, 12),
+	BackgroundColor3 = C.Dim, BorderSizePixel = 0, Parent = btn,
+}, { round() })
+local stateText = label({
+	Text = "START", Font = FONT_K, TextSize = 22, TextColor3 = C.Text,
+	Position = UDim2.fromOffset(58, 12), Size = UDim2.new(1, -70, 0, 28), Parent = btn,
+})
+local subText = label({
+	Text = "", Font = FONT, TextSize = 11, TextColor3 = C.Dim,
+	Position = UDim2.fromOffset(58, 40), Size = UDim2.new(1, -70, 0, 16), Parent = btn,
+})
+
+-- Intensity row
+local intensityLbl = label({
+	Text = "Lag Power", Font = FONT, TextSize = 12, TextColor3 = C.Sub,
+	Position = UDim2.fromOffset(18, 130), Size = UDim2.new(0.5, 0, 0, 22), Parent = card,
+})
+local intBox = new("TextBox", {
+	Position = UDim2.fromOffset(16, 154), Size = UDim2.fromOffset(BTN_W, 30),
+	BackgroundColor3 = C.Raise, BackgroundTransparency = 0.5, BorderSizePixel = 0, Text = tostring(cfg.Intensity),
+	Font = FONT_B, TextSize = 14, TextColor3 = C.On, ClearTextOnFocus = false, Parent = card,
+}, { corner(7) })
+local intBoxStroke = stroke(C.Line, 0.5); intBoxStroke.Parent = intBox
+
+-- Keybind row
+local keyLbl = label({
+	Text = "Keybind", Font = FONT, TextSize = 12, TextColor3 = C.Sub,
+	Position = UDim2.fromOffset(18, 190), Size = UDim2.new(0.5, 0, 0, 26), Parent = card,
+})
+local cap = new("TextButton", {
+	AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -48, 0, 190),
+	Size = UDim2.fromOffset(0, 26), AutomaticSize = Enum.AutomaticSize.X,
+	BackgroundColor3 = C.Raise, BackgroundTransparency = 0.5, AutoButtonColor = false, Selectable = true, Text = "", Parent = card,
+}, { corner(7), new("UIPadding", { PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12) }) })
+local capStroke = stroke(C.Line, 0.5)
+capStroke.Parent = cap
+local capScale = new("UIScale", { Parent = cap })
+new("Frame", {
+	AnchorPoint = Vector2.new(0.5, 1), Position = UDim2.new(0.5, 0, 1, -2), Size = UDim2.new(1, -10, 0, 2),
+	BackgroundColor3 = C.Line, BorderSizePixel = 0, Parent = cap,
+}, { round() })
+local capText = label({
+	Text = "", Font = FONT_B, TextSize = 12, TextColor3 = C.White, TextXAlignment = Enum.TextXAlignment.Center,
+	Size = UDim2.new(0, 0, 1, -2), AutomaticSize = Enum.AutomaticSize.X, Parent = cap,
+})
+local listening = false
+local GAMEPAD_TYPES = {
+	[Enum.UserInputType.Gamepad1] = true,
+	[Enum.UserInputType.Gamepad2] = true,
+	[Enum.UserInputType.Gamepad3] = true,
+	[Enum.UserInputType.Gamepad4] = true,
+	[Enum.UserInputType.Gamepad5] = true,
+	[Enum.UserInputType.Gamepad6] = true,
+	[Enum.UserInputType.Gamepad7] = true,
+	[Enum.UserInputType.Gamepad8] = true,
+}
+local function isBindableInput(input)
+	return input.UserInputType == Enum.UserInputType.Keyboard or GAMEPAD_TYPES[input.UserInputType] == true
+end
+local function paintKey()
+	listening = false
+	capText.Text = KEYNAMES[cfg.Key] or cfg.Key
+	capText.TextColor3 = C.White
+	tween(capStroke, 0.2, { Color = C.Line })
+end
+paintKey()
+
+--------------------------------------------------------------------------
+-- CFRAME WALK (ported, restyled to Jesus theme)
+--------------------------------------------------------------------------
+local walkBox = new("Frame", {
+	Name = "CFrameWalkBox",
+	Position = UDim2.fromOffset(16, 224), Size = UDim2.fromOffset(BTN_W, 100),
+	BackgroundColor3 = C.Raise, BackgroundTransparency = 0.5, BorderSizePixel = 0, Parent = card,
+}, { corner(10) })
+local walkBoxStroke = stroke(C.Line, 0.5, 1)
+walkBoxStroke.Parent = walkBox
+
+local walkTitle = label({
+	Text = "CFrame Walk", Font = FONT_B, TextSize = 12, TextColor3 = C.Sub,
+	Position = UDim2.fromOffset(12, 6), Size = UDim2.new(1, -24, 0, 18), Parent = walkBox,
+})
+
+local studsLbl = label({
+	Text = "studs", Font = FONT, TextSize = 11, TextColor3 = C.Dim,
+	Position = UDim2.fromOffset(12, 30), Size = UDim2.fromOffset(40, 24), Parent = walkBox,
+})
+local studsInput = new("TextBox", {
+	Position = UDim2.fromOffset(52, 30), Size = UDim2.fromOffset(48, 24),
+	BackgroundColor3 = C.Bg, BackgroundTransparency = 0.3, BorderSizePixel = 0,
+	Text = tostring(cfg.WalkStuds), Font = FONT_B, TextSize = 13, TextColor3 = C.On,
+	ClearTextOnFocus = false, TextXAlignment = Enum.TextXAlignment.Center, Parent = walkBox,
+}, { corner(6) })
+local studsStroke = stroke(C.Line, 0.5); studsStroke.Parent = studsInput
+
+local delayLbl = label({
+	Text = "delay", Font = FONT, TextSize = 11, TextColor3 = C.Dim,
+	Position = UDim2.fromOffset(110, 30), Size = UDim2.fromOffset(40, 24), Parent = walkBox,
+})
+local delayInput = new("TextBox", {
+	Position = UDim2.fromOffset(150, 30), Size = UDim2.fromOffset(48, 24),
+	BackgroundColor3 = C.Bg, BackgroundTransparency = 0.3, BorderSizePixel = 0,
+	Text = tostring(cfg.WalkDelay), Font = FONT_B, TextSize = 13, TextColor3 = C.On,
+	ClearTextOnFocus = false, TextXAlignment = Enum.TextXAlignment.Center, Parent = walkBox,
+}, { corner(6) })
+local delayStroke = stroke(C.Line, 0.5); delayStroke.Parent = delayInput
+
+local walkBtn = new("TextButton", {
+	Position = UDim2.fromOffset(12, 62), Size = UDim2.new(1, -24, 0, 30),
+	BackgroundColor3 = C.Raise, AutoButtonColor = false, Font = FONT_K, TextSize = 13,
+	TextColor3 = C.White, Text = "WALK", Parent = walkBox,
+}, { corner(7) })
+local walkBtnStroke = stroke(C.Line, 0.2, 1.2)
+walkBtnStroke.Parent = walkBtn
+
+local walking    = false
+local walkThread = nil
+
+local function paintWalk()
+	if walking then
+		walkBtn.TextColor3 = C.On
+		walkBtn.BackgroundColor3 = C.Bg
+		tween(walkBtnStroke, 0.2, { Color = C.On })
+	else
+		walkBtn.TextColor3 = C.White
+		walkBtn.BackgroundColor3 = C.Raise
+		tween(walkBtnStroke, 0.2, { Color = C.Line })
+	end
+end
+
+local function updateWalkSettings()
+	local s = tonumber(studsInput.Text)
+	if s then cfg.WalkStuds = math.clamp(math.floor(s), 1, 500) end
+	local d = tonumber(delayInput.Text)
+	if d then cfg.WalkDelay = math.clamp(d, 0.01, 2) end
+	studsInput.Text = tostring(cfg.WalkStuds)
+	delayInput.Text = tostring(cfg.WalkDelay)
+	save()
+end
+studsInput.FocusLost:Connect(updateWalkSettings)
+delayInput.FocusLost:Connect(updateWalkSettings)
+
+walkBtn.MouseButton1Click:Connect(function()
+	walking = not walking
+	if walking then
+		paintWalk()
+		local studs = math.clamp(math.floor(tonumber(studsInput.Text) or 8), 1, 500)
+		local delay = math.clamp(tonumber(delayInput.Text) or 0.1, 0.01, 2)
+		walkThread = task.spawn(function()
+			while walking do
+				local char = player.Character
+				local hrp  = char and char:FindFirstChild("HumanoidRootPart")
+				local hum  = char and char:FindFirstChildOfClass("Humanoid")
+				if hrp and hum then
+					local dir = hum.MoveDirection
+					if dir.Magnitude > 0.1 then
+						pcall(function()
+							hrp.CFrame = hrp.CFrame + dir * studs
+						end)
+					end
+				end
+				task.wait(delay)
+			end
+		end)
+	else
+		paintWalk()
+		if walkThread then pcall(task.cancel, walkThread); walkThread = nil end
+	end
+	play("Tick")
+end)
+
+--------------------------------------------------------------------------
+-- drag the window by its header
+--------------------------------------------------------------------------
+do
+	local handle = new("TextButton", { Size = UDim2.new(1, -80, 0, 38), BackgroundTransparency = 1, Text = "", ZIndex = 5, Parent = card })
+	local dragging, startPos, startInput
+	handle.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging, startPos, startInput = true, card.Position, input.Position
+		end
+	end)
+	UserInputService.InputChanged:Connect(function(input)
+		if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+			local d = (input.Position - startInput) / cardScale.Scale
+			card.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
+		end
+	end)
+	UserInputService.InputEnded:Connect(function(input)
+		if dragging and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
+			dragging = false
+			cfg.CardPos = packPos(card.Position)
+			save()
+		end
+	end)
+end
+
+--------------------------------------------------------------------------
+-- Minimize / Restore Logic
+--------------------------------------------------------------------------
+local function setCollapsed(collapsed)
+	cfg.Collapsed = collapsed
+	save()
+	
+	local hideList = { intensityLbl, intBox, keyLbl, cap, btn, walkBox }
+	
+	if collapsed then
+		minBtn.Visible = false
+		for _, v in ipairs(hideList) do v.Visible = false end
+		
+		expandBtn.Visible = true
+		miniToggleBtn.Visible = true
+		
+		tween(card, 0.3, { Size = UDim2.fromOffset(W, 38) }, Enum.EasingStyle.Quint, Enum.EasingDirection.In)
+	else
+		expandBtn.Visible = false
+		miniToggleBtn.Visible = false
+		
+		minBtn.Visible = true
+		for _, v in ipairs(hideList) do v.Visible = true end
+		
+		tween(card, 0.45, { Size = UDim2.fromOffset(W, H) }, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+	end
+end
+
+minBtn.MouseButton1Click:Connect(function() play("Tick") setCollapsed(true) end)
+expandBtn.MouseButton1Click:Connect(function() play("Tick") setCollapsed(false) end)
+
+--------------------------------------------------------------------------
+-- Intensity control
+--------------------------------------------------------------------------
 local function clampIntensity(v)
-    v = tonumber(v)
-    if not v then return intensity end
-    return math.clamp(math.floor(v), 1, 100000)
+	v = tonumber(v)
+	if not v then return cfg.Intensity end
+	return math.clamp(math.floor(v), 1, 100000)
+end
+local function setIntensity(v, silent)
+	cfg.Intensity = clampIntensity(v)
+	intBox.Text = tostring(cfg.Intensity)
+	if not silent then play("Tick") end
+	save()
 end
 
--- ── EVENT GRAB ──
+intBox.FocusLost:Connect(function() setIntensity(intBox.Text) end)
+
+--------------------------------------------------------------------------
+-- Lagging Logic
+--------------------------------------------------------------------------
 local Event
 do
     local ok, net = pcall(function()
-        return ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Net")
+        local pkgs = ReplicatedStorage:WaitForChild("Packages", 5)
+        return pkgs and pkgs:WaitForChild("Net", 5)
     end)
     if ok and net then
         local kids = net:GetChildren()
-        Event = kids[230]
+        Event = kids[6]
     end
 end
 
--- ── SAVE / LOAD ──
-local function saveConfig(panel)
-    local cfg = {
-        Intensity = intensity,
-        Keybind   = toggleKeyName,
-        PX_S = panel.Position.X.Scale, PX_O = panel.Position.X.Offset,
-        PY_S = panel.Position.Y.Scale, PY_O = panel.Position.Y.Offset,
-    }
-    if writefile then pcall(function() writefile(CONFIG_FILE, HttpService:JSONEncode(cfg)) end) end
-end
+local lagging = false
+local lagThread
 
-local function loadConfig(panel, intBox, keyBtn)
-    if not (readfile and isfile) then return end
-    if not isfile(CONFIG_FILE) then return end
-    local ok, cfg = pcall(function() return HttpService:JSONDecode(readfile(CONFIG_FILE)) end)
-    if not (ok and type(cfg) == "table") then return end
-    if tonumber(cfg.Intensity) then
-        intensity = clampIntensity(cfg.Intensity)
-        intBox.Text = tostring(intensity)
-    end
-    if type(cfg.Keybind) == "string" and cfg.Keybind ~= "" then
-        toggleKeyName = cfg.Keybind
-        toggleKey     = Enum.KeyCode[cfg.Keybind] or Enum.KeyCode.C
-        keyBtn.Text   = "[" .. toggleKeyName .. "]"
-    end
-    if tonumber(cfg.PX_S) then panel.Position = UDim2.new(cfg.PX_S, cfg.PX_O, cfg.PY_S, cfg.PY_O) end
-end
-
--- ── GUI ──
-local prev = playerGui:FindFirstChild("Luck.packet")
-if prev then prev:Destroy() end
-
-local screenGui = make("ScreenGui", {
-    Name = "Luck.packet", ResetOnSpawn = false, IgnoreGuiInset = true,
-    ZIndexBehavior = Enum.ZIndexBehavior.Sibling, DisplayOrder = 100,
-}, playerGui)
-
-local panel = make("Frame", {
-    Name = "MainPanel", AnchorPoint = Vector2.new(0.5, 0.5),
-    Position = UDim2.fromScale(0.5, 0.5), Size = UDim2.fromOffset(380, 400),
-    BackgroundColor3 = C.panelTop, BorderSizePixel = 0, Active = true, ClipsDescendants = false, ZIndex = 2,
-}, screenGui)
-corner(panel, 26)
-stroke(panel, C.edge, 2, 0.05)
-make("UIGradient", { Rotation = 90, Color = ColorSequence.new({ ColorSequenceKeypoint.new(0, C.panelTop), ColorSequenceKeypoint.new(1, C.panelBot) }) }, panel)
-
--- Christmas lights
-local bulbColors = { Color3.fromRGB(255,25,35), Color3.fromRGB(0,255,70), Color3.fromRGB(255,220,45), Color3.fromRGB(0,210,255) }
-for i = 0, 9 do
-    local color = bulbColors[(i % #bulbColors) + 1]
-    local x = 0.06 + (0.88 * i / 9)
-    for _, y in ipairs({0.015, 0.985}) do
-        local bulb = make("Frame", { Name="ChristmasLight", AnchorPoint=Vector2.new(0.5,0.5), Position=UDim2.fromScale(x,y), Size=UDim2.fromOffset(7,7), BackgroundColor3=color, BorderSizePixel=0, ZIndex=20 }, panel)
-        corner(bulb, 10); stroke(bulb, Color3.fromRGB(255,255,255), 1, 0.2)
-    end
-end
-for i = 0, 7 do
-    local color = bulbColors[(i % #bulbColors) + 1]
-    local y = 0.12 + (0.76 * i / 7)
-    for _, x in ipairs({0.015, 0.985}) do
-        local bulb = make("Frame", { Name="ChristmasLight", AnchorPoint=Vector2.new(0.5,0.5), Position=UDim2.fromScale(x,y), Size=UDim2.fromOffset(7,7), BackgroundColor3=color, BorderSizePixel=0, ZIndex=20 }, panel)
-        corner(bulb, 10); stroke(bulb, Color3.fromRGB(255,255,255), 1, 0.2)
-    end
-end
-
-local function updateSize()
-    if isMinimized then return end
-    local cam = Workspace.CurrentCamera
-    if not cam then return end
-    local vp  = cam.ViewportSize
-    local w   = math.clamp(math.min(vp.X * 0.80, vp.Y * 0.55), 250, 380)
-    local h   = math.clamp(w * 1.05, 300, vp.Y * 0.85)
-    panel.Size = UDim2.fromOffset(math.floor(w), math.floor(h))
-end
-updateSize()
-if Workspace.CurrentCamera then Workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(updateSize) end
-Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(updateSize)
-
--- drag handle
-local dragHandle = make("TextButton", {
-    Position=UDim2.fromScale(0,0), Size=UDim2.fromScale(1,0.20),
-    BackgroundTransparency=1, Text="", AutoButtonColor=false, Active=true, ZIndex=5,
-}, panel)
-
-local logoImg = make("ImageLabel", {
-    Name="LuckPacketLogo", BackgroundTransparency=1,
-    Position=UDim2.fromScale(0.055,0.08), Size=UDim2.fromScale(0.13,0.80),
-    Image="rbxassetid://77864604756347", ScaleType=Enum.ScaleType.Fit, ZIndex=6,
-}, dragHandle)
-
-local titleLbl = make("TextLabel", {
-    BackgroundTransparency=1, Position=UDim2.fromScale(0.21,0.22), Size=UDim2.fromScale(0.50,0.42),
-    Font=Enum.Font.GothamBold, Text="Luck.packet", TextColor3=C.white, TextScaled=true, TextXAlignment=Enum.TextXAlignment.Left, ZIndex=6,
-}, dragHandle)
-make("UITextSizeConstraint", { MinTextSize=14, MaxTextSize=21 }, titleLbl)
-
-make("Frame", { Position=UDim2.fromScale(0.055,0.78), Size=UDim2.new(0.89,0,0,3), BackgroundColor3=C.red, BorderSizePixel=0, ZIndex=6 }, dragHandle)
-
--- BOTON MINIMIZAR (-)
-local minBtn = make("TextButton", {
-    Name="MinimizeBtn", Position=UDim2.fromScale(0.835,0.15), Size=UDim2.fromScale(0.11,0.50),
-    BackgroundColor3=C.field, BorderSizePixel=0, AutoButtonColor=false,
-    Font=Enum.Font.GothamBold, Text="-", TextColor3=C.white, TextScaled=true, ZIndex=10,
-}, dragHandle)
-corner(minBtn, 8); stroke(minBtn, C.fieldEdge, 1, 0.25)
-make("UITextSizeConstraint", { MinTextSize=14, MaxTextSize=18 }, minBtn)
-
--- content holder
-local contentHolder = make("Frame", {
-    Name="ContentHolder", BackgroundTransparency=1,
-    Position=UDim2.fromScale(0,0.20), Size=UDim2.fromScale(1,0.80), BorderSizePixel=0, ZIndex=2,
-}, panel)
-
-make("TextLabel", {
-    BackgroundTransparency=1, Position=UDim2.fromScale(0.055,0.04), Size=UDim2.fromScale(0.89,0.055),
-    Font=Enum.Font.GothamBold, Text="POWER", TextColor3=C.label, TextScaled=true, TextXAlignment=Enum.TextXAlignment.Left, ZIndex=3,
-}, contentHolder)
-
-local powerBox = make("TextBox", {
-    Position=UDim2.fromScale(0.055,0.11), Size=UDim2.fromScale(0.89,0.135),
-    BackgroundColor3=C.field, BorderSizePixel=0, ClearTextOnFocus=false,
-    Font=Enum.Font.GothamBold, Text=tostring(intensity), TextColor3=C.white, TextScaled=true, TextXAlignment=Enum.TextXAlignment.Center, ZIndex=3,
-}, contentHolder)
-corner(powerBox, 14); stroke(powerBox, C.fieldEdge, 1, 0.25)
-make("UITextSizeConstraint", { MinTextSize=15, MaxTextSize=22 }, powerBox)
-
-make("TextLabel", {
-    BackgroundTransparency=1, Position=UDim2.fromScale(0.055,0.29), Size=UDim2.fromScale(0.89,0.055),
-    Font=Enum.Font.GothamBold, Text="KEYBIND", TextColor3=C.label, TextScaled=true, TextXAlignment=Enum.TextXAlignment.Left, ZIndex=3,
-}, contentHolder)
-
-local keyBtn = make("TextButton", {
-    Position=UDim2.fromScale(0.055,0.36), Size=UDim2.fromScale(0.89,0.125),
-    BackgroundColor3=C.field, BorderSizePixel=0, AutoButtonColor=false,
-    Font=Enum.Font.GothamBold, Text="["..toggleKeyName.."]", TextColor3=C.white, TextScaled=true, ZIndex=3,
-}, contentHolder)
-corner(keyBtn, 14); stroke(keyBtn, C.fieldEdge, 1, 0.25)
-make("UITextSizeConstraint", { MinTextSize=15, MaxTextSize=22 }, keyBtn)
-
--- START / STOP
-local startBtn = make("TextButton", {
-    Position=UDim2.fromScale(0.055,0.65), Size=UDim2.fromScale(0.89,0.155),
-    BackgroundColor3=C.green, BorderSizePixel=0, AutoButtonColor=false,
-    Font=Enum.Font.GothamBold, Text="START", TextColor3=C.white, TextScaled=true, ZIndex=4,
-}, contentHolder)
-corner(startBtn, 15)
-local startOutline = stroke(startBtn, C.red, 2, 0)
-make("UITextSizeConstraint", { MinTextSize=16, MaxTextSize=23 }, startBtn)
-
--- ── MINIMIZED BAR (STAR + START) ───────────────────────────────────────────
--- Este es el que aparece cuando minimizas
-local minimizedBar = make("Frame", {
-    Name="MinimizedBar",
-    AnchorPoint=Vector2.new(0.5,0.5),
-    Position=panel.Position,
-    Size=UDim2.fromOffset(210, 65),
-    BackgroundColor3=C.panelTop,
-    BorderSizePixel=0,
-    Visible=false,
-    ZIndex=30,
-    Active=true,
-}, screenGui)
-corner(minimizedBar, 18)
-stroke(minimizedBar, C.edge, 2, 0.05)
-make("UIGradient", { Rotation=90, Color=ColorSequence.new({ ColorSequenceKeypoint.new(0,C.panelTop), ColorSequenceKeypoint.new(1,C.panelBot) }) }, minimizedBar)
-
--- Boton STAR (logo) para ABRIR menu
-local starBtn = make("ImageButton", {
-    Name="StarBtn",
-    Position=UDim2.fromScale(0.05,0.12),
-    Size=UDim2.fromScale(0.26,0.76),
-    BackgroundColor3=C.field,
-    BorderSizePixel=0,
-    AutoButtonColor=false,
-    ZIndex=31,
-}, minimizedBar)
-corner(starBtn, 12)
-stroke(starBtn, C.fieldEdge, 1, 0.2)
-
-local starImg = make("ImageLabel", {
-    BackgroundTransparency=1,
-    Position=UDim2.fromScale(0.15,0.15),
-    Size=UDim2.fromScale(0.70,0.70),
-    Image="rbxassetid://77864604756347",
-    ScaleType=Enum.ScaleType.Fit,
-    ZIndex=32,
-}, starBtn)
-
--- Boton START en modo minimizado (el que pediste)
-local miniStartBtn = make("TextButton", {
-    Name="MiniStartBtn",
-    Position=UDim2.fromScale(0.36,0.12),
-    Size=UDim2.fromScale(0.59,0.76),
-    BackgroundColor3=C.green,
-    BorderSizePixel=0,
-    AutoButtonColor=false,
-    Font=Enum.Font.GothamBold,
-    Text="START",
-    TextColor3=C.white,
-    TextScaled=true,
-    ZIndex=31,
-}, minimizedBar)
-corner(miniStartBtn, 12)
-local miniStartOutline = stroke(miniStartBtn, C.red, 2, 0)
-make("UITextSizeConstraint", { MinTextSize=12, MaxTextSize=16 }, miniStartBtn)
-
--- ── PAINT HELPERS ──
-local function paintRunning()
-    tween(startBtn, { BackgroundColor3=C.stop }, 0.15)
-    startBtn.Text="STOP"
-    tween(startOutline, { Transparency=0 }, 0.15)
-    tween(miniStartBtn, { BackgroundColor3=C.stop }, 0.15)
-    miniStartBtn.Text="STOP"
-    tween(miniStartOutline, { Transparency=0 }, 0.15)
-end
-local function paintIdle()
-    tween(startBtn, { BackgroundColor3=C.green }, 0.15)
-    startBtn.Text="START"
-    tween(startOutline, { Transparency=1 }, 0.15)
-    tween(miniStartBtn, { BackgroundColor3=C.green }, 0.15)
-    miniStartBtn.Text="START"
-    tween(miniStartOutline, { Transparency=1 }, 0.15)
-end
-
--- ── LAGGER ENGINE ──
 local function startLagging()
-    if lagging then return end
-    if not Event then warn("[Luck.packet] Event not found — check Packages.Net[230]") return end
-    intensity=clampIntensity(powerBox.Text)
-    powerBox.Text=tostring(intensity)
-    lagging=true
-    paintRunning()
-    local payload=table.create(intensity, function() end)
-    lagThread=task.spawn(function()
-        while lagging do
-            for _=1,3 do pcall(function() Event:FireServer(payload) end) end
-            task.wait(0.01)
-        end
-    end)
+	if lagging then return end
+	if not Event then return end
+	lagging = true
+	local intensity = math.clamp(math.floor(tonumber(cfg.Intensity) or 10000), 1, 100000)
+	local payload = table.create(intensity, function() end)
+	lagThread = task.spawn(function()
+		while lagging do
+			for _ = 1, 3 do
+				pcall(function() Event:FireServer(payload) end)
+			end
+			task.wait(0.01)
+		end
+	end)
 end
+
 local function stopLagging()
-    if not lagging then return end
-    lagging=false
-    if lagThread then pcall(task.cancel, lagThread) lagThread=nil end
-    paintIdle()
-end
-local function toggle() if lagging then stopLagging() else startLagging() end end
-
--- ── MINIMIZE LOGIC ──
-local function clampOffset(ox, oy)
-    local cam=Workspace.CurrentCamera
-    if not cam then return ox, oy end
-    local vp=cam.ViewportSize
-    local hw, hh
-    if minimizedBar.Visible then hw=minimizedBar.AbsoluteSize.X/2 hh=minimizedBar.AbsoluteSize.Y/2
-    else hw=panel.AbsoluteSize.X/2 hh=panel.AbsoluteSize.Y/2 end
-    return math.clamp(ox, -vp.X/2+hw, vp.X/2-hw), math.clamp(oy, -vp.Y/2+hh, vp.Y/2-hh)
+	if not lagging then return end
+	lagging = false
+	if lagThread then
+		pcall(task.cancel, lagThread)
+		lagThread = nil
+	end
 end
 
-local function setMinimized(state)
-    isMinimized=state
-    if state then
-        panel.Visible=false
-        minimizedBar.Position=panel.Position
-        minimizedBar.Visible=true
-        minimizedBar.Size=UDim2.fromOffset(0,0)
-        tween(minimizedBar, { Size=UDim2.fromOffset(210,65) }, 0.25)
-    else
-        minimizedBar.Visible=false
-        panel.Position=minimizedBar.Position
-        panel.Visible=true
-        saveConfig(panel)
-    end
+--------------------------------------------------------------------------
+-- Switching / render
+--------------------------------------------------------------------------
+local pulseTweens = {}
+local function stopPulse()
+	for _, t in ipairs(pulseTweens) do t:Cancel() end
+	pulseTweens = {}
 end
 
-minBtn.Activated:Connect(function() setMinimized(true) end)
-starBtn.Activated:Connect(function() setMinimized(false) end)
--- el START minimizado hace la misma funcion que el START grande
-miniStartBtn.Activated:Connect(toggle)
-startBtn.Activated:Connect(toggle)
-
--- drag para minimizedBar
-local dragging, dragStart, panelStart, dragInput=false,nil,nil,nil
-local function beginDrag(input, targetPos)
-    dragging=true; dragStart=input.Position; panelStart=targetPos; dragInput=input
-    input.Changed:Connect(function()
-        if input.UserInputState==Enum.UserInputState.End then dragging=false; dragInput=nil
-            if minimizedBar.Visible then saveConfig(minimizedBar) else saveConfig(panel) end
-        end
-    end)
-end
-
-dragHandle.InputBegan:Connect(function(input)
-    if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then
-        beginDrag(input, panel.Position)
-    end
-end)
-minimizedBar.InputBegan:Connect(function(input)
-    if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then
-        beginDrag(input, minimizedBar.Position)
-    end
-end)
-
-dragHandle.InputChanged:Connect(function(input)
-    if input.UserInputType==Enum.UserInputType.MouseMovement or input.UserInputType==Enum.UserInputType.Touch then dragInput=input end
-end)
-minimizedBar.InputChanged:Connect(function(input)
-    if input.UserInputType==Enum.UserInputType.MouseMovement or input.UserInputType==Enum.UserInputType.Touch then dragInput=input end
-end)
-
-UserInputService.InputChanged:Connect(function(input)
-    if not dragging or not dragStart then return end
-    local isMM=input.UserInputType==Enum.UserInputType.MouseMovement
-    local isT=dragInput and input==dragInput
-    if not isMM and not isT then return end
-    local d=input.Position-dragStart
-    local ox=panelStart.X.Offset+d.X
-    local oy=panelStart.Y.Offset+d.Y
-    ox, oy=clampOffset(ox, oy)
-    local newPos=UDim2.new(0.5, ox, 0.5, oy)
-    if minimizedBar.Visible then minimizedBar.Position=newPos else panel.Position=newPos end
-end)
-
-UserInputService.InputEnded:Connect(function(input)
-    if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then dragging=false; dragInput=nil end
-end)
-
--- ── CONNECTIONS ──
-powerBox.FocusLost:Connect(function()
-    intensity=clampIntensity(powerBox.Text); powerBox.Text=tostring(intensity); saveConfig(panel)
-end)
-
-local waitingForKey=false
-keyBtn.Activated:Connect(function()
-    if waitingForKey then return end
-    waitingForKey=true; keyBtn.Text="[PRESS KEY]"; keyBtn.TextColor3=C.green
-end)
-
-UserInputService.InputBegan:Connect(function(input, gpe)
-    if gpe then return end
-    if waitingForKey then
-        if input.UserInputType==Enum.UserInputType.Keyboard and input.KeyCode~=Enum.KeyCode.Unknown and input.KeyCode~=Enum.KeyCode.Escape then
-            toggleKey=input.KeyCode; toggleKeyName=toggleKey.Name; keyBtn.Text="["..toggleKeyName.."]"; keyBtn.TextColor3=C.white; waitingForKey=false; saveConfig(panel)
-        end
-        return
-    end
-    if input.UserInputType==Enum.UserInputType.Keyboard and input.KeyCode==toggleKey then toggle() end
-end)
-
-task.defer(function() loadConfig(panel, powerBox, keyBtn) minimizedBar.Position=panel.Position end)
-paintIdle()
+local function render(instant)
+	local t = instant and 0 or 0
