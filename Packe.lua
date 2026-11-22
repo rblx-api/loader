@@ -1,1240 +1,504 @@
 --[[
-  VYNX PACKET LAGGER
-  LocalScript → StarterPlayerScripts  OR  run as executor script
+	JESUS PACKET
 
-  • VYNX purple UI (visible backgrounds, thin weak strokes)
-  • Faded packet-lag core (bomb / NetworkClient)
-  • Ported-style UI protection (gethui / CoreGui wipe / gen guard)
+	Features:
+	- Transparent dark blue theme with cyan accents (like the photo).
+	- Mobile support: Touch draggable, scales to fit screen.
+	- Minimize into a compact pill with a quick-toggle switch.
+	- Keybind system.
+	- CFrame Walk (ported from Violette, restyled to Jesus colors).
 ]]
 
-local Services = {
-	Players       = game:GetService("Players"),
-	UIS           = game:GetService("UserInputService"),
-	NetworkClient = game:GetService("NetworkClient"),
-	TweenService  = game:GetService("TweenService"),
-	RunService    = game:GetService("RunService"),
-	CoreGui       = game:GetService("CoreGui"),
-}
+-- ══════════════════════════════════════════════════════════════════
+--  HARDENED STARTUP — wait for game + LocalPlayer before anything
+-- ══════════════════════════════════════════════════════════════════
+repeat task.wait() until game:IsLoaded()
 
-local Players       = Services.Players
-local UIS           = Services.UIS
-local NetworkClient = Services.NetworkClient
-local TweenService  = Services.TweenService
-local RunService    = Services.RunService
-local CoreGui       = Services.CoreGui
+local Players           = game:GetService("Players")
+local TweenService      = game:GetService("TweenService")
+local UserInputService  = game:GetService("UserInputService")
+local RunService        = game:GetService("RunService")
+local HttpService       = game:GetService("HttpService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ContentProvider   = game:GetService("ContentProvider")
 
-local LP = Players.LocalPlayer
-local PlayerGui = LP:WaitForChild("PlayerGui", 10)
-
-----------------------------------------------------------------
--- Generation guard + cleanup (Ported style)
-----------------------------------------------------------------
-_G.VYNXPacketGen = (_G.VYNXPacketGen or 0) + 1
-local GEN = _G.VYNXPacketGen
-
-local function getProtectParent()
-	-- Prefer gethui (executor), then CoreGui, then PlayerGui
-	local ok, hui = pcall(function()
-		if type(gethui) == "function" then return gethui() end
-		return nil
-	end)
-	if ok and hui then return hui end
-	local ok2, cg = pcall(function() return CoreGui end)
-	if ok2 and cg then return cg end
-	return PlayerGui
+local player = Players.LocalPlayer
+if not player then
+	repeat task.wait(0.1) until Players.LocalPlayer
+	player = Players.LocalPlayer
+end
+local playerGui = player:WaitForChild("PlayerGui", 10)
+if not playerGui then
+	warn("[JESUS PACKET] PlayerGui never arrived — aborting.")
+	return
 end
 
-local function wipeOld()
-	local names = { "VYNXHubGui", "FadedPacketLagger", "VYNXPacketLagger" }
-	local function wipe(container)
-		if not container then return end
-		for _, n in ipairs(names) do
-			local old = container:FindFirstChild(n)
-			if old then pcall(function() old:Destroy() end) end
-		end
-		for _, c in ipairs(container:GetChildren()) do
-			if c:IsA("ScreenGui") then
-				local ln = string.lower(c.Name or "")
-				if string.find(ln, "vynx", 1, true) or string.find(ln, "fadedpacket", 1, true) then
-					pcall(function() c:Destroy() end)
-				end
-			end
+local old = playerGui:FindFirstChild("JESUSPACKET")
+if old then old:Destroy() end
+
+--------------------------------------------------------------------------
+-- Config
+--------------------------------------------------------------------------
+local FILE = "jesus_packet.json"
+local cfg = { Key = "G", Sounds = true, Collapsed = false, CardPos = nil, Intensity = 10000, WalkStuds = 8, WalkDelay = 0.1 }
+pcall(function()
+	if isfile and isfile(FILE) then
+		local data = HttpService:JSONDecode(readfile(FILE))
+		for k in pairs(cfg) do
+			if data[k] ~= nil then cfg[k] = data[k] end
 		end
 	end
-	pcall(function() wipe(CoreGui) end)
-	pcall(function() wipe(PlayerGui) end)
-	pcall(function() if type(gethui) == "function" then wipe(gethui()) end end)
+end)
+local saveToken = 0
+local function save()
+	saveToken += 1
+	local token = saveToken
+	task.delay(0.4, function()
+		if token ~= saveToken then return end
+		pcall(function()
+			if writefile then writefile(FILE, HttpService:JSONEncode(cfg)) end
+		end)
+	end)
+end
+local function packPos(p) return { p.X.Scale, p.X.Offset, p.Y.Scale, p.Y.Offset } end
+local function unpackPos(t, fallback)
+	if type(t) == "table" and #t == 4 then return UDim2.new(t[1], t[2], t[3], t[4]) end
+	return fallback
 end
 
-wipeOld()
-
-----------------------------------------------------------------
--- Theme (VYNX purple, thin strokes, visible BG)
-----------------------------------------------------------------
+--------------------------------------------------------------------------
+-- Look (Jesus Hub Theme)
+--------------------------------------------------------------------------
 local C = {
-	white      = Color3.fromRGB(249, 247, 255),
-	purple     = Color3.fromRGB(165, 93, 255),
-	purpleLite = Color3.fromRGB(198, 151, 255),
-	purpleDeep = Color3.fromRGB(77, 36, 129),
-	text       = Color3.fromRGB(245, 240, 255),
-	textDim    = Color3.fromRGB(178, 163, 202),
-	textMuted  = Color3.fromRGB(116, 100, 141),
-	green      = Color3.fromRGB(80, 220, 150),
-	red        = Color3.fromRGB(255, 91, 130),
-	card       = Color3.fromRGB(24, 17, 35),
-	chip       = Color3.fromRGB(37, 26, 53),
-	bgDark     = Color3.fromRGB(17, 11, 26),
-	stroke     = Color3.fromRGB(165, 93, 255),
+	Bg    = Color3.fromRGB(10, 12, 16),
+	Raise = Color3.fromRGB(18, 22, 30),
+	Line  = Color3.fromRGB(35, 45, 60),
+	Dim   = Color3.fromRGB(120, 140, 160),
+	Sub   = Color3.fromRGB(160, 180, 200),
+	Text  = Color3.fromRGB(240, 245, 255),
+	White = Color3.fromRGB(255, 255, 255),
+	On    = Color3.fromRGB(0, 170, 255),
+	On2   = Color3.fromRGB(0, 120, 255),
 }
+local FONT, FONT_B, FONT_K = Enum.Font.Gotham, Enum.Font.GothamMedium, Enum.Font.GothamBold
 
-local BACKGROUND_IMAGES = {
-	{ id = "rbxassetid://134260766475623", name = "1" },
-	{ id = "rbxassetid://106344835483006", name = "2" },
-	{ id = "rbxassetid://112180017939463", name = "3" },
-	{ id = "rbxassetid://124053948669794", name = "4" },
-}
-
-----------------------------------------------------------------
--- Helpers
-----------------------------------------------------------------
-local function guiCorner(parent, radius)
-	local c = Instance.new("UICorner")
-	c.CornerRadius = UDim.new(0, radius or 8)
-	c.Parent = parent
-	return c
+local function new(class, props, kids)
+	local o = Instance.new(class)
+	for k, v in pairs(props or {}) do
+		pcall(function() o[k] = v end)
+	end
+	for _, c in ipairs(kids or {}) do c.Parent = o end
+	return o
+end
+local function tween(o, t, props, style, dir)
+	local tw = TweenService:Create(o, TweenInfo.new(t, style or Enum.EasingStyle.Quad, dir or Enum.EasingDirection.Out), props)
+	tw:Play()
+	return tw
+end
+local function corner(r) return new("UICorner", { CornerRadius = UDim.new(0, r) }) end
+local function round() return new("UICorner", { CornerRadius = UDim.new(1, 0) }) end
+local function stroke(col, tr, th)
+	return new("UIStroke", { Color = col, Transparency = tr or 0, Thickness = th or 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border })
+end
+local function label(props)
+	props.BackgroundTransparency = 1
+	props.Font = props.Font or FONT
+	props.TextSize = props.TextSize or 12
+	props.TextColor3 = props.TextColor3 or C.Text
+	props.TextXAlignment = props.TextXAlignment or Enum.TextXAlignment.Left
+	return new("TextLabel", props)
 end
 
-local function guiStroke(parent, color, thickness, transparency)
-	local s = Instance.new("UIStroke")
-	s.Color = color or C.stroke
-	s.Thickness = thickness or 0.8
-	s.Transparency = transparency or 0.6
-	s.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	s.Parent = parent
-	return s
-end
-
-local function tween(obj, props, time, style, dir)
-	local t = TweenService:Create(
-		obj,
-		TweenInfo.new(time or 0.16, style or Enum.EasingStyle.Quad, dir or Enum.EasingDirection.Out),
-		props
-	)
-	t:Play()
-	return t
-end
-
-local KEY_DISPLAY_ALIASES = {
+local KEYNAMES = {
+	LeftShift = "L-Shift", RightShift = "R-Shift", LeftControl = "L-Ctrl", RightControl = "R-Ctrl",
+	LeftAlt = "L-Alt", RightAlt = "R-Alt", Return = "Enter", Backspace = "Bksp", Space = "Space",
+	CapsLock = "Caps", Tab = "Tab",
 	ButtonA = "A", ButtonB = "B", ButtonX = "X", ButtonY = "Y",
-	ButtonR1 = "RB", ButtonR2 = "RT", ButtonL1 = "LB", ButtonL2 = "LT",
-	DPadUp = "D↑", DPadDown = "D↓", DPadLeft = "D←", DPadRight = "D→",
-	ButtonStart = "▶", ButtonSelect = "◀", ButtonR3 = "RS", ButtonL3 = "LS",
-	CapsLock = "CapsLock",
-	LeftControl = "Ctrl", RightControl = "Ctrl",
-	LeftAlt = "Alt", RightAlt = "Alt",
+	ButtonL1 = "L1", ButtonR1 = "R1", ButtonL2 = "L2", ButtonR2 = "R2",
+	ButtonL3 = "L3", ButtonR3 = "R3", ButtonStart = "Start", ButtonSelect = "Select",
+	DPadUp = "D-Up", DPadDown = "D-Down", DPadLeft = "D-Left", DPadRight = "D-Right",
 }
 
-local function prettyKeyName(keyCode)
-	return KEY_DISPLAY_ALIASES[keyCode.Name] or keyCode.Name
+--------------------------------------------------------------------------
+-- Sound effects disabled
+local gui = new("ScreenGui", {
+	Name = "JESUSPACKET", ResetOnSpawn = false, IgnoreGuiInset = true,
+	ZIndexBehavior = Enum.ZIndexBehavior.Sibling, DisplayOrder = 100, Parent = playerGui,
+})
+local function play(name, pitch) return end
+
+-- State
+--------------------------------------------------------------------------
+local active = false
+local activeSince = 0
+local hooks = {}
+local setActive
+
+local touchOnly = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
+local W, H = 262, 380
+
+--------------------------------------------------------------------------
+-- The window
+--------------------------------------------------------------------------
+local card = new("Frame", {
+	AnchorPoint = Vector2.new(0.5, 0.5),
+	Position = unpackPos(cfg.CardPos, UDim2.fromScale(0.5, 0.5)),
+	Size = UDim2.fromOffset(W, H),
+	BackgroundColor3 = C.Bg,
+	BackgroundTransparency = 0.15,
+	BorderSizePixel = 0, ClipsDescendants = true, Parent = gui,
+}, { corner(12) })
+local cardStroke = stroke(C.Line, 0.5, 1.5)
+cardStroke.Parent = card
+local cardScale = new("UIScale", { Parent = card })
+
+local function fitScale()
+	local cam = workspace.CurrentCamera
+	local vs = cam and cam.ViewportSize or Vector2.new(1280, 720)
+	local base = touchOnly and 1.12 or 1
+	cardScale.Scale = math.clamp(math.min(base, (vs.X - 16) / W, (vs.Y - 16) / H), 0.55, 1.3)
+end
+fitScale()
+if workspace.CurrentCamera then
+	workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(fitScale)
 end
 
-----------------------------------------------------------------
--- Keybind capture
-----------------------------------------------------------------
-local KeyListen = { cb = nil, label = nil, active = false }
+-- Header
+local title = label({
+	Text = 'JESUS <font color="#00aaff">PACKET</font>', RichText = true,
+	Font = FONT_K, TextSize = 14, TextColor3 = C.Text,
+	Position = UDim2.fromOffset(16, 0), Size = UDim2.new(1, -72, 0, 38), Parent = card,
+})
 
-local function cancelKeyListen()
-	if KeyListen.label then
-		KeyListen.label.BackgroundColor3 = C.chip
+-- Mini-mode buttons
+local miniToggleBtn = new("TextButton", {
+	AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -40, 0.5, -13), Size = UDim2.fromOffset(40, 26),
+	BackgroundColor3 = C.Raise, AutoButtonColor = false, Font = FONT_K, TextSize = 11,
+	TextColor3 = C.White, Text = "START", Visible = false, ZIndex = 10, Parent = card,
+}, { corner(6) })
+local miniToggleStroke = stroke(C.Line, 0.2, 1.5)
+miniToggleStroke.Parent = miniToggleBtn
+
+local expandBtn = new("TextButton", {
+	AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -8, 0.5, -12), Size = UDim2.fromOffset(26, 24),
+	BackgroundColor3 = C.Raise, AutoButtonColor = false, Font = FONT_K, TextSize = 14,
+	TextColor3 = C.White, Text = "+", Visible = false, ZIndex = 10, Parent = card,
+}, { corner(4) })
+local expandStroke = stroke(C.Line, 0.2, 1.5)
+expandStroke.Parent = expandBtn
+
+local minBtn = new("TextButton", {
+	AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -8, 0, 8), Size = UDim2.fromOffset(24, 20),
+	BackgroundColor3 = C.Raise, AutoButtonColor = false, Font = FONT_B, TextSize = 14, TextColor3 = C.Dim, Text = "—", ZIndex = 10, Parent = card,
+}, { corner(4) })
+local minBtnStroke = stroke(C.Line, 0.5, 1); minBtnStroke.Parent = minBtn
+
+minBtn.MouseEnter:Connect(function() tween(minBtn, 0.12, { TextColor3 = C.White, BackgroundColor3 = C.Line }) end)
+minBtn.MouseLeave:Connect(function() tween(minBtn, 0.2, { TextColor3 = C.Dim, BackgroundColor3 = C.Raise }) end)
+
+new("Frame", { Position = UDim2.fromOffset(0, 38), Size = UDim2.new(1, 0, 0, 1), BackgroundColor3 = C.Line, BackgroundTransparency = 0.5, BorderSizePixel = 0, Parent = card })
+
+-- The big button
+local BTN_W, BTN_H = W - 32, 70
+local btn = new("TextButton", {
+	Position = UDim2.fromOffset(16, 52), Size = UDim2.fromOffset(BTN_W, BTN_H),
+	BackgroundColor3 = C.Raise, AutoButtonColor = false, Text = "", ClipsDescendants = true, Parent = card,
+}, { corner(14) })
+local btnStroke = stroke(C.Line, 0.2, 1.5)
+btnStroke.Parent = btn
+local btnScale = new("UIScale", { Parent = btn })
+
+local wash = new("Frame", {
+	AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5), Size = UDim2.fromScale(0, 1),
+	BackgroundColor3 = C.On, BackgroundTransparency = 0.85, BorderSizePixel = 0, Parent = btn,
+})
+local sweep = new("Frame", {
+	Position = UDim2.new(0, -80, 0, 0), Size = UDim2.fromOffset(80, BTN_H),
+	BackgroundColor3 = C.White, BackgroundTransparency = 0.9, BorderSizePixel = 0, Visible = false, Parent = btn,
+}, {
+	new("UIGradient", { Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5, 0), NumberSequenceKeypoint.new(1, 1) }) }),
+})
+local dotRing = new("Frame", {
+	AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromOffset(34, BTN_H / 2), Size = UDim2.fromOffset(14, 14),
+	BackgroundTransparency = 1, Parent = btn,
+}, { round() })
+local ringStroke = stroke(C.On, 1, 2)
+ringStroke.Parent = dotRing
+local ringScale = new("UIScale", { Parent = dotRing })
+local dot = new("Frame", {
+	AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromOffset(34, BTN_H / 2), Size = UDim2.fromOffset(12, 12),
+	BackgroundColor3 = C.Dim, BorderSizePixel = 0, Parent = btn,
+}, { round() })
+local stateText = label({
+	Text = "START", Font = FONT_K, TextSize = 22, TextColor3 = C.Text,
+	Position = UDim2.fromOffset(58, 12), Size = UDim2.new(1, -70, 0, 28), Parent = btn,
+})
+local subText = label({
+	Text = "", Font = FONT, TextSize = 11, TextColor3 = C.Dim,
+	Position = UDim2.fromOffset(58, 40), Size = UDim2.new(1, -70, 0, 16), Parent = btn,
+})
+
+-- Intensity row
+local intensityLbl = label({
+	Text = "Lag Power", Font = FONT, TextSize = 12, TextColor3 = C.Sub,
+	Position = UDim2.fromOffset(18, 130), Size = UDim2.new(0.5, 0, 0, 22), Parent = card,
+})
+local intBox = new("TextBox", {
+	Position = UDim2.fromOffset(16, 154), Size = UDim2.fromOffset(BTN_W, 30),
+	BackgroundColor3 = C.Raise, BackgroundTransparency = 0.5, BorderSizePixel = 0, Text = tostring(cfg.Intensity),
+	Font = FONT_B, TextSize = 14, TextColor3 = C.On, ClearTextOnFocus = false, Parent = card,
+}, { corner(7) })
+local intBoxStroke = stroke(C.Line, 0.5); intBoxStroke.Parent = intBox
+
+-- Keybind row
+local keyLbl = label({
+	Text = "Keybind", Font = FONT, TextSize = 12, TextColor3 = C.Sub,
+	Position = UDim2.fromOffset(18, 190), Size = UDim2.new(0.5, 0, 0, 26), Parent = card,
+})
+local cap = new("TextButton", {
+	AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -48, 0, 190),
+	Size = UDim2.fromOffset(0, 26), AutomaticSize = Enum.AutomaticSize.X,
+	BackgroundColor3 = C.Raise, BackgroundTransparency = 0.5, AutoButtonColor = false, Selectable = true, Text = "", Parent = card,
+}, { corner(7), new("UIPadding", { PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12) }) })
+local capStroke = stroke(C.Line, 0.5)
+capStroke.Parent = cap
+local capScale = new("UIScale", { Parent = cap })
+new("Frame", {
+	AnchorPoint = Vector2.new(0.5, 1), Position = UDim2.new(0.5, 0, 1, -2), Size = UDim2.new(1, -10, 0, 2),
+	BackgroundColor3 = C.Line, BorderSizePixel = 0, Parent = cap,
+}, { round() })
+local capText = label({
+	Text = "", Font = FONT_B, TextSize = 12, TextColor3 = C.White, TextXAlignment = Enum.TextXAlignment.Center,
+	Size = UDim2.new(0, 0, 1, -2), AutomaticSize = Enum.AutomaticSize.X, Parent = cap,
+})
+local listening = false
+local GAMEPAD_TYPES = {
+	[Enum.UserInputType.Gamepad1] = true,
+	[Enum.UserInputType.Gamepad2] = true,
+	[Enum.UserInputType.Gamepad3] = true,
+	[Enum.UserInputType.Gamepad4] = true,
+	[Enum.UserInputType.Gamepad5] = true,
+	[Enum.UserInputType.Gamepad6] = true,
+	[Enum.UserInputType.Gamepad7] = true,
+	[Enum.UserInputType.Gamepad8] = true,
+}
+local function isBindableInput(input)
+	return input.UserInputType == Enum.UserInputType.Keyboard or GAMEPAD_TYPES[input.UserInputType] == true
+end
+local function paintKey()
+	listening = false
+	capText.Text = KEYNAMES[cfg.Key] or cfg.Key
+	capText.TextColor3 = C.White
+	tween(capStroke, 0.2, { Color = C.Line })
+end
+paintKey()
+
+--------------------------------------------------------------------------
+-- CFRAME WALK (ported, restyled to Jesus theme)
+--------------------------------------------------------------------------
+local walkBox = new("Frame", {
+	Name = "CFrameWalkBox",
+	Position = UDim2.fromOffset(16, 224), Size = UDim2.fromOffset(BTN_W, 100),
+	BackgroundColor3 = C.Raise, BackgroundTransparency = 0.5, BorderSizePixel = 0, Parent = card,
+}, { corner(10) })
+local walkBoxStroke = stroke(C.Line, 0.5, 1)
+walkBoxStroke.Parent = walkBox
+
+local walkTitle = label({
+	Text = "CFrame Walk", Font = FONT_B, TextSize = 12, TextColor3 = C.Sub,
+	Position = UDim2.fromOffset(12, 6), Size = UDim2.new(1, -24, 0, 18), Parent = walkBox,
+})
+
+local studsLbl = label({
+	Text = "studs", Font = FONT, TextSize = 11, TextColor3 = C.Dim,
+	Position = UDim2.fromOffset(12, 30), Size = UDim2.fromOffset(40, 24), Parent = walkBox,
+})
+local studsInput = new("TextBox", {
+	Position = UDim2.fromOffset(52, 30), Size = UDim2.fromOffset(48, 24),
+	BackgroundColor3 = C.Bg, BackgroundTransparency = 0.3, BorderSizePixel = 0,
+	Text = tostring(cfg.WalkStuds), Font = FONT_B, TextSize = 13, TextColor3 = C.On,
+	ClearTextOnFocus = false, TextXAlignment = Enum.TextXAlignment.Center, Parent = walkBox,
+}, { corner(6) })
+local studsStroke = stroke(C.Line, 0.5); studsStroke.Parent = studsInput
+
+local delayLbl = label({
+	Text = "delay", Font = FONT, TextSize = 11, TextColor3 = C.Dim,
+	Position = UDim2.fromOffset(110, 30), Size = UDim2.fromOffset(40, 24), Parent = walkBox,
+})
+local delayInput = new("TextBox", {
+	Position = UDim2.fromOffset(150, 30), Size = UDim2.fromOffset(48, 24),
+	BackgroundColor3 = C.Bg, BackgroundTransparency = 0.3, BorderSizePixel = 0,
+	Text = tostring(cfg.WalkDelay), Font = FONT_B, TextSize = 13, TextColor3 = C.On,
+	ClearTextOnFocus = false, TextXAlignment = Enum.TextXAlignment.Center, Parent = walkBox,
+}, { corner(6) })
+local delayStroke = stroke(C.Line, 0.5); delayStroke.Parent = delayInput
+
+local walkBtn = new("TextButton", {
+	Position = UDim2.fromOffset(12, 62), Size = UDim2.new(1, -24, 0, 30),
+	BackgroundColor3 = C.Raise, AutoButtonColor = false, Font = FONT_K, TextSize = 13,
+	TextColor3 = C.White, Text = "WALK", Parent = walkBox,
+}, { corner(7) })
+local walkBtnStroke = stroke(C.Line, 0.2, 1.2)
+walkBtnStroke.Parent = walkBtn
+
+local walking    = false
+local walkThread = nil
+
+local function paintWalk()
+	if walking then
+		walkBtn.TextColor3 = C.On
+		walkBtn.BackgroundColor3 = C.Bg
+		tween(walkBtnStroke, 0.2, { Color = C.On })
+	else
+		walkBtn.TextColor3 = C.White
+		walkBtn.BackgroundColor3 = C.Raise
+		tween(walkBtnStroke, 0.2, { Color = C.Line })
 	end
-	KeyListen.cb = nil
-	KeyListen.label = nil
-	KeyListen.active = false
 end
 
-local function startKeyListen(labelBtn, onKeySet)
-	cancelKeyListen()
-	KeyListen.cb = onKeySet
-	KeyListen.label = labelBtn
-	KeyListen.active = true
-	labelBtn.Text = "..."
-	labelBtn.BackgroundColor3 = C.purpleDeep
-	local captureId = labelBtn
-	task.delay(8, function()
-		if KeyListen.label == captureId and KeyListen.active then
-			cancelKeyListen()
-			if labelBtn and labelBtn.Parent then
-				labelBtn.BackgroundColor3 = C.chip
+local function updateWalkSettings()
+	local s = tonumber(studsInput.Text)
+	if s then cfg.WalkStuds = math.clamp(math.floor(s), 1, 500) end
+	local d = tonumber(delayInput.Text)
+	if d then cfg.WalkDelay = math.clamp(d, 0.01, 2) end
+	studsInput.Text = tostring(cfg.WalkStuds)
+	delayInput.Text = tostring(cfg.WalkDelay)
+	save()
+end
+studsInput.FocusLost:Connect(updateWalkSettings)
+delayInput.FocusLost:Connect(updateWalkSettings)
+
+walkBtn.MouseButton1Click:Connect(function()
+	walking = not walking
+	if walking then
+		paintWalk()
+		local studs = math.clamp(math.floor(tonumber(studsInput.Text) or 8), 1, 500)
+		local delay = math.clamp(tonumber(delayInput.Text) or 0.1, 0.01, 2)
+		walkThread = task.spawn(function()
+			while walking do
+				local char = player.Character
+				local hrp  = char and char:FindFirstChild("HumanoidRootPart")
+				local hum  = char and char:FindFirstChildOfClass("Humanoid")
+				if hrp and hum then
+					local dir = hum.MoveDirection
+					if dir.Magnitude > 0.1 then
+						pcall(function()
+							hrp.CFrame = hrp.CFrame + dir * studs
+						end)
+					end
+				end
+				task.wait(delay)
 			end
-		end
-	end)
-end
-
-UIS.InputBegan:Connect(function(input, gameProcessed)
-	if not KeyListen.active or gameProcessed then return end
-	local ut = input.UserInputType
-	if ut ~= Enum.UserInputType.Keyboard
-		and ut ~= Enum.UserInputType.Gamepad1
-		and ut ~= Enum.UserInputType.Gamepad2 then return end
-	local key = input.KeyCode
-	local ignored = {
-		[Enum.KeyCode.Unknown] = true,
-		[Enum.KeyCode.LeftShift] = true,
-		[Enum.KeyCode.RightShift] = true,
-		[Enum.KeyCode.LeftMeta] = true,
-		[Enum.KeyCode.RightMeta] = true,
-		[Enum.KeyCode.Tab] = true,
-	}
-	if ignored[key] and key ~= Enum.KeyCode.CapsLock then return end
-	if key == Enum.KeyCode.Escape then
-		cancelKeyListen()
-		return
+		end)
+	else
+		paintWalk()
+		if walkThread then pcall(task.cancel, walkThread); walkThread = nil end
 	end
-	local cb = KeyListen.cb
-	local lbl = KeyListen.label
-	cancelKeyListen()
-	if lbl and lbl.Parent then
-		lbl.Text = prettyKeyName(key)
-		lbl.BackgroundColor3 = C.chip
-	end
-	if cb then task.spawn(cb, key) end
+	play("Tick")
 end)
 
-----------------------------------------------------------------
--- Settings + Faded packet lag core
-----------------------------------------------------------------
-local DELAY_PRESETS = {
-	FAST = 0.15,
-	MID  = 0.125,
-	SLOW = 1.20,
-}
-
-local PacketLagSettings = {
-	keybind         = "F",
-	power           = 97000,
-	activeMode      = "PC",
-	delayMode       = "FAST",
-	autoBrainrot    = false,
-	backgroundIndex = 2,
-}
-
-local function isMobileDevice()
-	return UIS.TouchEnabled and not UIS.KeyboardEnabled
+--------------------------------------------------------------------------
+-- drag the window by its header
+--------------------------------------------------------------------------
+do
+	local handle = new("TextButton", { Size = UDim2.new(1, -80, 0, 38), BackgroundTransparency = 1, Text = "", ZIndex = 5, Parent = card })
+	local dragging, startPos, startInput
+	handle.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging, startPos, startInput = true, card.Position, input.Position
+		end
+	end)
+	UserInputService.InputChanged:Connect(function(input)
+		if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+			local d = (input.Position - startInput) / cardScale.Scale
+			card.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
+		end
+	end)
+	UserInputService.InputEnded:Connect(function(input)
+		if dragging and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
+			dragging = false
+			cfg.CardPos = packPos(card.Position)
+			save()
+		end
+	end)
 end
 
-local FULL_W, FULL_H, MINI_W, MINI_H
-if isMobileDevice() then
-	FULL_W, FULL_H = 168, 300
-	MINI_W, MINI_H = 168, 52
-else
-	FULL_W, FULL_H = 210, 340
-	MINI_W, MINI_H = 210, 68
+--------------------------------------------------------------------------
+-- Minimize / Restore Logic
+--------------------------------------------------------------------------
+local function setCollapsed(collapsed)
+	cfg.Collapsed = collapsed
+	save()
+	
+	local hideList = { intensityLbl, intBox, keyLbl, cap, btn, walkBox }
+	
+	if collapsed then
+		minBtn.Visible = false
+		for _, v in ipairs(hideList) do v.Visible = false end
+		
+		expandBtn.Visible = true
+		miniToggleBtn.Visible = true
+		
+		tween(card, 0.3, { Size = UDim2.fromOffset(W, 38) }, Enum.EasingStyle.Quint, Enum.EasingDirection.In)
+	else
+		expandBtn.Visible = false
+		miniToggleBtn.Visible = false
+		
+		minBtn.Visible = true
+		for _, v in ipairs(hideList) do v.Visible = true end
+		
+		tween(card, 0.45, { Size = UDim2.fromOffset(W, H) }, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+	end
 end
 
-----------------------------------------------------------------
--- Build GUI + logic
-----------------------------------------------------------------
-local function createPacketLagGUI()
-	if _G.VYNXPacketGen ~= GEN then return end
-
-	local PLState = {
-		running           = false,
-		spamThread        = nil,
-		activeMode        = PacketLagSettings.activeMode,
-		collapsed         = false,
-		autoBrainrot      = PacketLagSettings.autoBrainrot,
-		lastBrainrotState = nil,
-	}
-	local PLUI = {}
-
-	-- Faded bomb core
-	local function getMaxValue(val)
-		local mainValueIfOneTable = PacketLagSettings.power
-		if type(val) ~= "number" then return nil end
-		return (mainValueIfOneTable / (val + 2))
-	end
-
-	local function bomb(tableIncrease, tries)
-		local mainTable = {}
-		local spammedTable = {}
-		table.insert(spammedTable, {})
-		local z = spammedTable[1]
-		for i = 1, tableIncrease do
-			local tableIns = {}
-			table.insert(z, tableIns)
-			z = tableIns
-		end
-		local calculateMax = getMaxValue(tableIncrease)
-		local maximum = calculateMax or 999999
-		for i = 1, maximum do
-			table.insert(mainTable, spammedTable)
-		end
-		for i = 1, tries do
-			pcall(function()
-				game.RobloxReplicatedStorage.SetPlayerBlockList:FireServer(mainTable)
-			end)
-		end
-	end
-
-	local function startPacketLag()
-		if PLState.running then return end
-		if _G.VYNXPacketGen ~= GEN then return end
-		PLState.running = true
-		local waitTime = DELAY_PRESETS[PacketLagSettings.delayMode] or DELAY_PRESETS.FAST
-		PLState.spamThread = task.spawn(function()
-			while PLState.running and _G.VYNXPacketGen == GEN do
-				task.wait(waitTime)
-				pcall(function() NetworkClient:SetOutgoingKBPSLimit(math.huge) end)
-				pcall(bomb, 290, 1)
-			end
-		end)
-		if PLUI.statusDot then tween(PLUI.statusDot, { BackgroundColor3 = C.green }, 0.18) end
-		if PLUI.statusText then
-			PLUI.statusText.Text = "ACTIVE"
-			tween(PLUI.statusText, { TextColor3 = C.green }, 0.18)
-		end
-		if PLUI.activateBtn then
-			PLUI.activateBtn.Text = "DEACTIVATE"
-			tween(PLUI.activateBtn, { BackgroundColor3 = C.red }, 0.18)
-		end
-	end
-
-	local function stopPacketLag()
-		if not PLState.running then return end
-		PLState.running = false
-		if PLState.spamThread then
-			pcall(function() task.cancel(PLState.spamThread) end)
-		end
-		PLState.spamThread = nil
-		pcall(function() NetworkClient:SetOutgoingKBPSLimit(0) end)
-		if PLUI.statusDot then tween(PLUI.statusDot, { BackgroundColor3 = C.textMuted }, 0.18) end
-		if PLUI.statusText then
-			PLUI.statusText.Text = "IDLE"
-			tween(PLUI.statusText, { TextColor3 = C.textDim }, 0.18)
-		end
-		if PLUI.activateBtn then
-			PLUI.activateBtn.Text = "ACTIVATE"
-			tween(PLUI.activateBtn, { BackgroundColor3 = C.purple }, 0.18)
-		end
-	end
-
-	local function activatePacketLag()
-		if not PLState.running then startPacketLag() end
-	end
-
-	local function togglePacketLag()
-		if PLState.running then stopPacketLag() else startPacketLag() end
-	end
-
-	local function restartPacketLag()
-		if PLState.running then
-			stopPacketLag()
-			task.wait(0.08)
-			startPacketLag()
-		end
-	end
-
-	local function setAutoBrainrot(on)
-		PLState.autoBrainrot = on
-		PacketLagSettings.autoBrainrot = on
-		PLState.lastBrainrotState = nil
-		if PLUI.autoBrTrack and PLUI.autoBrKnob then
-			tween(PLUI.autoBrTrack, { BackgroundColor3 = on and C.purple or C.chip }, 0.14)
-			tween(PLUI.autoBrKnob, {
-				Position = on and UDim2.new(1, -13, 0.5, -4.5) or UDim2.new(0, 2, 0.5, -4.5),
-				BackgroundColor3 = on and Color3.fromRGB(25, 12, 38) or C.textDim,
-			}, 0.14, Enum.EasingStyle.Back)
-		end
-	end
-
-	RunService.Heartbeat:Connect(function()
-		if _G.VYNXPacketGen ~= GEN then return end
-		if not PLState.autoBrainrot then
-			PLState.lastBrainrotState = nil
-			return
-		end
-		local char = LP.Character
-		if not char then return end
-		local hum = char:FindFirstChildOfClass("Humanoid")
-		if not hum then return end
-		local hasBrainrot = hum.WalkSpeed < 25
-		if PLState.lastBrainrotState == nil then
-			PLState.lastBrainrotState = hasBrainrot
-			return
-		end
-		if hasBrainrot and not PLState.lastBrainrotState then
-			PLState.lastBrainrotState = true
-			if not PLState.running then startPacketLag() end
-		elseif not hasBrainrot and PLState.lastBrainrotState then
-			PLState.lastBrainrotState = false
-			if PLState.running then stopPacketLag() end
-		end
-	end)
-
-	local function applyBackgroundImage(index)
-		index = math.clamp(math.floor(tonumber(index) or 1), 1, #BACKGROUND_IMAGES)
-		PacketLagSettings.backgroundIndex = index
-		local data = BACKGROUND_IMAGES[index]
-		if PLUI.bgImage and data then
-			PLUI.bgImage.Image = data.id
-			PLUI.bgImage.ImageTransparency = 0.02
-		end
-		if PLUI.bgShade then
-			PLUI.bgShade.BackgroundTransparency = 0.82
-		end
-		if PLUI.bgThumbButtons then
-			for i, btn in ipairs(PLUI.bgThumbButtons) do
-				local active = (i == index)
-				tween(btn, { BackgroundColor3 = active and C.purple or C.chip }, 0.12)
-				local stroke = btn:FindFirstChildOfClass("UIStroke")
-				if stroke then
-					stroke.Color = active and C.purpleLite or C.stroke
-					stroke.Transparency = active and 0.3 or 0.6
-					stroke.Thickness = active and 1.0 or 0.8
-				end
-			end
-		end
-		if PLUI.bgNameLbl then
-			PLUI.bgNameLbl.Text = "BG  " .. tostring(index) .. " / " .. tostring(#BACKGROUND_IMAGES)
-		end
-	end
-
-	local function updateUI()
-		if PLUI.powerValue then
-			PLUI.powerValue.Text = tostring(PacketLagSettings.power)
-		end
-		if PLUI.hotkeyBtn then
-			PLUI.hotkeyBtn.Text = prettyKeyName(Enum.KeyCode[PacketLagSettings.keybind] or Enum.KeyCode.F)
-		end
-		if PLUI.infoLbl then
-			local waitTime = DELAY_PRESETS[PacketLagSettings.delayMode] or DELAY_PRESETS.FAST
-			PLUI.infoLbl.Text = string.format("DELAY TIME  •  %ss", tostring(waitTime))
-		end
-		if PLUI.fastBtn and PLUI.midBtn and PLUI.slowBtn then
-			local function paint(btn, active)
-				tween(btn, {
-					BackgroundColor3 = active and C.purple or C.chip,
-					TextColor3 = active and Color3.fromRGB(25, 12, 38) or C.textDim,
-				}, 0.12)
-			end
-			paint(PLUI.fastBtn, PacketLagSettings.delayMode == "FAST")
-			paint(PLUI.midBtn,  PacketLagSettings.delayMode == "MID")
-			paint(PLUI.slowBtn, PacketLagSettings.delayMode == "SLOW")
-		end
-		if PLUI.pcBtn and PLUI.mobileBtn then
-			local isPC = (PLState.activeMode == "PC")
-			tween(PLUI.pcBtn, {
-				BackgroundColor3 = isPC and C.purple or C.chip,
-				TextColor3 = isPC and Color3.fromRGB(25, 12, 38) or C.textDim,
-			}, 0.12)
-			tween(PLUI.mobileBtn, {
-				BackgroundColor3 = (not isPC) and C.purple or C.chip,
-				TextColor3 = (not isPC) and Color3.fromRGB(25, 12, 38) or C.textDim,
-			}, 0.12)
-			if PLUI.hotkeyRow then PLUI.hotkeyRow.Visible = isPC end
-			if PLUI.mobileHintRow then PLUI.mobileHintRow.Visible = (not isPC) end
-		end
-		if PLUI.autoBrTrack and PLUI.autoBrKnob then
-			local on = PLState.autoBrainrot
-			tween(PLUI.autoBrTrack, { BackgroundColor3 = on and C.purple or C.chip }, 0.12)
-			tween(PLUI.autoBrKnob, {
-				Position = on and UDim2.new(1, -13, 0.5, -4.5) or UDim2.new(0, 2, 0.5, -4.5),
-				BackgroundColor3 = on and Color3.fromRGB(25, 12, 38) or C.textDim,
-			}, 0.12)
-		end
-		applyBackgroundImage(PacketLagSettings.backgroundIndex)
-	end
-
-	----------------------------------------------------------------
-	-- Root ScreenGui (protected parent)
-	----------------------------------------------------------------
-	local protectParent = getProtectParent()
-
-	local bg = Instance.new("ScreenGui")
-	bg.Name = "VYNXHubGui"
-	bg.ResetOnSpawn = false
-	bg.Enabled = true
-	bg.IgnoreGuiInset = true
-	bg.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-	bg.DisplayOrder = 100
-	pcall(function() bg.Parent = protectParent end)
-	if not bg.Parent then
-		bg.Parent = PlayerGui
-	end
-
-	----------------------------------------------------------------
-	-- Main Window
-	----------------------------------------------------------------
-	local main = Instance.new("Frame")
-	main.Name = "MainWindow"
-	main.Size = UDim2.fromOffset(FULL_W, FULL_H)
-	main.Position = UDim2.new(1, -(FULL_W + 18), 0.5, -FULL_H / 2)
-	main.BackgroundColor3 = C.bgDark
-	main.BorderSizePixel = 0
-	main.ClipsDescendants = true
-	main.ZIndex = 1
-	main.Parent = bg
-	guiCorner(main, isMobileDevice() and 12 or 14)
-	guiStroke(main, C.stroke, 0.9, 0.55)
-
-	-- Background image (highly visible)
-	local bgImage = Instance.new("ImageLabel")
-	bgImage.Name = "BackgroundImage"
-	bgImage.Size = UDim2.fromScale(1, 1)
-	bgImage.Position = UDim2.fromScale(0.5, 0.5)
-	bgImage.AnchorPoint = Vector2.new(0.5, 0.5)
-	bgImage.BackgroundTransparency = 1
-	bgImage.Image = BACKGROUND_IMAGES[2].id
-	bgImage.ImageTransparency = 0.02
-	bgImage.ScaleType = Enum.ScaleType.Crop
-	bgImage.ZIndex = 0
-	bgImage.Parent = main
-	guiCorner(bgImage, isMobileDevice() and 12 or 14)
-	PLUI.bgImage = bgImage
-
-	local bgShade = Instance.new("Frame")
-	bgShade.Name = "BackgroundShade"
-	bgShade.Size = UDim2.fromScale(1, 1)
-	bgShade.BackgroundColor3 = Color3.fromRGB(11, 5, 19)
-	bgShade.BackgroundTransparency = 0.82
-	bgShade.BorderSizePixel = 0
-	bgShade.ZIndex = 0
-	bgShade.Parent = main
-	guiCorner(bgShade, isMobileDevice() and 12 or 14)
-	PLUI.bgShade = bgShade
-
-	----------------------------------------------------------------
-	-- Header
-	----------------------------------------------------------------
-	local header = Instance.new("TextButton")
-	header.Name = "HeaderBar"
-	header.Size = UDim2.new(1, 0, 0, isMobileDevice() and 34 or 38)
-	header.BackgroundTransparency = 1
-	header.Text = ""
-	header.AutoButtonColor = false
-	header.Active = true
-	header.ZIndex = 5
-	header.Parent = main
-
-	local title = Instance.new("TextLabel")
-	title.Name = "TitleLabel"
-	title.Size = UDim2.new(1, -90, 0, isMobileDevice() and 14 or 16)
-	title.Position = UDim2.new(0, 12, 0, isMobileDevice() and 5 or 6)
-	title.BackgroundTransparency = 1
-	title.Text = "VYNX PACKET"
-	title.TextColor3 = C.white
-	title.Font = Enum.Font.GothamBlack
-	title.TextSize = isMobileDevice() and 11 or 13
-	title.TextXAlignment = Enum.TextXAlignment.Left
-	title.ZIndex = 6
-	title.Parent = header
-
-	local sub = Instance.new("TextLabel")
-	sub.Name = "SubtitleLabel"
-	sub.Size = UDim2.new(1, -90, 0, 11)
-	sub.Position = UDim2.new(0, 12, 0, isMobileDevice() and 19 or 22)
-	sub.BackgroundTransparency = 1
-	sub.Text = "discord.gg/vynxduel"
-	sub.TextColor3 = C.textMuted
-	sub.Font = Enum.Font.GothamBold
-	sub.TextSize = isMobileDevice() and 7 or 8
-	sub.TextXAlignment = Enum.TextXAlignment.Left
-	sub.ZIndex = 6
-	sub.Parent = header
-
-	-- Status pill
-	local statusPill = Instance.new("Frame")
-	statusPill.Name = "StatusPill"
-	statusPill.Size = UDim2.fromOffset(isMobileDevice() and 54 or 60, isMobileDevice() and 16 or 18)
-	statusPill.Position = UDim2.new(1, isMobileDevice() and -80 or -92, 0, isMobileDevice() and 8 or 10)
-	statusPill.BackgroundColor3 = C.card
-	statusPill.BorderSizePixel = 0
-	statusPill.ZIndex = 6
-	statusPill.Parent = header
-	guiCorner(statusPill, 9)
-	guiStroke(statusPill, C.stroke, 0.7, 0.6)
-
-	local statusDot = Instance.new("Frame")
-	statusDot.Name = "StatusDot"
-	statusDot.Size = UDim2.fromOffset(6, 6)
-	statusDot.Position = UDim2.new(0, 7, 0.5, -3)
-	statusDot.BackgroundColor3 = C.textMuted
-	statusDot.BorderSizePixel = 0
-	statusDot.ZIndex = 7
-	statusDot.Parent = statusPill
-	guiCorner(statusDot, 3)
-	PLUI.statusDot = statusDot
-
-	local statusText = Instance.new("TextLabel")
-	statusText.Name = "StatusLabel"
-	statusText.Size = UDim2.new(1, -16, 1, 0)
-	statusText.Position = UDim2.new(0, 15, 0, 0)
-	statusText.BackgroundTransparency = 1
-	statusText.Text = "IDLE"
-	statusText.TextColor3 = C.textDim
-	statusText.Font = Enum.Font.GothamBold
-	statusText.TextSize = isMobileDevice() and 8 or 9
-	statusText.TextXAlignment = Enum.TextXAlignment.Left
-	statusText.ZIndex = 7
-	statusText.Parent = statusPill
-	PLUI.statusText = statusText
-
-	local minBtn = Instance.new("TextButton")
-	minBtn.Name = "CollapseButton"
-	minBtn.Size = UDim2.fromOffset(isMobileDevice() and 18 or 22, isMobileDevice() and 18 or 22)
-	minBtn.Position = UDim2.new(1, isMobileDevice() and -24 or -28, 0, isMobileDevice() and 8 or 8)
-	minBtn.BackgroundColor3 = C.card
-	minBtn.BorderSizePixel = 0
-	minBtn.Text = "−"
-	minBtn.TextColor3 = C.text
-	minBtn.Font = Enum.Font.GothamBold
-	minBtn.TextSize = isMobileDevice() and 12 or 14
-	minBtn.AutoButtonColor = false
-	minBtn.ZIndex = 7
-	minBtn.Parent = header
-	guiCorner(minBtn, 6)
-	guiStroke(minBtn, C.stroke, 0.7, 0.6)
-	PLUI.minBtn = minBtn
-
-	minBtn.MouseEnter:Connect(function()
-		tween(minBtn, { BackgroundColor3 = C.purpleDeep }, 0.1)
-	end)
-	minBtn.MouseLeave:Connect(function()
-		tween(minBtn, { BackgroundColor3 = C.card }, 0.1)
-	end)
-
-	local headerAccent = Instance.new("Frame")
-	headerAccent.Name = "HeaderAccentDivider"
-	headerAccent.Size = UDim2.new(1, -16, 0, 1)
-	headerAccent.Position = UDim2.new(0, 8, 0, isMobileDevice() and 35 or 39)
-	headerAccent.BackgroundColor3 = C.purple
-	headerAccent.BackgroundTransparency = 0.35
-	headerAccent.BorderSizePixel = 0
-	headerAccent.ZIndex = 5
-	headerAccent.Parent = main
-
-	----------------------------------------------------------------
-	-- Scrolling content
-	----------------------------------------------------------------
-	local scroll = Instance.new("ScrollingFrame")
-	scroll.Name = "TabContentContainer"
-	scroll.Size = UDim2.new(1, -16, 1, isMobileDevice() and -108 or -120)
-	scroll.Position = UDim2.new(0, 8, 0, isMobileDevice() and 42 or 48)
-	scroll.BackgroundTransparency = 1
-	scroll.BorderSizePixel = 0
-	scroll.ScrollBarThickness = 2
-	scroll.ScrollBarImageColor3 = C.purple
-	scroll.ScrollBarImageTransparency = 0.4
-	scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-	scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
-	scroll.ScrollingDirection = Enum.ScrollingDirection.Y
-	scroll.ZIndex = 3
-	scroll.Parent = main
-	PLUI.tabContainer = scroll
-
-	local listLayout = Instance.new("UIListLayout")
-	listLayout.Padding = UDim.new(0, isMobileDevice() and 5 or 7)
-	listLayout.SortOrder = Enum.SortOrder.LayoutOrder
-	listLayout.Parent = scroll
-
-	local listPad = Instance.new("UIPadding")
-	listPad.PaddingTop = UDim.new(0, 4)
-	listPad.PaddingBottom = UDim.new(0, 10)
-	listPad.PaddingRight = UDim.new(0, 2)
-	listPad.Parent = scroll
-
-	local function makeCard(name, height, order)
-		local card = Instance.new("Frame")
-		card.Name = name
-		card.Size = UDim2.new(1, 0, 0, height or (isMobileDevice() and 32 or 36))
-		card.BackgroundColor3 = C.card
-		card.BackgroundTransparency = 0.28
-		card.BorderSizePixel = 0
-		card.LayoutOrder = order or 0
-		card.ZIndex = 4
-		card.Parent = scroll
-		guiCorner(card, isMobileDevice() and 7 or 8)
-		guiStroke(card, C.stroke, 0.8, 0.6)
-		return card
-	end
-
-	----------------------------------------------------------------
-	-- 1. Auto Brainrot
-	----------------------------------------------------------------
-	local autoBrCard = makeCard("AutoBrainrotCard", isMobileDevice() and 32 or 36, 1)
-
-	local autoBrLbl = Instance.new("TextLabel")
-	autoBrLbl.Size = UDim2.new(1, -48, 1, 0)
-	autoBrLbl.Position = UDim2.new(0, 10, 0, 0)
-	autoBrLbl.BackgroundTransparency = 1
-	autoBrLbl.Text = "AUTO ON BRAINROT"
-	autoBrLbl.TextColor3 = C.text
-	autoBrLbl.Font = Enum.Font.GothamBold
-	autoBrLbl.TextSize = isMobileDevice() and 9 or 10
-	autoBrLbl.TextXAlignment = Enum.TextXAlignment.Left
-	autoBrLbl.ZIndex = 5
-	autoBrLbl.Parent = autoBrCard
-
-	local autoBrTrack = Instance.new("Frame")
-	autoBrTrack.Size = UDim2.fromOffset(28, 15)
-	autoBrTrack.Position = UDim2.new(1, -38, 0.5, -7)
-	autoBrTrack.BackgroundColor3 = C.chip
-	autoBrTrack.BorderSizePixel = 0
-	autoBrTrack.ZIndex = 5
-	autoBrTrack.Parent = autoBrCard
-	guiCorner(autoBrTrack, 7)
-	guiStroke(autoBrTrack, C.stroke, 0.7, 0.65)
-	PLUI.autoBrTrack = autoBrTrack
-
-	local autoBrKnob = Instance.new("Frame")
-	autoBrKnob.Size = UDim2.fromOffset(11, 9)
-	autoBrKnob.Position = UDim2.new(0, 2, 0.5, -4.5)
-	autoBrKnob.BackgroundColor3 = C.textDim
-	autoBrKnob.BorderSizePixel = 0
-	autoBrKnob.ZIndex = 6
-	autoBrKnob.Parent = autoBrTrack
-	guiCorner(autoBrKnob, 5)
-	PLUI.autoBrKnob = autoBrKnob
-
-	local autoBrClick = Instance.new("TextButton")
-	autoBrClick.Size = UDim2.fromScale(1, 1)
-	autoBrClick.BackgroundTransparency = 1
-	autoBrClick.Text = ""
-	autoBrClick.ZIndex = 7
-	autoBrClick.Parent = autoBrCard
-	autoBrClick.MouseButton1Click:Connect(function()
-		setAutoBrainrot(not PLState.autoBrainrot)
-	end)
-
-	----------------------------------------------------------------
-	-- 2. Info
-	----------------------------------------------------------------
-	local infoCard = makeCard("InfoCard", isMobileDevice() and 28 or 34, 2)
-
-	local infoLbl = Instance.new("TextLabel")
-	infoLbl.Size = UDim2.new(1, -16, 1, 0)
-	infoLbl.Position = UDim2.new(0, 10, 0, 0)
-	infoLbl.BackgroundTransparency = 1
-	infoLbl.Text = "DELAY TIME  •  0.15s"
-	infoLbl.TextColor3 = C.textDim
-	infoLbl.Font = Enum.Font.GothamBold
-	infoLbl.TextSize = isMobileDevice() and 9 or 10
-	infoLbl.TextXAlignment = Enum.TextXAlignment.Left
-	infoLbl.ZIndex = 5
-	infoLbl.Parent = infoCard
-	PLUI.infoLbl = infoLbl
-
-	----------------------------------------------------------------
-	-- 3. Mode
-	----------------------------------------------------------------
-	local modeCard = makeCard("ModeCard", isMobileDevice() and 32 or 36, 3)
-	PLUI.modeCard = modeCard
-
-	local modeLbl = Instance.new("TextLabel")
-	modeLbl.Size = UDim2.new(0, 48, 1, 0)
-	modeLbl.Position = UDim2.new(0, 10, 0, 0)
-	modeLbl.BackgroundTransparency = 1
-	modeLbl.Text = "MODE"
-	modeLbl.TextColor3 = C.text
-	modeLbl.Font = Enum.Font.GothamBold
-	modeLbl.TextSize = isMobileDevice() and 9 or 10
-	modeLbl.TextXAlignment = Enum.TextXAlignment.Left
-	modeLbl.ZIndex = 5
-	modeLbl.Parent = modeCard
-
-	local modeToggle = Instance.new("Frame")
-	modeToggle.Size = UDim2.fromOffset(isMobileDevice() and 90 or 100, isMobileDevice() and 18 or 20)
-	modeToggle.Position = UDim2.new(1, isMobileDevice() and -98 or -108, 0.5, isMobileDevice() and -9 or -10)
-	modeToggle.BackgroundColor3 = C.chip
-	modeToggle.BorderSizePixel = 0
-	modeToggle.ZIndex = 5
-	modeToggle.Parent = modeCard
-	guiCorner(modeToggle, 6)
-	guiStroke(modeToggle, C.stroke, 0.7, 0.65)
-
-	local pcBtn = Instance.new("TextButton")
-	pcBtn.Size = UDim2.new(0.5, 0, 1, 0)
-	pcBtn.BackgroundColor3 = C.purple
-	pcBtn.BorderSizePixel = 0
-	pcBtn.Text = "PC"
-	pcBtn.TextColor3 = Color3.fromRGB(25, 12, 38)
-	pcBtn.Font = Enum.Font.GothamBold
-	pcBtn.TextSize = isMobileDevice() and 8 or 9
-	pcBtn.AutoButtonColor = false
-	pcBtn.ZIndex = 6
-	pcBtn.Parent = modeToggle
-	guiCorner(pcBtn, 6)
-	PLUI.pcBtn = pcBtn
-
-	local mobileBtn = Instance.new("TextButton")
-	mobileBtn.Size = UDim2.new(0.5, 0, 1, 0)
-	mobileBtn.Position = UDim2.new(0.5, 0, 0, 0)
-	mobileBtn.BackgroundColor3 = C.chip
-	mobileBtn.BorderSizePixel = 0
-	mobileBtn.Text = "MOBILE"
-	mobileBtn.TextColor3 = C.textDim
-	mobileBtn.Font = Enum.Font.GothamBold
-	mobileBtn.TextSize = isMobileDevice() and 8 or 9
-	mobileBtn.AutoButtonColor = false
-	mobileBtn.ZIndex = 6
-	mobileBtn.Parent = modeToggle
-	guiCorner(mobileBtn, 6)
-	PLUI.mobileBtn = mobileBtn
-
-	local function setMode(mode)
-		PLState.activeMode = mode
-		PacketLagSettings.activeMode = mode
-		restartPacketLag()
-		updateUI()
-	end
-	pcBtn.MouseButton1Click:Connect(function() setMode("PC") end)
-	mobileBtn.MouseButton1Click:Connect(function() setMode("MOBILE") end)
-
-	----------------------------------------------------------------
-	-- 4. Delay
-	----------------------------------------------------------------
-	local delayCard = makeCard("DelayCard", isMobileDevice() and 32 or 36, 4)
-
-	local delayLbl = Instance.new("TextLabel")
-	delayLbl.Size = UDim2.new(0, 48, 1, 0)
-	delayLbl.Position = UDim2.new(0, 10, 0, 0)
-	delayLbl.BackgroundTransparency = 1
-	delayLbl.Text = "DELAY"
-	delayLbl.TextColor3 = C.text
-	delayLbl.Font = Enum.Font.GothamBold
-	delayLbl.TextSize = isMobileDevice() and 9 or 10
-	delayLbl.TextXAlignment = Enum.TextXAlignment.Left
-	delayLbl.ZIndex = 5
-	delayLbl.Parent = delayCard
-
-	local delayToggle = Instance.new("Frame")
-	delayToggle.Size = UDim2.fromOffset(isMobileDevice() and 90 or 100, isMobileDevice() and 18 or 20)
-	delayToggle.Position = UDim2.new(1, isMobileDevice() and -98 or -108, 0.5, isMobileDevice() and -9 or -10)
-	delayToggle.BackgroundColor3 = C.chip
-	delayToggle.BorderSizePixel = 0
-	delayToggle.ZIndex = 5
-	delayToggle.Parent = delayCard
-	guiCorner(delayToggle, 6)
-	guiStroke(delayToggle, C.stroke, 0.7, 0.65)
-
-	local fastBtn = Instance.new("TextButton")
-	fastBtn.Size = UDim2.new(1/3, 0, 1, 0)
-	fastBtn.BackgroundColor3 = C.purple
-	fastBtn.BorderSizePixel = 0
-	fastBtn.Text = "FAST"
-	fastBtn.TextColor3 = Color3.fromRGB(25, 12, 38)
-	fastBtn.Font = Enum.Font.GothamBold
-	fastBtn.TextSize = isMobileDevice() and 7 or 8
-	fastBtn.AutoButtonColor = false
-	fastBtn.ZIndex = 6
-	fastBtn.Parent = delayToggle
-	guiCorner(fastBtn, 6)
-	PLUI.fastBtn = fastBtn
-
-	local midBtn = Instance.new("TextButton")
-	midBtn.Size = UDim2.new(1/3, 0, 1, 0)
-	midBtn.Position = UDim2.new(1/3, 0, 0, 0)
-	midBtn.BackgroundColor3 = C.chip
-	midBtn.BorderSizePixel = 0
-	midBtn.Text = "MID"
-	midBtn.TextColor3 = C.textDim
-	midBtn.Font = Enum.Font.GothamBold
-	midBtn.TextSize = isMobileDevice() and 7 or 8
-	midBtn.AutoButtonColor = false
-	midBtn.ZIndex = 6
-	midBtn.Parent = delayToggle
-	guiCorner(midBtn, 6)
-	PLUI.midBtn = midBtn
-
-	local slowBtn = Instance.new("TextButton")
-	slowBtn.Size = UDim2.new(1/3, 0, 1, 0)
-	slowBtn.Position = UDim2.new(2/3, 0, 0, 0)
-	slowBtn.BackgroundColor3 = C.chip
-	slowBtn.BorderSizePixel = 0
-	slowBtn.Text = "SLOW"
-	slowBtn.TextColor3 = C.textDim
-	slowBtn.Font = Enum.Font.GothamBold
-	slowBtn.TextSize = isMobileDevice() and 7 or 8
-	slowBtn.AutoButtonColor = false
-	slowBtn.ZIndex = 6
-	slowBtn.Parent = delayToggle
-	guiCorner(slowBtn, 6)
-	PLUI.slowBtn = slowBtn
-
-	local function setDelayMode(mode)
-		PacketLagSettings.delayMode = mode
-		restartPacketLag()
-		updateUI()
-	end
-	fastBtn.MouseButton1Click:Connect(function() setDelayMode("FAST") end)
-	midBtn.MouseButton1Click:Connect(function() setDelayMode("MID") end)
-	slowBtn.MouseButton1Click:Connect(function() setDelayMode("SLOW") end)
-
-	----------------------------------------------------------------
-	-- 5. Power
-	----------------------------------------------------------------
-	local powerCard = makeCard("PowerCard", isMobileDevice() and 32 or 36, 5)
-
-	local powerLbl = Instance.new("TextLabel")
-	powerLbl.Size = UDim2.new(0, 48, 1, 0)
-	powerLbl.Position = UDim2.new(0, 10, 0, 0)
-	powerLbl.BackgroundTransparency = 1
-	powerLbl.Text = "POWER"
-	powerLbl.TextColor3 = C.text
-	powerLbl.Font = Enum.Font.GothamBold
-	powerLbl.TextSize = isMobileDevice() and 9 or 10
-	powerLbl.TextXAlignment = Enum.TextXAlignment.Left
-	powerLbl.ZIndex = 5
-	powerLbl.Parent = powerCard
-
-	local powerBox = Instance.new("Frame")
-	powerBox.Size = UDim2.fromOffset(isMobileDevice() and 90 or 100, isMobileDevice() and 18 or 20)
-	powerBox.Position = UDim2.new(1, isMobileDevice() and -98 or -108, 0.5, isMobileDevice() and -9 or -10)
-	powerBox.BackgroundColor3 = C.chip
-	powerBox.BorderSizePixel = 0
-	powerBox.ZIndex = 5
-	powerBox.Parent = powerCard
-	guiCorner(powerBox, 6)
-	guiStroke(powerBox, C.stroke, 0.7, 0.65)
-
-	local minusBtn = Instance.new("TextButton")
-	minusBtn.Size = UDim2.fromOffset(22, isMobileDevice() and 18 or 20)
-	minusBtn.BackgroundTransparency = 1
-	minusBtn.Text = "−"
-	minusBtn.TextColor3 = C.textDim
-	minusBtn.Font = Enum.Font.GothamBold
-	minusBtn.TextSize = 14
-	minusBtn.AutoButtonColor = false
-	minusBtn.ZIndex = 6
-	minusBtn.Parent = powerBox
-	minusBtn.MouseButton1Click:Connect(function()
-		PacketLagSettings.power = math.max(10000, PacketLagSettings.power - 2000)
-		if PLUI.powerValue then PLUI.powerValue.Text = tostring(PacketLagSettings.power) end
-		restartPacketLag()
-	end)
-
-	local powerVal = Instance.new("TextBox")
-	powerVal.Size = UDim2.new(1, -44, 1, 0)
-	powerVal.Position = UDim2.fromOffset(22, 0)
-	powerVal.BackgroundTransparency = 1
-	powerVal.Text = tostring(PacketLagSettings.power)
-	powerVal.TextColor3 = C.white
-	powerVal.Font = Enum.Font.GothamBlack
-	powerVal.TextSize = isMobileDevice() and 10 or 11
-	powerVal.TextXAlignment = Enum.TextXAlignment.Center
-	powerVal.ClearTextOnFocus = false
-	powerVal.ZIndex = 6
-	powerVal.Parent = powerBox
-	PLUI.powerValue = powerVal
-
-	powerVal.FocusLost:Connect(function()
-		local num = tonumber(powerVal.Text)
-		if num then
-			num = math.clamp(math.floor(num), 10000, 120000)
-			PacketLagSettings.power = num
-			powerVal.Text = tostring(num)
-			restartPacketLag()
-		else
-			powerVal.Text = tostring(PacketLagSettings.power)
-		end
-	end)
-
-	local plusBtn = Instance.new("TextButton")
-	plusBtn.Size = UDim2.fromOffset(22, isMobileDevice() and 18 or 20)
-	plusBtn.Position = UDim2.new(1, -22, 0, 0)
-	plusBtn.BackgroundTransparency = 1
-	plusBtn.Text = "+"
-	plusBtn.TextColor3 = C.textDim
-	plusBtn.Font = Enum.Font.GothamBold
-	plusBtn.TextSize = 14
-	plusBtn.AutoButtonColor = false
-	plusBtn.ZIndex = 6
-	plusBtn.Parent = powerBox
-	plusBtn.MouseButton1Click:Connect(function()
-		PacketLagSettings.power = math.min(120000, PacketLagSettings.power + 2000)
-		if PLUI.powerValue then PLUI.powerValue.Text = tostring(PacketLagSettings.power) end
-		restartPacketLag()
-	end)
-
-	----------------------------------------------------------------
-	-- 6. Keybind
-	----------------------------------------------------------------
-	local hotkeyRow = makeCard("HotkeyRow", isMobileDevice() and 32 or 36, 6)
-	PLUI.hotkeyRow = hotkeyRow
-
-	local hotkeyLbl = Instance.new("TextLabel")
-	hotkeyLbl.Size = UDim2.new(0, 54, 1, 0)
-	hotkeyLbl.Position = UDim2.new(0, 10, 0, 0)
-	hotkeyLbl.BackgroundTransparency = 1
-	hotkeyLbl.Text = "KEYBIND"
-	hotkeyLbl.TextColor3 = C.text
-	hotkeyLbl.Font = Enum.Font.GothamBold
-	hotkeyLbl.TextSize = isMobileDevice() and 9 or 10
-	hotkeyLbl.TextXAlignment = Enum.TextXAlignment.Left
-	hotkeyLbl.ZIndex = 5
-	hotkeyLbl.Parent = hotkeyRow
-
-	local hotkeyBtn = Instance.new("TextButton")
-	hotkeyBtn.Size = UDim2.fromOffset(isMobileDevice() and 50 or 56, isMobileDevice() and 18 or 20)
-	hotkeyBtn.Position = UDim2.new(1, isMobileDevice() and -58 or -66, 0.5, isMobileDevice() and -9 or -10)
-	hotkeyBtn.BackgroundColor3 = C.chip
-	hotkeyBtn.BorderSizePixel = 0
-	hotkeyBtn.Text = prettyKeyName(Enum.KeyCode[PacketLagSettings.keybind] or Enum.KeyCode.F)
-	hotkeyBtn.TextColor3 = C.text
-	hotkeyBtn.Font = Enum.Font.GothamBold
-	hotkeyBtn.TextSize = isMobileDevice() and 10 or 11
-	hotkeyBtn.AutoButtonColor = false
-	hotkeyBtn.ZIndex = 5
-	hotkeyBtn.Parent = hotkeyRow
-	guiCorner(hotkeyBtn, 6)
-	guiStroke(hotkeyBtn, C.stroke, 0.8, 0.55)
-	PLUI.hotkeyBtn = hotkeyBtn
-
-	hotkeyBtn.MouseButton1Click:Connect(function()
-		startKeyListen(hotkeyBtn, function(nk)
-			PacketLagSettings.keybind = nk.Name
-			hotkeyBtn.Text = prettyKeyName(nk)
-		end)
-	end)
-
-	----------------------------------------------------------------
-	-- 7. Mobile hint
-	----------------------------------------------------------------
-	local mobileHintRow = makeCard("MobileHintRow", isMobileDevice() and 28 or 34, 7)
-	mobileHintRow.Visible = false
-	PLUI.mobileHintRow = mobileHintRow
-
-	local hintLbl = Instance.new("TextLabel")
-	hintLbl.Size = UDim2.new(1, -16, 1, 0)
-	hintLbl.Position = UDim2.new(0, 10, 0, 0)
-	hintLbl.BackgroundTransparency = 1
-	hintLbl.Text = "Tap ACTIVATE to start"
-	hintLbl.TextColor3 = C.textDim
-	hintLbl.Font = Enum.Font.GothamMedium
-	hintLbl.TextSize = isMobileDevice() and 9 or 10
-	hintLbl.TextXAlignment = Enum.TextXAlignment.Left
-	hintLbl.ZIndex = 5
-	hintLbl.Parent = mobileHintRow
-
-	----------------------------------------------------------------
-	-- 8. Background picker
-	----------------------------------------------------------------
-	local bgCard = makeCard("BackgroundImageCard", isMobileDevice() and 82 or 92, 8)
-
-	local bgTitle = Instance.new("TextLabel")
-	bgTitle.Size = UDim2.new(1, -16, 0, 18)
-	bgTitle.Position = UDim2.new(0, 10, 0, 6)
-	bgTitle.BackgroundTransparency = 1
-	bgTitle.Text = "BACKGROUND"
-	bgTitle.TextColor3 = C.text
-	bgTitle.Font = Enum.Font.GothamBold
-	bgTitle.TextSize = isMobileDevice() and 9 or 10
-	bgTitle.TextXAlignment = Enum.TextXAlignment.Left
-	bgTitle.ZIndex = 5
-	bgTitle.Parent = bgCard
-
-	local bgNameLbl = Instance.new("TextLabel")
-	bgNameLbl.Size = UDim2.new(0, 80, 0, 18)
-	bgNameLbl.Position = UDim2.new(1, -90, 0, 6)
-	bgNameLbl.BackgroundTransparency = 1
-	bgNameLbl.Text = "BG  2 / 4"
-	bgNameLbl.TextColor3 = C.purpleLite
-	bgNameLbl.Font = Enum.Font.GothamBold
-	bgNameLbl.TextSize = isMobileDevice() and 9 or 10
-	bgNameLbl.TextXAlignment = Enum.TextXAlignment.Right
-	bgNameLbl.ZIndex = 5
-	bgNameLbl.Parent = bgCard
-	PLUI.bgNameLbl = bgNameLbl
-
-	local thumbRow = Instance.new("Frame")
-	thumbRow.Size = UDim2.new(1, -16, 0, isMobileDevice() and 48 or 52)
-	thumbRow.Position = UDim2.new(0, 8, 0, isMobileDevice() and 26 or 28)
-	thumbRow.BackgroundTransparency = 1
-	thumbRow.ZIndex = 5
-	thumbRow.Parent = bgCard
-
-	local thumbLayout = Instance.new("UIListLayout")
-	thumbLayout.FillDirection = Enum.FillDirection.Horizontal
-	thumbLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-	thumbLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-	thumbLayout.Padding = UDim.new(0, isMobileDevice() and 5 or 6)
-	thumbLayout.SortOrder = Enum.SortOrder.LayoutOrder
-	thumbLayout.Parent = thumbRow
-
-	PLUI.bgThumbButtons = {}
-	local thumbSize = isMobileDevice() and 38 or 42
-
-	for i, data in ipairs(BACKGROUND_IMAGES) do
-		local thumb = Instance.new("ImageButton")
-		thumb.Name = "BackgroundThumb_" .. i
-		thumb.Size = UDim2.fromOffset(thumbSize, thumbSize)
-		thumb.BackgroundColor3 = (i == 2) and C.purple or C.chip
-		thumb.BorderSizePixel = 0
-		thumb.Image = data.id
-		thumb.ScaleType = Enum.ScaleType.Crop
-		thumb.AutoButtonColor = false
-		thumb.LayoutOrder = i
-		thumb.ZIndex = 6
-		thumb.Parent = thumbRow
-		guiCorner(thumb, 8)
-		guiStroke(thumb, (i == 2) and C.purpleLite or C.stroke, (i == 2) and 1.0 or 0.8, (i == 2) and 0.3 or 0.6)
-
-		local overlay = Instance.new("Frame")
-		overlay.Size = UDim2.fromScale(1, 1)
-		overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-		overlay.BackgroundTransparency = 0.55
-		overlay.BorderSizePixel = 0
-		overlay.ZIndex = 7
-		overlay.Parent = thumb
-		guiCorner(overlay, 8)
-
-		local num = Instance.new("TextLabel")
-		num.Size = UDim2.fromScale(1, 1)
-		num.BackgroundTransparency = 1
-		num.Text = tostring(i)
-		num.TextColor3 = C.white
-		num.Font = Enum.Font.GothamBlack
-		num.TextSize = isMobileDevice() and 12 or 14
-		num.ZIndex = 8
-		num.Parent = thumb
-
-		thumb.MouseButton1Click:Connect(function()
-			applyBackgroundImage(i)
-		end)
-		PLUI.bgThumbButtons[i] = thumb
-	end
-
-	----------------------------------------------------------------
-	-- Activate button
-	----------------------------------------------------------------
-	local activateBtn = Instance.new("TextButton")
-	activateBtn.Name = "ActivateButton"
-	activateBtn.Size = UDim2.new(1, -16, 0, isMobileDevice() and 28 or 30)
-	activateBtn.Position = UDim2.new(0, 8, 1, isMobileDevice() and -36 or -40)
-	activateBtn.BackgroundColor3 = C.purple
-	activateBtn.BorderSizePixel = 0
-	activateBtn.Text = "ACTIVATE"
-	activateBtn.TextColor3 = Color3.fromRGB(26, 13, 39)
-	activateBtn.Font = Enum.Font.GothamBlack
-	activateBtn.TextSize = isMobileDevice() and 11 or 12
-	activateBtn.AutoButtonColor = false
-	activateBtn.ZIndex = 8
-	activateBtn.Parent = main
-	guiCorner(activateBtn, 8)
-	guiStroke(activateBtn, C.purpleLite, 0.9, 0.45)
-
-	local activateGradient = Instance.new("UIGradient")
-	activateGradient.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, C.purpleLite),
-		ColorSequenceKeypoint.new(1, C.purpleDeep),
-	})
-	activateGradient.Parent = activateBtn
-	PLUI.activateBtn = activateBtn
-
-	activateBtn.MouseEnter:Connect(function()
-		if not PLState.running then
-			tween(activateBtn, { BackgroundColor3 = C.purpleLite }, 0.1)
-		else
-			tween(activateBtn, { BackgroundColor3 = Color3.fromRGB(255, 110, 130) }, 0.1)
-		end
-	end)
-	activateBtn.MouseLeave:Connect(function()
-		tween(activateBtn, { BackgroundColor3 = PLState.running and C.red or C.purple }, 0.1)
-	end)
-	activateBtn.MouseButton1Click:Connect(function()
-		if PLState.running then stopPacketLag() else activatePacketLag() end
-	end)
-
-	----------------------------------------------------------------
-	-- Drag + Collapse
-	----------------------------------------------------------------
-	do
-		local dragging = false
-		local dragStartPos, startGuiPos, dragInput
-		local moved = false
-
-		header.InputBegan:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1
-				or input.UserInputType == Enum.UserInputType.Touch then
-				dragging = true
-				moved = false
-				dragStartPos = input.Position
-				startGuiPos = main.Position
-				input.Changed:Connect(function()
-					if input.UserInputState == Enum.UserInputState.End then
-						dragging = false
-					end
-				end)
-			end
-		end)
-		header.InputChanged:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseMovement
-				or input.UserInputType == Enum.UserInputType.Touch then
-				dragInput = input
-			end
-		end)
-		UIS.InputChanged:Connect(function(input)
-			if input == dragInput and dragging then
-				local delta = input.Position - dragStartPos
-				if delta.Magnitude > 4 then moved = true end
-				main.Position = UDim2.new(
-					startGuiPos.X.Scale, startGuiPos.X.Offset + delta.X,
-					startGuiPos.Y.Scale, startGuiPos.Y.Offset + delta.Y
-				)
-			end
-		end)
-
-		local function toggleCollapse()
-			PLState.collapsed = not PLState.collapsed
-			local targetSize = PLState.collapsed
-				and UDim2.fromOffset(MINI_W, MINI_H)
-				or UDim2.fromOffset(FULL_W, FULL_H)
-			tween(main, { Size = targetSize }, 0.25, Enum.EasingStyle.Quint)
-			scroll.Visible = not PLState.collapsed
-			activateBtn.Visible = not PLState.collapsed
-			if minBtn then
-				minBtn.Text = PLState.collapsed and "+" or "−"
-			end
-		end
-
-		header.MouseButton1Click:Connect(function()
-			if moved then return end
-			toggleCollapse()
-		end)
-		minBtn.MouseButton1Click:Connect(toggleCollapse)
-	end
-
-	----------------------------------------------------------------
-	-- Hotkey toggle
-	----------------------------------------------------------------
-	local packetLagKeyConn = UIS.InputBegan:Connect(function(input, gp)
-		if gp or KeyListen.active then return end
-		if _G.VYNXPacketGen ~= GEN then return end
-		if PLState.activeMode == "PC" and input.KeyCode.Name == PacketLagSettings.keybind then
-			togglePacketLag()
-		end
-	end)
-
-	bg.AncestryChanged:Connect(function()
-		if not bg.Parent then
-			stopPacketLag()
-			pcall(function() packetLagKeyConn:Disconnect() end)
-		end
-	end)
-
-	-- Gen kill if reloaded
-	task.spawn(function()
-		while task.wait(1) do
-			if _G.VYNXPacketGen ~= GEN then
-				stopPacketLag()
-				pcall(function() bg:Destroy() end)
-				break
-			end
-		end
-	end)
-
-	updateUI()
-	print("[VYNX] Packet Lagger loaded  |  gen=" .. tostring(GEN) .. "  parent=" .. tostring(bg.Parent and bg.Parent.Name))
+minBtn.MouseButton1Click:Connect(function() play("Tick") setCollapsed(true) end)
+expandBtn.MouseButton1Click:Connect(function() play("Tick") setCollapsed(false) end)
+
+--------------------------------------------------------------------------
+-- Intensity control
+--------------------------------------------------------------------------
+local function clampIntensity(v)
+	v = tonumber(v)
+	if not v then return cfg.Intensity end
+	return math.clamp(math.floor(v), 1, 100000)
+end
+local function setIntensity(v, silent)
+	cfg.Intensity = clampIntensity(v)
+	intBox.Text = tostring(cfg.Intensity)
+	if not silent then play("Tick") end
+	save()
 end
 
-createPacketLagGUI()
+intBox.FocusLost:Connect(function() setIntensity(intBox.Text) end)
+
+--------------------------------------------------------------------------
+-- Lagging Logic  (FindFirstChild first — no multi-second stall)
+--------------------------------------------------------------------------
+local Event
+do
+	local ok, net = pcall(function()
+		local pkgs = ReplicatedStorage:FindFirstChild("Packages")
+		if not pkgs then
+			pkgs = ReplicatedStorage:WaitForChild("Packages", 2)
+		end
+		if not pkgs then return nil end
+		return pkgs:FindFirstChild("Net") or pkgs:WaitForChild("Net", 2)
+	end)
+	if ok and net then
+		local kids = net:GetChildren()
+		Event = kids[6]
+	end
+end
+
+if not Event then
+	warn("[JESUS PACKET] Could not find ReplicatedStorage.Packages.Net[6] — lagging will be inert, but GUI still works.")
+end
+
+local lagging = false
+local lagThread
+
+local function startLagging()
+	if lagging then return end
+	if not Event then return end
+	lagging = true
+	local intensity = math.clamp(math.floor(tonumber(cfg.Intensity)
