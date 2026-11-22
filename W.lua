@@ -2,13 +2,14 @@
 	JESUS PACKET LAGGER
 
 	Features:
-	- Gold and Black Jesus theme: black background + gold accents, cross ✝. Same logic, only look renamed.
+	- Gold and Black Jesus theme: black + gold . Same logic, only look renamed.
 	- Mobile support: Touch draggable, scales to fit screen.
 	- Minimize into a compact pill with a quick-toggle switch.
 	- Keybind system.
 	- CFrame Walk (ported from Violette, restyled to Jesus colors).
 ]]
 
+print("[Jesus Packet] loaded")
 local Players           = game:GetService("Players")
 local TweenService      = game:GetService("TweenService")
 local UserInputService  = game:GetService("UserInputService")
@@ -150,7 +151,7 @@ end
 
 -- Header
 local title = label({
-	Text = 'JESUS <font color="#FFD700">PACKET LAGGER</font> ✝', RichText = true,
+	Text = 'JESUS <font color="#FFD700">PACKET LAGGER</font> ', RichText = true,
 	Font = FONT_K, TextSize = 14, TextColor3 = C.Text,
 	Position = UDim2.fromOffset(16, 0), Size = UDim2.new(1, -72, 0, 38), Parent = card,
 })
@@ -174,7 +175,7 @@ expandStroke.Parent = expandBtn
 
 local minBtn = new("TextButton", {
 	AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -8, 0, 8), Size = UDim2.fromOffset(24, 20),
-	BackgroundColor3 = C.Raise, AutoButtonColor = false, Font = FONT_B, TextSize = 14, TextColor3 = C.Dim, Text = "—", ZIndex = 10, Parent = card,
+	BackgroundColor3 = C.Raise, AutoButtonColor = false, Font = FONT_B, TextSize = 14, TextColor3 = C.Dim, Text = "-", ZIndex = 10, Parent = card,
 }, { corner(4) })
 local minBtnStroke = stroke(C.Line, 0.5, 1); minBtnStroke.Parent = minBtn
 
@@ -635,19 +636,17 @@ end)
 -- Public hooks
 --------------------------------------------------------------------------
 _G.JesusPacketLagger = {
-	-- alias for old name, same table
 
 	On = function(fn) table.insert(hooks, fn) end,
 	Get = function() return active end,
 	Set = function(v) setActive(v) end,
 	Key = function() return cfg.Key end,
-_G.VisiblePacketLagger = _G.JesusPacketLagger -- backwards compat, do not remove
 	Walk = function() return walking end,
 	SetWalk = function(v)
 		if v ~= walking then walkBtn.MouseButton1Click:Fire() end
 	end,
 }
-_G.VisiblePacketLagger = _G.JesusPacketLagger -- backwards compat alias, same logic
+_G.VisiblePacketLagger = _G.JesusPacketLagger -- alias, same table
 
 --------------------------------------------------------------------------
 -- Start
