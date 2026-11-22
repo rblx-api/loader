@@ -1,12 +1,6 @@
 --[[
         JESUS PACKET LAGGER ✝️
-
-        Features:
-        - Gold and black Jesus theme with gold accents.
-        - Mobile support: Touch draggable, scales to fit screen.
-        - Minimize into a compact pill with a quick-toggle switch.
-        - Keybind system.
-        - CFrame Walk (ported from Jesus, restyled to Jesus colors).
+        Gold and black Jesus theme - FORCED OPEN / SOLID VERSION
 ]]
 
 local Players           = game:GetService("Players")
@@ -23,10 +17,9 @@ local playerGui = player:WaitForChild("PlayerGui")
 local old = playerGui:FindFirstChild("JESUSPACKETLAGGER")
 if old then old:Destroy() end
 
--- Config
-
 local FILE = "jesus_packet_lagger.json"
 local cfg = { Key = "G", Sounds = true, Collapsed = false, CardPos = nil, Intensity = 10000, WalkStuds = 8, WalkDelay = 0.1 }
+cfg.Collapsed = false
 pcall(function()
         if isfile and isfile(FILE) then
                 local data = HttpService:JSONDecode(readfile(FILE))
@@ -35,6 +28,7 @@ pcall(function()
                 end
         end
 end)
+cfg.Collapsed = false
 local saveToken = 0
 local function save()
         saveToken += 1
@@ -51,8 +45,6 @@ local function unpackPos(t, fallback)
         if type(t) == "table" and #t == 4 then return UDim2.new(t[1], t[2], t[3], t[4]) end
         return fallback
 end
-
--- Look (Jesus Hub Theme)
 
 local C = {
         Bg    = Color3.fromRGB(8, 8, 8),
@@ -102,14 +94,11 @@ local KEYNAMES = {
         DPadUp = "D-Up", DPadDown = "D-Down", DPadLeft = "D-Left", DPadRight = "D-Right",
 }
 
--- Sound effects disabled
 local gui = new("ScreenGui", {
         Name = "JESUSPACKETLAGGER", ResetOnSpawn = false, IgnoreGuiInset = true,
         ZIndexBehavior = Enum.ZIndexBehavior.Sibling, DisplayOrder = 999, Parent = playerGui,
 })
 local function play(name, pitch) return end
-
--- State
 
 local active = false
 local activeSince = 0
@@ -118,8 +107,6 @@ local setActive
 
 local touchOnly = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
 local W, H = 262, 380
-
--- The window
 
 local card = new("Frame", {
         AnchorPoint = Vector2.new(0.5, 0.5),
@@ -144,14 +131,12 @@ if workspace.CurrentCamera then
         workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(fitScale)
 end
 
--- Header
 local title = label({
         Text = 'JESUS <font color="#FFD700">PACKET LAGGER</font>', RichText = true,
         Font = FONT_K, TextSize = 14, TextColor3 = C.Text,
         Position = UDim2.fromOffset(16, 0), Size = UDim2.new(1, -72, 0, 38), Parent = card,
 })
 
--- Mini-mode buttons
 local miniToggleBtn = new("TextButton", {
         AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -40, 0.5, -13), Size = UDim2.fromOffset(40, 26),
         BackgroundColor3 = C.Raise, AutoButtonColor = false, Font = FONT_K, TextSize = 11,
@@ -177,9 +162,8 @@ local minBtnStroke = stroke(C.Line, 0.5, 1); minBtnStroke.Parent = minBtn
 minBtn.MouseEnter:Connect(function() tween(minBtn, 0.12, { TextColor3 = C.White, BackgroundColor3 = C.Line }) end)
 minBtn.MouseLeave:Connect(function() tween(minBtn, 0.2, { TextColor3 = C.Dim, BackgroundColor3 = C.Raise }) end)
 
-new("Frame", { Position = UDim2.fromOffset(0, 38), Size = UDim2.new(1, 0, 0, 1), BackgroundColor3 = C.Line, BackgroundTransparency = 0.5, BorderSizePixel = 0, Parent = card })
+new("Frame", { Position = UDim2.fromOffset(0, 38), Size = UDim2.new(1, 0, 0, 1), BackgroundColor3 = C.Line, BackgroundTransparency = 0, BorderSizePixel = 0, Parent = card })
 
--- The big button
 local BTN_W, BTN_H = W - 32, 70
 local btn = new("TextButton", {
         Position = UDim2.fromOffset(16, 52), Size = UDim2.fromOffset(BTN_W, BTN_H),
@@ -219,19 +203,17 @@ local subText = label({
         Position = UDim2.fromOffset(58, 40), Size = UDim2.new(1, -70, 0, 16), Parent = btn,
 })
 
--- Intensity row
 local intensityLbl = label({
         Text = "Lag Power", Font = FONT, TextSize = 12, TextColor3 = C.Sub,
         Position = UDim2.fromOffset(18, 130), Size = UDim2.new(0.5, 0, 0, 22), Parent = card,
 })
 local intBox = new("TextBox", {
         Position = UDim2.fromOffset(16, 154), Size = UDim2.fromOffset(BTN_W, 30),
-        BackgroundColor3 = C.Raise, BackgroundTransparency = 0.5, BorderSizePixel = 0, Text = tostring(cfg.Intensity),
+        BackgroundColor3 = C.Raise, BackgroundTransparency = 0, BorderSizePixel = 0, Text = tostring(cfg.Intensity),
         Font = FONT_B, TextSize = 14, TextColor3 = C.On, ClearTextOnFocus = false, Parent = card,
 }, { corner(7) })
 local intBoxStroke = stroke(C.Line, 0.5); intBoxStroke.Parent = intBox
 
--- Keybind row
 local keyLbl = label({
         Text = "Keybind", Font = FONT, TextSize = 12, TextColor3 = C.Sub,
         Position = UDim2.fromOffset(18, 190), Size = UDim2.new(0.5, 0, 0, 26), Parent = card,
@@ -239,7 +221,7 @@ local keyLbl = label({
 local cap = new("TextButton", {
         AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -48, 0, 190),
         Size = UDim2.fromOffset(0, 26), AutomaticSize = Enum.AutomaticSize.X,
-        BackgroundColor3 = C.Raise, BackgroundTransparency = 0.5, AutoButtonColor = false, Selectable = true, Text = "", Parent = card,
+        BackgroundColor3 = C.Raise, BackgroundTransparency = 0, AutoButtonColor = false, Selectable = true, Text = "", Parent = card,
 }, { corner(7), new("UIPadding", { PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12) }) })
 local capStroke = stroke(C.Line, 0.5)
 capStroke.Parent = cap
@@ -254,14 +236,10 @@ local capText = label({
 })
 local listening = false
 local GAMEPAD_TYPES = {
-        [Enum.UserInputType.Gamepad1] = true,
-        [Enum.UserInputType.Gamepad2] = true,
-        [Enum.UserInputType.Gamepad3] = true,
-        [Enum.UserInputType.Gamepad4] = true,
-        [Enum.UserInputType.Gamepad5] = true,
-        [Enum.UserInputType.Gamepad6] = true,
-        [Enum.UserInputType.Gamepad7] = true,
-        [Enum.UserInputType.Gamepad8] = true,
+        [Enum.UserInputType.Gamepad1] = true, [Enum.UserInputType.Gamepad2] = true,
+        [Enum.UserInputType.Gamepad3] = true, [Enum.UserInputType.Gamepad4] = true,
+        [Enum.UserInputType.Gamepad5] = true, [Enum.UserInputType.Gamepad6] = true,
+        [Enum.UserInputType.Gamepad7] = true, [Enum.UserInputType.Gamepad8] = true,
 }
 local function isBindableInput(input)
         return input.UserInputType == Enum.UserInputType.Keyboard or GAMEPAD_TYPES[input.UserInputType] == true
@@ -274,45 +252,39 @@ local function paintKey()
 end
 paintKey()
 
--- CFRAME WALK (ported, restyled to Jesus theme)
-
 local walkBox = new("Frame", {
         Name = "CFrameWalkBox",
         Position = UDim2.fromOffset(16, 224), Size = UDim2.fromOffset(BTN_W, 100),
-        BackgroundColor3 = C.Raise, BackgroundTransparency = 0.5, BorderSizePixel = 0, Parent = card,
+        BackgroundColor3 = C.Raise, BackgroundTransparency = 0, BorderSizePixel = 0, Parent = card,
 }, { corner(10) })
 local walkBoxStroke = stroke(C.Line, 0.5, 1)
 walkBoxStroke.Parent = walkBox
-
 local walkTitle = label({
         Text = "CFrame Walk", Font = FONT_B, TextSize = 12, TextColor3 = C.Sub,
         Position = UDim2.fromOffset(12, 6), Size = UDim2.new(1, -24, 0, 18), Parent = walkBox,
 })
-
 local studsLbl = label({
         Text = "studs", Font = FONT, TextSize = 11, TextColor3 = C.Dim,
         Position = UDim2.fromOffset(12, 30), Size = UDim2.fromOffset(40, 24), Parent = walkBox,
 })
 local studsInput = new("TextBox", {
         Position = UDim2.fromOffset(52, 30), Size = UDim2.fromOffset(48, 24),
-        BackgroundColor3 = C.Bg, BackgroundTransparency = 0.3, BorderSizePixel = 0,
+        BackgroundColor3 = C.Bg, BackgroundTransparency = 0, BorderSizePixel = 0,
         Text = tostring(cfg.WalkStuds), Font = FONT_B, TextSize = 13, TextColor3 = C.On,
         ClearTextOnFocus = false, TextXAlignment = Enum.TextXAlignment.Center, Parent = walkBox,
 }, { corner(6) })
 local studsStroke = stroke(C.Line, 0.5); studsStroke.Parent = studsInput
-
 local delayLbl = label({
         Text = "delay", Font = FONT, TextSize = 11, TextColor3 = C.Dim,
         Position = UDim2.fromOffset(110, 30), Size = UDim2.fromOffset(40, 24), Parent = walkBox,
 })
 local delayInput = new("TextBox", {
         Position = UDim2.fromOffset(150, 30), Size = UDim2.fromOffset(48, 24),
-        BackgroundColor3 = C.Bg, BackgroundTransparency = 0.3, BorderSizePixel = 0,
+        BackgroundColor3 = C.Bg, BackgroundTransparency = 0, BorderSizePixel = 0,
         Text = tostring(cfg.WalkDelay), Font = FONT_B, TextSize = 13, TextColor3 = C.On,
         ClearTextOnFocus = false, TextXAlignment = Enum.TextXAlignment.Center, Parent = walkBox,
 }, { corner(6) })
 local delayStroke = stroke(C.Line, 0.5); delayStroke.Parent = delayInput
-
 local walkBtn = new("TextButton", {
         Position = UDim2.fromOffset(12, 62), Size = UDim2.new(1, -24, 0, 30),
         BackgroundColor3 = C.Raise, AutoButtonColor = false, Font = FONT_K, TextSize = 13,
@@ -320,10 +292,8 @@ local walkBtn = new("TextButton", {
 }, { corner(7) })
 local walkBtnStroke = stroke(C.Line, 0.2, 1.2)
 walkBtnStroke.Parent = walkBtn
-
-local walking    = false
+local walking = false
 local walkThread = nil
-
 local function paintWalk()
         if walking then
                 walkBtn.TextColor3 = C.On
@@ -335,7 +305,6 @@ local function paintWalk()
                 tween(walkBtnStroke, 0.2, { Color = C.Line })
         end
 end
-
 local function updateWalkSettings()
         local s = tonumber(studsInput.Text)
         if s then cfg.WalkStuds = math.clamp(math.floor(s), 1, 500) end
@@ -347,7 +316,6 @@ local function updateWalkSettings()
 end
 studsInput.FocusLost:Connect(updateWalkSettings)
 delayInput.FocusLost:Connect(updateWalkSettings)
-
 walkBtn.MouseButton1Click:Connect(function()
         walking = not walking
         if walking then
@@ -362,9 +330,7 @@ walkBtn.MouseButton1Click:Connect(function()
                                 if hrp and hum then
                                         local dir = hum.MoveDirection
                                         if dir.Magnitude > 0.1 then
-                                                pcall(function()
-                                                        hrp.CFrame = hrp.CFrame + dir * studs
-                                                end)
+                                                pcall(function() hrp.CFrame = hrp.CFrame + dir * studs end)
                                         end
                                 end
                                 task.wait(delay)
@@ -376,8 +342,6 @@ walkBtn.MouseButton1Click:Connect(function()
         end
         play("Tick")
 end)
-
--- drag the window by its header
 
 do
         local handle = new("TextButton", { Size = UDim2.new(1, -80, 0, 38), BackgroundTransparency = 1, Text = "", ZIndex = 5, Parent = card })
@@ -402,37 +366,26 @@ do
         end)
 end
 
--- Minimize / Restore Logic
-
 local function setCollapsed(collapsed)
         cfg.Collapsed = collapsed
         save()
-        
         local hideList = { intensityLbl, intBox, keyLbl, cap, btn, walkBox }
-        
         if collapsed then
                 minBtn.Visible = false
                 for _, v in ipairs(hideList) do v.Visible = false end
-                
                 expandBtn.Visible = true
                 miniToggleBtn.Visible = true
-                
                 tween(card, 0.3, { Size = UDim2.fromOffset(W, 38) }, Enum.EasingStyle.Quint, Enum.EasingDirection.In)
         else
                 expandBtn.Visible = false
                 miniToggleBtn.Visible = false
-                
                 minBtn.Visible = true
                 for _, v in ipairs(hideList) do v.Visible = true end
-                
                 tween(card, 0.45, { Size = UDim2.fromOffset(W, H) }, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
         end
 end
-
 minBtn.MouseButton1Click:Connect(function() play("Tick") setCollapsed(true) end)
 expandBtn.MouseButton1Click:Connect(function() play("Tick") setCollapsed(false) end)
-
--- Intensity control
 
 local function clampIntensity(v)
         v = tonumber(v)
@@ -445,11 +398,9 @@ local function setIntensity(v, silent)
         if not silent then play("Tick") end
         save()
 end
-
 intBox.FocusLost:Connect(function() setIntensity(intBox.Text) end)
 
--- Lagging Logic
-
+-- Lagging Logic - ORIGINAL, UNCHANGED
 local Event
 do
     local ok, net = pcall(function()
@@ -457,4 +408,26 @@ do
         return pkgs and pkgs:WaitForChild("Net", 5)
     end)
     if ok and net then
-        local kids = net:GetChildren(
+        local kids = net:GetChildren()
+        Event = kids[6]
+    end
+end
+local lagging = false
+local lagThread
+local function startLagging()
+        if lagging then return end
+        if not Event then return end
+        lagging = true
+        local intensity = math.clamp(math.floor(tonumber(cfg.Intensity) or 10000), 1, 100000)
+        local payload = table.create(intensity, function() end)
+        lagThread = task.spawn(function()
+                while lagging do
+                        for _ = 1, 3 do
+                                pcall(function() Event:FireServer(payload) end)
+                        end
+                        task.wait(0.01)
+                end
+        end)
+end
+local function stopLagging()
+        if not lagging then return e
