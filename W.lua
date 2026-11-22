@@ -1,32 +1,33 @@
 --[[
-	VISIBLE PACKET LAGGER
+	JESUS PACKET
 
 	Features:
 	- Transparent dark blue theme with cyan accents (like the photo).
 	- Mobile support: Touch draggable, scales to fit screen.
 	- Minimize into a compact pill with a quick-toggle switch.
 	- Keybind system.
-	- CFrame Walk (ported from Violette, restyled to Visible colors).
+	- CFrame Walk (ported from Violette, restyled to Jesus colors).
 ]]
 
-local Players           = game:GetService("Players")
+-- Mobile safe loading (prevents hanging)
+local Players = game:GetService("Players")
+local player
+repeat task.wait() player = Players.LocalPlayer until player
+local playerGui = player:WaitForChild("PlayerGui")
+
 local TweenService      = game:GetService("TweenService")
 local UserInputService  = game:GetService("UserInputService")
 local RunService        = game:GetService("RunService")
 local HttpService       = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ContentProvider   = game:GetService("ContentProvider")
 
-local player    = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
-
-local old = playerGui:FindFirstChild("VISIBLEPACKETLAGGER")
+local old = playerGui:FindFirstChild("JESUSPACKET")
 if old then old:Destroy() end
 
 --------------------------------------------------------------------------
 -- Config
 --------------------------------------------------------------------------
-local FILE = "visible_packet_lagger.json"
+local FILE = "jesus_packet.json"
 local cfg = { Key = "G", Sounds = true, Collapsed = false, CardPos = nil, Intensity = 10000, WalkStuds = 8, WalkDelay = 0.1 }
 pcall(function()
 	if isfile and isfile(FILE) then
@@ -54,7 +55,7 @@ local function unpackPos(t, fallback)
 end
 
 --------------------------------------------------------------------------
--- Look (Visible Hub Theme)
+-- Look (Jesus Theme)
 --------------------------------------------------------------------------
 local C = {
 	Bg    = Color3.fromRGB(10, 12, 16),
@@ -105,15 +106,12 @@ local KEYNAMES = {
 }
 
 --------------------------------------------------------------------------
--- Sound effects disabled
 local gui = new("ScreenGui", {
-	Name = "VISIBLEPACKETLAGGER", ResetOnSpawn = false, IgnoreGuiInset = true,
-	ZIndexBehavior = Enum.ZIndexBehavior.Sibling, DisplayOrder = 100, Parent = playerGui,
+	Name = "JESUSPACKET", ResetOnSpawn = false, IgnoreGuiInset = true,
+	ZIndexBehavior = Enum.ZIndexBehavior.Sibling, DisplayOrder = 999, Parent = playerGui,
 })
 local function play(name, pitch) return end
 
--- State
---------------------------------------------------------------------------
 local active = false
 local activeSince = 0
 local hooks = {}
@@ -150,7 +148,7 @@ end
 
 -- Header
 local title = label({
-	Text = 'VISIBLE <font color="#00aaff">PACKET LAGGER</font>', RichText = true,
+	Text = 'JESUS <font color="#00aaff">PACKET</font>', RichText = true,
 	Font = FONT_K, TextSize = 14, TextColor3 = C.Text,
 	Position = UDim2.fromOffset(16, 0), Size = UDim2.new(1, -72, 0, 38), Parent = card,
 })
@@ -279,7 +277,7 @@ end
 paintKey()
 
 --------------------------------------------------------------------------
--- CFRAME WALK (ported, restyled to Visible theme)
+-- CFRAME WALK
 --------------------------------------------------------------------------
 local walkBox = new("Frame", {
 	Name = "CFrameWalkBox",
@@ -457,18 +455,18 @@ end
 intBox.FocusLost:Connect(function() setIntensity(intBox.Text) end)
 
 --------------------------------------------------------------------------
--- Lagging Logic
+-- Lagging Logic (FindFirstChild to avoid mobile freeze)
 --------------------------------------------------------------------------
 local Event
 do
-    local ok, net = pcall(function()
-        local pkgs = ReplicatedStorage:WaitForChild("Packages", 5)
-        return pkgs and pkgs:WaitForChild("Net", 5)
-    end)
-    if ok and net then
-        local kids = net:GetChildren()
-        Event = kids[6]
-    end
+	local pkgs = ReplicatedStorage:FindFirstChild("Packages")
+	if pkgs then
+		local net = pkgs:FindFirstChild("Net")
+		if net then
+			local kids = net:GetChildren()
+			Event = kids[6]
+		end
+	end
 end
 
 local lagging = false
@@ -514,146 +512,4 @@ local function render(instant)
 	if active then
 		tween(wash, t, { Size = UDim2.fromScale(1, 1) }, Enum.EasingStyle.Quint)
 		tween(btnStroke, t, { Color = C.On })
-		tween(dot, t, { BackgroundColor3 = C.On })
-		tween(stateText, t, { TextColor3 = C.White })
-		stateText.Text = "STOP"
-		sweep.Visible = true
-		sweep.Position = UDim2.new(0, -80, 0, 0)
-		
-		local loop = TweenInfo.new(1.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, -1)
-		ringStroke.Transparency = 0.2
-		ringScale.Scale = 1
-		for _, tw in ipairs({
-			TweenService:Create(ringScale, loop, { Scale = 2.6 }),
-			TweenService:Create(ringStroke, loop, { Transparency = 1 }),
-			TweenService:Create(sweep, TweenInfo.new(1.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1), { Position = UDim2.new(1, 0, 0, 0) }),
-		}) do
-			tw:Play()
-			table.insert(pulseTweens, tw)
-		end
-		
-		miniToggleBtn.Text = "STOP"
-		tween(miniToggleBtn, t, { TextColor3 = C.On })
-		tween(miniToggleStroke, t, { Color = C.On })
-	else
-		tween(wash, t, { Size = UDim2.fromScale(0, 1) }, Enum.EasingStyle.Quint)
-		tween(btnStroke, t, { Color = C.Line })
-		tween(dot, t, { BackgroundColor3 = C.Dim })
-		tween(stateText, t, { TextColor3 = C.Text })
-		stateText.Text = "START"
-		subText.Text = ""
-		sweep.Visible = false
-		ringStroke.Transparency = 1
-		
-		miniToggleBtn.Text = "START"
-		tween(miniToggleBtn, t, { TextColor3 = C.White })
-		tween(miniToggleStroke, t, { Color = C.Line })
-	end
-end
-
-setActive = function(v, quiet)
-	v = v and true or false
-	if v == active then return end
-	active = v
-	activeSince = os.clock()
-	render(false)
-	if v then startLagging() else stopLagging() end
-	if not quiet then play(v and "On" or "Off") end
-	
-	btnScale.Scale = 0.94
-	tween(btnScale, 0.35, { Scale = 1 }, Enum.EasingStyle.Back)
-	
-	if cfg.Collapsed then
-		miniToggleBtn.Size = UDim2.fromOffset(38, 24)
-		tween(miniToggleBtn, 0.3, { Size = UDim2.fromOffset(40, 26) }, Enum.EasingStyle.Back)
-	end
-	
-	for _, fn in ipairs(hooks) do task.spawn(fn, active) end
-end
-
-btn.MouseButton1Down:Connect(function() tween(btnScale, 0.08, { Scale = 0.96 }) end)
-btn.MouseButton1Up:Connect(function() tween(btnScale, 0.25, { Scale = 1 }, Enum.EasingStyle.Back) end)
-btn.MouseEnter:Connect(function() if not active then tween(btnStroke, 0.15, { Color = C.Dim }) end end)
-btn.MouseLeave:Connect(function()
-	tween(btnScale, 0.2, { Scale = 1 })
-	if not active then tween(btnStroke, 0.2, { Color = C.Line }) end
-end)
-btn.MouseButton1Click:Connect(function() setActive(not active) end)
-miniToggleBtn.MouseButton1Click:Connect(function() setActive(not active) end)
-
--- running time while it is on
-do
-	local acc = 0
-	RunService.Heartbeat:Connect(function(dt)
-		if not active then return end
-		acc += dt
-		if acc < 0.2 then return end
-		acc = 0
-		local s = math.floor(os.clock() - activeSince)
-		subText.Text = string.format("Active  %02d:%02d", s // 60, s % 60)
-	end)
-end
-
---------------------------------------------------------------------------
--- Keybind
---------------------------------------------------------------------------
-cap.MouseButton1Down:Connect(function() tween(capScale, 0.08, { Scale = 0.92 }) end)
-cap.MouseButton1Up:Connect(function() tween(capScale, 0.25, { Scale = 1 }, Enum.EasingStyle.Back) end)
-local function beginKeybindCapture()
-	listening = true
-	capText.Text = "press an input..."
-	capText.TextColor3 = C.On
-	tween(capStroke, 0.2, { Color = C.On })
-	play("Tick")
-end
-cap.Activated:Connect(beginKeybindCapture)
-
-UserInputService.InputBegan:Connect(function(input, processed)
-	if not isBindableInput(input) then return end
-
-	if listening then
-		listening = false
-		local cancelled = input.KeyCode == Enum.KeyCode.Escape or input.KeyCode == Enum.KeyCode.ButtonB
-		if not cancelled then
-			cfg.Key = input.KeyCode.Name
-			save()
-			play("Tick", 1.3)
-		end
-		paintKey()
-		return
-	end
-
-	if processed then return end
-	if input.KeyCode.Name == cfg.Key then
-		setActive(not active)
-		capScale.Scale = 0.88
-		tween(capScale, 0.35, { Scale = 1 }, Enum.EasingStyle.Back)
-	end
-end)
-
---------------------------------------------------------------------------
--- Public hooks
---------------------------------------------------------------------------
-_G.VisiblePacketLagger = {
-	On = function(fn) table.insert(hooks, fn) end,
-	Get = function() return active end,
-	Set = function(v) setActive(v) end,
-	Key = function() return cfg.Key end,
-	Walk = function() return walking end,
-	SetWalk = function(v)
-		if v ~= walking then walkBtn.MouseButton1Click:Fire() end
-	end,
-}
-
---------------------------------------------------------------------------
--- Start
---------------------------------------------------------------------------
-paintWalk()
-render(true)
-if cfg.Collapsed then
-	setCollapsed(true)
-else
-	card.Size = UDim2.fromOffset(W, 38)
-	tween(card, 0.5, { Size = UDim2.fromOffset(W, H) }, Enum.EasingStyle.Quint)
-end
-save()
+		tween(dot, t, { Ba
