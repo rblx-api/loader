@@ -1,15 +1,14 @@
 --[[
-	JESUS PACKET LAGGER
+	VISIBLE PACKET LAGGER
 
 	Features:
-	- Gold and Black Jesus theme: black + gold . Same logic, only look renamed.
+	- Transparent dark blue theme with cyan accents (like the photo).
 	- Mobile support: Touch draggable, scales to fit screen.
 	- Minimize into a compact pill with a quick-toggle switch.
 	- Keybind system.
-	- CFrame Walk (ported from Violette, restyled to Jesus colors).
+	- CFrame Walk (ported from Violette, restyled to Visible colors).
 ]]
 
-print("[Jesus Packet] loaded")
 local Players           = game:GetService("Players")
 local TweenService      = game:GetService("TweenService")
 local UserInputService  = game:GetService("UserInputService")
@@ -21,13 +20,13 @@ local ContentProvider   = game:GetService("ContentProvider")
 local player    = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
-local old = playerGui:FindFirstChild("JESUSPACKETLAGGER")
+local old = playerGui:FindFirstChild("VISIBLEPACKETLAGGER")
 if old then old:Destroy() end
 
 --------------------------------------------------------------------------
 -- Config
 --------------------------------------------------------------------------
-local FILE = "jesus_packet_lagger.json"
+local FILE = "visible_packet_lagger.json"
 local cfg = { Key = "G", Sounds = true, Collapsed = false, CardPos = nil, Intensity = 10000, WalkStuds = 8, WalkDelay = 0.1 }
 pcall(function()
 	if isfile and isfile(FILE) then
@@ -55,18 +54,18 @@ local function unpackPos(t, fallback)
 end
 
 --------------------------------------------------------------------------
--- Look (Jesus Theme)
+-- Look (Visible Hub Theme)
 --------------------------------------------------------------------------
 local C = {
-	Bg    = Color3.fromRGB(0, 0, 0), -- black
-	Raise = Color3.fromRGB(15, 15, 15), -- near black
-	Line  = Color3.fromRGB(255, 215, 0), -- gold
-	Dim   = Color3.fromRGB(160, 140, 60), -- muted gold
-	Sub   = Color3.fromRGB(255, 215, 0), -- gold
-	Text  = Color3.fromRGB(255, 215, 0), -- gold text
-	White = Color3.fromRGB(255, 215, 0), -- gold
-	On    = Color3.fromRGB(255, 215, 0), -- gold
-	On2   = Color3.fromRGB(255, 200, 0), -- bright gold
+	Bg    = Color3.fromRGB(10, 12, 16),
+	Raise = Color3.fromRGB(18, 22, 30),
+	Line  = Color3.fromRGB(35, 45, 60),
+	Dim   = Color3.fromRGB(120, 140, 160),
+	Sub   = Color3.fromRGB(160, 180, 200),
+	Text  = Color3.fromRGB(240, 245, 255),
+	White = Color3.fromRGB(255, 255, 255),
+	On    = Color3.fromRGB(0, 170, 255),
+	On2   = Color3.fromRGB(0, 120, 255),
 }
 local FONT, FONT_B, FONT_K = Enum.Font.Gotham, Enum.Font.GothamMedium, Enum.Font.GothamBold
 
@@ -108,7 +107,7 @@ local KEYNAMES = {
 --------------------------------------------------------------------------
 -- Sound effects disabled
 local gui = new("ScreenGui", {
-	Name = "JESUSPACKETLAGGER", ResetOnSpawn = false, IgnoreGuiInset = true,
+	Name = "VISIBLEPACKETLAGGER", ResetOnSpawn = false, IgnoreGuiInset = true,
 	ZIndexBehavior = Enum.ZIndexBehavior.Sibling, DisplayOrder = 100, Parent = playerGui,
 })
 local function play(name, pitch) return end
@@ -151,7 +150,7 @@ end
 
 -- Header
 local title = label({
-	Text = 'JESUS <font color="#FFD700">PACKET LAGGER</font> ', RichText = true,
+	Text = 'VISIBLE <font color="#00aaff">PACKET LAGGER</font>', RichText = true,
 	Font = FONT_K, TextSize = 14, TextColor3 = C.Text,
 	Position = UDim2.fromOffset(16, 0), Size = UDim2.new(1, -72, 0, 38), Parent = card,
 })
@@ -175,7 +174,7 @@ expandStroke.Parent = expandBtn
 
 local minBtn = new("TextButton", {
 	AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -8, 0, 8), Size = UDim2.fromOffset(24, 20),
-	BackgroundColor3 = C.Raise, AutoButtonColor = false, Font = FONT_B, TextSize = 14, TextColor3 = C.Dim, Text = "-", ZIndex = 10, Parent = card,
+	BackgroundColor3 = C.Raise, AutoButtonColor = false, Font = FONT_B, TextSize = 14, TextColor3 = C.Dim, Text = "—", ZIndex = 10, Parent = card,
 }, { corner(4) })
 local minBtnStroke = stroke(C.Line, 0.5, 1); minBtnStroke.Parent = minBtn
 
@@ -635,8 +634,7 @@ end)
 --------------------------------------------------------------------------
 -- Public hooks
 --------------------------------------------------------------------------
-_G.JesusPacketLagger = {
-
+_G.VisiblePacketLagger = {
 	On = function(fn) table.insert(hooks, fn) end,
 	Get = function() return active end,
 	Set = function(v) setActive(v) end,
@@ -646,7 +644,6 @@ _G.JesusPacketLagger = {
 		if v ~= walking then walkBtn.MouseButton1Click:Fire() end
 	end,
 }
-_G.VisiblePacketLagger = _G.JesusPacketLagger -- alias, same table
 
 --------------------------------------------------------------------------
 -- Start
