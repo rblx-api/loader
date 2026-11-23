@@ -9,17 +9,16 @@
 	- CFrame Walk (ported from Violette, restyled to Jesus colors).
 ]]
 
--- Mobile safe loading (prevents hanging)
-local Players = game:GetService("Players")
-local player
-repeat task.wait() player = Players.LocalPlayer until player
-local playerGui = player:WaitForChild("PlayerGui")
-
+local Players           = game:GetService("Players")
 local TweenService      = game:GetService("TweenService")
 local UserInputService  = game:GetService("UserInputService")
 local RunService        = game:GetService("RunService")
 local HttpService       = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ContentProvider   = game:GetService("ContentProvider")
+
+local player    = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
 
 local old = playerGui:FindFirstChild("JESUSPACKET")
 if old then old:Destroy() end
@@ -106,12 +105,15 @@ local KEYNAMES = {
 }
 
 --------------------------------------------------------------------------
+-- Sound effects disabled
 local gui = new("ScreenGui", {
 	Name = "JESUSPACKET", ResetOnSpawn = false, IgnoreGuiInset = true,
-	ZIndexBehavior = Enum.ZIndexBehavior.Sibling, DisplayOrder = 999, Parent = playerGui,
+	ZIndexBehavior = Enum.ZIndexBehavior.Sibling, DisplayOrder = 100, Parent = playerGui,
 })
 local function play(name, pitch) return end
 
+-- State
+--------------------------------------------------------------------------
 local active = false
 local activeSince = 0
 local hooks = {}
@@ -455,18 +457,18 @@ end
 intBox.FocusLost:Connect(function() setIntensity(intBox.Text) end)
 
 --------------------------------------------------------------------------
--- Lagging Logic (FindFirstChild to avoid mobile freeze)
+-- Lagging Logic
 --------------------------------------------------------------------------
 local Event
 do
-	local pkgs = ReplicatedStorage:FindFirstChild("Packages")
-	if pkgs then
-		local net = pkgs:FindFirstChild("Net")
-		if net then
-			local kids = net:GetChildren()
-			Event = kids[6]
-		end
-	end
+    local ok, net = pcall(function()
+        local pkgs = ReplicatedStorage:WaitForChild("Packages", 5)
+        return pkgs and pkgs:WaitForChild("Net", 5)
+    end)
+    if ok and net then
+        local kids = net:GetChildren()
+        Event = kids[6]
+    end
 end
 
 local lagging = false
@@ -510,6 +512,4 @@ local function render(instant)
 	local t = instant and 0 or 0.35
 	stopPulse()
 	if active then
-		tween(wash, t, { Size = UDim2.fromScale(1, 1) }, Enum.EasingStyle.Quint)
-		tween(btnStroke, t, { Color = C.On })
-		tween(dot, t, { Ba
+		twe
