@@ -1,374 +1,775 @@
--- Standalone client-side loader. Keeps an ENTIRE plot only when a brainrot
--- in that plot generates more than $20M/s; removes all other plot models.
-local Workspace = game:GetService("Workspace")
+local CoreGui = game:GetService("CoreGui")
+local ReplicatedFirst = game:GetService("ReplicatedFirst")
 local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer or Players.PlayerAdded:Wait()
 local RunService = game:GetService("RunService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Lighting = game:GetService("Lighting")
+local Workspace = game:GetService("Workspace")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local SoundService = game:GetService("SoundService")
-local CollectionService = game:GetService("CollectionService")
-local THRESHOLD = 20_000_000
-local SCAN_TIMEOUT = 90
-if _G.Rose20MLoaderStop then _G.Rose20MLoaderStop() end
 
-local running, connections = true, {}
-local retained = {}
-local floorNames = {
-    Ground = true, Ground_Left = true, Ground_Right = true,
-    Carpet = true, Floor = true, Baseplate = true,
-}
+local TARGET_FPS = 2000
 
--- grapple and clone flow even when their surrounding map is removed.
-local gameplayRoots = {
-    Interacts = true, ToolsAdds = true, __PROJECTILES = true,
-    Events = true, Debris = true,
-}
-local function isBrainrotVisual(object)
-    return CollectionService:HasTag(object, "ClientRenderBrainrot")
-        or CollectionService:HasTag(object, "RenderedMovingAnimal")
-        or CollectionService:HasTag(object, "Animal")
+-- 1. APPLICATION IMMÉDIATE DES FFLAGS & QUALITÉ GRAPHIQUE
+local function findGlobalFunction(name)
+    local fn
+    pcall(function() fn = getgenv and getgenv()[name] end)
+    if type(fn) == "function" then return fn end
+    pcall(function() fn = _G[name] end)
+    if type(fn) == "function" then return fn end
+    pcall(function() fn = getfenv(0)[name] end)
+    if type(fn) == "function" then return fn end
+    pcall(function() fn = rawget(getfenv(2), name) end)
+    if type(fn) == "function" then return fn end
+    return nil
 end
-local function delete(object)
-    if not (object and object.Parent) then return end
-    if isBrainrotVisual(object) then return end
-    -- Sounds often live under map parts. Move them before removing the part
-    -- so the optimizer cannot silence game audio along with the visuals.
-    if object:IsA("Sound") then
-        pcall(function() object.Parent = SoundService end)
+
+local FFlags = {
+    ["FFlagDebugSkyGray"] = "True",
+    ["FFlagTaskSchedulerLimitTargetFpsToDevice"] = "False",
+    ["FFlagTaskSchedulerLimitTargetFpsTo2402"] = "False",
+    ["FFlagGameBasicSettingsFramerateCap5"] = "False",
+    ["DFIntTaskSchedulerTargetFps"] = tostring(TARGET_FPS),
+    ["FFlagHandleAltEnterFullscreenManually"] = "False",
+    ["FFlagEnableTextureStreaming"] = "True",
+    ["FFlagPreloadAllFonts"] = "True",
+    ["DFFlagEnableSoundPreloading"] = "True",
+    ["DFFlagEnableMeshPreloading"] = "True",
+    ["DFFlagEnableMeshPreloading2"] = "True",
+    ["DFFlagEnableTexturePreloading"] = "True",
+    ["FFlagAssetPreloadingIXP"] = "True",
+    ["DFFlagEnablePreloadAvatarAssets"] = "True",
+    ["DFFlagTeleportClientAssetPreloadingEnabledIXP"] = "True",
+    ["DFFlagTeleportClientAssetPreloadingEnabledIXP2"] = "True",
+    ["DFFlagTeleportClientAssetPreloadingEnabled9"] = "True",
+    ["DFFlagTeleportClientAssetPreloadingDoingExperiment"] = "True",
+    ["DFFlagTeleportClientAssetPreloadingDoingExperiment2"] = "True",
+    ["DFFlagTeleportPreloadingMetrics5"] = "True",
+    ["DFFlagPreloadAsyncSupportTexturePack"] = "True",
+    ["FFlagPreloadTextureItemsOption4"] = "True",
+    ["FFlagUseNewLuaPreloadAssets"] = "True",
+    ["DFFlagEnableScriptPreloadOnJoin"] = "True",
+    ["FFlagLuaAppsScriptPreload"] = "True",
+    ["DFFlagRemoveUnusedKtxMetadata"] = "True",
+    ["DFIntContentProviderMaximumRequestsPerStep"] = "10000",
+    ["DFIntContentProviderMaximumRequestsPerSecond"] = "10000",
+    ["DFIntSolidModelStreamDebounceSecs"] = "0",
+    ["FIntRenderGrassDetailStrands"] = "0",
+    ["FIntRenderGrassHeightScaler"] = "0",
+    ["FIntTerrainOctreeMaxCells"] = "0",
+    ["FIntDebugForceMSAASamples"] = "0",
+    ["FIntRenderShadowIntensity"] = "0",
+    ["DFIntSignalRCoreTimerMs"] = "50",
+    ["FIntActivatedCountTimerMSMouse"] = "0",
+    ["FIntActivatedCountTimerMSKeyboard"] = "0",
+}
+
+pcall(function()
+    local setFF = findGlobalFunction("setfflag")
+    if setFF then
+        for flag, value in pairs(FFlags) do pcall(setFF, flag, value) end
+    end
+    local setCap = findGlobalFunction("setfpscap")
+    if setCap then setCap(TARGET_FPS) end
+    local rs = settings():GetService("RenderSettings")
+    rs.QualityLevel = Enum.QualityLevel.Level01
+    rs.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level01
+end)
+
+-- 2. CIEL 100 % GRIS UNI ULTRA-LÉGER (SANS BLEU NI ATMOSPHERE POUR MAX FPS)
+local GRAY_SKY_COLOR = Color3.fromRGB(115, 118, 124)
+
+local function ensureGraySkyObject()
+    local sky = Lighting:FindFirstChild("__SXE_GraySky")
+    if not sky then
+        sky = Instance.new("Sky")
+        sky.Name = "__SXE_GraySky"
+        sky.Parent = Lighting
+    end
+    -- On force des IDs transparents/vides + Fog dense gris pour empêcher le ciel bleu par défaut de Roblox
+    pcall(function()
+        sky.SkyboxBk = "rbxassetid://0"
+        sky.SkyboxDn = "rbxassetid://0"
+        sky.SkyboxFt = "rbxassetid://0"
+        sky.SkyboxLf = "rbxassetid://0"
+        sky.SkyboxRt = "rbxassetid://0"
+        sky.SkyboxUp = "rbxassetid://0"
+        sky.CelestialBodiesShown = false
+        sky.StarCount = 0
+    end)
+end
+
+local function applyGraySkyAndLighting()
+    pcall(function()
+        Lighting.GlobalShadows = false
+        Lighting.EnvironmentDiffuseScale = 0
+        Lighting.EnvironmentSpecularScale = 0
+        Lighting.ShadowSoftness = 0
+        Lighting.Brightness = 1.15
+        Lighting.ExposureCompensation = 0
+        Lighting.Ambient = Color3.fromRGB(150, 150, 155)
+        Lighting.OutdoorAmbient = Color3.fromRGB(150, 150, 155)
+        Lighting.ColorShift_Top = GRAY_SKY_COLOR
+        Lighting.ColorShift_Bottom = GRAY_SKY_COLOR
+        -- Brouillard gris uniforme pour couvrir totalement l'horizon bleu et booster les FPS
+        Lighting.FogColor = GRAY_SKY_COLOR
+        Lighting.FogStart = 250
+        Lighting.FogEnd = 650
+    end)
+
+    for _, ch in ipairs(Lighting:GetChildren()) do
+        if ch:IsA("Sky") and ch.Name ~= "__SXE_GraySky" then
+            pcall(function() ch:Destroy() end)
+        elseif ch:IsA("Atmosphere") or ch:IsA("Clouds") or ch:IsA("SunRaysEffect") then
+            pcall(function() ch:Destroy() end)
+        end
+    end
+
+    ensureGraySkyObject()
+
+    local terrain = Workspace:FindFirstChildOfClass("Terrain")
+    if terrain then
+        pcall(function()
+            terrain.Decoration = false
+            terrain.WaterWaveSize = 0
+            terrain.WaterWaveSpeed = 0
+            terrain.WaterReflectance = 0
+            terrain.WaterTransparency = 1
+            local clouds = terrain:FindFirstChildOfClass("Clouds")
+            if clouds then clouds:Destroy() end
+        end)
+    end
+end
+
+applyGraySkyAndLighting()
+
+-- Verrouillage léger pour éviter que le jeu ne remette du bleu ou du brouillard coloré
+Lighting.Changed:Connect(function(prop)
+    if prop == "FogColor" and Lighting.FogColor ~= GRAY_SKY_COLOR then
+        Lighting.FogColor = GRAY_SKY_COLOR
+    elseif prop == "OutdoorAmbient" and Lighting.OutdoorAmbient ~= Color3.fromRGB(150, 150, 155) then
+        Lighting.OutdoorAmbient = Color3.fromRGB(150, 150, 155)
+    elseif prop == "ClockTime" or prop == "TimeOfDay" then
+        ensureGraySkyObject()
+    end
+end)
+
+-- 3. FILE D'ATTENTE ANTI-CRASH & TAMPON LÉGER POUR LES BASES (Plots)
+local taskQueue = {}
+local qHead, qTail = 1, 0
+local function enqueue(fn)
+    qTail += 1
+    taskQueue[qTail] = fn
+end
+
+local bufferedInsts = {}
+local bCount = 0
+local flushScheduled = false
+local permanentStrip
+local disableAnimations
+
+local function flushBuffered()
+    flushScheduled = false
+    if bCount == 0 then return end
+    local batch = bufferedInsts
+    local total = bCount
+    bufferedInsts = {}
+    bCount = 0
+
+    for i = 1, total, 35 do
+        enqueue(function()
+            local limit = math.min(i + 34, total)
+            for j = i, limit do
+                local inst = batch[j]
+                if inst and inst.Parent then
+                    permanentStrip(inst)
+                    disableAnimations(inst)
+                end
+            end
+        end)
+    end
+end
+
+local function queueBuffered(inst)
+    bCount += 1
+    bufferedInsts[bCount] = inst
+    if not flushScheduled then
+        flushScheduled = true
+        task.delay(0.12, flushBuffered)
+    end
+end
+
+RunService.Heartbeat:Connect(function()
+    if qHead > qTail then
+        if qHead > 1 then
+            table.clear(taskQueue)
+            qHead, qTail = 1, 0
+        end
         return
     end
-    for _, descendant in ipairs(object:GetDescendants()) do
-        if isBrainrotVisual(descendant) and not object:IsDescendantOf(Workspace:FindFirstChild("Plots") or object) then
-            pcall(function() descendant.Parent = Workspace end)
-        elseif descendant:IsA("Sound") then
-            pcall(function() descendant.Parent = SoundService end)
-        end
+    local start = os.clock()
+    -- Budget strict de 2.5 ms/frame : 0 freeze et 0 crash mémoire même quand 8 bases apparaissent
+    while qHead <= qTail and (os.clock() - start) < 0.0025 do
+        local fn = taskQueue[qHead]
+        taskQueue[qHead] = nil
+        qHead += 1
+        if fn then pcall(fn) end
     end
-    pcall(function() object:Destroy() end)
+end)
+
+-- 4. HELPERS D'IDENTIFICATION ULTRA-RAPIDES (Brainrots vs Joueurs vs Tapis)
+local BODY_PART = {
+    HumanoidRootPart = true, Head = true, Torso = true,
+    UpperTorso = true, LowerTorso = true,
+    LeftUpperArm = true, LeftLowerArm = true, LeftHand = true,
+    RightUpperArm = true, RightLowerArm = true, RightHand = true,
+    LeftUpperLeg = true, LeftLowerLeg = true, LeftFoot = true,
+    RightUpperLeg = true, RightLowerLeg = true, RightFoot = true,
+    ["Left Arm"] = true, ["Right Arm"] = true,
+    ["Left Leg"] = true, ["Right Leg"] = true,
+}
+
+local function isCarpetName(name)
+    if type(name) ~= "string" then return false end
+    local l = string.lower(name)
+    return string.find(l, "carpet", 1, true) ~= nil
+        or string.find(l, "tapis", 1, true) ~= nil
+        or string.find(l, "rug", 1, true) ~= nil
+        or string.find(l, "mat", 1, true) ~= nil
 end
-local function cleanMapChild(child)
-    if floorNames[child.Name] or gameplayRoots[child.Name]
-        or child.Name == "RenderedMovingAnimals"
-        or child:IsA("Sound") or isBrainrotVisual(child) then return end
-    if child:IsA("Model") and
-        (child.Name:match("_Clone$") or child:FindFirstChildOfClass("Humanoid")) then return end
-    delete(child)
-end
-local function smoothVisiblePart(object)
-    if not object:IsA("BasePart") then return end
-    pcall(function()
-        object.TopSurface = Enum.SurfaceType.Smooth
-        object.BottomSurface = Enum.SurfaceType.Smooth
-        object.LeftSurface = Enum.SurfaceType.Smooth
-        object.RightSurface = Enum.SurfaceType.Smooth
-        object.FrontSurface = Enum.SurfaceType.Smooth
-        object.BackSurface = Enum.SurfaceType.Smooth
-        object.Material = Enum.Material.SmoothPlastic
-        object.MaterialVariant = ""
-    end)
-end
-local function smoothFloorQuick(root)
-    smoothVisiblePart(root)
-    for _, object in ipairs(root:GetDescendants()) do smoothVisiblePart(object) end
-end
-local watchedMaps = setmetatable({}, {__mode = "k"})
-local function watchMap(map)
-    if watchedMaps[map] then return end
-    watchedMaps[map] = true
-    for _, child in ipairs(map:GetChildren()) do
-        if floorNames[child.Name] then task.defer(smoothFloorQuick, child)
-        else cleanMapChild(child) end
-    end
-    connections[#connections + 1] = map.ChildAdded:Connect(function(child)
-        if running then
-            if floorNames[child.Name] then task.defer(smoothFloorQuick, child)
-            else cleanMapChild(child) end
-        end
-    end)
-end
-local function keepRoot(object)
-    if object.Name == "Plots" or object.Name == "Map" or gameplayRoots[object.Name]
-        or object:IsA("Camera")
-        or object.Name == "RenderedMovingAnimals"
-        or object:IsA("Terrain") or object:IsA("Sound")
-        or isBrainrotVisual(object)
-        or floorNames[object.Name] then return true end
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player.Character == object then return true end
-    end
-    -- Quantum Cloner creates e.g. Workspace["123456_Clone"]. Its model is
-    -- separate from Player.Character and must survive the cleanup.
-    if object:IsA("Model") and
-        (object.Name:match("_Clone$") or object:FindFirstChildOfClass("Humanoid")) then
-        return true
+
+local function isCarpetInstance(inst)
+    local x = inst
+    for _ = 1, 6 do
+        if not x or x == Workspace then break end
+        if isCarpetName(x.Name) then return true end
+        x = x.Parent
     end
     return false
 end
--- Immediate cleanup; the scanner runs afterward without blocking this pass.
-for _, object in ipairs(Workspace:GetChildren()) do
-    if object.Name == "Map" then watchMap(object)
-    elseif floorNames[object.Name] then task.defer(smoothFloorQuick, object)
-    elseif not keepRoot(object) then delete(object) end
+
+local function isUnderPlots(inst)
+    local x = inst and inst.Parent
+    for _ = 1, 10 do
+        if not x then break end
+        if x.Name == "Plots" and x.Parent == Workspace then return true end
+        if x == Workspace then break end
+        x = x.Parent
+    end
+    return false
 end
-connections[#connections + 1] = Workspace.ChildAdded:Connect(function(object)
-    if not running then return end
-    task.defer(function()
-        if not running or not object.Parent then return end
-        if object.Name == "Map" then watchMap(object)
-        elseif floorNames[object.Name] then task.defer(smoothFloorQuick, object)
-        elseif not keepRoot(object) then delete(object) end
+
+-- Uniquement les vrais joueurs (évite de confondre les Brainrots qui ont un Humanoid !)
+local function isPlayerCharacterModel(m)
+    if not (m and m:IsA("Model")) then return false end
+    return Players:GetPlayerFromCharacter(m) ~= nil
+end
+
+local function getAncestorPlayerCharacter(inst)
+    local x = inst
+    for _ = 1, 8 do
+        if not x or x == Workspace then break end
+        if isPlayerCharacterModel(x) then return x end
+        x = x.Parent
+    end
+    return nil
+end
+
+-- Cache léger pour éviter de recalculer isBrainrotModel des milliers de fois
+local brainrotCache = setmetatable({}, { __mode = "k" })
+
+local function isBrainrotModel(inst)
+    if not inst then return false end
+    local m = inst:IsA("Model") and inst or inst:FindFirstAncestorOfClass("Model")
+    if not m or isPlayerCharacterModel(m) then return false end
+
+    local cached = brainrotCache[m]
+    if cached ~= nil then return cached end
+
+    if isCarpetInstance(m) then
+        brainrotCache[m] = false
+        return false
+    end
+
+    -- 1. Brainrot sur le tapis roulant ou dans une base (Plots)
+    local p = m.Parent
+    if p and (p.Name == "RenderedMovingAnimals" or (p.Parent and p.Parent.Name == "Plots")) then
+        if m:FindFirstChild("FakeRootPart") or m:FindFirstChild("RootPart")
+            or m:FindFirstChildWhichIsA("AnimationController", true)
+            or m:FindFirstChildWhichIsA("MeshPart", true)
+            or m:FindFirstChildOfClass("Humanoid") then
+            brainrotCache[m] = true
+            return true
+        end
+    end
+
+    -- 2. Brainrot porté en main par un joueur
+    local char = getAncestorPlayerCharacter(m)
+    if char and not BODY_PART[m.Name] then
+        brainrotCache[m] = true
+        return true
+    end
+
+    -- 3. Présence explicite des racines de Brainrot
+    if m:FindFirstChild("FakeRootPart") or m:FindFirstChild("RootPart") then
+        brainrotCache[m] = true
+        return true
+    end
+
+    -- Vérification légère de soudure uniquement hors Plots
+    if not isUnderPlots(m) then
+        local root = m
+        while root and root.Parent and root.Parent ~= Workspace do
+            if isPlayerCharacterModel(root.Parent) then
+                brainrotCache[m] = true
+                return true
+            end
+            root = root.Parent
+        end
+    end
+
+    brainrotCache[m] = false
+    return false
+end
+
+-- 5. OPTIMISATION VISUELLE (Brainrots bien visibles, joueurs en noir, fluos assombris)
+local function toneDownBrainrotPart(part)
+    if not (part and part:IsA("BasePart")) then return end
+    pcall(function()
+        part.CastShadow = false
+        part.Reflectance = 0
+        if part.Material == Enum.Material.Neon then
+            part.Material = Enum.Material.SmoothPlastic
+        end
+        local c = part.Color
+        local h, s, v = c:ToHSV()
+        if s > 0.65 or v > 0.88 then
+            part.Color = Color3.fromHSV(h, math.min(s, 0.58), math.min(v, 0.85))
+        end
     end)
-end)
-local plots = Workspace:WaitForChild("Plots", 90)
-if not plots then warn("[20M Loader] No aparecieron Plots."); return end
-task.defer(function()
-    for _, plot in ipairs(plots:GetChildren()) do
-        local podiums = plot:FindFirstChild("AnimalPodiums")
-        for i, part in ipairs(plot:GetDescendants()) do
-            if not (podiums and part:IsDescendantOf(podiums)) then
-                smoothVisiblePart(part)
-            end
-            if i % 400 == 0 then task.wait() end
-        end
-    end
-end)
-
-local datas = ReplicatedStorage:WaitForChild("Datas", 90)
-assert(datas, "[20M Loader] No se encontraron los datos de brainrots.")
-local okAnimals, animalsData = pcall(require, datas:WaitForChild("Animals", 90))
-local okMutations, mutations = pcall(require, datas:WaitForChild("Mutations", 90))
-local okTraits, traitsData = pcall(require, datas:WaitForChild("Traits", 90))
-local okGame, gameData = pcall(require, datas:WaitForChild("Game", 90))
-assert(okAnimals and type(animalsData) == "table" and okMutations and okTraits and okGame,
-    "[20M Loader] No se pudieron cargar los datos de generación.")
-local function generation(index, mutation, traits)
-    local animal = animalsData[index]
-    if not animal then return nil end
-    local base = animal.Generation
-    if not base then
-        local modifier = gameData.Game and gameData.Game.AnimalGanerationModifier
-        if type(modifier) ~= "number" then return nil end
-        base = (animal.Price or 0) * modifier
-    end
-    local mult = 1
-    local mutationData = mutation and mutations[mutation]
-    if mutationData then mult = mult + (mutationData.Modifier or 0) end
-    local sleepy = false
-    for _, trait in pairs(traits or {}) do
-        if trait == "Sleepy" then sleepy = true
-        else
-            local traitData = traitsData[trait]
-            if traitData then mult = mult + (traitData.MultiplierModifier or 0) end
-        end
-    end
-    local result = base * mult
-    if sleepy then result = result * 0.5 end
-    return math.round(result)
 end
-local packages = ReplicatedStorage:WaitForChild("Packages", 90)
-local syncFolder = packages and packages:WaitForChild("Synchronizer", 90)
-local requestData = syncFolder and syncFolder:WaitForChild("RequestData", 90)
-assert(requestData and requestData:IsA("RemoteFunction"),
-    "[20M Loader] No se encontró RequestData del synchronizer.")
 
--- Same PlotSign check Rose uses for Line To Base, plus its YourBase marker.
--- This only identifies the plot; this loader never creates a Beam or a line.
-local function findMyPlot()
-    for _, plot in ipairs(plots:GetChildren()) do
-        local sign = plot:FindFirstChild("PlotSign")
-        if sign then
-            local marker = sign:FindFirstChild("YourBase")
-            if marker and marker:IsA("BillboardGui") and marker.Enabled then
-                return plot
+local function darkenFluoColor(part)
+    if not (part and part:IsA("BasePart")) then return end
+    local wasNeon = (part.Material == Enum.Material.Neon)
+    if wasNeon then
+        part.Material = Enum.Material.SmoothPlastic
+    end
+    local c = part.Color
+    local h, s, v = c:ToHSV()
+    if wasNeon or (s > 0.45 and v > 0.52) then
+        part.Color = Color3.fromHSV(h, math.min(s, 0.55), math.min(v * 0.46, 0.42))
+    end
+end
+
+local PLAYER_BLACK = Color3.fromRGB(22, 22, 25)
+local function applyBlackToPlayerOrCarpet(inst)
+    if not inst then return end
+    if isBrainrotModel(inst) then
+        if inst:IsA("BasePart") and inst.Transparency < 0.95 then
+            toneDownBrainrotPart(inst)
+        end
+        return
+    end
+    if inst:IsA("BasePart") then
+        if inst.Transparency >= 0.95 then return end
+        pcall(function()
+            inst.Material = Enum.Material.SmoothPlastic
+            inst.Color = PLAYER_BLACK
+            inst.Reflectance = 0
+            inst.CastShadow = false
+        end)
+    elseif inst:IsA("Shirt") or inst:IsA("Pants") or inst:IsA("ShirtGraphic") or inst:IsA("CharacterMesh") then
+        pcall(function() inst:Destroy() end)
+    elseif inst:IsA("Decal") or inst:IsA("Texture") then
+        if isCarpetInstance(inst) or inst.Name ~= "face" then
+            pcall(function() inst.Transparency = 1 end)
+        end
+    elseif inst:IsA("ParticleEmitter") or inst:IsA("Trail") or inst:IsA("Beam") or inst:IsA("PointLight") then
+        pcall(function() inst.Enabled = false end)
+    end
+end
+
+permanentStrip = function(inst)
+    if not inst or not inst.Parent then return end
+
+    if inst:IsA("ParticleEmitter") or inst:IsA("Trail") or inst:IsA("Smoke")
+        or inst:IsA("Fire") or inst:IsA("Sparkles") or inst:IsA("Beam") then
+        pcall(function() inst.Enabled = false end)
+        return
+    elseif inst:IsA("PointLight") or inst:IsA("SpotLight") or inst:IsA("SurfaceLight") then
+        pcall(function() inst.Enabled = false end)
+        return
+    elseif inst:IsA("Explosion") then
+        pcall(function() inst.Visible = false end)
+        return
+    end
+
+    if isBrainrotModel(inst) then
+        if inst:IsA("BasePart") and inst.Transparency < 0.95 then
+            toneDownBrainrotPart(inst)
+        end
+        return
+    end
+
+    local char = getAncestorPlayerCharacter(inst)
+    if char or isCarpetInstance(inst) then
+        applyBlackToPlayerOrCarpet(inst)
+        return
+    end
+
+    if inst:IsA("BasePart") then
+        if inst.Transparency >= 0.95 then return end
+        pcall(function()
+            if inst:IsA("MeshPart") then
+                inst.RenderFidelity = Enum.RenderFidelity.Performance
             end
-            local surfaceGui = sign:FindFirstChildWhichIsA("SurfaceGui", true)
-            local label = surfaceGui and surfaceGui:FindFirstChildWhichIsA("TextLabel", true)
-            if label then
-                local text = label.Text:lower()
-                if text:find(LocalPlayer.Name:lower(), 1, true)
-                    or text:find(LocalPlayer.DisplayName:lower(), 1, true) then
-                    return plot
+            inst.CastShadow = false
+            inst.Reflectance = 0
+            inst.TopSurface = Enum.SurfaceType.Smooth
+            inst.BottomSurface = Enum.SurfaceType.Smooth
+            inst.Material = Enum.Material.SmoothPlastic
+            darkenFluoColor(inst)
+        end)
+    elseif inst:IsA("Decal") or inst:IsA("Texture") then
+        if isUnderPlots(inst) then return end
+        pcall(function() inst.Transparency = 1 end)
+    end
+end
+
+-- 6. ARRÊT DES ANIMATIONS (SANS CONNEXIONS PERMANENTES LOURDES)
+local function stopAnimator(animator)
+    if not animator or not animator:IsA("Animator") then return end
+    pcall(function()
+        for _, t in ipairs(animator:GetPlayingAnimationTracks()) do
+            t:Stop(0)
+        end
+    end)
+    local conn
+    conn = animator.AnimationPlayed:Connect(function(t)
+        pcall(function() t:Stop(0) end)
+    end)
+    animator.Destroying:Once(function()
+        if conn then conn:Disconnect() end
+    end)
+end
+
+disableAnimations = function(inst)
+    if not inst then return end
+    if inst:IsA("Animator") then
+        stopAnimator(inst)
+    elseif inst:IsA("AnimationController") then
+        pcall(function()
+            local a = inst:FindFirstChildOfClass("Animator")
+            if a then stopAnimator(a) end
+        end)
+    elseif (inst:IsA("LocalScript") or inst:IsA("Script")) and string.lower(inst.Name) == "animate" then
+        pcall(function() inst.Disabled = true end)
+    end
+end
+
+-- 7. BLOCAGE DES EFFETS D'ÉCRAN & POST-PROCESSING
+local FX_KEYWORDS = {
+    "boogie", "bee", "honey", "sting", "swarm", "disco", "dance",
+    "blur", "flash", "blind", "stun", "ink", "slime", "mud",
+    "vignette", "overlay", "distortion", "drunk", "dizzy", "shock"
+}
+
+local function isScreenFxGui(inst)
+    if not inst then return false end
+    local l = string.lower(inst.Name)
+    for _, kw in ipairs(FX_KEYWORDS) do
+        if string.find(l, kw, 1, true) then
+            return true
+        end
+    end
+    return false
+end
+
+local function blockPostEffect(x)
+    if not x then return end
+    if x:IsA("BlurEffect") or x:IsA("ColorCorrectionEffect") or x:IsA("BloomEffect")
+        or x:IsA("DepthOfFieldEffect") or x:IsA("SunRaysEffect") then
+        pcall(function()
+            x.Enabled = false
+            x:Destroy()
+        end)
+    end
+end
+
+for _, ch in ipairs(Lighting:GetChildren()) do
+    blockPostEffect(ch)
+end
+
+Lighting.ChildAdded:Connect(function(ch)
+    if ch:IsA("Sky") and ch.Name ~= "__SXE_GraySky" then
+        pcall(function() ch:Destroy() end)
+        ensureGraySkyObject()
+    elseif ch:IsA("Atmosphere") or ch:IsA("Clouds") then
+        pcall(function() ch:Destroy() end)
+    else
+        blockPostEffect(ch)
+    end
+end)
+
+local function hookCamera(cam)
+    if not cam then return end
+    for _, ch in ipairs(cam:GetChildren()) do blockPostEffect(ch) end
+    cam.ChildAdded:Connect(blockPostEffect)
+end
+hookCamera(Workspace.CurrentCamera)
+Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+    hookCamera(Workspace.CurrentCamera)
+end)
+
+local function hookPlayerGui()
+    local lp = Players.LocalPlayer
+    if not lp then return end
+    local pg = lp:FindFirstChildOfClass("PlayerGui") or lp:WaitForChild("PlayerGui", 10)
+    if not pg then return end
+    for _, d in ipairs(pg:GetDescendants()) do
+        if isScreenFxGui(d) and (d:IsA("ScreenGui") or d:IsA("Frame") or d:IsA("ImageLabel")) then
+            pcall(function() d.Visible = false end)
+            if d:IsA("ScreenGui") then pcall(function() d.Enabled = false end) end
+        end
+    end
+    pg.DescendantAdded:Connect(function(d)
+        if isScreenFxGui(d) then
+            pcall(function()
+                if d:IsA("ScreenGui") then d.Enabled = false end
+                if d:IsA("GuiObject") then d.Visible = false end
+            end)
+        end
+    end)
+end
+task.spawn(hookPlayerGui)
+
+-- Anti-tremblement caméra & anti-zoom forcé
+RunService.RenderStepped:Connect(function()
+    local lp = Players.LocalPlayer
+    local char = lp and lp.Character
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    if hum and hum.CameraOffset ~= Vector3.zero then
+        hum.CameraOffset = Vector3.zero
+    end
+    local cam = Workspace.CurrentCamera
+    if cam and cam.FieldOfView ~= 70 then
+        cam.FieldOfView = 70
+    end
+end)
+
+-- 8. NETTOYAGE RAPIDE DES PODIUMS & BALAYAGE INITIAL PAR PAQUETS LÉGERS
+local function near(a, b)
+    return math.abs(a - b) < 0.25
+end
+
+local function isGraySpotPlate(d)
+    if not (d and d:IsA("BasePart")) then return false end
+    if isBrainrotModel(d) then return false end
+    if d.Name == "Spawn" or d.Name == "structure base home" or d.Name == "Base" or d.Name == "Floor" then
+        return false
+    end
+    local s = d.Size
+    if not d.CanCollide and s.Y <= 1.2 and s.X <= 8 and s.Z <= 8 then
+        return true
+    end
+    if near(s.X, 4) and near(s.Y, 1) and near(s.Z, 4) then return true end
+    if near(s.X, 2) and near(s.Y, 0.5) and near(s.Z, 2) then return true end
+    if near(s.X, 6) and near(s.Y, 0.2) and near(s.Z, 6) then return true end
+    if near(s.X, 4) and near(s.Y, 0.2) and near(s.Z, 4) then return true end
+    return false
+end
+
+local function cleanPodiumGrayBlobs(plot)
+    if not (plot and plot.Parent) then return end
+    for _, folderName in ipairs({"AnimalPodiums", "Decorations"}) do
+        local folder = plot:FindFirstChild(folderName)
+        if folder then
+            for _, d in ipairs(folder:GetDescendants()) do
+                if isGraySpotPlate(d) then
+                    enqueue(function()
+                        if d and d.Parent then pcall(function() d:Destroy() end) end
+                    end)
                 end
             end
         end
     end
 end
-_G.Rose20MLoaderStop = function()
-    running = false
-    for _, connection in ipairs(connections) do connection:Disconnect() end
+
+-- Balayage initial découpé en petits paquets de 50 objets (0 lag, 0 crash au lancement)
+task.spawn(function()
+    local descendants = Workspace:GetDescendants()
+    for i = 1, #descendants, 50 do
+        enqueue(function()
+            local limit = math.min(i + 49, #descendants)
+            for j = i, limit do
+                local inst = descendants[j]
+                if inst and inst.Parent then
+                    permanentStrip(inst)
+                    disableAnimations(inst)
+                end
+            end
+        end)
+    end
+end)
+
+Workspace.DescendantAdded:Connect(function(inst)
+    if isUnderPlots(inst) then
+        if isGraySpotPlate(inst) then
+            pcall(function() inst:Destroy() end)
+            return
+        end
+        queueBuffered(inst)
+        return
+    end
+    if isBrainrotModel(inst) then
+        if inst:IsA("BasePart") and inst.Transparency < 0.95 then
+            toneDownBrainrotPart(inst)
+        end
+        disableAnimations(inst)
+        return
+    end
+    local char = getAncestorPlayerCharacter(inst)
+    if char or isCarpetInstance(inst) then
+        applyBlackToPlayerOrCarpet(inst)
+        disableAnimations(inst)
+        return
+    end
+    queueBuffered(inst)
+end)
+
+-- Surveillance des bases (Plots)
+local function setupPlot(plot)
+    if not (plot and plot.Parent) then return end
+    enqueue(function()
+        cleanPodiumGrayBlobs(plot)
+    end)
 end
 
-local function readPlot(plot)
-    local instanceCache
-    if type(_G.JAF_InstanceChans) == "function" then
-        local ok, channels = pcall(_G.JAF_InstanceChans)
-        local channel = ok and type(channels) == "table" and channels[plot.Name]
-        if channel then instanceCache = rawget(channel, "CacheTable") end
+task.spawn(function()
+    local plots = Workspace:FindFirstChild("Plots") or Workspace:WaitForChild("Plots", 10)
+    if not plots then return end
+    for _, plot in ipairs(plots:GetChildren()) do
+        setupPlot(plot)
     end
-    local ok, result = pcall(function() return requestData:InvokeServer(plot.Name) end)
-    local cache = ok and type(result) == "table" and result or instanceCache
-    if type(cache) ~= "table" then return nil end
-    local animals = cache.AnimalList or cache.Animals
-    if type(animals) ~= "table" then
-        -- Unowned plots have no AnimalList. An owned plot without a readable
-        -- list is unresolved, so it must never be deleted.
-        if cache.Owner == nil and next(cache) ~= nil then animals = {} else return nil end
-    end
-    local keepSlots = {}
-    local function checkAnimals(list)
-        if type(list) ~= "table" then return true end
-        for slot, animal in pairs(list) do
-        if type(animal) == "table" and animal.Index then
-            local amount = generation(animal.Index, animal.Mutation, animal.Traits)
-            if type(amount) ~= "number" then return false end
-            if amount > THRESHOLD then keepSlots[tostring(slot)] = true end
+    plots.ChildAdded:Connect(setupPlot)
+end)
+
+-- Surveillance de tous les joueurs
+local function hookPlayer(plr)
+    if not plr then return end
+    local function onChar(char)
+        if not char then return end
+        for _, d in ipairs(char:GetDescendants()) do
+            if not isBrainrotModel(d) then
+                applyBlackToPlayerOrCarpet(d)
+            elseif d:IsA("BasePart") and d.Transparency < 0.95 then
+                toneDownBrainrotPart(d)
+            end
+            disableAnimations(d)
         end
-        end
-        return true
+        char.DescendantAdded:Connect(function(d)
+            if isBrainrotModel(d) then
+                if d:IsA("BasePart") and d.Transparency < 0.95 then
+                    toneDownBrainrotPart(d)
+                end
+                disableAnimations(d)
+                return
+            end
+            applyBlackToPlayerOrCarpet(d)
+            disableAnimations(d)
+        end)
     end
-    -- Merge live client channels with the server response. If either sees a
-    -- valuable slot, its entire plot survives a stale/empty scan result.
-    if not checkAnimals(animals) or not checkAnimals(type(instanceCache) == "table"
-        and (instanceCache.AnimalList or instanceCache.Animals)) then return nil end
-    return keepSlots, cache.Owner or (instanceCache and instanceCache.Owner)
+    if plr.Character then onChar(plr.Character) end
+    plr.CharacterAdded:Connect(onChar)
 end
 
--- Do not delete anything until every plot has a valid synchronizer result.
-local deadline = os.clock() + SCAN_TIMEOUT
-local snapshot, previousSignature, myPlotName = nil, nil, nil
-repeat
-    local current, complete = {}, true
-    myPlotName = (findMyPlot() or {}).Name
-    local list = plots:GetChildren()
-    if #list == 0 then complete = false end
-    local remaining = #list
-    for _, plot in ipairs(list) do
-        task.spawn(function()
-            local slots, owner = readPlot(plot)
-            if not slots then
-                complete = false
-            else
-                current[plot.Name] = slots
-                if not myPlotName and owner ~= nil then
-                    if owner == LocalPlayer or owner == LocalPlayer.Name
-                        or owner == LocalPlayer.UserId
-                        or type(owner) == "table" and
-                            (owner.UserId == LocalPlayer.UserId or owner.Name == LocalPlayer.Name) then
-                        myPlotName = plot.Name
+for _, plr in ipairs(Players:GetPlayers()) do
+    hookPlayer(plr)
+end
+Players.PlayerAdded:Connect(hookPlayer)
+
+-- 9. CONSERVATION DES CONTRÔLEURS ESSENTIELS (AVEC SON & AUDIO ACTIVÉS)
+do
+    local KEEP = {
+        CustomProximityPromptController = true,
+        InteractController = true,
+        PlotController = true,
+        AnimalController = true,
+        PetController = true,
+        WorldBrainrotController = true,
+        EquipBrainrotsController = true,
+        EquipBrainrotsRenderController = true,
+        SelectBrainrotsController = true,
+        BrainrotPreloadingController = true,
+        AssetStreamController = true,
+        AdminPanelController = true,
+        NotificationController = true,
+        ShopController = true,
+        SpinWheelController = true,
+        StealController = true,
+        CarryController = true,
+        HoldController = true,
+        ToolController = true,
+        -- Contrôleurs audio
+        SoundController = true,
+        AudioController = true,
+        MusicController = true,
+        SFXController = true,
+        VolumeController = true,
+    }
+    local function wrap(fn)
+        return newcclosure and newcclosure(fn) or fn
+    end
+    local oldNc
+    local undone = false
+    pcall(function()
+        oldNc = hookmetamethod(game, "__namecall", wrap(function(self, ...)
+            if not undone then
+                local method = getnamecallmethod()
+                if type(method) == "string" and string.lower(method) == "getchildren"
+                    and typeof(self) == "Instance" and self.Name == "Controllers" and self.Parent == ReplicatedStorage then
+                    local ok, s = pcall(getcallingscript)
+                    if ok and s and s.Name == "ClientLoader" then
+                        local kids = oldNc(self, ...)
+                        if type(kids) == "table" then
+                            local out = {}
+                            for i = 1, #kids do
+                                local name = kids[i] and kids[i].Name
+                                if name and (KEEP[name]
+                                    or string.find(name, "Sound")
+                                    or string.find(name, "Audio")
+                                    or string.find(name, "Music")
+                                    or string.find(name, "SFX")) then
+                                    out[#out + 1] = kids[i]
+                                end
+                            end
+                            return out
+                        end
                     end
                 end
             end
-            remaining -= 1
-        end)
-    end
-    while remaining > 0 and running and os.clock() < deadline do task.wait(0.03) end
-    if remaining > 0 then complete = false end
-    if complete and myPlotName then
-        local signatureParts = {}
-        for plotName, slots in pairs(current) do
-            local names = {}
-            for slot in pairs(slots) do names[#names + 1] = slot end
-            table.sort(names)
-            signatureParts[#signatureParts + 1] = plotName .. ":" .. table.concat(names, ",")
-        end
-        table.sort(signatureParts)
-        local signature = table.concat(signatureParts, "|")
-        if signature == previousSignature then
-            snapshot = current; break
-        end
-        previousSignature = signature
-    else
-        previousSignature = nil
-    end
-    if previousSignature then task.wait(0.06) else task.wait(0.2) end
-until not running or os.clock() > deadline
-if not snapshot or not running then
-    warn("[20M Loader] Scan o detección de tu base incompletos: no se borró nada.")
-    return
-end
-retained = snapshot
-print("[20M Loader] Scanner completo; comenzando limpieza de plots.")
-
-local keptCount, removedCount = 0, 0
-for _, plot in ipairs(plots:GetChildren()) do
-    if not running then return end
-    if plot.Name == myPlotName or next(retained[plot.Name] or {}) then
-        keptCount += 1 -- preserve the base AND every podium/brainrot in it
-    else
-        delete(plot)
-        removedCount += 1
-    end
-end
-
--- Studs/inlets on the floor and bases are BasePart surfaces, not textures.
--- Smooth them and remove decals/mesh textures without touching brainrots.
-local function smooth(object)
-    if object:IsA("BasePart") then
-        smoothVisiblePart(object)
+            return oldNc(self, ...)
+        end))
+    end)
+    task.delay(6, function()
+        undone = true
         pcall(function()
-            if object:IsA("MeshPart") then object.TextureID = "" end
+            if oldNc then hookmetamethod(game, "__namecall", oldNc) end
         end)
-    elseif object:IsA("Decal") or object:IsA("Texture") or object:IsA("SurfaceAppearance") then
-        delete(object)
-    elseif object:IsA("SpecialMesh") then
-        pcall(function() object.TextureId = "" end)
-    end
+    end)
 end
-local function smoothTree(root, plot)
-    if not root then return end
-    local podiums = plot and plot:FindFirstChild("AnimalPodiums")
-    smooth(root)
-    for i, object in ipairs(root:GetDescendants()) do
-        local visual = object
-        local protectedVisual = false
-        while visual and visual ~= plot and visual ~= root do
-            if isBrainrotVisual(visual) then protectedVisual = true; break end
-            visual = visual.Parent
-        end
-        if not protectedVisual and not (podiums and object:IsDescendantOf(podiums)) then
-            smooth(object)
-        end
-        if i % 350 == 0 then RunService.Heartbeat:Wait() end
-    end
-end
-local map = Workspace:FindFirstChild("Map")
-if map then
-    for _, child in ipairs(map:GetChildren()) do
-        if floorNames[child.Name] then smoothTree(child) end
-    end
-end
-for _, child in ipairs(Workspace:GetChildren()) do
-    if floorNames[child.Name] then smoothTree(child) end
-end
-for _, plot in ipairs(plots:GetChildren()) do smoothTree(plot, plot) end
-connections[#connections + 1] = Workspace.DescendantAdded:Connect(function(object)
-    if not running then return end
-    local plotAncestor = object
-    while plotAncestor and plotAncestor.Parent ~= plots do
-        plotAncestor = plotAncestor.Parent
-    end
-    local isPlotBase = plotAncestor and plotAncestor.Parent == plots
-        and not object:FindFirstAncestor("AnimalPodiums")
-    local insideFloor = false
-    local ancestor = object
-    while ancestor and ancestor ~= Workspace do
-        if floorNames[ancestor.Name] then insideFloor = true; break end
-        ancestor = ancestor.Parent
-    end
-    if isPlotBase or insideFloor then smooth(object) end
-end)
--- Remove heavy lighting effects after keeping the walkable floor and chosen plots.
-for _, effect in ipairs(Lighting:GetChildren()) do
-    if effect:IsA("PostEffect") or effect:IsA("Atmosphere") or effect:IsA("Sky")
-        or effect:IsA("Clouds") then delete(effect) end
-end
+
+-- S'assurer que le volume global et les groupes de sons restent actifs
 pcall(function()
-    Lighting.GlobalShadows = false
-    Lighting.FogEnd = 1e9
-    Lighting.EnvironmentDiffuseScale = 0
-    Lighting.EnvironmentSpecularScale = 0
-    settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+    for _, sg in ipairs(SoundService:GetDescendants()) do
+        if sg:IsA("SoundGroup") and sg.Volume == 0 then
+            sg.Volume = 1
+        end
+    end
 end)
-print("[20M Loader] Mapa limpiado con piso conservado. Plots conservados:", keptCount,
-    "| Plots borrados:", removedCount)
+
+_G.SXE_PrioSet = _G.SXE_PrioSet or {}
+_G.SXE_NukePlotPodiums = function() end
+_G.SXE_StripNonPrioPodiums = function() end
+_G.SXE_StripNoPrioPlots = function() end
+_G.SXE_LockPrioPlot = function() end
