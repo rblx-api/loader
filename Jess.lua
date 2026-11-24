@@ -11168,7 +11168,6 @@ end
 local _okInit, _errInit = pcall(function()
     loadConfigKeys()
     buildGui()
-    if mobileButtonsEnabled then buildMobileButtons() end
     task.spawn(function()
         task.wait(0.6)
         pcall(function()
@@ -11177,6 +11176,12 @@ local _okInit, _errInit = pcall(function()
         end)
     end)
     loadConfigState()
+    -- Always show the mobile action buttons on launch, even if an older saved
+    -- configuration had Mobile Buttons disabled.
+    mobileButtonsEnabled = true
+    task.defer(function()
+        pcall(buildMobileButtons)
+    end)
     K7ApplyCustomSky(currentSkyTheme)
 end)
 if not _okInit then
