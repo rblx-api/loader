@@ -5,8 +5,6 @@ local RunService = game:GetService("RunService")
 local Lighting = game:GetService("Lighting")
 local Workspace = game:GetService("Workspace")
 
-local OPT_ON = true
-local HARSH_ON = true
 local TARGET_FPS = 150
 
 local function findGlobalFunction(name)
