@@ -1294,3 +1294,5 @@ task.spawn(function()
                     task.wait(4)
                 end
             end)
+         end
+     end)
