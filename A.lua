@@ -14,23 +14,36 @@ while not LocalPlayer do
 	LocalPlayer = Players.LocalPlayer or Players.PlayerAdded:Wait()
 end
 
+-- Clean up any prior run when re-injecting from Delta Executor
+if type(_G.SAB_Duel_Script_Cleanup) == "function" then
+	pcall(_G.SAB_Duel_Script_Cleanup)
+end
+
+local connections: { RBXScriptConnection } = {}
+local function trackConn(conn: RBXScriptConnection)
+	table.insert(connections, conn)
+	return conn
+end
+
+local BLACK_TEXT = Color3.fromRGB(0, 0, 0)
+
 local UI = {
-	BG = Color3.fromRGB(14, 12, 26),
-	CARD = Color3.fromRGB(24, 20, 44),
-	BTN = Color3.fromRGB(38, 34, 68),
-	BTN_ACTIVE = Color3.fromRGB(34, 175, 110),
-	ACCENT = Color3.fromRGB(215, 45, 85),
-	BEST_BTN = Color3.fromRGB(142, 66, 255),
-	BLOCK_BTN = Color3.fromRGB(175, 45, 115),
-	ESP_COLOR = Color3.fromRGB(64, 215, 255),
-	BAR_FILL = Color3.fromRGB(168, 72, 255),
-	BAR_DONE = Color3.fromRGB(48, 224, 135),
-	SELF_TAG = Color3.fromRGB(255, 220, 115),
-	TEXT = Color3.fromRGB(248, 248, 255),
-	MUTED = Color3.fromRGB(190, 184, 232),
-	STROKE = Color3.fromRGB(130, 88, 255),
-	GRAD_A = Color3.fromRGB(24, 16, 48),
-	GRAD_B = Color3.fromRGB(12, 24, 46),
+	BG = Color3.fromRGB(48, 8, 14),
+	CARD = Color3.fromRGB(95, 16, 26),
+	BTN = Color3.fromRGB(175, 24, 42),
+	BTN_ACTIVE = Color3.fromRGB(225, 48, 68),
+	ACCENT = Color3.fromRGB(145, 14, 28),
+	BLOCK_BTN = Color3.fromRGB(165, 20, 38),
+	LEFT_BTN = Color3.fromRGB(210, 38, 58),
+	ESP_COLOR = Color3.fromRGB(235, 55, 75),
+	BAR_FILL = Color3.fromRGB(225, 42, 62),
+	BAR_DONE = Color3.fromRGB(245, 75, 90),
+	SELF_TAG = BLACK_TEXT,
+	TEXT = BLACK_TEXT,
+	MUTED = BLACK_TEXT,
+	STROKE = Color3.fromRGB(235, 45, 65),
+	GRAD_A = Color3.fromRGB(155, 20, 36),
+	GRAD_B = Color3.fromRGB(72, 8, 18),
 }
 
 -- Explicitly excludes "control"
@@ -46,81 +59,112 @@ local ADMIN_COMMANDS = {
 	"morph",
 }
 
-local AP_STEP_DELAY = 0.09
+local AP_STEP_DELAY = 0.06
+local AUTO_LEFT_SPEED = 58
+local AUTO_LEFT_PHASE_DURATION = 0.65
+local AUTO_LEFT_FORWARD_SPEED = 60
+local BASE_ARRIVAL_DISTANCE = 5.0
 
--- Ultra-fast Auto Steal default (0.08s hold) with settings presets available
-local autoGrabConfig = {
-	AutoStealEnabled = true,
-	Mode = "normal",
-	StealRadius = 32,
-	StealDuration = 0.08,
-	Data = {},
-}
+local AUTO_GRAB_RADIUS = 5.0
+local AUTO_GRAB_DEFAULT_HOLD = 0.15
+local AUTO_GRAB_COOLDOWN = 0.18
 
-local FLY_SPEED = 72
-local ARRIVAL_DISTANCE = 4.5
+local autoGrabEnabled = true
+local autoGrabHoldDuration = AUTO_GRAB_DEFAULT_HOLD
+local isGrabRunning = false
+local activeHeldPrompt: ProximityPrompt? = nil
+local promptCooldowns: { [ProximityPrompt]: number } = {}
 
 local selectedTarget = LocalPlayer
 local dragLockEnabled = false
 local playerEspEnabled = false
-local bestFlyActive = false
-local bestFlyTargetPos: Vector3? = nil
-local isStealBusy = false
-local isApRunning = false
-local activeHeldPrompt: ProximityPrompt? = nil
-local lastEspRefreshClock = 0
-local lastRemoteFireClock = 0
 
-_G.StealProgress = 0
-_G.AutoSteal = autoGrabConfig
+local autoLeftEnabled = false
+local autoLeftPhaseStart = 0
+local autoLeftBasePos: Vector3? = nil
+
+local isApRunning = false
+local lastEspRefreshClock = 0
+local scriptActive = true
 
 local avatarCache: { [number]: string } = {}
 local playerEspObjects: { [Player]: { highlight: Highlight?, tag: BillboardGui? } } = {}
 
-local function addCoolBackgroundGradient(gui: GuiObject, c1: Color3?, c2: Color3?, angle: number?)
-	local grad = Instance.new("UIGradient")
-	grad.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, c1 or UI.GRAD_A),
-		ColorSequenceKeypoint.new(1, c2 or UI.GRAD_B),
-	})
-	grad.Rotation = angle or 135
-	grad.Parent = gui
-	return grad
-end
-
-local function makeReadableText(lbl: TextLabel | TextButton, minSz: number, maxSz: number)
-	lbl.TextScaled = true
-	lbl.TextWrapped = false
-	local c = Instance.new("UITextSizeConstraint")
-	c.MinTextSize = minSz
-	c.MaxTextSize = maxSz
-	c.Parent = lbl
-end
-
-local function getMountParent()
-	if type(gethui) == "function" then
-		local ok, hui = pcall(gethui)
+local function safeGetHui(): Instance?
+	local fn = rawget(_G, "gethui") or (type(gethui) == "function" and gethui or nil)
+	if type(fn) == "function" then
+		local ok, hui = pcall(fn)
 		if ok and typeof(hui) == "Instance" then
 			return hui
 		end
 	end
-	local okCore, core = pcall(function()
-		return CoreGui
+	return nil
+end
+
+local function triggerPromptCompletion(prompt: ProximityPrompt)
+	pcall(function()
+		prompt:InputHoldEnd()
 	end)
-	if okCore and typeof(core) == "Instance" then
-		return core
+	local fireFn = rawget(_G, "fireproximityprompt") or (type(fireproximityprompt) == "function" and fireproximityprompt or nil)
+	if type(fireFn) == "function" then
+		pcall(fireFn, prompt)
 	end
+	pcall(function()
+		if type(firesignal) == "function" then
+			firesignal(prompt.PromptButtonHoldEnded, LocalPlayer)
+			firesignal(prompt.Triggered, LocalPlayer)
+		end
+	end)
+end
+
+local function getMountParent(): Instance
+	local hui = safeGetHui()
+	if hui then
+		local test = Instance.new("Folder")
+		test.Name = "SAB_Mount_Probe"
+		if pcall(function()
+			test.Parent = hui
+		end) then
+			test:Destroy()
+			return hui
+		end
+		test:Destroy()
+	end
+
+	local coreTest = Instance.new("Folder")
+	coreTest.Name = "SAB_Core_Probe"
+	if pcall(function()
+		coreTest.Parent = CoreGui
+	end) then
+		coreTest:Destroy()
+		return CoreGui
+	end
+	coreTest:Destroy()
+
 	return LocalPlayer:WaitForChild("PlayerGui")
 end
 
 local MountParent = getMountParent()
 
-pcall(function()
-	for _, name in ipairs({ "SAB_Compact_UI", "SAB_Grab_Standalone" }) do
-		local existing = MountParent:FindFirstChild(name)
-		if existing then
-			existing:Destroy()
+local function cleanupExistingGuis(parent: Instance)
+	pcall(function()
+		for _, name in ipairs({ "SAB_Compact_UI", "SAB_Grab_Standalone" }) do
+			local existing = parent:FindFirstChild(name)
+			if existing then
+				existing:Destroy()
+			end
 		end
+	end)
+end
+
+cleanupExistingGuis(MountParent)
+pcall(function()
+	cleanupExistingGuis(CoreGui)
+end)
+pcall(function()
+	local pg = LocalPlayer:FindFirstChild("PlayerGui")
+	if pg then
+		cleanupExistingGuis(pg)
 	end
 end)
 
@@ -136,46 +180,58 @@ end) then
 	ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 end
 
-local GrabGui = Instance.new("ScreenGui")
-GrabGui.Name = "SAB_Grab_Standalone"
-GrabGui.ResetOnSpawn = false
-GrabGui.IgnoreGuiInset = true
-GrabGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+local function addCoolBackgroundGradient(gui: GuiObject, c1: Color3?, c2: Color3?, angle: number?)
+	local grad = Instance.new("UIGradient")
+	grad.Color = ColorSequence.new({
+		ColorSequenceKeypoint.new(0, c1 or UI.GRAD_A),
+		ColorSequenceKeypoint.new(1, c2 or UI.GRAD_B),
+	})
+	grad.Rotation = angle or 135
+	grad.Parent = gui
+	return grad
+end
 
-if not pcall(function()
-	GrabGui.Parent = MountParent
-end) then
-	GrabGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+local function makeReadableText(lbl: TextLabel | TextButton, minSz: number, maxSz: number)
+	lbl.TextColor3 = BLACK_TEXT
+	lbl.TextScaled = true
+	lbl.TextWrapped = false
+	local c = Instance.new("UITextSizeConstraint")
+	c.MinTextSize = minSz
+	c.MaxTextSize = maxSz
+	c.Parent = lbl
 end
 
 local Toast = Instance.new("TextLabel")
-Toast.Size = UDim2.new(0, 210, 0, 18)
+Toast.Size = UDim2.new(0, 150, 0, 14)
 Toast.AnchorPoint = Vector2.new(0.5, 0)
-Toast.Position = UDim2.new(0.5, 0, 0.12, 0)
+Toast.Position = UDim2.new(0.5, 0, 0.11, 0)
 Toast.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Toast.TextColor3 = Color3.fromRGB(150, 255, 195)
+Toast.TextColor3 = BLACK_TEXT
 Toast.Text = "Ready"
 Toast.Font = Enum.Font.GothamBold
 Toast.Visible = false
 Toast.ZIndex = 95
 Toast.Parent = ScreenGui
-Instance.new("UICorner", Toast).CornerRadius = UDim.new(0, 5)
-addCoolBackgroundGradient(Toast, Color3.fromRGB(32, 18, 68), Color3.fromRGB(14, 34, 62), 90)
-makeReadableText(Toast, 7, 10)
+Instance.new("UICorner", Toast).CornerRadius = UDim.new(0, 4)
+addCoolBackgroundGradient(Toast, Color3.fromRGB(220, 42, 62), Color3.fromRGB(130, 16, 30), 90)
+makeReadableText(Toast, 6, 8)
 local toastStroke = Instance.new("UIStroke")
 toastStroke.Color = UI.STROKE
 toastStroke.Thickness = 1
 toastStroke.Parent = Toast
 
 local toastId = 0
-local function notify(text: string, okStatus: boolean?)
+local function notify(text: string, _okStatus: boolean?)
+	if not scriptActive then
+		return
+	end
 	toastId += 1
 	local current = toastId
 	Toast.Text = text
-	Toast.TextColor3 = if okStatus == false then Color3.fromRGB(255, 130, 145) else Color3.fromRGB(150, 255, 195)
+	Toast.TextColor3 = BLACK_TEXT
 	Toast.Visible = true
-	task.delay(1.1, function()
-		if toastId == current and Toast.Parent then
+	task.delay(1.0, function()
+		if scriptActive and toastId == current and Toast.Parent then
 			Toast.Visible = false
 		end
 	end)
@@ -194,48 +250,13 @@ local function applyAvatarThumbnail(imgLabel: ImageLabel, userId: number)
 				Enum.ThumbnailSize.Size48x48
 			)
 		end)
-		if ok and type(content) == "string" and #content > 0 then
+		if scriptActive and ok and type(content) == "string" and #content > 0 then
 			avatarCache[userId] = content
 			if imgLabel and imgLabel.Parent then
 				imgLabel.Image = content
 			end
 		end
 	end)
-end
-
-local function isSafeRemote(inst: Instance): boolean
-	if not (inst:IsA("RemoteEvent") or inst:IsA("UnreliableRemoteEvent")) then
-		return false
-	end
-	local low = string.lower(inst.Name)
-	if string.find(low, "teleport", 1, true)
-		or string.find(low, "plaza", 1, true)
-		or string.find(low, "trade", 1, true)
-		or string.find(low, "lobby", 1, true)
-		or string.find(low, "join", 1, true)
-		or string.find(low, "menu", 1, true)
-		or string.find(low, "server", 1, true)
-		or string.find(low, "kick", 1, true)
-		or string.find(low, "ban", 1, true)
-	then
-		return false
-	end
-	return true
-end
-
-local function getActionRemotes(): { Instance }
-	local list = {}
-	local count = 0
-	for _, obj in ipairs(ReplicatedStorage:GetDescendants()) do
-		count += 1
-		if count > 900 then
-			break
-		end
-		if isSafeRemote(obj) then
-			table.insert(list, obj)
-		end
-	end
-	return list
 end
 
 local sayMessageRemote: RemoteEvent? = nil
@@ -299,12 +320,13 @@ local function applyLocalCommandFeedback(cmd: string)
 	end)
 end
 
-local function runApPaced(targetPlr: Player?)
-	if isApRunning then
+-- Single-button AP: runs every command in ADMIN_COMMANDS except "control"
+local function runApAllExceptControl(targetPlr: Player?)
+	if isApRunning or not scriptActive then
 		return
 	end
 	if not targetPlr or not targetPlr.Parent then
-		notify("Select a target player first", false)
+		notify("Select target", false)
 		return
 	end
 
@@ -319,6 +341,9 @@ local function runApPaced(targetPlr: Player?)
 		end
 
 		for _, cmd in ipairs(ADMIN_COMMANDS) do
+			if not scriptActive then
+				break
+			end
 			if cmd ~= "control" then
 				sendFastChat(";" .. cmd .. " " .. targetPlr.Name)
 				task.wait(AP_STEP_DELAY)
@@ -326,39 +351,20 @@ local function runApPaced(targetPlr: Player?)
 		end
 
 		local tag = if targetPlr == LocalPlayer then (targetPlr.Name .. " (ME)") else targetPlr.Name
-		notify(string.format("AP -> %s", tag), true)
+		notify("AP -> " .. tag, true)
 		isApRunning = false
 	end)
 end
 
 local function promptBlockPlayer(targetPlr: Player?)
 	if not targetPlr or not targetPlr.Parent or targetPlr == LocalPlayer then
-		notify("Pick another player to block", false)
+		notify("Pick other player", false)
 		return
 	end
 	local ok = pcall(function()
 		StarterGui:SetCore("PromptBlockPlayer", targetPlr)
 	end)
-	notify(if ok then ("Block prompt: " .. targetPlr.Name) else "Block unavailable", ok)
-end
-
-local function isYourBasePlot(plotName: string): boolean
-	local plots = workspace:FindFirstChild("Plots")
-	if not plots then
-		return false
-	end
-	local plot = plots:FindFirstChild(plotName)
-	if not plot then
-		return false
-	end
-	local plotSign = plot:FindFirstChild("PlotSign")
-	if plotSign then
-		local yourBase = plotSign:FindFirstChild("YourBase")
-		if yourBase and yourBase:IsA("BillboardGui") then
-			return yourBase.Enabled == true
-		end
-	end
-	return false
+	notify(if ok then ("Block: " .. targetPlr.Name) else "Block off", ok)
 end
 
 local function getInstanceWorldPos(obj: Instance?): Vector3?
@@ -383,128 +389,75 @@ local function getInstanceWorldPos(obj: Instance?): Vector3?
 	return nil
 end
 
-local function parseNumberValue(rawText: string): number
-	local cleaned = string.lower(rawText)
-	local mult = 1
-	if string.find(cleaned, "/s", 1, true) then
-		cleaned = string.gsub(cleaned, "/s", "")
-	end
-	if string.find(cleaned, "dc", 1, true) then
-		mult = 1e33
-	elseif string.find(cleaned, "oc", 1, true) then
-		mult = 1e27
-	elseif string.find(cleaned, "sp", 1, true) then
-		mult = 1e24
-	elseif string.find(cleaned, "sx", 1, true) then
-		mult = 1e21
-	elseif string.find(cleaned, "qi", 1, true) then
-		mult = 1e18
-	elseif string.find(cleaned, "qa", 1, true) then
-		mult = 1e15
-	elseif string.find(cleaned, "t", 1, true) then
-		mult = 1e12
-	elseif string.find(cleaned, "b", 1, true) then
-		mult = 1e9
-	elseif string.find(cleaned, "m", 1, true) then
-		mult = 1e6
-	elseif string.find(cleaned, "k", 1, true) then
-		mult = 1e3
-	end
-	local numStr = string.match(cleaned, "[%d%.]+")
-	local n = tonumber(numStr)
-	if not n then
-		return 0
-	end
-	return n * mult
-end
-
-local function scoreCandidate(container: Instance): number
-	local score = 0
-	for _, attrName in ipairs({ "Value", "Price", "Cost", "Income", "Rate", "Money", "Cash", "Rarity", "Tier", "Level" }) do
-		local attrVal = container:GetAttribute(attrName)
-		if type(attrVal) == "number" and attrVal > score then
-			score = attrVal
-		elseif type(attrVal) == "string" then
-			local parsed = parseNumberValue(attrVal)
-			if parsed > score then
-				score = parsed
-			end
-		end
-	end
-	for _, desc in ipairs(container:GetDescendants()) do
-		if desc:IsA("TextLabel") or desc:IsA("TextButton") then
-			local parsed = parseNumberValue(desc.Text)
-			if parsed > score then
-				score = parsed
-			end
-		elseif desc:IsA("NumberValue") or desc:IsA("IntValue") then
-			if desc.Value > score then
-				score = desc.Value
-			end
-		end
-	end
-	return score
-end
-
-local function findBestBrainrotTarget(): (Vector3?, string?)
-	local bestPos: Vector3? = nil
-	local bestName: string? = nil
-	local bestScore = -1
-
+local function isYourBasePlot(plotName: string): boolean
 	local plots = workspace:FindFirstChild("Plots")
-	if plots then
-		for _, plot in ipairs(plots:GetChildren()) do
-			if plot:IsA("Model") and not isYourBasePlot(plot.Name) then
-				local podiums = plot:FindFirstChild("AnimalPodiums")
-				if podiums then
-					for _, podium in ipairs(podiums:GetChildren()) do
-						local pos = getInstanceWorldPos(podium)
-						if pos then
-							local s = scoreCandidate(podium)
-							if s > bestScore then
-								bestScore = s
-								bestPos = pos
-								bestName = podium.Name
-							end
-						end
-					end
-				end
-			end
+	if not plots then
+		return false
+	end
+	local plot = plots:FindFirstChild(plotName)
+	if not plot then
+		return false
+	end
+	local plotSign = plot:FindFirstChild("PlotSign")
+	if plotSign then
+		local yourBase = plotSign:FindFirstChild("YourBase")
+		if yourBase and yourBase:IsA("BillboardGui") then
+			return yourBase.Enabled == true
 		end
 	end
-
-	return bestPos, bestName
+	return false
 end
 
-local function stopBestFlight(restoreCharacter: boolean)
-	bestFlyActive = false
-	bestFlyTargetPos = nil
+local function findYourBasePosition(): Vector3?
+	local plots = workspace:FindFirstChild("Plots")
+	if not plots then
+		return nil
+	end
+	for _, plot in ipairs(plots:GetChildren()) do
+		if plot:IsA("Model") and isYourBasePlot(plot.Name) then
+			local signPos = getInstanceWorldPos(plot:FindFirstChild("PlotSign"))
+			if signPos then
+				return signPos
+			end
+			local basePart = plot:FindFirstChild("Base") or plot:FindFirstChild("Spawn") or plot:FindFirstChild("Delivery")
+			local bPos = getInstanceWorldPos(basePart)
+			if bPos then
+				return bPos
+			end
+			return plot:GetPivot().Position
+		end
+	end
+	return nil
+end
 
-	if restoreCharacter then
-		local char = LocalPlayer.Character
-		local hum = char and char:FindFirstChildOfClass("Humanoid")
-		local root = char and char:FindFirstChild("HumanoidRootPart")
-		pcall(function()
-			if hum and hum.Health > 0 then
-				hum.PlatformStand = false
-				hum.AutoRotate = true
-				if hum:GetState() == Enum.HumanoidStateType.Physics then
-					hum:ChangeState(Enum.HumanoidStateType.GettingUp)
-				end
-			end
-			if root and root:IsA("BasePart") then
-				root.AssemblyLinearVelocity = Vector3.zero
-				root.AssemblyAngularVelocity = Vector3.zero
-			end
-		end)
+local syncFeatureVisuals: () -> ()
+
+local function stopAutoLeftToBase(arrived: boolean)
+	autoLeftEnabled = false
+	autoLeftBasePos = nil
+	local char = LocalPlayer.Character
+	local hum = char and char:FindFirstChildOfClass("Humanoid")
+	local root = char and char:FindFirstChild("HumanoidRootPart")
+	pcall(function()
+		if hum then
+			hum:Move(Vector3.zero, false)
+		end
+		if root and root:IsA("BasePart") then
+			root.AssemblyLinearVelocity = Vector3.new(0, root.AssemblyLinearVelocity.Y, 0)
+		end
+	end)
+	if syncFeatureVisuals then
+		syncFeatureVisuals()
+	end
+	if arrived then
+		notify("At base!", true)
 	end
 end
 
-local function stepBestFlight(dt: number)
-	if not bestFlyActive then
+local function stepAutoLeft()
+	if not autoLeftEnabled then
 		return
 	end
-
 	local char = LocalPlayer.Character
 	local hum = char and char:FindFirstChildOfClass("Humanoid")
 	local root = char and char:FindFirstChild("HumanoidRootPart")
@@ -512,49 +465,62 @@ local function stepBestFlight(dt: number)
 		return
 	end
 
-	local refreshedPos = findBestBrainrotTarget()
-	if refreshedPos then
-		bestFlyTargetPos = refreshedPos
+	local elapsed = os.clock() - autoLeftPhaseStart
+	local cam = workspace.CurrentCamera
+	local moveDir: Vector3
+	local speed: number
+
+	if elapsed < AUTO_LEFT_PHASE_DURATION then
+		if cam then
+			local rightFlat = Vector3.new(cam.CFrame.RightVector.X, 0, cam.CFrame.RightVector.Z)
+			moveDir = if rightFlat.Magnitude > 0.001 then -rightFlat.Unit else -root.CFrame.RightVector
+		else
+			moveDir = -root.CFrame.RightVector
+		end
+		speed = AUTO_LEFT_SPEED
+	else
+		local targetBase = autoLeftBasePos or findYourBasePosition()
+		if targetBase then
+			autoLeftBasePos = targetBase
+			local flatOffset = Vector3.new(targetBase.X - root.Position.X, 0, targetBase.Z - root.Position.Z)
+			if flatOffset.Magnitude <= BASE_ARRIVAL_DISTANCE then
+				stopAutoLeftToBase(true)
+				return
+			end
+			moveDir = flatOffset.Unit
+		else
+			if cam then
+				local fwdFlat = Vector3.new(cam.CFrame.LookVector.X, 0, cam.CFrame.LookVector.Z)
+				moveDir = if fwdFlat.Magnitude > 0.001 then fwdFlat.Unit else root.CFrame.LookVector
+			else
+				moveDir = root.CFrame.LookVector
+			end
+		end
+		speed = AUTO_LEFT_FORWARD_SPEED
 	end
-
-	if not bestFlyTargetPos then
-		stopBestFlight(true)
-		notify("No brainrot found", false)
-		return
-	end
-
-	local goalPos = bestFlyTargetPos + Vector3.new(0, 2.2, 0)
-	local toGoal = goalPos - root.Position
-	local dist = toGoal.Magnitude
-
-	if dist <= ARRIVAL_DISTANCE then
-		stopBestFlight(true)
-		notify("Arrived!", true)
-		return
-	end
-
-	local clampedDt = math.clamp(dt, 0.001, 0.05)
-	local dir = toGoal.Unit
-	local desiredVel = dir * FLY_SPEED
-	local yawAngle = math.atan2(-dir.X, -dir.Z)
-	local uprightCFrame = CFrame.new(root.Position) * CFrame.Angles(0, yawAngle, 0)
 
 	pcall(function()
-		hum.PlatformStand = false
-		hum.AutoRotate = false
-		root.AssemblyLinearVelocity = desiredVel
-		root.AssemblyAngularVelocity = Vector3.zero
-		root.CFrame = root.CFrame:Lerp(uprightCFrame, math.min(1, clampedDt * 14))
+		hum:Move(moveDir, false)
+		root.AssemblyLinearVelocity = Vector3.new(
+			moveDir.X * speed,
+			root.AssemblyLinearVelocity.Y,
+			moveDir.Z * speed
+		)
 	end)
 end
 
+-- =========================================================================
+-- 5-STUD AUTO GRAB (NO SCREEN HOLD • PERCENTAGE 0 -> 50 -> 100 • FASTER)
+-- =========================================================================
 local GrabBarFill: Frame
 local GrabPercentLbl: TextLabel
+local GrabStatusLbl: TextLabel
+local GrabToggleBtn: TextButton
+local GrabSpeedBtn: TextButton
 
 local function setGrabProgress01(val01: number)
 	local clamped = math.clamp(val01, 0, 1)
-	_G.StealProgress = clamped
-	local pct = math.floor(clamped * 100)
+	local pct = math.floor(clamped * 100 + 0.001)
 	if GrabBarFill then
 		GrabBarFill.Size = UDim2.new(clamped, 0, 1, 0)
 		GrabBarFill.BackgroundColor3 = if pct >= 100 then UI.BAR_DONE else UI.BAR_FILL
@@ -562,94 +528,6 @@ local function setGrabProgress01(val01: number)
 	if GrabPercentLbl then
 		GrabPercentLbl.Text = string.format("%d%%", pct)
 	end
-end
-
-local function isStealPrompt(prompt: ProximityPrompt): boolean
-	if not prompt.Enabled then
-		return false
-	end
-	local parentName = if prompt.Parent then prompt.Parent.Name else ""
-	local grandParentName = if prompt.Parent and prompt.Parent.Parent then prompt.Parent.Parent.Name else ""
-	local blob = string.lower(
-		prompt.Name .. " " .. prompt.ActionText .. " " .. prompt.ObjectText .. " " .. parentName .. " " .. grandParentName
-	)
-	if string.find(blob, "lock", 1, true)
-		or string.find(blob, "unlock", 1, true)
-		or string.find(blob, "buy", 1, true)
-		or string.find(blob, "shop", 1, true)
-		or string.find(blob, "door", 1, true)
-	then
-		return false
-	end
-	return string.find(blob, "steal", 1, true) ~= nil
-end
-
-local function findNearestStealPrompt(originPos: Vector3): ProximityPrompt?
-	local maxRadius = autoGrabConfig.StealRadius
-	local bestPrompt: ProximityPrompt? = nil
-	local bestDist = maxRadius
-
-	local plots = workspace:FindFirstChild("Plots")
-	if plots then
-		for _, plot in ipairs(plots:GetChildren()) do
-			if plot:IsA("Model") and not isYourBasePlot(plot.Name) then
-				local podiums = plot:FindFirstChild("AnimalPodiums")
-				if podiums then
-					for _, podium in ipairs(podiums:GetChildren()) do
-						local base = podium:FindFirstChild("Base")
-						local spawnPart = base and base:FindFirstChild("Spawn")
-						if spawnPart and spawnPart:IsA("BasePart") then
-							local dist = (spawnPart.Position - originPos).Magnitude
-							if dist <= bestDist then
-								local promptAttachment = spawnPart:FindFirstChild("PromptAttachment")
-								local found: ProximityPrompt? = nil
-								if promptAttachment then
-									for _, child in ipairs(promptAttachment:GetChildren()) do
-										if child:IsA("ProximityPrompt") and isStealPrompt(child) then
-											found = child
-										end
-									end
-								end
-								if not found then
-									for _, desc in ipairs(spawnPart:GetDescendants()) do
-										if desc:IsA("ProximityPrompt") and isStealPrompt(desc) then
-											found = desc
-										end
-									end
-								end
-								if found then
-									bestDist = dist
-									bestPrompt = found
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	end
-
-	if not bestPrompt then
-		local scanned = 0
-		for _, desc in ipairs(workspace:GetDescendants()) do
-			scanned += 1
-			if scanned > 900 then
-				break
-			end
-			if desc:IsA("ProximityPrompt") and isStealPrompt(desc) then
-				local p = getInstanceWorldPos(desc)
-				if p then
-					local d = (p - originPos).Magnitude
-					if d <= bestDist then
-						bestDist = d
-						bestPrompt = desc
-					end
-				end
-			end
-		end
-	end
-
-	return bestPrompt
 end
 
 local function releasePromptHold()
@@ -662,97 +540,178 @@ local function releasePromptHold()
 	end
 end
 
-local function holdStealPrompt(prompt: ProximityPrompt)
-	if activeHeldPrompt and activeHeldPrompt ~= prompt then
-		local oldP = activeHeldPrompt
-		pcall(function()
-			oldP:InputHoldEnd()
-		end)
+local function isExcludedPrompt(prompt: ProximityPrompt): boolean
+	local parentName = if prompt.Parent then prompt.Parent.Name else ""
+	local grandParentName = if prompt.Parent and prompt.Parent.Parent then prompt.Parent.Parent.Name else ""
+	local blob = string.lower(
+		prompt.Name .. " " .. prompt.ActionText .. " " .. prompt.ObjectText .. " " .. parentName .. " " .. grandParentName
+	)
+	if string.find(blob, "unlock", 1, true)
+		or string.find(blob, "lock base", 1, true)
+		or string.find(blob, "buy", 1, true)
+		or string.find(blob, "shop", 1, true)
+		or string.find(blob, "sell", 1, true)
+	then
+		return true
 	end
-	activeHeldPrompt = prompt
-	pcall(function()
-		prompt:InputHoldBegin()
-	end)
+	return false
 end
 
-local function runUltraFastGrabSequence(prompt: ProximityPrompt)
-	if isStealBusy then
-		return
+local function isValidGrabPrompt(prompt: ProximityPrompt, originPos: Vector3): (boolean, number)
+	if not prompt or not prompt.Parent or not prompt.Enabled then
+		return false, math.huge
 	end
-	if not autoGrabConfig.Data[prompt] then
-		autoGrabConfig.Data[prompt] = { hold = {}, trigger = {}, ready = true }
-		if type(getconnections) == "function" then
-			for _, conn in ipairs(getconnections(prompt.PromptButtonHoldBegan)) do
-				if conn.Function then
-					table.insert(autoGrabConfig.Data[prompt].hold, conn.Function)
-				end
-			end
-			for _, conn in ipairs(getconnections(prompt.Triggered)) do
-				if conn.Function then
-					table.insert(autoGrabConfig.Data[prompt].trigger, conn.Function)
-				end
-			end
-		end
+	if isExcludedPrompt(prompt) then
+		return false, math.huge
 	end
-
-	local entry = autoGrabConfig.Data[prompt]
-	if not entry.ready then
-		return
+	local cdEnd = promptCooldowns[prompt]
+	if cdEnd and os.clock() < cdEnd then
+		return false, math.huge
 	end
+	local pPos = getInstanceWorldPos(prompt)
+	if not pPos then
+		return false, math.huge
+	end
+	local dist = (pPos - originPos).Magnitude
+	if dist <= AUTO_GRAB_RADIUS then
+		return true, dist
+	end
+	return false, math.huge
+end
 
-	entry.ready = false
-	isStealBusy = true
-	local startTick = tick()
-	local duration = math.max(autoGrabConfig.StealDuration, 0.02)
-	setGrabProgress01(0.15)
+local function findPromptWithinFiveStuds(originPos: Vector3): ProximityPrompt?
+	local bestPrompt: ProximityPrompt? = nil
+	local bestDist = AUTO_GRAB_RADIUS
 
-	task.spawn(function()
-		holdStealPrompt(prompt)
-		for _, fnHold in ipairs(entry.hold) do
-			task.spawn(fnHold)
-		end
-
-		while autoGrabConfig.AutoStealEnabled and prompt.Parent do
-			local elapsed = tick() - startTick
-			setGrabProgress01(math.clamp(0.15 + (elapsed / duration) * 0.85, 0, 1))
-			if elapsed >= duration then
-				break
-			end
-			task.wait()
-		end
-
-		if autoGrabConfig.AutoStealEnabled and prompt.Parent then
-			setGrabProgress01(1)
-			for _, fnTrig in ipairs(entry.trigger) do
-				task.spawn(fnTrig)
-			end
-			pcall(function()
-				if type(fireproximityprompt) == "function" then
-					fireproximityprompt(prompt)
-				end
-				prompt:InputHoldEnd()
-			end)
-			activeHeldPrompt = nil
-
-			local now = os.clock()
-			if (now - lastRemoteFireClock) >= 0.08 then
-				lastRemoteFireClock = now
-				for _, rem in ipairs(getActionRemotes()) do
-					local low = string.lower(rem.Name)
-					if string.find(low, "steal", 1, true) or string.find(low, "grab", 1, true) then
-						pcall(function()
-							rem:FireServer()
-						end)
+	local plots = workspace:FindFirstChild("Plots")
+	if plots then
+		for _, plot in ipairs(plots:GetChildren()) do
+			if plot:IsA("Model") and not isYourBasePlot(plot.Name) then
+				for _, desc in ipairs(plot:GetDescendants()) do
+					if desc:IsA("ProximityPrompt") then
+						local ok, dist = isValidGrabPrompt(desc, originPos)
+						if ok and dist <= bestDist then
+							bestDist = dist
+							bestPrompt = desc
+						end
 					end
 				end
 			end
-			task.wait(0.02)
+		end
+	end
+
+	if not bestPrompt then
+		for _, desc in ipairs(workspace:GetDescendants()) do
+			if desc:IsA("ProximityPrompt") then
+				local ok, dist = isValidGrabPrompt(desc, originPos)
+				if ok and dist <= bestDist then
+					bestDist = dist
+					bestPrompt = desc
+				end
+			end
+		end
+	end
+
+	return bestPrompt
+end
+
+local function equipNewestToolIfAny()
+	local char = LocalPlayer.Character
+	local hum = char and char:FindFirstChildOfClass("Humanoid")
+	local backpack = LocalPlayer:FindFirstChildOfClass("Backpack")
+	if not char or not hum or not backpack then
+		return
+	end
+	pcall(function()
+		if char:FindFirstChildOfClass("Tool") then
+			return
+		end
+		local tools = backpack:GetChildren()
+		for i = #tools, 1, -1 do
+			if tools[i]:IsA("Tool") then
+				hum:EquipTool(tools[i])
+				break
+			end
+		end
+	end)
+end
+
+-- Advances 0% -> 50% -> 100% on the bar without holding the screen, then completes the prompt
+local function runFullHundredGrab(prompt: ProximityPrompt)
+	if isGrabRunning or not scriptActive or not autoGrabEnabled then
+		return
+	end
+
+	isGrabRunning = true
+	activeHeldPrompt = nil
+	local effectiveDuration = math.max(0.08, autoGrabHoldDuration)
+	local halfDuration = effectiveDuration * 0.5
+	local startClock = os.clock()
+	setGrabProgress01(0)
+	if GrabStatusLbl then
+		GrabStatusLbl.Text = "0% -> 50%"
+	end
+
+	task.spawn(function()
+		local passedHalf = false
+		local reachedHundred = false
+
+		while scriptActive and autoGrabEnabled and prompt.Parent and prompt.Enabled do
+			local char = LocalPlayer.Character
+			local root = char and char:FindFirstChild("HumanoidRootPart")
+			local pPos = getInstanceWorldPos(prompt)
+			if not root or not root:IsA("BasePart") or not pPos or (pPos - root.Position).Magnitude > AUTO_GRAB_RADIUS then
+				break
+			end
+
+			local elapsed = os.clock() - startClock
+			if not passedHalf and elapsed >= halfDuration then
+				passedHalf = true
+				setGrabProgress01(0.5)
+				if GrabStatusLbl then
+					GrabStatusLbl.Text = "50% -> 100%"
+				end
+			end
+
+			local progress = math.clamp(elapsed / effectiveDuration, 0, 1)
+			setGrabProgress01(progress)
+			if progress >= 1 then
+				setGrabProgress01(1)
+				reachedHundred = true
+				break
+			end
+			RunService.Heartbeat:Wait()
 		end
 
-		releasePromptHold()
-		setGrabProgress01(0)
-		entry.ready = true
-		isStealBusy = false
+		if reachedHundred and scriptActive and autoGrabEnabled and prompt.Parent then
+			setGrabProgress01(1)
+			if GrabStatusLbl then
+				GrabStatusLbl.Text = "100% Grab!"
+			end
+			triggerPromptCompletion(prompt)
+			task.wait(0.03)
+			equipNewestToolIfAny()
+			promptCooldowns[prompt] = os.clock() + AUTO_GRAB_COOLDOWN
+			notify("100% Grabbed!", true)
+		else
+			setGrabProgress01(0)
+			if prompt and prompt.Parent then
+				promptCooldowns[prompt] = os.clock() + 0.06
+			end
+		end
+
+		if scriptActive then
+			task.delay(0.14, function()
+				if scriptActive and not isGrabRunning then
+					setGrabProgress01(0)
+				end
+			end)
+			if GrabStatusLbl then
+				GrabStatusLbl.Text = string.format("0-50-100 • %.2fs", autoGrabHoldDuration)
+			end
+		end
+
+		isGrabRunning = false
 	end)
 end
 
@@ -778,7 +737,7 @@ local function clearAllEsp()
 end
 
 local function updatePlayerEsp()
-	if not playerEspEnabled then
+	if not playerEspEnabled or not scriptActive then
 		return
 	end
 	local char = LocalPlayer.Character
@@ -799,7 +758,7 @@ local function updatePlayerEsp()
 					local hl = Instance.new("Highlight")
 					hl.Name = "SAB_Player_ESP"
 					hl.FillColor = UI.ESP_COLOR
-					hl.OutlineColor = UI.TEXT
+					hl.OutlineColor = BLACK_TEXT
 					hl.FillTransparency = 0.65
 					hl.OutlineTransparency = 0
 					hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
@@ -814,7 +773,7 @@ local function updatePlayerEsp()
 				if not entry.tag or not entry.tag.Parent then
 					local bg = Instance.new("BillboardGui")
 					bg.Name = "SAB_Player_Tag"
-					bg.Size = UDim2.new(0, 96, 0, 16)
+					bg.Size = UDim2.new(0, 82, 0, 13)
 					bg.StudsOffset = Vector3.new(0, 2.2, 0)
 					bg.AlwaysOnTop = true
 					bg.Adornee = adorneePart
@@ -823,14 +782,14 @@ local function updatePlayerEsp()
 					local lbl = Instance.new("TextLabel")
 					lbl.Name = "Label"
 					lbl.Size = UDim2.new(1, 0, 1, 0)
-					lbl.BackgroundTransparency = 0.25
+					lbl.BackgroundTransparency = 0.2
 					lbl.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-					lbl.TextColor3 = UI.ESP_COLOR
+					lbl.TextColor3 = BLACK_TEXT
 					lbl.Font = Enum.Font.GothamBold
 					lbl.Parent = bg
-					Instance.new("UICorner", lbl).CornerRadius = UDim.new(0, 4)
-					addCoolBackgroundGradient(lbl, Color3.fromRGB(24, 16, 48), Color3.fromRGB(14, 34, 62), 90)
-					makeReadableText(lbl, 7, 10)
+					Instance.new("UICorner", lbl).CornerRadius = UDim.new(0, 3)
+					addCoolBackgroundGradient(lbl, Color3.fromRGB(220, 42, 62), Color3.fromRGB(140, 18, 32), 90)
+					makeReadableText(lbl, 6, 8)
 
 					entry.tag = bg
 				else
@@ -855,7 +814,7 @@ local function makeDraggable(frame: GuiObject)
 	local dragStart: Vector3? = nil
 	local startPos: UDim2? = nil
 
-	frame.InputBegan:Connect(function(input)
+	trackConn(frame.InputBegan:Connect(function(input)
 		if dragLockEnabled then
 			return
 		end
@@ -864,9 +823,9 @@ local function makeDraggable(frame: GuiObject)
 			dragStart = input.Position
 			startPos = frame.Position
 		end
-	end)
+	end))
 
-	UserInputService.InputChanged:Connect(function(input)
+	trackConn(UserInputService.InputChanged:Connect(function(input)
 		if dragLockEnabled then
 			dragging = false
 			return
@@ -882,78 +841,78 @@ local function makeDraggable(frame: GuiObject)
 				)
 			end
 		end
-	end)
+	end))
 
-	UserInputService.InputEnded:Connect(function(input)
+	trackConn(UserInputService.InputEnded:Connect(function(input)
 		if dragging and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
 			dragging = false
 		end
-	end)
+	end))
 end
 
 -- =========================================================================
--- DISCONNECTED AUTO GRAB & SETTINGS WINDOW (FULL WORDS VISIBLE)
+-- SMALL AUTO GRAB BAR (RED • BLACK TEXT)
 -- =========================================================================
 local GrabWindow = Instance.new("Frame")
 GrabWindow.Name = "StandaloneGrabWindow"
-GrabWindow.Size = UDim2.new(0, 162, 0, 46)
+GrabWindow.Size = UDim2.new(0, 126, 0, 34)
 GrabWindow.Position = UDim2.new(0.16, 0, 0.03, 0)
 GrabWindow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 GrabWindow.BorderSizePixel = 0
 GrabWindow.ZIndex = 76
-GrabWindow.Parent = GrabGui
-Instance.new("UICorner", GrabWindow).CornerRadius = UDim.new(0, 6)
-addCoolBackgroundGradient(GrabWindow, Color3.fromRGB(36, 16, 72), Color3.fromRGB(16, 28, 56), 120)
+GrabWindow.Parent = ScreenGui
+Instance.new("UICorner", GrabWindow).CornerRadius = UDim.new(0, 5)
+addCoolBackgroundGradient(GrabWindow, Color3.fromRGB(215, 38, 58), Color3.fromRGB(115, 14, 26), 120)
 local grabStroke = Instance.new("UIStroke")
-grabStroke.Color = UI.BAR_FILL
-grabStroke.Thickness = 1.2
+grabStroke.Color = UI.STROKE
+grabStroke.Thickness = 1
 grabStroke.Parent = GrabWindow
 makeDraggable(GrabWindow)
 
 local GrabTitle = Instance.new("TextLabel")
-GrabTitle.Size = UDim2.new(0, 74, 0, 14)
-GrabTitle.Position = UDim2.new(0, 5, 0, 2)
+GrabTitle.Size = UDim2.new(0, 48, 0, 10)
+GrabTitle.Position = UDim2.new(0, 4, 0, 2)
 GrabTitle.BackgroundTransparency = 1
-GrabTitle.Text = "AUTO GRAB"
-GrabTitle.TextColor3 = UI.TEXT
+GrabTitle.Text = "GRAB"
+GrabTitle.TextColor3 = BLACK_TEXT
 GrabTitle.Font = Enum.Font.GothamBlack
 GrabTitle.TextXAlignment = Enum.TextXAlignment.Left
 GrabTitle.ZIndex = 77
 GrabTitle.Parent = GrabWindow
-makeReadableText(GrabTitle, 7, 10)
+makeReadableText(GrabTitle, 6, 7)
 
-local GrabToggleBtn = Instance.new("TextButton")
-GrabToggleBtn.Size = UDim2.new(0, 30, 0, 13)
-GrabToggleBtn.Position = UDim2.new(1, -52, 0, 2)
-GrabToggleBtn.BackgroundColor3 = UI.BTN_ACTIVE
-GrabToggleBtn.TextColor3 = UI.TEXT
+GrabToggleBtn = Instance.new("TextButton")
+GrabToggleBtn.Size = UDim2.new(0, 26, 0, 10)
+GrabToggleBtn.Position = UDim2.new(1, -64, 0, 2)
+GrabToggleBtn.BackgroundColor3 = Color3.fromRGB(235, 52, 72)
+GrabToggleBtn.TextColor3 = BLACK_TEXT
 GrabToggleBtn.Text = "ON"
 GrabToggleBtn.Font = Enum.Font.GothamBlack
 GrabToggleBtn.ZIndex = 77
 GrabToggleBtn.Parent = GrabWindow
-Instance.new("UICorner", GrabToggleBtn).CornerRadius = UDim.new(0, 4)
-makeReadableText(GrabToggleBtn, 7, 9)
+Instance.new("UICorner", GrabToggleBtn).CornerRadius = UDim.new(0, 3)
+makeReadableText(GrabToggleBtn, 6, 7)
 
-local GrabGearBtn = Instance.new("TextButton")
-GrabGearBtn.Size = UDim2.new(0, 17, 0, 13)
-GrabGearBtn.Position = UDim2.new(1, -19, 0, 2)
-GrabGearBtn.BackgroundColor3 = UI.BTN
-GrabGearBtn.TextColor3 = UI.TEXT
-GrabGearBtn.Text = "⚙"
-GrabGearBtn.Font = Enum.Font.GothamBold
-GrabGearBtn.ZIndex = 77
-GrabGearBtn.Parent = GrabWindow
-Instance.new("UICorner", GrabGearBtn).CornerRadius = UDim.new(0, 4)
-makeReadableText(GrabGearBtn, 8, 10)
+GrabSpeedBtn = Instance.new("TextButton")
+GrabSpeedBtn.Size = UDim2.new(0, 34, 0, 10)
+GrabSpeedBtn.Position = UDim2.new(1, -36, 0, 2)
+GrabSpeedBtn.BackgroundColor3 = Color3.fromRGB(195, 28, 46)
+GrabSpeedBtn.TextColor3 = BLACK_TEXT
+GrabSpeedBtn.Text = "0.15s"
+GrabSpeedBtn.Font = Enum.Font.GothamBlack
+GrabSpeedBtn.ZIndex = 77
+GrabSpeedBtn.Parent = GrabWindow
+Instance.new("UICorner", GrabSpeedBtn).CornerRadius = UDim.new(0, 3)
+makeReadableText(GrabSpeedBtn, 6, 7)
 
 local GrabBarTrack = Instance.new("Frame")
-GrabBarTrack.Size = UDim2.new(1, -10, 0, 11)
-GrabBarTrack.Position = UDim2.new(0, 5, 0, 18)
-GrabBarTrack.BackgroundColor3 = UI.CARD
+GrabBarTrack.Size = UDim2.new(1, -8, 0, 8)
+GrabBarTrack.Position = UDim2.new(0, 4, 0, 13)
+GrabBarTrack.BackgroundColor3 = Color3.fromRGB(115, 14, 26)
 GrabBarTrack.BorderSizePixel = 0
 GrabBarTrack.ZIndex = 77
 GrabBarTrack.Parent = GrabWindow
-Instance.new("UICorner", GrabBarTrack).CornerRadius = UDim.new(0, 4)
+Instance.new("UICorner", GrabBarTrack).CornerRadius = UDim.new(0, 3)
 
 GrabBarFill = Instance.new("Frame")
 GrabBarFill.Size = UDim2.new(0, 0, 1, 0)
@@ -961,99 +920,46 @@ GrabBarFill.BackgroundColor3 = UI.BAR_FILL
 GrabBarFill.BorderSizePixel = 0
 GrabBarFill.ZIndex = 78
 GrabBarFill.Parent = GrabBarTrack
-Instance.new("UICorner", GrabBarFill).CornerRadius = UDim.new(0, 4)
-addCoolBackgroundGradient(GrabBarFill, Color3.fromRGB(190, 75, 255), Color3.fromRGB(65, 210, 255), 0)
+Instance.new("UICorner", GrabBarFill).CornerRadius = UDim.new(0, 3)
+addCoolBackgroundGradient(GrabBarFill, Color3.fromRGB(240, 62, 82), Color3.fromRGB(175, 24, 42), 0)
 
 GrabPercentLbl = Instance.new("TextLabel")
 GrabPercentLbl.Size = UDim2.new(1, 0, 1, 0)
 GrabPercentLbl.BackgroundTransparency = 1
 GrabPercentLbl.Text = "0%"
-GrabPercentLbl.TextColor3 = UI.TEXT
+GrabPercentLbl.TextColor3 = BLACK_TEXT
 GrabPercentLbl.Font = Enum.Font.GothamBlack
 GrabPercentLbl.ZIndex = 79
 GrabPercentLbl.Parent = GrabBarTrack
-makeReadableText(GrabPercentLbl, 7, 9)
+makeReadableText(GrabPercentLbl, 6, 7)
 
-local GrabStatusLbl = Instance.new("TextLabel")
-GrabStatusLbl.Size = UDim2.new(1, -10, 0, 13)
-GrabStatusLbl.Position = UDim2.new(0, 5, 0, 31)
+GrabStatusLbl = Instance.new("TextLabel")
+GrabStatusLbl.Size = UDim2.new(1, -8, 0, 10)
+GrabStatusLbl.Position = UDim2.new(0, 4, 0, 22)
 GrabStatusLbl.BackgroundTransparency = 1
-GrabStatusLbl.Text = "Fast Grab: 0.08s"
-GrabStatusLbl.TextColor3 = UI.MUTED
+GrabStatusLbl.Text = "0-50-100 • 0.15s"
+GrabStatusLbl.TextColor3 = BLACK_TEXT
 GrabStatusLbl.Font = Enum.Font.GothamBold
 GrabStatusLbl.TextXAlignment = Enum.TextXAlignment.Left
 GrabStatusLbl.ZIndex = 77
 GrabStatusLbl.Parent = GrabWindow
-makeReadableText(GrabStatusLbl, 7, 9)
-
-local GrabSettingsBox = Instance.new("Frame")
-GrabSettingsBox.Name = "DisconnectedGrabSettings"
-GrabSettingsBox.Size = UDim2.new(0, 162, 0, 62)
-GrabSettingsBox.Position = UDim2.new(0.16, 0, 0.03, 50)
-GrabSettingsBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-GrabSettingsBox.BorderSizePixel = 0
-GrabSettingsBox.Visible = false
-GrabSettingsBox.ZIndex = 76
-GrabSettingsBox.Parent = GrabGui
-Instance.new("UICorner", GrabSettingsBox).CornerRadius = UDim.new(0, 6)
-addCoolBackgroundGradient(GrabSettingsBox, Color3.fromRGB(32, 18, 68), Color3.fromRGB(16, 28, 56), 135)
-local gsStroke = Instance.new("UIStroke")
-gsStroke.Color = UI.STROKE
-gsStroke.Thickness = 1
-gsStroke.Parent = GrabSettingsBox
-makeDraggable(GrabSettingsBox)
-
-local HoldTimeBtn = Instance.new("TextButton")
-HoldTimeBtn.Size = UDim2.new(1, -10, 0, 17)
-HoldTimeBtn.Position = UDim2.new(0, 5, 0, 5)
-HoldTimeBtn.BackgroundColor3 = UI.BTN_ACTIVE
-HoldTimeBtn.TextColor3 = UI.TEXT
-HoldTimeBtn.Text = "Hold: 0.08s"
-HoldTimeBtn.Font = Enum.Font.GothamBlack
-HoldTimeBtn.ZIndex = 77
-HoldTimeBtn.Parent = GrabSettingsBox
-Instance.new("UICorner", HoldTimeBtn).CornerRadius = UDim.new(0, 4)
-makeReadableText(HoldTimeBtn, 7, 9)
-
-local RangeCycleBtn = Instance.new("TextButton")
-RangeCycleBtn.Size = UDim2.new(1, -10, 0, 17)
-RangeCycleBtn.Position = UDim2.new(0, 5, 0, 24)
-RangeCycleBtn.BackgroundColor3 = UI.BTN
-RangeCycleBtn.TextColor3 = UI.TEXT
-RangeCycleBtn.Text = "Range: 32"
-RangeCycleBtn.Font = Enum.Font.GothamBold
-RangeCycleBtn.ZIndex = 77
-RangeCycleBtn.Parent = GrabSettingsBox
-Instance.new("UICorner", RangeCycleBtn).CornerRadius = UDim.new(0, 4)
-makeReadableText(RangeCycleBtn, 7, 9)
-
-local NormalModeLbl = Instance.new("TextLabel")
-NormalModeLbl.Size = UDim2.new(1, -10, 0, 15)
-NormalModeLbl.Position = UDim2.new(0, 5, 0, 43)
-NormalModeLbl.BackgroundColor3 = UI.CARD
-NormalModeLbl.TextColor3 = UI.MUTED
-NormalModeLbl.Text = "Normal Grab • No Click"
-NormalModeLbl.Font = Enum.Font.GothamBold
-NormalModeLbl.ZIndex = 77
-NormalModeLbl.Parent = GrabSettingsBox
-Instance.new("UICorner", NormalModeLbl).CornerRadius = UDim.new(0, 4)
-makeReadableText(NormalModeLbl, 7, 9)
+makeReadableText(GrabStatusLbl, 6, 7)
 
 -- =========================================================================
--- COMPACT MAIN PANEL (NO SERVER HOP • ALL WORDS VISIBLE)
+-- SMALL RED MAIN PANEL WITH BLACK TEXT
 -- =========================================================================
 local OpenBtn = Instance.new("TextButton")
-OpenBtn.Size = UDim2.new(0, 48, 0, 18)
+OpenBtn.Size = UDim2.new(0, 44, 0, 15)
 OpenBtn.Position = UDim2.new(0.02, 0, 0.20, 0)
 OpenBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-OpenBtn.TextColor3 = UI.TEXT
-OpenBtn.Text = "AP"
+OpenBtn.TextColor3 = BLACK_TEXT
+OpenBtn.Text = "PANEL"
 OpenBtn.Font = Enum.Font.GothamBlack
 OpenBtn.ZIndex = 70
 OpenBtn.Parent = ScreenGui
-Instance.new("UICorner", OpenBtn).CornerRadius = UDim.new(0, 5)
-addCoolBackgroundGradient(OpenBtn, Color3.fromRGB(45, 20, 86), Color3.fromRGB(20, 36, 72), 90)
-makeReadableText(OpenBtn, 7, 10)
+Instance.new("UICorner", OpenBtn).CornerRadius = UDim.new(0, 4)
+addCoolBackgroundGradient(OpenBtn, Color3.fromRGB(215, 38, 58), Color3.fromRGB(125, 14, 28), 90)
+makeReadableText(OpenBtn, 6, 8)
 local openStroke = Instance.new("UIStroke")
 openStroke.Color = UI.STROKE
 openStroke.Thickness = 1
@@ -1061,56 +967,56 @@ openStroke.Parent = OpenBtn
 makeDraggable(OpenBtn)
 
 local Panel = Instance.new("Frame")
-Panel.Size = UDim2.new(0, 194, 0, 182)
+Panel.Size = UDim2.new(0, 152, 0, 146)
 Panel.Position = UDim2.new(0.02, 0, 0.25, 0)
 Panel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Panel.BorderSizePixel = 0
 Panel.ZIndex = 72
 Panel.Parent = ScreenGui
-Instance.new("UICorner", Panel).CornerRadius = UDim.new(0, 6)
-addCoolBackgroundGradient(Panel, Color3.fromRGB(26, 15, 56), Color3.fromRGB(12, 22, 44), 135)
+Instance.new("UICorner", Panel).CornerRadius = UDim.new(0, 5)
+addCoolBackgroundGradient(Panel, Color3.fromRGB(165, 22, 38), Color3.fromRGB(76, 8, 18), 135)
 local stroke = Instance.new("UIStroke")
 stroke.Color = UI.STROKE
-stroke.Thickness = 1.2
+stroke.Thickness = 1
 stroke.Parent = Panel
 makeDraggable(Panel)
 
 local TitleBar = Instance.new("Frame")
-TitleBar.Size = UDim2.new(1, 0, 0, 18)
+TitleBar.Size = UDim2.new(1, 0, 0, 14)
 TitleBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 TitleBar.BorderSizePixel = 0
 TitleBar.ZIndex = 73
 TitleBar.Parent = Panel
-Instance.new("UICorner", TitleBar).CornerRadius = UDim.new(0, 6)
-addCoolBackgroundGradient(TitleBar, Color3.fromRGB(58, 26, 108), Color3.fromRGB(24, 42, 84), 0)
+Instance.new("UICorner", TitleBar).CornerRadius = UDim.new(0, 5)
+addCoolBackgroundGradient(TitleBar, Color3.fromRGB(225, 42, 62), Color3.fromRGB(135, 16, 30), 0)
 
 local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Size = UDim2.new(1, -22, 1, 0)
-TitleLabel.Position = UDim2.new(0, 6, 0, 0)
+TitleLabel.Size = UDim2.new(1, -18, 1, 0)
+TitleLabel.Position = UDim2.new(0, 4, 0, 0)
 TitleLabel.BackgroundTransparency = 1
 TitleLabel.Text = "SAB PANEL"
-TitleLabel.TextColor3 = UI.TEXT
+TitleLabel.TextColor3 = BLACK_TEXT
 TitleLabel.Font = Enum.Font.GothamBlack
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 TitleLabel.ZIndex = 74
 TitleLabel.Parent = TitleBar
-makeReadableText(TitleLabel, 7, 10)
+makeReadableText(TitleLabel, 6, 8)
 
 local CloseBtn = Instance.new("TextButton")
-CloseBtn.Size = UDim2.new(0, 15, 0, 14)
-CloseBtn.Position = UDim2.new(1, -17, 0.5, -7)
-CloseBtn.BackgroundColor3 = UI.ACCENT
-CloseBtn.TextColor3 = UI.TEXT
+CloseBtn.Size = UDim2.new(0, 12, 0, 11)
+CloseBtn.Position = UDim2.new(1, -14, 0.5, -5.5)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(235, 52, 72)
+CloseBtn.TextColor3 = BLACK_TEXT
 CloseBtn.Text = "X"
 CloseBtn.Font = Enum.Font.GothamBold
 CloseBtn.ZIndex = 74
 CloseBtn.Parent = TitleBar
-Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 4)
-makeReadableText(CloseBtn, 7, 9)
+Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 3)
+makeReadableText(CloseBtn, 6, 7)
 
 local TargetAvatar = Instance.new("ImageLabel")
-TargetAvatar.Size = UDim2.new(0, 13, 0, 13)
-TargetAvatar.Position = UDim2.new(0, 5, 0, 20)
+TargetAvatar.Size = UDim2.new(0, 10, 0, 10)
+TargetAvatar.Position = UDim2.new(0, 4, 0, 16)
 TargetAvatar.BackgroundColor3 = UI.CARD
 TargetAvatar.BorderSizePixel = 0
 TargetAvatar.ZIndex = 74
@@ -1119,27 +1025,27 @@ Instance.new("UICorner", TargetAvatar).CornerRadius = UDim.new(1, 0)
 applyAvatarThumbnail(TargetAvatar, LocalPlayer.UserId)
 
 local TargetLbl = Instance.new("TextLabel")
-TargetLbl.Size = UDim2.new(1, -22, 0, 13)
-TargetLbl.Position = UDim2.new(0, 20, 0, 20)
+TargetLbl.Size = UDim2.new(1, -18, 0, 10)
+TargetLbl.Position = UDim2.new(0, 16, 0, 16)
 TargetLbl.BackgroundTransparency = 1
 TargetLbl.Text = "Target: " .. LocalPlayer.Name .. " (ME)"
-TargetLbl.TextColor3 = UI.MUTED
+TargetLbl.TextColor3 = BLACK_TEXT
 TargetLbl.Font = Enum.Font.GothamBold
 TargetLbl.TextXAlignment = Enum.TextXAlignment.Left
 TargetLbl.ZIndex = 74
 TargetLbl.Parent = Panel
-makeReadableText(TargetLbl, 7, 9)
+makeReadableText(TargetLbl, 6, 7)
 
 local PlayerList = Instance.new("ScrollingFrame")
-PlayerList.Size = UDim2.new(0.45, -5, 1, -38)
-PlayerList.Position = UDim2.new(0, 5, 0, 35)
+PlayerList.Size = UDim2.new(0.41, -4, 1, -30)
+PlayerList.Position = UDim2.new(0, 4, 0, 27)
 PlayerList.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 PlayerList.BorderSizePixel = 0
 PlayerList.ScrollBarThickness = 2
 PlayerList.ZIndex = 73
 PlayerList.Parent = Panel
-Instance.new("UICorner", PlayerList).CornerRadius = UDim.new(0, 5)
-addCoolBackgroundGradient(PlayerList, Color3.fromRGB(30, 18, 62), Color3.fromRGB(16, 26, 52), 180)
+Instance.new("UICorner", PlayerList).CornerRadius = UDim.new(0, 4)
+addCoolBackgroundGradient(PlayerList, Color3.fromRGB(185, 26, 44), Color3.fromRGB(95, 10, 22), 180)
 
 local pListLayout = Instance.new("UIListLayout")
 pListLayout.Padding = UDim.new(0, 2)
@@ -1147,80 +1053,81 @@ pListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 pListLayout.Parent = PlayerList
 
 local ActionBox = Instance.new("Frame")
-ActionBox.Size = UDim2.new(0.55, -5, 1, -38)
-ActionBox.Position = UDim2.new(0.45, 1, 0, 35)
+ActionBox.Size = UDim2.new(0.59, -4, 1, -30)
+ActionBox.Position = UDim2.new(0.41, 1, 0, 27)
 ActionBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 ActionBox.BorderSizePixel = 0
 ActionBox.ZIndex = 73
 ActionBox.Parent = Panel
-Instance.new("UICorner", ActionBox).CornerRadius = UDim.new(0, 5)
-addCoolBackgroundGradient(ActionBox, Color3.fromRGB(30, 18, 62), Color3.fromRGB(16, 26, 52), 180)
+Instance.new("UICorner", ActionBox).CornerRadius = UDim.new(0, 4)
+addCoolBackgroundGradient(ActionBox, Color3.fromRGB(185, 26, 44), Color3.fromRGB(95, 10, 22), 180)
 
 local function styleActionButton(btn: TextButton, c1: Color3, c2: Color3)
 	btn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	btn.TextColor3 = BLACK_TEXT
 	addCoolBackgroundGradient(btn, c1, c2, 90)
-	makeReadableText(btn, 7, 9)
+	makeReadableText(btn, 6, 8)
 	local st = Instance.new("UIStroke")
-	st.Color = Color3.fromRGB(255, 255, 255)
-	st.Transparency = 0.75
-	st.Thickness = 0.8
+	st.Color = BLACK_TEXT
+	st.Transparency = 0.65
+	st.Thickness = 0.7
 	st.Parent = btn
 end
 
-local MainApBtn = Instance.new("TextButton")
-MainApBtn.Size = UDim2.new(1, -6, 0, 22)
-MainApBtn.Position = UDim2.new(0, 3, 0, 3)
-MainApBtn.TextColor3 = UI.TEXT
-MainApBtn.Text = "AP"
-MainApBtn.Font = Enum.Font.GothamBlack
-MainApBtn.ZIndex = 74
-MainApBtn.Parent = ActionBox
-Instance.new("UICorner", MainApBtn).CornerRadius = UDim.new(0, 4)
-styleActionButton(MainApBtn, Color3.fromRGB(220, 45, 95), Color3.fromRGB(130, 25, 70))
+local ApBtn = Instance.new("TextButton")
+ApBtn.Size = UDim2.new(1, -4, 0, 18)
+ApBtn.Position = UDim2.new(0, 2, 0, 2)
+ApBtn.TextColor3 = BLACK_TEXT
+ApBtn.Text = "AP"
+ApBtn.Font = Enum.Font.GothamBlack
+ApBtn.ZIndex = 74
+ApBtn.Parent = ActionBox
+Instance.new("UICorner", ApBtn).CornerRadius = UDim.new(0, 3)
+styleActionButton(ApBtn, Color3.fromRGB(225, 42, 62), Color3.fromRGB(145, 16, 30))
+
+local AutoLeftBtn = Instance.new("TextButton")
+AutoLeftBtn.Size = UDim2.new(1, -4, 0, 18)
+AutoLeftBtn.Position = UDim2.new(0, 2, 0, 22)
+AutoLeftBtn.TextColor3 = BLACK_TEXT
+AutoLeftBtn.Text = "AUTO LEFT: OFF"
+AutoLeftBtn.Font = Enum.Font.GothamBlack
+AutoLeftBtn.ZIndex = 74
+AutoLeftBtn.Parent = ActionBox
+Instance.new("UICorner", AutoLeftBtn).CornerRadius = UDim.new(0, 3)
+styleActionButton(AutoLeftBtn, Color3.fromRGB(215, 36, 56), Color3.fromRGB(130, 14, 26))
 
 local BlockBtn = Instance.new("TextButton")
-BlockBtn.Size = UDim2.new(1, -6, 0, 22)
-BlockBtn.Position = UDim2.new(0, 3, 0, 28)
-BlockBtn.TextColor3 = UI.TEXT
+BlockBtn.Size = UDim2.new(1, -4, 0, 18)
+BlockBtn.Position = UDim2.new(0, 2, 0, 42)
+BlockBtn.TextColor3 = BLACK_TEXT
 BlockBtn.Text = "BLOCK"
 BlockBtn.Font = Enum.Font.GothamBlack
 BlockBtn.ZIndex = 74
 BlockBtn.Parent = ActionBox
-Instance.new("UICorner", BlockBtn).CornerRadius = UDim.new(0, 4)
-styleActionButton(BlockBtn, Color3.fromRGB(190, 48, 125), Color3.fromRGB(108, 25, 85))
-
-local BestBrainRotBtn = Instance.new("TextButton")
-BestBrainRotBtn.Size = UDim2.new(1, -6, 0, 22)
-BestBrainRotBtn.Position = UDim2.new(0, 3, 0, 53)
-BestBrainRotBtn.TextColor3 = UI.TEXT
-BestBrainRotBtn.Text = "BEST BRAIN ROT"
-BestBrainRotBtn.Font = Enum.Font.GothamBlack
-BestBrainRotBtn.ZIndex = 74
-BestBrainRotBtn.Parent = ActionBox
-Instance.new("UICorner", BestBrainRotBtn).CornerRadius = UDim.new(0, 4)
-styleActionButton(BestBrainRotBtn, Color3.fromRGB(158, 72, 255), Color3.fromRGB(82, 42, 195))
+Instance.new("UICorner", BlockBtn).CornerRadius = UDim.new(0, 3)
+styleActionButton(BlockBtn, Color3.fromRGB(205, 32, 52), Color3.fromRGB(120, 12, 24))
 
 local LockBtn = Instance.new("TextButton")
-LockBtn.Size = UDim2.new(1, -6, 0, 22)
-LockBtn.Position = UDim2.new(0, 3, 0, 78)
-LockBtn.TextColor3 = UI.TEXT
+LockBtn.Size = UDim2.new(1, -4, 0, 18)
+LockBtn.Position = UDim2.new(0, 2, 0, 62)
+LockBtn.TextColor3 = BLACK_TEXT
 LockBtn.Text = "LOCK: OFF"
 LockBtn.Font = Enum.Font.GothamBlack
 LockBtn.ZIndex = 74
 LockBtn.Parent = ActionBox
-Instance.new("UICorner", LockBtn).CornerRadius = UDim.new(0, 4)
-styleActionButton(LockBtn, Color3.fromRGB(54, 48, 92), Color3.fromRGB(32, 28, 62))
+Instance.new("UICorner", LockBtn).CornerRadius = UDim.new(0, 3)
+styleActionButton(LockBtn, Color3.fromRGB(195, 28, 46), Color3.fromRGB(115, 12, 24))
 
 local PlayerEspBtn = Instance.new("TextButton")
-PlayerEspBtn.Size = UDim2.new(1, -6, 0, 22)
-PlayerEspBtn.Position = UDim2.new(0, 3, 0, 103)
-PlayerEspBtn.TextColor3 = UI.TEXT
+PlayerEspBtn.Size = UDim2.new(1, -4, 0, 18)
+PlayerEspBtn.Position = UDim2.new(0, 2, 0, 82)
+PlayerEspBtn.TextColor3 = BLACK_TEXT
 PlayerEspBtn.Text = "ESP: OFF"
 PlayerEspBtn.Font = Enum.Font.GothamBlack
 PlayerEspBtn.ZIndex = 74
 PlayerEspBtn.Parent = ActionBox
-Instance.new("UICorner", PlayerEspBtn).CornerRadius = UDim.new(0, 4)
-styleActionButton(PlayerEspBtn, Color3.fromRGB(54, 48, 92), Color3.fromRGB(32, 28, 62))
+Instance.new("UICorner", PlayerEspBtn).CornerRadius = UDim.new(0, 3)
+styleActionButton(PlayerEspBtn, Color3.fromRGB(195, 28, 46), Color3.fromRGB(115, 12, 24))
 
 local function formatPlayerTag(plr: Player?): string
 	if not plr or not plr.Parent then
@@ -1235,9 +1142,11 @@ end
 local function refreshTargetLabel()
 	if selectedTarget and selectedTarget.Parent then
 		TargetLbl.Text = "Target: " .. formatPlayerTag(selectedTarget)
+		TargetLbl.TextColor3 = BLACK_TEXT
 		applyAvatarThumbnail(TargetAvatar, selectedTarget.UserId)
 	else
 		TargetLbl.Text = "Target: None"
+		TargetLbl.TextColor3 = BLACK_TEXT
 		TargetAvatar.Image = ""
 	end
 end
@@ -1256,16 +1165,16 @@ local function rebuildPlayerList()
 
 		local row = Instance.new("Frame")
 		row.LayoutOrder = if isSelf then 0 else i
-		row.Size = UDim2.new(1, -2, 0, 18)
-		row.BackgroundColor3 = if isSelected then UI.BTN_ACTIVE else UI.BTN
+		row.Size = UDim2.new(1, -2, 0, 15)
+		row.BackgroundColor3 = if isSelected then Color3.fromRGB(240, 62, 82) else Color3.fromRGB(185, 28, 46)
 		row.BorderSizePixel = 0
 		row.ZIndex = 74
 		row.Parent = PlayerList
-		Instance.new("UICorner", row).CornerRadius = UDim.new(0, 4)
+		Instance.new("UICorner", row).CornerRadius = UDim.new(0, 3)
 
 		local avatar = Instance.new("ImageLabel")
-		avatar.Size = UDim2.new(0, 12, 0, 12)
-		avatar.Position = UDim2.new(0, 3, 0.5, -6)
+		avatar.Size = UDim2.new(0, 10, 0, 10)
+		avatar.Position = UDim2.new(0, 2, 0.5, -5)
 		avatar.BackgroundColor3 = UI.BG
 		avatar.BorderSizePixel = 0
 		avatar.ZIndex = 75
@@ -1274,130 +1183,118 @@ local function rebuildPlayerList()
 		applyAvatarThumbnail(avatar, plr.UserId)
 
 		local pickBtn = Instance.new("TextButton")
-		pickBtn.Size = UDim2.new(1, -17, 1, 0)
-		pickBtn.Position = UDim2.new(0, 16, 0, 0)
+		pickBtn.Size = UDim2.new(1, -14, 1, 0)
+		pickBtn.Position = UDim2.new(0, 13, 0, 0)
 		pickBtn.BackgroundTransparency = 1
 		pickBtn.Text = formatPlayerTag(plr)
-		pickBtn.TextColor3 = if isSelf and not isSelected then UI.SELF_TAG else UI.TEXT
+		pickBtn.TextColor3 = BLACK_TEXT
 		pickBtn.Font = Enum.Font.GothamBold
 		pickBtn.TextXAlignment = Enum.TextXAlignment.Left
 		pickBtn.ZIndex = 75
 		pickBtn.Parent = row
-		makeReadableText(pickBtn, 7, 9)
+		makeReadableText(pickBtn, 6, 7)
 
-		pickBtn.MouseButton1Click:Connect(function()
+		trackConn(pickBtn.MouseButton1Click:Connect(function()
 			selectedTarget = plr
 			refreshTargetLabel()
 			rebuildPlayerList()
-		end)
+		end))
 	end
 
-	PlayerList.CanvasSize = UDim2.new(0, 0, 0, math.max(#plrs * 20, 20))
+	PlayerList.CanvasSize = UDim2.new(0, 0, 0, math.max(#plrs * 17, 17))
 end
 
-local function syncFeatureVisuals()
-	TitleLabel.Text = if dragLockEnabled then "DRAG LOCKED" else "SAB PANEL"
-	stroke.Color = if dragLockEnabled then UI.BTN_ACTIVE else UI.STROKE
+syncFeatureVisuals = function()
+	TitleLabel.Text = if dragLockEnabled then "LOCKED" else "SAB PANEL"
+	TitleLabel.TextColor3 = BLACK_TEXT
+	stroke.Color = if dragLockEnabled then Color3.fromRGB(255, 80, 95) else UI.STROKE
 
-	GrabToggleBtn.BackgroundColor3 = if autoGrabConfig.AutoStealEnabled then UI.BTN_ACTIVE else UI.BTN
-	GrabToggleBtn.Text = if autoGrabConfig.AutoStealEnabled then "ON" else "OFF"
+	GrabToggleBtn.BackgroundColor3 = if autoGrabEnabled then Color3.fromRGB(240, 62, 82) else Color3.fromRGB(165, 20, 38)
+	GrabToggleBtn.Text = if autoGrabEnabled then "ON" else "OFF"
+	GrabToggleBtn.TextColor3 = BLACK_TEXT
 
-	local holdText = string.format("Hold: %.2fs", autoGrabConfig.StealDuration)
-	if math.abs(autoGrabConfig.StealDuration - 3.0) < 0.02 then
-		holdText = "Hold for 3sec"
+	GrabSpeedBtn.Text = string.format("%.2fs", autoGrabHoldDuration)
+	GrabSpeedBtn.TextColor3 = BLACK_TEXT
+
+	if not isGrabRunning then
+		GrabStatusLbl.Text = string.format("0-50-100 • %.2fs", autoGrabHoldDuration)
 	end
-	HoldTimeBtn.Text = holdText
-	GrabStatusLbl.Text = string.format("Fast Grab: %.2fs", autoGrabConfig.StealDuration)
+	GrabStatusLbl.TextColor3 = BLACK_TEXT
 
-	RangeCycleBtn.Text = string.format("Range: %d", autoGrabConfig.StealRadius)
+	ApBtn.Text = if isApRunning then "AP..." else "AP"
+	ApBtn.TextColor3 = BLACK_TEXT
 
-	BestBrainRotBtn.BackgroundColor3 = if bestFlyActive then UI.BTN_ACTIVE else UI.BEST_BTN
-	BestBrainRotBtn.Text = if bestFlyActive then "FLYING BEST..." else "BEST BRAIN ROT"
+	AutoLeftBtn.BackgroundColor3 = if autoLeftEnabled then Color3.fromRGB(240, 62, 82) else Color3.fromRGB(190, 28, 46)
+	AutoLeftBtn.Text = if autoLeftEnabled then "AUTO LEFT: ON" else "AUTO LEFT: OFF"
+	AutoLeftBtn.TextColor3 = BLACK_TEXT
 
-	LockBtn.BackgroundColor3 = if dragLockEnabled then UI.BTN_ACTIVE else UI.BTN
+	LockBtn.BackgroundColor3 = if dragLockEnabled then Color3.fromRGB(240, 62, 82) else Color3.fromRGB(190, 28, 46)
 	LockBtn.Text = if dragLockEnabled then "LOCK: ON" else "LOCK: OFF"
+	LockBtn.TextColor3 = BLACK_TEXT
 
-	PlayerEspBtn.BackgroundColor3 = if playerEspEnabled then UI.BTN_ACTIVE else UI.BTN
+	PlayerEspBtn.BackgroundColor3 = if playerEspEnabled then Color3.fromRGB(240, 62, 82) else Color3.fromRGB(190, 28, 46)
 	PlayerEspBtn.Text = if playerEspEnabled then "ESP: ON" else "ESP: OFF"
+	PlayerEspBtn.TextColor3 = BLACK_TEXT
 end
 
-GrabToggleBtn.MouseButton1Click:Connect(function()
-	autoGrabConfig.AutoStealEnabled = not autoGrabConfig.AutoStealEnabled
-	if not autoGrabConfig.AutoStealEnabled then
+trackConn(GrabToggleBtn.MouseButton1Click:Connect(function()
+	autoGrabEnabled = not autoGrabEnabled
+	if not autoGrabEnabled then
 		releasePromptHold()
 		setGrabProgress01(0)
 	end
 	syncFeatureVisuals()
-	notify("AUTO GRAB: " .. (if autoGrabConfig.AutoStealEnabled then "ON" else "OFF"), true)
-end)
+	notify("GRAB: " .. (if autoGrabEnabled then "ON" else "OFF"), true)
+end))
 
-GrabGearBtn.MouseButton1Click:Connect(function()
-	GrabSettingsBox.Visible = not GrabSettingsBox.Visible
-end)
-
-HoldTimeBtn.MouseButton1Click:Connect(function()
-	local presets = { 0.08, 0.20, 0.50, 3.0 }
-	local idx = 1
-	for i, v in ipairs(presets) do
-		if math.abs(v - autoGrabConfig.StealDuration) < 0.01 then
-			idx = (i % #presets) + 1
+trackConn(GrabSpeedBtn.MouseButton1Click:Connect(function()
+	local speeds = { 0.15, 0.28, 0.45 }
+	local nextIdx = 1
+	for i, v in ipairs(speeds) do
+		if math.abs(v - autoGrabHoldDuration) < 0.01 then
+			nextIdx = (i % #speeds) + 1
 			break
 		end
 	end
-	autoGrabConfig.StealDuration = presets[idx]
+	autoGrabHoldDuration = speeds[nextIdx]
 	syncFeatureVisuals()
-	notify(string.format("Hold time: %.2fs", autoGrabConfig.StealDuration), true)
-end)
+	notify(string.format("Hold: %.2fs", autoGrabHoldDuration), true)
+end))
 
-RangeCycleBtn.MouseButton1Click:Connect(function()
-	local ranges = { 24, 32, 45, 60 }
-	local idx = 1
-	for i, v in ipairs(ranges) do
-		if v == autoGrabConfig.StealRadius then
-			idx = (i % #ranges) + 1
-			break
+trackConn(ApBtn.MouseButton1Click:Connect(function()
+	runApAllExceptControl(selectedTarget)
+	syncFeatureVisuals()
+	task.delay(0.15, function()
+		if scriptActive then
+			syncFeatureVisuals()
 		end
-	end
-	autoGrabConfig.StealRadius = ranges[idx]
-	syncFeatureVisuals()
-	notify("Grab Range: " .. autoGrabConfig.StealRadius, true)
-end)
+	end)
+end))
 
-MainApBtn.MouseButton1Click:Connect(function()
-	runApPaced(selectedTarget)
-end)
-
-BlockBtn.MouseButton1Click:Connect(function()
-	promptBlockPlayer(selectedTarget)
-end)
-
-BestBrainRotBtn.MouseButton1Click:Connect(function()
-	if bestFlyActive then
-		stopBestFlight(true)
+trackConn(AutoLeftBtn.MouseButton1Click:Connect(function()
+	if autoLeftEnabled then
+		stopAutoLeftToBase(false)
+		notify("AUTO LEFT: OFF", true)
+	else
+		autoLeftEnabled = true
+		autoLeftPhaseStart = os.clock()
+		autoLeftBasePos = findYourBasePosition()
 		syncFeatureVisuals()
-		notify("Flight stopped", true)
-		return
+		notify("Left -> Base", true)
 	end
+end))
 
-	local pos, name = findBestBrainrotTarget()
-	if not pos then
-		notify("No best brainrot found", false)
-		return
-	end
+trackConn(BlockBtn.MouseButton1Click:Connect(function()
+	promptBlockPlayer(selectedTarget)
+end))
 
-	bestFlyTargetPos = pos
-	bestFlyActive = true
-	syncFeatureVisuals()
-	notify("Flying to: " .. (name or "Best Brain Rot"), true)
-end)
-
-LockBtn.MouseButton1Click:Connect(function()
+trackConn(LockBtn.MouseButton1Click:Connect(function()
 	dragLockEnabled = not dragLockEnabled
 	syncFeatureVisuals()
-	notify("DRAG LOCK: " .. (if dragLockEnabled then "ON" else "OFF"), true)
-end)
+	notify("LOCK: " .. (if dragLockEnabled then "ON" else "OFF"), true)
+end))
 
-PlayerEspBtn.MouseButton1Click:Connect(function()
+trackConn(PlayerEspBtn.MouseButton1Click:Connect(function()
 	playerEspEnabled = not playerEspEnabled
 	syncFeatureVisuals()
 	if not playerEspEnabled then
@@ -1406,47 +1303,47 @@ PlayerEspBtn.MouseButton1Click:Connect(function()
 		updatePlayerEsp()
 	end
 	notify("ESP: " .. (if playerEspEnabled then "ON" else "OFF"), true)
-end)
+end))
 
-CloseBtn.MouseButton1Click:Connect(function()
+trackConn(CloseBtn.MouseButton1Click:Connect(function()
 	Panel.Visible = false
-end)
+end))
 
-OpenBtn.MouseButton1Click:Connect(function()
+trackConn(OpenBtn.MouseButton1Click:Connect(function()
 	Panel.Visible = not Panel.Visible
 	if Panel.Visible then
 		rebuildPlayerList()
 	end
-end)
+end))
 
-LocalPlayer.CharacterAdded:Connect(function()
-	stopBestFlight(false)
+trackConn(LocalPlayer.CharacterAdded:Connect(function()
+	autoLeftEnabled = false
+	autoLeftBasePos = nil
+	releasePromptHold()
+	setGrabProgress01(0)
 	syncFeatureVisuals()
-end)
+end))
 
-RunService.Heartbeat:Connect(function(dt)
-	if bestFlyActive then
-		stepBestFlight(dt)
-		syncFeatureVisuals()
+trackConn(RunService.Heartbeat:Connect(function(_dt)
+	if not scriptActive then
+		return
+	end
+	if autoLeftEnabled then
+		stepAutoLeft()
 	end
 
-	if not autoGrabConfig.AutoStealEnabled then
-		if not isStealBusy then
-			releasePromptHold()
-			setGrabProgress01(0)
-		end
-	elseif not isStealBusy then
+	if autoGrabEnabled and not isGrabRunning then
 		local char = LocalPlayer.Character
 		local root = char and char:FindFirstChild("HumanoidRootPart")
 		if char and root and root:IsA("BasePart") then
-			local targetPrompt = findNearestStealPrompt(root.Position)
+			local targetPrompt = findPromptWithinFiveStuds(root.Position)
 			if targetPrompt then
-				runUltraFastGrabSequence(targetPrompt)
-			else
-				releasePromptHold()
-				setGrabProgress01(0)
+				runFullHundredGrab(targetPrompt)
 			end
 		end
+	elseif not autoGrabEnabled and not isGrabRunning then
+		releasePromptHold()
+		setGrabProgress01(0)
 	end
 
 	local now = os.clock()
@@ -1454,15 +1351,15 @@ RunService.Heartbeat:Connect(function(dt)
 		lastEspRefreshClock = now
 		pcall(updatePlayerEsp)
 	end
-end)
+end))
 
-Players.PlayerAdded:Connect(function()
+trackConn(Players.PlayerAdded:Connect(function()
 	if Panel.Visible then
 		rebuildPlayerList()
 	end
-end)
+end))
 
-Players.PlayerRemoving:Connect(function(plr)
+trackConn(Players.PlayerRemoving:Connect(function(plr)
 	avatarCache[plr.UserId] = nil
 	clearPlayerEspFor(plr)
 	if selectedTarget == plr then
@@ -1472,7 +1369,25 @@ Players.PlayerRemoving:Connect(function(plr)
 	if Panel.Visible then
 		rebuildPlayerList()
 	end
-end)
+end))
+
+_G.SAB_Duel_Script_Cleanup = function()
+	scriptActive = false
+	autoLeftEnabled = false
+	autoGrabEnabled = false
+	playerEspEnabled = false
+	releasePromptHold()
+	clearAllEsp()
+	for _, conn in ipairs(connections) do
+		pcall(function()
+			conn:Disconnect()
+		end)
+	end
+	table.clear(connections)
+	pcall(function()
+		ScreenGui:Destroy()
+	end)
+end
 
 rebuildPlayerList()
 refreshTargetLabel()
