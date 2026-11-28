@@ -185,7 +185,7 @@ end
 local function stop()
 	if conn then conn:Disconnect() conn = nil end
 	isStealing = false
-	if fill then TS:Create(fill, TweenInfo.new(0.2), {Size = UDim2.new(0,0,1,0)}):Play() end
+	if fill then fill.Size = UDim2.new(0,0,1,0) end
 	if pct then pct.Text = "0%" end
 end
 
@@ -206,7 +206,7 @@ local function createGUI()
 	main.Size = UDim2.new(0, w, 0, h)
 	main.Position = UDim2.new(0.5, -w/2, 0.5, -h/2)
 	-- Fondo verde oscuro navideño
-	main.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	main.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
 	main.BackgroundTransparency = 0.08
 	main.BorderSizePixel = 0
 	main.Active = true
@@ -214,95 +214,39 @@ local function createGUI()
 	main.ClipsDescendants = true
 	Instance.new("UICorner", main).CornerRadius = UDim.new(0, 16)
 
-	-- ❄️ Copos de nieve flotando DENTRO del panel
-	local snowSymbols = {"❄", "✦", "❅", "⁕", "✶"}
-	for si = 1, 7 do
-		local sf = Instance.new("TextLabel", main)
-		sf.BackgroundTransparency = 1
-		sf.Text = snowSymbols[(si % #snowSymbols) + 1]
-		sf.TextColor3 = Color3.fromRGB(229, 229, 229)
-		sf.Font = Enum.Font.GothamBlack
-		sf.TextSize = math.random(7, 12) * scale
-		sf.ZIndex = 3
-		sf.Size = UDim2.new(0, 14*scale, 1, 0)
-		sf.Position = UDim2.new(math.random(5, 90)/100, 0, -0.2, 0)
-		sf.ClipsDescendants = false
-		task.spawn(function()
-			task.wait(si * 0.4)
-			while sf and sf.Parent do
-				local startX = math.random(5, 88)/100
-				sf.Position = UDim2.new(startX, 0, -0.3, 0)
-				sf.TextTransparency = 0.1
-				TS:Create(sf, TweenInfo.new(2 + si*0.25, Enum.EasingStyle.Linear), {
-					Position = UDim2.new(startX + math.random(-3,3)/100, 0, 1.2, 0),
-					TextTransparency = 0.5
-				}):Play()
-				task.wait(2 + si*0.25)
-			end
-		end)
-	end
 
-	-- Gradiente navideño en el panel (verde oscuro → rojo oscuro)
+	-- Fondo monocromático estático
 	local panelGrad = Instance.new("UIGradient", main)
 	panelGrad.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0.0, Color3.fromRGB(39, 39, 39)),
-		ColorSequenceKeypoint.new(0.5, Color3.fromRGB(26, 26, 26)),
-		ColorSequenceKeypoint.new(1.0, Color3.fromRGB(20, 20, 20))
+		ColorSequenceKeypoint.new(0.0, Color3.fromRGB(28, 28, 28)),
+		ColorSequenceKeypoint.new(1.0, Color3.fromRGB(10, 10, 10))
 	})
-	panelGrad.Rotation = 135
+	panelGrad.Rotation = 90
 
-	-- Borde rojo/verde alternando (luces navideñas)
+	-- Borde gris estático
 	local stroke = Instance.new("UIStroke", main)
-	stroke.Thickness = 2.5
+	stroke.Thickness = 1.5
 	stroke.Transparency = 0.1
-	task.spawn(function()
-		local xmasCols = {
-			Color3.fromRGB(70, 70, 70),
-			Color3.fromRGB(117, 117, 117),
-			Color3.fromRGB(159, 159, 159),
-			Color3.fromRGB(208, 208, 208),
-			Color3.fromRGB(70, 70, 70),
-			Color3.fromRGB(144, 144, 144),
-			Color3.fromRGB(208, 208, 208),
-		}
-		local i = 1
-		while main and main.Parent do
-			local t = TS:Create(stroke, TweenInfo.new(1.1, Enum.EasingStyle.Sine), {Color = xmasCols[i]})
-			t:Play() t.Completed:Wait()
-			i = i % #xmasCols + 1
-		end
-	end)
+	stroke.Color = Color3.fromRGB(150, 150, 150)
 
-	-- Luces decorativas (bolitas de colores en el tope)
+	-- Detalles decorativos estáticos en escala de grises
 	local lightColors = {
-		Color3.fromRGB(86, 86, 86),
-		Color3.fromRGB(167, 167, 167),
-		Color3.fromRGB(208, 208, 208),
-		Color3.fromRGB(141, 141, 141),
-		Color3.fromRGB(139, 139, 139),
-		Color3.fromRGB(86, 86, 86),
-		Color3.fromRGB(167, 167, 167),
+		Color3.fromRGB(90, 90, 90), Color3.fromRGB(150, 150, 150),
+		Color3.fromRGB(210, 210, 210), Color3.fromRGB(120, 120, 120),
+		Color3.fromRGB(170, 170, 170), Color3.fromRGB(90, 90, 90),
+		Color3.fromRGB(200, 200, 200),
 	}
 	for li, lc in ipairs(lightColors) do
 		local bulb = Instance.new("Frame", main)
-		bulb.Size = UDim2.new(0, 7*scale, 0, 7*scale)
-		bulb.Position = UDim2.new(0, (li * 40 - 20)*scale, 0, -3*scale)
+		bulb.Size = UDim2.new(0, 5*scale, 0, 5*scale)
+		bulb.Position = UDim2.new(0, (li * 40 - 20)*scale, 0, 2*scale)
 		bulb.BackgroundColor3 = lc
 		bulb.ZIndex = 8
 		bulb.BorderSizePixel = 0
 		Instance.new("UICorner", bulb).CornerRadius = UDim.new(1, 0)
-		-- Parpadeo suave
-		task.spawn(function()
-			while bulb and bulb.Parent do
-				TS:Create(bulb, TweenInfo.new(0.5 + li*0.1, Enum.EasingStyle.Sine), {BackgroundTransparency = 0.6}):Play()
-				task.wait(0.5 + li*0.1)
-				TS:Create(bulb, TweenInfo.new(0.5 + li*0.1, Enum.EasingStyle.Sine), {BackgroundTransparency = 0}):Play()
-				task.wait(0.5 + li*0.1)
-			end
-		end)
 	end
 
-	-- Título 🎄
+	-- Título
 	local title = Instance.new("TextLabel", main)
 	title.Size = UDim2.new(0, 110*scale, 0, 18*scale)
 	title.Position = UDim2.new(0, 12*scale, 0, 6*scale)
@@ -313,15 +257,7 @@ local function createGUI()
 	title.TextSize = 14*scale
 	title.TextXAlignment = Enum.TextXAlignment.Left
 	title.ZIndex = 5
-	-- Título parpadea dorado/blanco
-	task.spawn(function()
-		while title and title.Parent do
-			TS:Create(title, TweenInfo.new(1.5, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(251, 251, 251)}):Play()
-			task.wait(1.5)
-			TS:Create(title, TweenInfo.new(1.5, Enum.EasingStyle.Sine), {TextColor3 = Color3.fromRGB(197, 197, 197)}):Play()
-			task.wait(1.5)
-		end
-	end)
+
 
 	local sub = Instance.new("TextLabel", main)
 	sub.Size = UDim2.new(0, 130*scale, 0, 12*scale)
@@ -345,7 +281,7 @@ local function createGUI()
 	radLbl.TextXAlignment = Enum.TextXAlignment.Right
 	radLbl.ZIndex = 5
 
-	-- ❄️ Barra de nieve navideña
+	-- Barra de progreso
 	local barBg = Instance.new("Frame", main)
 	barBg.Size = UDim2.new(0.68, 0, 0, 16*scale)
 	barBg.Position = UDim2.new(0, 12*scale, 0, 33*scale)
@@ -364,68 +300,19 @@ local function createGUI()
 	fill.ZIndex = 5
 	Instance.new("UICorner", fill).CornerRadius = UDim.new(1, 0)
 
-	-- Gradiente nieve: azul cielo → blanco nieve → celeste
-	local grad = Instance.new("UIGradient", fill)
-	grad.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0.00, Color3.fromRGB(168, 168, 168)),
-		ColorSequenceKeypoint.new(0.35, Color3.fromRGB(237, 237, 237)),
-		ColorSequenceKeypoint.new(0.65, Color3.fromRGB(255, 255, 255)),
-		ColorSequenceKeypoint.new(1.00, Color3.fromRGB(214, 214, 214))
-	})
+	-- Barra de progreso blanca/gris, sin animación decorativa
+	fill.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
-	-- Offset animado → efecto nieve moviéndose
-	task.spawn(function()
-		local offset = 0
-		while fill and fill.Parent do
-			offset = (offset + 0.005) % 1
-			grad.Offset = Vector2.new(-offset, 0)
-			task.wait()
-		end
-	end)
 
-	-- Copos de nieve ❄ dentro de la barra (textos pequeños que se mueven)
-	for sni = 1, 4 do
-		local sn = Instance.new("TextLabel", barBg)
-		sn.BackgroundTransparency = 1
-		sn.Text = "❄"
-		sn.TextColor3 = Color3.fromRGB(255, 255, 255)
-		sn.Font = Enum.Font.GothamBlack
-		sn.TextSize = 9 * scale
-		sn.ZIndex = 7
-		sn.Size = UDim2.new(0, 14, 1, 0)
-		sn.Position = UDim2.new(math.random(10,80)/100, 0, 0, 0)
-		sn.TextTransparency = 0.3
-		task.spawn(function()
-			while sn and sn.Parent do
-				local startX = math.random(0, 90)/100
-				sn.Position = UDim2.new(startX, 0, 0, 0)
-				TS:Create(sn, TweenInfo.new(1.8 + sni*0.3, Enum.EasingStyle.Linear), {
-					Position = UDim2.new(startX + 0.05, 0, 0, 0),
-					TextTransparency = 0.1
-				}):Play()
-				task.wait(1.8 + sni*0.3)
-			end
-		end)
-	end
-
-	-- Glow de nieve en el extremo derecho
+	-- Remate gris estático de la barra
 	local glow = Instance.new("Frame", fill)
-	glow.Size = UDim2.new(0, 20, 2, 0)
-	glow.Position = UDim2.new(1, -10, 0.5, 0)
+	glow.Size = UDim2.new(0, 8, 0.7, 0)
+	glow.Position = UDim2.new(1, -4, 0.5, 0)
 	glow.AnchorPoint = Vector2.new(0.5, 0.5)
-	glow.BackgroundColor3 = Color3.fromRGB(229, 229, 229)
-	glow.BackgroundTransparency = 0.05
+	glow.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
+	glow.BackgroundTransparency = 0
 	glow.ZIndex = 6
 	Instance.new("UICorner", glow).CornerRadius = UDim.new(1, 0)
-	-- Glow pulsa como nieve brillando
-	task.spawn(function()
-		while glow and glow.Parent do
-			TS:Create(glow, TweenInfo.new(0.8, Enum.EasingStyle.Sine), {BackgroundColor3 = Color3.fromRGB(255, 255, 255), BackgroundTransparency = 0}):Play()
-			task.wait(0.8)
-			TS:Create(glow, TweenInfo.new(0.8, Enum.EasingStyle.Sine), {BackgroundColor3 = Color3.fromRGB(200, 200, 200), BackgroundTransparency = 0.3}):Play()
-			task.wait(0.8)
-		end
-	end)
 
 	pct = Instance.new("TextLabel", main)
 	pct.Size = UDim2.new(0, 42*scale, 0, 16*scale)
@@ -480,7 +367,7 @@ local function createGUI()
 	tog.Position = UDim2.new(1, -62*scale, 0.5, -12*scale)
 	tog.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 	tog.BackgroundTransparency = 0.15
-	tog.Text = "❌ OFF"
+	tog.Text = "OFF"
 	tog.TextColor3 = Color3.fromRGB(180, 180, 180)
 	tog.Font = Enum.Font.GothamBlack
 	tog.TextSize = 11*scale
@@ -494,14 +381,14 @@ local function createGUI()
 	tog.MouseButton1Click:Connect(function()
 		Steal.Enabled = not Steal.Enabled
 		if Steal.Enabled then
-			tog.Text = "🎄 ON"
-			tog.BackgroundColor3 = Color3.fromRGB(61, 61, 61)
+			tog.Text = "ON"
+			tog.BackgroundColor3 = Color3.fromRGB(75, 75, 75)
 			tog.TextColor3 = Color3.fromRGB(234, 234, 234)
 			ts.Color = Color3.fromRGB(167, 167, 167)
 			ts.Transparency = 0.1
 			start()
 		else
-			tog.Text = "❌ OFF"
+			tog.Text = "OFF"
 			tog.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 			tog.TextColor3 = Color3.fromRGB(180, 180, 180)
 			ts.Color = Color3.fromRGB(86, 86, 86)
