@@ -14799,4 +14799,98 @@ do
         end
     end)
 end
+
+-- White press feedback for visible UI buttons (cosmetic only).
+do
+    local boundButtons = setmetatable({}, { __mode = "k" })
+
+    local function bindWhitePressEffect(button)
+        if not button or not button:IsA("GuiButton") or boundButtons[button] then
+            return
+        end
+        boundButtons[button] = true
+
+        local pressed = false
+        local originalBackground
+        local originalTransparency
+        local originalGradient
+        local gradientColor
+        local activeTween
+
+        local function setPressed(state)
+            if state then
+                if pressed then
+                    return
+                end
+                pressed = true
+                originalBackground = button.BackgroundColor3
+                originalTransparency = button.BackgroundTransparency
+                local gradient = button:FindFirstChildOfClass("UIGradient")
+                originalGradient = gradient
+                gradientColor = gradient and gradient.Color or nil
+
+                if activeTween then
+                    activeTween:Cancel()
+                end
+                button.BackgroundTransparency = math.min(originalTransparency, 0.15)
+                activeTween = TweenService:Create(
+                    button,
+                    TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                    { BackgroundColor3 = Color3.new(1, 1, 1) }
+                )
+                activeTween:Play()
+                if gradient then
+                    gradient.Color = ColorSequence.new(Color3.new(1, 1, 1))
+                end
+            elseif pressed then
+                pressed = false
+                if activeTween then
+                    activeTween:Cancel()
+                end
+                activeTween = TweenService:Create(
+                    button,
+                    TweenInfo.new(0.16, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                    {
+                        BackgroundColor3 = originalBackground,
+                        BackgroundTransparency = originalTransparency,
+                    }
+                )
+                activeTween:Play()
+                if originalGradient and originalGradient.Parent == button and gradientColor then
+                    originalGradient.Color = gradientColor
+                end
+            end
+        end
+
+        button.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1
+                or input.UserInputType == Enum.UserInputType.Touch then
+                setPressed(true)
+            end
+        end)
+
+        button.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1
+                or input.UserInputType == Enum.UserInputType.Touch then
+                setPressed(false)
+            end
+        end)
+    end
+
+    local function watchButtonContainer(container)
+        if not container then
+            return
+        end
+        for _, descendant in ipairs(container:GetDescendants()) do
+            bindWhitePressEffect(descendant)
+        end
+        container.DescendantAdded:Connect(function(descendant)
+            bindWhitePressEffect(descendant)
+        end)
+    end
+
+    watchButtonContainer(main)
+    watchButtonContainer(MobilePanel)
+end
+
 return
