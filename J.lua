@@ -1,419 +1,689 @@
+--[[ JORDAN PACKT LAGG ]]
+print("[JORDAN PACKT LAGG] Loaded")
+
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RS = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
-local player = Players.LocalPlayer
 
-local DEFAULT_SPEED = 21
-local TAP_INTERVAL = 0.5
-local CONFIG_FILE = "AutoSpd_" .. tostring(player.UserId) .. ".json"
+local LP = Players.LocalPlayer
+local CONFIG_FILE = "JordanPacktLagg_Config.json"
 
--- Persiste datos en el almacenamiento local del executor, no solo en Attributes de la sesión.
-local config = {}
-if type(readfile) == "function" and type(isfile) == "function" then
-    pcall(function()
-        if isfile(CONFIG_FILE) then
-            config = HttpService:JSONDecode(readfile(CONFIG_FILE))
-        end
-    end)
-end
-if type(config) ~= "table" then config = {} end
+-- The panel uses only the user's local image as its background.
+local SETTINGS_IMAGES = {}
 
-local function saveConfig()
-    if type(writefile) ~= "function" then return end
-    pcall(function()
-        writefile(CONFIG_FILE, HttpService:JSONEncode(config))
-    end)
+-- Local panel logo. Keep 1000000829.png in the same folder as this script.
+local function getLocalAsset(path)
+	local getter = getcustomasset or getsynasset
+	if getter then
+		local ok, asset = pcall(getter, path)
+		if ok and asset then return asset end
+	end
+	return nil
 end
 
-local speed = tonumber(config.speed) or player:GetAttribute("CarrySavedSpeed") or DEFAULT_SPEED
-local enabled = player:GetAttribute("CarrySpeedEnabled") == true
-local locked = true
+local PANEL_LOGO = getLocalAsset("1000000829.png")
 
-local originalSpeed = player:GetAttribute("CarryOriginalWalkSpeed") or 16
+-- Colors
+local PURPLE      = Color3.fromRGB(175, 95, 255) 
+local VOID        = Color3.fromRGB(15, 15, 18)   
+local INPUT       = Color3.fromRGB(25, 25, 30)
+local WHITE       = Color3.fromRGB(255, 255, 255)
+local DIM         = Color3.fromRGB(150, 150, 160)
 
-local taps = 0
-local lastTap = 0
+local function corner(o, r)
+	local c = Instance.new("UICorner")
+	c.CornerRadius = UDim.new(0, r)
+	c.Parent = o
+	return c
+end
+local function stroke(o, col, th, tr)
+	local s = Instance.new("UIStroke")
+	s.Color = col
+	s.Thickness = th or 1
+	s.Transparency = tr or 0.2
+	s.Parent = o
+	return s
+end
+
+-- Cleanup old instances
+pcall(function()
+	local pg = LP:FindFirstChild("PlayerGui")
+	if pg then
+			for _, n in ipairs({"ViolettePacketLagger", "BlindPacketLagger", "JordanPacktLagg"}) do
+			local old = pg:FindFirstChild(n)
+			if old then old:Destroy() end
+		end
+	end
+		if gethui then
+			for _, g in ipairs(gethui():GetChildren()) do
+				if g.Name == "ViolettePacketLagger" or g.Name == "JordanPacktLagg" then
+					g:Destroy()
+				end
+			end
+		end
+end)
 
 local gui = Instance.new("ScreenGui")
-gui.Name = "CarrySpeedPanel"
+gui.Name = "JordanPacktLagg"
 gui.ResetOnSpawn = false
-gui.Parent = player:WaitForChild("PlayerGui")
+gui.IgnoreGuiInset = true
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+gui.DisplayOrder = 999
+pcall(function() if gethui then gui.Parent = gethui() end end)
+if not gui.Parent then gui.Parent = LP:WaitForChild("PlayerGui") end
 
-local function corner(obj, radius)
-    local c = Instance.new("UICorner")
-    c.CornerRadius = UDim.new(0, radius)
-    c.Parent = obj
+-- Dimensions
+local W = 230
+local H = 375
+local collapsedH = 122 
+
+local Main = Instance.new("Frame")
+Main.Name = "Main"
+Main.Size = UDim2.fromOffset(W, H)
+Main.Position = UDim2.new(0.5, -W/2, 0.5, -H/2)
+Main.BackgroundColor3 = VOID
+Main.BorderSizePixel = 0
+Main.ClipsDescendants = true
+Main.Active = true
+Main.Parent = gui
+corner(Main, 18)
+stroke(Main, PURPLE, 1.5, 0.5)
+
+-- Background
+local bgImg = Instance.new("ImageLabel")
+bgImg.Size = UDim2.new(1, 0, 1, 0)
+bgImg.BackgroundTransparency = 1
+bgImg.Image = PANEL_LOGO or ""
+bgImg.ImageColor3 = WHITE
+bgImg.ImageTransparency = 0.05
+bgImg.ScaleType = Enum.ScaleType.Crop
+bgImg.ZIndex = 0
+bgImg.Parent = Main
+corner(bgImg, 18)
+
+local overlay = Instance.new("Frame")
+overlay.Size = UDim2.new(1, 0, 1, 0)
+overlay.BackgroundColor3 = VOID
+overlay.BackgroundTransparency = 0.4 
+overlay.BorderSizePixel = 0
+overlay.ZIndex = 1
+overlay.Parent = Main
+corner(overlay, 18)
+
+-- Signature image added to the panel as a subtle watermark.
+if PANEL_LOGO then
+	local logo = Instance.new("ImageLabel")
+	logo.Name = "PanelLogo"
+	logo.Size = UDim2.fromOffset(135, 110)
+	logo.Position = UDim2.new(1, -145, 1, -118)
+	logo.BackgroundTransparency = 1
+	logo.Image = PANEL_LOGO
+	logo.ImageTransparency = 0.18
+	logo.ScaleType = Enum.ScaleType.Fit
+	logo.ZIndex = 2
+	logo.Parent = Main
 end
 
-local function makeButton(parent, text, size, pos)
-    local b = Instance.new("TextButton")
-    b.Size = size
-    b.Position = pos
-    b.Text = text
-    b.TextSize = 12
-    b.TextColor3 = Color3.new(1,1,1)
-    b.BackgroundColor3 = Color3.fromRGB(48,48,58)
-    b.BorderSizePixel = 0
-    b.Parent = parent
-    corner(b,5)
-    return b
+-- Header
+local header = Instance.new("Frame")
+header.Size = UDim2.new(1, 0, 0, 50)
+header.BackgroundTransparency = 1
+header.ZIndex = 2
+header.Parent = Main
+
+local Title = Instance.new("TextLabel")
+Title.BackgroundTransparency = 1
+Title.Size = UDim2.new(1, -70, 0, 20)
+Title.Position = UDim2.fromOffset(14, 10)
+Title.Text = "JORDAN PACKT LAGG"
+Title.Font = Enum.Font.GothamBlack
+Title.TextSize = 12
+Title.TextColor3 = WHITE
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.ZIndex = 3
+Title.Parent = header
+
+local SubTitle = Instance.new("TextLabel")
+SubTitle.BackgroundTransparency = 1
+SubTitle.Size = UDim2.new(1, -70, 0, 15)
+SubTitle.Position = UDim2.fromOffset(14, 28)
+SubTitle.Text = "Custom panel"
+SubTitle.Font = Enum.Font.GothamMedium
+SubTitle.TextSize = 11
+SubTitle.TextColor3 = PURPLE
+SubTitle.TextXAlignment = Enum.TextXAlignment.Left
+SubTitle.ZIndex = 3
+SubTitle.Parent = header
+
+local btnL = Instance.new("TextButton")
+btnL.Size = UDim2.fromOffset(24, 24)
+btnL.Position = UDim2.new(1, -62, 0, 12)
+btnL.BackgroundColor3 = INPUT
+btnL.BackgroundTransparency = 0.4 
+btnL.Text = "L"
+btnL.Font = Enum.Font.GothamBlack
+btnL.TextSize = 13
+btnL.TextColor3 = WHITE
+btnL.AutoButtonColor = false
+btnL.ZIndex = 3
+btnL.Parent = header
+corner(btnL, 6)
+stroke(btnL, DIM, 1, 0.55)
+
+local minBtn = Instance.new("TextButton")
+minBtn.Size = UDim2.fromOffset(24, 24)
+minBtn.Position = UDim2.new(1, -32, 0, 12)
+minBtn.BackgroundColor3 = INPUT
+minBtn.BackgroundTransparency = 0.4 
+minBtn.Text = "−" 
+minBtn.Font = Enum.Font.GothamBlack
+minBtn.TextSize = 16
+minBtn.TextColor3 = WHITE
+minBtn.AutoButtonColor = false
+minBtn.ZIndex = 3
+minBtn.Parent = header
+corner(minBtn, 6)
+stroke(minBtn, DIM, 1, 0.7)
+
+-- Packet Power
+local powerLbl = Instance.new("TextLabel")
+powerLbl.BackgroundTransparency = 1
+powerLbl.Position = UDim2.fromOffset(14, 56)
+powerLbl.Size = UDim2.new(1, -28, 0, 14)
+powerLbl.Text = "PACKET POWER"
+powerLbl.Font = Enum.Font.GothamBold
+powerLbl.TextSize = 10
+powerLbl.TextColor3 = DIM
+powerLbl.TextXAlignment = Enum.TextXAlignment.Left
+powerLbl.ZIndex = 3
+powerLbl.Parent = Main
+
+local powerRow = Instance.new("Frame")
+powerRow.Size = UDim2.new(1, -28, 0, 32)
+powerRow.Position = UDim2.fromOffset(14, 72)
+powerRow.BackgroundColor3 = INPUT
+powerRow.BackgroundTransparency = 0.4 
+powerRow.ZIndex = 3
+powerRow.Parent = Main
+corner(powerRow, 16)
+
+local minusBtn = Instance.new("TextButton")
+minusBtn.Size = UDim2.fromOffset(30, 30)
+minusBtn.BackgroundTransparency = 1
+minusBtn.Text = "-"
+minusBtn.Font = Enum.Font.GothamBold
+minusBtn.TextSize = 16
+minusBtn.TextColor3 = WHITE
+minusBtn.AutoButtonColor = false
+minusBtn.ZIndex = 4
+minusBtn.Parent = powerRow
+
+local plusBtn = Instance.new("TextButton")
+plusBtn.Size = UDim2.fromOffset(30, 30)
+plusBtn.Position = UDim2.new(1, -30, 0, 0)
+plusBtn.BackgroundTransparency = 1
+plusBtn.Text = "+"
+plusBtn.Font = Enum.Font.GothamBold
+plusBtn.TextSize = 16
+plusBtn.TextColor3 = WHITE
+plusBtn.AutoButtonColor = false
+plusBtn.ZIndex = 4
+plusBtn.Parent = powerRow
+
+local PowerBox = Instance.new("TextBox")
+PowerBox.Position = UDim2.fromOffset(30, 0)
+PowerBox.Size = UDim2.new(1, -60, 1, 0) 
+PowerBox.BackgroundTransparency = 1
+PowerBox.Text = "15000"
+PowerBox.Font = Enum.Font.GothamBlack
+PowerBox.TextSize = 14
+PowerBox.TextColor3 = PURPLE
+PowerBox.TextXAlignment = Enum.TextXAlignment.Center
+PowerBox.ClearTextOnFocus = false
+PowerBox.ZIndex = 4
+PowerBox.Parent = powerRow
+
+-- Keybind
+local keyLbl = Instance.new("TextLabel")
+keyLbl.BackgroundTransparency = 1
+keyLbl.Position = UDim2.fromOffset(14, 112)
+keyLbl.Size = UDim2.new(1, -28, 0, 14)
+keyLbl.Text = "Keybind"
+keyLbl.Font = Enum.Font.GothamBold
+keyLbl.TextSize = 10
+keyLbl.TextColor3 = DIM
+keyLbl.TextXAlignment = Enum.TextXAlignment.Left
+keyLbl.ZIndex = 3
+keyLbl.Parent = Main
+
+local KeyBtn = Instance.new("TextButton")
+KeyBtn.Position = UDim2.fromOffset(14, 128)
+KeyBtn.Size = UDim2.new(1, -28, 0, 30) 
+KeyBtn.BackgroundColor3 = INPUT
+KeyBtn.BackgroundTransparency = 0.4 
+KeyBtn.Text = "V"
+KeyBtn.Font = Enum.Font.GothamBlack
+KeyBtn.TextSize = 14
+KeyBtn.TextColor3 = WHITE
+KeyBtn.AutoButtonColor = false
+KeyBtn.ZIndex = 3
+KeyBtn.Parent = Main
+corner(KeyBtn, 16) 
+
+-- Start Button (Square - No Corner)
+local StartBtn = Instance.new("TextButton")
+StartBtn.Position = UDim2.fromOffset(14, 168)
+StartBtn.Size = UDim2.new(1, -28, 0, 40)
+StartBtn.BackgroundColor3 = PURPLE
+StartBtn.Text = "START"
+StartBtn.Font = Enum.Font.GothamBlack
+StartBtn.TextSize = 15
+StartBtn.TextColor3 = WHITE
+StartBtn.AutoButtonColor = false
+StartBtn.ZIndex = 3
+StartBtn.Parent = Main
+corner(StartBtn, 14) -- rounded pill
+
+-- CFrame Walk (transparent bordered box)
+local walkBox = Instance.new("Frame")
+walkBox.Name = "CFrameWalkBox"
+walkBox.Size = UDim2.new(1, -28, 0, 72)
+walkBox.Position = UDim2.fromOffset(14, 216)
+walkBox.BackgroundColor3 = INPUT
+walkBox.BackgroundTransparency = 1 -- fully transparent
+walkBox.BorderSizePixel = 0
+walkBox.ZIndex = 3
+walkBox.Parent = Main
+corner(walkBox, 12)
+-- no border stroke
+
+local walkLbl = Instance.new("TextLabel")
+walkLbl.BackgroundTransparency = 1
+walkLbl.Position = UDim2.fromOffset(10, 4)
+walkLbl.Size = UDim2.new(1, -20, 0, 14)
+walkLbl.Text = "CFRAME WALK"
+walkLbl.Font = Enum.Font.GothamBold
+walkLbl.TextSize = 10
+walkLbl.TextColor3 = DIM
+walkLbl.TextXAlignment = Enum.TextXAlignment.Left
+walkLbl.ZIndex = 4
+walkLbl.Parent = walkBox
+
+local studsRow = Instance.new("Frame")
+studsRow.Size = UDim2.new(1, -16, 0, 22)
+studsRow.Position = UDim2.fromOffset(8, 22)
+studsRow.BackgroundTransparency = 1
+studsRow.ZIndex = 4
+studsRow.Parent = walkBox
+
+local studsLbl = Instance.new("TextLabel")
+studsLbl.BackgroundTransparency = 1
+studsLbl.Size = UDim2.new(0, 45, 1, 0)
+studsLbl.Text = "studs"
+studsLbl.Font = Enum.Font.GothamMedium
+studsLbl.TextSize = 12
+studsLbl.TextColor3 = WHITE
+studsLbl.TextXAlignment = Enum.TextXAlignment.Left
+studsLbl.ZIndex = 4
+studsLbl.Parent = studsRow
+
+local studsInput = Instance.new("TextBox")
+studsInput.Size = UDim2.new(0, 35, 1, 0)
+studsInput.Position = UDim2.new(0, 50, 0, 0)
+studsInput.BackgroundColor3 = INPUT
+studsInput.BackgroundTransparency = 0.4
+studsInput.Text = "8"
+studsInput.Font = Enum.Font.GothamBlack
+studsInput.TextSize = 12
+studsInput.TextColor3 = WHITE
+studsInput.ZIndex = 4
+studsInput.Parent = studsRow
+corner(studsInput, 10)
+
+local delayRow = Instance.new("Frame")
+delayRow.Size = UDim2.new(1, -16, 0, 22)
+delayRow.Position = UDim2.fromOffset(8, 46)
+delayRow.BackgroundTransparency = 1
+delayRow.ZIndex = 4
+delayRow.Parent = walkBox
+
+local delayLbl = Instance.new("TextLabel")
+delayLbl.BackgroundTransparency = 1
+delayLbl.Size = UDim2.new(0, 45, 1, 0)
+delayLbl.Text = "delay"
+delayLbl.Font = Enum.Font.GothamMedium
+delayLbl.TextSize = 12
+delayLbl.TextColor3 = WHITE
+delayLbl.TextXAlignment = Enum.TextXAlignment.Left
+delayLbl.ZIndex = 4
+delayLbl.Parent = delayRow
+
+local delayInput = Instance.new("TextBox")
+delayInput.Size = UDim2.new(0, 35, 1, 0)
+delayInput.Position = UDim2.new(0, 50, 0, 0)
+delayInput.BackgroundColor3 = INPUT
+delayInput.BackgroundTransparency = 0.4
+delayInput.Text = "0.1"
+delayInput.Font = Enum.Font.GothamBlack
+delayInput.TextSize = 12
+delayInput.TextColor3 = WHITE
+delayInput.ZIndex = 4
+delayInput.Parent = delayRow
+corner(delayInput, 10)
+
+local WalkBtn = Instance.new("TextButton")
+WalkBtn.Size = UDim2.new(0, 65, 1, 0)
+WalkBtn.Position = UDim2.new(1, -65, 0, 0)
+WalkBtn.BackgroundColor3 = INPUT
+WalkBtn.BackgroundTransparency = 0.4
+WalkBtn.Text = "WALK"
+WalkBtn.Font = Enum.Font.GothamBold
+WalkBtn.TextSize = 11
+WalkBtn.TextColor3 = WHITE
+WalkBtn.AutoButtonColor = false
+WalkBtn.ZIndex = 4
+WalkBtn.Parent = delayRow
+corner(WalkBtn, 10)
+
+-- Backgrounds
+local bgLbl = Instance.new("TextLabel")
+bgLbl.BackgroundTransparency = 1
+bgLbl.Position = UDim2.fromOffset(14, 296)
+bgLbl.Size = UDim2.new(1, -28, 0, 14)
+bgLbl.Text = "BACKGROUND"
+bgLbl.Font = Enum.Font.GothamBold
+bgLbl.TextSize = 10
+bgLbl.TextColor3 = DIM
+bgLbl.TextXAlignment = Enum.TextXAlignment.Left
+bgLbl.ZIndex = 3
+bgLbl.Parent = Main
+
+local bgRow = Instance.new("Frame")
+bgRow.Size = UDim2.new(1, -28, 0, 40)
+bgRow.Position = UDim2.fromOffset(14, 312)
+bgRow.BackgroundTransparency = 1
+bgRow.ZIndex = 3
+bgRow.Parent = Main
+
+local selectedImg = 1
+local imgButtons = {}
+
+local function createBgButton(index, asset, text)
+	local b = Instance.new("TextButton")
+	b.Size = UDim2.fromOffset(42, 42) -- square
+	b.Position = UDim2.fromOffset((index - 1) * 48, 0)
+	b.BackgroundColor3 = INPUT
+	b.BackgroundTransparency = 0.25
+	b.Text = text or ""
+	b.Font = Enum.Font.GothamBold
+	b.TextSize = 11
+	b.TextColor3 = WHITE
+	b.AutoButtonColor = false
+	b.ZIndex = 4
+	b.Parent = bgRow
+	corner(b, 8) -- slight round but square shape
+	
+	local st = stroke(b, (index == 1) and PURPLE or DIM, 1.6, (index == 1) and 0.05 or 0.4)
+	
+	if asset then
+		local im = Instance.new("ImageLabel")
+		im.Size = UDim2.new(1, -6, 1, -6)
+		im.Position = UDim2.fromOffset(3, 3)
+		im.BackgroundTransparency = 1
+		im.Image = asset
+		im.ImageColor3 = Color3.fromRGB(200, 150, 255) 
+		im.ScaleType = Enum.ScaleType.Crop
+		im.ZIndex = 5
+		im.Parent = b
+		corner(im, 6)
+	end
+	
+	imgButtons[index] = {btn = b, stroke = st, asset = asset}
+	
+	b.MouseButton1Click:Connect(function()
+		selectedImg = index
+		if asset then
+			bgImg.Image = asset
+			bgImg.Visible = true
+		else
+			bgImg.Visible = false 
+		end
+		for j, info in ipairs(imgButtons) do
+			info.stroke.Color = (j == index) and PURPLE or DIM
+			info.stroke.Transparency = (j == index) and 0.1 or 0.5
+		end
+	end)
 end
 
--- PANEL
-local panel = Instance.new("Frame")
-panel.Size = UDim2.fromOffset(150,60)
-panel.AnchorPoint = Vector2.new(0.5,0.5)
-panel.Position = UDim2.fromScale(0.5,0.5)
-panel.BackgroundColor3 = Color3.fromRGB(25,25,30)
-panel.BorderSizePixel = 0
-panel.Parent = gui
-corner(panel,8)
-
-local savedPanelX = tonumber(config.panelX) or player:GetAttribute("CarryPanelX")
-local savedPanelY = tonumber(config.panelY) or player:GetAttribute("CarryPanelY")
-
-if savedPanelX and savedPanelY then
-    panel.Position = UDim2.fromOffset(savedPanelX,savedPanelY)
+if PANEL_LOGO then
+	createBgButton(1, PANEL_LOGO, "logo")
 end
 
-local title = Instance.new("TextLabel")
-title.Size = UDim2.fromOffset(60,22)
-title.Position = UDim2.fromOffset(5,5)
-title.BackgroundTransparency = 1
-title.Text = "SPEED"
-title.TextColor3 = Color3.new(1,1,1)
-title.TextSize = 12
-title.Parent = panel
+-- State
+local lagging = false
+local lagThread = nil
+local intensity = 15000
+local toggleKey = Enum.KeyCode.V
+local toggleKeyName = "V"
+local listeningForKey = false
+local Event
+local isCollapsed = false
 
-local lockButton = makeButton(
-    panel,"Lock",
-    UDim2.fromOffset(48,20),
-    UDim2.fromOffset(72,6)
-)
-lockButton.TextSize = 9
-
-local minimize = makeButton(
-    panel,"-",
-    UDim2.fromOffset(20,20),
-    UDim2.fromOffset(125,5)
-)
-
-local speedBox = Instance.new("TextBox")
-speedBox.Size = UDim2.fromOffset(140,22)
-speedBox.Position = UDim2.fromOffset(5,33)
-speedBox.BackgroundColor3 = Color3.fromRGB(40,40,48)
-speedBox.TextColor3 = Color3.new(1,1,1)
-speedBox.Text = tostring(speed)
-speedBox.TextSize = 12
-speedBox.ClearTextOnFocus = false
-speedBox.Parent = panel
-corner(speedBox,5)
-
--- BOTÓN FLOTANTE
-local toggle = Instance.new("TextButton")
-toggle.Size = UDim2.fromOffset(30,30)
-toggle.AnchorPoint = Vector2.new(0.5,0.5)
-toggle.BackgroundTransparency = 1
-toggle.BorderSizePixel = 0
-toggle.TextSize = 9
-toggle.Parent = gui
-toggle.Visible = false
-toggle.Active = true
-
-local savedToggleX = tonumber(config.toggleX) or player:GetAttribute("CarryToggleX")
-local savedToggleY = tonumber(config.toggleY) or player:GetAttribute("CarryToggleY")
-
-if savedToggleX and savedToggleY then
-    toggle.Position = UDim2.fromOffset(savedToggleX,savedToggleY)
-else
-    toggle.Position = UDim2.new(0.5,-15,0.5,-15)
+local function setElementsVisible(visible)
+	local elements = {powerLbl, powerRow, keyLbl, KeyBtn, walkBox, walkLbl, studsRow, delayRow, bgLbl, bgRow}
+	for _, el in ipairs(elements) do
+		el.Visible = visible
+	end
 end
 
-local function updateToggle()
-    toggle.Text = enabled and "ON" or "OFF"
-    toggle.TextColor3 = enabled
-        and Color3.fromRGB(0,255,100)
-        or Color3.fromRGB(255,60,60)
+local function clampPower(v)
+	v = tonumber(v)
+	if not v then return intensity end
+	return math.clamp(math.floor(v), 1000, 1000000)
 end
 
-updateToggle()
-
--- VELOCIDAD
-local function applySpeed()
-    local char = player.Character
-    local hum = char and char:FindFirstChildOfClass("Humanoid")
-
-    if not hum then return end
-
-    local stealing = player:GetAttribute("Stealing") == true
-        or (char and char:GetAttribute("Stealing") == true)
-    if not stealing then
-        local playerFlag = player:FindFirstChild("Stealing")
-        local charFlag = char and char:FindFirstChild("Stealing")
-        stealing = (playerFlag and playerFlag:IsA("BoolValue") and playerFlag.Value == true)
-            or (charFlag and charFlag:IsA("BoolValue") and charFlag.Value == true)
-    end
-
-    if enabled and stealing then
-        if not player:GetAttribute("CarryOriginalWalkSpeed") then
-            originalSpeed = hum.WalkSpeed
-            player:SetAttribute("CarryOriginalWalkSpeed",originalSpeed)
-        end
-        hum.WalkSpeed = speed
-    else
-        hum.WalkSpeed = player:GetAttribute("CarryOriginalWalkSpeed") or originalSpeed
-    end
+local function updatePower()
+	intensity = clampPower(PowerBox.Text)
+	PowerBox.Text = tostring(intensity)
 end
 
-local function setEnabled(value)
-    enabled = value
-    player:SetAttribute("CarrySpeedEnabled",enabled)
-
-    if enabled then
-        local char = player.Character
-        local hum = char and char:FindFirstChildOfClass("Humanoid")
-
-        if hum and not player:GetAttribute("CarryOriginalWalkSpeed") then
-            originalSpeed = hum.WalkSpeed
-            player:SetAttribute("CarryOriginalWalkSpeed",originalSpeed)
-        end
-    else
-        originalSpeed = player:GetAttribute("CarryOriginalWalkSpeed") or originalSpeed
-        player:SetAttribute("CarryOriginalWalkSpeed",nil)
-    end
-
-    updateToggle()
-    applySpeed()
+local function applyKeybind(name)
+	toggleKeyName = name or "V"
+	local ok, key = pcall(function() return Enum.KeyCode[toggleKeyName] end)
+	toggleKey = (ok and key) or Enum.KeyCode.V
+	KeyBtn.Text = toggleKeyName
 end
 
-speedBox.FocusLost:Connect(function()
-    local n = tonumber(speedBox.Text)
+local function resolveEvent()
+	local ok, net = pcall(function()
+		local packages = RS:FindFirstChild("Packages")
+		if not packages then return nil end
+		return packages:FindFirstChild("Net")
+	end)
+	if ok and net then
+		local children = net:GetChildren()
+		Event = children[230] or (children[1] and children[1]:IsA("RemoteEvent") and children[1])
+	end
+end
+resolveEvent()
 
-    if n then
-        speed = math.clamp(n,1,500)
-        speedBox.Text = tostring(speed)
-        player:SetAttribute("CarrySavedSpeed",speed)
-        config.speed = speed
-        saveConfig()
+local function paintActivate()
+	if lagging then
+		StartBtn.Text = "STOP"
+		StartBtn.BackgroundColor3 = Color3.fromRGB(200, 40, 40)
+	else
+		StartBtn.Text = "START"
+		StartBtn.BackgroundColor3 = PURPLE
+	end
+end
 
-        if enabled then
-            applySpeed()
-        end
-    else
-        speedBox.Text = tostring(speed)
-    end
+local function startLagging()
+	if lagging then return end
+	updatePower()
+	lagging = true
+	paintActivate()
+	if not Event then resolveEvent() end
+	
+	local payload = table.create(intensity, function() end) 
+	
+	lagThread = task.spawn(function()
+		while lagging do
+			if Event then 
+				pcall(function() Event:FireServer(payload) end) 
+			end
+			task.wait(0.05) 
+		end
+	end)
+end
+
+local function stopLagging()
+	if not lagging then return end
+	lagging = false
+	if lagThread then pcall(task.cancel, lagThread); lagThread = nil end
+	paintActivate()
+end
+
+local function saveConfig()
+	updatePower()
+	pcall(function()
+		if writefile then
+			writefile(CONFIG_FILE, HttpService:JSONEncode({
+				Power = intensity,
+				Keybind = toggleKeyName,
+				Image = selectedImg,
+			}))
+		end
+	end)
+end
+
+local function loadConfig()
+	if not (readfile and isfile and isfile(CONFIG_FILE)) then return end
+	local ok, cfg = pcall(function() return HttpService:JSONDecode(readfile(CONFIG_FILE)) end)
+	if not (ok and type(cfg) == "table") then return end
+	if tonumber(cfg.Power) then
+		intensity = clampPower(cfg.Power)
+		PowerBox.Text = tostring(intensity)
+	end
+	if type(cfg.Keybind) == "string" and cfg.Keybind ~= "" then
+		applyKeybind(cfg.Keybind)
+	end
+	if type(cfg.Image) == "number" and imgButtons[cfg.Image] then
+		imgButtons[cfg.Image].btn.MouseButton1Click:Fire()
+	end
+end
+
+-- Connections
+minusBtn.MouseButton1Click:Connect(function()
+	intensity = clampPower(intensity - 1000)
+	PowerBox.Text = tostring(intensity)
 end)
 
--- LOCK / UNLOCK
-lockButton.Activated:Connect(function()
-    locked = not locked
-    lockButton.Text = locked and "Lock" or "UnLock"
-    lockButton.TextSize = locked and 9 or 7
+plusBtn.MouseButton1Click:Connect(function()
+	intensity = clampPower(intensity + 1000)
+	PowerBox.Text = tostring(intensity)
 end)
 
--- MINIMIZAR
-minimize.Activated:Connect(function()
-    panel.Visible = false
-    toggle.Visible = true
+PowerBox.FocusLost:Connect(updatePower)
+
+StartBtn.MouseButton1Click:Connect(function()
+	if lagging then stopLagging() else startLagging() end
 end)
 
--- ARRASTRE DEL BOTÓN FLOTANTE
-local dragging = false
-local dragInput
-local dragStart
-local startPos
-local moved = false
-local suppressClick = false
-
-toggle.InputBegan:Connect(function(input)
-    if locked then return end
-
-    if input.UserInputType == Enum.UserInputType.Touch
-    or input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true
-        dragInput = input
-        dragStart = input.Position
-        startPos = toggle.Position
-        moved = false
-    end
+KeyBtn.MouseButton1Click:Connect(function()
+	listeningForKey = true
+	KeyBtn.Text = "..."
 end)
 
+btnL.MouseButton1Click:Connect(function()
+	saveConfig()
+	btnL.Text = "Saved!"
+	btnL.TextColor3 = Color3.fromRGB(40, 220, 100)
+	task.delay(1.5, function()
+		btnL.Text = "L"
+		btnL.TextColor3 = WHITE
+	end)
+end)
+
+-- Minimize
+minBtn.MouseButton1Click:Connect(function()
+	isCollapsed = not isCollapsed
+	
+	if isCollapsed then
+		-- collapsed: small START on the side like screenshot
+		minBtn.Text = "+"
+		setElementsVisible(false)
+		StartBtn.Visible = true
+		StartBtn.Position = UDim2.fromOffset(14, 72)
+		StartBtn.Size = UDim2.fromOffset(120, 38) -- small, left side
+		StartBtn.BackgroundColor3 = PURPLE
+		StartBtn.TextSize = 14
+		local sc = StartBtn:FindFirstChildOfClass("UICorner")
+		if sc then sc.CornerRadius = UDim.new(0, 14) else corner(StartBtn, 14) end
+		header.Size = UDim2.new(1, 0, 0, 58)
+		
+		TweenService:Create(Main, TweenInfo.new(0.22, Enum.EasingStyle.Quad), {
+			Size = UDim2.fromOffset(W, collapsedH) 
+		}):Play()
+	else
+		-- expanded: same size as screenshot 1
+		minBtn.Text = "−"
+		StartBtn.Position = UDim2.fromOffset(14, 168)
+		StartBtn.Size = UDim2.new(1, -28, 0, 40)
+		StartBtn.TextSize = 15
+		local sc = StartBtn:FindFirstChildOfClass("UICorner")
+		if sc then sc.CornerRadius = UDim.new(0, 14) else corner(StartBtn, 14) end
+		header.Size = UDim2.new(1, 0, 0, 50)
+		
+		TweenService:Create(Main, TweenInfo.new(0.22, Enum.EasingStyle.Quad), {
+			Size = UDim2.fromOffset(W, H)
+		}):Play()
+		
+		task.delay(0.15, function() 
+			setElementsVisible(true)
+			StartBtn.Visible = true 
+		end)
+	end
+end)
+
+UIS.InputBegan:Connect(function(input, gpe)
+	if listeningForKey then
+		if input.UserInputType == Enum.UserInputType.Keyboard then
+			listeningForKey = false
+			applyKeybind(input.KeyCode.Name)
+		end
+		return
+	end
+	if gpe then return end
+	if input.KeyCode == toggleKey then
+		if lagging then stopLagging() else startLagging() end
+	end
+end)
+
+-- Drag System
+local dragging, dragStart, startPos
+header.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = Main.Position
+	end
+end)
 UIS.InputChanged:Connect(function(input)
-    if not dragging or locked then return end
-
-    local valid =
-        (dragInput.UserInputType == Enum.UserInputType.Touch and input == dragInput)
-        or
-        (dragInput.UserInputType == Enum.UserInputType.MouseButton1
-        and input.UserInputType == Enum.UserInputType.MouseMovement)
-
-    if not valid then return end
-
-    local delta = input.Position - dragStart
-
-    if delta.Magnitude > 5 then
-        moved = true
-    end
-
-    if moved then
-        toggle.Position = UDim2.new(
-            startPos.X.Scale,
-            startPos.X.Offset + delta.X,
-            startPos.Y.Scale,
-            startPos.Y.Offset + delta.Y
-        )
-    end
+	if not dragging then return end
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+		local d = input.Position - dragStart
+		Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
+	end
 end)
-
 UIS.InputEnded:Connect(function(input)
-    if dragging and (
-        input == dragInput or
-        (dragInput.UserInputType == Enum.UserInputType.MouseButton1
-        and input.UserInputType == Enum.UserInputType.MouseButton1)
-    ) then
-        dragging = false
-        dragInput = nil
-
-        if moved then
-            local p = toggle.AbsolutePosition
-            local s = toggle.AbsoluteSize
-
-            player:SetAttribute("CarryToggleX",p.X + s.X/2)
-            player:SetAttribute("CarryToggleY",p.Y + s.Y/2)
-            config.toggleX = p.X + s.X/2
-            config.toggleY = p.Y + s.Y/2
-            saveConfig()
-
-            suppressClick = true
-
-            task.delay(0.2,function()
-                suppressClick = false
-                moved = false
-            end)
-        end
-    end
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = false
+	end
 end)
 
--- ARRASTRE DEL PANEL (DESDE EL TÍTULO)
-local panelDragging = false
-local panelInput
-local panelDragStart
-local panelStartPos
-local panelMoved = false
-
-title.InputBegan:Connect(function(input)
-    if locked then return end
-
-    if input.UserInputType == Enum.UserInputType.Touch
-    or input.UserInputType == Enum.UserInputType.MouseButton1 then
-        panelDragging = true
-        panelInput = input
-        panelDragStart = input.Position
-        panelStartPos = panel.Position
-        panelMoved = false
-    end
+task.defer(function()
+	loadConfig()
+	paintActivate()
 end)
-
-UIS.InputChanged:Connect(function(input)
-    if not panelDragging or locked then return end
-
-    local valid =
-        (panelInput.UserInputType == Enum.UserInputType.Touch and input == panelInput)
-        or
-        (panelInput.UserInputType == Enum.UserInputType.MouseButton1
-        and input.UserInputType == Enum.UserInputType.MouseMovement)
-
-    if not valid then return end
-
-    local delta = input.Position - panelDragStart
-
-    if delta.Magnitude > 5 then
-        panelMoved = true
-    end
-
-    if panelMoved then
-        panel.Position = UDim2.new(
-            panelStartPos.X.Scale,
-            panelStartPos.X.Offset + delta.X,
-            panelStartPos.Y.Scale,
-            panelStartPos.Y.Offset + delta.Y
-        )
-    end
-end)
-
-UIS.InputEnded:Connect(function(input)
-    if panelDragging and (
-        input == panelInput or
-        (panelInput.UserInputType == Enum.UserInputType.MouseButton1
-        and input.UserInputType == Enum.UserInputType.MouseButton1)
-    ) then
-        panelDragging = false
-        panelInput = nil
-
-        if panelMoved then
-            local p = panel.AbsolutePosition
-            local s = panel.AbsoluteSize
-
-            player:SetAttribute("CarryPanelX",p.X + s.X/2)
-            player:SetAttribute("CarryPanelY",p.Y + s.Y/2)
-            config.panelX = p.X + s.X/2
-            config.panelY = p.Y + s.Y/2
-            saveConfig()
-        end
-
-        panelMoved = false
-    end
-end)
-
--- TRIPLE TOQUE
-toggle.Activated:Connect(function()
-    if suppressClick or moved then return end
-
-    local now = os.clock()
-
-    if now - lastTap > TAP_INTERVAL then
-        taps = 0
-    end
-
-    taps += 1
-    lastTap = now
-
-    if taps >= 3 then
-        taps = 0
-        panel.Visible = true
-        toggle.Visible = true
-        return
-    end
-
-    setEnabled(not enabled)
-end)
-
--- REAPARICIÓN
-local function setupCharacter(char)
-    task.spawn(function()
-        local hum = char:WaitForChild("Humanoid",0.2)
-
-        if not hum then
-            hum = char:WaitForChild("Humanoid")
-        end
-
-        if enabled then
-            applySpeed()
-        end
-    end)
-end
-
-player.CharacterAdded:Connect(setupCharacter)
-
-task.spawn(function()
-    while gui.Parent do
-        if enabled then
-            applySpeed()
-        end
-        task.wait(0.15)
-    end
-end)
-
-if player.Character then
-    setupCharacter(player.Character)
-end
