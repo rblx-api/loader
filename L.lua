@@ -97,9 +97,9 @@ stroke(Main, PURPLE, 1.5, 0.5)
 local bgImg = Instance.new("ImageLabel")
 bgImg.Size = UDim2.new(1, 0, 1, 0)
 bgImg.BackgroundTransparency = 1
-bgImg.Image = SETTINGS_IMAGES[1]
-bgImg.ImageColor3 = Color3.fromRGB(200, 150, 255) 
-bgImg.ImageTransparency = 0.3
+bgImg.Image = PANEL_LOGO or SETTINGS_IMAGES[1]
+bgImg.ImageColor3 = PANEL_LOGO and WHITE or Color3.fromRGB(200, 150, 255)
+bgImg.ImageTransparency = PANEL_LOGO and 0.05 or 0.3
 bgImg.ScaleType = Enum.ScaleType.Crop
 bgImg.ZIndex = 0
 bgImg.Parent = Main
