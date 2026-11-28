@@ -169,18 +169,37 @@ do
                             introSound:Destroy()
                         end)
                     end
-                    for _, letterEntry in ipairs(introLetters) do
-                        if letterEntry.image.Parent then
-                            introTweenService
-                                :Create(letterEntry.image, TweenInfo.new(0.3), {
-                                    ImageTransparency = 1,
-                                })
-                                :Play()
+                    -- Desactivar inmediatamente la capa que cubre la pantalla.
+                    -- El intro usa TextLabel, por lo que la propiedad correcta es
+                    -- TextTransparency (ImageTransparency provoca un error y deja
+                    -- las letras y el botón invisible bloqueando los toques).
+                    if introGui then
+                        for _, child in ipairs(introGui:GetChildren()) do
+                            if child:IsA("TextButton") then
+                                child.Active = false
+                                child.Selectable = false
+                                child.Visible = false
+                            end
                         end
                     end
-                    task.delay(0.34, function()
+                    for _, letterEntry in ipairs(introLetters) do
+                        local letter = letterEntry.image
+                        if letter and letter.Parent then
+                            pcall(function()
+                                introTweenService:Create(
+                                    letter,
+                                    TweenInfo.new(0.25),
+                                    { TextTransparency = 1, TextStrokeTransparency = 1 }
+                                ):Play()
+                            end)
+                        end
+                    end
+                    task.delay(0.28, function()
                         if introGui then
-                            introGui:Destroy()
+                            pcall(function()
+                                introGui:Destroy()
+                            end)
+                            introGui = nil
                         end
                     end)
                 end
