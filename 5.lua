@@ -10,12 +10,8 @@ local HttpService = game:GetService("HttpService")
 local LP = Players.LocalPlayer
 local CONFIG_FILE = "JordanPacktLagg_Config.json"
 
-local SETTINGS_IMAGES = {
-	"rbxassetid://71792293290595",
-	"rbxassetid://125423918880160",
-	"rbxassetid://119934726907659",
-	"rbxassetid://121229055542067",
-}
+-- The panel uses only the user's local image as its background.
+local SETTINGS_IMAGES = {}
 
 -- Local panel logo. Keep 1000000829.png in the same folder as this script.
 local function getLocalAsset(path)
@@ -99,9 +95,9 @@ stroke(Main, PURPLE, 1.5, 0.5)
 local bgImg = Instance.new("ImageLabel")
 bgImg.Size = UDim2.new(1, 0, 1, 0)
 bgImg.BackgroundTransparency = 1
-bgImg.Image = PANEL_LOGO or SETTINGS_IMAGES[1]
-bgImg.ImageColor3 = PANEL_LOGO and WHITE or Color3.fromRGB(200, 150, 255)
-bgImg.ImageTransparency = PANEL_LOGO and 0.05 or 0.3
+bgImg.Image = PANEL_LOGO or ""
+bgImg.ImageColor3 = WHITE
+bgImg.ImageTransparency = 0.05
 bgImg.ScaleType = Enum.ScaleType.Crop
 bgImg.ZIndex = 0
 bgImg.Parent = Main
@@ -461,13 +457,9 @@ local function createBgButton(index, asset, text)
 	end)
 end
 
-for i, asset in ipairs(SETTINGS_IMAGES) do
-	createBgButton(i, asset)
-end
 if PANEL_LOGO then
-	createBgButton(#SETTINGS_IMAGES + 1, PANEL_LOGO, "logo")
+	createBgButton(1, PANEL_LOGO, "logo")
 end
-createBgButton(#SETTINGS_IMAGES + (PANEL_LOGO and 2 or 1), nil, "off")
 
 -- State
 local lagging = false
