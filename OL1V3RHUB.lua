@@ -8657,13 +8657,13 @@ function buildGui()
     tabContent.ClipsDescendants = true
     tabContent.ZIndex = 5
 
-    local tabs = {"Speed", "Combat", "Visual", "Settings"}
+    local tabs = {"Speed", "Combat", "Visual", "Settings", "Music"}
     tabButtons = {}
     local contentPages = {}
 
     for i, name in ipairs(tabs) do
         local btn = Instance.new("TextButton", tabBar)
-        btn.Size = UDim2.new(0.25, -4, 1, -4)
+        btn.Size = UDim2.new(0.2, -4, 1, -4)
         btn.BackgroundColor3 = Color3.fromRGB(26, 26, 34)
         btn.BackgroundTransparency = 1
         btn.BorderSizePixel = 0
@@ -9299,6 +9299,58 @@ function buildGui()
         label.Position = UDim2.new(0, 64, 0, 0)
         label.Size = UDim2.new(0.44, 0, 1, 0)
         return row
+    end
+
+    -- ===== MUSIC (última pestaña) =====
+    local musicPage = contentPages["Music"]
+    mkSect(musicPage, "MÚSICAS")
+
+    local musicSound = Instance.new("Sound")
+    musicSound.Name = "OL1V3R_HUB_Music"
+    musicSound.SoundId = "rbxassetid://15911359666"
+    musicSound.Volume = 0.5
+    musicSound.Looped = true
+    musicSound.Parent = game:GetService("SoundService")
+
+    local function makeMusicButton(row, buttonText, callback, xOffset)
+        local button = Instance.new("TextButton", row)
+        button.Size = UDim2.new(0, 88, 0, 28)
+        button.AnchorPoint = Vector2.new(1, 0.5)
+        button.Position = UDim2.new(1, xOffset or -10, 0.5, 0)
+        button.BackgroundColor3 = getThemeColor()
+        button.BackgroundTransparency = 0.12
+        button.BorderSizePixel = 0
+        button.Text = buttonText
+        button.TextColor3 = Color3.fromRGB(255, 255, 255)
+        button.Font = Enum.Font.GothamBold
+        button.TextSize = 12
+        button.AutoButtonColor = true
+        button.ZIndex = 9
+        Instance.new("UICorner", button).CornerRadius = UDim.new(0, 8)
+        local stroke = Instance.new("UIStroke", button)
+        stroke.Color = getThemeColor()
+        stroke.Thickness = 1
+        stroke.Transparency = 0.35
+        button.MouseButton1Click:Connect(callback)
+        return button
+    end
+
+    do
+        local row = mkRow(musicPage, 44)
+        mkLabel(row, "Reproducir música")
+        makeMusicButton(row, "PLAY", function()
+            if not musicSound.IsPlaying then
+                pcall(function() musicSound:Play() end)
+            end
+        end, -10)
+    end
+
+    do
+        local row = mkRow(musicPage, 44)
+        mkLabel(row, "Detener música")
+        makeMusicButton(row, "STOP", function()
+            pcall(function() musicSound:Stop() end)
+        end, -10)
     end
 
     local speedPage = contentPages["Speed"]
