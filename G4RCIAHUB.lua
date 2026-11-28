@@ -114,8 +114,6 @@ do
             end
             do
                 local introLetters = {}
-                local introAnimationStart = os.clock()
-                local introRenderConnection = nil
                 introClosed = false
                 local introText = "G4RCIA HUB"
                 local letterCount = #introText
@@ -156,9 +154,6 @@ do
                         return
                     end
                     introClosed = true
-                    if introRenderConnection then
-                        introRenderConnection:Disconnect()
-                    end
                     if introHeartbeatConnection then
                         introHeartbeatConnection:Disconnect()
                         introHeartbeatConnection = nil
@@ -173,7 +168,7 @@ do
                         if letterEntry.image.Parent then
                             introTweenService
                                 :Create(letterEntry.image, TweenInfo.new(0.3), {
-                                    ImageTransparency = 1,
+                                    TextTransparency = 1,
                                 })
                                 :Play()
                         end
@@ -184,18 +179,6 @@ do
                         end
                     end)
                 end
-                introRenderConnection = introRunService.RenderStepped:Connect(function()
-                    local elapsedTime = os.clock() - introAnimationStart
-                    for _, letterEntry in ipairs(introLetters) do
-                        local image = letterEntry.image
-                        if image.Parent then
-                            local animationPhase = elapsedTime * 2.5 + letterEntry.G4RCIAHubIndex * 1.37
-                            image.Position = letterEntry.base
-                                + UDim2.fromOffset(math.sin(animationPhase) * 18, math.cos(animationPhase * 1.5) * 22)
-                            image.Rotation = math.sin(animationPhase * 0.72) * 7
-                        end
-                    end
-                end)
             end
             task.spawn(function()
                 local function resolveAssetPath(filePath)
@@ -259,10 +242,9 @@ do
                 skipIntroButton.ZIndex = 10
                 skipIntroButton.Activated:Connect(closeIntro)
             end
-            task.delay(10, closeIntro)
-            while not introClosed do
-                task.wait(0.05)
-            end
+            -- Never block the rest of the script on intro/audio completion.
+            -- The intro can be skipped, end with its song, or auto-close shortly.
+            task.delay(4.5, closeIntro)
         end
     end
     do
@@ -10599,14 +10581,18 @@ do
         frame.Position = UDim2.new(0, 12, 0, 6)
         frame.BackgroundTransparency = 1
         frame.ZIndex = 20
-        local imageLabel = Instance.new("ImageLabel", frame)
+        local imageLabel = Instance.new("TextLabel", frame)
         imageLabel.Name = "TitleImage"
         imageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
         imageLabel.Size = UDim2.new(1.2, 0, 1.2, 0)
         imageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
         imageLabel.BackgroundTransparency = 1
-        imageLabel.Image = "rbxassetid://129749560759368"
-        imageLabel.ScaleType = Enum.ScaleType.Crop
+        imageLabel.Text = "G4RCIA HUB"
+        imageLabel.TextColor3 = Color3.fromRGB(245, 245, 255)
+        imageLabel.TextStrokeColor3 = Color3.fromRGB(20, 20, 30)
+        imageLabel.TextStrokeTransparency = 0.2
+        imageLabel.Font = Enum.Font.GothamBlack
+        imageLabel.TextScaled = true
         imageLabel.ZIndex = 21
         local textButton = Instance.new("TextButton", main)
         textButton.Size = UDim2.new(0, 32, 0, 32)
@@ -10647,14 +10633,18 @@ do
         miniBtn.ZIndex = 20
         miniBtn.Visible = false
         Instance.new("UICorner", miniBtn).CornerRadius = UDim.new(1, 0)
-        local rootPart = Instance.new("ImageLabel", miniBtn)
+        local rootPart = Instance.new("TextLabel", miniBtn)
         rootPart.Name = "MiniTitleImage"
         rootPart.AnchorPoint = Vector2.new(0.5, 0.5)
-        rootPart.Size = UDim2.new(0.88, 0, 0.88, 0)
+        rootPart.Size = UDim2.new(0.94, 0, 0.9, 0)
         rootPart.Position = UDim2.new(0.5, 0, 0.5, 0)
         rootPart.BackgroundTransparency = 1
-        rootPart.Image = "rbxassetid://129749560759368"
-        rootPart.ScaleType = Enum.ScaleType.Crop
+        rootPart.Text = "G4RCIA HUB"
+        rootPart.TextColor3 = Color3.fromRGB(245, 245, 255)
+        rootPart.TextStrokeColor3 = Color3.fromRGB(20, 20, 30)
+        rootPart.TextStrokeTransparency = 0.2
+        rootPart.Font = Enum.Font.GothamBlack
+        rootPart.TextScaled = true
         rootPart.ZIndex = 21
         local tween = nil
         local position = main.Position
