@@ -15,6 +15,7 @@ local function addPrintedBranding(parent, position, size, textSize)
     end
     local label = Instance.new("TextLabel")
     label.Name = "PrintedBranding"
+    label.Visible = false
     label.Parent = parent
     label.Size = size or UDim2.new(1, -16, 0, 16)
     label.Position = position or UDim2.new(0, 8, 1, -20)
@@ -10620,6 +10621,7 @@ do
         frame.ZIndex = 20
         local imageLabel = Instance.new("TextLabel", frame)
         imageLabel.Name = "TitleImage"
+        imageLabel.Visible = false
         imageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
         imageLabel.Size = UDim2.new(1, 0, 1, 0)
         imageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -10672,6 +10674,7 @@ do
         Instance.new("UICorner", miniBtn).CornerRadius = UDim.new(1, 0)
         local rootPart = Instance.new("ImageLabel", miniBtn)
         rootPart.Name = "MiniTitleImage"
+        rootPart.Visible = false
         rootPart.AnchorPoint = Vector2.new(0.5, 0.5)
         rootPart.Size = UDim2.new(0.88, 0, 0.88, 0)
         rootPart.Position = UDim2.new(0.5, 0, 0.5, 0)
