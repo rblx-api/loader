@@ -1,5 +1,5 @@
 -- ⏱ KEY CON EXPIRACIÓN
-local keyExpiry = 1795895870392
+local keyExpiry = 1795895934133
 local now = os.time() * 1000
 if now > keyExpiry then
   pcall(function()
@@ -9,7 +9,7 @@ if now > keyExpiry then
 end
 
 -- 🔐 USUARIOS AUTORIZADOS
-local authorizedUsers = {"steban960"}
+local authorizedUsers = {"chersipe"}
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 if not localPlayer then return end
