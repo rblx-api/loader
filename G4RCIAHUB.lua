@@ -8517,47 +8517,22 @@ do
         local btnGrad = button:FindFirstChild("BtnGrad")
         local textLabel = button:FindFirstChild("TextLabel")
         local uiStroke = button:FindFirstChildOfClass("UIStroke")
-        button.BackgroundColor3 = Color3.fromRGB(255, 85, 255)
-        if active then
-            if btnGrad then
-                local activeGradientKeypoints = {}
-                local activeGradientStart = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255))
-                local activeGradientMiddle = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(248, 248, 252))
-                local activeGradientEnd = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(225, 40, 240))
-                activeGradientKeypoints[1] = activeGradientStart
-                activeGradientKeypoints[2] = activeGradientMiddle
-                activeGradientKeypoints[3] = activeGradientEnd
-                activeGradientKeypoints[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(195, 195, 208))
-                btnGrad.Color = ColorSequence.new(activeGradientKeypoints)
-            end
-            if textLabel then
-                textLabel.TextColor3 = Color3.fromRGB(15, 15, 18)
-            end
-            if uiStroke then
-                uiStroke.Color = Color3.fromRGB(255, 255, 255)
-                uiStroke.Thickness = 1.8
-                uiStroke.Transparency = 0.05
-            end
-        else
-            if btnGrad then
-                local inactiveGradientKeypoints = {}
-                local inactiveGradientStart = ColorSequenceKeypoint.new(0, Color3.fromRGB(70, 70, 78))
-                local inactiveGradientMiddle = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(28, 28, 34))
-                local inactiveGradientEnd = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(10, 10, 14))
-                inactiveGradientKeypoints[1] = inactiveGradientStart
-                inactiveGradientKeypoints[2] = inactiveGradientMiddle
-                inactiveGradientKeypoints[3] = inactiveGradientEnd
-                inactiveGradientKeypoints[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
-                btnGrad.Color = ColorSequence.new(inactiveGradientKeypoints)
-            end
-            if textLabel then
-                textLabel.TextColor3 = Color3.fromRGB(85, 255, 255)
-            end
-            if uiStroke then
-                uiStroke.Color = Color3.fromRGB(70, 70, 78)
-                uiStroke.Thickness = 1
-                uiStroke.Transparency = 0.45
-            end
+        button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        if btnGrad then
+            local blackGradientKeypoints = {}
+            blackGradientKeypoints[1] = ColorSequenceKeypoint.new(0, Color3.fromRGB(12, 12, 12))
+            blackGradientKeypoints[2] = ColorSequenceKeypoint.new(0.35, Color3.fromRGB(5, 5, 5))
+            blackGradientKeypoints[3] = ColorSequenceKeypoint.new(0.7, Color3.fromRGB(0, 0, 0))
+            blackGradientKeypoints[4] = ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
+            btnGrad.Color = ColorSequence.new(blackGradientKeypoints)
+        end
+        if textLabel then
+            textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        end
+        if uiStroke then
+            uiStroke.Color = Color3.fromRGB(65, 65, 65)
+            uiStroke.Thickness = active and 1.5 or 1
+            uiStroke.Transparency = active and 0.1 or 0.35
         end
     end
     applyFloatingButtonScale = function()
